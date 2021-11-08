@@ -1,0 +1,43 @@
+# Override containers for local / dev environnement
+version: "2.4"
+services:
+  reverse_proxy:
+    volumes:
+      - cerfa_nginx_data:/data
+
+  ui:
+    command: yarn start
+    mem_limit: 1g
+    stdin_open: true
+    volumes:
+      - ./ui:/app #Allows source folders to be watched
+      - /app/node_modules/
+
+  server:
+    command: [ "yarn", "debug" ]
+    ports:
+      - "127.0.0.1:9229:9229" # Allows remote debugging
+    volumes:
+      - ./server/src:/app/src # Allows source folders to be watched
+      - ./server/config:/app/config
+      - cerfa_server_data:/data
+    environment:
+      - CERFA_ENV=dev
+      - CERFA_LOG_LEVEL=debug
+
+  mongodb:
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - cerfa_mongodb_data:/data
+
+volumes:
+  cerfa_mongodb_data:
+    driver: local
+    name: cerfa_mongodb_data
+  cerfa_nginx_data:
+    driver: local
+    name: cerfa_nginx_data
+  cerfa_server_data:
+    driver: local
+    name: cerfa_server_data

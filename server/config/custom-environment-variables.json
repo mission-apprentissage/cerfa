@@ -1,0 +1,27 @@
+{
+  "appName": "CERFA_NAME",
+  "env": "CERFA_ENV",
+  "publicUrl": "CERFA_PUBLIC_URL",
+  "mongodb": {
+    "uri": "CERFA_MONGODB_URI"
+  },
+  "apiKey": "CERFA_API_KEY",
+  "auth": {
+    "passwordHashRounds": "CERFA_AUTH_PASSWORD_HASH_ROUNDS",
+    "user": {
+      "jwtSecret": "CERFA_AUTH_USER_JWT_SECRET"
+    },
+    "activation": {
+      "jwtSecret": "CERFA_AUTH_ACTIVATION_JWT_SECRET"
+    },
+    "password": {
+      "jwtSecret": "CERFA_AUTH_PASSWORD_JWT_SECRET"
+    }
+  },
+  "log": {
+    "level": "CERFA_LOG_LEVEL",
+    "destinations": "CERFA_LOG_DESTINATIONS"
+  },
+  "slackWebhookUrl": "CERFA_SLACK_WEBHOOK_URL",
+  "outputDir": "CERFA_OUTPUT_DIR"
+}

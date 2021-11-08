@@ -1,0 +1,54 @@
+version: "2.4"
+services:
+  reverse_proxy:
+    image: cerfa_reverse_proxy
+    container_name: cerfa_reverse_proxy
+    build:
+      context: reverse_proxy
+    mem_limit: 256m
+    restart: unless-stopped
+    ports:
+      - 80:80
+    networks:
+      - cerfa_network
+    depends_on:
+      - server
+      - ui
+
+  ui:
+    image: cerfa_ui
+    container_name: cerfa_ui
+    build:
+      context: ui
+    mem_limit: 256m
+    networks:
+      - cerfa_network
+    depends_on:
+      - server
+
+  server:
+    image: cerfa_server
+    container_name: cerfa_server
+    build:
+      context: server
+    mem_limit: 1g
+    restart: unless-stopped
+    networks:
+      - cerfa_network
+    depends_on:
+      - mongodb
+    environment:
+      - CERFA_MONGODB_URI=mongodb://mongodb:27017/template-app?retryWrites=true&w=majority
+      - CERFA_LOG_DESTINATIONS=stdout,mongodb
+
+  mongodb:
+    image: mongo:4.2.6-bionic
+    container_name: cerfa_mongodb
+    mem_limit: 1g
+    restart: unless-stopped
+    networks:
+      - cerfa_network
+
+networks:
+  cerfa_network:
+    name: cerfa_network
