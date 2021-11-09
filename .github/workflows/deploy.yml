@@ -1,9 +1,9 @@
 name: Deploy
 on:
   push:
-    branches: [master, recette]
+    branches: [main, recette]
   pull_request:
-    branches: [master, recette]
+    branches: [main, recette]
 
 jobs:
   deploy:
@@ -36,5 +36,5 @@ jobs:
           repository: mission-apprentissage/CERFA-infra
           token: ${{ secrets.DEVOPS_ACCESS_TOKEN }}
           event-type: deploy
-          client-payload: '{"envName": "production", "branchName":"master"}'
-        if: github.ref == 'refs/heads/master'
+          client-payload: '{"envName": "production", "branchName":"main"}'
+        if: github.ref == 'refs/heads/main'
