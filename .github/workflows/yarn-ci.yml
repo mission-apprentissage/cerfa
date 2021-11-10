@@ -19,7 +19,7 @@ jobs:
 
       # Install dependencies
       - name: Run yarn Install
-        run: yarn install
+        run: yarn install --ignore-scripts
       
       # Lint
       - name: Run Lint
