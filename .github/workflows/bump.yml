@@ -33,3 +33,4 @@ jobs:
           yarn npm:release
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

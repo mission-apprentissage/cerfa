@@ -13,7 +13,6 @@ const mainConfig = {
         changelogFile: "CHANGELOG.md",
       },
     ],
-    "@semantic-release/npm",
     [
       "@semantic-release/git",
       {
@@ -58,7 +57,9 @@ const localConfig = {
     },
   ],
   repositoryUrl: "https://github.com/mission-apprentissage/cerfa.git",
-  plugins: ["@semantic-release/commit-analyzer", "@semantic-release/npm"],
+  plugins: [
+    "@semantic-release/commit-analyzer"
+  ],
 };
 
 module.exports = process.env.LOCAL_RELEASE ? localConfig : mainConfig;
