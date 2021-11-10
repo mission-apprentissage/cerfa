@@ -1,3 +1,10 @@
+# [1.0.0-beta.26](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.25...v1.0.0-beta.26) (2021-11-10)
+
+
+### Bug Fixes
+
+* install root node_modules ([73d5091](https://github.com/mission-apprentissage/cerfa/commit/73d509139d7c38f0c9d8d7bf65fe24ee7df8732a))
+
 # [1.0.0-beta.25](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.24...v1.0.0-beta.25) (2021-11-10)
 
 
