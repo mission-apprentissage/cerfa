@@ -1,3 +1,10 @@
+# [1.0.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.8...v1.0.0-beta.9) (2021-11-10)
+
+
+### Bug Fixes
+
+* publish script ([3bef95b](https://github.com/mission-apprentissage/cerfa/commit/3bef95bb59db9c45246393f362bb4d6cc52d8ed7))
+
 # [1.0.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.7...v1.0.0-beta.8) (2021-11-10)
 
 
