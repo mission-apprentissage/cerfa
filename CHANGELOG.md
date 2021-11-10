@@ -1,3 +1,10 @@
+# [1.0.0-beta.31](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.30...v1.0.0-beta.31) (2021-11-10)
+
+
+### Bug Fixes
+
+* rewrite ga ([2919a2c](https://github.com/mission-apprentissage/cerfa/commit/2919a2ccc1a1de9b8fbb0f168fd7abe98a578cc8))
+
 # [1.0.0-beta.30](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.29...v1.0.0-beta.30) (2021-11-10)
 
 
