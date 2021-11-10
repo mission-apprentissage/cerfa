@@ -1,0 +1,35 @@
+name: Bump develop
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - name: Run Yarn Install
+        run: |
+          cd ui
+          yarn install
+
+      - name: bump
+        run: |
+          cd ui
+          yarn npm:release
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
