@@ -1,3 +1,10 @@
+# [1.0.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2021-11-10)
+
+
+### Features
+
+* add release npm but private enable ([f43588f](https://github.com/mission-apprentissage/cerfa/commit/f43588f5334c28a03cb9bfd300cbfd6cca24e215))
+
 # [1.0.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2021-11-10)
 
 
