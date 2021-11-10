@@ -1,3 +1,33 @@
+# [1.1.0](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0...v1.1.0) (2021-11-10)
+
+
+### Bug Fixes
+
+* change install ([bcd1508](https://github.com/mission-apprentissage/cerfa/commit/bcd1508a46fc1bd943b23db4fbeaf8a1ba182279))
+* change install + ci only on pr ([516d324](https://github.com/mission-apprentissage/cerfa/commit/516d324cf095afc514be90b626dc446d80ca593e))
+* change name ga ([97edb7e](https://github.com/mission-apprentissage/cerfa/commit/97edb7edd34f847b85ee70c2bf35bb7f58c7be86))
+* change to root linter ([e43eeec](https://github.com/mission-apprentissage/cerfa/commit/e43eeec2ed871f0afa7e14f55d09d1ca3f6b9a4b))
+* ci cmd ([91d552a](https://github.com/mission-apprentissage/cerfa/commit/91d552a218151c21a450c8f892c4242c8961052f))
+* cmd install ([6dc9341](https://github.com/mission-apprentissage/cerfa/commit/6dc9341c67884ba1329d0d5bee082fdb9072c18f))
+* **config:** husky version ([8ff2476](https://github.com/mission-apprentissage/cerfa/commit/8ff24765af642d4b42f2bed139dda79e4635d8e4))
+* deploy on develop ([92a31aa](https://github.com/mission-apprentissage/cerfa/commit/92a31aaacc61ba4c90bedef66706eb943c23af9e))
+* dummy commit ([acf1b90](https://github.com/mission-apprentissage/cerfa/commit/acf1b903ad36c05a0b7bbd8095b6e47cf7ddf67d))
+* install root node_modules ([73d5091](https://github.com/mission-apprentissage/cerfa/commit/73d509139d7c38f0c9d8d7bf65fe24ee7df8732a))
+* rewrite ga ([2919a2c](https://github.com/mission-apprentissage/cerfa/commit/2919a2ccc1a1de9b8fbb0f168fd7abe98a578cc8))
+* try simple yarn install ([7c7e21d](https://github.com/mission-apprentissage/cerfa/commit/7c7e21dc98f7dc2da40e4ecff4795d8d140d4c70))
+* yarn --ignore-scripts ([be35f84](https://github.com/mission-apprentissage/cerfa/commit/be35f84e3e06f9c8577ac7f38ff4d505689699f1))
+* yarn install ui and server ([899af7b](https://github.com/mission-apprentissage/cerfa/commit/899af7bcabdc1b9e778b5b08ef62f1b58fcee7d5))
+
+
+### Features
+
+* add docker start and teardown ([a0d018d](https://github.com/mission-apprentissage/cerfa/commit/a0d018d2c2cd3c2ebda26f170a6ca43e94be5388))
+* centralised linter in root ([f4ddde6](https://github.com/mission-apprentissage/cerfa/commit/f4ddde665bb8188852b1695e3fc774aeaf00a1d8))
+* change description ([4b9bb5c](https://github.com/mission-apprentissage/cerfa/commit/4b9bb5c93d3b4c580cd9a34d5b94ee7ec49612c4))
+* clean up and test ci ([5f10aec](https://github.com/mission-apprentissage/cerfa/commit/5f10aecb311580406052c8169d53853de605e3cb))
+* **config:** eslint + prettier basic config ([988f179](https://github.com/mission-apprentissage/cerfa/commit/988f179cd193d6230a06b11d432a846fab8de9c9))
+* deploy recette on merge develop ([efddf39](https://github.com/mission-apprentissage/cerfa/commit/efddf39adc294bcbafe8c4eb9f27e6e98f6185c2))
+
 # [1.1.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.1.0-beta.1...v1.1.0-beta.2) (2021-11-10)
 
 
