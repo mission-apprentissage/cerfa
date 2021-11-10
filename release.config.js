@@ -1,8 +1,5 @@
 const mainConfig = {
-  branches: [
-    "main",
-    { name: "develop", channel: "beta", prerelease: "beta" },
-  ],
+  branches: ["main", { name: "develop", channel: "beta", prerelease: "beta" }],
   repositoryUrl: "https://github.com/mission-apprentissage/cerfa.git",
   plugins: [
     "@semantic-release/commit-analyzer",
@@ -17,7 +14,7 @@ const mainConfig = {
     [
       "@semantic-release/exec",
       {
-        prepareCmd: "./scripts/prepare-release.sh ${nextRelease.version}"
+        prepareCmd: "./scripts/prepare-release.sh ${nextRelease.version}",
       },
     ],
     [
@@ -34,6 +31,12 @@ const mainConfig = {
       "@semantic-release/exec",
       {
         publishCmd: "git checkout -- package.json",
+      },
+    ],
+    [
+      "@saithodev/semantic-release-backmerge",
+      {
+        branches: ["develop"],
       },
     ],
     [
@@ -64,9 +67,7 @@ const localConfig = {
     },
   ],
   repositoryUrl: "https://github.com/mission-apprentissage/cerfa.git",
-  plugins: [
-    "@semantic-release/commit-analyzer"
-  ],
+  plugins: ["@semantic-release/commit-analyzer"],
 };
 
 module.exports = process.env.LOCAL_RELEASE ? localConfig : mainConfig;
