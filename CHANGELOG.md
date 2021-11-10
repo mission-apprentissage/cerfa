@@ -1,3 +1,10 @@
+# [1.0.0-beta.13](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.12...v1.0.0-beta.13) (2021-11-10)
+
+
+### Bug Fixes
+
+* missing push sematic git ([56ee0b2](https://github.com/mission-apprentissage/cerfa/commit/56ee0b2c51bf2bd57f3161e227af6de087190acd))
+
 # [1.0.0-beta.12](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.11...v1.0.0-beta.12) (2021-11-10)
 
 
