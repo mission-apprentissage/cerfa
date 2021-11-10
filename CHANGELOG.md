@@ -1,3 +1,10 @@
+# [1.0.0-beta.21](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.20...v1.0.0-beta.21) (2021-11-10)
+
+
+### Bug Fixes
+
+* **config:** husky version ([8ff2476](https://github.com/mission-apprentissage/cerfa/commit/8ff24765af642d4b42f2bed139dda79e4635d8e4))
+
 # [1.0.0-beta.20](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.19...v1.0.0-beta.20) (2021-11-10)
 
 
