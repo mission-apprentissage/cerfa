@@ -1,3 +1,10 @@
+# [1.0.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.7...v1.0.0-beta.8) (2021-11-10)
+
+
+### Bug Fixes
+
+* **bump:** remove exit 1 ([8fac927](https://github.com/mission-apprentissage/cerfa/commit/8fac9276f0b15c29e19acde245d6fe050edf33c6))
+
 # [1.0.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.6...v1.0.0-beta.7) (2021-11-10)
 
 
