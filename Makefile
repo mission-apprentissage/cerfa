@@ -1,7 +1,7 @@
 install: install-root install-server install-ui
 
 install-root:
-	yarn install --ignore-scripts
+	yarn
 
 install-server:
 	yarn --cwd server install --frozen-lockfile
