@@ -31,6 +31,12 @@ const mainConfig = {
     ],
     "@semantic-release/github",
     [
+      "@semantic-release/exec",
+      {
+        publishCmd: "git checkout -- package.json",
+      },
+    ],
+    [
       "semantic-release-slack-bot",
       {
         notifyOnSuccess: true,
