@@ -1,3 +1,10 @@
+# [1.0.0-beta.20](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.19...v1.0.0-beta.20) (2021-11-10)
+
+
+### Features
+
+* centralised linter in root ([f4ddde6](https://github.com/mission-apprentissage/cerfa/commit/f4ddde665bb8188852b1695e3fc774aeaf00a1d8))
+
 # [1.0.0-beta.19](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.18...v1.0.0-beta.19) (2021-11-10)
 
 
