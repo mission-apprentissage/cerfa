@@ -6,4 +6,4 @@ cd ./ui
 npm version ${next_version}
 cd ../server
 npm version ${next_version}
-cp ../CHANGELOG.md ../ui/src
+cp ../CHANGELOG.md ../ui/src/CHANGELOG.md
