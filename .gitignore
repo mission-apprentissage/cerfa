@@ -1,5 +1,4 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-build/
 
 # dependencies
 /node_modules
@@ -109,6 +108,7 @@ cmake-build-*/
 
 # IntelliJ
 out/
+.idea/
 
 # JIRA plugin
 atlassian-ide-plugin.xml
@@ -133,3 +133,13 @@ setEnv.sh
 **/.vagrant/
 **/node_modules/
 yarn-error.log
+
+
+# Builds
+dist
+build
+sdk/lib
+.npmrc
+
+# Local History for Visual Studio Code
+.history/

@@ -25,18 +25,18 @@ module.exports = async (components) => {
   const checkJwtToken = authMiddleware(components);
   const adminOnly = permissionsMiddleware({ isAdmin: true });
 
-  app.use(bodyParser.json());
+  app.use(bodyParser.json({ limit: "50mb" }));
   app.use(corsMiddleware());
   app.use(logMiddleware());
 
-  app.use("/api/helloRoute", hello());
-  app.use("/api/entity", entity());
-  app.use("/api/secured", apiKeyAuthMiddleware, secured());
-  app.use("/api/login", login(components));
-  app.use("/api/authentified", checkJwtToken, authentified());
-  app.use("/api/admin", checkJwtToken, adminOnly, admin());
-  app.use("/api/password", password(components));
-  app.use("/api/stats", checkJwtToken, adminOnly, stats(components));
+  app.use("/api/v1/helloRoute", hello());
+  app.use("/api/v1/entity", entity());
+  app.use("/api/v1/secured", apiKeyAuthMiddleware, secured());
+  app.use("/api/vlogin", login(components));
+  app.use("/api/v1/authentified", checkJwtToken, authentified());
+  app.use("/api/v1/admin", checkJwtToken, adminOnly, admin());
+  app.use("/api/v1/password", password(components));
+  app.use("/api/v1/stats", checkJwtToken, adminOnly, stats(components));
 
   app.get(
     "/api",
@@ -61,15 +61,6 @@ module.exports = async (components) => {
         healthcheck: {
           mongodb: mongodbStatus,
         },
-      });
-    })
-  );
-
-  app.get(
-    "/api/config",
-    tryCatch(async (req, res) => {
-      return res.json({
-        config: config,
       });
     })
   );
