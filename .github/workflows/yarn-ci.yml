@@ -20,6 +20,14 @@ jobs:
       # Install dependencies
       - name: Run yarn Install
         run: yarn install --ignore-scripts
+
+      # Install ui dependencies
+      - name: Run yarn Install ui
+        run: yarn --cwd ui install --frozen-lockfile
+
+      # Install yarn dependencies
+      - name: Run yarn Install server
+        run: yarn --cwd server install --frozen-lockfile
       
       # Lint
       - name: Run Lint
