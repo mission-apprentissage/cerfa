@@ -6,7 +6,7 @@ on:
     branches: [ develop, main ]
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
