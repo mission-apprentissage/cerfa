@@ -1,3 +1,10 @@
+# [1.0.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2021-11-10)
+
+
+### Features
+
+* move sematic config to parent ([31d8ea4](https://github.com/mission-apprentissage/cerfa/commit/31d8ea412f7551b29db8b3bfd6c7320a9628200c))
+
 # [1.0.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2021-11-10)
 
 
