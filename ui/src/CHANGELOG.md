@@ -1,3 +1,10 @@
+# [1.0.0-beta.25](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.24...v1.0.0-beta.25) (2021-11-10)
+
+
+### Bug Fixes
+
+* change to root linter ([e43eeec](https://github.com/mission-apprentissage/cerfa/commit/e43eeec2ed871f0afa7e14f55d09d1ca3f6b9a4b))
+
 # [1.0.0-beta.24](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.23...v1.0.0-beta.24) (2021-11-10)
 
 
