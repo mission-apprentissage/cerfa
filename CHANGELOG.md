@@ -1,3 +1,10 @@
+# [1.0.0-beta.16](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.15...v1.0.0-beta.16) (2021-11-10)
+
+
+### Features
+
+* add a copy changelog to ui src folder ([ea6c9bc](https://github.com/mission-apprentissage/cerfa/commit/ea6c9bc24c3e460ed1b5a48d4b8707cca0e833f0))
+
 # [1.0.0-beta.15](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.14...v1.0.0-beta.15) (2021-11-10)
 
 
