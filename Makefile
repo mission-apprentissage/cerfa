@@ -1,5 +1,8 @@
 install: install-server install-ui
 
+install-root:
+	yarn install
+
 install-server:
 	yarn --cwd server install --frozen-lockfile
 
