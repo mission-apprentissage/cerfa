@@ -1,3 +1,10 @@
+# [1.0.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2021-11-10)
+
+
+### Bug Fixes
+
+* dummy commit ([d7efa42](https://github.com/mission-apprentissage/cerfa/commit/d7efa4260428aa10c5d42bc570ddb8c2ac035bfd))
+
 # 1.0.0-beta.1 (2021-11-10)
 
 
