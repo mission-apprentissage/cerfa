@@ -3,6 +3,7 @@
   "description": "[MNA] Générateur de Cerfa apprentissage",
   "repository": "https://github.com/mission-apprentissage/cerfa.git",
   "version": "1.0.0-beta.19",
+  "main": "index.js",
   "author": "MNA",
   "license": "MIT",
   "private": true,
@@ -12,10 +13,34 @@
     "npm:release:local": "CI=true LOCAL_RELEASE=true semantic-release"
   },
   "devDependencies": {
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/exec": "^5.0.0",
     "@semantic-release/git": "^9.0.0",
     "semantic-release": "18.0.0",
-    "semantic-release-slack-bot": "2.1.2"
+    "semantic-release-slack-bot": "2.1.2",
+    "husky": "7.0.4",
+    "prettier": "2.0.5",
+    "lint-staged": "11.2.6",
+    "eslint": "^7.24.0",
+    "eslint-config-prettier": "^7.2.0"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "bracketSpacing": true,
+    "trailingComma": "es5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "./scripts/preventSensibleFilesCommit.sh && lint-staged",
+      "commit-msg": "[[ -n $HUSKY_BYPASS ]] || commitlint --config ./config/commitlint.config.js -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --cache --fix ./ui",
+      "prettier --write"
+    ]
   }
 }

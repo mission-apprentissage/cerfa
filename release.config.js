@@ -17,7 +17,7 @@ const mainConfig = {
     [
       "@semantic-release/exec",
       {
-        prepareCmd: "./prepare.sh ${nextRelease.version}"
+        prepareCmd: "./scripts/prepare-release.sh ${nextRelease.version}"
       },
     ],
     [
