@@ -1,3 +1,10 @@
+# [1.0.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.6...v1.0.0-beta.7) (2021-11-10)
+
+
+### Bug Fixes
+
+* execution rights ([3226e69](https://github.com/mission-apprentissage/cerfa/commit/3226e699339b450a82607439627270a2f202bc01))
+
 # [1.0.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2021-11-10)
 
 
