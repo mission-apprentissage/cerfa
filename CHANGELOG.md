@@ -1,3 +1,10 @@
+# [1.0.0-beta.30](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.29...v1.0.0-beta.30) (2021-11-10)
+
+
+### Bug Fixes
+
+* try simple yarn install ([7c7e21d](https://github.com/mission-apprentissage/cerfa/commit/7c7e21dc98f7dc2da40e4ecff4795d8d140d4c70))
+
 # [1.0.0-beta.29](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.28...v1.0.0-beta.29) (2021-11-10)
 
 
