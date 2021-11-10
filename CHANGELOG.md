@@ -1,3 +1,10 @@
+# [1.0.0-beta.10](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2021-11-10)
+
+
+### Bug Fixes
+
+* step exec ([165bd11](https://github.com/mission-apprentissage/cerfa/commit/165bd1123aae8ffc3e868c5c31ae0f775803ce58))
+
 # [1.0.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.8...v1.0.0-beta.9) (2021-11-10)
 
 
