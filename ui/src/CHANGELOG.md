@@ -1,3 +1,14 @@
+# [1.0.0-beta.28](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.27...v1.0.0-beta.28) (2021-11-10)
+
+
+### Bug Fixes
+
+* change install ([bcd1508](https://github.com/mission-apprentissage/cerfa/commit/bcd1508a46fc1bd943b23db4fbeaf8a1ba182279))
+* change install + ci only on pr ([516d324](https://github.com/mission-apprentissage/cerfa/commit/516d324cf095afc514be90b626dc446d80ca593e))
+* change name ga ([97edb7e](https://github.com/mission-apprentissage/cerfa/commit/97edb7edd34f847b85ee70c2bf35bb7f58c7be86))
+* cmd install ([6dc9341](https://github.com/mission-apprentissage/cerfa/commit/6dc9341c67884ba1329d0d5bee082fdb9072c18f))
+* dummy commit ([acf1b90](https://github.com/mission-apprentissage/cerfa/commit/acf1b903ad36c05a0b7bbd8095b6e47cf7ddf67d))
+
 # [1.0.0-beta.27](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.26...v1.0.0-beta.27) (2021-11-10)
 
 
