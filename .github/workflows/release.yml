@@ -23,7 +23,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Run yarn Install
-        run: yarn install --ignore-scripts
+        run: yarn install
 
       - name: bump
         run: yarn npm:release

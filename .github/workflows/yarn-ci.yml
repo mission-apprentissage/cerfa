@@ -19,7 +19,7 @@ jobs:
 
       # Install dependencies
       - name: Run yarn Install
-        run: yarn install --ignore-scripts
+        run: yarn install
 
       # Install ui dependencies
       - name: Run yarn Install ui
