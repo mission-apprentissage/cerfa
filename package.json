@@ -8,6 +8,8 @@
   "private": true,
   "dependencies": {},
   "scripts": {
+    "start": "make start",
+    "install": "make install",
     "lint": "eslint --cache ./ui ./server --ext .js,.jsx",
     "prettier:fix": "prettier --write ./ui ./server",
     "prettier:check": "prettier --check ./ui ./server",
