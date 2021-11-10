@@ -1,3 +1,10 @@
+# [1.0.0-beta.27](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.26...v1.0.0-beta.27) (2021-11-10)
+
+
+### Bug Fixes
+
+* ci cmd ([91d552a](https://github.com/mission-apprentissage/cerfa/commit/91d552a218151c21a450c8f892c4242c8961052f))
+
 # [1.0.0-beta.26](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.25...v1.0.0-beta.26) (2021-11-10)
 
 

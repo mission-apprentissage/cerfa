@@ -1,6 +1,6 @@
 {
   "name": "mna-cerfa-server",
-  "version": "1.0.0-beta.26",
+  "version": "1.0.0-beta.27",
   "description": "[MNA] Générateur Cerfa Serveer",
   "repository": "https://github.com/mission-apprentissage/cerfa.git",
   "private": true,
