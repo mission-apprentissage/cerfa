@@ -13,17 +13,17 @@ const mainConfig = {
         changelogFile: "CHANGELOG.md",
       },
     ],
+    "@semantic-release/npm",
     [
       "@semantic-release/exec",
       {
-        "prepare": "./publish.sh ${nextRelease.version}"
+        prepareCmd: "./publish.sh ${nextRelease.version}"
       },
     ],
-    "@semantic-release/npm",
     [
       "@semantic-release/git",
       {
-        assets: ["CHANGELOG.md", "package.json", "ui/package.json"],
+        assets: ["ui/package.json", "CHANGELOG.md", "package.json"],
         message:
           // eslint-disable-next-line no-template-curly-in-string
           "chore(release): ${nextRelease.version}",
