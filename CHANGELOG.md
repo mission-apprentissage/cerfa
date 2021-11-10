@@ -1,3 +1,10 @@
+# [1.0.0-beta.19](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.18...v1.0.0-beta.19) (2021-11-10)
+
+
+### Features
+
+* dummy commit ([e5788fb](https://github.com/mission-apprentissage/cerfa/commit/e5788fb733e5d9dc51c358604984d5ca10f6101a))
+
 # [1.0.0-beta.18](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.17...v1.0.0-beta.18) (2021-11-10)
 
 
