@@ -28,7 +28,7 @@ jobs:
           token: ${{ secrets.DEVOPS_ACCESS_TOKEN }}
           event-type: deploy
           client-payload: '{"envName": "recette", "branchName":"develop"}'
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/develop'
 
       - name: Request deployment production
         uses: peter-evans/repository-dispatch@v1
