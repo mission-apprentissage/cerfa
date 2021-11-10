@@ -1,3 +1,10 @@
+# [1.1.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.1.0-beta.1...v1.1.0-beta.2) (2021-11-10)
+
+
+### Features
+
+* change description ([4b9bb5c](https://github.com/mission-apprentissage/cerfa/commit/4b9bb5c93d3b4c580cd9a34d5b94ee7ec49612c4))
+
 # [1.1.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0...v1.1.0-beta.1) (2021-11-10)
 
 
