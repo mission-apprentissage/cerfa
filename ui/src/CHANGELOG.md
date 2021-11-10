@@ -1,3 +1,10 @@
+# [1.0.0-beta.23](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.22...v1.0.0-beta.23) (2021-11-10)
+
+
+### Features
+
+* deploy recette on merge develop ([efddf39](https://github.com/mission-apprentissage/cerfa/commit/efddf39adc294bcbafe8c4eb9f27e6e98f6185c2))
+
 # [1.0.0-beta.22](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.21...v1.0.0-beta.22) (2021-11-10)
 
 
