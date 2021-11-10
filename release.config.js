@@ -26,7 +26,7 @@ const mainConfig = {
         assets: ["ui/package.json", "server/package.json", "CHANGELOG.md", "package.json"],
         message:
           // eslint-disable-next-line no-template-curly-in-string
-          "chore(release): ${nextRelease.version}",
+          "chore(release): bump ${nextRelease.version}",
       },
     ],
     "@semantic-release/github",
