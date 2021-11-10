@@ -1,4 +1,4 @@
-install: install-server install-ui
+install: install-root install-server install-ui
 
 install-root:
 	yarn install
