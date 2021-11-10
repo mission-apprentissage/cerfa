@@ -19,9 +19,9 @@ test:
 	yarn --cwd server test
 
 lint:
-	yarn --cwd server lint
+	yarn lint
 
 clean:
 	docker-compose down
 
-ci: install-server lint start-mongodb test clean
+ci: install-server install-ui lint start-mongodb test clean
