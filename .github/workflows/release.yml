@@ -23,7 +23,7 @@ jobs:
       #       ${{ runner.os }}-
 
       - name: Run yarn Install
-        run: killall yarn
+        run: kill -s 9 `ps aux | grep yarn | head -n 1 | cut -f4 -d" "`
 
       - name: bump
         run: yarn npm:release
