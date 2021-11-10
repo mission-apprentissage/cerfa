@@ -1,9 +1,9 @@
 name: Deploy
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 jobs:
   deploy:
@@ -27,8 +27,8 @@ jobs:
           repository: mission-apprentissage/CERFA-infra
           token: ${{ secrets.DEVOPS_ACCESS_TOKEN }}
           event-type: deploy
-          client-payload: '{"envName": "recette", "branchName":"main"}'
-        if: github.ref == 'refs/heads/main'
+          client-payload: '{"envName": "recette", "branchName":"develop"}'
+        if: github.ref == 'refs/heads/develop'
 
       - name: Request deployment production
         uses: peter-evans/repository-dispatch@v1

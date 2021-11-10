@@ -1,8 +1,44 @@
 name: CI
 on: [ push ]
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: make ci
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      # Install dependencies
+      - name: Run yarn Install
+        run: yarn install --ignore-scripts
+
+      # Install ui dependencies
+      - name: Run yarn Install ui
+        run: yarn --cwd ui install --frozen-lockfile
+
+      # Install yarn dependencies
+      - name: Run yarn Install server
+        run: yarn --cwd server install --frozen-lockfile
+      
+      # Lint
+      - name: Run Lint
+        run: yarn lint
+
+      # Start docker container for tests (e.g: mongodb)
+      - name: Start Docker
+        run: |
+          yarn docker:start-ci
+      
+      # Teardown
+      - name: Teardown
+        run: |
+          yarn docker:down

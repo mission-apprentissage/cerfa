@@ -1,4 +1,4 @@
-name: Bump develop
+name: Release version
 on:
   push:
     branches: [ develop, main ]
@@ -6,7 +6,7 @@ on:
     branches: [ develop, main ]
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -22,13 +22,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-
 
-      - name: Run Yarn Install
-        run: |
-          yarn install
+      - name: Run yarn Install
+        run: yarn install --ignore-scripts
 
       - name: bump
-        run: |
-          yarn npm:release
+        run: yarn npm:release
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
