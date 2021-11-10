@@ -107,4 +107,7 @@ packages/*/lib
 src/**/*.css
 src/**/*.css.map
 
-*/CHANGELOG.md
+*/**/*.css
+*/**/*.css.map
+
+*/**/CHANGELOG.md
