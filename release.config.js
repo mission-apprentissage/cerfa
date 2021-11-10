@@ -16,7 +16,7 @@ const mainConfig = {
     [
       "@semantic-release/exec",
       {
-        "publishCmd": "./publish.sh ${nextRelease.version}"
+        "prepare": "./publish.sh ${nextRelease.version}"
       },
     ],
     "@semantic-release/npm",
