@@ -1,3 +1,10 @@
+# [1.0.0-beta.32](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.31...v1.0.0-beta.32) (2021-11-10)
+
+
+### Bug Fixes
+
+* yarn --ignore-scripts ([be35f84](https://github.com/mission-apprentissage/cerfa/commit/be35f84e3e06f9c8577ac7f38ff4d505689699f1))
+
 # [1.0.0-beta.31](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.30...v1.0.0-beta.31) (2021-11-10)
 
 
