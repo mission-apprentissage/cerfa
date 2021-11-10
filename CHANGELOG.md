@@ -1,3 +1,11 @@
+# [1.0.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2021-11-10)
+
+
+### Features
+
+* add publish.sh ([aaaa772](https://github.com/mission-apprentissage/cerfa/commit/aaaa772f79fef03919bc87346b8cd62510bc6815))
+* remove ui release config and bump ui package.json ([ae0b81a](https://github.com/mission-apprentissage/cerfa/commit/ae0b81a3f11d57728cb710067757a78ba6f748d7))
+
 # [1.0.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2021-11-10)
 
 
