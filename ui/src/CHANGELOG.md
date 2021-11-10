@@ -1,3 +1,10 @@
+# [1.0.0-beta.18](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.17...v1.0.0-beta.18) (2021-11-10)
+
+
+### Features
+
+* add sematic on main branch ([81f7ba7](https://github.com/mission-apprentissage/cerfa/commit/81f7ba7406a9ebd8e33bd3d4afe875f26ed678fe))
+
 # [1.0.0-beta.17](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.16...v1.0.0-beta.17) (2021-11-10)
 
 
