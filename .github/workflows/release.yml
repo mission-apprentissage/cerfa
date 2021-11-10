@@ -1,4 +1,4 @@
-name: Release
+name: Release version
 on:
   push:
     branches: [ develop, main ]
@@ -22,13 +22,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-
 
-      - name: Run Yarn Install
-        run: |
-          yarn install
+      - name: Run yarn Install
+        run: yarn install
 
       - name: bump
-        run: |
-          yarn npm:release
+        run: yarn npm:release
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
