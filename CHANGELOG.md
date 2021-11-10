@@ -1,3 +1,10 @@
+# [1.0.0-beta.24](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.23...v1.0.0-beta.24) (2021-11-10)
+
+
+### Bug Fixes
+
+* deploy on develop ([92a31aa](https://github.com/mission-apprentissage/cerfa/commit/92a31aaacc61ba4c90bedef66706eb943c23af9e))
+
 # [1.0.0-beta.23](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.22...v1.0.0-beta.23) (2021-11-10)
 
 
