@@ -1,6 +1,6 @@
 {
   "name": "mna-cerfa",
-  "description": "[MNA] Générateur de Cerfa apprentissage",
+  "description": "[MNA] Générateur de Cerfa publique",
   "repository": "https://github.com/mission-apprentissage/cerfa.git",
   "version": "1.1.0-beta.1",
   "author": "MNA",
