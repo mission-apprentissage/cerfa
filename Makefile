@@ -1,7 +1,7 @@
 install: install-root install-server install-ui
 
 install-root:
-	yarn
+	yarn install
 
 install-server:
 	yarn --cwd server install --frozen-lockfile
@@ -27,4 +27,4 @@ lint:
 clean:
 	docker-compose down
 
-ci: install-root lint start-mongodb clean
+ci: install lint start-mongodb clean

@@ -4,5 +4,23 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: make ci
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      # Install dependencies
+      - name: Run yarn Install
+        run: yarn install
+      
+      # Lint
+      - name: Run Lint
+        run: yarn lint
