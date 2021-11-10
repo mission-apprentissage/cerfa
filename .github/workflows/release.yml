@@ -23,10 +23,7 @@ jobs:
       #       ${{ runner.os }}-
 
       - name: Run yarn Install
-        run: echo `ps aux | grep yarn | head -n 1 | cut -f4 -d" "`
-      
-      - name: find make
-        run: echo `ps aux | grep make | head -n 1 | cut -f4 -d" "`
+        run: yarn install --ignore-scripts
 
       - name: bump
         run: yarn npm:release
