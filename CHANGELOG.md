@@ -1,3 +1,10 @@
+# [1.0.0-beta.12](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.11...v1.0.0-beta.12) (2021-11-10)
+
+
+### Features
+
+* add bump server ([caf02ab](https://github.com/mission-apprentissage/cerfa/commit/caf02ab839362dc8426e999e2e56fde5786c73e8))
+
 # [1.0.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2021-11-10)
 
 
