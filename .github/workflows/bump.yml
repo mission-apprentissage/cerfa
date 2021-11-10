@@ -24,12 +24,10 @@ jobs:
 
       - name: Run Yarn Install
         run: |
-          cd ui
           yarn install
 
       - name: bump
         run: |
-          cd ui
           yarn npm:release
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
