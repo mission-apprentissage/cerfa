@@ -1,3 +1,10 @@
+# [1.0.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2021-11-10)
+
+
+### Bug Fixes
+
+* prepare cmd ([a16aab5](https://github.com/mission-apprentissage/cerfa/commit/a16aab54f61feab6373fd98bd59acceea5922665))
+
 # [1.0.0-beta.10](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2021-11-10)
 
 
