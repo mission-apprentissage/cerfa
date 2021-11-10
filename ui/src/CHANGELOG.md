@@ -1,3 +1,10 @@
+# [1.0.0-beta.29](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.28...v1.0.0-beta.29) (2021-11-10)
+
+
+### Features
+
+* clean up and test ci ([5f10aec](https://github.com/mission-apprentissage/cerfa/commit/5f10aecb311580406052c8169d53853de605e3cb))
+
 # [1.0.0-beta.28](https://github.com/mission-apprentissage/cerfa/compare/v1.0.0-beta.27...v1.0.0-beta.28) (2021-11-10)
 
 
