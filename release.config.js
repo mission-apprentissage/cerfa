@@ -13,23 +13,23 @@ const mainConfig = {
         changelogFile: "CHANGELOG.md",
       },
     ],
+    [
+      "@semantic-release/exec",
+      {
+        publishCmd: "echo "`jq '.version="\${nextRelease.version}"' ./ui/package.json`" > ./ui/package.json",
+      },
+    ],
     "@semantic-release/npm",
     [
       "@semantic-release/git",
       {
-        assets: ["CHANGELOG.md", "package.json"],
+        assets: ["CHANGELOG.md", "package.json", "./ui/package.json"],
         message:
           // eslint-disable-next-line no-template-curly-in-string
           "chore(release): ${nextRelease.version}",
       },
     ],
     "@semantic-release/github",
-    [
-      "@semantic-release/exec",
-      {
-        publishCmd: "git checkout -- package.json",
-      },
-    ],
     [
       "semantic-release-slack-bot",
       {
