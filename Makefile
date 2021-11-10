@@ -27,4 +27,4 @@ lint:
 clean:
 	docker-compose down
 
-ci: install lint start-mongodb test clean
+ci: install-root lint start-mongodb test clean
