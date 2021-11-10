@@ -16,7 +16,7 @@ const mainConfig = {
     [
       "@semantic-release/exec",
       {
-        publishCmd: "echo "`jq '.version="\${nextRelease.version}"' ./ui/package.json`" > ./ui/package.json",
+        "publishCmd": "./publish.sh ${nextRelease.version}"
       },
     ],
     "@semantic-release/npm",
