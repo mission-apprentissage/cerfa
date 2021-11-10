@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/mission-apprentissage/cerfa/compare/v1.1.0...v1.2.0) (2021-11-10)
+
+
+### Features
+
+* add backmerge + eslint fix ([0f6f648](https://github.com/mission-apprentissage/cerfa/commit/0f6f6484e6cb796b1bf2fb3b0d4290328c1b093b))
+
 # [1.2.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.1.0...v1.2.0-beta.1) (2021-11-10)
 
 
