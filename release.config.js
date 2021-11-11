@@ -36,8 +36,9 @@ const mainConfig = {
     [
       "@saithodev/semantic-release-backmerge",
       {
-        branches: [{ from: "main", to: "develop" }],
+        branches: ["develop", { from: "main", to: "develop" }],
         backmergeStrategy: "merge",
+        mergeMode: "theirs",
       },
     ],
     [
