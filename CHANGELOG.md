@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/mission-apprentissage/cerfa/compare/v1.3.0...v1.3.1) (2021-11-11)
+
+
+### Bug Fixes
+
+* change mergestrategy ([46106d7](https://github.com/mission-apprentissage/cerfa/commit/46106d7a66ca1b479a26dcffedaefdba7c7270e6))
+
 ## [1.3.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.3.0...v1.3.1-beta.1) (2021-11-11)
 
 
