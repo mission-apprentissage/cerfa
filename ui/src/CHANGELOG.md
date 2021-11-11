@@ -1,3 +1,17 @@
+# [1.3.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.3.0-beta.1...v1.3.0-beta.2) (2021-11-11)
+
+
+### Bug Fixes
+
+* back merge branch strategy ([519f8dc](https://github.com/mission-apprentissage/cerfa/commit/519f8dc1af64f110e3a246983e61ddfea548ca33))
+
+# [1.3.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.2.1...v1.3.0-beta.1) (2021-11-11)
+
+
+### Features
+
+* change merge mode to theirs ([0200e87](https://github.com/mission-apprentissage/cerfa/commit/0200e873a4bb8a2670080885dc8ddd8cf95355fd))
+
 ## [1.2.1](https://github.com/mission-apprentissage/cerfa/compare/v1.2.0...v1.2.1) (2021-11-10)
 
 
