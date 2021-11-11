@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/mission-apprentissage/cerfa/compare/v1.2.0...v1.2.1) (2021-11-10)
+
+
+### Bug Fixes
+
+* backmerge as merge not rebase ([dc24fe9](https://github.com/mission-apprentissage/cerfa/commit/dc24fe987d1559f09c78001c3442f9977e4a4a7b))
+
 ## [1.2.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.2.0...v1.2.1-beta.1) (2021-11-10)
 
 
