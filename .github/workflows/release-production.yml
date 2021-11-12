@@ -47,7 +47,7 @@ jobs:
           github_token: ${{ secrets.GH_TOKEN }}
   deploy:
     needs: release
-    if: startsWith(github.event.head_commit.message, "chore(release)") != true
+    if: "!startsWith(github.event.head_commit.message, 'chore(release')"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
