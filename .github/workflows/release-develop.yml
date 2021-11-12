@@ -32,3 +32,27 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  deploy:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - shell: bash
+        run: echo 'CERFA_HEAD_REF=${{ github.head_ref }}' >> $GITHUB_ENV
+
+      - shell: bash
+        run: echo 'CERFA_REF=${{ github.ref }}' >> $GITHUB_ENV
+
+      - name: Check output
+        run: echo ${CERFA_REF:-${CERFA_REF##*/}}
+
+      - name: Request deployment recette
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          repository: mission-apprentissage/CERFA-infra
+          token: ${{ secrets.DEVOPS_ACCESS_TOKEN }}
+          event-type: deploy
+          client-payload: '{"envName": "recette", "branchName":"develop"}'
+        if: github.ref == 'refs/heads/develop'
