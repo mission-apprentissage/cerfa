@@ -41,8 +41,9 @@ jobs:
         uses: actions/checkout@v2
 
       - shell: bash
-        run: echo '${{ github.head_ref }}  ${{ github.event.ref }} ${{ github.ref }}'
-        
+        run: echo '${{ github.event.head_commit.message }}'
+        #chore(release): bump
+
       - shell: bash 
         run: echo 'CERFA_HEAD_REF=${{ github.head_ref }}' >> $GITHUB_ENV
 
