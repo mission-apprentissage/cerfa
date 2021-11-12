@@ -18,7 +18,7 @@ jobs:
           type: now
           from_branch: main
           target_branch: develop
-          github_token: ${{ secrets.G_TOKEN }}
+          github_token: ${{ secrets.GH_TOKEN }}
   release:
     runs-on: ubuntu-latest
     steps:

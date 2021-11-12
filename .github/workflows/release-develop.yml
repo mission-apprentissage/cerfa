@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
 
       - uses: actions/setup-node@v1
         with:
@@ -28,5 +31,6 @@ jobs:
       - name: bump
         run: yarn npm:release
         env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
