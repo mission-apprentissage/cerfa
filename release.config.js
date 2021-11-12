@@ -33,14 +33,6 @@ const mainConfig = {
         publishCmd: "git checkout -- package.json",
       },
     ],
-    // [
-    //   "@saithodev/semantic-release-backmerge",
-    //   {
-    //     branches: ["develop", { from: "main", to: "develop" }],
-    //     backmergeStrategy: "merge",
-    //     mergeMode: "theirs",
-    //   },
-    // ],
     [
       "semantic-release-slack-bot",
       {
