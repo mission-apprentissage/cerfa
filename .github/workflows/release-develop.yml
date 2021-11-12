@@ -5,6 +5,7 @@ on:
 
 jobs:
   release:
+    if: startsWith(github.event.head_commit.message, "chore(release)") != true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -34,15 +35,11 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
   deploy:
     needs: release
-    # if: startsWith(github.event.ref, ‘refs/tags/’) != true
+    if: startsWith(github.event.head_commit.message, "chore(release)") != true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
-
-      - shell: bash
-        run: echo '${{ github.event.head_commit.message }}'
-        #chore(release): bump
 
       - shell: bash 
         run: echo 'CERFA_HEAD_REF=${{ github.head_ref }}' >> $GITHUB_ENV
