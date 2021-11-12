@@ -34,12 +34,16 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
   deploy:
     needs: release
+    # if: startsWith(github.event.ref, ‘refs/tags/’) != true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
 
       - shell: bash
+        run: echo '${{ github.head_ref }}  ${{ github.event.ref }} ${{ github.ref }}'
+        
+      - shell: bash 
         run: echo 'CERFA_HEAD_REF=${{ github.head_ref }}' >> $GITHUB_ENV
 
       - shell: bash
