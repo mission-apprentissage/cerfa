@@ -2,7 +2,7 @@
   "name": "mna-cerfa-ui",
   "description": "[MNA] Générateur Cerfa UI",
   "repository": "https://github.com/mission-apprentissage/cerfa.git",
-  "version": "1.5.2-beta.3",
+  "version": "1.5.2-beta.4",
   "author": "MNA",
   "license": "MIT",
   "private": true,

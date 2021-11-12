@@ -1,3 +1,10 @@
+## [1.5.2-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2-beta.3...v1.5.2-beta.4) (2021-11-12)
+
+
+### Bug Fixes
+
+* **release:** echo head commit ([3e01e5f](https://github.com/mission-apprentissage/cerfa/commit/3e01e5fb359fe04fe2e833f80cacd197d6d4446d))
+
 ## [1.5.2-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2-beta.2...v1.5.2-beta.3) (2021-11-12)
 
 
