@@ -1,3 +1,11 @@
+## [1.5.2-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2-beta.4...v1.5.2-beta.5) (2021-11-12)
+
+
+### Bug Fixes
+
+* **release:** condition on commit message ([c21cae2](https://github.com/mission-apprentissage/cerfa/commit/c21cae22e621e2abdc8ea69c8b74082c51bfc5f7))
+* **release:** syntax ([1042800](https://github.com/mission-apprentissage/cerfa/commit/1042800a4608eb8f029b99f2567ffc1af9e67871))
+
 ## [1.5.2-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2-beta.3...v1.5.2-beta.4) (2021-11-12)
 
 
