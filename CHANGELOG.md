@@ -1,3 +1,10 @@
+## [1.5.2-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2-beta.1...v1.5.2-beta.2) (2021-11-12)
+
+
+### Bug Fixes
+
+* **release:** avoid conflict workflows ([68195c7](https://github.com/mission-apprentissage/cerfa/commit/68195c7485c715d3130d3f2279a634d08570251e))
+
 ## [1.5.2-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.5.1...v1.5.2-beta.1) (2021-11-12)
 
 
