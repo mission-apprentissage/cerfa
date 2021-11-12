@@ -1,3 +1,10 @@
+## [1.3.2-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.3.1...v1.3.2-beta.1) (2021-11-12)
+
+
+### Bug Fixes
+
+* **release:** comment back merge plugin ([b0a02ff](https://github.com/mission-apprentissage/cerfa/commit/b0a02ff21a43c8e9f457347a5f0dc20b7531b676))
+
 ## [1.3.1](https://github.com/mission-apprentissage/cerfa/compare/v1.3.0...v1.3.1) (2021-11-11)
 
 
