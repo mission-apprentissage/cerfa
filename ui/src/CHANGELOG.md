@@ -1,3 +1,10 @@
+# [1.5.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.4.0...v1.5.0-beta.1) (2021-11-12)
+
+
+### Features
+
+* **release:** update release workflows ([#4](https://github.com/mission-apprentissage/cerfa/issues/4)) ([92d07f8](https://github.com/mission-apprentissage/cerfa/commit/92d07f8ed65e6be2b2aa4e95189788c7a835f8e7))
+
 # [1.4.0](https://github.com/mission-apprentissage/cerfa/compare/v1.3.3...v1.4.0) (2021-11-12)
 
 
