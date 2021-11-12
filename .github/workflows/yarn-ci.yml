@@ -33,12 +33,12 @@ jobs:
       - name: Run Lint
         run: yarn lint
 
-      # Start docker container for tests (e.g: mongodb)
-      - name: Start Docker
-        run: |
-          yarn docker:start-ci
+      # # Start docker container for tests (e.g: mongodb)
+      # - name: Start Docker
+      #   run: |
+      #     yarn docker:start-ci
       
-      # Teardown
-      - name: Teardown
-        run: |
-          yarn docker:down
+      # # Teardown
+      # - name: Teardown
+      #   run: |
+      #     yarn docker:down

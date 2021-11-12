@@ -1,3 +1,53 @@
+## [1.5.2-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2-beta.6...v1.5.2-beta.7) (2021-11-12)
+
+
+### Bug Fixes
+
+* **release:** back merge condition ([fd1752a](https://github.com/mission-apprentissage/cerfa/commit/fd1752a68b5541e5376f67d687a4aafb77d0cde4))
+
+## [1.5.2-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2-beta.5...v1.5.2-beta.6) (2021-11-12)
+
+
+### Bug Fixes
+
+* **release:** condition on prod ([4addf67](https://github.com/mission-apprentissage/cerfa/commit/4addf67664754eeb662f68563e35e21ccf482321))
+
+## [1.5.2-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2-beta.4...v1.5.2-beta.5) (2021-11-12)
+
+
+### Bug Fixes
+
+* **release:** condition on commit message ([c21cae2](https://github.com/mission-apprentissage/cerfa/commit/c21cae22e621e2abdc8ea69c8b74082c51bfc5f7))
+* **release:** syntax ([1042800](https://github.com/mission-apprentissage/cerfa/commit/1042800a4608eb8f029b99f2567ffc1af9e67871))
+
+## [1.5.2-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2-beta.3...v1.5.2-beta.4) (2021-11-12)
+
+
+### Bug Fixes
+
+* **release:** echo head commit ([3e01e5f](https://github.com/mission-apprentissage/cerfa/commit/3e01e5fb359fe04fe2e833f80cacd197d6d4446d))
+
+## [1.5.2-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2-beta.2...v1.5.2-beta.3) (2021-11-12)
+
+
+### Bug Fixes
+
+* **release:** echo refs ([2780b3f](https://github.com/mission-apprentissage/cerfa/commit/2780b3f4bb0668993083a4f73412c2d542b54994))
+
+## [1.5.2-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2-beta.1...v1.5.2-beta.2) (2021-11-12)
+
+
+### Bug Fixes
+
+* **release:** avoid conflict workflows ([68195c7](https://github.com/mission-apprentissage/cerfa/commit/68195c7485c715d3130d3f2279a634d08570251e))
+
+## [1.5.2-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.5.1...v1.5.2-beta.1) (2021-11-12)
+
+
+### Bug Fixes
+
+* **release:** clean triggers ([d4c329e](https://github.com/mission-apprentissage/cerfa/commit/d4c329e132ef91943853421adbc77fc6a19f92e7))
+
 ## [1.5.1](https://github.com/mission-apprentissage/cerfa/compare/v1.5.0...v1.5.1) (2021-11-12)
 
 
