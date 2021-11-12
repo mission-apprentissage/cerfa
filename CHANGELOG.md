@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/mission-apprentissage/cerfa/compare/v1.3.3...v1.4.0) (2021-11-12)
+
+
+### Features
+
+* **release:** try protected branch on main ([0d5d622](https://github.com/mission-apprentissage/cerfa/commit/0d5d62275207cc04219cf1a84f46d5a0e64e469b))
+
 # [1.4.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.3.3...v1.4.0-beta.1) (2021-11-12)
 
 
