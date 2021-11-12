@@ -1,3 +1,10 @@
+## [1.5.2-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2-beta.6...v1.5.2-beta.7) (2021-11-12)
+
+
+### Bug Fixes
+
+* **release:** back merge condition ([fd1752a](https://github.com/mission-apprentissage/cerfa/commit/fd1752a68b5541e5376f67d687a4aafb77d0cde4))
+
 ## [1.5.2-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2-beta.5...v1.5.2-beta.6) (2021-11-12)
 
 
