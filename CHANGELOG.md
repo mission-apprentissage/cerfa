@@ -1,3 +1,11 @@
+## [1.5.1](https://github.com/mission-apprentissage/cerfa/compare/v1.5.0...v1.5.1) (2021-11-12)
+
+
+### Bug Fixes
+
+* **release:** change GA workflows triggers ([#7](https://github.com/mission-apprentissage/cerfa/issues/7)) ([2dbe8d7](https://github.com/mission-apprentissage/cerfa/commit/2dbe8d78e8016d9a75b1527a57eb4cef818af684))
+* **release:** trigger on push ([3e8aecd](https://github.com/mission-apprentissage/cerfa/commit/3e8aecd8e09e2c93074bcf51d1a22f6cd01938ee))
+
 ## [1.5.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.5.0...v1.5.1-beta.1) (2021-11-12)
 
 
