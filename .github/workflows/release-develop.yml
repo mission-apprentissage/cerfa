@@ -5,7 +5,7 @@ on:
 
 jobs:
   release:
-    if: startsWith(github.event.head_commit.message, "chore(release)") != true
+    if: "!startsWith(github.event.head_commit.message, 'chore(release')"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -35,7 +35,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
   deploy:
     needs: release
-    if: startsWith(github.event.head_commit.message, "chore(release)") != true
+    if: "!startsWith(github.event.head_commit.message, 'chore(release')"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
