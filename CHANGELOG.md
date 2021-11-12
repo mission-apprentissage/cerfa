@@ -1,3 +1,10 @@
+## [1.5.2-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2-beta.5...v1.5.2-beta.6) (2021-11-12)
+
+
+### Bug Fixes
+
+* **release:** condition on prod ([4addf67](https://github.com/mission-apprentissage/cerfa/commit/4addf67664754eeb662f68563e35e21ccf482321))
+
 ## [1.5.2-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2-beta.4...v1.5.2-beta.5) (2021-11-12)
 
 
