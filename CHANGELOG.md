@@ -1,3 +1,10 @@
+## [1.5.2-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.5.1...v1.5.2-beta.1) (2021-11-12)
+
+
+### Bug Fixes
+
+* **release:** clean triggers ([d4c329e](https://github.com/mission-apprentissage/cerfa/commit/d4c329e132ef91943853421adbc77fc6a19f92e7))
+
 ## [1.5.1](https://github.com/mission-apprentissage/cerfa/compare/v1.5.0...v1.5.1) (2021-11-12)
 
 
