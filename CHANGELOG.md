@@ -1,3 +1,10 @@
+## [1.5.3-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2...v1.5.3-beta.1) (2021-11-18)
+
+
+### Bug Fixes
+
+* **config:** prestaged linter + reverse proxy  ([#10](https://github.com/mission-apprentissage/cerfa/issues/10)) ([bfbe55f](https://github.com/mission-apprentissage/cerfa/commit/bfbe55f2c38c6fd2fdace64639be9f993ab7a27d))
+
 ## [1.5.2](https://github.com/mission-apprentissage/cerfa/compare/v1.5.1...v1.5.2) (2021-11-12)
 
 
