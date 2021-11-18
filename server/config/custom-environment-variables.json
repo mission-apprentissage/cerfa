@@ -1,6 +1,7 @@
 {
   "appName": "CERFA_NAME",
   "env": "CERFA_ENV",
+  "isOffline": "false",
   "publicUrl": "CERFA_PUBLIC_URL",
   "mongodb": {
     "uri": "CERFA_MONGODB_URI"

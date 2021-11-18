@@ -20,11 +20,6 @@ const usersSchema = {
     default: null,
     description: "Email",
   },
-  academie: {
-    type: String,
-    default: null,
-    description: "Academie coma separated",
-  },
   account_status: {
     type: String,
     default: "FORCE_RESET_PASSWORD",

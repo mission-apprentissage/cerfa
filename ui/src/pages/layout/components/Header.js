@@ -20,15 +20,15 @@ import { isUserAdmin, hasAccessTo } from "../../../common/utils/rolesUtils";
 import { _get } from "../../../common/httpClient";
 import { LockFill } from "../../../theme/components/icons/LockFill";
 import { Logo } from "./Logo";
-import AlertMessage from "./AlertMessage";
-import { AccountFill, DoubleArrows, DownloadLine, InfoCircle } from "../../../theme/components/icons";
+// import AlertMessage from "./AlertMessage";
+import { AccountFill, DownloadLine, InfoCircle } from "../../../theme/components/icons";
 
 const Header = () => {
   let [auth, setAuth] = useAuth();
   let history = useHistory();
 
   let logout = async () => {
-    const { loggedOut } = await _get("/api/auth/logout");
+    const { loggedOut } = await _get("/api/v1/auth/logout");
     if (loggedOut) {
       setAuth(null);
       history.push("/");
@@ -37,7 +37,7 @@ const Header = () => {
 
   return (
     <>
-      <AlertMessage />
+      {/* <AlertMessage /> */}
       <Container maxW={"full"} borderBottom={"1px solid"} borderColor={"grey.400"} px={[0, 4]}>
         <Container maxW="xl" py={[0, 2]} px={[0, 4]}>
           <Flex alignItems="center" color="grey.800">
@@ -48,7 +48,7 @@ const Header = () => {
 
             <Box p={[1, 6]} flex="1">
               <Heading as="h6" textStyle="h6">
-                Catalogue des offres de formations en apprentissage
+                Générateur de contrat publique d'apprentissage
               </Heading>
             </Box>
             {/* User Menu */}
@@ -95,14 +95,6 @@ const Header = () => {
                     {hasAccessTo(auth, "page_message_maintenance") && (
                       <MenuItem as={NavLink} to="/admin/messagescript" icon={<InfoCircle boxSize={4} />}>
                         Message de maintenance
-                      </MenuItem>
-                    )}
-                  </MenuGroup>
-                  <MenuDivider />
-                  <MenuGroup title="Réconciliation">
-                    {hasAccessTo(auth, "page_reconciliation_ps") && (
-                      <MenuItem as={NavLink} to="/couverture-ps" icon={<DoubleArrows boxSize={4} />}>
-                        Réconciliation Parcoursup
                       </MenuItem>
                     )}
                   </MenuGroup>

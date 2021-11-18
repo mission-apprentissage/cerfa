@@ -11,6 +11,7 @@ module.exports = async () => {
   return {
     authenticate: async (username, password) => {
       const user = await User.findOne({ username });
+
       if (!user) {
         return null;
       }
@@ -36,7 +37,6 @@ module.exports = async () => {
         password: hash,
         isAdmin: !!permissions.isAdmin,
         email: options.email || "",
-        academie: options.academie || "0",
         roles: options.roles || ["user"],
         acl: options.acl || [],
       });
@@ -87,7 +87,6 @@ module.exports = async () => {
         permissions,
         sub: user.username,
         email: user.email,
-        academie: user.academie,
         account_status: user.account_status,
         roles: permissions.isAdmin ? ["admin", ...user.roles] : user.roles,
         acl: uniq([...rolesAcl, ...user.acl]),

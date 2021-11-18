@@ -1,4 +1,4 @@
-import { useAuthState, anonymous } from "../auth";
+import { useAuthState, anonymous } from "../globalStates";
 
 export default function useAuth() {
   let [auth, setAuth] = useAuthState();

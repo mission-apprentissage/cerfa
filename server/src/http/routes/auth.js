@@ -1,5 +1,9 @@
 const express = require("express");
+const config = require("config");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
+const { createUserToken } = require("../../common/utils/jwtUtils");
+
+const IS_OFFLINE = Boolean(config.isOffline);
 
 module.exports = ({ users }) => {
   const router = express.Router(); // eslint-disable-line new-cap
@@ -14,31 +18,37 @@ module.exports = ({ users }) => {
 
       const payload = await users.structureUser(user);
 
-      req.logIn(payload, async () => {
-        await users.registerUser(payload.email);
-        return res.json(payload);
-      });
+      await users.registerUser(payload.email);
+
+      const token = createUserToken({ payload });
+
+      res
+        .cookie(`cerfa-${config.env}-jwt`, token, {
+          maxAge: 365 * 24 * 3600000,
+          httpOnly: !IS_OFFLINE,
+          sameSite: IS_OFFLINE ? "lax" : "none",
+          secure: !IS_OFFLINE,
+        })
+        .status(200)
+        .json({
+          loggedIn: true,
+          token,
+        });
     })
   );
 
   router.get(
     "/logout",
     tryCatch((req, res) => {
-      req.logOut();
-      req.session.destroy();
-      return res.json({ loggedOut: true });
-    })
-  );
-
-  router.get(
-    "/current-session",
-    tryCatch(async (req, res) => {
-      if (req.user) {
-        let { user } = req.session.passport;
-        return res.json(user);
+      if (req.cookies[`cerfa-${config.env}-jwt`]) {
+        res.clearCookie(`cerfa-${config.env}-jwt`).status(200).json({
+          loggedOut: true,
+        });
+      } else {
+        res.status(401).json({
+          error: "Invalid jwt",
+        });
       }
-      const payload = await users.structureUser({ username: "anonymous", roles: ["public"], acl: [] });
-      return res.json(payload);
     })
   );
 

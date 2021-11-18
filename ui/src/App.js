@@ -36,10 +36,10 @@ const ResetPasswordWrapper = ({ children }) => {
   useEffect(() => {
     async function run() {
       if (auth.sub !== "anonymous") {
-        if (auth.account_status === "FORCE_RESET_PASSWORD") {
-          let { token } = await _post("/api/password/forgotten-password?noEmail=true", { username: auth.sub });
-          history.push(`/reset-password?passwordToken=${token}`);
-        }
+        // if (auth.account_status === "FORCE_RESET_PASSWORD") {
+        //   let { token } = await _post("/api/password/forgotten-password?noEmail=true", { username: auth.sub });
+        //   history.push(`/reset-password?passwordToken=${token}`);
+        // }
       }
     }
     run();
@@ -57,13 +57,12 @@ export default () => {
   useEffect(() => {
     async function getUser() {
       try {
-        let user = await _get("/api/auth/current-session");
-
-        if (user) {
+        let user = await _get("/api/v1/authentified/current");
+        if (user && user.loggedIn) {
           setAuth(user);
         }
       } catch (error) {
-        console.error(error);
+        setAuth(null);
       }
       setIsLoading(false);
     }
@@ -83,7 +82,6 @@ export default () => {
               <ScrollToTop />
               <Switch>
                 <PrivateRoute exact path="/" component={HomePage} />
-
                 <Route exact path="/login" component={LoginPage} />
                 <Route exact path="/reset-password" component={ResetPasswordPage} />
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />

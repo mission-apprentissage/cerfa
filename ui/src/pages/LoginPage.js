@@ -1,7 +1,7 @@
 import {
   Box,
+  Flex,
   Button,
-  Center,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -15,20 +15,28 @@ import { Field, Form, Formik } from "formik";
 import React from "react";
 import { NavLink, useHistory } from "react-router-dom";
 import * as Yup from "yup";
+import jwt from "jsonwebtoken";
 
 import useAuth from "../common/hooks/useAuth";
+import useToken from "../common/hooks/useToken";
+
 import { _post } from "../common/httpClient";
 import { setTitle } from "../common/utils/pageUtils";
 
 const LoginPage = () => {
   const [, setAuth] = useAuth();
+  const [, setToken] = useToken();
   const history = useHistory();
 
   const login = async (values, { setStatus }) => {
     try {
-      const user = await _post("/api/auth/login", values);
-      setAuth(user);
-      history.push("/");
+      const result = await _post("/api/v1/auth/login", values);
+      if (result.loggedIn) {
+        const user = jwt.decode(result.token);
+        setAuth(user);
+        setToken(result.token);
+        history.push("/");
+      }
     } catch (e) {
       console.error(e);
       setStatus({ error: e.prettyMessage });
@@ -39,7 +47,7 @@ const LoginPage = () => {
   setTitle(title);
 
   return (
-    <Center height="100vh" verticalAlign="center">
+    <Flex height="100vh" justifyContent="center" mt="10">
       <Box width={["auto", "28rem"]}>
         <Heading fontFamily="Marianne" fontWeight="700" marginBottom="2w">
           {title}
@@ -97,7 +105,7 @@ const LoginPage = () => {
           </Formik>
         </Box>
       </Box>
-    </Center>
+    </Flex>
   );
 };
 
