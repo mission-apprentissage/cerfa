@@ -30,6 +30,7 @@
     "compose-middleware": "5.0.1",
     "config": "3.3.1",
     "convert-csv-to-json": "0.0.15",
+    "cli-progress": "3.8.2",
     "env-var": "6.1.1",
     "express": "4.17.1",
     "fs-extra": "9.0.0",
@@ -39,6 +40,10 @@
     "jsonwebtoken": "8.5.1",
     "lodash": "4.17.15",
     "moment": "2.26.0",
+    "mjml": "^4.7.1",
+    "nodemailer": "^6.4.14",
+    "nodemailer-html-to-text": "^3.1.0",
+    "ejs": "^3.1.5",
     "mongoose": "5.10.2",
     "mongoose-paginate": "5.0.3",
     "multipipe": "4.0.0",
@@ -47,10 +52,11 @@
     "passport-jwt": "4.0.0",
     "passport-local": "1.0.0",
     "sha512crypt-node": "0.1.0",
+    "oleoduc": "0.5.11",
     "xlsx": "0.16.1"
   },
   "engines": {
-    "node": ">=12.11.0"
+    "node": ">=14.15.0"
   },
   "devDependencies": {
     "axiosist": "0.9.0",

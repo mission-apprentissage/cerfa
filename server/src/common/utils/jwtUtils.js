@@ -1,6 +1,6 @@
-const pick = require("lodash").pick;
 const jwt = require("jsonwebtoken");
 const config = require("config");
+const crypto = require("crypto");
 
 const createToken = (type, subject, options = {}) => {
   const defaults = config.auth[type];
@@ -15,12 +15,35 @@ const createToken = (type, subject, options = {}) => {
   });
 };
 
-module.exports = {
-  createActivationToken: (subject, options = {}) => createToken("activation", subject, options),
-  createPasswordToken: (subject, options = {}) => createToken("password", subject, options),
-  createUserToken: (user, options = {}) => {
-    const payload = { permissions: pick(user, ["isAdmin"]) };
+/**
+ * Generate a JWT token to use for Parcoursup Web Service
+ * ttl default : 20 seconds
+ */
+const createParcoursupToken = ({ ttl = 20000, id, data, privateKey, pwd }) => {
+  const expire = Date.now() + ttl;
+  const dataStr = JSON.stringify(data);
+  const hash = crypto.createHash("sha512").update(dataStr, "utf-8").digest("hex");
 
-    return createToken("user", user.username, { payload, ...options });
-  },
+  console.log("expire :", expire, "->", new Date(expire));
+  console.log("data:", dataStr);
+  console.log("hash:", hash);
+
+  return jwt.sign(
+    {
+      id,
+      expire,
+      hash,
+    },
+    { key: privateKey, passphrase: pwd },
+    {
+      algorithm: "RS512",
+      noTimestamp: true,
+      // keyid: "devKey", // no keyid yet
+    }
+  );
+};
+
+module.exports = {
+  createParcoursupToken,
+  createPasswordToken: (subject, options = {}) => createToken("password", subject, options),
 };

@@ -1,5 +1,6 @@
-const { User } = require("../model/index");
+const { User, Role } = require("../model/index");
 const sha512Utils = require("../utils/sha512Utils");
+const { pick, uniq } = require("lodash");
 
 const rehashPassword = (user, password) => {
   user.password = sha512Utils.hash(password);
@@ -23,7 +24,9 @@ module.exports = async () => {
       }
       return null;
     },
-    getUser: (username) => User.findOne({ username }),
+    getUser: async (username) => await User.findOne({ username }),
+    getUserByEmail: async (email) => await User.findOne({ email }),
+    getUsers: async () => await User.find({}, { password: 0, _id: 0, __v: 0 }).lean(),
     createUser: async (username, password, options = {}) => {
       const hash = options.hash || sha512Utils.hash(password);
       const permissions = options.permissions || {};
@@ -32,6 +35,10 @@ module.exports = async () => {
         username,
         password: hash,
         isAdmin: !!permissions.isAdmin,
+        email: options.email || "",
+        academie: options.academie || "0",
+        roles: options.roles || ["user"],
+        acl: options.acl || [],
       });
 
       await user.save();
@@ -45,10 +52,24 @@ module.exports = async () => {
 
       return await user.deleteOne({ username });
     },
+    updateUser: async (username, data) => {
+      let user = await User.findOne({ username });
+      if (!user) {
+        throw new Error(`Unable to find user ${username}`);
+      }
+
+      const result = await User.findOneAndUpdate({ _id: user._id }, data, { new: true });
+
+      return result.toObject();
+    },
     changePassword: async (username, newPassword) => {
       const user = await User.findOne({ username });
       if (!user) {
         throw new Error(`Unable to find user ${username}`);
+      }
+
+      if (user.account_status === "FORCE_RESET_PASSWORD") {
+        user.account_status = "CONFIRMED";
       }
 
       user.password = sha512Utils.hash(newPassword);
@@ -56,5 +77,24 @@ module.exports = async () => {
 
       return user.toObject();
     },
+    structureUser: async (user) => {
+      const permissions = pick(user, ["isAdmin"]);
+
+      const rolesList = await Role.find({ name: { $in: user.roles } }).lean();
+      const rolesAcl = rolesList.reduce((acc, { acl }) => [...acc, ...acl], []);
+
+      const structure = {
+        permissions,
+        sub: user.username,
+        email: user.email,
+        academie: user.academie,
+        account_status: user.account_status,
+        roles: permissions.isAdmin ? ["admin", ...user.roles] : user.roles,
+        acl: uniq([...rolesAcl, ...user.acl]),
+      };
+      return structure;
+    },
+    registerUser: (email) =>
+      User.findOneAndUpdate({ email }, { last_connection: new Date(), $push: { connection_history: new Date() } }),
   };
 };

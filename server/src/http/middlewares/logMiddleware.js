@@ -8,7 +8,7 @@ module.exports = () => {
     const withoutSensibleFields = (obj) => {
       return omitBy(obj, (value, key) => {
         const lower = key.toLowerCase();
-        return lower.indexOf("token") !== -1 || ["authorization", "password"].includes(lower);
+        return lower.indexOf("token") !== -1 || ["authorization", "password", "newpassword"].includes(lower);
       });
     };
 
@@ -30,7 +30,7 @@ module.exports = () => {
               path: (req.baseUrl || "") + (req.path || ""),
               parameters: withoutSensibleFields(req.query),
             },
-            body: withoutSensibleFields(req.body),
+            ...(relativeUrl.includes("_msearch") ? {} : { body: withoutSensibleFields(req.body) }),
           },
           response: {
             statusCode,

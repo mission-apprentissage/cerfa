@@ -1,5 +1,5 @@
-import EventEmitter from "events";
 import { getAuth } from "./auth";
+import { emitter } from "./emitter";
 
 class AuthError extends Error {
   constructor(json, statusCode) {
@@ -19,7 +19,6 @@ class HTTPError extends Error {
   }
 }
 
-const emitter = new EventEmitter();
 const handleResponse = (path, response) => {
   let statusCode = response.status;
   if (statusCode >= 400 && statusCode < 600) {
@@ -38,43 +37,54 @@ const handleResponse = (path, response) => {
   return response.json();
 };
 
-const getHeaders = () => {
+const getHeaders = (authorization = true, contentType = "application/json") => {
   let auth = getAuth();
-
-  return {
+  let result = {
     Accept: "application/json",
     ...(auth.sub !== "anonymous" ? { Authorization: `Bearer ${auth.token}` } : {}),
-    "Content-Type": "application/json",
+    ...(contentType ? { "Content-Type": contentType } : {}),
   };
+  if (!authorization) {
+    delete result.Authorization;
+  }
+  return result;
 };
 
-export const _get = (path) => {
+export const _get = (path, auth = true) => {
   return fetch(`${path}`, {
     method: "GET",
-    headers: getHeaders(),
+    headers: getHeaders(auth),
   }).then((res) => handleResponse(path, res));
 };
 
-export const _post = (path, body) => {
+export const _post = (path, body, auth = true) => {
   return fetch(`${path}`, {
     method: "POST",
-    headers: getHeaders(),
+    headers: getHeaders(auth),
     body: JSON.stringify(body),
   }).then((res) => handleResponse(path, res));
 };
 
-export const _put = (path, body = {}) => {
+export const _postFile = (path, data, auth = true) => {
+  return fetch(`${path}`, {
+    method: "POST",
+    headers: getHeaders(auth, null),
+    body: data,
+  }).then((res) => handleResponse(path, res));
+};
+
+export const _put = (path, body = {}, auth = true) => {
   return fetch(`${path}`, {
     method: "PUT",
-    headers: getHeaders(),
+    headers: getHeaders(auth),
     body: JSON.stringify(body),
   }).then((res) => handleResponse(path, res));
 };
 
-export const _delete = (path) => {
+export const _delete = (path, auth = true) => {
   return fetch(`${path}`, {
     method: "DELETE",
-    headers: getHeaders(),
+    headers: getHeaders(auth),
   }).then((res) => handleResponse(path, res));
 };
 
@@ -86,5 +96,3 @@ export const buildLink = (path) => {
   }
   return path;
 };
-
-export const subscribeToHttpEvent = (eventName, callback) => emitter.on(eventName, callback);

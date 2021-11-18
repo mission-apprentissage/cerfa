@@ -1,5 +1,5 @@
 {
-  "appName": "Template App",
+  "appName": "Cerfa App",
   "env": "local",
   "publicUrl": "http://localhost",
   "mongodb": {
@@ -26,5 +26,13 @@
     "destinations": "stdout"
   },
   "slackWebhookUrl": null,
-  "outputDir": ".local/output"
+  "outputDir": ".local/output",
+  "smtp": {
+    "host": "CERFA_SMTP_HOST",
+    "port": "CERFA_SMTP_PORT",
+    "auth": {
+      "user": "CERFA_SMTP_AUTH_USER",
+      "pass": "CERFA_SMTP_AUTH_PASS"
+    }
+  }
 }
