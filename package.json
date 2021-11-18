@@ -49,6 +49,7 @@
   },
   "lint-staged": {
     "*.{js,jsx}": [
+      "eslint --cache --fix ./ui ./server",
       "prettier --write ./ui ./server"
     ],
     "*.{md,json,html}": "prettier --write ./ui ./server"
