@@ -1,10 +1,10 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect, useHistory } from "react-router-dom";
 import useAuth from "./common/hooks/useAuth";
-import { _post, _get } from "./common/httpClient";
+import { _get } from "./common/httpClient";
 import ScrollToTop from "./common/components/ScrollToTop";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { hasAccessTo } from "./common/utils/rolesUtils";
+// import { hasAccessTo } from "./common/utils/rolesUtils";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
@@ -51,7 +51,7 @@ const ResetPasswordWrapper = ({ children }) => {
 const queryClient = new QueryClient();
 
 export default () => {
-  let [auth, setAuth] = useAuth();
+  let [, setAuth] = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
