@@ -1,4 +1,4 @@
-import { Box, Button, Center, FormControl, FormErrorMessage, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import queryString from "query-string";
 import React from "react";
@@ -41,7 +41,7 @@ const ResetPasswordPage = () => {
   setTitle(title);
 
   return (
-    <Center height="100vh" verticalAlign="center">
+    <Flex height="100vh" justifyContent="center" mt="10">
       <Box width={["auto", "28rem"]}>
         <Heading fontFamily="Marianne" fontWeight="700" marginBottom="2w">
           {title}
@@ -87,7 +87,7 @@ const ResetPasswordPage = () => {
           }}
         </Formik>
       </Box>
-    </Center>
+    </Flex>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Box, Button, Center, FormControl, FormErrorMessage, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import React from "react";
 import { useHistory } from "react-router-dom";
@@ -24,7 +24,7 @@ const ForgottenPasswordPage = () => {
   setTitle(title);
 
   return (
-    <Center height="100vh" verticalAlign="center">
+    <Flex height="100vh" justifyContent="center" mt="10">
       <Box width={["auto", "28rem"]}>
         <Heading fontFamily="Marianne" fontWeight="700" marginBottom="2w">
           {title}
@@ -70,7 +70,7 @@ const ForgottenPasswordPage = () => {
           }}
         </Formik>
       </Box>
-    </Center>
+    </Flex>
   );
 };
 
