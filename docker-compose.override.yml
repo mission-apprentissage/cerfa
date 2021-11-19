@@ -12,6 +12,12 @@ services:
     volumes:
       - ./ui:/app #Allows source folders to be watched
       - /app/node_modules/
+    build:
+      context: ui
+      dockerfile: Dockerfile.dev
+    env_file: ./ui/.env
+    environment:
+      - FAST_REFRESH=false
 
   server:
     command: [ "yarn", "debug" ]
@@ -21,6 +27,7 @@ services:
       - ./server/src:/app/src # Allows source folders to be watched
       - ./server/config:/app/config
       - cerfa_server_data:/data
+    env_file: ./server/.env
     environment:
       - CERFA_ENV=dev
       - CERFA_LOG_LEVEL=debug
