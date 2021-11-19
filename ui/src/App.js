@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { hasAccessTo } from "./common/utils/rolesUtils";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
 const ResetPasswordPage = lazy(() => import("./pages/auth/ResetPasswordPage"));
@@ -90,6 +91,7 @@ export default () => {
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
 
                 <PrivateRoute exact path="/" component={HomePage} />
+                <PrivateRoute exact path="/mes-actions" component={Dashboard} />
 
                 {auth && hasAccessTo(auth, "page_gestion_utilisateurs") && (
                   <PrivateRoute exact path="/admin/users" component={Users} />

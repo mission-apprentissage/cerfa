@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  Flex,
   Heading,
   Button,
   FormControl,
@@ -174,13 +173,13 @@ const Message = () => {
           </Breadcrumb>
         </Container>
       </Box>
-      <Flex mt={5} pt={[4, 8]} px={[1, 24]} justifyContent="center" w="100%">
+      <Box w="100%" minH="100vh" px={[1, 1, 12, 24]}>
         <Container maxW="xl">
-          <Heading textStyle="h2" marginBottom="2w">
+          <Heading textStyle="h2" marginBottom="2w" mt={6}>
             Message de maintenance
           </Heading>
           <Box>
-            <Box maxW="xl">
+            <Box>
               {messagesManuel.length > 0 && (
                 <Table
                   data={messagesManuel.map((m) => ({
@@ -219,7 +218,7 @@ const Message = () => {
                 />
               )}
             </Box>
-            <FormControl as="fieldset" maxW="xl">
+            <FormControl as="fieldset" mt={8}>
               <FormLabel as="legend">Ajouter un message manuel: </FormLabel>
               <Textarea
                 name="msg"
@@ -244,8 +243,8 @@ const Message = () => {
               </Box>
             </FormControl>
           </Box>
-          <Divider my={5} border="2px solid" />
-          <Box maxW="xl">
+          <Divider my={10} border="2px solid" />
+          <Box>
             <FormControl as="fieldset" mt={5}>
               <FormLabel as="legend">Message d'alert automatique lors d'un traitement coté serveur: </FormLabel>
               <Textarea
@@ -264,7 +263,7 @@ const Message = () => {
             </FormControl>
           </Box>
         </Container>
-      </Flex>
+      </Box>
     </Layout>
   );
 };

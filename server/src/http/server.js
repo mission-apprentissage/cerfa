@@ -8,14 +8,16 @@ const tryCatch = require("./middlewares/tryCatchMiddleware");
 const apiKeyAuthMiddleware = require("./middlewares/apiKeyAuthMiddleware");
 const corsMiddleware = require("./middlewares/corsMiddleware");
 const authMiddleware = require("./middlewares/authMiddleware");
-// const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
+const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
 const hello = require("./routes/hello");
 const secured = require("./routes/secured");
 const authentified = require("./routes/authentified");
 // const admin = require("./routes/admin");
-const password = require("./routes/password");
 // const stats = require("./routes/stats");
+const user = require("./routes/user");
+const role = require("./routes/role");
+const password = require("./routes/password");
 const upload = require("./routes/upload");
 const auth = require("./routes/auth");
 const maintenanceMessage = require("./routes/maintenanceMessage");
@@ -40,11 +42,24 @@ module.exports = async (components) => {
   app.use("/api/v1/secured", apiKeyAuthMiddleware, secured());
   // app.use("/api/v1/admin", checkJwtToken, adminOnly, admin());
   // app.use("/api/v1/stats", checkJwtToken, adminOnly, stats(components));
-  app.use("/api/v1/maintenanceMessage", maintenanceMessage());
+
+  app.use(
+    "/api/v1/admin",
+    checkJwtToken,
+    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs"]),
+    user(components)
+  );
+  app.use(
+    "/api/v1/admin",
+    checkJwtToken,
+    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
+    role(components)
+  );
 
   // app.use("/api/v1/upload", permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
   app.use("/api/v1/upload", upload());
 
+  app.use("/api/v1/maintenanceMessage", maintenanceMessage());
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/authentified", checkJwtToken, authentified(components));
   app.use("/api/v1/password", password(components));

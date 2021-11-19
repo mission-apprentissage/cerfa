@@ -50,7 +50,7 @@ const UserLine = ({ user, roles }) => {
       setRolesAcl(buildRolesAcl(user?.roles || [], roles));
     }
     run();
-  }, [roles, user.roles]);
+  }, [roles, user]);
 
   const newTmpPassword = generator.generate({
     length: 10,
@@ -85,7 +85,7 @@ const UserLine = ({ user, roles }) => {
                 },
               },
             };
-            await _put(`/api/admin/user/${user.username}`, body);
+            await _put(`/api/v1/admin/user/${user.username}`, body);
             document.location.reload(true);
           } else {
             const body = {
@@ -100,7 +100,7 @@ const UserLine = ({ user, roles }) => {
                 },
               },
             };
-            await _post(`/api/admin/user/`, body);
+            await _post(`/api/v1/admin/user/`, body);
             document.location.reload(true);
           }
         } catch (e) {
@@ -126,7 +126,7 @@ const UserLine = ({ user, roles }) => {
     e.preventDefault();
     // eslint-disable-next-line no-restricted-globals
     if (confirm("Delete user !?")) {
-      await _delete(`/api/admin/user/${user.username}`);
+      await _delete(`/api/v1/admin/user/${user.username}`);
       document.location.reload(true);
     }
   };
@@ -287,11 +287,11 @@ const UserLine = ({ user, roles }) => {
 };
 
 export default () => {
-  const { data: roles } = useQuery("roles", () => _get(`/api/admin/roles/`), {
+  const { data: roles } = useQuery("roles", () => _get(`/api/v1/admin/roles/`), {
     refetchOnWindowFocus: false,
   });
 
-  const { data: users } = useQuery("users", () => _get(`/api/admin/users/`), {
+  const { data: users } = useQuery("users", () => _get(`/api/v1/admin/users/`), {
     refetchOnWindowFocus: false,
   });
 

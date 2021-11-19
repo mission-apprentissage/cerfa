@@ -37,7 +37,7 @@ module.exports = async () => {
         password: hash,
         isAdmin: !!permissions.isAdmin,
         email: options.email || "",
-        roles: options.roles || ["user"],
+        roles: options.roles || ["public"],
         acl: options.acl || [],
       });
 
