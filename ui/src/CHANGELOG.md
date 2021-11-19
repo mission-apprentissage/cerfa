@@ -1,3 +1,10 @@
+## [1.7.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.7.0...v1.7.1-beta.1) (2021-11-19)
+
+
+### Bug Fixes
+
+* **actions:** missing copy .env ([db58c76](https://github.com/mission-apprentissage/cerfa/commit/db58c763769d1b4336c09ceb5caddb09576766e7))
+
 # [1.7.0](https://github.com/mission-apprentissage/cerfa/compare/v1.6.0...v1.7.0) (2021-11-19)
 
 
