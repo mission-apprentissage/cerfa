@@ -32,11 +32,18 @@
     "whatwg-fetch": "3.6.2",
     "yup": "0.29.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@testing-library/dom": "8.7.2",
+    "@testing-library/jest-dom": "5.11.10",
+    "@testing-library/react": "11.2.6",
+    "@testing-library/react-hooks": "7.0.2",
+    "@testing-library/user-event": "13.3.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:coverage": "react-scripts test --watchAll=false --coverage",
     "eject": "react-scripts eject"
   },
   "browserslist": {
