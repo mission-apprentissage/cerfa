@@ -1,9 +1,13 @@
-const messageScriptSchema = {
+const maintenanceMessageSchema = {
   msg: {
     type: String,
     required: true,
   },
   type: {
+    type: String,
+    required: true,
+  },
+  context: {
     type: String,
     required: true,
   },
@@ -20,4 +24,4 @@ const messageScriptSchema = {
     default: false,
   },
 };
-module.exports = messageScriptSchema;
+module.exports = maintenanceMessageSchema;

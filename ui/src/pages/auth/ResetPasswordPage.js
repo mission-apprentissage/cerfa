@@ -4,14 +4,17 @@ import queryString from "query-string";
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import * as Yup from "yup";
+import jwt from "jsonwebtoken";
 
 import useAuth from "../../common/hooks/useAuth";
+import useToken from "../../common/hooks/useToken";
 import { _post } from "../../common/httpClient";
 import decodeJWT from "../../common/utils/decodeJWT";
 import { setTitle } from "../../common/utils/pageUtils";
 
 const ResetPasswordPage = () => {
   const [, setAuth] = useAuth();
+  const [, setToken] = useToken();
   const history = useHistory();
   const location = useLocation();
   const { passwordToken } = queryString.parse(location.search);
@@ -19,9 +22,13 @@ const ResetPasswordPage = () => {
 
   const changePassword = async (values, { setStatus }) => {
     try {
-      const user = await _post("/api/v1/password/reset-password", { ...values, passwordToken });
-      setAuth(user);
-      history.push("/");
+      const result = await _post("/api/v1/password/reset-password", { ...values, passwordToken });
+      if (result.loggedIn) {
+        const user = jwt.decode(result.token);
+        setAuth(user);
+        setToken(result.token);
+        history.push("/");
+      }
     } catch (e) {
       console.error(e);
       setStatus({

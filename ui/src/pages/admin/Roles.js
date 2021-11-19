@@ -38,14 +38,14 @@ const RoleLine = ({ role }) => {
               name: newName,
               acl: newAcl,
             };
-            await _put(`/api/admin/role/${role.name}`, body);
+            await _put(`/api/v1/admin/role/${role.name}`, body);
             document.location.reload(true);
           } else {
             const body = {
               name: newName,
               acl: newAcl,
             };
-            await _post(`/api/admin/role/`, body);
+            await _post(`/api/v1/admin/role/`, body);
             document.location.reload(true);
           }
         } catch (e) {
@@ -62,7 +62,7 @@ const RoleLine = ({ role }) => {
     e.preventDefault();
     // eslint-disable-next-line no-restricted-globals
     if (confirm("Supprimer le rôle !?")) {
-      await _delete(`/api/admin/role/${role.name}`);
+      await _delete(`/api/v1/admin/role/${role.name}`);
       document.location.reload(true);
     }
   };
@@ -146,7 +146,7 @@ export default () => {
   const [roles, setRoles] = useState([]);
   useEffect(() => {
     async function run() {
-      const rolesList = await _get(`/api/admin/roles/`);
+      const rolesList = await _get(`/api/v1/admin/roles/`);
       setRoles(rolesList);
     }
     run();
