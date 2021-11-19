@@ -27,7 +27,7 @@ const usersSchema = {
   },
   roles: {
     type: [String],
-    default: [],
+    default: ["public"],
     description: "Roles de l'utilisateur",
   },
   acl: {
@@ -49,6 +49,11 @@ const usersSchema = {
     type: Date,
     default: Date.now,
     description: "Date de création du compte",
+  },
+  invalided_token: {
+    type: Boolean,
+    default: false,
+    description: "true si besoin de reset le token",
   },
 };
 module.exports = usersSchema;
