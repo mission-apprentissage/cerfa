@@ -1,7 +1,7 @@
 name: CI
 on: [ pull_request ]
 jobs:
-  ci:
+  ciserver:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -37,6 +37,15 @@ jobs:
       # - name: Start Docker
       #   run: |
       #     yarn docker:start-ci
+
+      # codecov
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./server/coverage
+          name: codecov-server
+          verbose: true
       
       # # Teardown
       # - name: Teardown
