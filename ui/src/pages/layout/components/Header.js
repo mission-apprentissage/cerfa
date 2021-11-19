@@ -20,7 +20,7 @@ import { isUserAdmin, hasAccessTo } from "../../../common/utils/rolesUtils";
 import { _get } from "../../../common/httpClient";
 import { LockFill } from "../../../theme/components/icons/LockFill";
 import { Logo } from "./Logo";
-// import AlertMessage from "./AlertMessage";
+import AlertMessage from "./AlertMessage";
 import { AccountFill, DownloadLine, InfoCircle } from "../../../theme/components/icons";
 
 const Header = () => {
@@ -37,7 +37,7 @@ const Header = () => {
 
   return (
     <>
-      {/* <AlertMessage /> */}
+      <AlertMessage />
       <Container maxW={"full"} borderBottom={"1px solid"} borderColor={"grey.400"} px={[0, 4]}>
         <Container maxW="xl" py={[0, 2]} px={[0, 4]}>
           <Flex alignItems="center" color="grey.800">
@@ -93,7 +93,7 @@ const Header = () => {
                       </MenuItem>
                     )}
                     {hasAccessTo(auth, "page_message_maintenance") && (
-                      <MenuItem as={NavLink} to="/admin/messagescript" icon={<InfoCircle boxSize={4} />}>
+                      <MenuItem as={NavLink} to="/admin/maintenance" icon={<InfoCircle boxSize={4} />}>
                         Message de maintenance
                       </MenuItem>
                     )}

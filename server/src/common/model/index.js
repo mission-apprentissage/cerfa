@@ -14,5 +14,5 @@ module.exports = {
   User: createModel("user", schema.userSchema),
   Role: createModel("role", schema.roleSchema),
   Log: createModel("log", schema.logSchema),
-  MessageScript: createModel("messageScript", schema.messageScriptSchema),
+  MaintenanceMessage: createModel("maintenanceMessage", schema.maintenanceMessageSchema),
 };

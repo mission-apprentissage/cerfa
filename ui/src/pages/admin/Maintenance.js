@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  Center,
+  Flex,
   Heading,
   Button,
   FormControl,
@@ -10,34 +10,42 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Input,
   Textarea,
+  Divider,
+  Text,
+  Switch,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import { _post, _get, _put } from "../../common/httpClient";
+import { _post, _get, _put, _delete } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import { NavLink } from "react-router-dom";
 import { ArrowDropRightLine } from "../../theme/components/icons";
 import useAuth from "../../common/hooks/useAuth";
+import { Table } from "../../common/components/Table";
 
 const Message = () => {
   const [messageAutomatique, setMessageAutomatique] = useState([]);
+  const [messagesManuel, setMessagesManuel] = useState([]);
 
   const [user] = useAuth();
 
   const { values: valuesM, handleSubmit: handleSubmitM, handleChange: handleChangeM } = useFormik({
     initialValues: {
       msg: "",
+      type: "",
     },
-    onSubmit: ({ msg }, { setSubmitting }) => {
+    onSubmit: ({ msg, type }, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
         try {
-          const newMessageScript = {
-            type: "manuel",
+          const newMaintenanceMessage = {
+            type,
+            context: "manuel",
             msg,
             name: user.email,
             enabled: true,
           };
-          const messagePosted = await _post("/api/v1/entity/messageScript", newMessageScript);
+          const messagePosted = await _post("/api/v1/maintenanceMessage", newMaintenanceMessage);
           if (messagePosted) {
             alert("Le message a bien été envoyé.");
           }
@@ -52,20 +60,29 @@ const Message = () => {
     },
   });
 
-  const { values: valuesA, handleSubmit: handleSubmitA, handleChange: handleChangeA, setFieldValue } = useFormik({
+  const {
+    values: valuesA,
+    handleSubmit: handleSubmitA,
+    handleChange: handleChangeA,
+    setFieldValue: setFieldValueA,
+  } = useFormik({
     initialValues: {
       msg: "",
     },
     onSubmit: ({ msg }, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
         try {
-          const newMessageScript = {
-            type: "automatique",
+          const newMaintenanceMessage = {
+            type: "alert",
+            context: "automatique",
             msg,
             name: "auto",
             enabled: false,
           };
-          const messagePosted = await _put(`/api/v1/entity/messageScript/${messageAutomatique._id}`, newMessageScript);
+          const messagePosted = await _put(
+            `/api/v1/maintenanceMessage/${messageAutomatique._id}`,
+            newMaintenanceMessage
+          );
           if (messagePosted) {
             alert("Le message a bien été mise à jour.");
           }
@@ -83,32 +100,63 @@ const Message = () => {
   useEffect(() => {
     const run = async () => {
       try {
-        const data = await _get("/api/v1/entity/messageScript");
+        const data = await _get("/api/v1/maintenanceMessage");
         if (data.length === 0) {
-          const newMessageScript = {
-            type: "automatique",
+          const newMaintenanceMessage = {
+            type: "alert",
+            context: "automatique",
             msg:
-              "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.",
+              "Une mise à jour des données est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.",
             name: "auto",
             enabled: false,
           };
-          await _post("/api/v1/entity/messageScript", newMessageScript);
+          await _post("/api/v1/maintenanceMessage", newMaintenanceMessage);
           window.location.reload();
         } else {
-          const [a] = data.filter((d) => d.type === "automatique");
+          const [a] = data.filter((d) => d.context === "automatique");
           setMessageAutomatique(a);
-          setFieldValue(
+          setFieldValueA(
             "msg",
             a.msg ||
-              "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh."
+              "Une mise à jour des données est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh."
           );
+
+          const m = data.filter((d) => d.context === "manuel");
+          setMessagesManuel(m);
         }
       } catch (e) {
         console.error(e);
       }
     };
     run();
-  }, [setFieldValue]);
+  }, [setFieldValueA]);
+
+  const onEnabledClicked = async (item, payload) => {
+    try {
+      const messagePosted = await _put(`/api/v1/maintenanceMessage/${item._id}`, {
+        ...item,
+        ...payload,
+      });
+      if (messagePosted) {
+        alert("Le message a bien été mise à jour.");
+      }
+      window.location.reload();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const onDeleteClicked = async (item) => {
+    try {
+      const messageDeleted = await _delete(`/api/v1/maintenanceMessage/${item._id}`);
+      if (messageDeleted) {
+        alert("Le message MANUEL seulement a bien été supprimé.");
+      }
+      window.location.reload();
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <Layout>
@@ -126,14 +174,53 @@ const Message = () => {
           </Breadcrumb>
         </Container>
       </Box>
-      <Center mt={5} verticalAlign="center">
-        <Box width={["auto", "28rem"]}>
+      <Flex mt={5} pt={[4, 8]} px={[1, 24]} justifyContent="center" w="100%">
+        <Container maxW="xl">
           <Heading textStyle="h2" marginBottom="2w">
             Message de maintenance
           </Heading>
           <Box>
-            <FormControl as="fieldset">
-              <FormLabel as="legend">Message manuel: </FormLabel>
+            <Box maxW="xl">
+              {messagesManuel.length > 0 && (
+                <Table
+                  data={messagesManuel.map((m) => ({
+                    Message: m.msg,
+                    Type: m.type,
+                    Actif: m.enabled,
+                    Supprimer: null,
+                  }))}
+                  components={{
+                    Actif: (value, i) => {
+                      return (
+                        <Box>
+                          <Switch
+                            onChange={() => {
+                              onEnabledClicked(messagesManuel[i], { enabled: !value });
+                            }}
+                            defaultIsChecked={value}
+                          />
+                        </Box>
+                      );
+                    },
+                    Supprimer: (value, i) => {
+                      return (
+                        <Box
+                          onClick={() => {
+                            onDeleteClicked(messagesManuel[i]);
+                          }}
+                        >
+                          <Text color="tomato" fontWeight="bold">
+                            X
+                          </Text>
+                        </Box>
+                      );
+                    },
+                  }}
+                />
+              )}
+            </Box>
+            <FormControl as="fieldset" maxW="xl">
+              <FormLabel as="legend">Ajouter un message manuel: </FormLabel>
               <Textarea
                 name="msg"
                 value={valuesM.msg}
@@ -142,16 +229,25 @@ const Message = () => {
                 rows={3}
                 required
               />
-              <Box mt="2rem">
+              <Input
+                mt={3}
+                name="type"
+                value={valuesM.type}
+                onChange={handleChangeM}
+                placeholder="alert ou info"
+                required
+              />
+              <Box mt="3">
                 <Button textStyle="sm" variant="primary" onClick={handleSubmitM}>
                   Enregistrer et activé
                 </Button>
               </Box>
             </FormControl>
           </Box>
-          <Box>
+          <Divider my={5} border="2px solid" />
+          <Box maxW="xl">
             <FormControl as="fieldset" mt={5}>
-              <FormLabel as="legend">Message Automatique : </FormLabel>
+              <FormLabel as="legend">Message d'alert automatique lors d'un traitement coté serveur: </FormLabel>
               <Textarea
                 name="msg"
                 value={valuesA.msg}
@@ -167,8 +263,8 @@ const Message = () => {
               </Box>
             </FormControl>
           </Box>
-        </Box>
-      </Center>
+        </Container>
+      </Flex>
     </Layout>
   );
 };

@@ -18,6 +18,7 @@ const password = require("./routes/password");
 // const stats = require("./routes/stats");
 const upload = require("./routes/upload");
 const auth = require("./routes/auth");
+const maintenanceMessage = require("./routes/maintenanceMessage");
 
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
@@ -39,6 +40,8 @@ module.exports = async (components) => {
   app.use("/api/v1/secured", apiKeyAuthMiddleware, secured());
   // app.use("/api/v1/admin", checkJwtToken, adminOnly, admin());
   // app.use("/api/v1/stats", checkJwtToken, adminOnly, stats(components));
+  app.use("/api/v1/maintenanceMessage", maintenanceMessage());
+
   // app.use("/api/v1/upload", permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
   app.use("/api/v1/upload", upload());
 

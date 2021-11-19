@@ -85,10 +85,11 @@ export default () => {
             <ResetPasswordWrapper>
               <ScrollToTop />
               <Switch>
-                <PrivateRoute exact path="/" component={HomePage} />
                 <Route exact path="/login" component={LoginPage} />
                 <Route exact path="/reset-password" component={ResetPasswordPage} />
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
+
+                <PrivateRoute exact path="/" component={HomePage} />
 
                 {auth && hasAccessTo(auth, "page_gestion_utilisateurs") && (
                   <PrivateRoute exact path="/admin/users" component={Users} />
