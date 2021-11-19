@@ -36,6 +36,10 @@ jobs:
       # Start docker container for tests (e.g: mongodb)
       - name: Start Docker
         run: |
+          cd ui
+          cp .env.example .env
+          cd ../server
+          cp .env.example .env
           yarn docker:start-ci
 
       # Run mocha tests
