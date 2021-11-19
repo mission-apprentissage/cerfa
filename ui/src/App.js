@@ -8,9 +8,9 @@ import { hasAccessTo } from "./common/utils/rolesUtils";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
-const LoginPage = lazy(() => import("./pages/LoginPage"));
-const ResetPasswordPage = lazy(() => import("./pages/password/ResetPasswordPage"));
-const ForgottenPasswordPage = lazy(() => import("./pages/password/ForgottenPasswordPage"));
+const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
+const ResetPasswordPage = lazy(() => import("./pages/auth/ResetPasswordPage"));
+const ForgottenPasswordPage = lazy(() => import("./pages/auth/ForgottenPasswordPage"));
 const Users = lazy(() => import("./pages/admin/Users"));
 const Roles = lazy(() => import("./pages/admin/Roles"));
 const UploadFiles = lazy(() => import("./pages/admin/UploadFiles"));

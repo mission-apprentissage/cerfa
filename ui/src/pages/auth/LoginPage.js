@@ -17,11 +17,11 @@ import { NavLink, useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import jwt from "jsonwebtoken";
 
-import useAuth from "../common/hooks/useAuth";
-import useToken from "../common/hooks/useToken";
+import useAuth from "../../common/hooks/useAuth";
+import useToken from "../../common/hooks/useToken";
 
-import { _post } from "../common/httpClient";
-import { setTitle } from "../common/utils/pageUtils";
+import { _post } from "../../common/httpClient";
+import { setTitle } from "../../common/utils/pageUtils";
 
 const LoginPage = () => {
   const [, setAuth] = useAuth();
