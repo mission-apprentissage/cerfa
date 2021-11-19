@@ -1,3 +1,22 @@
+# [1.7.0](https://github.com/mission-apprentissage/cerfa/compare/v1.6.0...v1.7.0) (2021-11-19)
+
+
+### Bug Fixes
+
+* **test:** front ([d8a05e3](https://github.com/mission-apprentissage/cerfa/commit/d8a05e337c99b922905e0113c27192ac22c3047d))
+* **test:** repare test server ([61e2dcc](https://github.com/mission-apprentissage/cerfa/commit/61e2dcc5eb02a0d92f236be3dcca0f45ad9d99d8))
+* **ui-auth:** set state after reset pwd ([a6c4b23](https://github.com/mission-apprentissage/cerfa/commit/a6c4b23783f5b743148d3bc1577cf4420316b5b1))
+
+
+### Features
+
+* **actions:** update ([#16](https://github.com/mission-apprentissage/cerfa/issues/16)) ([c70b618](https://github.com/mission-apprentissage/cerfa/commit/c70b6182fdf52349baf4a61be3913ce08fb06d39))
+* **auth:** invalidate token when update user or role ([5ff2625](https://github.com/mission-apprentissage/cerfa/commit/5ff26255a4c0547170bec5bda2482c88a9750947))
+* **codecov:** add action ([#14](https://github.com/mission-apprentissage/cerfa/issues/14)) ([cfff0f6](https://github.com/mission-apprentissage/cerfa/commit/cfff0f6b474b2650caa633ed24fc2141aeb7d49c))
+* **maintenance:** improve maintenance message ([3828d23](https://github.com/mission-apprentissage/cerfa/commit/3828d23615486fa6b5719c7de27735c40a6f884d))
+* **ui:** footer, legals pages, sitemap, stats ([0a3b4e3](https://github.com/mission-apprentissage/cerfa/commit/0a3b4e3e555d0436c781cf11ab766fe80642bdbb))
+* **user:** repare first glance of pages ([cb59c38](https://github.com/mission-apprentissage/cerfa/commit/cb59c3824d0c5ebd42d29607c643573c9fb369a3))
+
 # [1.7.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.7.0-beta.2...v1.7.0-beta.3) (2021-11-19)
 
 
