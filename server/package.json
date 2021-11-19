@@ -17,6 +17,7 @@
     "docker:stop": "docker-compose down",
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",
     "seed": "node src/jobs/seed/index.js",
+    "playground": "node src/jobs/playground/index.js",
     "jobs": "node src/jobs/index.js",
     "clear": "node src/jobs/clear/index.js",
     "stats": "node src/jobs/stats/index.js"
