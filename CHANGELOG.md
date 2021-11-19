@@ -1,3 +1,10 @@
+# [1.6.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.6.0-beta.1...v1.6.0-beta.2) (2021-11-19)
+
+
+### Features
+
+* **auth:** login flow ([24fa710](https://github.com/mission-apprentissage/cerfa/commit/24fa710f8ff17e8da86d9dee26761f02b5b2edf2))
+
 # [1.6.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.5.3-beta.1...v1.6.0-beta.1) (2021-11-19)
 
 
