@@ -11,6 +11,7 @@ const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const ResetPasswordPage = lazy(() => import("./pages/password/ResetPasswordPage"));
 const ForgottenPasswordPage = lazy(() => import("./pages/password/ForgottenPasswordPage"));
+const UploadFiles = lazy(() => import("./pages/admin/UploadFiles"));
 
 function PrivateRoute({ component, ...rest }) {
   let [auth] = useAuth();
@@ -85,6 +86,8 @@ export default () => {
                 <Route exact path="/login" component={LoginPage} />
                 <Route exact path="/reset-password" component={ResetPasswordPage} />
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
+
+                <Route exact path="/admin/upload" component={UploadFiles} />
 
                 <Route component={NotFoundPage} />
               </Switch>

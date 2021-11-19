@@ -16,6 +16,7 @@ const authentified = require("./routes/authentified");
 // const admin = require("./routes/admin");
 const password = require("./routes/password");
 // const stats = require("./routes/stats");
+const upload = require("./routes/upload");
 const auth = require("./routes/auth");
 
 const passport = require("passport");
@@ -38,6 +39,8 @@ module.exports = async (components) => {
   app.use("/api/v1/secured", apiKeyAuthMiddleware, secured());
   // app.use("/api/v1/admin", checkJwtToken, adminOnly, admin());
   // app.use("/api/v1/stats", checkJwtToken, adminOnly, stats(components));
+  // app.use("/api/v1/upload", permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
+  app.use("/api/v1/upload", upload());
 
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/authentified", checkJwtToken, authentified(components));
