@@ -1,3 +1,10 @@
+# [1.6.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.5.3-beta.1...v1.6.0-beta.1) (2021-11-19)
+
+
+### Features
+
+* backporting base  ([#11](https://github.com/mission-apprentissage/cerfa/issues/11)) ([b8126b1](https://github.com/mission-apprentissage/cerfa/commit/b8126b1055eb8bb56a7c06d004bc5a8d3d0439f9))
+
 ## [1.5.3-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2...v1.5.3-beta.1) (2021-11-18)
 
 
