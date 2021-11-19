@@ -1,3 +1,10 @@
+# [1.7.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.7.0-beta.2...v1.7.0-beta.3) (2021-11-19)
+
+
+### Features
+
+* **actions:** update ([#16](https://github.com/mission-apprentissage/cerfa/issues/16)) ([c70b618](https://github.com/mission-apprentissage/cerfa/commit/c70b6182fdf52349baf4a61be3913ce08fb06d39))
+
 # [1.7.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.7.0-beta.1...v1.7.0-beta.2) (2021-11-19)
 
 
