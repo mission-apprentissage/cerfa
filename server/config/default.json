@@ -1,6 +1,7 @@
 {
-  "appName": "Template App",
+  "appName": "Cerfa App",
   "env": "local",
+  "isOffline": "true",
   "publicUrl": "http://localhost",
   "mongodb": {
     "uri": "mongodb://127.0.0.1:27017/cerfa?retryWrites=true&w=majority"
@@ -26,5 +27,13 @@
     "destinations": "stdout"
   },
   "slackWebhookUrl": null,
-  "outputDir": ".local/output"
+  "outputDir": ".local/output",
+  "smtp": {
+    "host": "CERFA_SMTP_HOST",
+    "port": "CERFA_SMTP_PORT",
+    "auth": {
+      "user": "CERFA_SMTP_AUTH_USER",
+      "pass": "CERFA_SMTP_AUTH_PASS"
+    }
+  }
 }

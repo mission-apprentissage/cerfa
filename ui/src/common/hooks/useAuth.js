@@ -1,16 +1,13 @@
-import { useAuthState, anonymous } from "../auth";
-import decodeJWT from "../utils/decodeJWT";
+import { useAuthState, anonymous } from "../globalStates";
 
 export default function useAuth() {
   let [auth, setAuth] = useAuthState();
 
-  let setAuthFromToken = (token) => {
-    if (!token) {
-      sessionStorage.removeItem("cerfa:token");
+  let setAuthFromToken = (user) => {
+    if (!user) {
       setAuth(anonymous);
     } else {
-      sessionStorage.setItem("cerfa:token", token);
-      setAuth(decodeJWT(token));
+      setAuth(user);
     }
   };
 
