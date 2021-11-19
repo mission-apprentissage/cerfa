@@ -1,3 +1,10 @@
+# [1.7.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.7.0-beta.1...v1.7.0-beta.2) (2021-11-19)
+
+
+### Features
+
+* **codecov:** add action ([#14](https://github.com/mission-apprentissage/cerfa/issues/14)) ([cfff0f6](https://github.com/mission-apprentissage/cerfa/commit/cfff0f6b474b2650caa633ed24fc2141aeb7d49c))
+
 # [1.7.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.6.0...v1.7.0-beta.1) (2021-11-19)
 
 
