@@ -48,7 +48,7 @@ module.exports = ({ users, mailer }) => {
 
       await mailer.sendEmail(
         user.email,
-        `[${config.env} Catalogue apprentissage] Bienvenue`,
+        `[${config.env} Contrat publique apprentissage] Bienvenue`,
         getEmailTemplate("grettings"),
         {
           username,
