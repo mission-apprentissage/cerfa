@@ -40,6 +40,7 @@ jobs:
           cp .env.example .env
           cd ../server
           cp .env.example .env
+          cd ..
           yarn docker:start-ci
 
       # Run mocha tests
