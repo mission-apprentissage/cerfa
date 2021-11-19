@@ -34,6 +34,10 @@ module.exports = ({ users }) => {
             if (!user) {
               return done("Unauthorized", false);
             }
+            if (user.invalided_token) {
+              await users.updateUser(user.username, { invalided_token: false });
+              return done(null, { invalided_token: true });
+            }
             const result = await users.structureUser(user);
             return done(null, result);
           })
@@ -45,6 +49,11 @@ module.exports = ({ users }) => {
   return compose([
     passport.authenticate("jwt", { session: false }),
     async (req, res, next) => {
+      if (req.user.invalided_token) {
+        return res.clearCookie(`cerfa-${config.env}-jwt`).status(401).json({
+          error: "Invalid jwt",
+        });
+      }
       next();
     },
   ]);

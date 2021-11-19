@@ -8,36 +8,13 @@ const roleSchema = Joi.object({
   acl: Joi.array().required(),
 });
 
-const closeSessionsOfThisRole = async (db, name) =>
-  new Promise((resolve, reject) => {
-    db.collection("sessions", function (err, collection) {
-      collection.find({}).toArray(function (err, data) {
-        const sessionIdToDelete = [];
-        for (let index = 0; index < data.length; index++) {
-          const element = data[index];
-          const session = JSON.parse(element.session);
-          if (session.passport.user.roles?.includes(name)) {
-            sessionIdToDelete.push(element._id);
-          }
-        }
-        collection.deleteMany({ _id: { $in: sessionIdToDelete } }, function (err, r) {
-          if (err) {
-            return reject(err);
-          }
-          resolve(r);
-        });
-      });
-    });
-  });
-
-module.exports = ({ db: { db } }) => {
+module.exports = ({ users }) => {
   const router = express.Router();
 
   router.get(
     "/roles",
     tryCatch(async (req, res) => {
       const rolesList = await Role.find({}).lean();
-      console.log(rolesList);
       return res.json(rolesList || []);
     })
   );
@@ -78,7 +55,11 @@ module.exports = ({ db: { db } }) => {
         { new: true }
       );
 
-      await closeSessionsOfThisRole(db, name);
+      const allRoleUsers = await users.getUsers({ roles: { $in: [name] } });
+      for (let index = 0; index < allRoleUsers.length; index++) {
+        const user = allRoleUsers[index];
+        await users.updateUser(user.username, { invalided_token: true });
+      }
 
       res.json({ message: `Rôle ${name} updated !` });
     })
@@ -96,7 +77,12 @@ module.exports = ({ db: { db } }) => {
 
       await role.deleteOne({ name });
 
-      await closeSessionsOfThisRole(db, name);
+      const allRoleUsers = await users.getUsers({ roles: { $in: [name] } });
+      for (let index = 0; index < allRoleUsers.length; index++) {
+        const user = allRoleUsers[index];
+        const roles = user.roles.filter((r) => r !== name);
+        await users.updateUser(user.username, { invalided_token: true, roles });
+      }
 
       res.json({ message: `Rôle ${name} deleted !` });
     })

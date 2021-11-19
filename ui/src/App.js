@@ -91,7 +91,10 @@ export default () => {
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
 
                 <PrivateRoute exact path="/" component={HomePage} />
-                <PrivateRoute exact path="/mes-actions" component={Dashboard} />
+
+                {auth && hasAccessTo(auth, "page_dashboard") && (
+                  <PrivateRoute exact path="/mes-actions" component={Dashboard} />
+                )}
 
                 {auth && hasAccessTo(auth, "page_gestion_utilisateurs") && (
                   <PrivateRoute exact path="/admin/users" component={Users} />

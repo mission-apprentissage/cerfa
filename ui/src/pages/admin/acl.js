@@ -1,7 +1,7 @@
 export default [
   {
-    feature: "Actions expertes",
-    ref: "page_actions_expertes",
+    feature: "Dashboard",
+    ref: "page_dashboard",
   },
   {
     feature: "Gestion des utilisateurs",

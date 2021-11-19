@@ -50,5 +50,10 @@ const usersSchema = {
     default: Date.now,
     description: "Date de création du compte",
   },
+  invalided_token: {
+    type: Boolean,
+    default: false,
+    description: "true si besoin de reset le token",
+  },
 };
 module.exports = usersSchema;

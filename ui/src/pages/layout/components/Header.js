@@ -76,7 +76,7 @@ const Header = () => {
                   </Flex>
                 </MenuButton>
                 <MenuList>
-                  <MenuGroup title="Administration">
+                  <MenuGroup title="Profile">
                     {hasAccessTo(auth, "page_gestion_utilisateurs") && (
                       <MenuItem as={NavLink} to="/admin/users" icon={<AccountFill boxSize={4} />}>
                         Gestion des utilisateurs
