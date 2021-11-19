@@ -10,11 +10,8 @@ const corsMiddleware = require("./middlewares/corsMiddleware");
 const authMiddleware = require("./middlewares/authMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
-const hello = require("./routes/hello");
-const secured = require("./routes/secured");
+const secured = require("./routes/securedAPI");
 const authentified = require("./routes/authentified");
-// const admin = require("./routes/admin");
-// const stats = require("./routes/stats");
 const user = require("./routes/user");
 const role = require("./routes/role");
 const password = require("./routes/password");
@@ -37,10 +34,7 @@ module.exports = async (components) => {
 
   app.use(passport.initialize());
 
-  app.use("/api/v1/helloRoute", hello());
   app.use("/api/v1/securedAPI", apiKeyAuthMiddleware, secured());
-  // app.use("/api/v1/admin", checkJwtToken, adminOnly, admin());
-  // app.use("/api/v1/stats", checkJwtToken, adminOnly, stats(components));
 
   app.use(
     "/api/v1/admin",
