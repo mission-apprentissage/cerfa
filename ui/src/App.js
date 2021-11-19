@@ -7,7 +7,8 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { hasAccessTo } from "./common/utils/rolesUtils";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
+const DashboardPage = lazy(() => import("./pages/DashboardPage"));
+const StatsPage = lazy(() => import("./pages/StatsPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
 const ResetPasswordPage = lazy(() => import("./pages/auth/ResetPasswordPage"));
@@ -16,6 +17,11 @@ const Users = lazy(() => import("./pages/admin/Users"));
 const Roles = lazy(() => import("./pages/admin/Roles"));
 const UploadFiles = lazy(() => import("./pages/admin/UploadFiles"));
 const Maintenance = lazy(() => import("./pages/admin/Maintenance"));
+const Contact = lazy(() => import("./pages/legal/Contact"));
+const Cookies = lazy(() => import("./pages/legal/Cookies"));
+const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
+const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
+const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 
 function PrivateRoute({ component, ...rest }) {
   let [auth] = useAuth();
@@ -86,6 +92,8 @@ export default () => {
             <ResetPasswordWrapper>
               <ScrollToTop />
               <Switch>
+                <Route exact path="/stats" component={StatsPage} />
+
                 <Route exact path="/login" component={LoginPage} />
                 <Route exact path="/reset-password" component={ResetPasswordPage} />
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
@@ -93,7 +101,7 @@ export default () => {
                 <PrivateRoute exact path="/" component={HomePage} />
 
                 {auth && hasAccessTo(auth, "page_dashboard") && (
-                  <PrivateRoute exact path="/mes-actions" component={Dashboard} />
+                  <PrivateRoute exact path="/mes-actions" component={DashboardPage} />
                 )}
 
                 {auth && hasAccessTo(auth, "page_gestion_utilisateurs") && (
@@ -108,6 +116,12 @@ export default () => {
                 {auth && hasAccessTo(auth, "page_upload") && (
                   <PrivateRoute exact path="/admin/upload" component={UploadFiles} />
                 )}
+
+                <Route exact path="/contact" component={Contact} />
+                <Route exact path="/cookies" component={Cookies} />
+                <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
+                <Route exact path="/mentions-legales" component={MentionsLegales} />
+                <Route exact path="/accessibilite" component={Accessibilite} />
 
                 <Route component={NotFoundPage} />
               </Switch>
