@@ -1,9 +1,11 @@
 const logSchema = require("./log");
-const sampleSchema = require("./sample");
 const userSchema = require("./user");
+const roleSchema = require("./role");
+const messageScriptSchema = require("./messageScript");
 
 module.exports = {
-  sampleSchema,
   logSchema,
   userSchema,
+  roleSchema,
+  messageScriptSchema,
 };

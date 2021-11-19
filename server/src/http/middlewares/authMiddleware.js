@@ -1,26 +1,41 @@
 const config = require("config");
 const passport = require("passport");
-const { Strategy, ExtractJwt } = require("passport-jwt");
+const { Strategy: JWTStrategy } = require("passport-jwt");
 const compose = require("compose-middleware").compose;
+
+const cookieExtractor = (req) => {
+  let jwt = null;
+
+  if (req && req.cookies) {
+    jwt = req.cookies[`cerfa-${config.env}-jwt`];
+  }
+
+  return jwt;
+};
 
 module.exports = ({ users }) => {
   passport.use(
-    new Strategy(
+    "jwt",
+    new JWTStrategy(
       {
-        jwtFromRequest: ExtractJwt.fromExtractors([
-          ExtractJwt.fromUrlQueryParameter("token"),
-          ExtractJwt.fromAuthHeaderAsBearerToken(),
-        ]),
+        jwtFromRequest: cookieExtractor,
         secretOrKey: config.auth.user.jwtSecret,
       },
-      (jwt_payload, done) => {
+      (jwtPayload, done) => {
+        const { expiration } = jwtPayload;
+
+        if (Date.now() > expiration) {
+          done("Unauthorized", false);
+        }
+
         return users
-          .getUser(jwt_payload.sub)
-          .then((user) => {
+          .getUser(jwtPayload.sub)
+          .then(async (user) => {
             if (!user) {
-              return done(null, false);
+              return done("Unauthorized", false);
             }
-            return done(null, user);
+            const result = await users.structureUser(user);
+            return done(null, result);
           })
           .catch((err) => done(err));
       }

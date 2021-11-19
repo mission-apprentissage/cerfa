@@ -1,41 +1,18 @@
-const mongoose = require("mongoose");
-const { mongooseInstance } = require("../mongodb");
-const { sampleSchema, userSchema } = require("../model/schema");
+const { mongoose } = require("../mongodb");
+const schema = require("../model/schema");
 
-const getMongoostaticModel = (modelName, schema, instanceMongoose = mongooseInstance) => {
-  const Schema = new instanceMongoose.Schema(schema);
-  Schema.plugin(require("mongoose-paginate"));
-  return mongooseInstance.model(modelName, Schema);
+const createModel = (modelName, descriptor, options = {}) => {
+  const schema = new mongoose.Schema(descriptor);
+  schema.plugin(require("mongoose-paginate"));
+  if (options.createMongoDBIndexes) {
+    options.createMongoDBIndexes(schema);
+  }
+  return mongoose.model(modelName, schema, options.collectionName);
 };
-
-const getMongooseModel = (modelName, callback = () => ({})) => {
-  const modelSchema = new mongoose.Schema(require(`./schema/${modelName}`));
-  callback(modelSchema);
-  return mongoose.model(modelName, modelSchema, modelName);
-};
-
-const getModel = (modelName, schema, instanceMongoose = mongooseInstance) => {
-  if (instanceMongoose) return getMongoostaticModel(modelName, schema);
-  return getMongooseModel(modelName);
-};
-
-let s = null;
-if (!s) {
-  s = getModel("sample", sampleSchema);
-}
-
-let u = null;
-if (!u) {
-  u = getModel("user", userSchema);
-}
-
-let l = null;
-if (!l) {
-  l = getMongooseModel("log");
-}
 
 module.exports = {
-  Sample: s,
-  User: u,
-  Log: l,
+  User: createModel("user", schema.userSchema),
+  Role: createModel("role", schema.roleSchema),
+  Log: createModel("log", schema.logSchema),
+  MessageScript: createModel("messageScript", schema.messageScriptSchema),
 };

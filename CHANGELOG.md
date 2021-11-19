@@ -1,3 +1,24 @@
+# [1.6.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.6.0-beta.1...v1.6.0-beta.2) (2021-11-19)
+
+
+### Features
+
+* **auth:** login flow ([24fa710](https://github.com/mission-apprentissage/cerfa/commit/24fa710f8ff17e8da86d9dee26761f02b5b2edf2))
+
+# [1.6.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.5.3-beta.1...v1.6.0-beta.1) (2021-11-19)
+
+
+### Features
+
+* backporting base  ([#11](https://github.com/mission-apprentissage/cerfa/issues/11)) ([b8126b1](https://github.com/mission-apprentissage/cerfa/commit/b8126b1055eb8bb56a7c06d004bc5a8d3d0439f9))
+
+## [1.5.3-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.5.2...v1.5.3-beta.1) (2021-11-18)
+
+
+### Bug Fixes
+
+* **config:** prestaged linter + reverse proxy  ([#10](https://github.com/mission-apprentissage/cerfa/issues/10)) ([bfbe55f](https://github.com/mission-apprentissage/cerfa/commit/bfbe55f2c38c6fd2fdace64639be9f993ab7a27d))
+
 ## [1.5.2](https://github.com/mission-apprentissage/cerfa/compare/v1.5.1...v1.5.2) (2021-11-12)
 
 

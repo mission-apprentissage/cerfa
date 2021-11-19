@@ -1,26 +1,24 @@
-const pick = require("lodash").pick;
 const jwt = require("jsonwebtoken");
 const config = require("config");
 
-const createToken = (type, subject, options = {}) => {
+const createToken = (type, subject = null, options = {}) => {
   const defaults = config.auth[type];
   const secret = options.secret || defaults.jwtSecret;
   const expiresIn = options.expiresIn || defaults.expiresIn;
   const payload = options.payload || {};
 
-  return jwt.sign(payload, secret, {
+  let opts = {
     issuer: config.appName,
     expiresIn: expiresIn,
-    subject: subject,
-  });
+  };
+  if (subject) {
+    opts.subject = subject;
+  }
+  return jwt.sign(payload, secret, opts);
 };
 
 module.exports = {
-  createActivationToken: (subject, options = {}) => createToken("activation", subject, options),
   createPasswordToken: (subject, options = {}) => createToken("password", subject, options),
-  createUserToken: (user, options = {}) => {
-    const payload = { permissions: pick(user, ["isAdmin"]) };
-
-    return createToken("user", user.username, { payload, ...options });
-  },
+  createActivationToken: (subject, options = {}) => createToken("activation", subject, options),
+  createUserToken: (options = {}) => createToken("user", null, options),
 };

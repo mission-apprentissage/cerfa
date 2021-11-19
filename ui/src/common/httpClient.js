@@ -1,5 +1,6 @@
-import EventEmitter from "events";
-import { getAuth } from "./auth";
+import { getAuth } from "./globalStates";
+import { emitter } from "./emitter";
+import { fetch as fetchPolyfill } from "whatwg-fetch";
 
 class AuthError extends Error {
   constructor(json, statusCode) {
@@ -19,52 +20,53 @@ class HTTPError extends Error {
   }
 }
 
-const emitter = new EventEmitter();
 const handleResponse = (path, response) => {
   let statusCode = response.status;
   if (statusCode >= 400 && statusCode < 600) {
     emitter.emit("http:error", response);
 
     if (statusCode === 401 || statusCode === 403) {
-      throw new AuthError(response.json(), statusCode);
+      throw new AuthError(response, statusCode);
     } else {
-      throw new HTTPError(
-        `Server returned ${statusCode} when requesting resource ${path}`,
-        response.json(),
-        statusCode
-      );
+      throw new HTTPError(`Server returned ${statusCode} when requesting resource ${path}`, response, statusCode);
     }
   }
   return response.json();
 };
 
-const getHeaders = () => {
-  let auth = getAuth();
-
-  return {
+const getHeaders = (contentType = "application/json") => {
+  let result = {
     Accept: "application/json",
-    ...(auth.sub !== "anonymous" ? { Authorization: `Bearer ${auth.token}` } : {}),
-    "Content-Type": "application/json",
+    ...(contentType ? { "Content-Type": contentType } : {}),
   };
+  return result;
 };
 
 export const _get = (path) => {
-  return fetch(`${path}`, {
+  return fetchPolyfill(`${path}`, {
     method: "GET",
     headers: getHeaders(),
   }).then((res) => handleResponse(path, res));
 };
 
 export const _post = (path, body) => {
-  return fetch(`${path}`, {
+  return fetchPolyfill(`${path}`, {
     method: "POST",
     headers: getHeaders(),
     body: JSON.stringify(body),
   }).then((res) => handleResponse(path, res));
 };
 
+export const _postFile = (path, data) => {
+  return fetchPolyfill(`${path}`, {
+    method: "POST",
+    headers: getHeaders(null),
+    body: data,
+  }).then((res) => handleResponse(path, res));
+};
+
 export const _put = (path, body = {}) => {
-  return fetch(`${path}`, {
+  return fetchPolyfill(`${path}`, {
     method: "PUT",
     headers: getHeaders(),
     body: JSON.stringify(body),
@@ -72,7 +74,7 @@ export const _put = (path, body = {}) => {
 };
 
 export const _delete = (path) => {
-  return fetch(`${path}`, {
+  return fetchPolyfill(`${path}`, {
     method: "DELETE",
     headers: getHeaders(),
   }).then((res) => handleResponse(path, res));
@@ -86,5 +88,3 @@ export const buildLink = (path) => {
   }
   return path;
 };
-
-export const subscribeToHttpEvent = (eventName, callback) => emitter.on(eventName, callback);
