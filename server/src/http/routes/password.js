@@ -6,8 +6,10 @@ const passport = require("passport");
 const { Strategy, ExtractJwt } = require("passport-jwt");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const validators = require("../utils/validators");
-const { createPasswordToken } = require("../../common/utils/jwtUtils");
+const { createPasswordToken, createUserToken } = require("../../common/utils/jwtUtils");
 const path = require("path");
+
+const IS_OFFLINE = Boolean(config.isOffline);
 
 const checkPasswordToken = (users) => {
   passport.use(
@@ -63,7 +65,7 @@ module.exports = ({ users, mailer }) => {
       } else {
         await mailer.sendEmail(
           user.email,
-          `[${config.env} Catalogue apprentissage] Réinitialiser votre mot de passe`,
+          `[${config.env} Contrat publique apprentissage] Réinitialiser votre mot de passe`,
           getEmailTemplate("forgotten-password"),
           {
             url,
@@ -91,9 +93,22 @@ module.exports = ({ users, mailer }) => {
 
       const payload = await users.structureUser(updatedUser);
 
-      req.logIn(payload, () => {
-        return res.json(payload);
-      });
+      await users.registerUser(payload.email);
+
+      const token = createUserToken({ payload });
+
+      res
+        .cookie(`cerfa-${config.env}-jwt`, token, {
+          maxAge: 365 * 24 * 3600000,
+          httpOnly: !IS_OFFLINE,
+          sameSite: IS_OFFLINE ? "lax" : "none",
+          secure: !IS_OFFLINE,
+        })
+        .status(200)
+        .json({
+          loggedIn: true,
+          token,
+        });
     })
   );
 

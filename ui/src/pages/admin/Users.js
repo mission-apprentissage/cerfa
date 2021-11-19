@@ -201,10 +201,6 @@ const UserLine = ({ user, roles }) => {
       <FormControl py={2}>
         <FormLabel>Rôles</FormLabel>
         <HStack spacing={5}>
-          {/* <Checkbox name="roles" onChange={handleRoleChange} value={"user"} isDisabled isChecked>
-            user
-          </Checkbox> */}
-
           {roles.map((role, i) => {
             return (
               <Checkbox

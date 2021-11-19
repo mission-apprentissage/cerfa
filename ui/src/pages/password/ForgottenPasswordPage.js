@@ -11,7 +11,7 @@ const ForgottenPasswordPage = () => {
 
   const resetPassword = async (values, { setStatus }) => {
     try {
-      await _post("/api/password/forgotten-password", { ...values });
+      await _post("/api/v1/password/forgotten-password", { ...values });
       setStatus({ message: "Un email vous a été envoyé." });
       setTimeout(() => history.push("/"), 1500);
     } catch (e) {
