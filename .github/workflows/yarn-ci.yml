@@ -1,4 +1,4 @@
-name: CI
+name: Yarn CI Server
 on: [ pull_request ]
 jobs:
   ciserver:
@@ -33,10 +33,15 @@ jobs:
       - name: Run Lint
         run: yarn lint
 
-      # # Start docker container for tests (e.g: mongodb)
-      # - name: Start Docker
-      #   run: |
-      #     yarn docker:start-ci
+      # Start docker container for tests (e.g: mongodb)
+      - name: Start Docker
+        run: |
+          yarn docker:start-ci
+
+      # Run mocha tests
+      - name: Run Tests
+        run: |
+          yarn --cwd server test:coverage
 
       # codecov
       - name: Upload coverage to Codecov
@@ -47,7 +52,7 @@ jobs:
           name: codecov-server
           verbose: true
       
-      # # Teardown
-      # - name: Teardown
-      #   run: |
-      #     yarn docker:down
+      # Teardown
+      - name: Teardown
+        run: |
+          yarn docker:down
