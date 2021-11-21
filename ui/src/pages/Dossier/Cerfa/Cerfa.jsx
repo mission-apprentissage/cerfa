@@ -37,7 +37,7 @@ const tabsFormAccordion = [
 
 export default () => {
   return (
-    <Accordion allowToggle>
+    <Accordion allowToggle mt={16}>
       {tabsFormAccordion.map(({ title, Component }, key) => {
         return (
           <AccordionItem key={key}>
