@@ -1,5 +1,5 @@
 import { extendTheme } from "@chakra-ui/react";
-// import { theme } from "@chakra-ui/theme";
+import { theme } from "@chakra-ui/theme";
 import { fonts, colors, fontSizes, space, rootFontSizePx, textStyles } from "./theme-beta";
 import { components } from "./components/index";
 
@@ -43,20 +43,20 @@ const overrides = {
   textStyles,
   space,
   components,
-  // sizes: {
-  //   ...theme.space,
-  //   xs: "20rem",
-  //   sm: "24rem",
-  //   md: "28rem",
-  //   lg: "32rem",
-  //   xl: "1280px",
-  //   container: {
-  //     sm: "640px",
-  //     md: "768px",
-  //     lg: "1024px",
-  //     xl: "1280px",
-  //   },
-  // }
+  sizes: {
+    ...theme.sizes,
+    xs: "20rem",
+    sm: "24rem",
+    md: "28rem",
+    lg: "32rem",
+    xl: "1280px",
+    container: {
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+    },
+  },
 };
 
 export default extendTheme(overrides);

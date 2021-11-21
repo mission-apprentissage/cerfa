@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Box, Container, Flex, Link, Text, ListItem } from "@chakra-ui/react";
+import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
 import { hasAccessTo } from "../../../common/utils/rolesUtils";
 import { MenuFill, Close } from "../../../theme/components/icons";
@@ -59,12 +59,11 @@ const NavLinks = ({ isOpen }) => {
         textStyle="sm"
       >
         <NavItem to="/">Accueil</NavItem>
+        {hasAccessTo(auth, "page_dashboard") && <NavItem to="/dossier">Remplir un nouveau contrat</NavItem>}
         {hasAccessTo(auth, "page_dashboard") && <NavItem to="/mes-actions">Dashboard</NavItem>}
-        <ListItem>
-          <Link href="https://github.com/mission-apprentissage/cerfa/releases" mr={4} isExternal>
-            Journal des modifications
-          </Link>
-        </ListItem>
+        <Link href="https://github.com/mission-apprentissage/cerfa/releases" mr={4} isExternal>
+          Journal des modifications
+        </Link>
       </Flex>
     </Box>
   );

@@ -15,4 +15,7 @@ module.exports = {
   Role: createModel("role", schema.roleSchema),
   Log: createModel("log", schema.logSchema),
   MaintenanceMessage: createModel("maintenanceMessage", schema.maintenanceMessageSchema),
+
+  // below Cerfa specific
+  Cerfa: createModel("cerfa", schema.cerfaSchema),
 };
