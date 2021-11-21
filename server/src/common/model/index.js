@@ -17,5 +17,5 @@ module.exports = {
   MaintenanceMessage: createModel("maintenanceMessage", schema.maintenanceMessageSchema),
 
   // below Cerfa specific
-  Contrat: createModel("contrat", schema.contratSchema),
+  Cerfa: createModel("cerfa", schema.cerfaSchema),
 };

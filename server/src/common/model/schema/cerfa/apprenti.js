@@ -1,5 +1,6 @@
 const { mongoose } = require("../../../mongodb");
 const adresseSchema = require("./adresse");
+const diplomeSchema = require("./diplome");
 
 const apprentiSchema = {
   nom: {
@@ -108,12 +109,7 @@ const apprentiSchema = {
       "**Situation de l'apprenti avant le contrat**\r\n<br />1 : Scolaire\r\n<br />2 : Prépa apprentissage\r\n<br />3 : Etudiant\r\n<br />4 : Contrat d’apprentissage\r\n<br />5 : Contrat de professionnalisation\r\n<br />6 : Contrat aidé\r\n<br />7 : En formation au CFA avant signature d’un contrat d’apprentissage (L6222-12-1 du code du travail)\r\n<br />8 : En formation, au CFA, sans contrat, suite à rupture (5° de L6231-2 du code du travail)\r\n<br />9 : Stagiaire de la formation professionnelle\r\n<br />10 : Salarié\r\n<br />11 : Personne à la recherche d’un emploi (inscrite ou non au Pôle Emploi)\r\n<br />12 : Inactif",
   },
   diplome: {
-    enum: [13, 25, 26, 33, 34, 35, 38, 41, 42, 43, 49, 54, 55, 58, 61, 62, 63, 69, 71, 72, 73, 74, 79, 80],
-    type: Number,
-    default: null,
-    required: true,
-    description:
-      "**Diplômes et titres de l'apprenti** : \r\n<br />*Diplôme ou titre de niveau bac +5 et plus*\r\n<br />80 : Doctorat\r\n<br />71 : Master professionnel/DESS\r\n<br />72 : Master recherche/DEA\r\n<br />73 : Master indifférencié\r\n<br />74 : Diplôme d'ingénieur, diplôme d'école de commerce\r\n<br />79 : Autre diplôme ou titre de niveau bac+5 ou plus\r\n<br />*Diplôme ou titre de niveau bac +3 et 4*\r\n<br />61 : 1ère année de Master\r\n<br />62 : Licence professionnelle\r\n<br />63 : Licence générale\r\n<br />69 : Autre diplôme ou titre de niveau bac +3 ou 4\r\n<br />*Diplôme ou titre de niveau bac +2*\r\n<br />54 : Brevet de Technicien Supérieur\r\n<br />55 : Diplôme Universitaire de technologie\r\n<br /> 58 : Autre diplôme ou titre de niveau bac+2\r\n<br />*Diplôme ou titre de niveau bac*\r\n<br /> 41 : Baccalauréat professionnel\r\n<br /> 42 : Baccalauréat général \r\n<br /> 43 : Baccalauréat technologique\r\n<br /> 49 : Autre diplôme ou titre de niveau bac\r\n<br />*Diplôme ou titre de niveau CAP/BEP*\r\n<br /> 33 : CAP\r\n<br /> 34 : BEP\r\n<br /> 35 : Mention complémentaire\r\n<br /> 38 : Autre diplôme ou titre de niveau CAP/BEP\r\n<br />*Aucun diplôme ni titre*\r\n<br /> 25 : Diplôme national du Brevet (DNB)\r\n<br /> 26 : Certificat de formation générale\r\n<br /> 13 : Aucun diplôme ni titre professionnel",
+    ...diplomeSchema,
   },
   derniereClasse: {
     enum: [1, 11, 12, 21, 22, 31, 32, 40, 41, 42],
@@ -124,12 +120,7 @@ const apprentiSchema = {
       "**Dernière année ou classe suivie par l’apprenti** :\r\n<br /> 1 : l’apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre\r\n<br /> 11 : l’apprenti a suivi la 1ère année du cycle et l’a validée (examens réussis mais année non diplômante)\r\n<br /> 12 : l’apprenti a suivi la 1ère année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 21 : l’apprenti a suivi la 2è année du cycle et l’a validée (examens réussis mais année non diplômante)\r\n<br /> 22 : l’apprenti a suivi la 2è année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 31 : l’apprenti a suivi la 3è année du cycle et l’a validée (examens réussis mais année non diplômante, cycle adapté)\r\n<br /> 32 : l’apprenti a suivi la 3è année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 40 : l’apprenti a achevé le 1er cycle de l’enseignement secondaire (collège)\r\n<br /> 41 : l’apprenti a interrompu ses études en classe de 3è\r\n<br /> 42 : l’apprenti a interrompu ses études en classe de 4è",
   },
   diplomePrepare: {
-    enum: [13, 25, 26, 33, 34, 35, 38, 41, 42, 43, 49, 54, 55, 58, 61, 62, 63, 69, 71, 72, 73, 74, 79, 80],
-    type: Number,
-    default: null,
-    required: true,
-    description:
-      "**Diplômes et titres de l'apprenti** : \r\n<br />*Diplôme ou titre de niveau bac +5 et plus*\r\n<br />80 : Doctorat\r\n<br />71 : Master professionnel/DESS\r\n<br />72 : Master recherche/DEA\r\n<br />73 : Master indifférencié\r\n<br />74 : Diplôme d'ingénieur, diplôme d'école de commerce\r\n<br />79 : Autre diplôme ou titre de niveau bac+5 ou plus\r\n<br />*Diplôme ou titre de niveau bac +3 et 4*\r\n<br />61 : 1ère année de Master\r\n<br />62 : Licence professionnelle\r\n<br />63 : Licence générale\r\n<br />69 : Autre diplôme ou titre de niveau bac +3 ou 4\r\n<br />*Diplôme ou titre de niveau bac +2*\r\n<br />54 : Brevet de Technicien Supérieur\r\n<br />55 : Diplôme Universitaire de technologie\r\n<br /> 58 : Autre diplôme ou titre de niveau bac+2\r\n<br />*Diplôme ou titre de niveau bac*\r\n<br /> 41 : Baccalauréat professionnel\r\n<br /> 42 : Baccalauréat général \r\n<br /> 43 : Baccalauréat technologique\r\n<br /> 49 : Autre diplôme ou titre de niveau bac\r\n<br />*Diplôme ou titre de niveau CAP/BEP*\r\n<br /> 33 : CAP\r\n<br /> 34 : BEP\r\n<br /> 35 : Mention complémentaire\r\n<br /> 38 : Autre diplôme ou titre de niveau CAP/BEP\r\n<br />*Aucun diplôme ni titre*\r\n<br /> 25 : Diplôme national du Brevet (DNB)\r\n<br /> 26 : Certificat de formation générale\r\n<br /> 13 : Aucun diplôme ni titre professionnel",
+    ...diplomeSchema,
   },
   intituleDiplomePrepare: {
     maxLength: 255,
