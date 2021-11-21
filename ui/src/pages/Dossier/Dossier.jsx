@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { setTitle } from "../../common/utils/pageUtils";
 import { Box, Flex, Center, Heading, Button, Container } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
@@ -15,9 +15,19 @@ const steps = [
 ];
 
 export default () => {
-  const { nextStep, prevStep, reset, activeStep } = useSteps({
+  const { nextStep, prevStep, reset, activeStep, setStep } = useSteps({
     initialStep: 0,
   });
+  const [stepState, setStepState] = useState();
+
+  const onClickNextStep = async () => {
+    setStepState("loading"); // type StateValue = "loading" | "error" | undefined
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setStepState("error");
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setStepState();
+    nextStep();
+  };
 
   const title = "Nouveau contrat";
   setTitle(title);
@@ -35,7 +45,7 @@ export default () => {
             {title}
           </Heading>
           <Flex flexDir="column" width="100%" mt={6}>
-            <Steps activeStep={activeStep}>
+            <Steps onClickStep={(step) => setStep(step)} activeStep={activeStep} state={stepState}>
               {steps.map(({ label, description }, index) => (
                 <Step label={label} key={label} description={description}>
                   {index === 0 && <Cerfa />}
@@ -62,7 +72,7 @@ export default () => {
                 <Button mr={4} size="md" variant="primary" onClick={prevStep} isDisabled={activeStep === 0}>
                   Retourner à l'étape précédente
                 </Button>
-                <Button size="md" onClick={nextStep} variant="primary">
+                <Button size="md" onClick={onClickNextStep} variant="primary">
                   {activeStep === steps.length - 1 ? "Soumettre" : "Passer à l'étape suivante"}
                 </Button>
               </Flex>
