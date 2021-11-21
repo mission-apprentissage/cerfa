@@ -1,3 +1,15 @@
+# [1.8.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.7.1...v1.8.0-beta.1) (2021-11-21)
+
+
+### Features
+
+* **data:** add fragments models ([74c7d71](https://github.com/mission-apprentissage/cerfa/commit/74c7d71c7b38015dba047de32928a30b40d5b1cd))
+* **data:** add model cerfa ([f039f75](https://github.com/mission-apprentissage/cerfa/commit/f039f7537739bf8b89b002fbee5e29913a67734b))
+* **ui:** add clickable steps and states ([4f05f68](https://github.com/mission-apprentissage/cerfa/commit/4f05f682847da717563eccae35cf8cb949625253))
+* **ui:** add dossier page + copy base form ([7d49420](https://github.com/mission-apprentissage/cerfa/commit/7d494200108dcd9fea49c4c9f1f329f762e18506))
+* **ui:** add stepper + update chakra ([e0baee8](https://github.com/mission-apprentissage/cerfa/commit/e0baee8c3420621fd7bab3b077ea5f6c17e0c4b8))
+* **ui:** quick clean ([ed96e3a](https://github.com/mission-apprentissage/cerfa/commit/ed96e3a291b10853982fe8d1cf2ec86e75ee5495))
+
 ## [1.7.1](https://github.com/mission-apprentissage/cerfa/compare/v1.7.0...v1.7.1) (2021-11-19)
 
 
