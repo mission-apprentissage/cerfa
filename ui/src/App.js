@@ -22,6 +22,7 @@ const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
+const Dossier = lazy(() => import("./pages/Dossier/Dossier"));
 
 function PrivateRoute({ component, ...rest }) {
   let [auth] = useAuth();
@@ -99,6 +100,7 @@ export default () => {
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
 
                 <PrivateRoute exact path="/" component={HomePage} />
+                <PrivateRoute exact path="/dossier" component={Dossier} />
 
                 {auth && hasAccessTo(auth, "page_dashboard") && (
                   <PrivateRoute exact path="/mes-actions" component={DashboardPage} />

@@ -59,6 +59,7 @@ const NavLinks = ({ isOpen }) => {
         textStyle="sm"
       >
         <NavItem to="/">Accueil</NavItem>
+        {hasAccessTo(auth, "page_dashboard") && <NavItem to="/dossier">Remplir un nouveau contrat</NavItem>}
         {hasAccessTo(auth, "page_dashboard") && <NavItem to="/mes-actions">Dashboard</NavItem>}
         <ListItem>
           <Link href="https://github.com/mission-apprentissage/cerfa/releases" mr={4} isExternal>
