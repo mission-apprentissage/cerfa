@@ -17,47 +17,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-
 
-      # Install dependencies
-      - name: Run yarn Install
-        run: yarn install
-
-      # Install ui dependencies
-      - name: Run yarn Install ui
-        run: yarn --cwd ui install --frozen-lockfile
-
-      # Install yarn dependencies
-      - name: Run yarn Install server
-        run: yarn --cwd server install --frozen-lockfile
-      
-      # Lint
-      - name: Run Lint
-        run: yarn lint
-
-      # Start docker container for tests (e.g: mongodb)
-      - name: Start Docker
-        run: |
-          cd ui
-          cp .env.example .env
-          cd ../server
-          cp .env.example .env
-          cd ..
-          yarn docker:start-ci
-
-      # Run mocha tests
-      - name: Run Tests
-        run: |
-          yarn --cwd server test:coverage
+      - run: make ci
 
       # codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./server/coverage
+          directory: ./server/.coverage
           name: codecov-server
           verbose: true
-      
-      # Teardown
-      - name: Teardown
-        run: |
-          yarn docker:down

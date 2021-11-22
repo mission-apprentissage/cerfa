@@ -1,23 +1,61 @@
-const path = require("path");
-const config = require("config");
-const { emptyDir } = require("fs-extra");
-const { connectToMongo } = require("../../src/common/mongodb");
+const { getDatabase } = require("./mongoMemoryServer");
+const createComponents = require("../../src/common/components/components");
+const server = require("../../src/http/server");
+const axiosist = require("axiosist");
+const fakeMailer = require("./fakeMailer");
+const models = require("../../src/common/model");
 
-const testDataDir = path.join(__dirname, "../../.local/test");
-let mongoHolder = null;
+async function testContext() {
+  const db = getDatabase();
+  let emailsSents = [];
+  const mailer = fakeMailer({ calls: emailsSents });
+  return {
+    components: await createComponents({ db, mailer }),
+    helpers: { getEmailsSent: () => emailsSents },
+  };
+}
 
-const connectToMongoForTests = async () => {
-  if (!mongoHolder) {
-    const uri = config.mongodb.uri.split("cerfa").join("cerfa_test");
-    mongoHolder = await connectToMongo(uri);
+async function startServer() {
+  let { components, helpers } = await testContext();
+  const app = await server(components);
+  const httpClient = axiosist(app);
+
+  return {
+    httpClient,
+    components,
+    ...helpers,
+    createAndLogUser: async (username, password, options) => {
+      await components.users.createUser(username, password, options);
+
+      const response = await httpClient.post("/api/v1/auth/login", {
+        username: username,
+        password: password,
+      });
+
+      return {
+        Cookie: response.headers["set-cookie"],
+      };
+    },
+  };
+}
+
+function cleanDatabase() {
+  let all = Object.values(models);
+  return Promise.all(all.map((m) => m.deleteMany({})));
+}
+
+function getTokenFromCookie(response) {
+  let cookie = response.headers["set-cookie"];
+  let jwt = cookie[0].split(";").find((i) => i.startsWith("cerfa-local-jwt"));
+  if (!jwt) {
+    throw new Error("No JWT found in response");
   }
-  return mongoHolder;
-};
+
+  return jwt.split("=")[1];
+}
 
 module.exports = {
-  connectToMongoForTests,
-  cleanAll: () => {
-    const models = require("../../src/common/model");
-    return Promise.all([emptyDir(testDataDir), ...Object.values(models).map((m) => m.deleteMany())]);
-  },
+  startServer,
+  cleanDatabase,
+  getTokenFromCookie,
 };

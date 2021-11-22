@@ -55,27 +55,21 @@ module.exports = ({ users, mailer }) => {
       if (!user) {
         throw Boom.badRequest();
       }
-      let noEmail = req.query.noEmail;
 
       const token = createPasswordToken(user.username);
       const url = `${config.publicUrl}/reset-password?passwordToken=${token}`;
+      await mailer.sendEmail(
+        user.email,
+        `[${config.env} Contrat publique apprentissage] Réinitialiser votre mot de passe`,
+        getEmailTemplate("forgotten-password"),
+        {
+          url,
+          username: user.username,
+          publicUrl: config.publicUrl,
+        }
+      );
 
-      if (noEmail) {
-        return res.json({ token });
-      } else {
-        await mailer.sendEmail(
-          user.email,
-          `[${config.env} Contrat publique apprentissage] Réinitialiser votre mot de passe`,
-          getEmailTemplate("forgotten-password"),
-          {
-            url,
-            username: user.username,
-            publicUrl: config.publicUrl,
-          }
-        );
-
-        return res.json({});
-      }
+      return res.json({});
     })
   );
 

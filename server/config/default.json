@@ -24,6 +24,7 @@
   },
   "log": {
     "level": "info",
+    "type": "console",
     "destinations": "stdout"
   },
   "slackWebhookUrl": null,

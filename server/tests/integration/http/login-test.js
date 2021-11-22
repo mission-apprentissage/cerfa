@@ -1,25 +1,24 @@
 const assert = require("assert");
 const config = require("config");
 const jwt = require("jsonwebtoken");
-const omit = require("lodash").omit;
-const httpTests = require("../../utils/httpTests");
 const { User } = require("../../../src/common/model");
 const { hash } = require("../../../src/common/utils/sha512Utils");
+const { startServer, getTokenFromCookie } = require("../../utils/testUtils");
+const { omit } = require("lodash");
 
-const BASE_URL = "/api/v1/auth";
-
-httpTests(__filename, ({ startServer }) => {
+describe("[Routes] Login", () => {
   it("Vérifie qu'on peut se connecter", async () => {
     const { httpClient, components } = await startServer();
     await components.users.createUser("user", "password");
 
-    const response = await httpClient.post(`${BASE_URL}/login`, {
+    const response = await httpClient.post("/api/v1/auth/login", {
       username: "user",
       password: "password",
     });
 
     assert.strictEqual(response.status, 200);
-    const decoded = jwt.verify(response.data.token, config.auth.user.jwtSecret);
+    let token = getTokenFromCookie(response);
+    const decoded = jwt.verify(token, config.auth.user.jwtSecret);
     assert.ok(decoded.iat);
     assert.ok(decoded.exp);
     assert.deepStrictEqual(omit(decoded, ["iat", "exp"]), {
@@ -39,7 +38,7 @@ httpTests(__filename, ({ startServer }) => {
     const { httpClient, components } = await startServer();
     await components.users.createUser("user", "password");
 
-    const response = await httpClient.post(`${BASE_URL}/login`, {
+    const response = await httpClient.post("/api/v1/auth/login", {
       username: "user",
       password: "INVALID",
     });
@@ -50,7 +49,7 @@ httpTests(__filename, ({ startServer }) => {
   it("Vérifie qu'un login invalide est rejeté", async () => {
     const { httpClient } = await startServer();
 
-    const response = await httpClient.post(`${BASE_URL}/login`, {
+    const response = await httpClient.post("/api/v1/auth/login", {
       username: "INVALID",
       password: "INVALID",
     });
@@ -62,7 +61,7 @@ httpTests(__filename, ({ startServer }) => {
     const { httpClient, components } = await startServer();
     await components.users.createUser("user", "password", { hash: hash("password", 1000) });
 
-    let response = await httpClient.post(`${BASE_URL}/login`, {
+    let response = await httpClient.post("/api/v1/auth/login", {
       username: "user",
       password: "password",
     });
@@ -71,7 +70,7 @@ httpTests(__filename, ({ startServer }) => {
     const found = await User.findOne({ username: "user" });
     assert.strictEqual(found.password.startsWith("$6$rounds=1001"), true);
 
-    response = await httpClient.post(`${BASE_URL}/login`, {
+    response = await httpClient.post("/api/v1/auth/login", {
       username: "user",
       password: "password",
     });
@@ -83,7 +82,7 @@ httpTests(__filename, ({ startServer }) => {
     await components.users.createUser("user", "password", { hash: hash("password", 1001) });
     const previous = await User.findOne({ username: "user" });
 
-    const response = await httpClient.post(`${BASE_URL}/login`, {
+    const response = await httpClient.post("/api/v1/auth/login", {
       username: "user",
       password: "password",
     });
@@ -98,7 +97,7 @@ httpTests(__filename, ({ startServer }) => {
     await components.users.createUser("user", "password", { hash: hash("password", 1001) });
     const previous = await User.findOne({ username: "user" });
 
-    const response = await httpClient.post(`${BASE_URL}/login`, {
+    const response = await httpClient.post("/api/v1/auth/login", {
       username: "user",
       password: "invalid",
     });
