@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 import InfoTooltip from "../../../../common/components/InfoTooltip";
-import Comment from "../../../../common/components/Comment";
+import Comment from "../../../../common/components/Comments/Comment";
 
 export default ({ name, label, schema, onSubmitted }) => {
   // const [isLoading, setIsLoading] = useState(false); // TODO
