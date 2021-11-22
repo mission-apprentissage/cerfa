@@ -31,12 +31,27 @@ services:
     environment:
       - CERFA_ENV=dev
       - CERFA_LOG_LEVEL=debug
+      - CERFA_SMTP_HOST=smtp
+      - CERFA_SMTP_PORT=1025
+    depends_on:
+      - smtp
 
   mongodb:
     ports:
       - "127.0.0.1:27017:27017"
     volumes:
       - cerfa_mongodb_data:/data
+
+  smtp:
+    image: mailhog/mailhog
+    container_name: cerfa_smtp
+    mem_limit: 128m
+    ports:
+      - 1025:1025
+    networks:
+      - cerfa_network
+    environment:
+      - MH_UI_WEB_PATH=smtp
 
 volumes:
   cerfa_mongodb_data:
