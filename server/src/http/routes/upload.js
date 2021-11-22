@@ -1,69 +1,48 @@
 const express = require("express");
-const multer = require("multer");
-const { mkdirp, move } = require("fs-extra");
+const config = require("../../config");
+const mongoose = require("mongoose");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const path = require("path");
-const logger = require("../../common/logger");
+const { putObjectIntoStorage } = require("../../common/utils/ovhUtils");
+const { compose } = require("oleoduc");
+const multiparty = require("multiparty");
+const { cipher } = require("../../common/utils/cryptoUtils");
 
 module.exports = () => {
   const router = express.Router();
+  const encryptionKey = config.ovh.storage.encryptionKey;
 
-  const UPLOAD_DIR = "/data/uploads";
-
-  const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      mkdirp(UPLOAD_DIR, (err) => cb(err, UPLOAD_DIR));
-    },
-    filename: function (req, file, cb) {
-      cb(null, `tmp-${file.originalname}`);
-    },
-  });
-
-  const upload = multer({ storage: storage }).single("file");
+  /**
+   * FIXME Fake implementation
+   * @returns {*}
+   */
+  function getContratIdForUser() {
+    return mongoose.Types.ObjectId().toString();
+  }
 
   router.post(
     "/",
     tryCatch(async (req, res) => {
-      upload(req, res, async (err) => {
-        if (err) {
-          return res.status(500).json(err);
+      let contratId = getContratIdForUser();
+
+      let form = new multiparty.Form();
+      form.on("close", () => res.json({}));
+      form.on("error", (e) => {
+        return res.status(400).json({ error: e.message || "Une erreur est survenue lors de l'envoi du fichier" });
+      });
+      form.on("part", async (part) => {
+        if (part.headers["content-type"] !== "application/pdf") {
+          form.emit("error", new Error("Le fichier n'est pas au bon format"));
         }
 
-        const src = path.join(UPLOAD_DIR, `tmp-${req.file.originalname}`);
-        const dest = path.join(UPLOAD_DIR, req.file.originalname);
-
-        let callback;
-
-        switch (req.file.originalname) {
-          case "testFile.pdf": {
-            // TODO implement
-            try {
-              // SOME TESTS
-              // return res.status(400).json({
-              //   error: `Erreur`,
-              // });
-            } catch (e) {
-              logger.error(e);
-              // return res.status(400).json({
-              //   error: `Erreur`,
-              // });
-            }
-            break;
-          }
-          default:
-            return res.status(400).json({ error: `Le type de fichier est invalide` });
-        }
-
-        // success, move the file
-        await move(src, dest, { overwrite: true }, (err) => {
-          if (err) return logger.error(err);
-
-          // launch cb if any
-          callback?.();
+        let encryptedStream = compose(part, cipher(encryptionKey, contratId));
+        await putObjectIntoStorage(`contrats/${contratId}/${part.filename}`, encryptedStream, {
+          contentType: part.headers["content-type"],
         });
 
-        return res.status(200).send(req.file);
+        part.resume();
       });
+
+      form.parse(req);
     })
   );
 

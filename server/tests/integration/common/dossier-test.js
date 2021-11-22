@@ -141,8 +141,6 @@ describe("cerfa", () => {
     });
     await contrat.save();
 
-    console.log(contrat);
-
     const results = await Dossier.find({ "employeur.denomination": "ENERGIE 3000" });
 
     assert.equal(results.length === 1, true);
