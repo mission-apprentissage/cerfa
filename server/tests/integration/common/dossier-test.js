@@ -1,8 +1,7 @@
 const assert = require("assert");
-const integrationTests = require("../../utils/integrationTests");
 const { Dossier } = require("../../../src/common/model");
 
-integrationTests(__filename, () => {
+describe("cerfa", () => {
   it("Doit créer un dossier NON-DRAFT", async () => {
     const contrat = new Dossier({
       draft: false,
