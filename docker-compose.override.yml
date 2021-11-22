@@ -27,7 +27,6 @@ services:
       - ./server/src:/app/src # Allows source folders to be watched
       - ./server/config:/app/config
       - cerfa_server_data:/data
-    env_file: ./server/.env
     environment:
       - CERFA_ENV=dev
       - CERFA_LOG_LEVEL=debug
