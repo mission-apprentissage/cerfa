@@ -29,11 +29,11 @@
   "slackWebhookUrl": null,
   "outputDir": ".local/output",
   "smtp": {
-    "host": "CERFA_SMTP_HOST",
-    "port": "CERFA_SMTP_PORT",
+    "host": null,
+    "port": null,
     "auth": {
-      "user": "CERFA_SMTP_AUTH_USER",
-      "pass": "CERFA_SMTP_AUTH_PASS"
+      "user": null,
+      "pass": null
     }
   }
 }
