@@ -4,6 +4,8 @@ import { CheckIcon } from "@chakra-ui/icons";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
+import InfoTooltip from "../../../../common/components/InfoTooltip";
+
 export default ({ name, label, schema, onSubmitted }) => {
   // const [isLoading, setIsLoading] = useState(false); // TODO
   const [validated, setValidated] = useState(false); // TODO
@@ -43,8 +45,23 @@ export default ({ name, label, schema, onSubmitted }) => {
     <FormControl isRequired mt={2} isInvalid={errors[name]}>
       <FormLabel>{label}</FormLabel>
       <InputGroup>
-        <Input type="text" name={name} onChange={handleChange} value={values[name]} required pattern={schema.pattern} />
-        {validated && <InputRightElement children={<CheckIcon color="green.500" />} />}
+        <Input
+          type="text"
+          name={name}
+          onChange={handleChange}
+          value={values[name]}
+          required
+          pattern={schema.pattern}
+          placeholder={schema.description}
+        />
+        <InputRightElement
+          children={
+            <>
+              <InfoTooltip description={schema.description} />
+              {validated && <CheckIcon color="green.500" ml={0.5} />}
+            </>
+          }
+        />
       </InputGroup>
       {errors[name] && touched[name] && <FormErrorMessage>{errors[name]}</FormErrorMessage>}
     </FormControl>
