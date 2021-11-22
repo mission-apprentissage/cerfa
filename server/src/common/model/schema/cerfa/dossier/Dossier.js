@@ -1,31 +1,15 @@
-const employeurCerfaSchema = require("./employeurCerfa");
-const apprentiSchema = require("./apprenti");
-const maitreApprentissageSchema = require("./maitreApprentissage");
-const formationSchema = require("./formation");
-const contratSchema = require("./contrat");
-const organismeFormationSchema = require("./organismeFormation");
+const cerfaSchema = require("./Cerfa");
+const documentSchema = require("./document");
 
-const CerfaSchema = {
-  employeur: {
-    ...employeurCerfaSchema,
-  },
-  apprenti: {
-    ...apprentiSchema,
-  },
-  maitre1: {
-    ...maitreApprentissageSchema,
-  },
-  maitre2: {
-    ...maitreApprentissageSchema,
-  },
-  formation: {
-    ...formationSchema,
-  },
-  contrat: {
-    ...contratSchema,
-  },
-  organismeFormation: {
-    ...organismeFormationSchema,
+const dossierSchema = {
+  ...cerfaSchema,
+  documents: {
+    type: [
+      {
+        ...documentSchema,
+      },
+    ],
+    default: [],
   },
   numeroExterne: {
     type: String,
@@ -44,6 +28,7 @@ const CerfaSchema = {
     description: "Numéro DECA du dossier\r\n<br />Obsolète : Ce champ est redondant avec le champ contrat.noContrat",
     nullable: true,
     default: null,
+    example: "222222222222",
   },
   etat: {
     enum: ["TRANSMIS", "EN_COURS_INSTRUCTION", "ENGAGE", "ANNULE", "REFUSE", "RUTPURE", "SOLDE", null],
@@ -53,5 +38,17 @@ const CerfaSchema = {
     description:
       "**Etat du contrat** :\r\n<br />TRANSMIS\r\n<br />EN_COURS_INSTRUCTION\r\n<br />ENGAGE\r\n<br />ANNULE\r\n<br />REFUSE\r\n<br />RUPTURE\r\n<br />SOLDE",
   },
+  draft: {
+    type: Boolean,
+    default: true,
+    required: true,
+    description: "Statut interne brouillon",
+  },
+  qui: {
+    type: String,
+    default: null,
+    required: true,
+    description: "Qui a initié le dossier",
+  },
 };
-module.exports = CerfaSchema;
+module.exports = dossierSchema;

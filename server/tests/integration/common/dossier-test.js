@@ -1,9 +1,9 @@
 const assert = require("assert");
-const { Cerfa } = require("../../../src/common/model");
+const { Dossier } = require("../../../src/common/model");
 
 describe("cerfa", () => {
-  it("Vérifie la création d'un cerfa", async () => {
-    const contrat = new Cerfa({
+  it("Doit créer un dossier NON-DRAFT", async () => {
+    const contrat = new Dossier({
       draft: false,
       employeur: {
         denomination: "ENERGIE 3000",
@@ -137,22 +137,24 @@ describe("cerfa", () => {
           quiMiseAJour: "test-user",
         },
       ],
+      qui: "test-user",
     });
     await contrat.save();
 
     console.log(contrat);
 
-    const results = await Cerfa.find({ "employeur.denomination": "ENERGIE 3000" });
+    const results = await Dossier.find({ "employeur.denomination": "ENERGIE 3000" });
 
     assert.equal(results.length === 1, true);
   });
-  it("Doit créer un cerfa DRAFT", async () => {
-    const contrat = new Cerfa({
+  it("Doit créer un dossier DRAFT", async () => {
+    const contrat = new Dossier({
       draft: true,
+      qui: "test-user",
     });
     await contrat.save();
 
-    const results = await Cerfa.find({});
+    const results = await Dossier.find({});
 
     assert.equal(results.length === 1, true);
   });

@@ -7,13 +7,17 @@ const organismeFormationSchema = {
     description: "Nom de l'organisme de formation responsable",
     example: "CFA",
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   formationInterne: {
     type: Boolean,
     description: "Est un service de formation en interne (CFA d'entreprise)",
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   raison_sociale: {
     type: String,
@@ -26,6 +30,7 @@ const organismeFormationSchema = {
     minLength: 14,
     validate: {
       validator: function (v) {
+        if (!v) return true;
         return /^([0-9]{14}|[0-9]{9} [0-9]{4})$/.test(v);
       },
       message: (props) => `${props.value} n'est pas un siret valide`,
@@ -34,14 +39,20 @@ const organismeFormationSchema = {
     description: "N° SIRET de l'organisme de formation responsable",
     default: null,
     example: "98765432400019",
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
+    nullable: function () {
+      return this.draft;
+    },
+    pattern: "^([0-9]{14}|[0-9]{9} [0-9]{4})$",
   },
-
   uaiCfa: {
     maxLength: 8,
     minLength: 8,
     validate: {
       validator: function (v) {
+        if (!v) return true;
         return /^[0-9]{7}[a-zA-Z]$/.test(v);
       },
       message: (props) => `${props.value} n'est pas un UAI valide`,
@@ -49,7 +60,12 @@ const organismeFormationSchema = {
     type: String,
     description: "N° UAI de l'organisme de formation responsable",
     default: null,
-    required: true,
+    nullable: function () {
+      return this.draft;
+    },
+    required: function () {
+      return !this.draft;
+    },
   },
   visaCfa: {
     type: Boolean,

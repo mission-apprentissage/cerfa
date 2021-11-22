@@ -2,7 +2,9 @@ const adresseSchema = {
   numero: {
     type: Number,
     description: "N°",
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
     nullable: true,
     example: 13,
     default: 0,
@@ -13,14 +15,18 @@ const adresseSchema = {
     nullable: true,
     example: "Boulevard de la liberté",
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   complement: {
     type: String,
     description: "Complément d'adresse",
     nullable: true,
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
     example: "Etage 6 - Appartement 654",
   },
   label: {
@@ -29,7 +35,9 @@ const adresseSchema = {
     description: "Libellé complet de l’adresse",
     nullable: true,
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
     example: "13 Boulevard de la liberté",
   },
   codePostal: {
@@ -37,6 +45,7 @@ const adresseSchema = {
     minLength: 5,
     validate: {
       validator: function (v) {
+        if (!v) return true;
         return /^[0-9]{5}$/.test(v);
       },
       message: (props) => `${props.value} n'est pas un code postal valide`,
@@ -45,7 +54,9 @@ const adresseSchema = {
     description: "Code postal",
     example: "75000",
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   commune: {
     maxLength: 80,
@@ -53,7 +64,9 @@ const adresseSchema = {
     description: "Commune",
     example: "PARIS",
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
 };
 module.exports = adresseSchema;
