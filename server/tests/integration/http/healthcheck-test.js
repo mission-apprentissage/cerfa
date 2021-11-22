@@ -1,5 +1,5 @@
 const assert = require("assert");
-const config = require("config");
+const config = require("../../../src/config");
 const { startServer } = require("../../utils/testUtils");
 
 describe("[Routes] Healthcheck", () => {

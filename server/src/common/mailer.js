@@ -4,7 +4,7 @@ const htmlToText = require("nodemailer-html-to-text").htmlToText;
 const mjml = require("mjml");
 const { promisify } = require("util");
 const ejs = require("ejs");
-const config = require("config");
+const config = require("../config");
 const renderFile = promisify(ejs.renderFile);
 
 const createTransporter = (smtp) => {
