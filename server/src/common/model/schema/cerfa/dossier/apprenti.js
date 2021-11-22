@@ -1,4 +1,3 @@
-const { mongoose } = require("../../../mongodb");
 const adresseSchema = require("./adresse");
 const diplomeSchema = require("./diplome");
 
@@ -213,7 +212,7 @@ const apprentiSchema = {
       //!this.draft
       return false;
     },
-    type: new mongoose.Schema({
+    type: {
       nom: {
         maxLength: 80,
         type: String,
@@ -237,7 +236,7 @@ const apprentiSchema = {
       adresse: {
         ...adresseSchema,
       },
-    }),
+    },
   },
   inscriptionSportifDeHautNiveau: {
     type: Boolean,

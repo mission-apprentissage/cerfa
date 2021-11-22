@@ -57,6 +57,18 @@ describe("cerfa", () => {
           codePostal: "75000",
           commune: "PARIS",
         },
+        responsableLegal: {
+          nom: "Honore",
+          prenom: "Robert",
+          adresse: {
+            numero: 20,
+            voie: "Boulevard de la liberté",
+            complement: "Etage 6 - Appartement 654",
+            label: "20 Boulevard de la liberté",
+            codePostal: "75000",
+            commune: "PARIS",
+          },
+        },
         inscriptionSportifDeHautNiveau: false,
       },
       maitre1: { nom: "Dupont", prenom: "Claire", dateNaissance: "1988-02-02T00:00:00+00:00" },
@@ -127,6 +139,8 @@ describe("cerfa", () => {
       ],
     });
     await contrat.save();
+
+    console.log(contrat);
 
     const results = await Cerfa.find({ "employeur.denomination": "ENERGIE 3000" });
 

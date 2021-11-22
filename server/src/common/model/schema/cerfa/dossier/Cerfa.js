@@ -69,5 +69,11 @@ const CerfaSchema = {
     required: true,
     description: "Statut interne brouillon",
   },
+  qui: {
+    type: String,
+    default: null,
+    required: true,
+    description: "Qui a initié le dossier",
+  },
 };
 module.exports = CerfaSchema;
