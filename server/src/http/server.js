@@ -18,6 +18,7 @@ const password = require("./routes/password");
 const upload = require("./routes/upload");
 const auth = require("./routes/auth");
 const maintenanceMessage = require("./routes/maintenanceMessage");
+const cerfa = require("./routes/cerfa");
 
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
@@ -50,6 +51,7 @@ module.exports = async (components) => {
   );
   app.use("/api/v1/upload", checkJwtToken, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
   app.use("/api/v1/maintenanceMessage", maintenanceMessage());
+  app.use("/api/v1/cerfa", cerfa());
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/authentified", checkJwtToken, authentified(components));
   app.use("/api/v1/password", password(components));

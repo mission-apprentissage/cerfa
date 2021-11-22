@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Accordion,
@@ -9,12 +9,15 @@ import {
   Heading,
 } from "@chakra-ui/react";
 
+import { _get } from "../../../common/httpClient";
+
 import FormEmployer from "./components/FormEmployer";
 import FormLearner from "./components/FormLearner";
 import FormLearningMaster from "./components/FormLearningMaster";
 import FormContract from "./components/FormContract";
 import FormFormation from "./components/FormFormation";
 // import FormSubmittingContract from "./components/FormSubmittingContract";
+import Input from "./components/Input";
 
 const tabsFormAccordion = [
   {
@@ -44,8 +47,31 @@ const tabsFormAccordion = [
 ];
 
 export default () => {
+  const [schema, setSchema] = useState(null);
+  useEffect(() => {
+    async function run() {
+      try {
+        const response = await _get("/api/v1/cerfa/schema");
+        setSchema(response);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    run();
+  }, []);
+
+  if (!schema) return null;
+
   return (
     <Accordion allowToggle mt={16}>
+      <Input
+        name="siret"
+        label="N° SIRET CFA :"
+        schema={schema.organismeFormation.siret}
+        onSubmitted={(values) => {
+          console.log(JSON.stringify(values, null, 2));
+        }}
+      />
       {tabsFormAccordion.map(({ title, Component }, key) => {
         return (
           <AccordionItem key={key}>

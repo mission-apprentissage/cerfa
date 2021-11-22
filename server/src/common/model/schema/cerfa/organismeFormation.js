@@ -35,8 +35,8 @@ const organismeFormationSchema = {
     default: null,
     example: "98765432400019",
     required: true,
+    pattern: "^([0-9]{14}|[0-9]{9} [0-9]{4})$",
   },
-
   uaiCfa: {
     maxLength: 8,
     minLength: 8,
