@@ -15,7 +15,7 @@ const createTransporter = (smtp) => {
   return transporter;
 };
 
-module.exports = (transporter = createTransporter(config.smtp)) => {
+module.exports = (transporter = createTransporter({ ...config.smtp, secure: false })) => {
   let renderEmail = async (template, data = {}) => {
     let buffer = await renderFile(template, {
       data,
