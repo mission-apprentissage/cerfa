@@ -5,7 +5,9 @@ const maitreApprentissageSchema = {
     description: "Nom (Nom de naissance/ patronymique) du maitre d'apprentissage",
     example: "Dupont",
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   prenom: {
     maxLength: 80,
@@ -13,14 +15,18 @@ const maitreApprentissageSchema = {
     description: "Prénom du maitre d'apprentissage",
     example: "Claire",
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   dateNaissance: {
     type: Date,
     description: "Date de naissance  de l'apprenti",
     example: "1988-02-02T00:00:00+0000",
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
 };
 

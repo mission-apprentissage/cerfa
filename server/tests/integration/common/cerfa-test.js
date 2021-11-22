@@ -4,6 +4,7 @@ const { Cerfa } = require("../../../src/common/model");
 describe("cerfa", () => {
   it("Vérifie la création d'un cerfa", async () => {
     const contrat = new Cerfa({
+      draft: false,
       employeur: {
         denomination: "ENERGIE 3000",
         siret: "98765432400019",
@@ -115,10 +116,29 @@ describe("cerfa", () => {
           commune: "PARIS",
         },
       },
+      documents: [
+        {
+          typeDocument: "CONVENTION_FORMATION",
+          typeFichier: "pdf",
+          nomFichier: "conventionFormation",
+          cheminFichier: "/upload/xxxxx/conventionFormation.pdf",
+          quiMiseAJour: "test-user",
+        },
+      ],
     });
     await contrat.save();
 
     const results = await Cerfa.find({ "employeur.denomination": "ENERGIE 3000" });
+
+    assert.equal(results.length === 1, true);
+  });
+  it("Doit créer un cerfa DRAFT", async () => {
+    const contrat = new Cerfa({
+      draft: true,
+    });
+    await contrat.save();
+
+    const results = await Cerfa.find({});
 
     assert.equal(results.length === 1, true);
   });

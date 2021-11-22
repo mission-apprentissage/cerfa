@@ -7,7 +7,9 @@ const employeurCerfaSchema = {
     description: "Dénomination de l'employeur",
     example: "ENERGIE 3000",
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   raison_sociale: {
     type: String,
@@ -20,6 +22,7 @@ const employeurCerfaSchema = {
     minLength: 14,
     validate: {
       validator: function (v) {
+        if (!v) return true;
         return /^([0-9]{14}|[0-9]{9} [0-9]{4})$/.test(v);
       },
       message: (props) => `${props.value} n'est pas un siret valide`,
@@ -27,20 +30,29 @@ const employeurCerfaSchema = {
     type: String,
     description: "N° SIRET de l'employeur",
     default: null,
+    nullable: function () {
+      return this.draft;
+    },
     example: "98765432400019",
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   naf: {
     maxLength: 6,
     type: String,
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
     description: "Code NAF de l'employeur",
     example: "1031Z",
   },
   nombreDeSalaries: {
     type: Number,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
     default: 0,
     description: "Effectif salarié de l'entreprise",
     example: 123,
@@ -49,7 +61,9 @@ const employeurCerfaSchema = {
     maxLength: 4,
     type: String,
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
     description: "Code IDCC de la convention collective appliquée",
     example: "0043",
   },
@@ -67,13 +81,15 @@ const employeurCerfaSchema = {
     minLength: 10,
     validate: {
       validator: function (v) {
+        if (!v) return true;
         return /^[0-9]{10}$/.test(v);
       },
       message: (props) => `${props.value} n'est pas un numéro de télephone valide`,
     },
-
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
     type: String,
     description: "Téléphone de l'employeur",
     example: "0908070605",
@@ -82,10 +98,13 @@ const employeurCerfaSchema = {
     maxLength: 80,
     type: String,
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
     description: "Courriel de l'employeur",
     validate: {
       validator: function (v) {
+        if (!v) return true;
         return /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@[*[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+]*/.test(v);
       },
       message: (props) => `${props.value} n'est pas un courriel valide`,
@@ -112,7 +131,9 @@ const employeurCerfaSchema = {
     example: "MARTINE",
   },
   typeEmployeur: {
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
     enum: [11, 12, 13, 14, 15, 16, 21, 22, 23, 24, 25, 26, 27, 28, 29],
     type: Number,
     nullable: true,
@@ -132,7 +153,9 @@ const employeurCerfaSchema = {
     maxLength: 80,
     type: String,
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
     description: "Caisse de retraite complémentaire Alternant",
     example: "AGIRC-ARRCO",
   },
@@ -148,14 +171,18 @@ const employeurCerfaSchema = {
     description: "Atteste de l'éligibilité du tuteur / maître d'apprentissage",
     default: false,
     example: false,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   attestationPieces: {
     type: Boolean,
     description: "Atteste de disposer des pièces justificatives",
     default: false,
     example: false,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
 };
 module.exports = employeurCerfaSchema;
