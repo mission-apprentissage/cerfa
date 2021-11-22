@@ -1,8 +1,7 @@
 const assert = require("assert");
-const integrationTests = require("../../utils/integrationTests");
 const { Cerfa } = require("../../../src/common/model");
 
-integrationTests(__filename, () => {
+describe("cerfa", () => {
   it("Vérifie la création d'un cerfa", async () => {
     const contrat = new Cerfa({
       employeur: {

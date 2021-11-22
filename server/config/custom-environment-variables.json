@@ -21,6 +21,7 @@
   },
   "log": {
     "level": "CERFA_LOG_LEVEL",
+    "type": "CERFA_LOG_TYPE",
     "destinations": "CERFA_LOG_DESTINATIONS"
   },
   "slackWebhookUrl": "CERFA_SLACK_WEBHOOK_URL",

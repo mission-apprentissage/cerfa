@@ -1,8 +1,8 @@
 const assert = require("assert");
-const httpTests = require("../../utils/httpTests");
 const config = require("config");
+const { startServer } = require("../../utils/testUtils");
 
-httpTests(__filename, ({ startServer }) => {
+describe("[Routes] Healthcheck", () => {
   it("Vérifie que le server fonctionne", async () => {
     const { httpClient } = await startServer();
 

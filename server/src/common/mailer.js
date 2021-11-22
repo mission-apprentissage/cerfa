@@ -4,6 +4,7 @@ const htmlToText = require("nodemailer-html-to-text").htmlToText;
 const mjml = require("mjml");
 const { promisify } = require("util");
 const ejs = require("ejs");
+const config = require("config");
 const renderFile = promisify(ejs.renderFile);
 
 const createTransporter = (smtp) => {
@@ -14,7 +15,7 @@ const createTransporter = (smtp) => {
   return transporter;
 };
 
-module.exports = (config, transporter = createTransporter(config.smtp)) => {
+module.exports = (transporter = createTransporter(config.smtp)) => {
   let renderEmail = async (template, data = {}) => {
     let buffer = await renderFile(template, {
       data,

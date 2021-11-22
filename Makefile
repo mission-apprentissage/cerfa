@@ -21,10 +21,13 @@ stop:
 test:
 	yarn --cwd server test
 
+coverage:
+	yarn --cwd server test:coverage
+
 lint:
 	yarn lint
 
 clean:
 	docker-compose down
 
-ci: install lint start-mongodb clean
+ci: install-server lint test coverage

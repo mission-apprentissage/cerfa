@@ -1,27 +1,34 @@
 const assert = require("assert");
-const httpTests = require("../../utils/httpTests");
+const config = require("config");
+const jwt = require("jsonwebtoken");
 const { createPasswordToken } = require("../../../src/common/utils/jwtUtils");
+const { startServer, getTokenFromCookie } = require("../../utils/testUtils");
 
-const BASE_URL = "/api/v1/password";
-
-httpTests(__filename, ({ startServer }) => {
+describe("[Routes] Password", () => {
   it("Vérifie qu'un utilisateur peut faire une demande de réinitialisation de mot de passe", async () => {
-    const { httpClient, createAndLogUser } = await startServer();
-    await createAndLogUser("user", "password", { permissions: { isAdmin: true } });
+    const { httpClient, createAndLogUser, getEmailsSent } = await startServer();
+    await createAndLogUser("user", "password", {
+      email: "user1@apprentissage.beta.gouv.fr",
+      permissions: { isAdmin: true },
+    });
 
-    const response = await httpClient.post(`${BASE_URL}/forgotten-password?noEmail=true`, {
+    const response = await httpClient.post("/api/v1/password/forgotten-password", {
       username: "user",
     });
 
     assert.strictEqual(response.status, 200);
-    assert.ok(response.data.token);
+    let emailsSent = getEmailsSent();
+    assert.strictEqual(emailsSent.length, 1);
+    assert.strictEqual(emailsSent[0].to, "user1@apprentissage.beta.gouv.fr");
+    assert.strictEqual(emailsSent[0].from, "no-reply@apprentissage.beta.gouv.fr");
+    assert.ok(emailsSent[0].subject.indexOf("Réinitialiser votre mot de passe") !== -1);
   });
 
   it("Vérifie qu'on ne peut pas demander la réinitialisation du mot de passe pour un utilisateur inconnu", async () => {
     const { httpClient, createAndLogUser } = await startServer();
     await createAndLogUser("admin", "password", { permissions: { isAdmin: true } });
 
-    const response = await httpClient.post(`${BASE_URL}/forgotten-password?noEmail=true`, {
+    const response = await httpClient.post("/api/v1/password/forgotten-password", {
       username: "inconnu",
     });
 
@@ -32,7 +39,7 @@ httpTests(__filename, ({ startServer }) => {
     const { httpClient, createAndLogUser } = await startServer();
     await createAndLogUser("user123", "password");
 
-    const response = await httpClient.post(`${BASE_URL}/forgotten-password?noEmail=true`, {
+    const response = await httpClient.post("/api/v1/password/forgotten-password", {
       type: "cfa",
       username: "user123456",
     });
@@ -44,28 +51,23 @@ httpTests(__filename, ({ startServer }) => {
     const { httpClient, createAndLogUser } = await startServer();
     await createAndLogUser("admin", "password", { permissions: { isAdmin: true } });
 
-    const response = await httpClient.post(`${BASE_URL}/reset-password`, {
+    const response = await httpClient.post("/api/v1/password/reset-password", {
       passwordToken: createPasswordToken("admin"),
       newPassword: "Password!123456",
     });
 
     assert.strictEqual(response.status, 200);
-    const responseLogin = await httpClient.post("/api/v1/auth/login", {
-      username: "admin",
-      password: "Password!123456",
-    });
-
-    assert.strictEqual(responseLogin.status, 200);
-    // const { permissions, sub } = responseLogin.data;
-    // assert.strictEqual(permissions.isAdmin, true);
-    // assert.strictEqual(sub, "admin");
+    let token = getTokenFromCookie(response);
+    const decoded = jwt.verify(token, config.auth.user.jwtSecret);
+    assert.ok(decoded.iat);
+    assert.ok(decoded.exp);
   });
 
   it("Vérifie qu'on doit spécifier un mot de passe valide", async () => {
     const { httpClient, createAndLogUser } = await startServer();
     await createAndLogUser("admin", "password", { permissions: { isAdmin: true } });
 
-    const response = await httpClient.post(`${BASE_URL}/reset-password`, {
+    const response = await httpClient.post("/api/v1/password/reset-password", {
       passwordToken: createPasswordToken("admin"),
       newPassword: "invalid",
     });
