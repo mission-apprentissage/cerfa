@@ -1,5 +1,5 @@
 const assert = require("assert");
-const config = require("config");
+const config = require("../../../src/config");
 const jwt = require("jsonwebtoken");
 const { createPasswordToken } = require("../../../src/common/utils/jwtUtils");
 const { startServer, getTokenFromCookie } = require("../../utils/testUtils");

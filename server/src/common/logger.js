@@ -1,4 +1,4 @@
-const config = require("config");
+const config = require("../config");
 const util = require("util");
 const bunyan = require("bunyan");
 const PrettyStream = require("bunyan-prettystream");

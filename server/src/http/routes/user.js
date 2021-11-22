@@ -1,7 +1,7 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const Joi = require("joi");
-const config = require("config");
+const config = require("../../config");
 const path = require("path");
 const Boom = require("boom");
 

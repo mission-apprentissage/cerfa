@@ -1,5 +1,5 @@
 const assert = require("assert");
-const config = require("config");
+const config = require("../../../src/config");
 const jwt = require("jsonwebtoken");
 const { User } = require("../../../src/common/model");
 const { hash } = require("../../../src/common/utils/sha512Utils");

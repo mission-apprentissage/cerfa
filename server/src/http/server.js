@@ -1,5 +1,5 @@
 const express = require("express");
-const config = require("config");
+const config = require("../config");
 const logger = require("../common/logger");
 const bodyParser = require("body-parser");
 const logMiddleware = require("./middlewares/logMiddleware");
