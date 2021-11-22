@@ -55,9 +55,15 @@ module.exports = ({ users, mailer }) => {
       if (!user) {
         throw Boom.badRequest();
       }
+      let noEmail = req.query.noEmail;
 
       const token = createPasswordToken(user.username);
       const url = `${config.publicUrl}/reset-password?passwordToken=${token}`;
+
+      if (noEmail) {
+        return res.json({ token });
+      }
+
       await mailer.sendEmail(
         user.email,
         `[${config.env} Contrat publique apprentissage] Réinitialiser votre mot de passe`,
