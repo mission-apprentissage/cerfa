@@ -1,12 +1,6 @@
 import React from "react";
 import { Badge, Text, Flex, Box, Divider, Wrap, WrapItem, Avatar } from "@chakra-ui/react";
-
-const prettyPrintDate = (date) => {
-  const event = new Date(date);
-  const options = { hour: "2-digit", minute: "2-digit", year: "numeric", month: "short", day: "numeric" };
-
-  return event.toLocaleDateString("fr-FR", options);
-};
+import { prettyPrintDate } from "../../utils/dateUtils";
 
 export default ({ data }) => {
   return (
@@ -36,12 +30,14 @@ export default ({ data }) => {
         </Flex>
       </Wrap>
       <Box mt={5}>
-        <Text textStyle="sm">{data.contenu}</Text>
+        <Text textStyle="sm" mb={2}>
+          {data.contenu}
+        </Text>
         <Text textStyle="sm" color="bluefrance">
-          @{data.assigne}
+          {data.notifify.map((n) => `@${n} `)}
         </Text>
       </Box>
-      <Divider borderWidth="2px" color="grey.500" mt={3} />
+      <Divider borderWidth="2px" color="grey.500" mt={2} />
     </Flex>
   );
 };

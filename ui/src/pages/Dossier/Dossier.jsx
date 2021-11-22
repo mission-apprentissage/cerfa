@@ -9,7 +9,7 @@ import Cerfa from "./Cerfa/Cerfa";
 
 const steps = [
   { label: "Cerfa", description: "Information contenu dans le Cerfa" },
-  { label: "Piéces justificative", description: "À ajouter au dossier" },
+  { label: "Piéces justificatives", description: "À ajouter au dossier" },
   { label: "Signatures", description: "Signatures électronique" },
   { label: "État", description: "Statut de votre dossier" },
 ];

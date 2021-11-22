@@ -31,11 +31,10 @@ const commentaireSchema = {
           required: true,
           description: "Qui a réalisé la derniere mise à jour",
         },
-        assigne: {
-          type: String,
-          default: null,
-          required: true,
-          description: "Assigné à qui ? Déclenche une notification",
+        notifify: {
+          type: [String],
+          default: [],
+          description: "Notifié à qui ? Déclenche une/(des) notification(s)",
         },
       }),
     ],

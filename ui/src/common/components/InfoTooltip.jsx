@@ -1,5 +1,22 @@
 import React from "react";
-import { Icon, Text, Tooltip } from "@chakra-ui/react";
+import {
+  Icon,
+  Popover,
+  PopoverTrigger,
+  IconButton,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
+  Wrap,
+  WrapItem,
+  Avatar,
+  Flex,
+  Text,
+  Badge,
+} from "@chakra-ui/react";
+import { prettyPrintDate } from "../utils/dateUtils";
 
 const TooltipIcon = (props) => (
   <Icon viewBox="0 0 24 24" w="24px" h="24px" {...props}>
@@ -10,23 +27,53 @@ const TooltipIcon = (props) => (
   </Icon>
 );
 
-const InfoTooltip = ({ description }) => {
+const InfoTooltip = ({ description, history }) => {
   return (
-    <Tooltip
-      label={
-        <Text p={3} fontSize={"epsilon"}>
-          {description}
-        </Text>
-      }
-      openDelay={600}
-      bg="white"
-      color="grey.800"
-      placement="right"
-    >
-      <Text as={"span"} _hover={{ cursor: "pointer" }}>
-        <TooltipIcon color={"grey.700"} w="23px" h="23px" />
-      </Text>
-    </Tooltip>
+    <Popover placement="bottom">
+      <PopoverTrigger>
+        <IconButton icon={<TooltipIcon color={"grey.700"} w="23px" h="23px" />} />
+      </PopoverTrigger>
+      <PopoverContent>
+        <PopoverArrow />
+        <PopoverCloseButton />
+        <PopoverHeader fontWeight="bold">Description</PopoverHeader>
+        <PopoverBody>{description}</PopoverBody>
+        <PopoverHeader fontWeight="bold">Historique</PopoverHeader>
+        <PopoverBody>
+          {history.map((entry, i) => {
+            return (
+              <Wrap key={i} mb={3}>
+                <WrapItem>
+                  <Avatar name={entry.qui} size="xs" />
+                </WrapItem>
+                <Flex flexDirection="column">
+                  <Flex alignItems="center">
+                    <Text textStyle="sm" fontWeight="bold">
+                      {entry.qui}
+                    </Text>
+                    <Badge
+                      variant="solid"
+                      bg="greenmedium.300"
+                      borderRadius="16px"
+                      color="grey.800"
+                      textStyle="sm"
+                      px="15px"
+                      ml="10px"
+                    >
+                      {entry.role}
+                    </Badge>
+                  </Flex>
+                  <Text textStyle="xs">{prettyPrintDate(entry.quand)}</Text>
+                </Flex>
+                <Text textStyle="sm" mt="0">
+                  {entry.quoi}
+                </Text>
+              </Wrap>
+            );
+          })}
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
   );
 };
 

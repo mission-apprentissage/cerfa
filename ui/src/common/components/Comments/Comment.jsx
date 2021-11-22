@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Icon,
   useDisclosure,
@@ -19,20 +19,13 @@ import {
   CheckboxGroup,
   Text,
   Badge,
+  Avatar,
+  AvatarBadge,
 } from "@chakra-ui/react";
+import { CheckIcon } from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
 
 import CardComment from "./Card";
-
-const testData = [
-  {
-    contenu: "text du commentaire",
-    dateAjout: Date.now(),
-    qui: "Antoine Bigard",
-    role: "CFA",
-    assigne: "Paul Pierre",
-  },
-];
 
 const CommentIcon = (props) => (
   <Icon viewBox="0 0 24 24" w="24px" h="24px" {...props}>
@@ -44,84 +37,59 @@ const CommentIcon = (props) => (
   </Icon>
 );
 
-// 1. Create a text input component
 const CommentInput = React.forwardRef((props, ref) => {
   return (
     <FormControl>
-      <FormLabel htmlFor={props.id}>{props.label}</FormLabel>
-      <Textarea ref={ref} id={props.id} {...props} />
+      <FormLabel htmlFor={props.id} d="none">
+        {props.label}
+      </FormLabel>
+      <Textarea ref={ref} id={props.id} placeholder="Répondre ou notifier" {...props} />
     </FormControl>
   );
 });
 
-// 2. Create the form
-const Form = ({ firstFieldRef, onCancel }) => {
+const Form = ({ firstFieldRef, onSubmit, onCancel, commentaires, users }) => {
+  const [show, setShow] = useState(commentaires.discussion.length === 0);
+  const toogle = () => setShow(!show);
+  // TODO FORMIK
   return (
-    <Stack spacing={4}>
-      {testData.map((data, i) => {
-        return (
-          <Box key={i}>
-            <CardComment data={data} />
-          </Box>
-        );
-      })}
-      <Stack spacing={4} mt={5}>
+    <Stack spacing={4} mt={5}>
+      <Text onClick={toogle} cursor="pointer">
+        {!show ? "+" : "-"} Ajouter un nouveau commentaire
+      </Text>
+      <Stack spacing={4} mt={5} display={!show ? "none" : "flex"} opacity={!show ? "0" : "1"} transition="opacity 0.2s">
         <CommentInput label="ajouter un nouveau commentaire" id="first-name" ref={firstFieldRef} defaultValue="" />
 
-        <CheckboxGroup colorScheme="green" defaultValue={["naruto", "kakashi"]}>
+        <CheckboxGroup colorScheme="green" defaultValue={[]}>
           <Text>Notifier:</Text>
           <Stack>
-            <Checkbox value="Paul Pierre">
-              Paul Pierre{" "}
-              <Badge
-                variant="solid"
-                bg="greenmedium.300"
-                borderRadius="16px"
-                color="grey.800"
-                textStyle="sm"
-                px="15px"
-                ml="10px"
-              >
-                Employeur
-              </Badge>
-            </Checkbox>
-            <Checkbox value="Antoine Bigard">
-              Antoine Bigard{" "}
-              <Badge
-                variant="solid"
-                bg="greenmedium.300"
-                borderRadius="16px"
-                color="grey.800"
-                textStyle="sm"
-                px="15px"
-                ml="10px"
-              >
-                CFA
-              </Badge>
-            </Checkbox>
-            <Checkbox value="Pablo Hanry">
-              Pablo Hanry
-              <Badge
-                variant="solid"
-                bg="greenmedium.300"
-                borderRadius="16px"
-                color="grey.800"
-                textStyle="sm"
-                px="15px"
-                ml="10px"
-              >
-                Apprenti
-              </Badge>
-            </Checkbox>
+            {users.map((user, i) => {
+              return (
+                <Checkbox value={user.name} key={i}>
+                  {user.name}
+                  <Badge
+                    variant="solid"
+                    bg="greenmedium.300"
+                    borderRadius="16px"
+                    color="grey.800"
+                    textStyle="sm"
+                    px="15px"
+                    ml="10px"
+                  >
+                    {user.role}
+                  </Badge>
+                </Checkbox>
+              );
+            })}
           </Stack>
         </CheckboxGroup>
 
         <ButtonGroup d="flex" justifyContent="flex-end">
-          <Button variant="outline" onClick={onCancel}>
-            Cancel
+          <Button colorScheme="teal" variant="primary" onClick={onSubmit}>
+            {commentaires.discussion.length === 0 ? "Commenter" : "Répondre"}
           </Button>
-          <Button isDisabled colorScheme="teal" variant="primary">
-            Save
+          <Button variant="outline" onClick={onCancel}>
+            Annuler
           </Button>
         </ButtonGroup>
       </Stack>
@@ -129,11 +97,33 @@ const Form = ({ firstFieldRef, onCancel }) => {
   );
 };
 
-// 3. Create the Popover
+const Discution = ({ commentaires }) => {
+  return (
+    <Stack spacing={4}>
+      {commentaires.discussion.map((data, i) => {
+        return (
+          <Box key={i}>
+            <CardComment data={data} />
+          </Box>
+        );
+      })}
+    </Stack>
+  );
+};
+
 // Ensure you set `closeOnBlur` prop to false so it doesn't close on outside click
-export default () => {
+export default ({ commentaires, users, onAdd, onResolve }) => {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const firstFieldRef = React.useRef(null);
+
+  const onAddClicked = async (comment) => {
+    await onAdd(comment);
+  };
+
+  const onResolveClicked = async () => {
+    onClose();
+    await onResolve();
+  };
 
   return (
     <Popover
@@ -145,13 +135,59 @@ export default () => {
       closeOnBlur={false}
     >
       <PopoverTrigger>
-        <IconButton icon={<CommentIcon color={"grey.700"} mt="4px" />} />
+        <Avatar
+          icon={<CommentIcon color="grey.700" mt="2px" w={7} h={7} />}
+          bg="gray.100"
+          h="10"
+          w="auto"
+          borderRadius="md"
+          as={IconButton}
+        >
+          {commentaires.discussion.length > 0 && (
+            <AvatarBadge
+              boxSize="1.7em"
+              bg="redmarianne"
+              fontSize="md"
+              fontWeight="semibold"
+              color="white"
+              top="-4"
+              right="-1"
+            >
+              {commentaires.discussion.length}
+            </AvatarBadge>
+          )}
+        </Avatar>
       </PopoverTrigger>
       <PopoverContent p={5}>
         <FocusLock returnFocus persistentFocus={false}>
           <PopoverArrow />
-          <PopoverCloseButton />
-          <Form firstFieldRef={firstFieldRef} onCancel={onClose} />
+          <PopoverCloseButton fontSize="12px" padding={3} h={8} />
+          {commentaires.discussion.length > 0 && (
+            <IconButton
+              icon={
+                <Box>
+                  <CheckIcon color="bluefrance" /> Résourdre
+                </Box>
+              }
+              size="sm"
+              position="absolute"
+              top={1}
+              right={10}
+              padding={3}
+              fontSize="12px"
+              bg="none"
+              onClick={onResolveClicked}
+            />
+          )}
+          <Box h="1px" mt="8" />
+          {commentaires.discussion.length > 0 && <Discution commentaires={commentaires} />}
+          <Form
+            firstFieldRef={firstFieldRef}
+            onCancel={onClose}
+            commentaires={commentaires}
+            users={users}
+            onSubmit={onAddClicked}
+          />
         </FocusLock>
       </PopoverContent>
     </Popover>
