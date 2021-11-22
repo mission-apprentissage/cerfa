@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 import InfoTooltip from "../../../../common/components/InfoTooltip";
+import Comment from "../../../../common/components/Comment";
 
 export default ({ name, label, schema, onSubmitted }) => {
   // const [isLoading, setIsLoading] = useState(false); // TODO
@@ -58,6 +59,7 @@ export default ({ name, label, schema, onSubmitted }) => {
           children={
             <>
               <InfoTooltip description={schema.description} />
+              <Comment />
               {validated && <CheckIcon color="green.500" ml={0.5} />}
             </>
           }
