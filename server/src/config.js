@@ -38,4 +38,10 @@ module.exports = {
       pass: env.get("CERFA_SMTP_AUTH_PASS").asString(),
     },
   },
+  ovh: {
+    storage: {
+      encryptionKey: env.get("CERFA_OVH_STORAGE_ENCRYPTION_KEY").asString(),
+      uri: env.get("CERFA_OVH_STORAGE_URI").asString(),
+    },
+  },
 };

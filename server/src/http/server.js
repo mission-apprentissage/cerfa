@@ -29,7 +29,7 @@ module.exports = async (components) => {
   const app = express();
   const checkJwtToken = authMiddleware(components);
 
-  app.use(bodyParser.json({ limit: "50mb" }));
+  app.use(bodyParser.json());
   app.use(corsMiddleware());
   app.use(logMiddleware());
   app.use(cookieParser());

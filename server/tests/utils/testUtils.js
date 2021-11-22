@@ -33,7 +33,7 @@ async function startServer() {
       });
 
       return {
-        Cookie: response.headers["set-cookie"],
+        Cookie: response.headers["set-cookie"].join(";"),
       };
     },
   };
