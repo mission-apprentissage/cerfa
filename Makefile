@@ -30,4 +30,4 @@ lint:
 clean:
 	docker-compose down
 
-ci: install-server lint test coverage
+ci: install lint test coverage

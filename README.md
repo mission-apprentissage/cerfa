@@ -19,7 +19,10 @@ make install
 make start
 ```
 
-L'application est ensuite disponible à l'url [http://localhost](http://localhost)
+L'application est ensuite disponible à l'url [http://localhost](http://localhost).
+
+Il est possible de consulter les emails envoyés par l'application à
+l'url [http://localhost/smtp](http://localhost/smtp)
 
 ## Développement
 
