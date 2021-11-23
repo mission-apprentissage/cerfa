@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Icon,
   useDisclosure,
@@ -24,6 +24,9 @@ import {
 } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
+import { useFormik } from "formik";
+import { useDossier } from "../../../common/hooks/useDossier";
+import { useComment } from "../../../common/hooks/useComment";
 
 import CardComment from "./Card";
 
@@ -48,24 +51,68 @@ const CommentInput = React.forwardRef((props, ref) => {
   );
 });
 
-const Form = ({ firstFieldRef, onSubmit, onCancel, commentaires, users }) => {
-  const [show, setShow] = useState(commentaires.discussion.length === 0);
+const Form = ({ firstFieldRef, onSubmitted, onCancel, feed }) => {
+  const [show, setShow] = useState(feed.length === 0);
+  const [canSubmit, setCanSubmit] = useState(false);
+  const { users } = useDossier();
   const toogle = () => setShow(!show);
-  // TODO FORMIK
+
+  const { values, handleChange, handleSubmit, setFieldValue } = useFormik({
+    initialValues: {
+      comment: "",
+      notify: [],
+    },
+    onSubmit: ({ comment, notify }) => {
+      return new Promise(async (resolve) => {
+        await onSubmitted({
+          comment,
+          notify,
+        });
+        resolve("onSubmitHandler publish complete");
+      });
+    },
+  });
+
+  const handleNotifyChange = (notify) => {
+    let newNotify = [];
+    if (values.notify.includes(notify)) {
+      newNotify = values.notify.filter((r) => r !== notify);
+    } else {
+      newNotify = [...values.notify, notify];
+    }
+    setFieldValue("notify", newNotify);
+  };
+
   return (
     <Stack spacing={4} mt={5}>
       <Text onClick={toogle} cursor="pointer">
         {!show ? "+" : "-"} Ajouter un nouveau commentaire
       </Text>
       <Stack spacing={4} mt={5} display={!show ? "none" : "flex"} opacity={!show ? "0" : "1"} transition="opacity 0.2s">
-        <CommentInput label="ajouter un nouveau commentaire" id="first-name" ref={firstFieldRef} defaultValue="" />
+        <CommentInput
+          label="ajouter un nouveau commentaire"
+          id="comment"
+          name="comment"
+          value={values.comment}
+          ref={firstFieldRef}
+          onChange={(evt) => {
+            setCanSubmit(true);
+            handleChange(evt);
+          }}
+        />
 
         <CheckboxGroup colorScheme="green" defaultValue={[]}>
           <Text>Notifier:</Text>
           <Stack>
             {users.map((user, i) => {
               return (
-                <Checkbox value={user.name} key={i}>
+                <Checkbox
+                  value={user.name}
+                  key={i}
+                  name="notify"
+                  onChange={() => handleNotifyChange(user.name)}
+                  isChecked={values.notify.includes(user.name)}
+                >
                   {user.name}
                   <Badge
                     variant="solid"
@@ -85,8 +132,8 @@ const Form = ({ firstFieldRef, onSubmit, onCancel, commentaires, users }) => {
         </CheckboxGroup>
 
         <ButtonGroup d="flex" justifyContent="flex-end">
-          <Button colorScheme="teal" variant="primary" onClick={onSubmit}>
-            {commentaires.discussion.length === 0 ? "Commenter" : "Répondre"}
+          <Button colorScheme="teal" variant="primary" onClick={handleSubmit} isDisabled={!canSubmit}>
+            {feed.length === 0 ? "Commenter" : "Répondre"}
           </Button>
           <Button variant="outline" onClick={onCancel}>
             Annuler
@@ -97,10 +144,10 @@ const Form = ({ firstFieldRef, onSubmit, onCancel, commentaires, users }) => {
   );
 };
 
-const Discution = ({ commentaires }) => {
+const Discution = ({ feed }) => {
   return (
     <Stack spacing={4}>
-      {commentaires.discussion.map((data, i) => {
+      {feed.map((data, i) => {
         return (
           <Box key={i}>
             <CardComment data={data} />
@@ -112,18 +159,29 @@ const Discution = ({ commentaires }) => {
 };
 
 // Ensure you set `closeOnBlur` prop to false so it doesn't close on outside click
-export default ({ commentaires, users, onAdd, onResolve }) => {
+export default ({ context }) => {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const firstFieldRef = React.useRef(null);
+  const { isloaded, comments, onAddComment, onResolveFeed } = useComment();
 
-  const onAddClicked = async (comment) => {
-    await onAdd(comment);
-  };
+  const onAddClicked = useCallback(
+    async (comment) => {
+      await onAddComment(context, comment);
+      // Dirty refresh
+      onClose();
+      onOpen();
+    },
+    [context, onAddComment, onClose, onOpen]
+  );
 
   const onResolveClicked = async () => {
     onClose();
-    await onResolve();
+    await onResolveFeed(context);
   };
+
+  if (!isloaded) return null;
+
+  const [{ feed }] = comments[context].discussions;
 
   return (
     <Popover
@@ -143,7 +201,7 @@ export default ({ commentaires, users, onAdd, onResolve }) => {
           borderRadius="md"
           as={IconButton}
         >
-          {commentaires.discussion.length > 0 && (
+          {feed.length > 0 && (
             <AvatarBadge
               boxSize="1.7em"
               bg="redmarianne"
@@ -152,8 +210,9 @@ export default ({ commentaires, users, onAdd, onResolve }) => {
               color="white"
               top="-4"
               right="-1"
+              borderWidth="0"
             >
-              {commentaires.discussion.length}
+              {feed.length}
             </AvatarBadge>
           )}
         </Avatar>
@@ -162,7 +221,7 @@ export default ({ commentaires, users, onAdd, onResolve }) => {
         <FocusLock returnFocus persistentFocus={false}>
           <PopoverArrow />
           <PopoverCloseButton fontSize="12px" padding={3} h={8} />
-          {commentaires.discussion.length > 0 && (
+          {feed.length > 0 && (
             <IconButton
               icon={
                 <Box>
@@ -180,14 +239,8 @@ export default ({ commentaires, users, onAdd, onResolve }) => {
             />
           )}
           <Box h="1px" mt="8" />
-          {commentaires.discussion.length > 0 && <Discution commentaires={commentaires} />}
-          <Form
-            firstFieldRef={firstFieldRef}
-            onCancel={onClose}
-            commentaires={commentaires}
-            users={users}
-            onSubmit={onAddClicked}
-          />
+          {feed.length > 0 && <Discution feed={feed} />}
+          <Form firstFieldRef={firstFieldRef} onCancel={onClose} feed={feed} onSubmitted={onAddClicked} />
         </FocusLock>
       </PopoverContent>
     </Popover>

@@ -18,20 +18,7 @@ import * as Yup from "yup";
 import InfoTooltip from "../../../../common/components/InfoTooltip";
 import Comment from "../../../../common/components/Comments/Comment";
 
-export default ({
-  name,
-  label,
-  requiredMessage,
-  schema,
-  onSubmitted,
-  onFetch,
-  onAddComment,
-  onResolveComments,
-  users,
-  commentaires,
-  history,
-  ...props
-}) => {
+export default ({ name, label, requiredMessage, schema, onSubmitted, onFetch, history, ...props }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [validated, setValidated] = useState(false);
   const [isErrored, setIsErrored] = useState(false);
@@ -145,7 +132,7 @@ export default ({
           <InfoTooltip description={schema.description} history={history} />
         </Box>
         <Box>
-          <Comment commentaires={commentaires} users={users} onAdd={onAddComment} onResolve={onResolveComments} />
+          <Comment context={name} />
         </Box>
       </HStack>
       {errors[name] && <FormErrorMessage>{errors[name]}</FormErrorMessage>}

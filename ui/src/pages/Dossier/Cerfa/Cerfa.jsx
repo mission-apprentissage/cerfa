@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Box,
   Accordion,
@@ -9,7 +9,7 @@ import {
   Heading,
 } from "@chakra-ui/react";
 
-import { _get } from "../../../common/httpClient";
+import { useDossier } from "../../../common/hooks/useDossier";
 
 import FormEmployer from "./components/FormEmployer";
 import FormLearner from "./components/FormLearner";
@@ -47,107 +47,20 @@ const tabsFormAccordion = [
 ];
 
 export default () => {
-  const [formState, setFormState] = useState(null);
+  const { isloaded, cerfa } = useDossier();
 
-  useEffect(() => {
-    async function run() {
-      try {
-        // TODO CUSTOM HOOK Dossier
-        const schema = await _get("/api/v1/cerfa/schema");
-        setFormState({
-          siretCFA: {
-            name: "siretCFA",
-            label: "N° SIRET CFA :",
-            requiredMessage: "Le siret est obligatoire",
-            schema: schema.organismeFormation.siret,
-            onSubmitted: (values) => {
-              console.log(JSON.stringify(values, null, 2));
-            },
-            onFetch: async (value) => {
-              await new Promise((resolve) => setTimeout(resolve, 1000));
-              return {
-                successed: false, // true or false fetching success
-                message: `Le Siret ${value} est un établissement fermé.`,
-              };
-            },
-            onAddComment: async (comment) => {
-              console.log("Add comment", comment);
-            },
-            onResolveComments: async () => {
-              console.log("resolve");
-            },
-            commentaires: {
-              contexte: "siret",
-              resolve: false,
-              discussion: [
-                {
-                  contenu: "Je ne sais pas remplir ce champ. Pourriez-vous m'aider svp?",
-                  dateAjout: Date.now(),
-                  qui: "Antoine Bigard",
-                  role: "CFA",
-                  notifify: ["Paul Pierre"],
-                },
-                {
-                  contenu: "C'est fait!",
-                  dateAjout: Date.now(),
-                  qui: "Paul Pierre",
-                  role: "Employeur",
-                  notifify: ["Antoine Bigard", "Pablo Hanry"],
-                },
-              ],
-            },
-            history: [
-              {
-                qui: "Antoine Bigard",
-                role: "CFA",
-                quoi: "A modifié la valeur du champ par 98765432400070",
-                quand: Date.now(),
-              },
-              {
-                qui: "Paul Pierre",
-                role: "Employeur",
-                quoi: "A modifié la valeur du champ par 98765432400019",
-                quand: Date.now(),
-              },
-            ],
-          },
-        });
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    run();
-  }, []);
-
-  if (!formState) return null;
+  if (!isloaded) return null;
 
   return (
     <Accordion allowToggle mt={16}>
       <Input
-        name={formState.siretCFA.name}
-        label={formState.siretCFA.label}
-        requiredMessage={formState.siretCFA.requiredMessage}
-        schema={formState.siretCFA.schema}
-        onSubmitted={formState.siretCFA.onSubmitted}
-        onFetch={formState.siretCFA.onFetch}
-        onAddComment={formState.siretCFA.onAddComment}
-        onResolveComments={formState.siretCFA.onResolveComments}
-        commentaires={formState.siretCFA.commentaires}
-        history={formState.siretCFA.history}
-        users={[
-          {
-            name: "Paul Pierre", // TODO CUSTOM HOOK ~ useUserDossier
-            role: "Employeur",
-          },
-          {
-            name: "Antoine Bigard",
-            role: "CFA",
-          },
-          {
-            name: "Pablo Hanry",
-            role: "Apprenti",
-          },
-        ]}
+        name={cerfa.siretCFA.name}
+        label={cerfa.siretCFA.label}
+        requiredMessage={cerfa.siretCFA.requiredMessage}
+        schema={cerfa.siretCFA.schema}
+        onSubmitted={cerfa.siretCFA.onSubmitted}
+        onFetch={cerfa.siretCFA.onFetch}
+        history={cerfa.siretCFA.history}
         mb="3"
       />
       {tabsFormAccordion.map(({ title, Component }, key) => {

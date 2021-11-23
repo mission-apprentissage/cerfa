@@ -31,7 +31,7 @@ const commentaireSchema = {
           required: true,
           description: "Qui a réalisé la derniere mise à jour",
         },
-        notifify: {
+        notify: {
           type: [String],
           default: [],
           description: "Notifié à qui ? Déclenche une/(des) notification(s)",

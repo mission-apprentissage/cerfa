@@ -34,7 +34,7 @@ export default ({ data }) => {
           {data.contenu}
         </Text>
         <Text textStyle="sm" color="bluefrance">
-          {data.notifify.map((n) => `@${n} `)}
+          {data.notify.map((n) => `@${n} `)}
         </Text>
       </Box>
       <Divider borderWidth="2px" color="grey.500" mt={2} />
