@@ -38,13 +38,15 @@ const organismeFormationSchema = {
     type: String,
     description: "N° SIRET de l'organisme de formation responsable",
     default: null,
-    example: "98765432400019",
     required: function () {
       return !this.draft;
     },
     nullable: function () {
       return this.draft;
     },
+    example: "98765432400019",
+    label: "N° SIRET CFA :",
+    requiredMessage: "Le siret est obligatoire",
     pattern: "^([0-9]{14}|[0-9]{9} [0-9]{4})$",
   },
   uaiCfa: {

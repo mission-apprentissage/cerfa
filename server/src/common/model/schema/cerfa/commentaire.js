@@ -11,40 +11,46 @@ const commentaireSchema = {
     required: true,
     description: "contexte du commentaire",
   },
-  discussion: {
+  discussions: {
     type: [
       new mongoose.Schema({
-        contenu: {
-          type: String,
+        resolve: {
+          type: Boolean,
+          default: false,
           required: true,
-          description: "text du commentaire",
+          description: "Statut du commentaire",
         },
-        dateAjout: {
-          type: Date,
-          default: Date.now,
-          required: true,
-          description: "Date d'ajout",
-        },
-        qui: {
-          type: String,
-          default: null,
-          required: true,
-          description: "Qui a réalisé la derniere mise à jour",
-        },
-        notify: {
-          type: [String],
-          default: [],
-          description: "Notifié à qui ? Déclenche une/(des) notification(s)",
+        feed: {
+          type: [
+            {
+              contenu: {
+                type: String,
+                required: true,
+                description: "text du commentaire",
+              },
+              dateAjout: {
+                type: Date,
+                default: Date.now,
+                required: true,
+                description: "Date d'ajout",
+              },
+              qui: {
+                type: String,
+                default: null,
+                required: true,
+                description: "Qui a réalisé la derniere mise à jour",
+              },
+              notify: {
+                type: [String],
+                default: [],
+                description: "Notifié à qui ? Déclenche une/(des) notification(s)",
+              },
+            },
+          ],
         },
       }),
     ],
     default: [],
-  },
-  resolve: {
-    type: Boolean,
-    default: false,
-    required: true,
-    description: "Statut du commentaire",
   },
 };
 

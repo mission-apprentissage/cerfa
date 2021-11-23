@@ -18,4 +18,6 @@ module.exports = {
 
   // below Cerfa specific
   Dossier: createModel("cerfa", schema.dossierSchema),
+  Commentaire: createModel("commentaire", schema.commentaireSchema),
+  History: createModel("history", schema.historySchema),
 };

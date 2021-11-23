@@ -25,7 +25,7 @@ import {
 import { CheckIcon } from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
 import { useFormik } from "formik";
-import { useDossier } from "../../../common/hooks/useDossier";
+import { useDossier } from "../../hooks/useDossier";
 import { useComment } from "../../../common/hooks/useComment";
 
 import CardComment from "./Card";
@@ -57,7 +57,7 @@ const Form = ({ firstFieldRef, onSubmitted, onCancel, feed }) => {
   const { users } = useDossier();
   const toogle = () => setShow(!show);
 
-  const { values, handleChange, handleSubmit, setFieldValue } = useFormik({
+  const { values, handleChange, handleSubmit, setFieldValue, resetForm } = useFormik({
     initialValues: {
       comment: "",
       notify: [],
@@ -68,6 +68,7 @@ const Form = ({ firstFieldRef, onSubmitted, onCancel, feed }) => {
           comment,
           notify,
         });
+        resetForm();
         resolve("onSubmitHandler publish complete");
       });
     },

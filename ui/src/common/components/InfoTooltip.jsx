@@ -15,6 +15,7 @@ import {
   Flex,
   Text,
   Badge,
+  Stack,
 } from "@chakra-ui/react";
 import { prettyPrintDate } from "../utils/dateUtils";
 
@@ -27,7 +28,7 @@ const TooltipIcon = (props) => (
   </Icon>
 );
 
-const InfoTooltip = ({ description, history }) => {
+const InfoTooltip = ({ description, example, history }) => {
   return (
     <Popover placement="bottom">
       <PopoverTrigger>
@@ -37,19 +38,24 @@ const InfoTooltip = ({ description, history }) => {
         <PopoverArrow />
         <PopoverCloseButton />
         <PopoverHeader fontWeight="bold">Description</PopoverHeader>
-        <PopoverBody>{description}</PopoverBody>
+        <PopoverBody>
+          <Stack>
+            <Text>{description}</Text>
+            <Text as="samp">Exemple: {example}</Text>
+          </Stack>
+        </PopoverBody>
         <PopoverHeader fontWeight="bold">Historique</PopoverHeader>
         <PopoverBody>
           {history.map((entry, i) => {
             return (
               <Wrap key={i} mb={3}>
                 <WrapItem>
-                  <Avatar name={entry.qui} size="xs" />
+                  <Avatar name={entry.who} size="xs" />
                 </WrapItem>
                 <Flex flexDirection="column">
                   <Flex alignItems="center">
                     <Text textStyle="sm" fontWeight="bold">
-                      {entry.qui}
+                      {entry.who}
                     </Text>
                     <Badge
                       variant="solid"
@@ -63,10 +69,10 @@ const InfoTooltip = ({ description, history }) => {
                       {entry.role}
                     </Badge>
                   </Flex>
-                  <Text textStyle="xs">{prettyPrintDate(entry.quand)}</Text>
+                  <Text textStyle="xs">{prettyPrintDate(entry.when)}</Text>
                 </Flex>
                 <Text textStyle="sm" mt="0">
-                  {entry.quoi}
+                  A modifié(e) la valeur du champ par {entry.to}
                 </Text>
               </Wrap>
             );

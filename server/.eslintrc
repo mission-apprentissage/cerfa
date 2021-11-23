@@ -1,6 +1,6 @@
 {
   "root": true,
-  "extends": ["eslint:recommended", "plugin:node/recommended", "plugin:prettier/recommended"],
+  "extends": ["plugin:node/recommended", "plugin:prettier/recommended"],
   "env": {
     "node": true,
     "es6": true,
@@ -13,7 +13,9 @@
     {
       "files": ["**/*test.js", "**/*Tests.js", "tests/**/*.js"],
       "rules": {
-        "node/no-unpublished-require": 0
+        "node/no-unpublished-require": 0,
+        "no-nonoctal-decimal-escape": 0,
+        "no-unsafe-optional-chaining": 0
       }
     }
   ]

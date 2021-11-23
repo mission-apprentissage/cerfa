@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 // import { _get } from "../httpClient";
 
 const commentsC = {
-  siretCFA: {
-    context: "siretCFA",
+  "organismeFormation.siret": {
+    context: "organismeFormation.siret",
     discussions: [
       {
         resolve: false,
@@ -30,7 +30,7 @@ const commentsC = {
 
 const hydrate = async () => {
   try {
-    await new Promise((resolve) => setTimeout(resolve, 200)); // Mock Fetch comments
+    await new Promise((resolve) => setTimeout(resolve, 200)); // TODO Fetch comments
     return {
       comments: commentsC,
     };
@@ -47,12 +47,11 @@ export function useComment() {
 
   const onAddComment = useCallback(async (context, { comment, notify }) => {
     try {
-      // TODO dummy data
       commentsC[context].discussions[0].feed.push({
         contenu: comment,
         dateAjout: Date.now(),
-        qui: "Paul Pierre",
-        role: "Employeur",
+        qui: "Paul Pierre", // TODO Get user
+        role: "Employeur", // TODO Get user
         notify,
       });
     } catch (e) {

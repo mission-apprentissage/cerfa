@@ -18,11 +18,20 @@ import * as Yup from "yup";
 import InfoTooltip from "../../../../common/components/InfoTooltip";
 import Comment from "../../../../common/components/Comments/Comment";
 
-export default ({ name, label, requiredMessage, schema, onSubmitted, onFetch, history, ...props }) => {
+import { useCerfa } from "../../../../common/hooks/useCerfa";
+
+export default ({ path, ...props }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [validated, setValidated] = useState(false);
   const [isErrored, setIsErrored] = useState(false);
+  const { cerfa, getField } = useCerfa();
 
+  const { label, requiredMessage, pattern, description, example, maxLength, onSubmitted, onFetch, history } = getField(
+    cerfa,
+    path
+  );
+
+  const name = path.replace(".", "_");
   const { values, handleChange: handleChangeFormik, handleSubmit, errors, setFieldValue, setErrors } = useFormik({
     initialValues: {
       [name]: "",
@@ -42,7 +51,7 @@ export default ({ name, label, requiredMessage, schema, onSubmitted, onFetch, hi
       setValidated(false);
       setIsErrored(false);
 
-      const regex = new RegExp(schema.pattern);
+      const regex = new RegExp(pattern);
       const valid = regex.test(val);
       if (!valid) {
         return handleChangeFormik(e);
@@ -59,7 +68,7 @@ export default ({ name, label, requiredMessage, schema, onSubmitted, onFetch, hi
         setIsErrored(true);
       }
     },
-    [handleChangeFormik, handleSubmit, name, onFetch, schema.pattern, setErrors, setFieldValue]
+    [handleChangeFormik, handleSubmit, name, onFetch, pattern, setErrors, setFieldValue]
   );
 
   const borderBottomColor = validated ? "green.500" : isErrored ? "error" : "grey.600";
@@ -75,10 +84,11 @@ export default ({ name, label, requiredMessage, schema, onSubmitted, onFetch, hi
             onChange={handleChange}
             value={values[name]}
             required
-            pattern={schema.pattern}
-            placeholder={schema.description}
+            pattern={pattern}
+            placeholder={description}
             variant={validated ? "valid" : "outline"}
             isInvalid={isErrored}
+            maxLength={maxLength}
             _focus={{
               borderBottomColor: borderBottomColor,
               boxShadow: "none",
@@ -129,10 +139,10 @@ export default ({ name, label, requiredMessage, schema, onSubmitted, onFetch, hi
         </InputGroup>
 
         <Box>
-          <InfoTooltip description={schema.description} history={history} />
+          <InfoTooltip description={description} example={example} history={history} />
         </Box>
         <Box>
-          <Comment context={name} />
+          <Comment context={path} />
         </Box>
       </HStack>
       {errors[name] && <FormErrorMessage>{errors[name]}</FormErrorMessage>}

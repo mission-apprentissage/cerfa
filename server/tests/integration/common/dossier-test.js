@@ -1,7 +1,7 @@
 const assert = require("assert");
 const { Dossier } = require("../../../src/common/model");
 
-describe("cerfa", () => {
+describe("Dossier", () => {
   it("Doit créer un dossier NON-DRAFT", async () => {
     const contrat = new Dossier({
       draft: false,

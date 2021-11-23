@@ -9,7 +9,7 @@ import {
   Heading,
 } from "@chakra-ui/react";
 
-import { useDossier } from "../../../common/hooks/useDossier";
+import { useCerfa } from "../../../common/hooks/useCerfa";
 
 import FormEmployer from "./components/FormEmployer";
 import FormLearner from "./components/FormLearner";
@@ -47,22 +47,13 @@ const tabsFormAccordion = [
 ];
 
 export default () => {
-  const { isloaded, cerfa } = useDossier();
+  const { isloaded } = useCerfa();
 
   if (!isloaded) return null;
 
   return (
     <Accordion allowToggle mt={16}>
-      <Input
-        name={cerfa.siretCFA.name}
-        label={cerfa.siretCFA.label}
-        requiredMessage={cerfa.siretCFA.requiredMessage}
-        schema={cerfa.siretCFA.schema}
-        onSubmitted={cerfa.siretCFA.onSubmitted}
-        onFetch={cerfa.siretCFA.onFetch}
-        history={cerfa.siretCFA.history}
-        mb="3"
-      />
+      <Input path="organismeFormation.siret" mb="3" />
       {tabsFormAccordion.map(({ title, Component }, key) => {
         return (
           <AccordionItem key={key}>
