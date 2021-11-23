@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { _get } from "../httpClient";
+import { _get, _put } from "../httpClient";
 import { atom, useRecoilState } from "recoil";
 
 export const cerfaAtom = atom({
@@ -21,13 +21,22 @@ const hydrate = async () => {
       organismeFormation: {
         siret: {
           ...organismeFormation.siret,
-          onSubmitted: (values) => {
-            console.log(JSON.stringify(values, null, 2));
+          onSubmitted: async (values) => {
+            await _put("/api/v1/history", {
+              // TODO
+              idDossier: "619baec6fcdd030ba4e13c40",
+              context: "organismeFormation.siret",
+              from: "98765432400070",
+              to: values["organismeFormation.siret"],
+              how: "manuel",
+              when: Date.now(),
+              who: "Antoine Bigard", // TODO Get user
+            });
           },
           onFetch: async (value) => {
             await new Promise((resolve) => setTimeout(resolve, 1000));
             return {
-              successed: false, // // TODO Fetch => true or false fetching success
+              successed: true, // // TODO Fetch => true or false fetching success
               message: `Le Siret ${value} est un établissement fermé.`,
             };
           },

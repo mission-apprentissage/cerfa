@@ -5,7 +5,7 @@ describe("History", () => {
   it("Doit créer une historique sur un champ", async () => {
     const history = await History.create({
       idDossier: "619baec6fcdd030ba4e13c40",
-      contexte: "organismeFormation.siret",
+      context: "organismeFormation.siret",
       history: [
         {
           from: null,
@@ -24,9 +24,10 @@ describe("History", () => {
       ],
     });
 
-    console.log(history);
-
-    const results = await History.find({ idDossier: "619baec6fcdd030ba4e13c40", contexte: "organismeFormation.siret" });
+    const results = await History.find({
+      idDossier: "619baec6fcdd030ba4e13c40",
+      context: "organismeFormation.siret",
+    });
 
     assert.equal(results.length === 1, true);
   });

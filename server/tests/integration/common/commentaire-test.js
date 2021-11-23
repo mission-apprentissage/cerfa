@@ -21,8 +21,6 @@ describe("Commentaire", () => {
       ],
     });
 
-    console.log(commentaire);
-
     const results = await Commentaire.find({});
 
     assert.equal(results.length === 1, true);

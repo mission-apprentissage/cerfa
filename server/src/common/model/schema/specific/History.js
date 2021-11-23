@@ -6,7 +6,7 @@ const historySchema = {
     description: "Identifiant interne du dossier",
     required: true,
   },
-  contexte: {
+  context: {
     type: String,
     required: true,
     description: "contexte de l'historique",

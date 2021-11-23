@@ -40,7 +40,10 @@ export default ({ path, ...props }) => {
       [name]: Yup.string().required(requiredMessage),
     }),
     onSubmit: (values) => {
-      onSubmitted(values);
+      return new Promise(async (resolve) => {
+        await onSubmitted({ [path]: values[name] });
+        resolve("onSubmitHandler publish complete");
+      });
     },
   });
 
