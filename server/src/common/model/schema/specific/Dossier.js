@@ -47,7 +47,7 @@ const dossierSchema = {
     required: true,
     description: "Statut interne brouillon",
   },
-  qui: {
+  createdBy: {
     type: String,
     default: null,
     required: true,

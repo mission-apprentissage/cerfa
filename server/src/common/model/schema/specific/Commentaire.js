@@ -34,7 +34,7 @@ const commentaireSchema = {
                 required: true,
                 description: "Date d'ajout",
               },
-              qui: {
+              createdBy: {
                 type: String,
                 default: null,
                 required: true,

@@ -15,7 +15,7 @@ const authentified = require("./routes/authentified");
 const user = require("./routes/user");
 const role = require("./routes/role");
 const password = require("./routes/password");
-const upload = require("./routes/upload");
+const upload = require("./routes/specific/upload");
 const auth = require("./routes/auth");
 // const secured = require("./routes/securedAPI");
 const maintenanceMessage = require("./routes/maintenanceMessage");
@@ -51,15 +51,15 @@ module.exports = async (components) => {
     permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
     role(components)
   );
-  app.use("/api/v1/upload", checkJwtToken, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
   app.use("/api/v1/maintenanceMessage", checkJwtToken, maintenanceMessage());
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/authentified", checkJwtToken, authentified(components));
   app.use("/api/v1/password", password(components));
 
   // below specific
+  app.use("/api/v1/upload", checkJwtToken, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
   app.use("/api/v1/history", checkJwtToken, history());
-  app.use("/api/v1/cerfa", cerfa());
+  app.use("/api/v1/cerfa", checkJwtToken, cerfa());
 
   app.get(
     "/api",

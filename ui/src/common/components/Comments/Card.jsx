@@ -7,12 +7,12 @@ export default ({ data }) => {
     <Flex flexDirection="column">
       <Wrap>
         <WrapItem>
-          <Avatar name={data.qui} />
+          <Avatar name={data.createdBy} />
         </WrapItem>
         <Flex flexDirection="column">
           <Flex alignItems="center">
             <Text textStyle="sm" fontWeight="bold">
-              {data.qui}
+              {data.createdBy}
             </Text>
             <Badge
               variant="solid"

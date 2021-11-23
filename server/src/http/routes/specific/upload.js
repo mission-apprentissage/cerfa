@@ -1,11 +1,11 @@
 const express = require("express");
-const config = require("../../config");
+const config = require("../../../config");
 const mongoose = require("mongoose");
-const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { putObjectIntoStorage } = require("../../common/utils/ovhUtils");
+const tryCatch = require("../../middlewares/tryCatchMiddleware");
+const { putObjectIntoStorage } = require("../../../common/utils/ovhUtils");
 const { compose } = require("oleoduc");
 const multiparty = require("multiparty");
-const { cipher } = require("../../common/utils/cryptoUtils");
+const { cipher } = require("../../../common/utils/cryptoUtils");
 
 module.exports = () => {
   const router = express.Router();

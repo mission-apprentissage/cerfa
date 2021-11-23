@@ -15,7 +15,7 @@ describe("Dossier", () => {
           quiMiseAJour: "test-user",
         },
       ],
-      qui: "test-user",
+      createdBy: "test-user",
     });
 
     const results = await Dossier.find({});
@@ -26,7 +26,7 @@ describe("Dossier", () => {
     await Dossier.create({
       draft: true,
       cerfaId: "619baec6fcdd030ba4e13c40",
-      qui: "test-user",
+      createdBy: "test-user",
     });
 
     const results = await Dossier.find({});

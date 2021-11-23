@@ -13,7 +13,7 @@ describe("Commentaire", () => {
             {
               contenu: "Je ne sais pas remplir ce champ. Pourriez-vous m'aider svp?",
               dateAjout: Date.now(),
-              qui: "Antoine Bigard",
+              createdBy: "Antoine Bigard",
               notify: ["Paul Pierre"],
             },
           ],

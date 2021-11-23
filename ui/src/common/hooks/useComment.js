@@ -11,14 +11,14 @@ const commentsC = {
           {
             contenu: "Je ne sais pas remplir ce champ. Pourriez-vous m'aider svp?",
             dateAjout: Date.now(),
-            qui: "Antoine Bigard",
+            createdBy: "Antoine Bigard",
             role: "CFA",
             notify: ["Paul Pierre"],
           },
           {
             contenu: "C'est fait!",
             dateAjout: Date.now(),
-            qui: "Paul Pierre",
+            createdBy: "Paul Pierre",
             role: "Employeur",
             notify: ["Antoine Bigard", "Pablo Hanry"],
           },
@@ -50,7 +50,7 @@ export function useComment() {
       commentsC[context].discussions[0].feed.push({
         contenu: comment,
         dateAjout: Date.now(),
-        qui: "Paul Pierre", // TODO Get user
+        createdBy: "Paul Pierre", // TODO Get user
         role: "Employeur", // TODO Get user
         notify,
       });
