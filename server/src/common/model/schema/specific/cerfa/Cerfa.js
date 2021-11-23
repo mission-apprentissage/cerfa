@@ -1,9 +1,9 @@
-const employeurCerfaSchema = require("./employeurCerfa");
-const apprentiSchema = require("./apprenti");
-const maitreApprentissageSchema = require("./maitreApprentissage");
-const formationSchema = require("./formation");
-const contratSchema = require("./contrat");
-const organismeFormationSchema = require("./organismeFormation");
+const employeurCerfaSchema = require("./parts/employeurCerfa.part");
+const apprentiSchema = require("./parts/apprenti.part");
+const maitreApprentissageSchema = require("./parts/maitreApprentissage.part");
+const formationSchema = require("./parts/formation.part");
+const contratSchema = require("./parts/contrat.part");
+const organismeFormationSchema = require("./parts/organismeFormation.part");
 
 const cerfaSchema = {
   employeur: {

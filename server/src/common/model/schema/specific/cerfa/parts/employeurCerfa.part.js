@@ -1,4 +1,4 @@
-const adresseSchema = require("./adresse");
+const adresseSchema = require("./adresse.part");
 
 const employeurCerfaSchema = {
   denomination: {

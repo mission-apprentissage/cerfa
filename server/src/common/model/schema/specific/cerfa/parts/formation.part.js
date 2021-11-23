@@ -1,4 +1,4 @@
-const diplomeSchema = require("./diplome");
+const diplomeSchema = require("./diplome.part");
 
 const formationSchema = {
   rncp: {

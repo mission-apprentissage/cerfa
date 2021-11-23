@@ -1,5 +1,5 @@
-const cerfaSchema = require("./Cerfa");
-const documentSchema = require("./document");
+const cerfaSchema = require("./cerfa/Cerfa");
+const documentSchema = require("./document.part");
 
 const dossierSchema = {
   ...cerfaSchema,

@@ -1,5 +1,5 @@
 const express = require("express");
-const cerfaSchema = require("../../common/model/schema/cerfa/dossier/Cerfa");
+const cerfaSchema = require("../../common/model/schema/specific/cerfa/Cerfa");
 
 module.exports = () => {
   const router = express.Router();
