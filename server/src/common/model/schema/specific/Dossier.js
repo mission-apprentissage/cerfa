@@ -1,8 +1,11 @@
-const cerfaSchema = require("./cerfa/Cerfa");
 const documentSchema = require("./document.part");
 
 const dossierSchema = {
-  ...cerfaSchema,
+  cerfaId: {
+    type: String,
+    description: "Identifiant interne du cerfa",
+    required: true,
+  },
   documents: {
     type: [
       {

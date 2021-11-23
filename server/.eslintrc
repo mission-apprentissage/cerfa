@@ -1,6 +1,6 @@
 {
   "root": true,
-  "extends": ["plugin:node/recommended", "plugin:prettier/recommended"],
+  "extends": ["eslint:recommended", "plugin:node/recommended", "plugin:prettier/recommended"],
   "env": {
     "node": true,
     "es6": true,
@@ -18,5 +18,9 @@
         "no-unsafe-optional-chaining": 0
       }
     }
-  ]
+  ],
+  "rules": {
+    "no-nonoctal-decimal-escape": 0,
+    "no-unsafe-optional-chaining": 0
+  }
 }

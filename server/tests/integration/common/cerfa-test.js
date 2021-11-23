@@ -3,7 +3,7 @@ const { Cerfa } = require("../../../src/common/model");
 
 describe("Cerfa", () => {
   it("Doit créer un cerfa NON-DRAFT", async () => {
-    const cerfa = await Cerfa.create({
+    await Cerfa.create({
       draft: false,
       employeur: {
         denomination: "ENERGIE 3000",
@@ -135,7 +135,7 @@ describe("Cerfa", () => {
     assert.equal(results.length === 1, true);
   });
   it("Doit créer un Cerfa DRAFT", async () => {
-    const contrat = await Cerfa.create({
+    await Cerfa.create({
       draft: true,
     });
 

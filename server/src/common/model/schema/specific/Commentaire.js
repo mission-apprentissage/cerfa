@@ -1,7 +1,7 @@
 const { mongoose } = require("../../../mongodb");
 
 const commentaireSchema = {
-  idDossier: {
+  dossierId: {
     type: String,
     description: "Identifiant interne du dossier",
     required: true,

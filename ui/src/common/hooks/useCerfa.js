@@ -24,7 +24,7 @@ const hydrate = async () => {
           onSubmitted: async (values) => {
             await _put("/api/v1/history", {
               // TODO
-              idDossier: "619baec6fcdd030ba4e13c40",
+              dossierId: "619baec6fcdd030ba4e13c40",
               context: "organismeFormation.siret",
               from: "98765432400070",
               to: values["organismeFormation.siret"],

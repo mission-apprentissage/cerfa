@@ -20,8 +20,8 @@ module.exports = () => {
   router.post(
     "/",
     tryCatch(async ({ body }, res) => {
-      let { idDossier, context, history } = await Joi.object({
-        idDossier: Joi.string().required(),
+      let { dossierId, context, history } = await Joi.object({
+        dossierId: Joi.string().required(),
         context: Joi.string().required(),
         history: Joi.array()
           .items({
@@ -35,7 +35,7 @@ module.exports = () => {
       }).validateAsync(body, { abortEarly: false });
 
       const result = await History.create({
-        idDossier,
+        dossierId,
         context,
         history,
       });
@@ -71,9 +71,9 @@ module.exports = () => {
 
   router.put(
     "/",
-    tryCatch(async ({ body, params }, res) => {
+    tryCatch(async ({ body }, res) => {
       await Joi.object({
-        idDossier: Joi.string().required(),
+        dossierId: Joi.string().required(),
         context: Joi.string().required(),
         from: Joi.string().allow("").required(),
         to: Joi.string().required(),
@@ -82,9 +82,9 @@ module.exports = () => {
         when: Joi.date().default(Date.now),
       }).validateAsync(body, { abortEarly: false });
 
-      const { idDossier, context, ...rest } = body;
+      const { dossierId, context, ...rest } = body;
       const result = await History.findOneAndUpdate(
-        { idDossier, context },
+        { dossierId, context },
         {
           $push: { history: rest },
         },

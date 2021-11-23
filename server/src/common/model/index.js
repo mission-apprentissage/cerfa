@@ -20,13 +20,13 @@ module.exports = {
   Dossier: createModel("dossier", schema.dossierSchema),
   Cerfa: createModel("cerfa", schema.cerfaSchema, {
     createMongoDBIndexes: (schema) => {
-      schema.index({ idDossier: 1 }, { unique: true });
+      schema.index({ dossierId: 1 }, { unique: true });
     },
   }),
   Commentaire: createModel("commentaire", schema.commentaireSchema),
   History: createModel("history", schema.historySchema, {
     createMongoDBIndexes: (schema) => {
-      schema.index({ idDossier: 1, context: 1 }, { unique: true });
+      schema.index({ dossierId: 1, context: 1 }, { unique: true });
     },
   }),
 };

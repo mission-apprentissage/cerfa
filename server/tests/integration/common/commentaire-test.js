@@ -3,8 +3,8 @@ const { Commentaire } = require("../../../src/common/model");
 
 describe("Commentaire", () => {
   it("Doit créer un commentaire", async () => {
-    const commentaire = await Commentaire.create({
-      idDossier: "619baec6fcdd030ba4e13c40",
+    await Commentaire.create({
+      dossierId: "619baec6fcdd030ba4e13c40",
       contexte: "organismeFormation.siret",
       discussions: [
         {

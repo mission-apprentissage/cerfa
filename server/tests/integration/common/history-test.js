@@ -3,8 +3,8 @@ const { History } = require("../../../src/common/model");
 
 describe("History", () => {
   it("Doit créer une historique sur un champ", async () => {
-    const history = await History.create({
-      idDossier: "619baec6fcdd030ba4e13c40",
+    await History.create({
+      dossierId: "619baec6fcdd030ba4e13c40",
       context: "organismeFormation.siret",
       history: [
         {
@@ -25,7 +25,7 @@ describe("History", () => {
     });
 
     const results = await History.find({
-      idDossier: "619baec6fcdd030ba4e13c40",
+      dossierId: "619baec6fcdd030ba4e13c40",
       context: "organismeFormation.siret",
     });
 
