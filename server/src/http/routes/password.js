@@ -1,7 +1,7 @@
 const express = require("express");
 const Boom = require("boom");
 const Joi = require("joi");
-const config = require("config");
+const config = require("../../config");
 const passport = require("passport");
 const { Strategy, ExtractJwt } = require("passport-jwt");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
@@ -62,20 +62,20 @@ module.exports = ({ users, mailer }) => {
 
       if (noEmail) {
         return res.json({ token });
-      } else {
-        await mailer.sendEmail(
-          user.email,
-          `[${config.env} Contrat publique apprentissage] Réinitialiser votre mot de passe`,
-          getEmailTemplate("forgotten-password"),
-          {
-            url,
-            username: user.username,
-            publicUrl: config.publicUrl,
-          }
-        );
-
-        return res.json({});
       }
+
+      await mailer.sendEmail(
+        user.email,
+        `[${config.env} Contrat publique apprentissage] Réinitialiser votre mot de passe`,
+        getEmailTemplate("forgotten-password"),
+        {
+          url,
+          username: user.username,
+          publicUrl: config.publicUrl,
+        }
+      );
+
+      return res.json({});
     })
   );
 

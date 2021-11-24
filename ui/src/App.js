@@ -22,6 +22,8 @@ const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
+const Dossier = lazy(() => import("./pages/Dossier/Dossier"));
+const Contrat = lazy(() => import("./pages/Dossier/Contrat"));
 
 function PrivateRoute({ component, ...rest }) {
   let [auth] = useAuth();
@@ -45,15 +47,14 @@ const ResetPasswordWrapper = ({ children }) => {
   let history = useHistory();
 
   useEffect(() => {
-    async function run() {
+    (async () => {
       if (auth.sub !== "anonymous") {
         if (auth.account_status === "FORCE_RESET_PASSWORD") {
           let { token } = await _post("/api/v1/password/forgotten-password?noEmail=true", { username: auth.sub });
           history.push(`/reset-password?passwordToken=${token}`);
         }
       }
-    }
-    run();
+    })();
   }, [auth, history]);
 
   return <>{children}</>;
@@ -101,8 +102,10 @@ export default () => {
                 <PrivateRoute exact path="/" component={HomePage} />
 
                 {auth && hasAccessTo(auth, "page_dashboard") && (
-                  <PrivateRoute exact path="/mes-actions" component={DashboardPage} />
+                  <PrivateRoute exact path="/dossiers" component={DashboardPage} />
                 )}
+                <PrivateRoute exact path="/dossiers/contrat" component={Dossier} />
+                <PrivateRoute exact path="/dossiers/contrat/:id" component={Contrat} />
 
                 {auth && hasAccessTo(auth, "page_gestion_utilisateurs") && (
                   <PrivateRoute exact path="/admin/users" component={Users} />

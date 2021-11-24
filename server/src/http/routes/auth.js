@@ -1,5 +1,5 @@
 const express = require("express");
-const config = require("config");
+const config = require("../../config");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { createUserToken } = require("../../common/utils/jwtUtils");
 

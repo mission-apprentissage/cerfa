@@ -15,4 +15,23 @@ module.exports = {
   Role: createModel("role", schema.roleSchema),
   Log: createModel("log", schema.logSchema),
   MaintenanceMessage: createModel("maintenanceMessage", schema.maintenanceMessageSchema),
+
+  // below Cerfa specific
+  Dossier: createModel("dossier", schema.dossierSchema, {
+    createMongoDBIndexes: (schema) => {
+      schema.index({ cerfaId: 1 }, { unique: true });
+    },
+  }),
+  Cerfa: createModel("cerfa", schema.cerfaSchema, {
+    createMongoDBIndexes: (schema) => {
+      schema.index({ dossierId: 1 }, { unique: true });
+    },
+  }),
+  Commentaire: createModel("commentaire", schema.commentaireSchema),
+  History: createModel("history", schema.historySchema, {
+    createMongoDBIndexes: (schema) => {
+      schema.index({ dossierId: 1, context: 1 }, { unique: true });
+    },
+  }),
+  Permission: createModel("permission", schema.permissionSchema),
 };
