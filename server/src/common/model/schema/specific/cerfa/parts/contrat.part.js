@@ -1,7 +1,7 @@
-const modeContractuelSchema = require("./modeContractuel");
-const typeContratSchema = require("./typeContrat");
-const typeDerogationSchema = require("./typeDerogation");
-const remunerationAnnuelleSchema = require("./remunerationAnnuelle");
+const modeContractuelSchema = require("./modeContractuel.part");
+const typeContratSchema = require("./typeContrat.part");
+const typeDerogationSchema = require("./typeDerogation.part");
+const remunerationAnnuelleSchema = require("./remunerationAnnuelle.part");
 
 const contratSchema = {
   modeContractuel: {

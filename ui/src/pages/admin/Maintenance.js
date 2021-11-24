@@ -23,7 +23,7 @@ import { ArrowDropRightLine } from "../../theme/components/icons";
 import useAuth from "../../common/hooks/useAuth";
 import { Table } from "../../common/components/Table";
 
-const Message = () => {
+const Message = ({ match }) => {
   const [messageAutomatique, setMessageAutomatique] = useState([]);
   const [messagesManuel, setMessagesManuel] = useState([]);
 
@@ -158,7 +158,7 @@ const Message = () => {
   };
 
   return (
-    <Layout>
+    <Layout match={match}>
       <Box w="100%" pt={[4, 8]} px={[1, 24]} color="grey.800">
         <Container maxW="xl">
           <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">

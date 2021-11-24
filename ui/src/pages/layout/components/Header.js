@@ -47,7 +47,7 @@ const Header = () => {
             </Link>
 
             <Box p={[1, 6]} flex="1">
-              <Heading as="h6" textStyle="h6">
+              <Heading as="h6" textStyle="h6" fontSize="xl">
                 Générateur de contrat publique d'apprentissage
               </Heading>
             </Box>

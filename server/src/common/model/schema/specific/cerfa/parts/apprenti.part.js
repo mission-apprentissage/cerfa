@@ -1,5 +1,5 @@
-const adresseSchema = require("./adresse");
-const diplomeSchema = require("./diplome");
+const adresseSchema = require("./adresse.part");
+const diplomeSchema = require("./diplome.part");
 
 const apprentiSchema = {
   nom: {

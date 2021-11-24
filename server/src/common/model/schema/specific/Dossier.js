@@ -1,8 +1,11 @@
-const cerfaSchema = require("./Cerfa");
-const documentSchema = require("./document");
+const documentSchema = require("./document.part");
 
 const dossierSchema = {
-  ...cerfaSchema,
+  cerfaId: {
+    type: String,
+    description: "Identifiant interne du cerfa",
+    required: true,
+  },
   documents: {
     type: [
       {
@@ -10,6 +13,9 @@ const dossierSchema = {
       },
     ],
     default: [],
+    required: function () {
+      return !this.draft;
+    },
   },
   numeroExterne: {
     type: String,
@@ -35,6 +41,9 @@ const dossierSchema = {
     type: String,
     default: null,
     nullable: true,
+    required: function () {
+      return !this.draft;
+    },
     description:
       "**Etat du contrat** :\r\n<br />TRANSMIS\r\n<br />EN_COURS_INSTRUCTION\r\n<br />ENGAGE\r\n<br />ANNULE\r\n<br />REFUSE\r\n<br />RUPTURE\r\n<br />SOLDE",
   },
@@ -44,7 +53,17 @@ const dossierSchema = {
     required: true,
     description: "Statut interne brouillon",
   },
-  qui: {
+  saved: {
+    type: Boolean,
+    default: false,
+    description: "Sauvegardé",
+  },
+  lastModified: {
+    type: Date,
+    default: Date.now,
+    description: "Date derniere modification",
+  },
+  createdBy: {
     type: String,
     default: null,
     required: true,
