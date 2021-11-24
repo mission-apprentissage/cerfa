@@ -49,5 +49,5 @@ export const useUnloadEffect = (match, onLeave) => {
         setIsListening(false);
       }
     };
-  }, [beforeUnload, dossier.saved, isListening, location.pathname, match, setIsListening]);
+  }, [beforeUnload, dossier, isListening, location.pathname, match, setIsListening]);
 };

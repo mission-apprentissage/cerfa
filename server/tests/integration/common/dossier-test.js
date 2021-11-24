@@ -15,6 +15,7 @@ describe("Dossier", () => {
           quiMiseAJour: "test-user",
         },
       ],
+      etat: "TRANSMIS",
       createdBy: "test-user",
     });
 
