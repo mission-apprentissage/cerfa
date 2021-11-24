@@ -1,9 +1,22 @@
 import React, { useState } from "react";
 import { setTitle } from "../../common/utils/pageUtils";
-import { Box, Flex, Center, Heading, Button, Container, Badge, HStack, AvatarGroup, Avatar } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Center,
+  Heading,
+  Button,
+  Container,
+  Badge,
+  HStack,
+  AvatarGroup,
+  Avatar,
+  Text,
+} from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { useHistory } from "react-router-dom";
 import { _delete } from "../../common/httpClient";
+import { prettyPrintDate } from "../../common/utils/dateUtils";
 
 import Layout from "../layout/Layout";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
@@ -84,6 +97,11 @@ export default ({ match }) => {
                 ml="10px"
               >
                 Brouillon
+              </Badge>
+              <Badge variant="solid" bg="grey.100" color="grey.500" textStyle="sm" px="15px" ml="10px">
+                <Text as="i">
+                  {!dossier.saved ? "Non sauvegardé" : `Dernière sauvegarde ${prettyPrintDate(dossier.lastModified)}`}
+                </Text>
               </Badge>
             </Heading>
             <HStack>

@@ -13,6 +13,9 @@ const dossierSchema = {
       },
     ],
     default: [],
+    required: function () {
+      return !this.draft;
+    },
   },
   numeroExterne: {
     type: String,
@@ -38,6 +41,9 @@ const dossierSchema = {
     type: String,
     default: null,
     nullable: true,
+    required: function () {
+      return !this.draft;
+    },
     description:
       "**Etat du contrat** :\r\n<br />TRANSMIS\r\n<br />EN_COURS_INSTRUCTION\r\n<br />ENGAGE\r\n<br />ANNULE\r\n<br />REFUSE\r\n<br />RUPTURE\r\n<br />SOLDE",
   },
@@ -46,6 +52,16 @@ const dossierSchema = {
     default: true,
     required: true,
     description: "Statut interne brouillon",
+  },
+  saved: {
+    type: Boolean,
+    default: false,
+    description: "Sauvegardé",
+  },
+  lastModified: {
+    type: Date,
+    default: Date.now,
+    description: "Date derniere modification",
   },
   createdBy: {
     type: String,

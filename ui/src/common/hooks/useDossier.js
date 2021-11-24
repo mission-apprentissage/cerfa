@@ -1,5 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
+import { useRecoilState } from "recoil";
+
 import { _post, _get } from "../httpClient";
+import { dossierAtom } from "./dossierAtom";
 
 const hydrate = async (dossierId) => {
   if (!dossierId) return { dossier: null };
@@ -18,7 +21,7 @@ const hydrate = async (dossierId) => {
 
 export function useDossier(dossierId = null) {
   const [isloaded, setIsLoaded] = useState(false);
-  const [dossier, setDossier] = useState(null);
+  const [dossier, setDossier] = useRecoilState(dossierAtom);
   const [error, setError] = useState(null);
 
   const createDossier = useCallback(async () => {
@@ -31,7 +34,7 @@ export function useDossier(dossierId = null) {
       setDossier(d);
     }
     return d;
-  }, []);
+  }, [setDossier]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -51,7 +54,7 @@ export function useDossier(dossierId = null) {
     return () => {
       abortController.abort();
     };
-  }, [dossierId]);
+  }, [dossierId, setDossier]);
 
   if (error !== null) {
     throw error;

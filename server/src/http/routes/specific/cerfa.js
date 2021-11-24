@@ -51,7 +51,7 @@ module.exports = ({ cerfas }) => {
   router.put(
     "/:id",
     tryCatch(async ({ body, params }, res) => {
-      await Joi.object({
+      const data = await Joi.object({
         employeur: Joi.object({
           denomination: Joi.string(),
           siret: Joi.string(),
@@ -184,7 +184,7 @@ module.exports = ({ cerfas }) => {
 
       // TODO HAS RIGHTS
 
-      const result = await Cerfa.findOneAndUpdate({ _id: params.id }, body, {
+      const result = await Cerfa.findOneAndUpdate({ _id: params.id }, data, {
         new: true,
       });
 

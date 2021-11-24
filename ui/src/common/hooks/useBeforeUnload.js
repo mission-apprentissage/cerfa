@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { atom, useRecoilState } from "recoil";
+import { atom, useRecoilState, useRecoilValue } from "recoil";
+import { dossierAtom } from "./dossierAtom";
 
 window.dossierId = null;
 window.manuallyTriggered = false;
@@ -16,7 +17,6 @@ export const useUnloadEffect = (match, onLeave) => {
       e.preventDefault();
       e.returnValue = "";
     }
-    // console.log("triggerred", e);
     if (window.dossierId) {
       onLeave({ dossierId: window.dossierId, internalLeave: window.manuallyTriggered });
     }
@@ -24,12 +24,13 @@ export const useUnloadEffect = (match, onLeave) => {
 
   let location = useLocation();
   const [isListening, setIsListening] = useRecoilState(isListeningAtom);
+  const dossier = useRecoilValue(dossierAtom);
 
   useEffect(() => {
     const onBeforeUnload = (e) => beforeUnload.current(e);
 
     if (match?.params?.id && match?.path === "/dossiers/contrat/:id") {
-      if (!isListening) {
+      if (!isListening && dossier?.saved === false) {
         window.dossierId = match.params.id;
         window.addEventListener("beforeunload", onBeforeUnload);
         setIsListening(true);
@@ -43,11 +44,10 @@ export const useUnloadEffect = (match, onLeave) => {
           window.manuallyTriggered = true;
           window.dispatchEvent(new Event("beforeunload"));
         }
-        // console.log("remove beforeunload listeners");
         window.dossierId = null;
         window.removeEventListener("beforeunload", onBeforeUnload);
         setIsListening(false);
       }
     };
-  }, [beforeUnload, isListening, location.pathname, match, setIsListening]);
+  }, [beforeUnload, dossier.saved, isListening, location.pathname, match, setIsListening]);
 };

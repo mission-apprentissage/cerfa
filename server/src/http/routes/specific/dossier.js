@@ -48,6 +48,33 @@ module.exports = ({ cerfas, dossiers }) => {
   );
 
   router.put(
+    "/:id",
+    tryCatch(async ({ body, params }, res) => {
+      const data = await Joi.object({
+        documents: Joi.array().items({
+          typeDocument: Joi.string(),
+          typeFichier: Joi.string(),
+          nomFichier: Joi.string(),
+          cheminFichier: Joi.string(),
+        }),
+        numeroExterne: Joi.string(),
+        numeroInterne: Joi.string(),
+        numeroDeca: Joi.string(),
+        etat: Joi.string(),
+        saved: Joi.string(),
+      }).validateAsync(body, { abortEarly: false });
+
+      // TODO HAS RIGHTS
+
+      const result = await Dossier.findOneAndUpdate({ _id: params.id }, data, {
+        new: true,
+      });
+
+      return res.json(result);
+    })
+  );
+
+  router.put(
     "/:id/publish",
     tryCatch(async ({ params }, res) => {
       // TODO HAS RIGHTS
