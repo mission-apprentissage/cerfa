@@ -13,8 +13,14 @@
     {
       "files": ["**/*test.js", "**/*Tests.js", "tests/**/*.js"],
       "rules": {
-        "node/no-unpublished-require": 0
+        "node/no-unpublished-require": 0,
+        "no-nonoctal-decimal-escape": 0,
+        "no-unsafe-optional-chaining": 0
       }
     }
-  ]
+  ],
+  "rules": {
+    "no-nonoctal-decimal-escape": 0,
+    "no-unsafe-optional-chaining": 0
+  }
 }

@@ -1,18 +1,22 @@
-const modeContractuelSchema = require("./modeContractuel");
-const typeContratSchema = require("./typeContrat");
-const typeDerogationSchema = require("./typeDerogation");
-const remunerationAnnuelleSchema = require("./remunerationAnnuelle");
+const modeContractuelSchema = require("./modeContractuel.part");
+const typeContratSchema = require("./typeContrat.part");
+const typeDerogationSchema = require("./typeDerogation.part");
+const remunerationAnnuelleSchema = require("./remunerationAnnuelle.part");
 
 const contratSchema = {
   modeContractuel: {
     ...modeContractuelSchema,
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   typeContratApp: {
     ...typeContratSchema,
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   numeroContratPrecedent: {
     type: String,
@@ -37,7 +41,9 @@ const contratSchema = {
     description: "Date de début d'éxécution du contrat",
     example: "2021-02-01T00:00:00+0000",
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   dateEffetAvenant: {
     type: Date,
@@ -50,14 +56,18 @@ const contratSchema = {
     description: "Date de conclusion du contrat",
     example: "2021-01-15T00:00:00+0000",
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   dateFinContrat: {
     type: Date,
     description: "Date de fin du contrat prévue",
     example: "2021-02-28T00:00:00+0000",
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   dateRupture: {
     type: Date,
@@ -70,7 +80,9 @@ const contratSchema = {
     description: "Lieu de signature du contrat",
     example: "PARIS",
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   typeDerogation: {
     ...typeDerogationSchema,
@@ -80,28 +92,36 @@ const contratSchema = {
     description: "Durée hebdomadaire du travail (heures)",
     example: 37,
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   dureeTravailHebdoMinutes: {
     type: Number,
     description: "Durée hebdomadaire du travail (minutes)",
     example: 30,
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   travailRisque: {
     type: Boolean,
     description: "Travaille sur machines dangereuses ou exposition à des risques particuliers",
     example: true,
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   salaireEmbauche: {
     type: Number,
     description: "Salaire brut à l'embauche",
     example: 1530,
     default: null,
-    required: true,
+    required: function () {
+      return !this.draft;
+    },
   },
   avantageNourriture: {
     type: Number,

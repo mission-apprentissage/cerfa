@@ -1,13 +1,9 @@
 import React from "react";
-import {
-  Box,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Heading,
-} from "@chakra-ui/react";
+import { Box, Accordion, AccordionItem, AccordionButton, AccordionPanel } from "@chakra-ui/react";
+
+import { AddFill, SubtractLine } from "../../../theme/components/icons";
+
+import { useCerfa } from "../../../common/hooks/useCerfa";
 
 import FormEmployer from "./components/FormEmployer";
 import FormLearner from "./components/FormLearner";
@@ -44,20 +40,32 @@ const tabsFormAccordion = [
 ];
 
 export default () => {
+  const { isloaded } = useCerfa();
+
+  if (!isloaded) return null;
+
   return (
-    <Accordion allowToggle mt={16}>
+    <Accordion allowMultiple allowToggle mt={12}>
       {tabsFormAccordion.map(({ title, Component }, key) => {
         return (
-          <AccordionItem key={key}>
-            <AccordionButton bg="secondaryBackground">
-              <Box flex="1" textAlign="left">
-                <Heading fontSize="1rem">{title}</Heading>
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel pb={4}>
-              <Component />
-            </AccordionPanel>
+          <AccordionItem border="none" key={key}>
+            {({ isExpanded }) => (
+              <>
+                <AccordionButton bg="#F9F8F6">
+                  <Box flex="1" textAlign="left">
+                    {title}
+                  </Box>
+                  {isExpanded ? (
+                    <SubtractLine fontSize="12px" color="bluefrance" />
+                  ) : (
+                    <AddFill fontSize="12px" color="bluefrance" />
+                  )}
+                </AccordionButton>
+                <AccordionPanel pb={4}>
+                  <Component />
+                </AccordionPanel>
+              </>
+            )}
           </AccordionItem>
         );
       })}

@@ -1,6 +1,6 @@
 const server = require("./http/server");
 const logger = require("./common/logger");
-const config = require("config");
+const config = require("./config");
 const createComponents = require("./common/components/components");
 
 process.on("unhandledRejection", (e) => logger.error("An unexpected error occurred", e));

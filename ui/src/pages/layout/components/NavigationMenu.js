@@ -59,11 +59,11 @@ const NavLinks = ({ isOpen }) => {
         textStyle="sm"
       >
         <NavItem to="/">Accueil</NavItem>
-        {hasAccessTo(auth, "page_dashboard") && <NavItem to="/dossier">Remplir un nouveau contrat</NavItem>}
-        {hasAccessTo(auth, "page_dashboard") && <NavItem to="/mes-actions">Dashboard</NavItem>}
-        <Link href="https://github.com/mission-apprentissage/cerfa/releases" mr={4} isExternal>
+        {hasAccessTo(auth, "page_dashboard") && <NavItem to="/dossiers">Mes Dossiers</NavItem>}
+        <NavItem to="/dossiers/contrat">Remplir un nouveau contrat</NavItem>
+        {/* <Link href="https://github.com/mission-apprentissage/cerfa/releases" mr={4} isExternal>
           Journal des modifications
-        </Link>
+        </Link> */}
       </Flex>
     </Box>
   );

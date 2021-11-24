@@ -1,10 +1,10 @@
 const assert = require("assert");
-const integrationTests = require("../../utils/integrationTests");
 const { Cerfa } = require("../../../src/common/model");
 
-integrationTests(__filename, () => {
-  it("Vérifie la création d'un cerfa", async () => {
-    const contrat = new Cerfa({
+describe("Cerfa", () => {
+  it("Doit créer un cerfa NON-DRAFT", async () => {
+    await Cerfa.create({
+      draft: false,
       employeur: {
         denomination: "ENERGIE 3000",
         siret: "98765432400019",
@@ -56,6 +56,18 @@ integrationTests(__filename, () => {
           label: "20 Boulevard de la liberté",
           codePostal: "75000",
           commune: "PARIS",
+        },
+        responsableLegal: {
+          nom: "Honore",
+          prenom: "Robert",
+          adresse: {
+            numero: 20,
+            voie: "Boulevard de la liberté",
+            complement: "Etage 6 - Appartement 654",
+            label: "20 Boulevard de la liberté",
+            codePostal: "75000",
+            commune: "PARIS",
+          },
         },
         inscriptionSportifDeHautNiveau: false,
       },
@@ -116,10 +128,22 @@ integrationTests(__filename, () => {
           commune: "PARIS",
         },
       },
+      dossierId: "619baec6fcdd030ba4e13c40",
+      createdBy: "test-user",
     });
-    await contrat.save();
 
     const results = await Cerfa.find({ "employeur.denomination": "ENERGIE 3000" });
+
+    assert.equal(results.length === 1, true);
+  });
+  it("Doit créer un Cerfa DRAFT", async () => {
+    await Cerfa.create({
+      draft: true,
+      dossierId: "619baec6fcdd030ba4e13c40",
+      createdBy: "test-user",
+    });
+
+    const results = await Cerfa.find({});
 
     assert.equal(results.length === 1, true);
   });

@@ -2,7 +2,11 @@ const logSchema = require("./log");
 const userSchema = require("./user");
 const roleSchema = require("./role");
 const maintenanceMessageSchema = require("./maintenanceMessage");
-const cerfaSchema = require("./cerfa/Cerfa");
+const dossierSchema = require("./specific/Dossier");
+const cerfaSchema = require("./specific/cerfa/Cerfa");
+const commentaireSchema = require("./specific/Commentaire");
+const historySchema = require("./specific/History");
+const permissionSchema = require("./specific/Permission");
 
 module.exports = {
   logSchema,
@@ -11,5 +15,9 @@ module.exports = {
   maintenanceMessageSchema,
 
   // below Cerfa specific
+  dossierSchema,
   cerfaSchema,
+  commentaireSchema,
+  historySchema,
+  permissionSchema,
 };

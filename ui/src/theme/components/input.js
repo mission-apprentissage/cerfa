@@ -20,7 +20,7 @@ const commonFieldStyle = {
     outlineOffset: "2px",
   },
   _invalid: {
-    borderBottomColor: "grey.600",
+    borderBottomColor: "error",
     boxShadow: "none",
     outline: "2px solid",
     outlineColor: "error",
@@ -43,6 +43,12 @@ const Input = {
     outline: {
       field: {
         ...commonFieldStyle,
+      },
+    },
+    valid: {
+      field: {
+        ...commonFieldStyle,
+        borderBottomColor: "green.500",
       },
     },
   },

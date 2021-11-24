@@ -3,6 +3,8 @@ import { Box, Button, FormControl, FormLabel, Input, FormErrorMessage, Flex, HSt
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
+import InputCerfa from "./Input";
+
 // import { _post, _get, _put } from "../../common/httpClient";
 
 const FormFormation = () => {
@@ -53,6 +55,7 @@ const FormFormation = () => {
   });
   return (
     <Box>
+      <InputCerfa path="organismeFormation.siret" mb="10" />
       <FormControl>
         <FormLabel>CFA d’entreprise :</FormLabel>
         <HStack w="40%">

@@ -5,7 +5,7 @@ import { Breadcrumb } from "../common/components/Breadcrumb";
 import { setTitle } from "../common/utils/pageUtils";
 
 export default () => {
-  const title = "Dashboard";
+  const title = "Mes dossiers";
   setTitle(title);
 
   return (
@@ -16,7 +16,7 @@ export default () => {
         </Container>
       </Box>
       <Box w="100%" py={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
-        <Container maxW="xl">Dashboard</Container>
+        <Container maxW="xl">Mes dossiers</Container>
       </Box>
     </Layout>
   );

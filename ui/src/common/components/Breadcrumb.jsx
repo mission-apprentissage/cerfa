@@ -11,7 +11,7 @@ const Breadcrumb = ({ pages }) => {
       color="grey.800"
     >
       {pages.map((page, index) => {
-        if (index === pages.length - 1) {
+        if (index === pages.length - 1 || !page.to) {
           return (
             <BreadcrumbItem key={page.title} isCurrentPage>
               <BreadcrumbLink>{page.title}</BreadcrumbLink>
