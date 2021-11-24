@@ -1,3 +1,39 @@
+# [1.8.0](https://github.com/mission-apprentissage/cerfa/compare/v1.7.1...v1.8.0) (2021-11-24)
+
+
+### Bug Fixes
+
+* **chore:** remove cerfa-test.js ([654c973](https://github.com/mission-apprentissage/cerfa/commit/654c973dbc4c770c94dac1a7dbd9c41a6239cbd7))
+* **chore:** remove eslint dependency from server ([7f8067f](https://github.com/mission-apprentissage/cerfa/commit/7f8067f11e0cc949181080ca2728f070c908e4b3))
+* invalid mailer initialisation ([b17094e](https://github.com/mission-apprentissage/cerfa/commit/b17094e112a3cb0c8fe340a1f67fac4adbdfec58))
+* reading attribut of dossier null + tests ([d41540e](https://github.com/mission-apprentissage/cerfa/commit/d41540eebc5e22f2dcb2d346efa178d86f96a480))
+* **ui:** tests ([8f9bc3b](https://github.com/mission-apprentissage/cerfa/commit/8f9bc3b05fc42eea621dfcc7449f4c94f56f823e))
+
+
+### Features
+
+* add API cerfa routes ([0042ac8](https://github.com/mission-apprentissage/cerfa/commit/0042ac8861f2d66ece2f185e340dccfc23f6ed2b))
+* add dossier save value to alert on leaving ([254b6db](https://github.com/mission-apprentissage/cerfa/commit/254b6db6a679ec83bc21f7dfbdd9bac15d45d4f2))
+* add mailhog to send emails locally ([#21](https://github.com/mission-apprentissage/cerfa/issues/21)) ([ece4b9d](https://github.com/mission-apprentissage/cerfa/commit/ece4b9d61cb6c0aa2dd374172cbace37faf40ab4))
+* add recoil state, History model, update comment model + tests ([e81a231](https://github.com/mission-apprentissage/cerfa/commit/e81a2311f71f6a12f3322c5bc6ff5121f67bf30a))
+* **Bow:** Base of work schemas + form ui  ([#24](https://github.com/mission-apprentissage/cerfa/issues/24)) ([aa8e109](https://github.com/mission-apprentissage/cerfa/commit/aa8e109a347b129c1d89389e46b4af45bb14c5c8))
+* **data:** add fragments models ([74c7d71](https://github.com/mission-apprentissage/cerfa/commit/74c7d71c7b38015dba047de32928a30b40d5b1cd))
+* **data:** add get routes cerfa ([d8313e2](https://github.com/mission-apprentissage/cerfa/commit/d8313e2fc670c96e5e6a8c4deb1831fd2eda0f7e))
+* **data:** add model cerfa ([f039f75](https://github.com/mission-apprentissage/cerfa/commit/f039f7537739bf8b89b002fbee5e29913a67734b))
+* encrypt files and upload then on ovh storage ([#22](https://github.com/mission-apprentissage/cerfa/issues/22)) ([885a5be](https://github.com/mission-apprentissage/cerfa/commit/885a5beb366460502d3d00a5d88b290440dc39a0))
+* expose mailhog on /smtp ([#25](https://github.com/mission-apprentissage/cerfa/issues/25)) ([ca5b2d1](https://github.com/mission-apprentissage/cerfa/commit/ca5b2d1bfc0b2c4afda4b065891899db8d0e47b5))
+* handle history route, re-add cerfa model + tests ([8d663b7](https://github.com/mission-apprentissage/cerfa/commit/8d663b7787b2e8128048d1ce6a5034e195cde2db))
+* manage config in a single place ([#23](https://github.com/mission-apprentissage/cerfa/issues/23)) ([efb0442](https://github.com/mission-apprentissage/cerfa/commit/efb0442558ca4bd430be16b98fc72c720daea3b7))
+* rework tests with in-memory mongodb server and nock ([#20](https://github.com/mission-apprentissage/cerfa/issues/20)) ([ef691ea](https://github.com/mission-apprentissage/cerfa/commit/ef691eac386a9f7b29ec2553c99a61571a51a52f))
+* **ui-comment:** add bow ([ec8feba](https://github.com/mission-apprentissage/cerfa/commit/ec8feba2870a8307a508329cb19a3cf1fecf1a92))
+* **ui-input:** bow input with info and comments ([876c809](https://github.com/mission-apprentissage/cerfa/commit/876c809c2be92aebd95e1a44601976f9c4158d9b))
+* **ui:** add alert not saved contrat ([a369120](https://github.com/mission-apprentissage/cerfa/commit/a3691202f1af059d739f64b7d8cf1e335f7a69d0))
+* **ui:** add clickable steps and states ([4f05f68](https://github.com/mission-apprentissage/cerfa/commit/4f05f682847da717563eccae35cf8cb949625253))
+* **ui:** add custom hooks ([8d64fd6](https://github.com/mission-apprentissage/cerfa/commit/8d64fd67b39360976116bd5ce9fe5172cbba81af))
+* **ui:** add dossier page + copy base form ([7d49420](https://github.com/mission-apprentissage/cerfa/commit/7d494200108dcd9fea49c4c9f1f329f762e18506))
+* **ui:** add stepper + update chakra ([e0baee8](https://github.com/mission-apprentissage/cerfa/commit/e0baee8c3420621fd7bab3b077ea5f6c17e0c4b8))
+* **ui:** quick clean ([ed96e3a](https://github.com/mission-apprentissage/cerfa/commit/ed96e3a291b10853982fe8d1cf2ec86e75ee5495))
+
 # [1.8.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.8.0-beta.1...v1.8.0-beta.2) (2021-11-24)
 
 
