@@ -25,7 +25,7 @@ import {
 import { CheckIcon } from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
 import { useFormik } from "formik";
-import { useDossier } from "../../hooks/useDossier";
+// import { useDossier } from "../../hooks/useDossier";
 import { useComment } from "../../../common/hooks/useComment";
 
 import CardComment from "./Card";
@@ -54,7 +54,7 @@ const CommentInput = React.forwardRef((props, ref) => {
 const Form = ({ firstFieldRef, onSubmitted, onCancel, feed }) => {
   const [show, setShow] = useState(feed.length === 0);
   const [canSubmit, setCanSubmit] = useState(false);
-  const { users } = useDossier();
+  // const { users } = useDossier();
   const toogle = () => setShow(!show);
 
   const { values, handleChange, handleSubmit, setFieldValue, resetForm } = useFormik({
@@ -69,6 +69,7 @@ const Form = ({ firstFieldRef, onSubmitted, onCancel, feed }) => {
           notify,
         });
         resetForm();
+        setCanSubmit(false);
         resolve("onSubmitHandler publish complete");
       });
     },
@@ -105,7 +106,20 @@ const Form = ({ firstFieldRef, onSubmitted, onCancel, feed }) => {
         <CheckboxGroup colorScheme="green" defaultValue={[]}>
           <Text>Notifier:</Text>
           <Stack>
-            {users.map((user, i) => {
+            {[
+              {
+                name: "Paul Pierre",
+                role: "Employeur",
+              },
+              {
+                name: "Antoine Bigard",
+                role: "CFA",
+              },
+              {
+                name: "Pablo Hanry",
+                role: "Apprenti",
+              },
+            ].map((user, i) => {
               return (
                 <Checkbox
                   value={user.name}

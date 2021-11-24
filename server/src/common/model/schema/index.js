@@ -6,6 +6,7 @@ const dossierSchema = require("./specific/Dossier");
 const cerfaSchema = require("./specific/cerfa/Cerfa");
 const commentaireSchema = require("./specific/Commentaire");
 const historySchema = require("./specific/History");
+const permissionSchema = require("./specific/Permission");
 
 module.exports = {
   logSchema,
@@ -18,4 +19,5 @@ module.exports = {
   cerfaSchema,
   commentaireSchema,
   historySchema,
+  permissionSchema,
 };

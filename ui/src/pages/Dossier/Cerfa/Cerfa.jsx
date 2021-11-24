@@ -1,13 +1,7 @@
 import React from "react";
-import {
-  Box,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Heading,
-} from "@chakra-ui/react";
+import { Box, Accordion, AccordionItem, AccordionButton, AccordionPanel } from "@chakra-ui/react";
+
+import { AddFill, SubtractLine } from "../../../theme/components/icons";
 
 import { useCerfa } from "../../../common/hooks/useCerfa";
 
@@ -17,7 +11,6 @@ import FormLearningMaster from "./components/FormLearningMaster";
 import FormContract from "./components/FormContract";
 import FormFormation from "./components/FormFormation";
 // import FormSubmittingContract from "./components/FormSubmittingContract";
-import Input from "./components/Input";
 
 const tabsFormAccordion = [
   {
@@ -52,20 +45,27 @@ export default () => {
   if (!isloaded) return null;
 
   return (
-    <Accordion allowToggle mt={16}>
-      <Input path="organismeFormation.siret" mb="3" />
+    <Accordion allowMultiple allowToggle mt={12}>
       {tabsFormAccordion.map(({ title, Component }, key) => {
         return (
-          <AccordionItem key={key}>
-            <AccordionButton bg="secondaryBackground">
-              <Box flex="1" textAlign="left">
-                <Heading fontSize="1rem">{title}</Heading>
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel pb={4}>
-              <Component />
-            </AccordionPanel>
+          <AccordionItem border="none" key={key}>
+            {({ isExpanded }) => (
+              <>
+                <AccordionButton bg="#F9F8F6">
+                  <Box flex="1" textAlign="left">
+                    {title}
+                  </Box>
+                  {isExpanded ? (
+                    <SubtractLine fontSize="12px" color="bluefrance" />
+                  ) : (
+                    <AddFill fontSize="12px" color="bluefrance" />
+                  )}
+                </AccordionButton>
+                <AccordionPanel pb={4}>
+                  <Component />
+                </AccordionPanel>
+              </>
+            )}
           </AccordionItem>
         );
       })}

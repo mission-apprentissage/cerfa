@@ -17,7 +17,11 @@ module.exports = {
   MaintenanceMessage: createModel("maintenanceMessage", schema.maintenanceMessageSchema),
 
   // below Cerfa specific
-  Dossier: createModel("dossier", schema.dossierSchema),
+  Dossier: createModel("dossier", schema.dossierSchema, {
+    createMongoDBIndexes: (schema) => {
+      schema.index({ cerfaId: 1 }, { unique: true });
+    },
+  }),
   Cerfa: createModel("cerfa", schema.cerfaSchema, {
     createMongoDBIndexes: (schema) => {
       schema.index({ dossierId: 1 }, { unique: true });
@@ -29,4 +33,5 @@ module.exports = {
       schema.index({ dossierId: 1, context: 1 }, { unique: true });
     },
   }),
+  Permission: createModel("permission", schema.permissionSchema),
 };

@@ -19,6 +19,7 @@ const upload = require("./routes/specific/upload");
 const auth = require("./routes/auth");
 // const secured = require("./routes/securedAPI");
 const maintenanceMessage = require("./routes/maintenanceMessage");
+const dossier = require("./routes/specific/dossier");
 const cerfa = require("./routes/specific/cerfa");
 const history = require("./routes/specific/history");
 
@@ -59,7 +60,8 @@ module.exports = async (components) => {
   // below specific
   app.use("/api/v1/upload", checkJwtToken, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
   app.use("/api/v1/history", checkJwtToken, history());
-  app.use("/api/v1/cerfa", checkJwtToken, cerfa());
+  app.use("/api/v1/dossier", checkJwtToken, dossier(components));
+  app.use("/api/v1/cerfa", checkJwtToken, cerfa(components));
 
   app.get(
     "/api",

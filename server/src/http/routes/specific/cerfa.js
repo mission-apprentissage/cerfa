@@ -5,7 +5,7 @@ const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const cerfaSchema = require("../../../common/model/schema/specific/cerfa/Cerfa");
 
-module.exports = () => {
+module.exports = ({ cerfas }) => {
   const router = express.Router();
 
   router.get("/schema", async (req, res) => {
@@ -18,9 +18,11 @@ module.exports = () => {
     }).validateAsync(req.query, { abortEarly: false });
 
     let json = JSON.parse(query);
-    const result = await Cerfa.find(json);
+    const results = await Cerfa.find(json);
 
-    return res.json(result);
+    // TODO HAS RIGHTS
+
+    return res.json(results);
   });
 
   router.get(
@@ -30,32 +32,17 @@ module.exports = () => {
       if (!cerfa) {
         throw Boom.notFound("Doesn't exist");
       }
+
+      // TODO HAS RIGHTS
+
       res.json(cerfa);
     })
   );
 
   router.post(
     "/",
-    tryCatch(async ({ body, user }, res, next) => {
-      let { dossierId } = await Joi.object({
-        dossierId: Joi.string().required(),
-      }).validateAsync(body, { abortEarly: false });
-
-      let result = null;
-      try {
-        result = await Cerfa.create({
-          draft: true,
-          dossierId,
-          createdBy: user.sub,
-        });
-      } catch (error) {
-        const { code, name, message } = error;
-        if (name === "MongoError" && code === 11000 && message.includes("idDossier_1 dup key")) {
-          throw Boom.conflict("Already exist");
-        } else {
-          return next(error);
-        }
-      }
+    tryCatch(async ({ body, user }, res) => {
+      const result = await cerfas.createCerfa(body, user);
 
       return res.json(result);
     })
@@ -195,6 +182,8 @@ module.exports = () => {
         }),
       }).validateAsync(body, { abortEarly: false });
 
+      // TODO HAS RIGHTS
+
       const result = await Cerfa.findOneAndUpdate({ _id: params.id }, body, {
         new: true,
       });
@@ -206,18 +195,9 @@ module.exports = () => {
   router.put(
     "/:id/publish",
     tryCatch(async ({ params }, res) => {
-      const found = await Cerfa.findById(params.id).lean();
+      // TODO HAS RIGHTS
 
-      if (!found) {
-        throw Boom.notFound("Doesn't exist");
-      }
-
-      // eslint-disable-next-line no-unused-vars
-      const { _id, __v, dossierId, ...cerfa } = found;
-      const validate = await Cerfa.create({ ...cerfa, dossierId: "619baec6fcdd030ba4e13c41", draft: false });
-      await validate.delete();
-
-      await Cerfa.findOneAndUpdate({ _id: params.id }, { draft: false }, { new: true });
+      await cerfas.publishCerfa(params.id);
 
       return res.json({ publish: true });
     })
@@ -226,13 +206,8 @@ module.exports = () => {
   router.put(
     "/:id/unpublish",
     tryCatch(async ({ params }, res) => {
-      const found = await Cerfa.findById(params.id).lean();
-
-      if (!found) {
-        throw Boom.notFound("Doesn't exist");
-      }
-
-      await Cerfa.findOneAndUpdate({ _id: params.id }, { draft: true }, { new: true });
+      // TODO HAS RIGHTS
+      await cerfas.unpublishCerfa(params.id);
 
       return res.json({ publish: false });
     })
@@ -241,7 +216,8 @@ module.exports = () => {
   router.delete(
     "/:id",
     tryCatch(async ({ params }, res) => {
-      const result = await Cerfa.deleteOne({ _id: params.id });
+      // TODO HAS RIGHTS
+      const result = await cerfas.removeCerfa(params.id);
       return res.json(result);
     })
   );
