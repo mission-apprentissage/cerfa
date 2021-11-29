@@ -22,6 +22,7 @@ const maintenanceMessage = require("./routes/maintenanceMessage");
 const dossier = require("./routes/specific/dossier");
 const cerfa = require("./routes/specific/cerfa");
 const history = require("./routes/specific/history");
+const siret = require("./routes/specific/siret");
 
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
@@ -62,6 +63,7 @@ module.exports = async (components) => {
   app.use("/api/v1/history", checkJwtToken, history());
   app.use("/api/v1/dossier", checkJwtToken, dossier(components));
   app.use("/api/v1/cerfa", checkJwtToken, cerfa(components));
+  app.use("/api/v1/siret", checkJwtToken, siret());
 
   app.get(
     "/api",

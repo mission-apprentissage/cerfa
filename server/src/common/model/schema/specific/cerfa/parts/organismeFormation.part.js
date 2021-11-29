@@ -2,9 +2,10 @@ const adresseSchema = require("./adresse.part");
 
 const organismeFormationSchema = {
   denomination: {
-    maxLength: 80,
+    // maxLength: 80,
     type: String,
     description: "Nom de l'organisme de formation responsable",
+    label: "Dénomination du CFA responsable :",
     example: "CFA",
     default: null,
     required: function () {
@@ -19,12 +20,12 @@ const organismeFormationSchema = {
       return !this.draft;
     },
   },
-  raison_sociale: {
-    type: String,
-    default: null,
-    example: "CFAA",
-    description: "Raison sociale de l'organisme de formation responsable",
-  },
+  // raison_sociale: {
+  //   type: String,
+  //   default: null,
+  //   example: "CFAA",
+  //   description: "Raison sociale de l'organisme de formation responsable",
+  // },
   siret: {
     maxLength: 14,
     minLength: 14,
@@ -47,6 +48,7 @@ const organismeFormationSchema = {
     example: "98765432400019",
     label: "N° SIRET CFA :",
     requiredMessage: "Le siret est obligatoire",
+    validateMessage: `n'est pas un siret valide`,
     pattern: "^([0-9]{14}|[0-9]{9} [0-9]{4})$",
   },
   uaiCfa: {
@@ -61,6 +63,10 @@ const organismeFormationSchema = {
     },
     type: String,
     description: "N° UAI de l'organisme de formation responsable",
+    example: "0561910X",
+    label: "N° UAI du CFA :",
+    validateMessage: `n'est pas un uai valide`,
+    pattern: "^[0-9]{7}[a-zA-Z]$",
     default: null,
     nullable: function () {
       return this.draft;

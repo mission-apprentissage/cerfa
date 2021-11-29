@@ -1,7 +1,8 @@
 const adresseSchema = {
   numero: {
     type: Number,
-    description: "N°",
+    description: "N° de la voie",
+    label: "N° :",
     required: function () {
       return !this.draft;
     },
@@ -12,6 +13,7 @@ const adresseSchema = {
   voie: {
     type: String,
     description: "Nom de voie",
+    label: "Voie :",
     nullable: true,
     example: "Boulevard de la liberté",
     default: null,
@@ -22,6 +24,7 @@ const adresseSchema = {
   complement: {
     type: String,
     description: "Complément d'adresse",
+    label: "Complément :",
     nullable: true,
     default: null,
     required: function () {
@@ -29,17 +32,17 @@ const adresseSchema = {
     },
     example: "Etage 6 - Appartement 654",
   },
-  label: {
-    maxLength: 50,
-    type: String,
-    description: "Libellé complet de l’adresse",
-    nullable: true,
-    default: null,
-    required: function () {
-      return !this.draft;
-    },
-    example: "13 Boulevard de la liberté",
-  },
+  // label: {
+  //   maxLength: 50,
+  //   type: String,
+  //   description: "Libellé complet de l’adresse",
+  //   nullable: true,
+  //   default: null,
+  //   required: function () {
+  //     return !this.draft;
+  //   },
+  //   example: "13 Boulevard de la liberté",
+  // },
   codePostal: {
     maxLength: 5,
     minLength: 5,
@@ -52,6 +55,7 @@ const adresseSchema = {
     },
     type: String,
     description: "Code postal",
+    label: "Code postal :",
     example: "75000",
     default: null,
     required: function () {
@@ -62,6 +66,7 @@ const adresseSchema = {
     maxLength: 80,
     type: String,
     description: "Commune",
+    label: "Commune: ",
     example: "PARIS",
     default: null,
     required: function () {

@@ -43,12 +43,26 @@ const Input = {
     outline: {
       field: {
         ...commonFieldStyle,
+        _placeholder: {
+          color: "grey.500",
+        },
       },
     },
     valid: {
       field: {
         ...commonFieldStyle,
         borderBottomColor: "green.500",
+      },
+    },
+    autoFilled: {
+      field: {
+        ...commonFieldStyle,
+        fontStyle: "italic",
+        cursor: "not-allowed",
+        borderBottomColor: "bluesoft.400",
+        _placeholder: {
+          color: "grey.800",
+        },
       },
     },
   },
