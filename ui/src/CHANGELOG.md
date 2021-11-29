@@ -1,3 +1,10 @@
+# [1.9.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.8.0...v1.9.0-beta.1) (2021-11-29)
+
+
+### Features
+
+* connect api entreprise + start autofill data ([46a9f0a](https://github.com/mission-apprentissage/cerfa/commit/46a9f0a6cee0e0f747b652cbca2d817a4608fcd8))
+
 # [1.8.0](https://github.com/mission-apprentissage/cerfa/compare/v1.7.1...v1.8.0) (2021-11-24)
 
 
