@@ -1,62 +1,13 @@
 import React from "react";
-import { Box, Button, FormControl, FormLabel, Input, FormErrorMessage, Flex, HStack, Checkbox } from "@chakra-ui/react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import { Box, FormControl, FormLabel, Input, FormErrorMessage, Flex } from "@chakra-ui/react";
 
 import InputCerfa from "./Input";
 
-// import { _post, _get, _put } from "../../common/httpClient";
-
 const FormFormation = () => {
-  const { values, handleChange, handleSubmit, errors, touched } = useFormik({
-    initialValues: {
-      companyCfa: "",
-      nameResponsibleCFA: "",
-      uaiCFA: "",
-      siretCFA: "",
-      number: "",
-      way: "",
-      complement: "",
-      zipCode: "",
-      townShip: "",
-      titleTargeted: "",
-      preciseTitle: "",
-      diplomaCode: "",
-      codeRNCP: "",
-      startDateTrainingCycle: "",
-      endDateExams: "",
-      trainingDuration: "",
-      checkEmployer: "",
-      madeIn: "",
-    },
-    validationSchema: Yup.object().shape({
-      companyCfa: Yup.string().required("Requis"),
-      nameResponsibleCFA: Yup.string().required("Requis"),
-      uaiCFA: Yup.string().required("Requis"),
-      siretCFA: Yup.string().required("Requis"),
-      number: Yup.string().required("Requis"),
-      way: Yup.string().required("Requis"),
-      complement: Yup.string().required("Requis"),
-      zipCode: Yup.string().required("Requis"),
-      townShip: Yup.string().required("Requis"),
-      titleTargeted: Yup.string().required("Requis"),
-      preciseTitle: Yup.string().required("Requis"),
-      diplomaCode: Yup.string().required("Requis"),
-      codeRNCP: Yup.string().required("Requis"),
-      startDateTrainingCycle: Yup.string().required("Requis"),
-      endDateExams: Yup.string().required("Requis"),
-      trainingDuration: Yup.string().required("Requis"),
-      checkEmployer: Yup.string().required("Requis"),
-      madeIn: Yup.string().required("Requis"),
-    }),
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
-  });
   return (
     <Box>
-      <InputCerfa path="organismeFormation.siret" mb="10" />
-      <FormControl>
+      <InputCerfa path="organismeFormation.siret" mb="10" hasComments />
+      {/* <FormControl>
         <FormLabel>CFA d’entreprise :</FormLabel>
         <HStack w="40%">
           <Flex alignItems="center">
@@ -81,88 +32,50 @@ const FormFormation = () => {
           </Flex>
         </HStack>
         {errors.gender && touched.gender && <FormErrorMessage>{errors.gender}</FormErrorMessage>}
-      </FormControl>
+      </FormControl> */}
       <Flex>
         <Box w="55%" flex="1">
-          <FormControl isRequired mt={2} isInvalid={errors.nameResponsibleCFA}>
-            <FormLabel>Dénomination du CFA responsable :</FormLabel>
-            <Input
-              type="text"
-              name="nameResponsibleCFA"
-              onChange={handleChange}
-              value={values.nameResponsibleCFA}
-              required
-            />
-            {errors.nameResponsibleCFA && touched.nameResponsibleCFA && (
-              <FormErrorMessage>{errors.nameResponsibleCFA}</FormErrorMessage>
-            )}
-          </FormControl>
-          <FormControl isRequired mt={2} isInvalid={errors.uaiCFA}>
-            <FormLabel>N° UAI du CFA :</FormLabel>
-            <Input type="text" name="uaiCFA" onChange={handleChange} value={values.uaiCFA} required />
-            {errors.uaiCFA && touched.uaiCFA && <FormErrorMessage>{errors.uaiCFA}</FormErrorMessage>}
-          </FormControl>
-          <FormControl isRequired mt={2} isInvalid={errors.siretCFA}>
-            <FormLabel>N° SIRET CFA :</FormLabel>
-            <Input type="text" name="siretCFA" onChange={handleChange} value={values.siretCFA} required />
-            {errors.siretCFA && touched.siretCFA && <FormErrorMessage>{errors.siretCFA}</FormErrorMessage>}
-          </FormControl>
+          <InputCerfa path="organismeFormation.denomination" mt="2" isDisabled />
+          <InputCerfa path="organismeFormation.uaiCfa" mt="2" isDisabled />
+          <InputCerfa path="organismeFormation.siret" mt="2" isDisabled noHistory />
           <FormLabel fontWeight={700} my={3}>
             Adresse du CFA responsable :{" "}
           </FormLabel>
-          <FormControl isRequired mt={2} isInvalid={errors.number}>
-            <FormLabel>N° :</FormLabel>
-            <Input type="text" name="number" onChange={handleChange} value={values.number} required />
-            {errors.number && touched.number && <FormErrorMessage>{errors.number}</FormErrorMessage>}
-          </FormControl>
-          <FormControl isRequired mt={2} isInvalid={errors.way}>
-            <FormLabel>Voie :</FormLabel>
-            <Input type="text" name="way" onChange={handleChange} value={values.way} required />
-            {errors.way && touched.way && <FormErrorMessage>{errors.way}</FormErrorMessage>}
-          </FormControl>
-          <FormControl isRequired mt={2} isInvalid={errors.complement}>
-            <FormLabel>Complément :</FormLabel>
-            <Input type="text" name="complement" onChange={handleChange} value={values.complement} required />
-            {errors.complement && touched.complement && <FormErrorMessage>{errors.complement}</FormErrorMessage>}
-          </FormControl>
-          <FormControl isRequired mt={2} isInvalid={errors.zipCode}>
-            <FormLabel>Code postal :</FormLabel>
-            <Input type="text" name="zipCode" onChange={handleChange} value={values.zipCode} required />
-            {errors.zipCode && touched.zipCode && <FormErrorMessage>{errors.zipCode}</FormErrorMessage>}
-          </FormControl>
-          <FormControl isRequired mt={2} isInvalid={errors.townShip}>
-            <FormLabel>Commune :</FormLabel>
-            <Input type="text" name="townShip" onChange={handleChange} value={values.townShip} required />
-            {errors.townShip && touched.townShip && <FormErrorMessage>{errors.townShip}</FormErrorMessage>}
-          </FormControl>
+          <InputCerfa path="organismeFormation.adresse.numero" mt="2" isDisabled />
+          <InputCerfa path="organismeFormation.adresse.voie" mt="2" isDisabled />
+          <InputCerfa path="organismeFormation.adresse.complement" mt="2" isDisabled />
+          <InputCerfa path="organismeFormation.adresse.codePostal" mt="2" isDisabled />
+          <InputCerfa path="organismeFormation.adresse.commune" mt="2" isDisabled />
         </Box>
         <Box w="45%" flex="1" ml="5w">
-          <FormControl isRequired mt={2} isInvalid={errors.titleTargeted}>
+          {/* <FormControl isRequired mt={2} isInvalid={errors.titleTargeted}>
             <FormLabel>Diplôme ou titre visé par l’apprenti :</FormLabel>
             <Input type="text" name="titleTargeted" onChange={handleChange} value={values.titleTargeted} required />
             {errors.titleTargeted && touched.titleTargeted && (
               <FormErrorMessage>{errors.titleTargeted}</FormErrorMessage>
             )}
-          </FormControl>
-          <FormControl isRequired mt={2} isInvalid={errors.preciseTitle}>
+          </FormControl> */}
+          {/* <FormControl isRequired mt={2} isInvalid={errors.preciseTitle}>
             <FormLabel>Intitulé précis :</FormLabel>
             <Input type="text" name="preciseTitle" onChange={handleChange} value={values.preciseTitle} required />
             {errors.preciseTitle && touched.preciseTitle && <FormErrorMessage>{errors.preciseTitle}</FormErrorMessage>}
-          </FormControl>
-          <FormControl isRequired mt={2} isInvalid={errors.diplomaCode}>
+          </FormControl> */}
+          <InputCerfa path="formation.codeDiplome" mt="2" />
+          {/* <FormControl isRequired mt={2} isInvalid={errors.diplomaCode}>
             <FormLabel>Code du diplôme :</FormLabel>
             <Input type="text" name="diplomaCode" onChange={handleChange} value={values.diplomaCode} required />
             {errors.diplomaCode && touched.diplomaCode && <FormErrorMessage>{errors.diplomaCode}</FormErrorMessage>}
-          </FormControl>
-          <FormControl isRequired mt={2} isInvalid={errors.codeRNCP}>
+          </FormControl> */}
+          <InputCerfa path="formation.rncp" mt="2" />
+          {/* <FormControl isRequired mt={2} isInvalid={errors.codeRNCP}>
             <FormLabel>Code RNCP :</FormLabel>
             <Input type="text" name="codeRNCP" onChange={handleChange} value={values.codeRNCP} required />
             {errors.codeRNCP && touched.codeRNCP && <FormErrorMessage>{errors.codeRNCP}</FormErrorMessage>}
-          </FormControl>
+          </FormControl> */}
           <FormLabel fontWeight={700} my={3}>
             Organisation de la formation en CFA :
           </FormLabel>
-          <FormControl isRequired mt={2} isInvalid={errors.startDateTrainingCycle}>
+          {/* <FormControl isRequired mt={2} isInvalid={errors.startDateTrainingCycle}>
             <FormLabel>Date de début du cycle de formation : </FormLabel>
             <Input
               type="date"
@@ -197,10 +110,10 @@ const FormFormation = () => {
                 <FormErrorMessage>{errors.trainingDuration}</FormErrorMessage>
               )}
             </FormControl>
-          </Flex>
+          </Flex> */}
         </Box>
       </Flex>
-      <Box>
+      {/* <Box>
         <FormControl isRequired mt={2} isInvalid={errors.checkEmployer}>
           <Flex>
             <Checkbox type="checkbox" value="oui" name="checkEmployer" onChange={handleChange} required />
@@ -220,7 +133,7 @@ const FormFormation = () => {
         <Button variant="primary" ml={3} onClick={handleSubmit} type="submit">
           Enregistrer
         </Button>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

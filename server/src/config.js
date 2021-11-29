@@ -44,4 +44,5 @@ module.exports = {
       uri: env.get("CERFA_OVH_STORAGE_URI").asString(),
     },
   },
+  apiEntreprise: env.get("CERFA_API_ENTREPRISE_KEY").asString(),
 };

@@ -6,6 +6,7 @@ sensible_files_pattern="\.(csv|xls|xls(x?)|json|env)$"
 exception="(package.json|custom-environment-variables.json"
 exception="$exception|manifest.json"
 exception="$exception|sample.json"
+exception="$exception|dataDepartements.json"
 exception="$exception)$"
 
 files=$(git diff --cached --name-only | grep -v -E "$exception" | grep -E "$sensible_files_pattern")

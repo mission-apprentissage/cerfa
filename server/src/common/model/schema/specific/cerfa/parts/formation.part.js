@@ -5,6 +5,18 @@ const formationSchema = {
     maxLength: 9,
     type: String,
     description: "Qualification public visée numéro RNCP du diplôme ou titre visé par l'Alternant",
+    label: "Code RNCP : ",
+    example: "RNCP15516",
+    requiredMessage: "Le code RNCP est obligatoire",
+    validateMessage: `n'est pas un code RNCP valide. Le code RNCP doit être définit et au format 5 ou 9 caractères,  RNCP24440 ou 24440`,
+    pattern: "^(RNCP)?[0-9]{2,5}$",
+    validate: {
+      validator: function (v) {
+        if (!v) return true;
+        return /^(RNCP)?[0-9]{2,5}$/.test(v);
+      },
+      message: (props) => `${props.value} n'est pas un code RNCP valide`,
+    },
     default: null,
     required: function () {
       return !this.draft;
@@ -13,8 +25,20 @@ const formationSchema = {
   codeDiplome: {
     maxLength: 8,
     type: String,
-    description: "Code du diplôme ou titre visé par l'Alternant, basé sur le référentiel France Compétences",
     default: null,
+    description: "Code du diplôme ou titre visé par l'Alternant, basé sur le référentiel France Compétences",
+    label: "Code diplôme (Éducation Nationale) : ",
+    example: "32322111",
+    requiredMessage: "Le code diplôme est obligatoire",
+    validateMessage: `n'est pas un code diplôme valide. Le code formation diplôme doit être au format 8 caractères ou 9 avec la lettre specialité`,
+    pattern: "^[0-9A-Z]{8}[A-Z]?$",
+    validate: {
+      validator: function (v) {
+        if (!v) return true;
+        return /^[0-9A-Z]{8}[A-Z]?$/.test(v);
+      },
+      message: (props) => `${props.value} n'est pas un code diplôme valide`,
+    },
     required: function () {
       return !this.draft;
     },

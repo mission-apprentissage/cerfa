@@ -20,6 +20,7 @@
     "framer-motion": "^4",
     "generate-password-browser": "1.1.0",
     "jsonwebtoken": "8.5.1",
+    "lodash.clonedeep": "4.5.0",
     "query-string": "6.13.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",

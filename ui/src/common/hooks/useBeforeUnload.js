@@ -32,6 +32,7 @@ export const useUnloadEffect = (match, onLeave) => {
     if (match?.params?.id && match?.path === "/dossiers/contrat/:id") {
       if (!isListening && dossier?.saved === false) {
         window.dossierId = match.params.id;
+        window.removeEventListener("beforeunload", onBeforeUnload);
         window.addEventListener("beforeunload", onBeforeUnload);
         setIsListening(true);
       }

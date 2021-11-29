@@ -14,7 +14,7 @@ const documentSchema = {
     description: "Le type de document",
   },
   typeFichier: {
-    enum: ["pdf", "xls", "xlsx", "csv", null],
+    enum: ["pdf", "png", "jpg", "jpeg", null], // 10mb
     type: String,
     default: null,
     required: true,

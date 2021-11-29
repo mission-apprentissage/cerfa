@@ -23,6 +23,7 @@
     "stats": "node src/jobs/stats/index.js"
   },
   "dependencies": {
+    "axios": "0.24.0",
     "body-parser": "1.19.0",
     "boom": "7.3.0",
     "bunyan": "1.8.12",
@@ -57,6 +58,8 @@
     "passport-http": "0.3.0",
     "passport-jwt": "4.0.0",
     "passport-local": "1.0.0",
+    "query-string": "6.13.8",
+    "rate-limiter-flexible": "2.2.1",
     "sha512crypt-node": "0.1.0",
     "xlsx": "0.16.1"
   },

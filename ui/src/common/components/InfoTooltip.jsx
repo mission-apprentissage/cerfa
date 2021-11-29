@@ -28,7 +28,7 @@ const TooltipIcon = (props) => (
   </Icon>
 );
 
-const InfoTooltip = ({ description, example, history }) => {
+const InfoTooltip = ({ description, example, history, noHistory }) => {
   return (
     <Popover placement="bottom">
       <PopoverTrigger>
@@ -44,40 +44,44 @@ const InfoTooltip = ({ description, example, history }) => {
             <Text as="samp">Exemple: {example}</Text>
           </Stack>
         </PopoverBody>
-        <PopoverHeader fontWeight="bold">Historique</PopoverHeader>
-        <PopoverBody>
-          {history.map((entry, i) => {
-            return (
-              <Wrap key={i} mb={3}>
-                <WrapItem>
-                  <Avatar name={entry.who} size="xs" />
-                </WrapItem>
-                <Flex flexDirection="column">
-                  <Flex alignItems="center">
-                    <Text textStyle="sm" fontWeight="bold">
-                      {entry.who}
+        {history && !noHistory && (
+          <>
+            <PopoverHeader fontWeight="bold">Historique</PopoverHeader>
+            <PopoverBody>
+              {history?.map((entry, i) => {
+                return (
+                  <Wrap key={i} mb={3}>
+                    <WrapItem>
+                      <Avatar name={entry.who} size="xs" />
+                    </WrapItem>
+                    <Flex flexDirection="column">
+                      <Flex alignItems="center">
+                        <Text textStyle="sm" fontWeight="bold">
+                          {entry.who}
+                        </Text>
+                        <Badge
+                          variant="solid"
+                          bg="greenmedium.300"
+                          borderRadius="16px"
+                          color="grey.800"
+                          textStyle="sm"
+                          px="15px"
+                          ml="10px"
+                        >
+                          {entry.role}
+                        </Badge>
+                      </Flex>
+                      <Text textStyle="xs">{prettyPrintDate(entry.when)}</Text>
+                    </Flex>
+                    <Text textStyle="sm" mt="0">
+                      A modifié(e) la valeur du champ par {entry.to}
                     </Text>
-                    <Badge
-                      variant="solid"
-                      bg="greenmedium.300"
-                      borderRadius="16px"
-                      color="grey.800"
-                      textStyle="sm"
-                      px="15px"
-                      ml="10px"
-                    >
-                      {entry.role}
-                    </Badge>
-                  </Flex>
-                  <Text textStyle="xs">{prettyPrintDate(entry.when)}</Text>
-                </Flex>
-                <Text textStyle="sm" mt="0">
-                  A modifié(e) la valeur du champ par {entry.to}
-                </Text>
-              </Wrap>
-            );
-          })}
-        </PopoverBody>
+                  </Wrap>
+                );
+              })}
+            </PopoverBody>
+          </>
+        )}
       </PopoverContent>
     </Popover>
   );

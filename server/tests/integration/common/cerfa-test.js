@@ -74,8 +74,8 @@ describe("Cerfa", () => {
       maitre1: { nom: "Dupont", prenom: "Claire", dateNaissance: "1988-02-02T00:00:00+00:00" },
       maitre2: { nom: "Dupont", prenom: "Claire", dateNaissance: "1988-02-02T00:00:00+00:00" },
       formation: {
-        rncp: "string",
-        codeDiplome: "string",
+        rncp: "RNCP15516",
+        codeDiplome: "32322111",
         typeDiplome: 13,
         intituleQualification: "string",
         dateDebutFormation: "2021-05-04T21:13:43+00:00",
@@ -114,9 +114,9 @@ describe("Cerfa", () => {
         ],
       },
       organismeFormation: {
+        siret: "12345678901234",
         denomination: "string",
         formationInterne: true,
-        siret: "12345678901234",
         uaiCfa: "0123456A",
         visaCfa: true,
         adresse: {
