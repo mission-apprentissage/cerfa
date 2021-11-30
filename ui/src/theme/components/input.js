@@ -59,7 +59,7 @@ const Input = {
         ...commonFieldStyle,
         fontStyle: "italic",
         cursor: "not-allowed",
-        borderBottomColor: "bluesoft.400",
+        borderBottomColor: "green.400",
         _placeholder: {
           color: "grey.800",
         },

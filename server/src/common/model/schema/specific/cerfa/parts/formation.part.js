@@ -62,6 +62,10 @@ const formationSchema = {
   dateDebutFormation: {
     type: Date,
     description: "Date de début du cycle de formation",
+    label: "Date de début du cycle de formation : ",
+    example: "05/11/2021",
+    requiredMessage: "la date de début de cycle est obligatoire",
+    validateMessage: ` n'est pas une date valide`,
     default: null,
     required: function () {
       return !this.draft;
@@ -70,6 +74,10 @@ const formationSchema = {
   dateFinFormation: {
     type: Date,
     description: "Date de fin du cycle de formation",
+    label: "Date prévue de fin des épreuves ou examens : ",
+    example: "18/11/2021",
+    requiredMessage: "la date de fin de cycle est obligatoire",
+    validateMessage: ` n'est pas une date valide`,
     default: null,
     required: function () {
       return !this.draft;
