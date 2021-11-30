@@ -20,14 +20,25 @@ import InfoTooltip from "../../../../common/components/InfoTooltip";
 import Comment from "../../../../common/components/Comments/Comment";
 
 export default React.memo(
-  ({ path, field, onAsyncData, onSubmittedField, hasComments, isDisabled, noHistory, type, ...props }) => {
+  ({
+    path,
+    field,
+    onAsyncData,
+    onSubmittedField,
+    hasComments,
+    isDisabled,
+    noHistory,
+    type,
+    forceIsErrored,
+    ...props
+  }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [validated, setValidated] = useState(false);
     const [isErrored, setIsErrored] = useState(false);
     const [isAutoFilled, setIsAutoFilled] = useState(false);
 
     const prevOnAsyncDataRef = useRef();
-    const prevIsDisabledRef = useRef();
+    // const prevIsDisabledRef = useRef();
 
     const borderBottomColor = useMemo(
       () => (validated ? "green.500" : isErrored ? "error" : isAutoFilled ? "green.400" : "grey.600"),
@@ -37,10 +48,11 @@ export default React.memo(
 
     useEffect(() => {
       prevOnAsyncDataRef.current = onAsyncData;
-      prevIsDisabledRef.current = isDisabled;
-    });
+      // prevIsDisabledRef.current = isDisabled;
+      setIsErrored(forceIsErrored);
+    }, [onAsyncData, forceIsErrored]);
     const prevOnAsyncData = prevOnAsyncDataRef.current;
-    const prevIsDisabled = prevIsDisabledRef.current;
+    // const prevIsDisabled = prevIsDisabledRef.current;
 
     const { values, handleChange: handleChangeFormik, errors, setFieldValue, setErrors } = useFormik({
       initialValues: {
@@ -96,11 +108,11 @@ export default React.memo(
     // console.log(path, onAsyncData, prevOnAsyncData, values[name], field?.value);
     // console.log(path, isDisabled, prevIsDisabled);
 
-    let shouldBeDisabled = isDisabled; // TODO UAI
-    if (prevIsDisabled !== undefined && (!isDisabled || !prevIsDisabled)) {
-      shouldBeDisabled = false;
-      prevIsDisabledRef.current = false;
-    }
+    let shouldBeDisabled = isDisabled;
+    // if (prevIsDisabled !== undefined && (!isDisabled || !prevIsDisabled)) {
+    //   shouldBeDisabled = false;
+    //   prevIsDisabledRef.current = false;
+    // }
 
     if (
       prevOnAsyncData &&

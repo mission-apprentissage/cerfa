@@ -29,6 +29,14 @@ const hydrate = async () => {
           ...formation.codeDiplome,
           value: "",
         },
+        typeDiplome: {
+          ...formation.typeDiplome,
+          value: "",
+        },
+        intituleQualification: {
+          ...formation.intituleQualification,
+          value: "",
+        },
         dateDebutFormation: {
           ...formation.dateDebutFormation,
           value: "",
@@ -74,6 +82,10 @@ const hydrate = async () => {
               message: null,
             };
           },
+        },
+        dureeFormation: {
+          ...formation.dureeFormation,
+          value: "",
         },
       },
       contrat: {},
@@ -212,6 +224,7 @@ export function useCerfa() {
   const [organismeFormationSiret, setOrganismeFormationSiret] = useState(null);
   const [organismeFormationDenomination, setOrganismeFormationDenomination] = useState(null);
   const [organismeFormationUaiCfa, setOrganismeFormationUaiCfa] = useState(null);
+  const [organismeFormationUaiCfaAutomatic, setOrganismeFormationUaiCfaAutomatic] = useState(true);
   const [organismeFormationAdresseNumero, setOrganismeFormationAdresseNumero] = useState(null);
   const [organismeFormationAdresseVoie, setOrganismeFormationAdresseVoie] = useState(null);
   const [organismeFormationAdresseComplement, setOrganismeFormationAdresseComplement] = useState(null);
@@ -222,6 +235,10 @@ export function useCerfa() {
   const [formationCodeDiplome, setFormationCodeDiplome] = useState(null);
   const [formationDateDebutFormation, setFormationDateDebutFormation] = useState(null);
   const [formationDateFinFormation, setFormationDateFinFormation] = useState(null);
+  const [formationDureeFormation, setFormationDureeFormation] = useState(null);
+  const [formationIntituleQualification, setFormationIntituleQualification] = useState(null);
+  const [formationTypeDiplome, setFormationTypeDiplome] = useState(null);
+
   const [error, setError] = useState(null);
 
   const onSubmittedOrganismeFormationSiret = useCallback(
@@ -247,7 +264,7 @@ export function useCerfa() {
             {
               denomination: data.enseigne || data.entreprise_raison_sociale,
               siret: data.siret,
-              uaiCfa: "0561910X", //"0561910X", // TODO
+              uaiCfa: "", //"0561910X",
               adresse: {
                 numero: data.numero_voie, //parseInt(data.numero_voie),
                 voie: `${data.type_voie} ${data.nom_voie}`,
@@ -266,6 +283,9 @@ export function useCerfa() {
           }
           if (organismeFormationUaiCfa.value !== newV.organismeFormation.uaiCfa.value) {
             setOrganismeFormationUaiCfa(newV.organismeFormation.uaiCfa);
+          }
+          if (!newV.organismeFormation.uaiCfa.value && newV.organismeFormation.uaiCfa.value === "") {
+            setOrganismeFormationUaiCfaAutomatic(false);
           }
           if (organismeFormationAdresseNumero.value !== newV.organismeFormation.adresse.numero.value) {
             setOrganismeFormationAdresseNumero(newV.organismeFormation.adresse.numero);
@@ -379,6 +399,84 @@ export function useCerfa() {
     [formationDateDebutFormation, formationDateFinFormation]
   );
 
+  const onSubmittedFormationDureeFormation = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "formation.dureeFormation") {
+          const newV = updateCerfaValuesOf(
+            {
+              formation: {
+                dureeFormation: formationDureeFormation,
+              },
+            },
+            "formation",
+            {
+              dureeFormation: data,
+            }
+          );
+          if (formationDureeFormation.value !== newV.formation.dureeFormation.value) {
+            setFormationDureeFormation(newV.formation.dureeFormation);
+          }
+        }
+      } catch (e) {
+        setError(e);
+      }
+    },
+    [formationDureeFormation]
+  );
+
+  const onSubmittedFormationIntituleQualification = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "formation.intituleQualification") {
+          const newV = updateCerfaValuesOf(
+            {
+              formation: {
+                intituleQualification: formationIntituleQualification,
+              },
+            },
+            "formation",
+            {
+              intituleQualification: data,
+            }
+          );
+          if (formationIntituleQualification.value !== newV.formation.intituleQualification.value) {
+            setFormationIntituleQualification(newV.formation.intituleQualification);
+          }
+        }
+      } catch (e) {
+        setError(e);
+      }
+    },
+    [formationIntituleQualification]
+  );
+
+  const onSubmittedFormationTypeDiplome = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "formation.typeDiplome") {
+          const newV = updateCerfaValuesOf(
+            {
+              formation: {
+                typeDiplome: formationTypeDiplome,
+              },
+            },
+            "formation",
+            {
+              typeDiplome: data,
+            }
+          );
+          if (formationTypeDiplome.value !== newV.formation.typeDiplome.value) {
+            setFormationTypeDiplome(newV.formation.typeDiplome);
+          }
+        }
+      } catch (e) {
+        setError(e);
+      }
+    },
+    [formationTypeDiplome]
+  );
+
   const onSubmittedFormationCodeDiplome = useCallback(
     async (path, data) => {
       try {
@@ -450,6 +548,9 @@ export function useCerfa() {
           setFormationCodeDiplome(res.formation.codeDiplome);
           setFormationDateDebutFormation(res.formation.dateDebutFormation);
           setFormationDateFinFormation(res.formation.dateFinFormation);
+          setFormationDureeFormation(res.formation.dureeFormation);
+          setFormationIntituleQualification(res.formation.intituleQualification);
+          setFormationTypeDiplome(res.formation.typeDiplome);
 
           setIsLoaded(true);
         }
@@ -482,17 +583,24 @@ export function useCerfa() {
         commune: organismeFormationAdresseCommune,
       },
     },
+    organismeFormationUaiCfaAutomatic,
     formation: {
       rncp: formationRncp,
       codeDiplome: formationCodeDiplome,
       dateDebutFormation: formationDateDebutFormation,
       dateFinFormation: formationDateFinFormation,
+      dureeFormation: formationDureeFormation,
+      intituleQualification: formationIntituleQualification,
+      typeDiplome: formationTypeDiplome,
     },
     onSubmittedOrganismeFormationSiret,
     onSubmittedFormationCodeDiplome,
     onSubmittedRncp,
     onSubmittedFormationDateDebutFormation,
     onSubmittedFormationDateFinFormation,
+    onSubmittedFormationDureeFormation,
+    onSubmittedFormationIntituleQualification,
+    onSubmittedFormationTypeDiplome,
     onSubmittedOrganismeFormationUaiCfa,
   };
 }

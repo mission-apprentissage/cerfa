@@ -13,12 +13,24 @@ const FormFormation = React.memo((props) => {
       uaiCfa,
       adresse: { numero, voie, complement, codePostal, commune },
     },
-    formation: { rncp, codeDiplome, dateDebutFormation, dateFinFormation },
+    organismeFormationUaiCfaAutomatic,
+    formation: {
+      rncp,
+      codeDiplome,
+      dateDebutFormation,
+      dateFinFormation,
+      dureeFormation,
+      intituleQualification,
+      typeDiplome,
+    },
     onSubmittedOrganismeFormationSiret,
     onSubmittedFormationCodeDiplome,
     onSubmittedRncp,
     onSubmittedFormationDateDebutFormation,
     onSubmittedFormationDateFinFormation,
+    onSubmittedFormationDureeFormation,
+    onSubmittedFormationIntituleQualification,
+    onSubmittedFormationTypeDiplome,
     onSubmittedOrganismeFormationUaiCfa,
   } = useCerfa();
 
@@ -68,7 +80,8 @@ const FormFormation = React.memo((props) => {
             field={uaiCfa}
             type="text"
             mt="2"
-            isDisabled={!(uaiCfa.value === "" && siret.value !== "")}
+            isDisabled={organismeFormationUaiCfaAutomatic}
+            forceIsErrored={!organismeFormationUaiCfaAutomatic && uaiCfa.value === ""}
             onSubmittedField={onSubmittedOrganismeFormationUaiCfa}
           />
           {/* <InputCerfa path="organismeFormation.siret" type="text" mt="2" isDisabled noHistory /> */}
@@ -89,11 +102,20 @@ const FormFormation = React.memo((props) => {
               <FormErrorMessage>{errors.titleTargeted}</FormErrorMessage>
             )}
           </FormControl> */}
-          {/* <FormControl isRequired mt={2} isInvalid={errors.preciseTitle}>
-            <FormLabel>Intitulé précis :</FormLabel>
-            <Input type="text" name="preciseTitle" onChange={handleChange} value={values.preciseTitle} required />
-            {errors.preciseTitle && touched.preciseTitle && <FormErrorMessage>{errors.preciseTitle}</FormErrorMessage>}
-          </FormControl> */}
+          <InputCerfa
+            path="formation.typeDiplome"
+            field={typeDiplome}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedFormationTypeDiplome}
+          />
+          <InputCerfa
+            path="formation.intituleQualification"
+            field={intituleQualification}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedFormationIntituleQualification}
+          />
           <InputCerfa
             path="formation.codeDiplome"
             field={codeDiplome}
@@ -121,24 +143,15 @@ const FormFormation = React.memo((props) => {
             onSubmittedField={onSubmittedFormationDateFinFormation}
             onAsyncData={{ value: dateDebutFormation.value }}
           />
-          {/* <Flex mt={4}>
-            <FormControl isRequired mt={4} isInvalid={errors.trainingDuration}>
-              <Flex>
-                <FormLabel>Durée de la formation :</FormLabel>
-                <Input
-                  type="text"
-                  name="trainingDuration"
-                  onChange={handleChange}
-                  value={values.trainingDuration}
-                  required
-                />
-                <FormLabel>heures</FormLabel>
-              </Flex>
-              {errors.trainingDuration && touched.trainingDuration && (
-                <FormErrorMessage>{errors.trainingDuration}</FormErrorMessage>
-              )}
-            </FormControl>
-          </Flex> */}
+          <Flex mt={4}>
+            <InputCerfa
+              path="formation.dureeFormation"
+              field={dureeFormation}
+              type="text"
+              mt="2"
+              onSubmittedField={onSubmittedFormationDureeFormation}
+            />
+          </Flex>
         </Box>
       </Flex>
       {/* <Box>
