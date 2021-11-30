@@ -38,7 +38,7 @@ export default React.memo(
     const [isAutoFilled, setIsAutoFilled] = useState(false);
 
     const prevOnAsyncDataRef = useRef();
-    // const prevIsDisabledRef = useRef();
+    const prevHasBeenAutoFillRef = useRef(false);
 
     const borderBottomColor = useMemo(
       () => (validated ? "green.500" : isErrored ? "error" : isAutoFilled ? "green.400" : "grey.600"),
@@ -48,13 +48,11 @@ export default React.memo(
 
     useEffect(() => {
       prevOnAsyncDataRef.current = onAsyncData;
-      // prevIsDisabledRef.current = isDisabled;
       setIsErrored(forceIsErrored);
-    }, [onAsyncData, forceIsErrored]);
+    }, [onAsyncData, forceIsErrored, field]);
     const prevOnAsyncData = prevOnAsyncDataRef.current;
-    // const prevIsDisabled = prevIsDisabledRef.current;
 
-    const { values, handleChange: handleChangeFormik, errors, setFieldValue, setErrors } = useFormik({
+    const formikOpts = {
       initialValues: {
         [name]: field?.value || "",
       },
@@ -63,7 +61,8 @@ export default React.memo(
           .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
           .required(field?.requiredMessage),
       }),
-    });
+    };
+    const { values, handleChange: handleChangeFormik, errors, setFieldValue, setErrors } = useFormik(formikOpts);
 
     let handleChange = useCallback(
       async (e) => {
@@ -92,7 +91,9 @@ export default React.memo(
         const { successed, data, message } = await field?.doAsyncActions(val, onAsyncData);
         setIsLoading(false);
         setErrors({ [name]: message });
-        await onSubmittedField(path, data);
+        if (data) {
+          await onSubmittedField(path, data);
+        }
         if (successed) {
           setIsErrored(false);
           setValidated(true);
@@ -108,12 +109,6 @@ export default React.memo(
     // console.log(path, onAsyncData, prevOnAsyncData, values[name], field?.value);
     // console.log(path, isDisabled, prevIsDisabled);
 
-    let shouldBeDisabled = isDisabled;
-    // if (prevIsDisabled !== undefined && (!isDisabled || !prevIsDisabled)) {
-    //   shouldBeDisabled = false;
-    //   prevIsDisabledRef.current = false;
-    // }
-
     if (
       prevOnAsyncData &&
       prevOnAsyncData.value &&
@@ -126,8 +121,34 @@ export default React.memo(
     }
 
     if (values[name] === "" && field?.value !== values[name]) {
+      // formikOpts.validationSchema
+      //   .isValid({
+      //     [name]: field?.value,
+      //   })
+      //   .then(function (valid) {
+      //     // if (isDisabled) {
+      //     // setIsAutoFilled(true); ///
+      //     // }
+      //     if (!valid) {
+      //       setValidated(false);
+      //       setIsErrored(true);
+      //     }
+      //   });
       setFieldValue(name, field?.value);
       setIsAutoFilled(true);
+      prevHasBeenAutoFillRef.current = true;
+    } else if (prevHasBeenAutoFillRef.current && field?.value !== values[name]) {
+      // formikOpts.validationSchema
+      //   .isValid({
+      //     [name]: field?.value,
+      //   })
+      //   .then(function (valid) {
+      //     if (!valid) {
+      //       setValidated(false);
+      //       setIsErrored(true);
+      //     }
+      //   });
+      setFieldValue(name, field?.value);
     }
 
     if (!field) return null;
@@ -148,7 +169,7 @@ export default React.memo(
               variant={validated ? "valid" : isAutoFilled ? "autoFilled" : "outline"}
               isInvalid={isErrored}
               maxLength={field?.maxLength}
-              isDisabled={shouldBeDisabled}
+              isDisabled={isDisabled}
               _focus={{
                 borderBottomColor: borderBottomColor,
                 boxShadow: "none",
@@ -177,17 +198,24 @@ export default React.memo(
                 opacity: 1,
               }}
             />
-            {!shouldBeDisabled && (isLoading || validated || isErrored) && (
+            {(isDisabled || isLoading || validated || isErrored) && (
               <InputRightElement
                 children={
                   <Center
                     bg="grey.200"
                     w="40px"
                     h="40px"
-                    ml={isLoading || validated || isErrored ? "0 !important" : "-40px !important"}
+                    ml={
+                      isLoading || validated || isErrored
+                        ? "0 !important"
+                        : isDisabled
+                        ? "-3px !important"
+                        : "-40px !important"
+                    }
                     borderBottom="2px solid"
                     borderBottomColor={borderBottomColor}
                   >
+                    {isDisabled && <LockFill color={"grey.600"} w="20px" h="20px" />}
                     {isLoading && <Spinner />}
                     {validated && <CheckIcon color="green.500" />}
                     {isErrored && (
@@ -205,11 +233,6 @@ export default React.memo(
             )}
           </InputGroup>
 
-          {shouldBeDisabled && (
-            <Box>
-              <LockFill color={"grey.600"} w="20px" h="20px" />
-            </Box>
-          )}
           <Box>
             <InfoTooltip
               description={field?.description}

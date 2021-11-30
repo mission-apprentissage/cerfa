@@ -23,6 +23,8 @@ const FormFormation = React.memo((props) => {
       intituleQualification,
       typeDiplome,
     },
+    formationCodeDiplomeAutomatic,
+    formationRncpAutomatic,
     onSubmittedOrganismeFormationSiret,
     onSubmittedFormationCodeDiplome,
     onSubmittedRncp,
@@ -84,7 +86,6 @@ const FormFormation = React.memo((props) => {
             forceIsErrored={!organismeFormationUaiCfaAutomatic && uaiCfa.value === ""}
             onSubmittedField={onSubmittedOrganismeFormationUaiCfa}
           />
-          {/* <InputCerfa path="organismeFormation.siret" type="text" mt="2" isDisabled noHistory /> */}
           <FormLabel fontWeight={700} my={3}>
             Adresse du CFA responsable :{" "}
           </FormLabel>
@@ -95,13 +96,6 @@ const FormFormation = React.memo((props) => {
           <InputCerfa path="organismeFormation.adresse.commune" field={commune} type="text" mt="2" isDisabled />
         </Box>
         <Box w="45%" flex="1" ml="5w">
-          {/* <FormControl isRequired mt={2} isInvalid={errors.titleTargeted}>
-            <FormLabel>Diplôme ou titre visé par l’apprenti :</FormLabel>
-            <Input type="text" name="titleTargeted" onChange={handleChange} value={values.titleTargeted} required />
-            {errors.titleTargeted && touched.titleTargeted && (
-              <FormErrorMessage>{errors.titleTargeted}</FormErrorMessage>
-            )}
-          </FormControl> */}
           <InputCerfa
             path="formation.typeDiplome"
             field={typeDiplome}
@@ -114,6 +108,7 @@ const FormFormation = React.memo((props) => {
             field={intituleQualification}
             type="text"
             mt="2"
+            isDisabled
             onSubmittedField={onSubmittedFormationIntituleQualification}
           />
           <InputCerfa
@@ -122,8 +117,16 @@ const FormFormation = React.memo((props) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedFormationCodeDiplome}
+            forceIsErrored={formationCodeDiplomeAutomatic && codeDiplome.value === ""}
           />
-          <InputCerfa path="formation.rncp" field={rncp} type="text" mt="2" onSubmittedField={onSubmittedRncp} />
+          <InputCerfa
+            path="formation.rncp"
+            field={rncp}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedRncp}
+            forceIsErrored={formationRncpAutomatic && rncp.value === ""}
+          />
           <FormLabel fontWeight={700} my={3}>
             Organisation de la formation en CFA :
           </FormLabel>

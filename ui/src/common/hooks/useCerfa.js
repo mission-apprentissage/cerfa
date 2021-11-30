@@ -24,10 +24,101 @@ const hydrate = async () => {
         rncp: {
           ...formation.rncp,
           value: "",
+          doAsyncActions: async (value) => {
+            try {
+              const response = await _post(`/api/v1/cfdrncp`, {
+                rncp: value,
+              });
+              console.log(response);
+              // TODO All cases
+              if (response.messages.code_rncp === "Ok") {
+                if (!response.result.cfds) {
+                  return {
+                    successed: true,
+                    data: {
+                      cfd: "",
+                      rncp: response.result.code_rncp,
+                      intitule_diplome: response.result.intitule_diplome,
+                    },
+                    message: null,
+                  };
+                }
+                if (response.result.cfds.length > 1) {
+                  return {
+                    successed: true,
+                    data: {
+                      cfd: "",
+                      // cfd: response.result.cfds.join(","),
+                      rncp: response.result.code_rncp,
+                      intitule_diplome: response.result.intitule_diplome,
+                    },
+                    message: `La fiche ${value} retourne plusieurs Codes diplômes. Veuillez en choisir un seul dans la liste suivant: ${response.result.cfds.join(
+                      ","
+                    )}`,
+                  };
+                }
+                return {
+                  successed: true,
+                  data: {
+                    cfd: response.result.cfds[0] || "",
+                    rncp: response.result.code_rncp,
+                    intitule_diplome: response.result.intitule_diplome,
+                  },
+                  message: null,
+                };
+              }
+              return {
+                successed: false,
+                data: null,
+                message: response.messages.code_rncp,
+              };
+            } catch (error) {
+              return {
+                successed: false,
+                data: null,
+                message: error.prettyMessage,
+              };
+            }
+          },
         },
         codeDiplome: {
           ...formation.codeDiplome,
           value: "",
+          doAsyncActions: async (value) => {
+            try {
+              const response = await _post(`/api/v1/cfdrncp`, {
+                cfd: value,
+              });
+              // TODO outdated cfd
+              if (response.messages.rncp.code_rncp === "Ok") {
+                return {
+                  successed: true,
+                  data: {
+                    cfd: response.result.cfd,
+                    rncp: response.result.rncp.code_rncp,
+                    intitule_diplome: response.result.rncp.intitule_diplome,
+                  },
+                  message: null,
+                };
+              }
+              return {
+                successed: true,
+                data: {
+                  cfd: response.result.cfd,
+                  rncp: "",
+                  intitule_diplome: response.result.intitule_long,
+                  // message: response.messages.rncp.code_rncp,
+                },
+                message: null,
+              };
+            } catch (error) {
+              return {
+                successed: false,
+                data: null,
+                message: error.prettyMessage,
+              };
+            }
+          },
         },
         typeDiplome: {
           ...formation.typeDiplome,
@@ -233,6 +324,8 @@ export function useCerfa() {
 
   const [formationRncp, setFormationRncp] = useState(null);
   const [formationCodeDiplome, setFormationCodeDiplome] = useState(null);
+  const [formationCodeDiplomeAutomatic, setFormationCodeDiplomeAutomatic] = useState(false);
+  const [formationRncpAutomatic, setFormationRncpAutomatic] = useState(false);
   const [formationDateDebutFormation, setFormationDateDebutFormation] = useState(null);
   const [formationDateFinFormation, setFormationDateFinFormation] = useState(null);
   const [formationDureeFormation, setFormationDureeFormation] = useState(null);
@@ -485,22 +578,31 @@ export function useCerfa() {
             {
               formation: {
                 codeDiplome: formationCodeDiplome,
+                rncp: formationRncp,
+                intituleQualification: formationIntituleQualification,
               },
             },
             "formation",
             {
-              codeDiplome: data,
+              codeDiplome: data.cfd,
+              rncp: data.rncp,
+              intituleQualification: data.intitule_diplome,
             }
           );
           if (formationCodeDiplome.value !== newV.formation.codeDiplome.value) {
             setFormationCodeDiplome(newV.formation.codeDiplome);
+            setFormationRncp(newV.formation.rncp);
+            setFormationIntituleQualification(newV.formation.intituleQualification);
+            if (!newV.formation.rncp.value && newV.formation.rncp.value === "") {
+              setFormationRncpAutomatic(true);
+            }
           }
         }
       } catch (e) {
         setError(e);
       }
     },
-    [formationCodeDiplome]
+    [formationCodeDiplome, formationIntituleQualification, formationRncp]
   );
 
   const onSubmittedRncp = useCallback(
@@ -510,23 +612,33 @@ export function useCerfa() {
           const newV = updateCerfaValuesOf(
             {
               formation: {
+                codeDiplome: formationCodeDiplome,
                 rncp: formationRncp,
+                intituleQualification: formationIntituleQualification,
               },
             },
             "formation",
             {
-              rncp: data,
+              codeDiplome: data.cfd || "",
+              rncp: data.rncp,
+              intituleQualification: data.intitule_diplome,
             }
           );
           if (formationRncp.value !== newV.formation.rncp.value) {
             setFormationRncp(newV.formation.rncp);
+            setFormationCodeDiplome(newV.formation.codeDiplome);
+            setFormationIntituleQualification(newV.formation.intituleQualification);
+
+            if (!newV.formation.codeDiplome.value && newV.formation.codeDiplome.value === "") {
+              setFormationCodeDiplomeAutomatic(true);
+            }
           }
         }
       } catch (e) {
         setError(e);
       }
     },
-    [formationRncp]
+    [formationCodeDiplome, formationIntituleQualification, formationRncp]
   );
 
   useEffect(() => {
@@ -593,6 +705,8 @@ export function useCerfa() {
       intituleQualification: formationIntituleQualification,
       typeDiplome: formationTypeDiplome,
     },
+    formationCodeDiplomeAutomatic,
+    formationRncpAutomatic,
     onSubmittedOrganismeFormationSiret,
     onSubmittedFormationCodeDiplome,
     onSubmittedRncp,
