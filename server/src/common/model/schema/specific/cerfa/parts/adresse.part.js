@@ -56,6 +56,9 @@ const adresseSchema = {
     type: String,
     description: "Code postal",
     label: "Code postal :",
+    requiredMessage: "Le code postal est obligatoire",
+    validateMessage: `n'est pas un code postal valide`,
+    pattern: "^[0-9]{5}$",
     example: "75000",
     default: null,
     required: function () {

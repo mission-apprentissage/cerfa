@@ -65,6 +65,7 @@ const organismeFormationSchema = {
     description: "N° UAI de l'organisme de formation responsable",
     example: "0561910X",
     label: "N° UAI du CFA :",
+    requiredMessage: "Le N° UAI de l'organisme est obligatoire",
     validateMessage: `n'est pas un uai valide`,
     pattern: "^[0-9]{7}[a-zA-Z]$",
     default: null,

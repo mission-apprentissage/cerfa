@@ -13,7 +13,6 @@ const FormFormation = React.memo((props) => {
       uaiCfa,
       adresse: { numero, voie, complement, codePostal, commune },
     },
-    organismeFormationUaiCfaAutomatic,
     formation: {
       rncp,
       codeDiplome,
@@ -23,8 +22,6 @@ const FormFormation = React.memo((props) => {
       intituleQualification,
       typeDiplome,
     },
-    formationCodeDiplomeAutomatic,
-    formationRncpAutomatic,
     onSubmittedOrganismeFormationSiret,
     onSubmittedFormationCodeDiplome,
     onSubmittedRncp,
@@ -76,24 +73,22 @@ const FormFormation = React.memo((props) => {
       </FormControl> */}
       <Flex>
         <Box w="55%" flex="1">
-          <InputCerfa path="organismeFormation.denomination" field={denomination} type="text" mt="2" isDisabled />
+          <InputCerfa path="organismeFormation.denomination" field={denomination} type="text" mt="2" />
           <InputCerfa
             path="organismeFormation.uaiCfa"
             field={uaiCfa}
             type="text"
             mt="2"
-            isDisabled={organismeFormationUaiCfaAutomatic}
-            forceIsErrored={!organismeFormationUaiCfaAutomatic && uaiCfa.value === ""}
             onSubmittedField={onSubmittedOrganismeFormationUaiCfa}
           />
           <FormLabel fontWeight={700} my={3}>
             Adresse du CFA responsable :{" "}
           </FormLabel>
-          <InputCerfa path="organismeFormation.adresse.numero" field={numero} type="text" mt="2" isDisabled />
-          <InputCerfa path="organismeFormation.adresse.voie" field={voie} type="text" mt="2" isDisabled />
-          <InputCerfa path="organismeFormation.adresse.complement" field={complement} type="text" mt="2" isDisabled />
-          <InputCerfa path="organismeFormation.adresse.codePostal" field={codePostal} type="text" mt="2" isDisabled />
-          <InputCerfa path="organismeFormation.adresse.commune" field={commune} type="text" mt="2" isDisabled />
+          <InputCerfa path="organismeFormation.adresse.numero" field={numero} type="text" mt="2" />
+          <InputCerfa path="organismeFormation.adresse.voie" field={voie} type="text" mt="2" />
+          <InputCerfa path="organismeFormation.adresse.complement" field={complement} type="text" mt="2" />
+          <InputCerfa path="organismeFormation.adresse.codePostal" field={codePostal} type="text" mt="2" />
+          <InputCerfa path="organismeFormation.adresse.commune" field={commune} type="text" mt="2" />
         </Box>
         <Box w="45%" flex="1" ml="5w">
           <InputCerfa
@@ -108,8 +103,7 @@ const FormFormation = React.memo((props) => {
             field={intituleQualification}
             type="text"
             mt="2"
-            isDisabled
-            onSubmittedField={onSubmittedFormationIntituleQualification}
+            // onSubmittedField={onSubmittedFormationIntituleQualification}
           />
           <InputCerfa
             path="formation.codeDiplome"
@@ -117,7 +111,7 @@ const FormFormation = React.memo((props) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedFormationCodeDiplome}
-            forceIsErrored={formationCodeDiplomeAutomatic && codeDiplome.value === ""}
+            // onAsyncData={{ value: rncp.value }}
           />
           <InputCerfa
             path="formation.rncp"
@@ -125,7 +119,7 @@ const FormFormation = React.memo((props) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedRncp}
-            forceIsErrored={formationRncpAutomatic && rncp.value === ""}
+            // onAsyncData={{ value: codeDiplome.value }}
           />
           <FormLabel fontWeight={700} my={3}>
             Organisation de la formation en CFA :
@@ -150,7 +144,7 @@ const FormFormation = React.memo((props) => {
             <InputCerfa
               path="formation.dureeFormation"
               field={dureeFormation}
-              type="text"
+              type="number"
               mt="2"
               onSubmittedField={onSubmittedFormationDureeFormation}
             />

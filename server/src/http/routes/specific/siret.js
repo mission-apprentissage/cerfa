@@ -15,7 +15,15 @@ module.exports = () => {
 
       const data = await getDataFromSiret(siret);
 
-      return res.json(data);
+      let uai = ""; // TODO
+      if (siret === "30291412200015") {
+        uai = "0561910X";
+      }
+      let dataResult = data.result;
+      if (Object.keys(dataResult).length > 0) {
+        dataResult = { ...data.result, uai };
+      }
+      return res.json({ ...data, result: dataResult });
     })
   );
 
