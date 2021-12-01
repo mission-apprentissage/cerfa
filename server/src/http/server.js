@@ -19,6 +19,7 @@ const upload = require("./routes/specific/upload");
 const auth = require("./routes/auth");
 // const secured = require("./routes/securedAPI");
 const maintenanceMessage = require("./routes/maintenanceMessage");
+const maitreApprentissage = require("./routes/cerfaMaster");
 const dossier = require("./routes/specific/dossier");
 const cerfa = require("./routes/specific/cerfa");
 const history = require("./routes/specific/history");
@@ -55,6 +56,7 @@ module.exports = async (components) => {
     role(components)
   );
   app.use("/api/v1/maintenanceMessage", checkJwtToken, maintenanceMessage());
+  app.use("/api/v1/cerfa", checkJwtToken, maitreApprentissage());
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/authentified", checkJwtToken, authentified(components));
   app.use("/api/v1/password", password(components));
