@@ -28,7 +28,7 @@ const FormFormation = React.memo((props) => {
     onSubmittedFormationDateDebutFormation,
     onSubmittedFormationDateFinFormation,
     onSubmittedFormationDureeFormation,
-    onSubmittedFormationIntituleQualification,
+    // onSubmittedFormationIntituleQualification,
     onSubmittedFormationTypeDiplome,
     onSubmittedOrganismeFormationUaiCfa,
   } = useCerfa();

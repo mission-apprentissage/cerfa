@@ -15,7 +15,7 @@ module.exports = () => {
 
       const data = await getDataFromSiret(siret);
 
-      let uai = ""; // TODO
+      let uai = ""; // TODO  FOR TEST
       if (siret === "30291412200015") {
         uai = "0561910X";
       }

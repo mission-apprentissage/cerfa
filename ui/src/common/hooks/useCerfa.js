@@ -3,7 +3,6 @@
  */
 
 import { useState, useEffect, useCallback } from "react";
-import cloneDeep from "lodash.clonedeep";
 import { DateTime } from "luxon";
 import {
   _get,
@@ -110,7 +109,7 @@ const hydrate = async () => {
                 data: {
                   cfd: response.result.cfd,
                   rncp: "",
-                  intitule_diplome: response.result.intitule_long,
+                  intitule_diplome: "", // response.result.intitule_long,
                 },
                 // message: response.messages.rncp.code_rncp,
                 message: null,
@@ -289,33 +288,6 @@ const hydrate = async () => {
     console.log(e);
     return null;
   }
-};
-
-const updateCerfaValuesOf = (obj, key, values) => {
-  let newObj = cloneDeep(obj);
-  const keys = Object.keys(values);
-  for (let index = 0; index < keys.length; index++) {
-    const keyN = keys[index];
-
-    if (newObj[key] && newObj[key][keyN]) {
-      if (typeof values[keyN] !== "object") {
-        newObj[key][keyN].value = values[keyN];
-      } else if (newObj[key][keyN].value !== undefined) {
-        newObj[key][keyN].value = values[keyN];
-      } else {
-        let tmp = updateCerfaValuesOf({ [keyN]: newObj[key][keyN] }, keyN, values[keyN]);
-        const subKeys = Object.keys(tmp[keyN]);
-        for (let j = 0; j < subKeys.length; j++) {
-          const subKeyN = subKeys[j];
-          if (!newObj[key][keyN][subKeyN]) {
-            delete tmp[keyN][subKeyN];
-          }
-        }
-        newObj[key][keyN] = tmp[keyN];
-      }
-    }
-  }
-  return newObj;
 };
 
 export function findFieldDef(path, obj) {
@@ -505,32 +477,6 @@ export function useCerfa() {
     [formationDureeFormation]
   );
 
-  const onSubmittedFormationIntituleQualification = useCallback(
-    async (path, data) => {
-      try {
-        if (path === "formation.intituleQualification") {
-          const newV = updateCerfaValuesOf(
-            {
-              formation: {
-                intituleQualification: formationIntituleQualification,
-              },
-            },
-            "formation",
-            {
-              intituleQualification: data,
-            }
-          );
-          if (formationIntituleQualification.value !== newV.formation.intituleQualification.value) {
-            setFormationIntituleQualification(newV.formation.intituleQualification);
-          }
-        }
-      } catch (e) {
-        setError(e);
-      }
-    },
-    [formationIntituleQualification]
-  );
-
   const onSubmittedFormationTypeDiplome = useCallback(
     async (path, data) => {
       try {
@@ -698,7 +644,6 @@ export function useCerfa() {
     onSubmittedFormationDateDebutFormation,
     onSubmittedFormationDateFinFormation,
     onSubmittedFormationDureeFormation,
-    onSubmittedFormationIntituleQualification,
     onSubmittedFormationTypeDiplome,
     onSubmittedOrganismeFormationUaiCfa,
   };
