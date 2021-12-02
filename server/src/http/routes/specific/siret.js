@@ -13,6 +13,8 @@ module.exports = () => {
         siret: Joi.string().required(),
       }).validateAsync(body, { abortEarly: false });
 
+      // TODO HAS RIGHTS
+
       const data = await getDataFromSiret(siret);
 
       let uai = ""; // TODO  FOR TEST

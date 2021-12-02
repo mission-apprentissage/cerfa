@@ -45,4 +45,8 @@ module.exports = {
     },
   },
   apiEntreprise: env.get("CERFA_API_ENTREPRISE_KEY").asString(),
+  apiYousign: {
+    url: env.get("CERFA_API_YOUSIGN_URL").asString(),
+    key: env.get("CERFA_API_YOUSIGN_KEY").asString(),
+  },
 };

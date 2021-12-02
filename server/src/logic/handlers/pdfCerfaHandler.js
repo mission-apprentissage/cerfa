@@ -3,12 +3,10 @@ const { Cerfa } = require("../../common/model/index");
 
 // eslint-disable-next-line no-unused-vars
 const pdfCerfaHandler = async (cerfaId) => {
-  const pdfCtrl = await pdfCerfaController();
-
   // TODO find Cerfa by id cerfaId
   const cerfa = await Cerfa.findOne({ createdBy: "test-user" }).lean();
 
-  await pdfCtrl.createPdfCerfa(cerfa);
+  await pdfCerfaController.createPdfCerfa(cerfa);
 
   return {
     success: true,

@@ -24,6 +24,7 @@ const cerfa = require("./routes/specific/cerfa");
 const history = require("./routes/specific/history");
 const siret = require("./routes/specific/siret");
 const cfdrncp = require("./routes/specific/cfdrncp");
+const signDocument = require("./routes/specific/signDocument");
 
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
@@ -54,7 +55,12 @@ module.exports = async (components) => {
     permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
     role(components)
   );
-  app.use("/api/v1/maintenanceMessage", checkJwtToken, maintenanceMessage());
+  app.use(
+    "/api/v1/maintenanceMessage",
+    checkJwtToken,
+    permissionsMiddleware({ isAdmin: true }, ["page_message_maintenance"]),
+    maintenanceMessage()
+  );
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/authentified", checkJwtToken, authentified(components));
   app.use("/api/v1/password", password(components));
@@ -66,6 +72,7 @@ module.exports = async (components) => {
   app.use("/api/v1/cerfa", checkJwtToken, cerfa(components));
   app.use("/api/v1/siret", checkJwtToken, siret());
   app.use("/api/v1/cfdrncp", checkJwtToken, cfdrncp());
+  app.use("/api/v1/sign_document", checkJwtToken, signDocument());
 
   app.get(
     "/api",

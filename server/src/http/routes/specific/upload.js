@@ -22,6 +22,8 @@ module.exports = () => {
   router.post(
     "/",
     tryCatch(async (req, res) => {
+      // TODO HAS RIGHTS
+
       let contratId = getContratIdForUser();
 
       let form = new multiparty.Form();

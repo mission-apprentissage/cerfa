@@ -15,6 +15,8 @@ module.exports = () => {
         rncp: Joi.string().pattern(new RegExp("^(RNCP)?[0-9]{2,5}$")),
       }).validateAsync(body, { abortEarly: false });
 
+      // TODO HAS RIGHTS
+
       if (!cfd && !rncp) {
         return res.json({ error: "Cfd ou rncp doivent être défini et formaté" });
       }

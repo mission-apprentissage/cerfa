@@ -11,6 +11,8 @@ module.exports = () => {
       query: Joi.string().default("{}"),
     }).validateAsync(req.query, { abortEarly: false });
 
+    // TODO HAS RIGHTS
+
     let json = JSON.parse(query);
     const result = await History.find(json);
 
@@ -34,6 +36,8 @@ module.exports = () => {
           .default([]),
       }).validateAsync(body, { abortEarly: false });
 
+      // TODO HAS RIGHTS
+
       const result = await History.create({
         dossierId,
         context,
@@ -54,6 +58,8 @@ module.exports = () => {
         who: Joi.string().required(),
         when: Joi.date().default(Date.now),
       }).validateAsync(body, { abortEarly: false });
+
+      // TODO HAS RIGHTS
 
       const result = await History.findOneAndUpdate(
         { _id: params.id },
@@ -82,6 +88,8 @@ module.exports = () => {
         when: Joi.date().default(Date.now),
       }).validateAsync(body, { abortEarly: false });
 
+      // TODO HAS RIGHTS
+
       const { dossierId, context, ...rest } = body;
       const result = await History.findOneAndUpdate(
         { dossierId, context },
@@ -100,6 +108,7 @@ module.exports = () => {
   router.delete(
     "/:id",
     tryCatch(async ({ params }, res) => {
+      // TODO HAS RIGHTS
       const result = await History.deleteOne({ _id: params.id });
       return res.json(result);
     })
