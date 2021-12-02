@@ -15,7 +15,6 @@ module.exports = {
   Role: createModel("role", schema.roleSchema),
   Log: createModel("log", schema.logSchema),
   MaintenanceMessage: createModel("maintenanceMessage", schema.maintenanceMessageSchema),
-  MaitreApprentissage: createModel("maitreApprentissage", schema.maitreApprentissageSchema),
 
   // below Cerfa specific
   Dossier: createModel("dossier", schema.dossierSchema, {

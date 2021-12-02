@@ -1,13 +1,26 @@
-// eslint-disable-next-line node/no-extraneous-require
 const { PDFDocument, rgb, grayscale } = require("pdf-lib");
-const fs = require("fs");
 const { spaced } = require("./spacingUtils");
-const path = require("path");
 
-module.exports = async () => {
-  let formPdfBytes = fs.readFileSync(path.join(__dirname, "./cerfa-pdf.pdf"));
+const fieldsPositions = {
+  employeur: {
+    denomination: {
+      x: 28,
+      y: 685,
+      r: 0,
+    },
+  },
+};
 
-  const pdfDoc = await PDFDocument.load(formPdfBytes);
+const buildFieldDraw = (value, position) => {
+  const parts = value.split(" ");
+  // TODO
+  console.log(parts);
+
+  return [{ title: value, ...position }];
+};
+
+module.exports = async (pdfCerfaEmpty, cerfa) => {
+  const pdfDoc = await PDFDocument.load(pdfCerfaEmpty);
   const pages = pdfDoc.getPages();
   const firstPage = pages[0];
   const secondPage = pages[1];
@@ -17,8 +30,8 @@ module.exports = async () => {
     //TODO EMPLOYEUR
     { title: "X", x: 233, y: 713, r: 1 },
     { title: "X", x: 391, y: 713, r: 1 },
-    { title: "Hanry", x: 28, y: 685, r: 0 },
-    { title: "s", x: 110, y: 685, r: 2, cases: 13 },
+    ...buildFieldDraw(cerfa.employeur.denomination, fieldsPositions.employeur.denomination),
+    // { title: "s", x: 110, y: 685, r: 2, cases: 13 },
     { title: "122", x: 50, y: 649, r: 2 },
     { title: "3", x: 155, y: 649, r: 2 },
     { title: "4", x: 100, y: 630, r: 2 },
@@ -228,7 +241,5 @@ module.exports = async () => {
     }
   });
   const pdfBytes = await pdfDoc.save();
-  fs.writeFile(__dirname + "/test.pdf", pdfBytes, "base64", function (err) {
-    console.log(err);
-  });
+  return pdfBytes;
 };
