@@ -6,18 +6,90 @@ const fieldsPositions = {
     denomination: {
       x: 28,
       y: 685,
-      maxLength: 13,
-      type: "text",
+      maxLength: 40,
+    },
+    adresse: {
+      numero: {
+        x: 50,
+        y: 649,
+        maxLength: 30,
+      },
+      voie: {
+        x: 155,
+        y: 649,
+        maxLength: 10,
+      },
+      complement: {
+        x: 100,
+        y: 630,
+        maxLength: 30,
+      },
+      codePostal: {
+        x: 97,
+        y: 610,
+        maxLength: 30,
+      },
+      commune: {
+        x: 89,
+        y: 592,
+        maxLength: 30,
+      },
+    },
+    telephone: {
+      x: 90,
+      y: 574,
+      maxLength: 40,
+    },
+    siret: {
+      x: 305,
+      y: 685,
+      maxLength: 40,
+    },
+    typeEmployeur: {
+      x: 400,
+      y: 669,
+      maxLength: 40,
+    },
+    employeurSpecifique: {
+      x: 418,
+      y: 648,
+      maxLength: 40,
+    },
+    naf: {
+      x: 480,
+      y: 630,
+      maxLength: 40,
+    },
+    nombreDeSalaries: {
+      x: 305,
+      y: 597,
+      maxLength: 40,
+    },
+    libelleIdcc: {
+      x: 305,
+      y: 560,
+      maxLength: 40,
+    },
+    codeIdcc: {
+      x: 452,
+      y: 530,
+      maxLength: 40,
+    },
+    regimeSpecifique: {
+      x: 473,
+      y: 513,
+      maxLength: 40,
     },
   },
 };
 
 const buildFieldDraw = (value, fieldDefinition) => {
   const result = {
-    title: value,
+    title: isNaN(value) === true ? value : value.toString(),
     x: fieldDefinition.x,
     y: fieldDefinition.y,
   };
+
   if (fieldDefinition.maxLength && value.length > fieldDefinition.maxLength) {
     result.title = value.slice(0, fieldDefinition.maxLength - 1) + ".";
   }
@@ -27,17 +99,35 @@ const buildFieldDraw = (value, fieldDefinition) => {
 module.exports = async (pdfCerfaEmpty, cerfa) => {
   const pdfDoc = await PDFDocument.load(pdfCerfaEmpty);
   const pages = pdfDoc.getPages();
-  const pdfPagesContent = [[...buildFieldDraw(cerfa.employeur.denomination, fieldsPositions.employeur.denomination)]];
-  // const pdfPagesContent = [[...buildFieldDraw("ABCDEFGH .", fieldsPositions.employeur.denomination)]];
+  console.log(cerfa.employeur.employeurSpecifique);
+
+  const pdfPagesContent = [
+    [
+      ...buildFieldDraw(cerfa.employeur.denomination, fieldsPositions.employeur.denomination),
+      ...buildFieldDraw(cerfa.employeur.adresse.numero, fieldsPositions.employeur.adresse.numero),
+      ...buildFieldDraw(cerfa.employeur.adresse.voie, fieldsPositions.employeur.adresse.voie),
+      ...buildFieldDraw(cerfa.employeur.adresse.complement, fieldsPositions.employeur.adresse.complement),
+      ...buildFieldDraw(cerfa.employeur.adresse.codePostal, fieldsPositions.employeur.adresse.codePostal),
+      ...buildFieldDraw(cerfa.employeur.adresse.commune, fieldsPositions.employeur.adresse.commune),
+      ...buildFieldDraw(cerfa.employeur.telephone, fieldsPositions.employeur.telephone),
+      ...buildFieldDraw(cerfa.employeur.siret, fieldsPositions.employeur.siret),
+      ...buildFieldDraw(cerfa.employeur.typeEmployeur, fieldsPositions.employeur.typeEmployeur),
+      // ...buildFieldDraw(cerfa.employeur.employeurSpecifique, fieldsPositions.employeur.employeurSpecifique),
+      ...buildFieldDraw(cerfa.employeur.naf, fieldsPositions.employeur.naf),
+      ...buildFieldDraw(cerfa.employeur.nombreDeSalaries, fieldsPositions.employeur.nombreDeSalaries),
+      ...buildFieldDraw(cerfa.employeur.libelleIdcc, fieldsPositions.employeur.libelleIdcc),
+      ...buildFieldDraw(cerfa.employeur.codeIdcc, fieldsPositions.employeur.codeIdcc),
+      ...buildFieldDraw(cerfa.employeur.regimeSpecifique, fieldsPositions.employeur.regimeSpecifique),
+    ],
+  ];
   // const pdfPagesContent = [
   //   [
-  //     { title: "X", x: 413, y: 732, r: 1 },
+  // { title: "X", x: 413, y: 732, r: 1 },
 
   //     //TODO EMPLOYEUR
   //     { title: "X", x: 233, y: 713, r: 1 },
   //     { title: "X", x: 391, y: 713, r: 1 },
   //     // { title: "s", x: 110, y: 685, r: 2, cases: 13 },
-  //     { title: "122", x: 50, y: 649, r: 2 },
   //     { title: "3", x: 155, y: 649, r: 2 },
   //     { title: "4", x: 100, y: 630, r: 2 },
   //     { title: "zd", x: 97, y: 610, r: 1 },
@@ -170,7 +260,7 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
         page.drawRectangle({
           x: nextXPos,
           y: y - 2,
-          width: 10,
+          width: 12,
           height: 12,
           borderWidth: 0.5,
           borderColor: grayscale(0.1),
