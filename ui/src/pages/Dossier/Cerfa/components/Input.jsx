@@ -42,10 +42,10 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
   const prevFieldValueRef = useRef("");
   const initRef = useRef(0);
 
-  const borderBottomColor = useMemo(() => (validated ? "green.500" : isErrored ? "error" : "grey.600"), [
-    isErrored,
-    validated,
-  ]);
+  const borderBottomColor = useMemo(
+    () => (validated ? "green.500" : isErrored ? "error" : "grey.600"),
+    [isErrored, validated]
+  );
   const name = useMemo(() => path.replaceAll(".", "_"), [path]);
 
   const { values, errors, setFieldValue, setErrors } = useFormik({

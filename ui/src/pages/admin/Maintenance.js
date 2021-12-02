@@ -29,7 +29,11 @@ const Message = ({ match }) => {
 
   const [user] = useAuth();
 
-  const { values: valuesM, handleSubmit: handleSubmitM, handleChange: handleChangeM } = useFormik({
+  const {
+    values: valuesM,
+    handleSubmit: handleSubmitM,
+    handleChange: handleChangeM,
+  } = useFormik({
     initialValues: {
       msg: "",
       type: "",
@@ -104,8 +108,7 @@ const Message = ({ match }) => {
           const newMaintenanceMessage = {
             type: "alert",
             context: "automatique",
-            msg:
-              "Une mise à jour des données est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.",
+            msg: "Une mise à jour des données est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.",
             name: "auto",
             enabled: false,
           };

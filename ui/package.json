@@ -30,7 +30,7 @@
     "react-hooks-global-state": "1.0.0",
     "react-query": "3.2.0",
     "react-router-dom": "5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "4.0.3",
     "react-table": "7.7.0",
     "recoil": "0.5.2",
     "styled-components": "5.1.1",
@@ -42,7 +42,10 @@
     "@testing-library/jest-dom": "5.11.10",
     "@testing-library/react": "11.2.6",
     "@testing-library/react-hooks": "7.0.2",
-    "@testing-library/user-event": "13.3.0"
+    "@testing-library/user-event": "13.3.0",
+    "eslint-plugin-prettier": "4.0.0",
+    "eslint-config-prettier": "8.3.0",
+    "prettier": "2.5.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -50,6 +53,11 @@
     "test": "react-scripts test",
     "test:coverage": "react-scripts test --watchAll=false --coverage",
     "eject": "react-scripts eject"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "bracketSpacing": true,
+    "trailingComma": "es5"
   },
   "browserslist": {
     "production": [
