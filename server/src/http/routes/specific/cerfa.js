@@ -4,6 +4,7 @@ const Boom = require("boom");
 const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const cerfaSchema = require("../../../common/model/schema/specific/cerfa/Cerfa");
+const { pdfCerfaHandler } = require("../../../logic/handlers/pdfCerfaHandler");
 
 module.exports = ({ cerfas }) => {
   const router = express.Router();
@@ -219,6 +220,15 @@ module.exports = ({ cerfas }) => {
       // TODO HAS RIGHTS
       const result = await cerfas.removeCerfa(params.id);
       return res.json(result);
+    })
+  );
+
+  router.post(
+    "/pdf",
+    tryCatch(async (req, res) => {
+      await pdfCerfaHandler();
+
+      return res.json({});
     })
   );
 
