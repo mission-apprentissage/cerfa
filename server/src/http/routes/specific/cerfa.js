@@ -5,7 +5,7 @@ const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsMiddleware = require("../../middlewares/permissionsMiddleware");
 const cerfaSchema = require("../../../common/model/schema/specific/cerfa/Cerfa");
-const { pdfCerfaHandler } = require("../../../logic/handlers/pdfCerfaHandler");
+const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfaController");
 
 module.exports = ({ cerfas }) => {
   const router = express.Router();
@@ -225,9 +225,10 @@ module.exports = ({ cerfas }) => {
   );
 
   router.post(
-    "/pdf",
-    tryCatch(async (req, res) => {
-      await pdfCerfaHandler();
+    "/pdf/:id",
+    tryCatch(async ({ params }, res) => {
+      const cerfa = await Cerfa.findOne({ _id: params.id }).lean();
+      await pdfCerfaController.createPdfCerfa(cerfa);
 
       return res.json({});
     })
