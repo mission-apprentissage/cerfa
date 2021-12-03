@@ -27,6 +27,7 @@ const workspaceSchema = {
     ref: "user",
     default: null,
     required: true,
+    unique: true,
     description: "Propriétaire du workspace",
   },
 };

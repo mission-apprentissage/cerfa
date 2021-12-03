@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { History } = require("../../../src/common/model");
+const { History } = require("../../../../src/common/model");
 
 describe("History", () => {
   it("Doit créer une historique sur un champ", async () => {

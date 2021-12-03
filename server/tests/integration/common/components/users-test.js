@@ -1,6 +1,6 @@
 const assert = require("assert");
-const users = require("../../../src/common/components/users");
-const { User } = require("../../../src/common/model");
+const users = require("../../../../src/common/components/users");
+const { User } = require("../../../../src/common/model");
 
 describe("users http", () => {
   it("Permet de créer un utilisateur", async () => {

@@ -1,9 +1,9 @@
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
-const { MaintenanceMessage, Role, Cerfa } = require("../../common/model/index");
+const { MaintenanceMessage, Role, Workspace, Dossier, Cerfa } = require("../../common/model/index");
 
 runScript(async ({ users }) => {
-  await users.createUser("testAdmin", "password", {
+  const user = await users.createUser("testAdmin", "password", {
     email: "antoine.bigard@beta.gouv.fr",
     permissions: { isAdmin: true },
   });
@@ -26,6 +26,20 @@ runScript(async ({ users }) => {
   });
   await newRole.save();
   logger.info(`Role public created`);
+
+  const wks = await Workspace.create({
+    owner: user._id,
+    nom: "Espace test",
+    description: "Votre espace test",
+  });
+  logger.info(`Workspace test created`);
+
+  const dossier = await Dossier.create({
+    draft: true,
+    owner: user._id,
+    workspaceId: wks._id,
+  });
+  logger.info(`Dossier test created`);
 
   await Cerfa.create({
     draft: true,
@@ -152,7 +166,7 @@ runScript(async ({ users }) => {
         commune: "PARIS",
       },
     },
-    dossierId: "619baec6fcdd030ba4e13c40",
+    dossierId: dossier._id,
   });
   logger.info(`Seed cerfa created`);
 });

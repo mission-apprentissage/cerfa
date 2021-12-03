@@ -17,7 +17,11 @@ module.exports = {
   MaintenanceMessage: createModel("maintenanceMessage", schema.maintenanceMessageSchema),
 
   // below Cerfa specific
-  Workspace: createModel("workspace", schema.workspaceSchema),
+  Workspace: createModel("workspace", schema.workspaceSchema, {
+    createMongoDBIndexes: (schema) => {
+      schema.index({ owner: 1 }, { unique: true });
+    },
+  }),
   Dossier: createModel("dossier", schema.dossierSchema, {
     createMongoDBIndexes: (schema) => {
       schema.index({ workspaceId: 1 }, { unique: true });

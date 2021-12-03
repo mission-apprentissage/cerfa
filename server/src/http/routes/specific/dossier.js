@@ -1,7 +1,6 @@
 const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
-const mongoose = require("mongoose");
 const { Dossier } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 
@@ -37,11 +36,13 @@ module.exports = ({ cerfas, dossiers }) => {
 
   router.post(
     "/",
-    tryCatch(async ({ user }, res) => {
-      const temporaryDossierId = mongoose.Types.ObjectId().toString();
-      const { _id: cerfaId } = await cerfas.createCerfa({ dossierId: temporaryDossierId });
-      const result = await dossiers.createDossier({ cerfaId: cerfaId.toString() }, user);
-      await cerfas.updateDossierId(cerfaId, result._id);
+    tryCatch(async ({ body, user }, res) => {
+      let { workspaceId } = await Joi.object({
+        workspaceId: Joi.string().required(),
+      }).validateAsync(body, { abortEarly: false });
+
+      const result = await dossiers.createDossier({ workspaceId }, user);
+      await cerfas.createCerfa({ dossierId: result._id });
 
       return res.json(result);
     })

@@ -7,11 +7,6 @@ const dossierSchema = {
     description: "Nom du dossier",
     default: null,
   },
-  cerfaId: {
-    type: String,
-    description: "Identifiant interne du cerfa",
-    required: true,
-  },
   documents: {
     type: [
       {
@@ -85,8 +80,8 @@ const dossierSchema = {
   workspaceId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "workspace",
-    default: null,
     required: true,
+    unique: true,
     description: "Workspace id",
   },
 };

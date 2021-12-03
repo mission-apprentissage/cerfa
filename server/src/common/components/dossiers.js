@@ -5,8 +5,8 @@ const Boom = require("boom");
 module.exports = async () => {
   return {
     createDossier: async (data, user) => {
-      let { cerfaId } = await Joi.object({
-        cerfaId: Joi.string().required(),
+      let { workspaceId } = await Joi.object({
+        workspaceId: Joi.string().required(),
       }).validateAsync(data, { abortEarly: false });
 
       const userDb = await User.findOne({ username: user.sub });
@@ -14,11 +14,13 @@ module.exports = async () => {
         throw new Error("User doesn't exist");
       }
 
+      // TODO Workspace Id
+
       let result = null;
       try {
         result = await Dossier.create({
           draft: true,
-          cerfaId,
+          workspaceId,
           owner: userDb._id,
         });
       } catch (error) {
@@ -56,7 +58,7 @@ module.exports = async () => {
         throw Boom.notFound("Doesn't exist");
       }
 
-      await Cerfa.deleteOne({ _id: found.cerfaId });
+      await Cerfa.deleteOne({ dossierId: found._id });
 
       return await Dossier.deleteOne({ _id });
     },

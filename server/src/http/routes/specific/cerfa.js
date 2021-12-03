@@ -3,6 +3,7 @@ const Joi = require("joi");
 const Boom = require("boom");
 const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
+const permissionsMiddleware = require("../../middlewares/permissionsMiddleware");
 const cerfaSchema = require("../../../common/model/schema/specific/cerfa/Cerfa");
 const { pdfCerfaHandler } = require("../../../logic/handlers/pdfCerfaHandler");
 
@@ -13,7 +14,7 @@ module.exports = ({ cerfas }) => {
     return res.json(cerfaSchema);
   });
 
-  router.get("/", async (req, res) => {
+  router.get("/", permissionsMiddleware(), async (req, res) => {
     let { query } = await Joi.object({
       query: Joi.string().default("{}"),
     }).validateAsync(req.query, { abortEarly: false });
