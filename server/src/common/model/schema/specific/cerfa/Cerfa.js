@@ -5,6 +5,7 @@ const maitreApprentissageSchema = require("./parts/maitreApprentissage.part");
 const formationSchema = require("./parts/formation.part");
 const contratSchema = require("./parts/contrat.part");
 const organismeFormationSchema = require("./parts/organismeFormation.part");
+const fieldLockedSchema = require("./parts/fieldLocked.part");
 
 const cerfaSchema = {
   employeur: {
@@ -27,6 +28,9 @@ const cerfaSchema = {
   },
   organismeFormation: {
     ...organismeFormationSchema,
+  },
+  isLockedField: {
+    ...fieldLockedSchema,
   },
   draft: {
     type: Boolean,

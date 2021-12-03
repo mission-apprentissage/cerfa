@@ -14,9 +14,12 @@ import { dossierAtom } from "./dossierAtom";
 
 const hydrate = async (dossier) => {
   try {
-    const cerf = await _get(`/api/v1/cerfa?workspaceId=${dossier.workspaceId}&dossierId=${dossier._id}`);
+    const cerfa = await _get(`/api/v1/cerfa?workspaceId=${dossier.workspaceId}&dossierId=${dossier._id}`);
     const schema = await _get("/api/v1/cerfa/schema");
-    console.log(cerf, schema);
+    console.log(schema);
+    console.log(cerfa);
+    // console.log(merge(schema, cerf));
+
     const { organismeFormation, formation } = schema;
     return {
       // employeur: {},

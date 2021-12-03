@@ -1,6 +1,7 @@
 const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
+const { cloneDeep, mergeWith } = require("lodash");
 const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsMiddleware = require("../../middlewares/permissionsMiddleware");
@@ -24,11 +25,77 @@ module.exports = ({ cerfas }) => {
         .unknown()
         .validateAsync(req.query, { abortEarly: false });
 
-      const results = await Cerfa.findOne({ dossierId }).lean();
+      const cerfa = await Cerfa.findOne({ dossierId }).lean();
 
       // TODO HAS RIGHTS
 
-      return res.json(results);
+      function customizer(objValue, srcValue) {
+        if (objValue !== undefined) {
+          return { ...objValue, value: srcValue || "" };
+        }
+      }
+
+      let result = {
+        employeur: {
+          ...mergeWith(cloneDeep(cerfaSchema.employeur), cerfa.employeur, customizer),
+          adresse: {
+            ...mergeWith(cloneDeep(cerfaSchema.employeur.adresse), cerfa.employeur.adresse, customizer),
+          },
+        },
+        apprenti: {
+          ...mergeWith(cloneDeep(cerfaSchema.apprenti), cerfa.apprenti, customizer),
+          adresse: {
+            ...mergeWith(cloneDeep(cerfaSchema.apprenti.adresse), cerfa.apprenti.adresse, customizer),
+          },
+          responsableLegal: {
+            ...mergeWith(
+              cloneDeep(cerfaSchema.apprenti.responsableLegal.type),
+              cerfa.apprenti.responsableLegal,
+              customizer
+            ),
+            adresse: {
+              ...mergeWith(
+                cloneDeep(cerfaSchema.apprenti.responsableLegal.type.adresse),
+                cerfa.apprenti.responsableLegal.adresse,
+                customizer
+              ),
+            },
+          },
+        },
+        maitre1: {
+          ...mergeWith(cloneDeep(cerfaSchema.maitre1), cerfa.maitre1, customizer),
+        },
+        maitre2: {
+          ...mergeWith(cloneDeep(cerfaSchema.maitre2), cerfa.maitre2, customizer),
+        },
+        formation: {
+          ...mergeWith(cloneDeep(cerfaSchema.formation), cerfa.formation, customizer),
+        },
+        contrat: {
+          ...mergeWith(cloneDeep(cerfaSchema.contrat), cerfa.contrat, customizer),
+          remunerationsAnnuelles: [
+            ...cerfa.contrat.remunerationsAnnuelles.map((remunerationAnnuelle) => {
+              return mergeWith(
+                cloneDeep(cerfaSchema.contrat.remunerationsAnnuelles.type[0]),
+                remunerationAnnuelle,
+                customizer
+              );
+            }),
+          ],
+        },
+        organismeFormation: {
+          ...mergeWith(cloneDeep(cerfaSchema.organismeFormation), cerfa.organismeFormation, customizer),
+          adresse: {
+            ...mergeWith(
+              cloneDeep(cerfaSchema.organismeFormation.adresse),
+              cerfa.organismeFormation.adresse,
+              customizer
+            ),
+          },
+        },
+      };
+
+      return res.json(result);
     })
   );
 
