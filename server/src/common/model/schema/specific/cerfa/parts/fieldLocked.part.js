@@ -38,6 +38,10 @@ const fieldLockedSchema = {
       type: Boolean,
       default: true,
     },
+    formationInterne: {
+      type: Boolean,
+      default: true,
+    },
     uaiCfa: {
       type: Boolean,
       default: true,

@@ -11,10 +11,6 @@ const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfa
 module.exports = ({ cerfas }) => {
   const router = express.Router();
 
-  router.get("/schema", async (req, res) => {
-    return res.json(cerfaSchema);
-  });
-
   router.get(
     "/",
     permissionsMiddleware(),
@@ -32,6 +28,12 @@ module.exports = ({ cerfas }) => {
       function customizer(objValue, srcValue) {
         if (objValue !== undefined) {
           return { ...objValue, value: srcValue || "" };
+        }
+      }
+
+      function customizerLock(objValue, srcValue) {
+        if (objValue !== undefined) {
+          return { ...objValue, locked: srcValue };
         }
       }
 
@@ -69,7 +71,11 @@ module.exports = ({ cerfas }) => {
           ...mergeWith(cloneDeep(cerfaSchema.maitre2), cerfa.maitre2, customizer),
         },
         formation: {
-          ...mergeWith(cloneDeep(cerfaSchema.formation), cerfa.formation, customizer),
+          ...mergeWith(
+            mergeWith(cloneDeep(cerfaSchema.formation), cerfa.formation, customizer),
+            cerfa.isLockedField.formation,
+            customizerLock
+          ),
         },
         contrat: {
           ...mergeWith(cloneDeep(cerfaSchema.contrat), cerfa.contrat, customizer),
@@ -84,12 +90,20 @@ module.exports = ({ cerfas }) => {
           ],
         },
         organismeFormation: {
-          ...mergeWith(cloneDeep(cerfaSchema.organismeFormation), cerfa.organismeFormation, customizer),
+          ...mergeWith(
+            mergeWith(cloneDeep(cerfaSchema.organismeFormation), cerfa.organismeFormation, customizer),
+            cerfa.isLockedField.organismeFormation,
+            customizerLock
+          ),
           adresse: {
             ...mergeWith(
-              cloneDeep(cerfaSchema.organismeFormation.adresse),
-              cerfa.organismeFormation.adresse,
-              customizer
+              mergeWith(
+                cloneDeep(cerfaSchema.organismeFormation.adresse),
+                cerfa.organismeFormation.adresse,
+                customizer
+              ),
+              cerfa.isLockedField.organismeFormation.adresse,
+              customizerLock
             ),
           },
         },

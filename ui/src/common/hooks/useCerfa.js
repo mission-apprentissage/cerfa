@@ -15,22 +15,17 @@ import { dossierAtom } from "./dossierAtom";
 const hydrate = async (dossier) => {
   try {
     const cerfa = await _get(`/api/v1/cerfa?workspaceId=${dossier.workspaceId}&dossierId=${dossier._id}`);
-    const schema = await _get("/api/v1/cerfa/schema");
-    console.log(schema);
     console.log(cerfa);
-    // console.log(merge(schema, cerf));
-
-    const { organismeFormation, formation } = schema;
     return {
+      ...cerfa,
       // employeur: {},
       // apprenti: {},
       // maitre1: {},
       // maitre2: {},
       formation: {
+        ...cerfa.formation,
         rncp: {
-          ...formation.rncp,
-          locked: false, // default lock
-          value: "",
+          ...cerfa.formation.rncp,
           doAsyncActions: async (value, data) => {
             try {
               const response = await _post(`/api/v1/cfdrncp`, {
@@ -91,9 +86,7 @@ const hydrate = async (dossier) => {
           },
         },
         codeDiplome: {
-          ...formation.codeDiplome,
-          locked: false, // default lock
-          value: "",
+          ...cerfa.formation.codeDiplome,
           doAsyncActions: async (value) => {
             try {
               const response = await _post(`/api/v1/cfdrncp`, {
@@ -130,20 +123,8 @@ const hydrate = async (dossier) => {
             }
           },
         },
-        typeDiplome: {
-          ...formation.typeDiplome,
-          locked: false, // default lock
-          value: "",
-        },
-        intituleQualification: {
-          ...formation.intituleQualification,
-          locked: true, // default lock
-          value: "",
-        },
         dateDebutFormation: {
-          ...formation.dateDebutFormation,
-          locked: false, // default lock
-          value: "",
+          ...cerfa.formation.dateDebutFormation,
           doAsyncActions: async (value, data) => {
             await new Promise((resolve) => setTimeout(resolve, 100));
             const dateDebutFormation = DateTime.fromISO(value).setLocale("fr-FR");
@@ -165,9 +146,7 @@ const hydrate = async (dossier) => {
           },
         },
         dateFinFormation: {
-          ...formation.dateFinFormation,
-          locked: false, // default lock
-          value: "",
+          ...cerfa.formation.dateFinFormation,
           doAsyncActions: async (value, data) => {
             await new Promise((resolve) => setTimeout(resolve, 100));
             const dateFinFormation = DateTime.fromISO(value).setLocale("fr-FR");
@@ -188,18 +167,12 @@ const hydrate = async (dossier) => {
             };
           },
         },
-        dureeFormation: {
-          ...formation.dureeFormation,
-          locked: false, // default lock
-          value: "",
-        },
       },
       // contrat: {},
       organismeFormation: {
+        ...cerfa.organismeFormation,
         siret: {
-          ...organismeFormation.siret,
-          locked: false, // default lock
-          value: "",
+          ...cerfa.organismeFormation.siret,
           doAsyncActions: async (value) => {
             const response = await _post(`/api/v1/siret`, {
               siret: value,
@@ -251,43 +224,6 @@ const hydrate = async (dossier) => {
               role: "Employeur",
             },
           ],
-        },
-        denomination: {
-          ...organismeFormation.denomination,
-          locked: true, // default lock
-          value: "",
-        },
-        uaiCfa: {
-          ...organismeFormation.uaiCfa,
-          locked: true, // default lock  || db.locked : false
-          value: "", //"Already in db inValid",
-        },
-        adresse: {
-          numero: {
-            ...organismeFormation.adresse.numero,
-            locked: true, // default lock
-            value: "",
-          },
-          voie: {
-            ...organismeFormation.adresse.voie,
-            locked: true, // default lock
-            value: "",
-          },
-          complement: {
-            ...organismeFormation.adresse.complement,
-            locked: true, // default lock
-            value: "Already in db Valid",
-          },
-          codePostal: {
-            ...organismeFormation.adresse.codePostal,
-            locked: true, // default lock
-            value: "",
-          },
-          commune: {
-            ...organismeFormation.adresse.commune,
-            locked: true, // default lock
-            value: "",
-          },
         },
       },
     };
