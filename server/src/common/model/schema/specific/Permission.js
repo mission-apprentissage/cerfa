@@ -1,28 +1,28 @@
+const { mongoose } = require("../../../mongodb");
+
 const permissionSchema = {
-  cerfaId: {
-    type: String,
-    description: "Identifiant interne du cerfa",
+  workspaceId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "workspace",
+    description: "Workspace id",
     required: true,
-    index: true,
   },
   dossierId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "dossier",
     description: "Identifiant interne du dossier",
     required: true,
-    index: true,
   },
-  username: {
+  userEmail: {
     type: String,
+    description: "User email",
     required: true,
-    index: true,
-    description: "Qui a le droit sur le dossier",
   },
   role: {
-    type: String,
-    enum: ["initiateur_cerfa", "utilisateur", "signataire"],
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "role",
+    description: "Role id",
     required: true,
-    index: true,
-    description: "Avec quel role",
   },
 };
 module.exports = permissionSchema;

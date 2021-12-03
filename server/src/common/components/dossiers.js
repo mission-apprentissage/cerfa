@@ -1,4 +1,4 @@
-const { Dossier, Cerfa } = require("../model/index");
+const { Dossier, Cerfa, User } = require("../model/index");
 const Joi = require("joi");
 const Boom = require("boom");
 
@@ -9,12 +9,17 @@ module.exports = async () => {
         cerfaId: Joi.string().required(),
       }).validateAsync(data, { abortEarly: false });
 
+      const userDb = await User.findOne({ username: user.sub });
+      if (!userDb) {
+        throw new Error("User doesn't exist");
+      }
+
       let result = null;
       try {
         result = await Dossier.create({
           draft: true,
           cerfaId,
-          createdBy: user.sub,
+          owner: userDb._id,
         });
       } catch (error) {
         const { code, name, message } = error;

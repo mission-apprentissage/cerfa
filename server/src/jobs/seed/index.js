@@ -153,7 +153,6 @@ runScript(async ({ users }) => {
       },
     },
     dossierId: "619baec6fcdd030ba4e13c40",
-    createdBy: "test-user",
   });
   logger.info(`Seed cerfa created`);
 });

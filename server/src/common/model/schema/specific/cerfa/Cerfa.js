@@ -33,12 +33,6 @@ const cerfaSchema = {
     required: true,
     description: "Statut interne brouillon",
   },
-  createdBy: {
-    type: String,
-    default: null,
-    required: true,
-    description: "Qui a initié le cerfa",
-  },
   dossierId: {
     type: String,
     description: "Identifiant interne du dossier",

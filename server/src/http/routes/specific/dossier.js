@@ -39,7 +39,7 @@ module.exports = ({ cerfas, dossiers }) => {
     "/",
     tryCatch(async ({ user }, res) => {
       const temporaryDossierId = mongoose.Types.ObjectId().toString();
-      const { _id: cerfaId } = await cerfas.createCerfa({ dossierId: temporaryDossierId }, user);
+      const { _id: cerfaId } = await cerfas.createCerfa({ dossierId: temporaryDossierId });
       const result = await dossiers.createDossier({ cerfaId: cerfaId.toString() }, user);
       await cerfas.updateDossierId(cerfaId, result._id);
 

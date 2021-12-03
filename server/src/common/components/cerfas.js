@@ -4,17 +4,17 @@ const Boom = require("boom");
 
 module.exports = async () => {
   return {
-    createCerfa: async (data, user) => {
+    createCerfa: async (data) => {
       let { dossierId } = await Joi.object({
         dossierId: Joi.string().required(),
       }).validateAsync(data, { abortEarly: false });
 
+      // TODO IF DOSSIER ID EXIST
       let result = null;
       try {
         result = await Cerfa.create({
           draft: true,
           dossierId,
-          createdBy: user.sub,
         });
       } catch (error) {
         const { code, name, message } = error;

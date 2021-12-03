@@ -129,7 +129,6 @@ describe("Cerfa", () => {
         },
       },
       dossierId: "619baec6fcdd030ba4e13c40",
-      createdBy: "test-user",
     });
 
     const results = await Cerfa.find({ "employeur.denomination": "ENERGIE 3000" });
@@ -140,7 +139,6 @@ describe("Cerfa", () => {
     await Cerfa.create({
       draft: true,
       dossierId: "619baec6fcdd030ba4e13c40",
-      createdBy: "test-user",
     });
 
     const results = await Cerfa.find({});

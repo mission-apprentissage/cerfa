@@ -42,8 +42,8 @@ module.exports = ({ cerfas }) => {
 
   router.post(
     "/",
-    tryCatch(async ({ body, user }, res) => {
-      const result = await cerfas.createCerfa(body, user);
+    tryCatch(async ({ body }, res) => {
+      const result = await cerfas.createCerfa(body);
 
       return res.json(result);
     })
