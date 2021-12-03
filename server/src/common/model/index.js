@@ -24,7 +24,7 @@ module.exports = {
   }),
   Dossier: createModel("dossier", schema.dossierSchema, {
     createMongoDBIndexes: (schema) => {
-      schema.index({ workspaceId: 1 }, { unique: true });
+      schema.index({ workspaceId: 1 });
     },
   }),
   Cerfa: createModel("cerfa", schema.cerfaSchema, {

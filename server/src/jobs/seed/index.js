@@ -35,6 +35,7 @@ runScript(async ({ users }) => {
     draft: true,
     owner: user._id,
     workspaceId: wks._id,
+    saved: true,
   });
   logger.info(`Dossier test created`);
 

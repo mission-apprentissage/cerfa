@@ -9,10 +9,14 @@ import {
   // _put,
   _post,
 } from "../httpClient";
+import { useRecoilValue } from "recoil";
+import { dossierAtom } from "./dossierAtom";
 
-const hydrate = async () => {
+const hydrate = async (dossier) => {
   try {
+    const cerf = await _get(`/api/v1/cerfa?workspaceId=${dossier.workspaceId}&dossierId=${dossier._id}`);
     const schema = await _get("/api/v1/cerfa/schema");
+    console.log(cerf, schema);
     const { organismeFormation, formation } = schema;
     return {
       // employeur: {},
@@ -302,6 +306,8 @@ export function findFieldDef(path, obj) {
 
 export function useCerfa() {
   const [isloaded, setIsLoaded] = useState(false);
+  const dossier = useRecoilValue(dossierAtom);
+
   const [organismeFormationSiret, setOrganismeFormationSiret] = useState(null);
   const [organismeFormationDenomination, setOrganismeFormationDenomination] = useState(null);
   const [organismeFormationUaiCfa, setOrganismeFormationUaiCfa] = useState(null);
@@ -578,7 +584,7 @@ export function useCerfa() {
   useEffect(() => {
     const abortController = new AbortController();
 
-    hydrate()
+    hydrate(dossier)
       .then((res) => {
         if (!abortController.signal.aborted) {
           setOrganismeFormationSiret(res.organismeFormation.siret);
@@ -609,7 +615,7 @@ export function useCerfa() {
     return () => {
       abortController.abort();
     };
-  }, []);
+  }, [dossier]);
 
   if (error !== null) {
     throw error;

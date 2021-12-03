@@ -31,5 +31,18 @@ module.exports = async () => {
       }
       return result;
     },
+    // TODO Permission
+    // addContributeur: async (data) => {
+    //   let { workspaceId, username } = await Joi.object({
+    //     username: Joi.string().required(),
+    //     workspaceId: Joi.string().required(),
+    //   }).validateAsync(data, { abortEarly: false });
+
+    //   const userDb = await User.findOne({ username });
+    //   if (!userDb) {
+    //     throw new Error("User doesn't exist");
+    //   }
+    //   //workspaceId
+    // },
   };
 };

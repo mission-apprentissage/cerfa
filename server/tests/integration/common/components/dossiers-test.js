@@ -1,8 +1,7 @@
 const assert = require("assert");
 const dossiers = require("../../../../src/common/components/dossiers");
 const users = require("../../../../src/common/components/users");
-const { Dossier } = require("../../../../src/common/model");
-const { mongoose } = require("../../../../src/common/mongodb");
+const { Dossier, Workspace } = require("../../../../src/common/model");
 
 describe("Dossiers component", () => {
   it("Permet de créer un dossier", async () => {
@@ -10,16 +9,17 @@ describe("Dossiers component", () => {
     const testUser = await createUser("user", "password");
 
     const { createDossier } = await dossiers();
-    const testWorkspaceId = mongoose.Types.ObjectId().toString();
 
-    const created = await createDossier({ workspaceId: testWorkspaceId }, { sub: testUser.username });
+    const created = await createDossier({ sub: testUser.username });
 
-    assert.strictEqual(created.workspaceId.toString(), testWorkspaceId);
+    const wks = await Workspace.findOne({ owner: testUser._id });
+
+    assert.strictEqual(created.workspaceId.toString(), wks._id.toString());
     assert.strictEqual(created.owner.toString(), testUser._id.toString());
     assert.strictEqual(created.draft, true);
 
-    const found = await Dossier.findOne({ workspaceId: testWorkspaceId });
-    assert.strictEqual(found.workspaceId.toString(), testWorkspaceId);
+    const found = await Dossier.findOne({ workspaceId: wks._id.toString() });
+    assert.strictEqual(found.workspaceId.toString(), wks._id.toString());
     assert.strictEqual(found.owner.toString(), testUser._id.toString());
     assert.strictEqual(found.draft, true);
   });

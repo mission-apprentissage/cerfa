@@ -1,26 +1,24 @@
-const { Dossier, Cerfa, User } = require("../model/index");
-const Joi = require("joi");
+const { Workspace, Dossier, Cerfa, User } = require("../model/index");
 const Boom = require("boom");
 
 module.exports = async () => {
   return {
-    createDossier: async (data, user) => {
-      let { workspaceId } = await Joi.object({
-        workspaceId: Joi.string().required(),
-      }).validateAsync(data, { abortEarly: false });
-
+    createDossier: async (user) => {
       const userDb = await User.findOne({ username: user.sub });
       if (!userDb) {
         throw new Error("User doesn't exist");
       }
 
-      // TODO Workspace Id
+      const wks = await Workspace.findOne({ owner: userDb._id });
+      if (!wks) {
+        throw new Error("Something went wrong");
+      }
 
       let result = null;
       try {
         result = await Dossier.create({
           draft: true,
-          workspaceId,
+          workspaceId: wks._id,
           owner: userDb._id,
         });
       } catch (error) {

@@ -65,12 +65,14 @@ export default ({ match }) => {
       match={match}
       onLeave={async ({ internalLeave }) => {
         if (internalLeave) {
-          // eslint-disable-next-line no-restricted-globals
-          const leave = confirm("Voulez-vous vraiment quitter cette page ?");
-          if (leave) {
-            await _delete(`/api/v1/dossier/${dossier._id}`);
-          } else {
-            history.goBack();
+          if (!dossier.saved) {
+            // eslint-disable-next-line no-restricted-globals
+            const leave = confirm("Voulez-vous vraiment quitter cette page ?");
+            if (leave) {
+              await _delete(`/api/v1/dossier/${dossier._id}`);
+            } else {
+              history.goBack();
+            }
           }
         }
       }}

@@ -7,18 +7,21 @@ const tryCatch = require("../../middlewares/tryCatchMiddleware");
 module.exports = ({ cerfas, dossiers }) => {
   const router = express.Router();
 
-  router.get("/", async (req, res) => {
-    let { query } = await Joi.object({
-      query: Joi.string().default("{}"),
-    }).validateAsync(req.query, { abortEarly: false });
+  router.get(
+    "/",
+    tryCatch(async (req, res) => {
+      let { query } = await Joi.object({
+        query: Joi.string().default("{}"),
+      }).validateAsync(req.query, { abortEarly: false });
 
-    let json = JSON.parse(query);
-    const results = await Dossier.find(json);
+      let json = JSON.parse(query);
+      const results = await Dossier.find(json);
 
-    // TODO HAS RIGHTS
+      // TODO HAS RIGHTS
 
-    return res.json(results);
-  });
+      return res.json(results);
+    })
+  );
 
   router.get(
     "/:id",
@@ -36,13 +39,9 @@ module.exports = ({ cerfas, dossiers }) => {
 
   router.post(
     "/",
-    tryCatch(async ({ body, user }, res) => {
-      let { workspaceId } = await Joi.object({
-        workspaceId: Joi.string().required(),
-      }).validateAsync(body, { abortEarly: false });
-
-      const result = await dossiers.createDossier({ workspaceId }, user);
-      await cerfas.createCerfa({ dossierId: result._id });
+    tryCatch(async ({ user }, res) => {
+      const result = await dossiers.createDossier(user);
+      await cerfas.createCerfa({ dossierId: result._id.toString() });
 
       return res.json(result);
     })

@@ -81,7 +81,6 @@ const dossierSchema = {
     type: mongoose.Schema.Types.ObjectId,
     ref: "workspace",
     required: true,
-    unique: true,
     description: "Workspace id",
   },
 };

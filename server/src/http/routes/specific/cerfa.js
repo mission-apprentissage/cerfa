@@ -14,18 +14,23 @@ module.exports = ({ cerfas }) => {
     return res.json(cerfaSchema);
   });
 
-  router.get("/", permissionsMiddleware(), async (req, res) => {
-    let { query } = await Joi.object({
-      query: Joi.string().default("{}"),
-    }).validateAsync(req.query, { abortEarly: false });
+  router.get(
+    "/",
+    permissionsMiddleware(),
+    tryCatch(async (req, res) => {
+      let { dossierId } = await Joi.object({
+        dossierId: Joi.string().required(),
+      })
+        .unknown()
+        .validateAsync(req.query, { abortEarly: false });
 
-    let json = JSON.parse(query);
-    const results = await Cerfa.find(json);
+      const results = await Cerfa.findOne({ dossierId }).lean();
 
-    // TODO HAS RIGHTS
+      // TODO HAS RIGHTS
 
-    return res.json(results);
-  });
+      return res.json(results);
+    })
+  );
 
   router.get(
     "/:id",
