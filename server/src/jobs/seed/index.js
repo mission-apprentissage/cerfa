@@ -27,12 +27,9 @@ runScript(async ({ users }) => {
   await newRole.save();
   logger.info(`Role public created`);
 
-  const wks = await Workspace.create({
+  const wks = await Workspace.findOne({
     owner: user._id,
-    nom: "Espace test",
-    description: "Votre espace test",
-  });
-  logger.info(`Workspace test created`);
+  }).lean();
 
   const dossier = await Dossier.create({
     draft: true,

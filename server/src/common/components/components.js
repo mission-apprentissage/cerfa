@@ -1,8 +1,10 @@
 const { connectToMongo } = require("../mongodb");
-const createUsers = require("./users");
-const createCerfas = require("./cerfas");
-const createDossiers = require("./dossiers");
 const createMailer = require("../../common/mailer");
+const createUsers = require("./users");
+const createWorkspaces = require("./workspaces");
+const createDossiers = require("./dossiers");
+const createCerfas = require("./cerfas");
+const createPermissions = require("./permissions");
 
 module.exports = async (options = {}) => {
   const users = options.users || (await createUsers());
@@ -10,8 +12,10 @@ module.exports = async (options = {}) => {
   const db = options.db || (await connectToMongo()).db;
 
   // below specific
-  const cerfas = options.cerfa || (await createCerfas());
+  const workspaces = options.workspace || (await createWorkspaces());
   const dossiers = options.cerfa || (await createDossiers());
+  const cerfas = options.cerfa || (await createCerfas());
+  const permissions = options.permission || (await createPermissions());
 
   return {
     users,
@@ -19,7 +23,9 @@ module.exports = async (options = {}) => {
     mailer: options.mailer || createMailer(),
 
     // below specific
+    workspaces,
     dossiers,
     cerfas,
+    permissions,
   };
 };
