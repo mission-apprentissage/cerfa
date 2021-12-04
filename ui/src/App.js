@@ -105,9 +105,9 @@ export default () => {
                 {auth && hasAccessTo(auth, "page_dashboard") && (
                   <PrivateRoute exact path="/mon-espace/mes-dossiers" component={DashboardPage} />
                 )}
-                <PrivateRoute exact path="/mon-espace/parametres" component={Parametres} />
                 <PrivateRoute exact path="/mon-espace/mes-dossiers/nouveau-dossier" component={NouveauDossier} />
                 <PrivateRoute exact path="/mon-espace/mes-dossiers/:id/:step" component={Dossier} />
+                <PrivateRoute exact path="/mon-espace/parametres/:sub" component={Parametres} />
 
                 {auth && hasAccessTo(auth, "page_gestion_utilisateurs") && (
                   <PrivateRoute exact path="/admin/users" component={Users} />

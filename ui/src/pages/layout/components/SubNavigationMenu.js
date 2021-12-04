@@ -5,7 +5,7 @@ import useAuth from "../../../common/hooks/useAuth";
 import { hasAccessTo } from "../../../common/utils/rolesUtils";
 import { MenuFill, Close, Parametre, Folder } from "../../../theme/components/icons";
 
-const SubNavigationMenu = ({ isMesDossiers, ...props }) => {
+const SubNavigationMenu = ({ isMesDossiers, match, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
@@ -13,7 +13,7 @@ const SubNavigationMenu = ({ isMesDossiers, ...props }) => {
   return (
     <NavBarContainer {...props}>
       <NavToggle toggle={toggle} isOpen={isOpen} />
-      <NavLinks isOpen={isOpen} isMesDossiers={isMesDossiers} />
+      <NavLinks isOpen={isOpen} match={match} />
     </NavBarContainer>
   );
 };
@@ -26,7 +26,7 @@ const NavToggle = ({ toggle, isOpen }) => {
   );
 };
 
-const NavItem = ({ children, to = "/", isMesDossiers, ...rest }) => {
+const NavItem = ({ children, to = "/", shoudBeActive, ...rest }) => {
   const { pathname } = useLocation();
   const isActive = pathname === to;
 
@@ -35,10 +35,10 @@ const NavItem = ({ children, to = "/", isMesDossiers, ...rest }) => {
       p={4}
       as={NavLink}
       to={to}
-      color={isActive || isMesDossiers ? "bluefrance" : "grey.800"}
+      color={isActive || shoudBeActive ? "bluefrance" : "grey.800"}
       _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
       borderBottom="3px solid"
-      borderColor={isActive || isMesDossiers ? "bluefrance" : "transparent"}
+      borderColor={isActive || shoudBeActive ? "bluefrance" : "transparent"}
     >
       <Text display="block" {...rest}>
         {children}
@@ -47,8 +47,11 @@ const NavItem = ({ children, to = "/", isMesDossiers, ...rest }) => {
   );
 };
 
-const NavLinks = ({ isOpen, isMesDossiers }) => {
+const NavLinks = ({ isOpen, match }) => {
   let [auth] = useAuth();
+  const isMesDossiers = match.path.includes("/mon-espace/mes-dossiers");
+  const isParametres = match.path.includes("/mon-espace/parametres");
+
   return (
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
       <Flex
@@ -59,12 +62,12 @@ const NavLinks = ({ isOpen, isMesDossiers }) => {
         textStyle="sm"
       >
         {hasAccessTo(auth, "page_dashboard") && (
-          <NavItem to="/mon-espace/mes-dossiers" isMesDossiers={isMesDossiers}>
+          <NavItem to="/mon-espace/mes-dossiers" shoudBeActive={isMesDossiers}>
             <Folder w={"1rem"} h={"1rem"} mb={"0.125rem"} mr={2} />
             Mes Dossiers
           </NavItem>
         )}
-        <NavItem to="/mon-espace/parametres">
+        <NavItem to="/mon-espace/parametres/gestion-acces" shoudBeActive={isParametres}>
           <Parametre w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr={2} />
           Paramètres
         </NavItem>
