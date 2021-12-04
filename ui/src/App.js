@@ -24,7 +24,7 @@ const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 const NouveauDossier = lazy(() => import("./pages/Dossier/NouveauDossier"));
 const Parametres = lazy(() => import("./pages/Dossier/Parametres"));
-const Contrat = lazy(() => import("./pages/Dossier/Contrat"));
+const Dossier = lazy(() => import("./pages/Dossier/Dossier"));
 
 function PrivateRoute({ component, ...rest }) {
   let [auth] = useAuth();
@@ -103,11 +103,13 @@ export default () => {
                 <PrivateRoute exact path="/" component={HomePage} />
 
                 {auth && hasAccessTo(auth, "page_dashboard") && (
-                  <PrivateRoute exact path="/mon-espace/mes-dossiers" component={DashboardPage} />
+                  <>
+                    <PrivateRoute exact path="/mon-espace/mes-dossiers" component={DashboardPage} />
+                    <PrivateRoute exact path="/mon-espace/parametres" component={Parametres} />
+                    <PrivateRoute exact path="/mon-espace/mes-dossiers/nouveau-dossier" component={NouveauDossier} />
+                    <PrivateRoute exact path="/mon-espace/mes-dossiers/:id" component={Dossier} />
+                  </>
                 )}
-                <PrivateRoute exact path="/mon-espace/parametres" component={Parametres} />
-                <PrivateRoute exact path="/mon-espace/mes-dossiers/nouveau-dossier" component={NouveauDossier} />
-                <PrivateRoute exact path="/mon-espace/mes-dossiers/:id" component={Contrat} />
 
                 {auth && hasAccessTo(auth, "page_gestion_utilisateurs") && (
                   <PrivateRoute exact path="/admin/users" component={Users} />
