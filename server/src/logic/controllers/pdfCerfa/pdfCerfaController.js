@@ -14,10 +14,10 @@ class PdfCerfaController {
     // TODO destination
     // fs.writeFileSync(__dirname + "/test.pdf", pdfCerfaFilled, { encoding: "base64" });
 
-    return Buffer.from(pdfCerfaFilled).toString("base64");
+    return pdfCerfaFilled;
   }
 
-  async getBase64File() {
+  async getEmptyCerfeBase64() {
     return fs.readFileSync(PATH_EMPTY_CERFA_PDF, { encoding: "base64" });
   }
 }

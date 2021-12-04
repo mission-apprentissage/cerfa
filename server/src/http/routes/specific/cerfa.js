@@ -311,6 +311,31 @@ module.exports = ({ cerfas }) => {
     })
   );
 
+  router.get(
+    "/pdf/:id",
+    tryCatch(async ({ params }, res) => {
+      const cerfa = await Cerfa.findOne({ _id: params.id }).lean();
+
+      if (!cerfa) {
+        throw Boom.notFound("Doesn't exist");
+      }
+      // TODO HAS RIGHTS
+
+      const pdfBytes = await pdfCerfaController.createPdfCerfa(cerfa);
+
+      console.log(pdfBytes);
+
+      const pdfBuffer = Buffer.from(pdfBytes.buffer, "binary");
+      res.header("Content-Type", "application/pdf");
+      res.header("Content-Disposition", `attachment; filename=contrat_${params.id}.pdf`);
+      res.header("Content-Length", pdfBuffer.length);
+      res.status(200);
+      res.type("pdf");
+
+      res.send(pdfBuffer);
+    })
+  );
+
   router.post(
     "/pdf/:id",
     tryCatch(async ({ params }, res) => {
@@ -321,11 +346,9 @@ module.exports = ({ cerfas }) => {
       }
       // TODO HAS RIGHTS
 
-      const pdfBase64 = await pdfCerfaController.createPdfCerfa(cerfa);
+      const pdfBytes = await pdfCerfaController.createPdfCerfa(cerfa);
 
-      return res.json({
-        pdf: pdfBase64,
-      });
+      res.json({ pdfBase64: Buffer.from(pdfBytes).toString("base64") });
     })
   );
 

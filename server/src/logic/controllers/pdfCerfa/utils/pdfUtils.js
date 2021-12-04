@@ -99,7 +99,7 @@ const buildFieldDraw = (value, fieldDefinition) => {
 module.exports = async (pdfCerfaEmpty, cerfa) => {
   const pdfDoc = await PDFDocument.load(pdfCerfaEmpty);
   const pages = pdfDoc.getPages();
-  console.log(cerfa.employeur.employeurSpecifique);
+  // console.log(cerfa.employeur.employeurSpecifique);
 
   const pdfPagesContent = [
     [
