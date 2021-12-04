@@ -21,7 +21,7 @@ export default ({ match }) => {
     setIsCreating(false);
     // TODO Temporary saved
     await saveDossier(_id);
-    history.push(`/mon-espace/mes-dossiers/${_id}`);
+    history.push(`/mon-espace/mes-dossiers/${_id}/cerfa`);
   };
 
   if (!isloaded) return null;

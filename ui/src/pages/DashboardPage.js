@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useHistory } from "react-router-dom";
-import { Flex, Box, Container, Text, Badge, Heading, Link, Button } from "@chakra-ui/react";
+import { Flex, Box, Container, Text, Badge, Heading, Button, HStack, Link } from "@chakra-ui/react";
 import Layout from "./layout/Layout";
 import { _get, _delete } from "../common/httpClient";
 import useAuth from "../common/hooks/useAuth";
 import { Breadcrumb } from "../common/components/Breadcrumb";
 import { setTitle } from "../common/utils/pageUtils";
+import { prettyPrintDate } from "../common/utils/dateUtils";
 import { Table } from "../common/components/Table";
 
 export default ({ match }) => {
@@ -17,6 +18,7 @@ export default ({ match }) => {
     const run = async () => {
       try {
         const ds = await _get(`/api/v1/dossier?workspaceId=${auth.workspaceId}`);
+        // console.log(ds);
         setDossiers(ds);
       } catch (e) {
         console.error(e);
@@ -77,16 +79,38 @@ export default ({ match }) => {
             {dossiers.length > 0 && (
               <Table
                 data={dossiers.map((m) => ({
-                  Nom: m.nom,
-                  Etat: null,
-                  Supprimer: null,
+                  Nom: {
+                    Header: "Nom",
+                    width: 150,
+                    value: m.nom,
+                  },
+                  Contenu: {
+                    Header: "",
+                    width: 150,
+                    value: null,
+                  },
+                  Last: {
+                    Header: "Modifié le",
+                    width: 90,
+                    value: prettyPrintDate(m.lastModified),
+                  },
+                  Etat: {
+                    Header: "Statut",
+                    width: 60,
+                    value: null,
+                  },
+                  Supprimer: {
+                    Header: "",
+                    width: 50,
+                    value: null,
+                  },
                 }))}
                 components={{
                   Nom: (value, i) => {
                     return (
                       <Link
                         as={NavLink}
-                        to={`/mon-espace/mes-dossiers/${dossiers[i]._id}`}
+                        to={`/mon-espace/mes-dossiers/${dossiers[i]._id}/cerfa`}
                         _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.300" }}
                         w="full"
                         h="full"
@@ -94,6 +118,32 @@ export default ({ match }) => {
                       >
                         <Text display="block">{value}</Text>
                       </Link>
+                    );
+                  },
+                  Contenu: (value, i) => {
+                    return (
+                      <HStack>
+                        <NavLink to={`/mon-espace/mes-dossiers/${dossiers[i]._id}/cerfa`}>
+                          <Badge variant="solid" textStyle="xs">
+                            Cerfa
+                          </Badge>
+                        </NavLink>
+                        <NavLink to={`/mon-espace/mes-dossiers/${dossiers[i]._id}/documents`}>
+                          <Badge variant="solid" textStyle="xs">
+                            Justificatives
+                          </Badge>
+                        </NavLink>
+                        <NavLink to={`/mon-espace/mes-dossiers/${dossiers[i]._id}/signatures`}>
+                          <Badge variant="solid" textStyle="xs">
+                            Signatures
+                          </Badge>
+                        </NavLink>
+                        <NavLink to={`/mon-espace/mes-dossiers/${dossiers[i]._id}/etat`}>
+                          <Badge variant="solid" textStyle="xs">
+                            Etat
+                          </Badge>
+                        </NavLink>
+                      </HStack>
                     );
                   },
                   Etat: (value, i) => {
@@ -107,7 +157,6 @@ export default ({ match }) => {
                             color="grey.800"
                             textStyle="sm"
                             px="15px"
-                            ml="10px"
                           >
                             Brouillon
                           </Badge>
@@ -117,16 +166,21 @@ export default ({ match }) => {
                   },
                   Supprimer: (value, i) => {
                     return (
-                      <Box
+                      <Button
+                        variant="pill"
+                        color="tomato"
+                        borderRadius="5px"
+                        _hover={{ fontWeigth: "bold", bg: "redmarianne", color: "white" }}
                         onClick={() => {
                           onDeleteClicked(dossiers[i]);
                         }}
                         cursor="pointer"
+                        ml="2"
                       >
-                        <Text color="tomato" fontWeight="bold">
-                          X
+                        <Text display="block" px={2}>
+                          Supprimer
                         </Text>
-                      </Box>
+                      </Button>
                     );
                   },
                 }}

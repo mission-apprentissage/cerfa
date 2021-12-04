@@ -3,7 +3,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
 import { hasAccessTo } from "../../../common/utils/rolesUtils";
-import { MenuFill, Close } from "../../../theme/components/icons";
+import { MenuFill, Close, Parametre, Folder } from "../../../theme/components/icons";
 
 const SubNavigationMenu = ({ isMesDossiers, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -60,10 +60,14 @@ const NavLinks = ({ isOpen, isMesDossiers }) => {
       >
         {hasAccessTo(auth, "page_dashboard") && (
           <NavItem to="/mon-espace/mes-dossiers" isMesDossiers={isMesDossiers}>
+            <Folder w={"1rem"} h={"1rem"} mb={"0.125rem"} mr={2} />
             Mes Dossiers
           </NavItem>
         )}
-        <NavItem to="/mon-espace/parametres">Paramètres</NavItem>
+        <NavItem to="/mon-espace/parametres">
+          <Parametre w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr={2} />
+          Paramètres
+        </NavItem>
         {/* <Link href="https://github.com/mission-apprentissage/cerfa/releases" mr={4} isExternal>
           Journal des modifications
         </Link> */}

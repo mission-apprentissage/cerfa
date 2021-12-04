@@ -17,11 +17,13 @@ import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { useHistory } from "react-router-dom";
 import { _delete } from "../../common/httpClient";
 import { prettyPrintDate } from "../../common/utils/dateUtils";
-
 import Layout from "../layout/Layout";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
-import UploadFiles from "../../common/components/UploadFiles";
+
 import Cerfa from "./Cerfa/Cerfa";
+import PiecesJustificatives from "./PiecesJustificatives/PiecesJustificatives";
+import Signatures from "./Signatures/Signatures";
+import Statuts from "./Statuts/Statuts";
 
 import { useDossier } from "../../common/hooks/useDossier";
 
@@ -32,9 +34,11 @@ const steps = [
   { label: "État", description: "Statut de votre dossier" },
 ];
 
+const stepByPath = ["cerfa", "documents", "signatures", "etat"];
+
 export default ({ match }) => {
   const { nextStep, prevStep, reset, activeStep, setStep } = useSteps({
-    initialStep: 0,
+    initialStep: stepByPath.indexOf(match.params.step),
   });
   const [stepState, setStepState] = useState();
   const { isloaded, dossier } = useDossier(match.params.id);
@@ -125,7 +129,8 @@ export default ({ match }) => {
           <Flex flexDir="column" width="100%" mt={9}>
             <Steps
               onClickStep={(step) => {
-                if (step === 0 || step === 1) return setStep(step);
+                // if (step === 0 || step === 1) return setStep(step);
+                return setStep(step);
               }}
               activeStep={activeStep}
               state={stepState}
@@ -133,14 +138,9 @@ export default ({ match }) => {
               {steps.map(({ label, description }, index) => (
                 <Step label={label} key={label} description={description}>
                   {index === 0 && <Cerfa />}
-                  {index === 1 && (
-                    <Box mt={16}>
-                      Pieces jointes
-                      <UploadFiles />
-                    </Box>
-                  )}
-                  {index === 2 && <Box mt={16}>Signatures</Box>}
-                  {index === 3 && <Box mt={16}>Statuts</Box>}
+                  {index === 1 && <PiecesJustificatives />}
+                  {index === 2 && <Signatures />}
+                  {index === 3 && <Statuts />}
                 </Step>
               ))}
             </Steps>
