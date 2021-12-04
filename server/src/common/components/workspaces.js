@@ -1,5 +1,6 @@
 const { Workspace, User } = require("../model/index");
 const Joi = require("joi");
+const permissions = require("./permissions");
 
 module.exports = async () => {
   return {
@@ -29,8 +30,18 @@ module.exports = async () => {
       } catch (error) {
         throw new Error(error);
       }
+
+      const { createPermission } = await permissions();
+      await createPermission({
+        workspaceId: result._id.toString(),
+        dossierId: null,
+        userEmail: userDb.email,
+        role: "wks.admin",
+      });
+
       return result;
     },
+    getUserWorkspace: async (user) => await Workspace.findOne({ owner: user._id }),
     // TODO Permission
     // addContributeur: async (data) => {
     //   let { workspaceId, username } = await Joi.object({

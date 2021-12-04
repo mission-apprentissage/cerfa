@@ -1,4 +1,4 @@
-const { Permission } = require("../model/index");
+const { Permission, Role } = require("../model/index");
 const Joi = require("joi");
 const Boom = require("boom");
 
@@ -12,19 +12,26 @@ module.exports = async () => {
         role: Joi.string().required(),
       }).validateAsync(data, { abortEarly: false });
 
+      const roleDb = await Role.findOne({ name: role });
+      if (!roleDb) {
+        throw new Error("Role doesn't exist");
+      }
+
       let result = null;
       try {
         result = await Permission.create({
           workspaceId,
           dossierId,
           userEmail,
-          role,
+          role: roleDb._id,
         });
       } catch (error) {
         throw new Error(error);
       }
       return result;
     },
+    findPermissions: async ({ workspaceId, dossierId, userEmail }) =>
+      await Permission.find({ workspaceId, dossierId, userEmail }),
     removePermission: async (_id) => {
       const found = await Permission.findById(_id).lean();
 

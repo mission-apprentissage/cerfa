@@ -1,5 +1,6 @@
 const { Workspace, Dossier, Cerfa, User } = require("../model/index");
 const Boom = require("boom");
+const { prettyPrintDate } = require("../utils/dateUtils");
 
 module.exports = async () => {
   return {
@@ -17,6 +18,7 @@ module.exports = async () => {
       let result = null;
       try {
         result = await Dossier.create({
+          nom: `Dossier ${prettyPrintDate(Date.now())}`,
           draft: true,
           workspaceId: wks._id,
           owner: userDb._id,
@@ -30,6 +32,22 @@ module.exports = async () => {
         }
       }
       return result;
+    },
+    saveDossier: async (id) => {
+      const found = await Dossier.findById(id).lean();
+
+      if (!found) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      return await Dossier.findOneAndUpdate(
+        { _id: id },
+        {
+          saved: true,
+          lastModified: Date.now(),
+        },
+        { new: true }
+      );
     },
     publishDossier: async (id) => {
       const found = await Dossier.findById(id).lean();

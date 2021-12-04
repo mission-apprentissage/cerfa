@@ -1,12 +1,11 @@
 const assert = require("assert");
 const dossiers = require("../../../../src/common/components/dossiers");
-const users = require("../../../../src/common/components/users");
 const { Dossier, Workspace } = require("../../../../src/common/model");
+const { initComponents } = require("../../../utils/testUtils");
 
 describe("Dossiers component", () => {
   it("Permet de créer un dossier", async () => {
-    const { createUser } = await users();
-    const testUser = await createUser("user", "password");
+    const { testUser } = await initComponents();
 
     const { createDossier } = await dossiers();
 
@@ -22,5 +21,18 @@ describe("Dossiers component", () => {
     assert.strictEqual(found.workspaceId.toString(), wks._id.toString());
     assert.strictEqual(found.owner.toString(), testUser._id.toString());
     assert.strictEqual(found.draft, true);
+  });
+  it("Permet de sauvegarder un dossier", async () => {
+    const { testUser } = await initComponents();
+
+    const { createDossier, saveDossier } = await dossiers();
+
+    const created = await createDossier({ sub: testUser.username });
+
+    const saved = await saveDossier(created._id.toString());
+
+    assert.strictEqual(created._id.toString(), saved._id.toString());
+    assert.strictEqual(created.saved, false);
+    assert.strictEqual(saved.saved, true);
   });
 });

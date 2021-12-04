@@ -1,13 +1,12 @@
 const assert = require("assert");
 // const workspaces = require("../../../../src/common/components/workspaces");
-const users = require("../../../../src/common/components/users");
 const { Workspace } = require("../../../../src/common/model");
+const { initComponents } = require("../../../utils/testUtils");
 // const { mongoose } = require("../../../../src/common/mongodb");
 
 describe("Workspace component", () => {
   it("Permet de créer un workspace", async () => {
-    const { createUser } = await users();
-    const testUser = await createUser("user", "password", { email: "h@ck.me" });
+    const { testUser } = await initComponents();
 
     // const { createWorkspace } = await workspaces();
 

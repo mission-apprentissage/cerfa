@@ -74,7 +74,7 @@ const usersSchema = {
   },
   roles: {
     type: [String],
-    default: ["public"],
+    default: [],
     description: "Roles de l'utilisateur",
   },
   acl: {

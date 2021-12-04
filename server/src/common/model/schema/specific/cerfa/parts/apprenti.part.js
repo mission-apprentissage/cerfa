@@ -237,6 +237,17 @@ const apprentiSchema = {
         ...adresseSchema,
       },
     },
+    default: {
+      nom: null,
+      prenom: null,
+      adresse: {
+        numero: 0,
+        voie: null,
+        complement: null,
+        codePostal: null,
+        commune: null,
+      },
+    },
   },
   inscriptionSportifDeHautNiveau: {
     type: Boolean,

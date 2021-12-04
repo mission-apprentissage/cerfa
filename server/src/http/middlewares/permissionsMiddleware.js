@@ -2,7 +2,7 @@ const Joi = require("joi");
 const tryCatch = require("./tryCatchMiddleware");
 
 module.exports = () =>
-  tryCatch(async ({ method, body, query }, res, next) => {
+  tryCatch(async ({ method, body, query, user }, res, next) => {
     const data = method === "GET" ? query : body;
 
     let { workspaceId } = await Joi.object({
@@ -11,8 +11,9 @@ module.exports = () =>
       .unknown()
       .validateAsync(data, { abortEarly: false });
 
-    // TODO STUFF PERMISSION
-    console.log(workspaceId);
+    if (workspaceId !== user.workspaceId) {
+      return res.status(401).json({ message: "Accès non autorisé" });
+    }
 
     next();
   });

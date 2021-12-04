@@ -14,7 +14,7 @@ module.exports = ({ users }) => {
           loggedIn: true,
         });
       }
-      const payload = await users.structureUser({ username: "anonymous", roles: ["public"], acl: [] });
+      const payload = await users.structureUser({ username: "anonymous", roles: [], acl: [] });
       return res.json(payload);
     })
   );

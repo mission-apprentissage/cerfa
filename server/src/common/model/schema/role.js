@@ -7,7 +7,7 @@ const rolesSchema = {
   },
   acl: {
     type: [String],
-    default: null,
+    default: [],
     description: "Access control level array",
   },
 };

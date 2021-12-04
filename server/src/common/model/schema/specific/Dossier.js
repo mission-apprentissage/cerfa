@@ -4,8 +4,9 @@ const documentSchema = require("./document.part");
 const dossierSchema = {
   nom: {
     type: String,
+    required: true,
     description: "Nom du dossier",
-    default: null,
+    default: "Nouveau Dossier",
   },
   documents: {
     type: [

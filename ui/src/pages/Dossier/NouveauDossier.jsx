@@ -8,18 +8,20 @@ import Layout from "../layout/Layout";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 
 export default ({ match }) => {
-  const { isloaded, createDossier } = useDossier();
+  const { isloaded, createDossier, saveDossier } = useDossier();
   const [isCreating, setIsCreating] = useState(false);
   const history = useHistory();
 
-  const title = "Commencer un nouveau contrat";
+  const title = "Commencer un nouveau dossier";
   setTitle(title);
 
   const onStartClicked = async () => {
     setIsCreating(true);
     const { _id } = await createDossier();
     setIsCreating(false);
-    history.push(`/dossiers/contrat/${_id}`);
+    // TODO Temporary saved
+    await saveDossier(_id);
+    history.push(`/mon-espace/mes-dossiers/${_id}`);
   };
 
   if (!isloaded) return null;
@@ -31,8 +33,8 @@ export default ({ match }) => {
           <Breadcrumb
             pages={[
               { title: "Accueil", to: "/" },
-              { title: "Mes dossiers", to: "/dossiers" },
-              { title: "Nouveau contrat" },
+              { title: "Mes dossiers", to: "/mon-espace/mes-dossiers" },
+              { title: "Nouveau dossier" },
             ]}
           />
         </Container>
@@ -40,7 +42,7 @@ export default ({ match }) => {
       <Box w="100%" px={[1, 1, 12, 24]} mt={5}>
         <Container maxW="xl">
           <Heading as="h1" flexGrow="1">
-            Créer un nouveau contrat
+            Créer un nouveau dossier
           </Heading>
 
           <Flex flexDir="column" width="100%" mt={9}>

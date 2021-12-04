@@ -5,6 +5,7 @@ const createWorkspaces = require("./workspaces");
 const createDossiers = require("./dossiers");
 const createCerfas = require("./cerfas");
 const createPermissions = require("./permissions");
+const createRoles = require("./roles");
 
 module.exports = async (options = {}) => {
   const users = options.users || (await createUsers());
@@ -16,6 +17,7 @@ module.exports = async (options = {}) => {
   const dossiers = options.cerfa || (await createDossiers());
   const cerfas = options.cerfa || (await createCerfas());
   const permissions = options.permission || (await createPermissions());
+  const roles = options.role || (await createRoles());
 
   return {
     users,
@@ -27,5 +29,6 @@ module.exports = async (options = {}) => {
     dossiers,
     cerfas,
     permissions,
+    roles,
   };
 };

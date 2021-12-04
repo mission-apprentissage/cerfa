@@ -33,3 +33,4 @@ export * from "./FolderOpenLine";
 export * from "./CloseCircleLine";
 export * from "./CheckLine";
 export * from "./SentPaperPlane";
+export * from "./LockFill";

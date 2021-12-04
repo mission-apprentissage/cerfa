@@ -49,9 +49,6 @@ export default ({ match }) => {
     nextStep();
   };
 
-  const title = "Nouveau contrat";
-  setTitle(title);
-
   if (!isloaded) return null;
 
   if (!dossier) {
@@ -59,6 +56,9 @@ export default ({ match }) => {
   }
 
   // TODO not Authorize handler
+
+  const title = dossier.nom;
+  setTitle(title);
 
   return (
     <Layout
@@ -80,7 +80,12 @@ export default ({ match }) => {
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
         <Container maxW="xl">
           <Breadcrumb
-            pages={[{ title: "Accueil", to: "/" }, { title: "Mes dossiers", to: "/dossiers" }, { title: title }]}
+            pages={[
+              { title: "Accueil", to: "/" },
+              // { title: "Mon espace", to: "/mon-espace/mes-dossiers" },
+              { title: "Mes dossiers", to: "/mon-espace/mes-dossiers" },
+              { title: title },
+            ]}
           />
         </Container>
       </Box>

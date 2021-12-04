@@ -1,11 +1,33 @@
 import React, { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
+import { NavLink, useLocation, useHistory } from "react-router-dom";
+import {
+  Box,
+  Container,
+  Flex,
+  Link,
+  Text,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuGroup,
+  MenuItem,
+  MenuList,
+  Button,
+} from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
-import { hasAccessTo } from "../../../common/utils/rolesUtils";
-import { MenuFill, Close } from "../../../theme/components/icons";
+import { isUserAdmin, hasAccessTo } from "../../../common/utils/rolesUtils";
+import {
+  MenuFill,
+  Close,
+  AccountFill,
+  DownloadLine,
+  InfoCircle,
+  ExternalLinkLine,
+  LockFill,
+} from "../../../theme/components/icons";
+import { _get } from "../../../common/httpClient";
 
-const NavigationMenu = (props) => {
+const NavigationMenu = ({ isDashboard, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
@@ -13,8 +35,79 @@ const NavigationMenu = (props) => {
   return (
     <NavBarContainer {...props}>
       <NavToggle toggle={toggle} isOpen={isOpen} />
-      <NavLinks isOpen={isOpen} />
+      <NavLinks isOpen={isOpen} isDashboard={isDashboard} />
+      <UserMenu />
     </NavBarContainer>
+  );
+};
+
+const UserMenu = () => {
+  let [auth, setAuth] = useAuth();
+  let history = useHistory();
+
+  let logout = async () => {
+    const { loggedOut } = await _get("/api/v1/auth/logout");
+    if (loggedOut) {
+      setAuth(null);
+      history.push("/");
+    }
+  };
+
+  return (
+    <>
+      {auth?.sub === "anonymous" && (
+        <Box>
+          <Link as={NavLink} to="/login" variant="pill">
+            <LockFill boxSize={3} mb={1} mr={2} />
+            Connexion
+          </Link>
+        </Box>
+      )}
+      {auth?.sub !== "anonymous" && (
+        <Menu placement="bottom">
+          <MenuButton as={Button} variant="pill">
+            <Flex>
+              <AccountFill color={"bluefrance"} mt="0.3rem" boxSize={4} />
+              <Box display={["none", "block"]} ml={2}>
+                <Text color="bluefrance" textStyle="sm">
+                  {auth.sub}{" "}
+                  <Text color="grey.600" as="span">
+                    ({isUserAdmin(auth) ? "admin" : "Utilisateur"})
+                  </Text>
+                </Text>
+              </Box>
+            </Flex>
+          </MenuButton>
+          <MenuList>
+            <MenuGroup title="Profile">
+              {hasAccessTo(auth, "page_gestion_utilisateurs") && (
+                <MenuItem as={NavLink} to="/admin/users" icon={<AccountFill boxSize={4} />}>
+                  Gestion des utilisateurs
+                </MenuItem>
+              )}
+              {hasAccessTo(auth, "page_gestion_roles") && (
+                <MenuItem as={NavLink} to="/admin/roles" icon={<AccountFill boxSize={4} />}>
+                  Gestion des rôles
+                </MenuItem>
+              )}
+              {hasAccessTo(auth, "page_upload") && (
+                <MenuItem as={NavLink} to="/admin/upload" icon={<DownloadLine boxSize={4} />}>
+                  Upload de fichiers
+                </MenuItem>
+              )}
+              {hasAccessTo(auth, "page_message_maintenance") && (
+                <MenuItem as={NavLink} to="/admin/maintenance" icon={<InfoCircle boxSize={4} />}>
+                  Message de maintenance
+                </MenuItem>
+              )}
+            </MenuGroup>
+
+            <MenuDivider />
+            <MenuItem onClick={logout}>Déconnexion</MenuItem>
+          </MenuList>
+        </Menu>
+      )}
+    </>
   );
 };
 
@@ -26,7 +119,7 @@ const NavToggle = ({ toggle, isOpen }) => {
   );
 };
 
-const NavItem = ({ children, to = "/", ...rest }) => {
+const NavItem = ({ children, to = "/", isDashboard, ...rest }) => {
   const { pathname } = useLocation();
   const isActive = pathname === to;
 
@@ -35,10 +128,11 @@ const NavItem = ({ children, to = "/", ...rest }) => {
       p={4}
       as={NavLink}
       to={to}
-      color={isActive ? "bluefrance" : "grey.800"}
+      color={isDashboard ? "white" : isActive ? "bluefrance" : "grey.800"}
       _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
       borderBottom="3px solid"
-      borderColor={isActive ? "bluefrance" : "transparent"}
+      borderColor={isDashboard ? "bluefrance" : isActive ? "bluefrance" : "transparent"}
+      bg={isDashboard ? "bluefrance" : "transparent"}
     >
       <Text display="block" {...rest}>
         {children}
@@ -47,7 +141,7 @@ const NavItem = ({ children, to = "/", ...rest }) => {
   );
 };
 
-const NavLinks = ({ isOpen }) => {
+const NavLinks = ({ isOpen, isDashboard }) => {
   let [auth] = useAuth();
   return (
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
@@ -59,19 +153,41 @@ const NavLinks = ({ isOpen }) => {
         textStyle="sm"
       >
         <NavItem to="/">Accueil</NavItem>
-        {hasAccessTo(auth, "page_dashboard") && <NavItem to="/dossiers">Mes Dossiers</NavItem>}
-        <NavItem to="/dossiers/contrat">Remplir un nouveau contrat</NavItem>
-        {/* <Link href="https://github.com/mission-apprentissage/cerfa/releases" mr={4} isExternal>
-          Journal des modifications
-        </Link> */}
+        {hasAccessTo(auth, "page_dashboard") && (
+          <NavItem to="/mon-espace/mes-dossiers" isDashboard={isDashboard}>
+            Mon espace
+          </NavItem>
+        )}
+        <Link
+          href="https://github.com/mission-apprentissage/cerfa/releases"
+          p={4}
+          color="grey.800"
+          _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
+          borderBottom="3px solid"
+          borderColor="transparent"
+          isExternal
+        >
+          <Text display="block">
+            Journal des modifications
+            <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} ml={2} />{" "}
+          </Text>
+        </Link>
       </Flex>
     </Box>
   );
 };
 
-const NavBarContainer = ({ children, ...props }) => {
+const NavBarContainer = ({ children, isDashboard, ...props }) => {
+  const boxProps = !isDashboard
+    ? {
+        boxShadow: "md",
+      }
+    : {
+        borderBottom: "1px solid",
+        borderColor: "bluefrance",
+      };
   return (
-    <Box w="full" boxShadow="md">
+    <Box w="full" {...boxProps}>
       <Container maxW="xl">
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" w="100%" {...props}>
           {children}

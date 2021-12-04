@@ -29,7 +29,7 @@ export const useUnloadEffect = (match, onLeave) => {
   useEffect(() => {
     const onBeforeUnload = (e) => beforeUnload.current(e);
 
-    if (match?.params?.id && match?.path === "/dossiers/contrat/:id") {
+    if (match?.params?.id && match?.path === "/mon-espace/mes-dossiers/:id") {
       if (!isListening && dossier?.saved === false) {
         window.dossierId = match.params.id;
         window.removeEventListener("beforeunload", onBeforeUnload);
@@ -40,7 +40,7 @@ export const useUnloadEffect = (match, onLeave) => {
 
     return async () => {
       if (isListening) {
-        const contratPath = new RegExp("^/dossiers/contrat/[0-9A-Fa-f]{24}$");
+        const contratPath = new RegExp("^/mon-espace/mes-dossiers/[0-9A-Fa-f]{24}$");
         if (contratPath.test(location.pathname)) {
           window.manuallyTriggered = true;
           window.dispatchEvent(new Event("beforeunload"));

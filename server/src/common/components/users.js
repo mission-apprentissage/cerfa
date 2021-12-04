@@ -38,7 +38,7 @@ module.exports = async () => {
         password: hash,
         isAdmin: !!permissions.isAdmin,
         email: options.email || "",
-        roles: options.roles || ["public"],
+        roles: options.roles || [],
         acl: options.acl || [],
       });
 
@@ -90,6 +90,9 @@ module.exports = async () => {
       const rolesList = await Role.find({ name: { $in: user.roles } }).lean();
       const rolesAcl = rolesList.reduce((acc, { acl }) => [...acc, ...acl], []);
 
+      const { getUserWorkspace } = await workspaces();
+      const workspace = await getUserWorkspace(user);
+
       const structure = {
         permissions,
         sub: user.username,
@@ -97,6 +100,7 @@ module.exports = async () => {
         account_status: user.account_status,
         roles: permissions.isAdmin ? ["admin", ...user.roles] : user.roles,
         acl: uniq([...rolesAcl, ...user.acl]),
+        workspaceId: workspace?._id.toString(),
       };
       return structure;
     },

@@ -3,13 +3,19 @@ const logger = require("../../common/logger");
 const { MaintenanceMessage, Role, Workspace, Dossier, Cerfa } = require("../../common/model/index");
 
 runScript(async ({ users }) => {
+  await Role.create({
+    name: "wks.admin",
+    acl: [],
+  });
+  logger.info(`Role wks.admin created`);
+
   const user = await users.createUser("testAdmin", "password", {
     email: "antoine.bigard@beta.gouv.fr",
     permissions: { isAdmin: true },
   });
   logger.info(`User 'testAdmin' with password 'password' and admin is successfully created `);
 
-  const newMaintenanceMessage = new MaintenanceMessage({
+  await MaintenanceMessage.create({
     context: "automatique",
     type: "alert",
     msg: "Une mise à jour des données est en cours...",
@@ -17,21 +23,14 @@ runScript(async ({ users }) => {
     enabled: false,
     time: new Date(),
   });
-  await newMaintenanceMessage.save();
   logger.info(`MaintenanceMessage default created`);
-
-  const newRole = new Role({
-    name: "public",
-    acl: [],
-  });
-  await newRole.save();
-  logger.info(`Role public created`);
 
   const wks = await Workspace.findOne({
     owner: user._id,
   }).lean();
 
   const dossier = await Dossier.create({
+    nom: "Dossier Test",
     draft: true,
     owner: user._id,
     workspaceId: wks._id,

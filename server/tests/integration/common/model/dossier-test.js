@@ -5,6 +5,7 @@ const { mongoose } = require("../../../../src/common/mongodb");
 describe("Dossier", () => {
   it("Doit créer un dossier NON-DRAFT", async () => {
     await Dossier.create({
+      name: "testDossier",
       draft: false,
       documents: [
         {
@@ -26,6 +27,7 @@ describe("Dossier", () => {
   });
   it("Doit créer un dossier DRAFT", async () => {
     await Dossier.create({
+      name: "testDossier",
       draft: true,
       owner: mongoose.Types.ObjectId(),
       workspaceId: mongoose.Types.ObjectId(),
