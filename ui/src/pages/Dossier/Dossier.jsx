@@ -139,7 +139,7 @@ export default ({ match }) => {
                 <Step label={label} key={label} description={description}>
                   {index === 0 && <Cerfa />}
                   {index === 1 && <PiecesJustificatives />}
-                  {index === 2 && <Signatures />}
+                  {index === 2 && <Signatures dossierId={dossier._id} />}
                   {index === 3 && <Statuts />}
                 </Step>
               ))}

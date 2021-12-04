@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
-export const dossierAtom = atom({
-  key: "dossier",
+export const cerfaIdAtom = atom({
+  key: "cerfaId",
   default: null,
 });

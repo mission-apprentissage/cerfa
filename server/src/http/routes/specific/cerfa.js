@@ -107,6 +107,7 @@ module.exports = ({ cerfas }) => {
             ),
           },
         },
+        id: cerfa._id.toString(),
       };
 
       return res.json(result);
@@ -314,9 +315,17 @@ module.exports = ({ cerfas }) => {
     "/pdf/:id",
     tryCatch(async ({ params }, res) => {
       const cerfa = await Cerfa.findOne({ _id: params.id }).lean();
-      await pdfCerfaController.createPdfCerfa(cerfa);
 
-      return res.json({});
+      if (!cerfa) {
+        throw Boom.notFound("Doesn't exist");
+      }
+      // TODO HAS RIGHTS
+
+      const pdfBase64 = await pdfCerfaController.createPdfCerfa(cerfa);
+
+      return res.json({
+        pdf: pdfBase64,
+      });
     })
   );
 

@@ -9,14 +9,16 @@ import {
   // _put,
   _post,
 } from "../httpClient";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { dossierAtom } from "./dossierAtom";
+import { cerfaIdAtom } from "./cerfaIdAtom";
 import useAuth from "./useAuth";
 
 const hydrate = async (auth, dossier) => {
   try {
     const cerfa = await _get(`/api/v1/cerfa?workspaceId=${auth.workspaceId}&dossierId=${dossier._id}`);
     console.log(cerfa);
+
     return {
       ...cerfa,
       // employeur: {},
@@ -248,6 +250,8 @@ export function useCerfa() {
   const [isloaded, setIsLoaded] = useState(false);
   const dossier = useRecoilValue(dossierAtom);
   let [auth] = useAuth();
+
+  const [cerfaId, setCerfaId] = useRecoilState(cerfaIdAtom);
 
   const [organismeFormationSiret, setOrganismeFormationSiret] = useState(null);
   const [organismeFormationDenomination, setOrganismeFormationDenomination] = useState(null);
@@ -528,6 +532,7 @@ export function useCerfa() {
     hydrate(auth, dossier)
       .then((res) => {
         if (!abortController.signal.aborted) {
+          setCerfaId(res.id);
           setOrganismeFormationSiret(res.organismeFormation.siret);
           setOrganismeFormationDenomination(res.organismeFormation.denomination);
           setOrganismeFormationUaiCfa(res.organismeFormation.uaiCfa);
@@ -556,7 +561,7 @@ export function useCerfa() {
     return () => {
       abortController.abort();
     };
-  }, [auth, dossier]);
+  }, [auth, dossier, setCerfaId]);
 
   if (error !== null) {
     throw error;
@@ -564,6 +569,7 @@ export function useCerfa() {
 
   return {
     isloaded,
+    cerfaId,
     organismeFormation: {
       siret: organismeFormationSiret,
       denomination: organismeFormationDenomination,
