@@ -14,7 +14,9 @@ const Breadcrumb = ({ pages }) => {
         if (index === pages.length - 1 || !page.to) {
           return (
             <BreadcrumbItem key={page.title} isCurrentPage>
-              <BreadcrumbLink>{page.title}</BreadcrumbLink>
+              <BreadcrumbLink textDecoration="none" _hover={{ textDecoration: "none" }} cursor="default">
+                {page.title}
+              </BreadcrumbLink>
             </BreadcrumbItem>
           );
         } else {

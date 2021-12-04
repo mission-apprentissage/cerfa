@@ -2,13 +2,13 @@ import React from "react";
 import { render } from "@testing-library/react";
 import { RecoilRoot } from "recoil";
 import Contact from "./Contact";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 test("should display contact", () => {
   const { queryByText } = render(
     <Router>
       <RecoilRoot>
-        <Contact />
+        <Route exact path="/" component={Contact} />
       </RecoilRoot>
     </Router>
   );

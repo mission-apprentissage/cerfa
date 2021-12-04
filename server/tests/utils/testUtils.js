@@ -15,10 +15,34 @@ async function testContext() {
   };
 }
 
+async function initComponents(options) {
+  let { components, helpers } = await testContext();
+
+  const defaultOptions = {
+    userOpt: { username: "user", password: "password", options: { email: "h@ck.me" } },
+    roleOpt: { name: "wks.admin", acl: [] },
+  };
+
+  const roleOpt = options?.roleOpt || defaultOptions.roleOpt;
+  const userOpt = options?.userOpt || defaultOptions.userOpt;
+
+  const testRole = await components.roles.createRole(roleOpt);
+  const testUser = await components.users.createUser(userOpt.username, userOpt.password, userOpt.options);
+
+  return {
+    components,
+    testRole,
+    testUser,
+    ...helpers,
+  };
+}
+
 async function startServer() {
   let { components, helpers } = await testContext();
   const app = await server(components);
   const httpClient = axiosist(app);
+
+  await components.roles.createRole({ name: "wks.admin" });
 
   return {
     httpClient,
@@ -58,4 +82,5 @@ module.exports = {
   startServer,
   cleanDatabase,
   getTokenFromCookie,
+  initComponents,
 };

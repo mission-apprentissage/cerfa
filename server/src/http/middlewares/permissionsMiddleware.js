@@ -1,12 +1,19 @@
-const { isEqual, pick } = require("lodash");
+const Joi = require("joi");
+const tryCatch = require("./tryCatchMiddleware");
 
-module.exports = (permissions = {}, acl = []) => {
-  return (req, res, next) => {
-    const current = pick(req.user.permissions, Object.keys(permissions));
-    if (!(isEqual(current, permissions) || acl.some((page) => req?.user?.acl?.includes(page)))) {
+module.exports = () =>
+  tryCatch(async ({ method, body, query, user }, res, next) => {
+    const data = method === "GET" ? query : body;
+
+    let { workspaceId } = await Joi.object({
+      workspaceId: Joi.string().required(),
+    })
+      .unknown()
+      .validateAsync(data, { abortEarly: false });
+
+    if (workspaceId !== user.workspaceId) {
       return res.status(401).json({ message: "Accès non autorisé" });
     }
 
     next();
-  };
-};
+  });

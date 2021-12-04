@@ -6,18 +6,21 @@ const tryCatch = require("../../middlewares/tryCatchMiddleware");
 module.exports = () => {
   const router = express.Router();
 
-  router.get("/", async (req, res) => {
-    let { query } = await Joi.object({
-      query: Joi.string().default("{}"),
-    }).validateAsync(req.query, { abortEarly: false });
+  router.get(
+    "/",
+    tryCatch(async (req, res) => {
+      let { query } = await Joi.object({
+        query: Joi.string().default("{}"),
+      }).validateAsync(req.query, { abortEarly: false });
 
-    // TODO HAS RIGHTS
+      // TODO HAS RIGHTS
 
-    let json = JSON.parse(query);
-    const result = await History.find(json);
+      let json = JSON.parse(query);
+      const result = await History.find(json);
 
-    return res.json(result);
-  });
+      return res.json(result);
+    })
+  );
 
   router.post(
     "/",

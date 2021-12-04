@@ -2,26 +2,33 @@ import React, { useMemo } from "react";
 import { useTable, useFlexLayout, useGlobalFilter, useSortBy } from "react-table";
 import { Box, Flex, Text, Stack } from "@chakra-ui/react";
 
-const buildColumns = (key) => {
-  switch (key) {
-    default:
-      return {
-        Header: key,
-        accessor: key,
-      };
-  }
-};
-
 const Table = ({ data, onRowClick, components }) => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const tableData = useMemo(() => data, []);
+  const tableData = useMemo(
+    () =>
+      data.reduce((acc, item) => {
+        const iKeys = Object.keys(item);
+        let newItem = {};
+        for (let i = 0; i < iKeys.length; i++) {
+          const iKey = iKeys[i];
+          newItem[iKey] = item[iKey].value;
+        }
+
+        return [...acc, newItem];
+      }, []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const columns = Object.keys(data[0]).map((key) => {
-    return buildColumns(key);
+    return {
+      Header: data[0][key].Header,
+      width: data[0][key].width,
+      accessor: key,
+    };
   });
 
   const tableColumns = useMemo(
-    () => [...columns],
+    () => columns,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
@@ -51,7 +58,7 @@ const Table = ({ data, onRowClick, components }) => {
               as="tr"
               flex={1}
               {...headerGroup.getHeaderGroupProps({})}
-              pb={4}
+              pb={2}
               borderBottom="3px solid"
               borderColor="bluefrance"
             >
@@ -64,7 +71,7 @@ const Table = ({ data, onRowClick, components }) => {
                   overflow="hidden"
                   borderColor="grey.800"
                   color="grey.800"
-                  px={5}
+                  px={3}
                 >
                   <Stack direction="row" alignItems="center" justifyContent="center">
                     <Text>{column.render("Header")}</Text>
@@ -93,7 +100,7 @@ const Table = ({ data, onRowClick, components }) => {
               >
                 {row.cells.map((cell, i) => {
                   return (
-                    <Box as="td" {...cell.getCellProps()} display={"flex"} px={5} overflow="hidden">
+                    <Box as="td" {...cell.getCellProps()} display={"flex"} px={3} overflow="hidden">
                       {components && components[cell.column.id] ? (
                         components[cell.column.id](cell.value, cell.row.id)
                       ) : !cell.value ? (

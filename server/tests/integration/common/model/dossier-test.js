@@ -1,11 +1,12 @@
 const assert = require("assert");
-const { Dossier } = require("../../../src/common/model");
+const { Dossier } = require("../../../../src/common/model");
+const { mongoose } = require("../../../../src/common/mongodb");
 
 describe("Dossier", () => {
   it("Doit créer un dossier NON-DRAFT", async () => {
     await Dossier.create({
+      name: "testDossier",
       draft: false,
-      cerfaId: "619baec6fcdd030ba4e13c40",
       documents: [
         {
           typeDocument: "CONVENTION_FORMATION",
@@ -16,7 +17,8 @@ describe("Dossier", () => {
         },
       ],
       etat: "TRANSMIS",
-      createdBy: "test-user",
+      owner: mongoose.Types.ObjectId(),
+      workspaceId: mongoose.Types.ObjectId(),
     });
 
     const results = await Dossier.find({});
@@ -25,9 +27,10 @@ describe("Dossier", () => {
   });
   it("Doit créer un dossier DRAFT", async () => {
     await Dossier.create({
+      name: "testDossier",
       draft: true,
-      cerfaId: "619baec6fcdd030ba4e13c40",
-      createdBy: "test-user",
+      owner: mongoose.Types.ObjectId(),
+      workspaceId: mongoose.Types.ObjectId(),
     });
 
     const results = await Dossier.find({});

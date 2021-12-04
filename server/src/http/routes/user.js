@@ -5,18 +5,6 @@ const config = require("../../config");
 const path = require("path");
 const Boom = require("boom");
 
-const userSchema = Joi.object({
-  username: Joi.string().required(),
-  password: Joi.string().required(),
-  options: Joi.object({
-    email: Joi.string().required(),
-    roles: Joi.array().required(),
-    permissions: Joi.object({
-      isAdmin: Joi.boolean().required(),
-    }).unknown(),
-  }).unknown(),
-});
-
 const getEmailTemplate = (type = "forgotten-password") => {
   return path.join(__dirname, `../../assets/templates/${type}.mjml.ejs`);
 };
@@ -35,9 +23,17 @@ module.exports = ({ users, mailer }) => {
   router.post(
     "/user",
     tryCatch(async ({ body }, res) => {
-      await userSchema.validateAsync(body, { abortEarly: false });
-
-      const { username, password, options } = body;
+      const { username, password, options } = await Joi.object({
+        username: Joi.string().required(),
+        password: Joi.string().required(),
+        options: Joi.object({
+          email: Joi.string().required(),
+          roles: Joi.array().required(),
+          permissions: Joi.object({
+            isAdmin: Joi.boolean().required(),
+          }).unknown(),
+        }).unknown(),
+      }).validateAsync(body, { abortEarly: false });
 
       const alreadyExists = await users.getUser(username);
       if (alreadyExists) {

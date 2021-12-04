@@ -186,10 +186,22 @@ const Message = ({ match }) => {
               {messagesManuel.length > 0 && (
                 <Table
                   data={messagesManuel.map((m) => ({
-                    Message: m.msg,
-                    Type: m.type,
-                    Actif: m.enabled,
-                    Supprimer: null,
+                    Message: {
+                      Header: "Message",
+                      value: m.msg,
+                    },
+                    Type: {
+                      Header: "Type",
+                      value: m.type,
+                    },
+                    Actif: {
+                      Header: "Actif",
+                      value: m.enabled,
+                    },
+                    Supprimer: {
+                      Header: "Supprimer",
+                      value: null,
+                    },
                   }))}
                   components={{
                     Actif: (value, i) => {

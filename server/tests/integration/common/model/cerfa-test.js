@@ -1,5 +1,6 @@
 const assert = require("assert");
-const { Cerfa } = require("../../../src/common/model");
+const { Cerfa } = require("../../../../src/common/model");
+const { mongoose } = require("../../../../src/common/mongodb");
 
 describe("Cerfa", () => {
   it("Doit créer un cerfa NON-DRAFT", async () => {
@@ -128,8 +129,7 @@ describe("Cerfa", () => {
           commune: "PARIS",
         },
       },
-      dossierId: "619baec6fcdd030ba4e13c40",
-      createdBy: "test-user",
+      dossierId: mongoose.Types.ObjectId(),
     });
 
     const results = await Cerfa.find({ "employeur.denomination": "ENERGIE 3000" });
@@ -139,8 +139,7 @@ describe("Cerfa", () => {
   it("Doit créer un Cerfa DRAFT", async () => {
     await Cerfa.create({
       draft: true,
-      dossierId: "619baec6fcdd030ba4e13c40",
-      createdBy: "test-user",
+      dossierId: mongoose.Types.ObjectId(),
     });
 
     const results = await Cerfa.find({});

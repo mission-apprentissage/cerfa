@@ -9,21 +9,26 @@ import {
   // _put,
   _post,
 } from "../httpClient";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { dossierAtom } from "./dossierAtom";
+import { cerfaIdAtom } from "./cerfaIdAtom";
+import useAuth from "./useAuth";
 
-const hydrate = async () => {
+const hydrate = async (auth, dossier) => {
   try {
-    const schema = await _get("/api/v1/cerfa/schema");
-    const { organismeFormation, formation } = schema;
+    const cerfa = await _get(`/api/v1/cerfa?workspaceId=${auth.workspaceId}&dossierId=${dossier._id}`);
+    console.log(cerfa);
+
     return {
+      ...cerfa,
       // employeur: {},
       // apprenti: {},
       // maitre1: {},
       // maitre2: {},
       formation: {
+        ...cerfa.formation,
         rncp: {
-          ...formation.rncp,
-          locked: false, // default lock
-          value: "",
+          ...cerfa.formation.rncp,
           doAsyncActions: async (value, data) => {
             try {
               const response = await _post(`/api/v1/cfdrncp`, {
@@ -84,9 +89,7 @@ const hydrate = async () => {
           },
         },
         codeDiplome: {
-          ...formation.codeDiplome,
-          locked: false, // default lock
-          value: "",
+          ...cerfa.formation.codeDiplome,
           doAsyncActions: async (value) => {
             try {
               const response = await _post(`/api/v1/cfdrncp`, {
@@ -123,20 +126,8 @@ const hydrate = async () => {
             }
           },
         },
-        typeDiplome: {
-          ...formation.typeDiplome,
-          locked: false, // default lock
-          value: "",
-        },
-        intituleQualification: {
-          ...formation.intituleQualification,
-          locked: true, // default lock
-          value: "",
-        },
         dateDebutFormation: {
-          ...formation.dateDebutFormation,
-          locked: false, // default lock
-          value: "",
+          ...cerfa.formation.dateDebutFormation,
           doAsyncActions: async (value, data) => {
             await new Promise((resolve) => setTimeout(resolve, 100));
             const dateDebutFormation = DateTime.fromISO(value).setLocale("fr-FR");
@@ -158,9 +149,7 @@ const hydrate = async () => {
           },
         },
         dateFinFormation: {
-          ...formation.dateFinFormation,
-          locked: false, // default lock
-          value: "",
+          ...cerfa.formation.dateFinFormation,
           doAsyncActions: async (value, data) => {
             await new Promise((resolve) => setTimeout(resolve, 100));
             const dateFinFormation = DateTime.fromISO(value).setLocale("fr-FR");
@@ -181,18 +170,12 @@ const hydrate = async () => {
             };
           },
         },
-        dureeFormation: {
-          ...formation.dureeFormation,
-          locked: false, // default lock
-          value: "",
-        },
       },
       // contrat: {},
       organismeFormation: {
+        ...cerfa.organismeFormation,
         siret: {
-          ...organismeFormation.siret,
-          locked: false, // default lock
-          value: "",
+          ...cerfa.organismeFormation.siret,
           doAsyncActions: async (value) => {
             const response = await _post(`/api/v1/siret`, {
               siret: value,
@@ -245,43 +228,6 @@ const hydrate = async () => {
             },
           ],
         },
-        denomination: {
-          ...organismeFormation.denomination,
-          locked: true, // default lock
-          value: "",
-        },
-        uaiCfa: {
-          ...organismeFormation.uaiCfa,
-          locked: true, // default lock  || db.locked : false
-          value: "", //"Already in db inValid",
-        },
-        adresse: {
-          numero: {
-            ...organismeFormation.adresse.numero,
-            locked: true, // default lock
-            value: "",
-          },
-          voie: {
-            ...organismeFormation.adresse.voie,
-            locked: true, // default lock
-            value: "",
-          },
-          complement: {
-            ...organismeFormation.adresse.complement,
-            locked: true, // default lock
-            value: "Already in db Valid",
-          },
-          codePostal: {
-            ...organismeFormation.adresse.codePostal,
-            locked: true, // default lock
-            value: "",
-          },
-          commune: {
-            ...organismeFormation.adresse.commune,
-            locked: true, // default lock
-            value: "",
-          },
-        },
       },
     };
   } catch (e) {
@@ -302,6 +248,11 @@ export function findFieldDef(path, obj) {
 
 export function useCerfa() {
   const [isloaded, setIsLoaded] = useState(false);
+  const dossier = useRecoilValue(dossierAtom);
+  let [auth] = useAuth();
+
+  const [cerfaId, setCerfaId] = useRecoilState(cerfaIdAtom);
+
   const [organismeFormationSiret, setOrganismeFormationSiret] = useState(null);
   const [organismeFormationDenomination, setOrganismeFormationDenomination] = useState(null);
   const [organismeFormationUaiCfa, setOrganismeFormationUaiCfa] = useState(null);
@@ -578,9 +529,10 @@ export function useCerfa() {
   useEffect(() => {
     const abortController = new AbortController();
 
-    hydrate()
+    hydrate(auth, dossier)
       .then((res) => {
         if (!abortController.signal.aborted) {
+          setCerfaId(res.id);
           setOrganismeFormationSiret(res.organismeFormation.siret);
           setOrganismeFormationDenomination(res.organismeFormation.denomination);
           setOrganismeFormationUaiCfa(res.organismeFormation.uaiCfa);
@@ -609,7 +561,7 @@ export function useCerfa() {
     return () => {
       abortController.abort();
     };
-  }, []);
+  }, [auth, dossier, setCerfaId]);
 
   if (error !== null) {
     throw error;
@@ -617,6 +569,7 @@ export function useCerfa() {
 
   return {
     isloaded,
+    cerfaId,
     organismeFormation: {
       siret: organismeFormationSiret,
       denomination: organismeFormationDenomination,

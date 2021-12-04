@@ -5,10 +5,13 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 module.exports = () => {
   const router = express.Router();
 
-  router.get("/", async (req, res) => {
-    const result = await MaintenanceMessage.find({});
-    return res.json(result);
-  });
+  router.get(
+    "/",
+    tryCatch(async (req, res) => {
+      const result = await MaintenanceMessage.find({});
+      return res.json(result);
+    })
+  );
 
   router.post(
     "/",

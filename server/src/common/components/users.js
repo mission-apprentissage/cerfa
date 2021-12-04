@@ -1,6 +1,7 @@
 const { User, Role } = require("../model/index");
 const sha512Utils = require("../utils/sha512Utils");
 const { pick, uniq } = require("lodash");
+const workspaces = require("./workspaces");
 
 const rehashPassword = (user, password) => {
   user.password = sha512Utils.hash(password);
@@ -32,17 +33,23 @@ module.exports = async () => {
       const hash = options.hash || sha512Utils.hash(password);
       const permissions = options.permissions || {};
 
-      const user = new User({
+      const user = await User.create({
         username,
         password: hash,
         isAdmin: !!permissions.isAdmin,
         email: options.email || "",
-        roles: options.roles || ["public"],
+        roles: options.roles || [],
         acl: options.acl || [],
       });
 
-      await user.save();
-      return user.toObject();
+      const { createWorkspace } = await workspaces();
+      await createWorkspace({
+        username,
+        nom: "Votre espace",
+        description: "Votre espace de travail",
+      });
+
+      return user;
     },
     removeUser: async (username) => {
       const user = await User.findOne({ username });
@@ -83,6 +90,9 @@ module.exports = async () => {
       const rolesList = await Role.find({ name: { $in: user.roles } }).lean();
       const rolesAcl = rolesList.reduce((acc, { acl }) => [...acc, ...acl], []);
 
+      const { getUserWorkspace } = await workspaces();
+      const workspace = await getUserWorkspace(user);
+
       const structure = {
         permissions,
         sub: user.username,
@@ -90,6 +100,7 @@ module.exports = async () => {
         account_status: user.account_status,
         roles: permissions.isAdmin ? ["admin", ...user.roles] : user.roles,
         acl: uniq([...rolesAcl, ...user.acl]),
+        workspaceId: workspace?._id.toString(),
       };
       return structure;
     },

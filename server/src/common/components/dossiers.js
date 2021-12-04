@@ -1,20 +1,27 @@
-const { Dossier, Cerfa } = require("../model/index");
-const Joi = require("joi");
+const { Workspace, Dossier, Cerfa, User } = require("../model/index");
 const Boom = require("boom");
+const { prettyPrintDate } = require("../utils/dateUtils");
 
 module.exports = async () => {
   return {
-    createDossier: async (data, user) => {
-      let { cerfaId } = await Joi.object({
-        cerfaId: Joi.string().required(),
-      }).validateAsync(data, { abortEarly: false });
+    createDossier: async (user) => {
+      const userDb = await User.findOne({ username: user.sub });
+      if (!userDb) {
+        throw new Error("User doesn't exist");
+      }
+
+      const wks = await Workspace.findOne({ owner: userDb._id });
+      if (!wks) {
+        throw new Error("Something went wrong");
+      }
 
       let result = null;
       try {
         result = await Dossier.create({
+          nom: `Dossier ${prettyPrintDate(Date.now())}`,
           draft: true,
-          cerfaId,
-          createdBy: user.sub,
+          workspaceId: wks._id,
+          owner: userDb._id,
         });
       } catch (error) {
         const { code, name, message } = error;
@@ -25,6 +32,22 @@ module.exports = async () => {
         }
       }
       return result;
+    },
+    saveDossier: async (id) => {
+      const found = await Dossier.findById(id).lean();
+
+      if (!found) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      return await Dossier.findOneAndUpdate(
+        { _id: id },
+        {
+          saved: true,
+          lastModified: Date.now(),
+        },
+        { new: true }
+      );
     },
     publishDossier: async (id) => {
       const found = await Dossier.findById(id).lean();
@@ -51,7 +74,7 @@ module.exports = async () => {
         throw Boom.notFound("Doesn't exist");
       }
 
-      await Cerfa.deleteOne({ _id: found.cerfaId });
+      await Cerfa.deleteOne({ dossierId: found._id });
 
       return await Dossier.deleteOne({ _id });
     },

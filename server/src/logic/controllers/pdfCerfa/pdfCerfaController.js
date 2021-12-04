@@ -12,12 +12,12 @@ class PdfCerfaController {
     const pdfCerfaFilled = await PdfUtils(pdfCerfaEmpty, cerfa);
 
     // TODO destination
-    fs.writeFileSync(__dirname + "/test.pdf", pdfCerfaFilled, { encoding: "base64" });
+    // fs.writeFileSync(__dirname + "/test.pdf", pdfCerfaFilled, { encoding: "base64" });
 
-    return true;
+    return pdfCerfaFilled;
   }
 
-  async getBase64File() {
+  async getEmptyCerfeBase64() {
     return fs.readFileSync(PATH_EMPTY_CERFA_PDF, { encoding: "base64" });
   }
 }
