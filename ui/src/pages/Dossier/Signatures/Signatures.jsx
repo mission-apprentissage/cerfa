@@ -18,7 +18,6 @@ export default ({ dossierId }) => {
     const run = async () => {
       try {
         if (dossierId && cerfaId) {
-          console.log(auth.workspaceId, dossierId, cerfaId);
           const { pdfBase64 } = await _post(`/api/v1/cerfa/pdf/${cerfaId}`, {
             workspaceId: auth.workspaceId,
             dossierId,

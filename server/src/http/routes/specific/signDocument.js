@@ -41,7 +41,7 @@ module.exports = () => {
       console.log(resultFiles);
 
       const resultProcedures = await apiYousign.postProcedures({
-        name: `Signature du dossier ${dossier}`,
+        name: `Signature du dossier ${dossier.nom}`,
         description: `Le contrat en apprentissage de .... pour .....`,
         members: [
           {
@@ -49,6 +49,11 @@ module.exports = () => {
             lastname: "Bigard",
             email: "antoine.bigard@beta.gouv.fr",
             phone: "+33612647513",
+            operationLevel: "custom",
+            operationCustomModes: ["sms"],
+            operationModeSmsConfig: {
+              content: `eSIGNATURE Cerfa - {{code}} est le code pour signer le contrat ${dossier.nom}.`,
+            },
             fileObjects: [
               {
                 file: resultFiles.id,
@@ -62,6 +67,26 @@ module.exports = () => {
             ],
           },
         ],
+        config: {
+          email: {
+            "member.started": [
+              {
+                subject: `Vous avez été invité à signer un contrat`,
+                message:
+                  'Hello <tag data-tag-type="string" data-tag-name="recipient.firstname"></tag> <tag data-tag-type="string" data-tag-name="recipient.lastname"></tag>, <br><br> Vous avez été invité à signer un contrat en apprentissage, merci de cliquer sur le boutton suivant pour y accéder: <tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Accéder au document</tag>',
+                to: ["@member"],
+              },
+            ],
+            "procedure.started": [
+              {
+                subject: `Vous avez été invité à signer un contrat`,
+                message:
+                  'Hello <tag data-tag-type="string" data-tag-name="recipient.firstname"></tag> <tag data-tag-type="string" data-tag-name="recipient.lastname"></tag>, <br><br> Vous avez été invité à signer un contrat en apprentissage, merci de cliquer sur le boutton suivant pour y accéder: <tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Accéder au document</tag>',
+                to: ["@member"],
+              },
+            ],
+          },
+        },
       });
 
       console.log(resultProcedures);

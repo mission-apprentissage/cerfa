@@ -85,12 +85,12 @@ const fieldsPositions = {
 
 const buildFieldDraw = (value, fieldDefinition) => {
   const result = {
-    title: isNaN(value) === true ? value : value.toString(),
+    title: isNaN(value) === true ? value : value?.toString(),
     x: fieldDefinition.x,
     y: fieldDefinition.y,
   };
 
-  if (fieldDefinition.maxLength && value.length > fieldDefinition.maxLength) {
+  if (fieldDefinition.maxLength && value?.length > fieldDefinition.maxLength) {
     result.title = value.slice(0, fieldDefinition.maxLength - 1) + ".";
   }
   return [result];
@@ -255,7 +255,7 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
     for (let jndex = 0; jndex < pdfPageContent.length; jndex++) {
       const { title, x, y } = pdfPageContent[jndex];
       let nextXPos = x;
-      for (let kndex = 0; kndex < title.length; kndex++) {
+      for (let kndex = 0; kndex < title?.length; kndex++) {
         const letter = title[kndex];
         page.drawRectangle({
           x: nextXPos,
