@@ -80,22 +80,22 @@ const UserMenu = () => {
           </MenuButton>
           <MenuList>
             <MenuGroup title="Profile">
-              {hasAccessTo(auth, "page_gestion_utilisateurs") && (
+              {hasAccessTo(auth, "admin/page_gestion_utilisateurs") && (
                 <MenuItem as={NavLink} to="/admin/users" icon={<AccountFill boxSize={4} />}>
                   Gestion des utilisateurs
                 </MenuItem>
               )}
-              {hasAccessTo(auth, "page_gestion_roles") && (
+              {hasAccessTo(auth, "admin/page_gestion_roles") && (
                 <MenuItem as={NavLink} to="/admin/roles" icon={<AccountFill boxSize={4} />}>
                   Gestion des rôles
                 </MenuItem>
               )}
-              {hasAccessTo(auth, "page_upload") && (
+              {hasAccessTo(auth, "admin/page_upload") && (
                 <MenuItem as={NavLink} to="/admin/upload" icon={<DownloadLine boxSize={4} />}>
                   Upload de fichiers
                 </MenuItem>
               )}
-              {hasAccessTo(auth, "page_message_maintenance") && (
+              {hasAccessTo(auth, "admin/page_message_maintenance") && (
                 <MenuItem as={NavLink} to="/admin/maintenance" icon={<InfoCircle boxSize={4} />}>
                   Message de maintenance
                 </MenuItem>
@@ -153,7 +153,7 @@ const NavLinks = ({ isOpen, isDashboard }) => {
         textStyle="sm"
       >
         <NavItem to="/">Accueil</NavItem>
-        {hasAccessTo(auth, "page_dashboard") && (
+        {hasAccessTo(auth, "wks/page_espace") && (
           <NavItem to="/mon-espace/mes-dossiers" isDashboard={isDashboard}>
             Mon espace
           </NavItem>

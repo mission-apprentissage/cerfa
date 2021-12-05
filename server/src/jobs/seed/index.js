@@ -2,12 +2,14 @@ const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
 const { MaintenanceMessage, Role, Workspace, Dossier, Cerfa } = require("../../common/model/index");
 
+const defaultRolesAcls = require("./defaultRolesAcls");
+
 runScript(async ({ users }) => {
-  await Role.create({
-    name: "wks.admin",
-    acl: [],
-  });
-  logger.info(`Role wks.admin created`);
+  for (let index = 0; index < Object.keys(defaultRolesAcls).length; index++) {
+    const key = Object.keys(defaultRolesAcls)[index];
+    await Role.create(defaultRolesAcls[key]);
+    logger.info(`Role ${key} created`);
+  }
 
   const user = await users.createUser("testAdmin", "password", {
     email: "antoine.bigard@beta.gouv.fr",

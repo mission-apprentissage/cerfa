@@ -102,20 +102,20 @@ export default () => {
 
                 <PrivateRoute exact path="/" component={HomePage} />
 
-                {auth && hasAccessTo(auth, "page_dashboard") && (
+                {auth && hasAccessTo(auth, "wks/page_espace") && (
                   <PrivateRoute exact path="/mon-espace/mes-dossiers" component={DashboardPage} />
                 )}
                 <PrivateRoute exact path="/mon-espace/mes-dossiers/nouveau-dossier" component={NouveauDossier} />
                 <PrivateRoute exact path="/mon-espace/mes-dossiers/:id/:step" component={Dossier} />
                 <PrivateRoute exact path="/mon-espace/parametres/:sub" component={Parametres} />
 
-                {auth && hasAccessTo(auth, "page_gestion_utilisateurs") && (
+                {auth && hasAccessTo(auth, "admin/page_gestion_utilisateurs") && (
                   <PrivateRoute exact path="/admin/users" component={Users} />
                 )}
-                {auth && hasAccessTo(auth, "page_gestion_roles") && (
+                {auth && hasAccessTo(auth, "admin/page_gestion_roles") && (
                   <PrivateRoute exact path="/admin/roles" component={Roles} />
                 )}
-                {auth && hasAccessTo(auth, "page_message_maintenance") && (
+                {auth && hasAccessTo(auth, "admin/page_message_maintenance") && (
                   <PrivateRoute exact path="/admin/maintenance" component={Maintenance} />
                 )}
                 {auth && hasAccessTo(auth, "page_upload") && (

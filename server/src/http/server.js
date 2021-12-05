@@ -49,24 +49,24 @@ module.exports = async (components) => {
 
   // private access
   app.use("/api/v1/authentified", checkJwtToken, authentified(components));
-  app.use("/api/v1/admin", checkJwtToken, pageAccessMiddleware(["page_gestion_utilisateurs"]), user(components));
+  app.use("/api/v1/admin", checkJwtToken, pageAccessMiddleware(["admin/page_gestion_utilisateurs"]), user(components));
   app.use(
     "/api/v1/admin",
     checkJwtToken,
-    pageAccessMiddleware(["page_gestion_utilisateurs", "page_gestion_roles"]),
+    pageAccessMiddleware(["admin/page_gestion_utilisateurs", "admin/page_gestion_roles"]),
     role(components)
   );
   app.use(
     "/api/v1/maintenanceMessage",
     checkJwtToken,
-    pageAccessMiddleware(["page_message_maintenance"]),
+    pageAccessMiddleware(["admin/page_message_maintenance"]),
     maintenanceMessage()
   );
 
   // below specific
   app.use("/api/v1/dossier", checkJwtToken, dossier(components));
   app.use("/api/v1/cerfa", checkJwtToken, cerfa(components));
-  app.use("/api/v1/upload", checkJwtToken, pageAccessMiddleware(["page_upload"]), upload());
+  app.use("/api/v1/upload", checkJwtToken, pageAccessMiddleware(["admin/page_upload"]), upload());
   app.use("/api/v1/history", checkJwtToken, history());
   app.use("/api/v1/siret", checkJwtToken, siret());
   app.use("/api/v1/cfdrncp", checkJwtToken, cfdrncp());

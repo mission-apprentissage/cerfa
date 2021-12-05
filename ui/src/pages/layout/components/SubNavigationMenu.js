@@ -61,7 +61,7 @@ const NavLinks = ({ isOpen, match }) => {
         pb={[3, 0]}
         textStyle="sm"
       >
-        {hasAccessTo(auth, "page_dashboard") && (
+        {hasAccessTo(auth, "wks/page_espace") && (
           <NavItem to="/mon-espace/mes-dossiers" shoudBeActive={isMesDossiers}>
             <Folder w={"1rem"} h={"1rem"} mb={"0.125rem"} mr={2} />
             Mes Dossiers
