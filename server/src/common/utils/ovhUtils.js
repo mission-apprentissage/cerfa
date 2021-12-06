@@ -1,7 +1,8 @@
 // eslint-disable-next-line node/no-extraneous-require
 const axios = require("axios");
 const config = require("../../config");
-const { fetchFileAsStream, sendFileAsStream } = require("./httpUtils");
+const logger = require("../logger");
+const { createRequestStream, createUploadStream } = require("./httpUtils");
 
 const DEFAULT_STORAGE_NAME = "mna-cerfa";
 
@@ -49,23 +50,36 @@ async function requestObjectAccess(path, options) {
 }
 
 module.exports = {
-  getObjectFromStorage: async (path, options = {}) => {
+  getFromStorage: async (path, options = {}) => {
+    logger.debug(`Fetching OVH Object Storage file ${path}`);
     let { url, token } = await requestObjectAccess(path, options);
-    return fetchFileAsStream(url, {
+    return createRequestStream(url, {
+      method: "GET",
       headers: {
         "X-Auth-Token": token,
         Accept: "application/json",
       },
     });
   },
-  putObjectIntoStorage: async (path, stream, options = {}) => {
+  uploadToStorage: async (path, options = {}) => {
+    logger.debug(`Uploading OVH Object Storage file ${path}`);
     let { url, token } = await requestObjectAccess(path, options);
-
-    return sendFileAsStream(url, stream, {
+    return createUploadStream(url, {
       headers: {
         "X-Auth-Token": token,
         Accept: "application/json",
         "Content-Type": options.contentType || "application/octet-stream",
+      },
+    });
+  },
+  deleteFromStorage: async (path, options = {}) => {
+    logger.debug(`Deleting OVH Object Storage file ${path}`);
+    let { url, token } = await requestObjectAccess(path, options);
+    return createRequestStream(url, {
+      method: "DELETE",
+      headers: {
+        "X-Auth-Token": token,
+        Accept: "application/json",
       },
     });
   },

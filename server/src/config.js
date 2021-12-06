@@ -49,4 +49,7 @@ module.exports = {
     url: env.get("CERFA_API_YOUSIGN_URL").asString(),
     key: env.get("CERFA_API_YOUSIGN_KEY").asString(),
   },
+  clamav: {
+    uri: env.get("CERFA_CLAMAV_URI").default("127.0.0.1:3310").asString(),
+  },
 };

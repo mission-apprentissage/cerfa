@@ -6,6 +6,9 @@ const createDossiers = require("./dossiers");
 const createCerfas = require("./cerfas");
 const createPermissions = require("./permissions");
 const createRoles = require("./roles");
+const createClamav = require("./clamav");
+const createCrypto = require("./crypto");
+const config = require("../../config");
 
 module.exports = async (options = {}) => {
   const users = options.users || (await createUsers());
@@ -18,6 +21,8 @@ module.exports = async (options = {}) => {
   const cerfas = options.cerfa || (await createCerfas());
   const permissions = options.permission || (await createPermissions());
   const roles = options.role || (await createRoles());
+  const clamav = options.clamav || (await createClamav(config.clamav.uri));
+  const crypto = options.crypto || createCrypto(config.ovh.storage.encryptionKey);
 
   return {
     users,
@@ -30,5 +35,7 @@ module.exports = async (options = {}) => {
     cerfas,
     permissions,
     roles,
+    clamav,
+    crypto,
   };
 };
