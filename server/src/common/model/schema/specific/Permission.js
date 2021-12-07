@@ -37,5 +37,10 @@ const permissionSchema = {
     description: "Role id",
     required: true,
   },
+  acl: {
+    type: [String],
+    default: [],
+    description: "Custom Access Control Level array",
+  },
 };
 module.exports = permissionSchema;

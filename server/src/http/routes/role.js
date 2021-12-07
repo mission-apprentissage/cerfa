@@ -55,7 +55,7 @@ module.exports = ({ users }) => {
         { new: true }
       );
 
-      const allRoleUsers = await users.getUsers({ roles: { $in: [name] } });
+      const allRoleUsers = await users.getUsers({ roles: { $in: [role._id] } });
       for (let index = 0; index < allRoleUsers.length; index++) {
         const user = allRoleUsers[index];
         await users.updateUser(user.username, { invalided_token: true });
@@ -77,10 +77,10 @@ module.exports = ({ users }) => {
 
       await role.deleteOne({ name });
 
-      const allRoleUsers = await users.getUsers({ roles: { $in: [name] } });
+      const allRoleUsers = await users.getUsers({ roles: { $in: [role._id] } });
       for (let index = 0; index < allRoleUsers.length; index++) {
         const user = allRoleUsers[index];
-        const roles = user.roles.filter((r) => r !== name);
+        const roles = user.roles.filter((r) => r !== role._id);
         await users.updateUser(user.username, { invalided_token: true, roles });
       }
 

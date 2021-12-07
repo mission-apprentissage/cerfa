@@ -33,12 +33,20 @@ module.exports = async () => {
       const hash = options.hash || sha512Utils.hash(password);
       const permissions = options.permissions || {};
 
+      let rolesDb = [];
+      if (options.roles && options.roles.length > 0) {
+        rolesDb = await Role.find({ name: { $in: options.roles } }, { _id: 1 });
+        if (!rolesDb.length === 0) {
+          throw new Error("Roles doesn't exist");
+        }
+      }
+
       const user = await User.create({
         username,
         password: hash,
         isAdmin: !!permissions.isAdmin,
         email: options.email || "",
-        roles: options.roles || [],
+        roles: rolesDb,
         acl: options.acl || [],
       });
 
@@ -87,7 +95,7 @@ module.exports = async () => {
     structureUser: async (user) => {
       const permissions = pick(user, ["isAdmin"]);
 
-      const rolesList = await Role.find({ name: { $in: user.roles } }).lean();
+      const rolesList = await Role.find({ _id: { $in: user.roles } }).lean();
       const rolesAcl = rolesList.reduce((acc, { acl }) => [...acc, ...acl], []);
 
       const { getUserWorkspace } = await workspaces();
@@ -98,7 +106,7 @@ module.exports = async () => {
         sub: user.username,
         email: user.email,
         account_status: user.account_status,
-        roles: permissions.isAdmin ? ["admin", ...user.roles] : user.roles,
+        roles: permissions.isAdmin ? ["admin", ...rolesList] : rolesList,
         acl: uniq([...rolesAcl, ...user.acl]),
         workspaceId: workspace?._id.toString(),
       };

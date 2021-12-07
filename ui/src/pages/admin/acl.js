@@ -22,7 +22,7 @@ export default [
     ],
   },
   {
-    feature: "Accès aux fonctionnalités administrateur",
+    feature: "Accès aux fonctionnalités d'espace",
     ref: "wks",
     subFeatures: [
       {

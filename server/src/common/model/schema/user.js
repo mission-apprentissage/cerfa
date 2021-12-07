@@ -73,13 +73,14 @@ const usersSchema = {
     description: "true si l'utilisateur est administrateur",
   },
   roles: {
-    type: [String],
-    default: [],
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "role",
     description: "Roles de l'utilisateur",
+    default: [],
   },
   acl: {
     type: [String],
-    default: null,
+    default: [],
     description: "Access control level array",
   },
   last_connection: {
