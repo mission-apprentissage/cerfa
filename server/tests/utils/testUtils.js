@@ -20,7 +20,7 @@ async function initComponents(options) {
 
   const defaultOptions = {
     userOpt: { username: "user", password: "password", options: { email: "h@ck.me" } },
-    roleOpt: { name: "wks.admin", acl: [] },
+    roleOpt: { name: "wks.admin", type: "permission", acl: [] },
   };
 
   const roleOpt = options?.roleOpt || defaultOptions.roleOpt;
@@ -42,7 +42,7 @@ async function startServer() {
   const app = await server(components);
   const httpClient = axiosist(app);
 
-  await components.roles.createRole({ name: "wks.admin" });
+  await components.roles.createRole({ name: "wks.admin", type: "permission" });
 
   return {
     httpClient,

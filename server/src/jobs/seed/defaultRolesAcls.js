@@ -1,22 +1,8 @@
 module.exports = {
-  support: {
-    name: "support",
-    acl: [],
-  },
-  entreprise: {
-    name: "entreprise",
-    acl: [],
-  },
-  cfa: {
-    name: "cfa",
-    acl: [],
-  },
-  instructeur: {
-    name: "instructeur",
-    acl: [],
-  },
   "wks.admin": {
     name: "wks.admin",
+    type: "permission",
+    description: "Permission gestionnaire d'espace",
     acl: [
       "wks",
       "wks/page_espace",
@@ -31,33 +17,51 @@ module.exports = {
   },
   "wks.member": {
     name: "wks.member",
+    type: "permission",
+    description: "Permission rédacteur d'espace",
     acl: [
       "wks",
       "wks/page_espace",
       "wks/page_espace/page_dossiers",
       "wks/page_espace/page_dossiers/ajouter_nouveau_dossier",
-      "wks/page_espace/page_dossiers/voir_liste_dossiers",
       "wks/page_espace/page_dossiers/voir_liste_dossiers/tous",
+      "wks/page_espace/page_dossiers/voir_liste_dossiers",
     ],
   },
-  "wks.instructeur": {
-    name: "wks.instructeur",
+  "wks.readonly": {
+    name: "wks.readonly",
+    type: "permission",
+    description: "Permission lecteur d'espace",
     acl: [
       "wks",
       "wks/page_espace",
       "wks/page_espace/page_dossiers",
       "wks/page_espace/page_dossiers/voir_liste_dossiers",
-      "wks/page_espace/page_dossiers/voir_liste_dossiers/demande_instruction",
+      "wks/page_espace/page_dossiers/voir_liste_dossiers/tous",
     ],
   },
-  "wks.support": {
-    name: "wks.support",
-    acl: [
-      "wks",
-      "wks/page_espace",
-      "wks/page_espace/page_dossiers",
-      "wks/page_espace/page_dossiers/voir_liste_dossiers/tous",
-      "wks/page_espace/page_dossiers/voir_liste_dossiers",
-    ],
+  support: {
+    name: "support",
+    type: "user",
+    description: "Rôle utilisateur support",
+    acl: [],
+  },
+  entreprise: {
+    name: "entreprise",
+    type: "user",
+    description: "Rôle utilisateur entreprise",
+    acl: [],
+  },
+  cfa: {
+    name: "cfa",
+    type: "user",
+    description: "Rôle utilisateur Organisme de formation",
+    acl: [],
+  },
+  instructeur: {
+    name: "instructeur",
+    type: "user",
+    description: "Rôle utilisateur DR(I)EETS",
+    acl: [],
   },
 };

@@ -48,7 +48,7 @@ export default [
                   },
                   {
                     feature: "Voir uniquement les dossiers en cours d'instruction",
-                    ref: "wks/page_espace/page_dossiers/voir_liste_dossiers/demande_instruction",
+                    ref: "wks/page_espace/page_dossiers/voir_liste_dossiers/instruction_en_cours",
                   },
                 ],
               },

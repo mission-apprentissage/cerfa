@@ -4,8 +4,9 @@ const Joi = require("joi");
 module.exports = async () => {
   return {
     createRole: async (data) => {
-      let { name, acl } = await Joi.object({
+      let { name, acl, type } = await Joi.object({
         name: Joi.string().required(),
+        type: Joi.string().required(),
         acl: Joi.array().items(Joi.string()).default([]),
       }).validateAsync(data, { abortEarly: false });
 
@@ -13,6 +14,7 @@ module.exports = async () => {
       try {
         result = await await Role.create({
           name,
+          type,
           acl,
         });
       } catch (error) {

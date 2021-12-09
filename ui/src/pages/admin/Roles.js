@@ -15,39 +15,90 @@ import {
   FormControl,
   FormLabel,
   Heading,
-  HStack,
+  VStack,
   Input,
   Stack,
   Flex,
+  RadioGroup,
+  Radio,
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import ACL from "./acl";
 
+const specialsAcls = {
+  "wks/page_espace/page_dossiers/voir_liste_dossiers": [
+    "wks/page_espace/page_dossiers/voir_liste_dossiers/tous",
+    "wks/page_espace/page_dossiers/voir_liste_dossiers/instruction_en_cours",
+  ],
+};
+
+const shouldBeNotAllowed = (acl, ref) => {
+  const isAncestorsAllowed = (acl, ref) => {
+    const ancestorRef = ref.substring(0, ref.lastIndexOf("/"));
+    const hasAncestor = ancestorRef !== "";
+    if (hasAncestor) {
+      return isAncestorsAllowed(acl, ancestorRef) && acl.includes(ref);
+    } else {
+      return acl.includes(ref);
+    }
+  };
+
+  const parentRef = ref.substring(0, ref.lastIndexOf("/"));
+  const isRootRef = parentRef === "";
+
+  return isRootRef ? false : !isAncestorsAllowed(acl, parentRef);
+};
+
 const RoleLine = ({ role }) => {
+  const specialskeys = Object.keys(specialsAcls);
+  let specialValues = {};
+  for (let index = 0; index < specialskeys.length; index++) {
+    specialValues[`${specialskeys[index]}_SUB`] = "";
+    for (let j = 0; j < specialsAcls[specialskeys[index]].length; j++) {
+      const uniq = specialsAcls[specialskeys[index]][j];
+      if (role?.acl.includes(uniq)) {
+        specialValues[`${specialskeys[index]}_SUB`] = uniq;
+      }
+    }
+  }
+
   const { values, handleSubmit, handleChange } = useFormik({
     initialValues: {
       newName: role?.name || "",
       newAcl: role?.acl || [],
+      ...specialValues,
     },
-    onSubmit: ({ newAcl, newName }, { setSubmitting }) => {
+    onSubmit: ({ newAcl, newName, ...rest }, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
+        let tmp = [...newAcl];
+        const specialskeys = Object.keys(specialsAcls);
+        for (let index = 0; index < specialskeys.length; index++) {
+          tmp = tmp.filter((a) => !specialsAcls[specialskeys[index]].includes(a));
+          tmp.push(rest[`${specialskeys[index]}_SUB`]);
+        }
+
+        const final = [];
+        for (let index = 0; index < tmp.length; index++) {
+          const aclRef = tmp[index];
+          if (!shouldBeNotAllowed(tmp, aclRef)) {
+            final.push(aclRef);
+          }
+        }
+
         try {
           if (role) {
-            const body = {
+            await _put(`/api/v1/admin/role/${role.name}`, {
               name: newName,
-              acl: newAcl,
-            };
-            await _put(`/api/v1/admin/role/${role.name}`, body);
-            document.location.reload(true);
+              acl: final,
+            });
           } else {
-            const body = {
+            await _post(`/api/v1/admin/role/`, {
               name: newName,
-              acl: newAcl,
-            };
-            await _post(`/api/v1/admin/role/`, body);
-            document.location.reload(true);
+              acl: final,
+            });
           }
+          document.location.reload(true);
         } catch (e) {
           console.log(e);
         }
@@ -67,6 +118,80 @@ const RoleLine = ({ role }) => {
     }
   };
 
+  const rendreACL = (feature, deepth) => {
+    return (
+      <>
+        {feature.map((item, i) => {
+          let shouldBeDisabled = shouldBeNotAllowed(values.newAcl, item.ref);
+
+          return (
+            <Flex flexDirection="column" mb={deepth === 0 ? 5 : 2} key={`${item.ref}_${deepth}`} w="100%">
+              <Box mb={2}>
+                <Checkbox
+                  name="newAcl"
+                  onChange={handleChange}
+                  value={item.ref}
+                  isChecked={values.newAcl.includes(item.ref)}
+                  isDisabled={shouldBeDisabled}
+                  fontWeight={deepth < 2 ? "bold" : "none"}
+                >
+                  {item.feature}
+                </Checkbox>
+              </Box>
+              {!item.uniqSubFeature && (
+                <Box ml={5} pr={14}>
+                  {item.subFeatures?.map((subitem, j) => {
+                    if (subitem.subFeatures) {
+                      return (
+                        <Flex flexDirection="column" key={`${subitem.ref}_${deepth}`} ml={5}>
+                          {rendreACL([subitem], deepth + 1)}
+                        </Flex>
+                      );
+                    }
+
+                    return (
+                      <VStack spacing={5} ml={5} key={`${subitem.ref}_${deepth}`} alignItems="baseline">
+                        <Checkbox
+                          name="newAcl"
+                          onChange={handleChange}
+                          value={subitem.ref}
+                          isChecked={values.newAcl.includes(subitem.ref)}
+                          isDisabled={shouldBeDisabled || !values.newAcl.includes(item.ref)}
+                        >
+                          {subitem.feature}
+                        </Checkbox>
+                      </VStack>
+                    );
+                  })}
+                </Box>
+              )}
+              {item.uniqSubFeature && (
+                <Box ml={5} pr={14}>
+                  <RadioGroup id={`${item.ref}_SUB`} name={`${item.ref}_SUB`} defaultValue={values[`${item.ref}_SUB`]}>
+                    <VStack spacing={0} ml={5} alignItems="baseline">
+                      {item.subFeatures?.map((subitem, j) => {
+                        return (
+                          <Radio
+                            key={`${subitem.ref}_${deepth}`}
+                            value={subitem.ref}
+                            onChange={handleChange}
+                            isDisabled={shouldBeDisabled || !values.newAcl.includes(item.ref)}
+                          >
+                            {subitem.feature}
+                          </Radio>
+                        );
+                      })}
+                    </VStack>
+                  </RadioGroup>
+                </Box>
+              )}
+            </Flex>
+          );
+        })}
+      </>
+    );
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <FormControl py={2}>
@@ -83,42 +208,7 @@ const RoleLine = ({ role }) => {
             <AccordionIcon />
           </AccordionButton>
           <AccordionPanel pb={4} border={"none"} bg="grey.100">
-            <FormControl p={2}>
-              {ACL.map((item, i) => {
-                return (
-                  <Flex flexDirection="column" mb={5} key={i}>
-                    <Box mb={2}>
-                      <Checkbox
-                        name="newAcl"
-                        onChange={handleChange}
-                        value={item.ref}
-                        isChecked={values.newAcl.includes(item.ref)}
-                        fontWeight="bold"
-                      >
-                        {item.feature}
-                      </Checkbox>
-                    </Box>
-                    <Flex ml={5} pr={14}>
-                      {item.subFeatures?.map((subitem, j) => {
-                        return (
-                          <HStack spacing={5} ml={5} key={`${i}_${j}`}>
-                            <Checkbox
-                              name="newAcl"
-                              onChange={handleChange}
-                              value={subitem.ref}
-                              isChecked={values.newAcl.includes(subitem.ref)}
-                              isDisabled={!values.newAcl.includes(item.ref)}
-                            >
-                              {subitem.feature}
-                            </Checkbox>
-                          </HStack>
-                        );
-                      })}
-                    </Flex>
-                  </Flex>
-                );
-              })}
-            </FormControl>
+            <FormControl p={2}>{rendreACL(ACL, 0)}</FormControl>
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
@@ -186,9 +276,16 @@ export default ({ match }) => {
               return (
                 <Accordion bg="white" key={i} allowToggle>
                   <AccordionItem>
-                    <AccordionButton _expanded={{ bg: "grey.200" }} border={"1px solid"} borderColor={"bluefrance"}>
+                    <AccordionButton
+                      _expanded={{ bg: roleAttr.type === "user" ? "greensoft.300" : "grey.200", color: "bluefrance" }}
+                      _hover={{ bg: "grey.200", color: "bluefrance" }}
+                      bg={roleAttr.type === "user" ? "greensoft.500" : "transparent"}
+                      color={roleAttr.type === "user" ? "white" : "bluefrance"}
+                      border={"1px solid"}
+                      borderColor={"bluefrance"}
+                    >
                       <Box flex="1" textAlign="left" fontSize="gamma">
-                        {roleAttr.name}
+                        {roleAttr.name} {roleAttr.type === "user" ? "(Utilisateur)" : "(Permission)"}
                       </Box>
                       <AccordionIcon />
                     </AccordionButton>

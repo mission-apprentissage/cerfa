@@ -206,15 +206,15 @@ const apprentiSchema = {
   adresse: {
     ...adresseSchema,
   },
-  apprentiMineurNonEmancipe: {
-    type: Boolean,
-    description: "l'apprenti(e) est mineur non emancipé",
-    example: false,
-    default: null,
-    required: function () {
-      return !this.draft;
-    },
-  },
+  // apprentiMineurNonEmancipe: {
+  //   type: Boolean,
+  //   description: "l'apprenti(e) est mineur non emancipé",
+  //   example: false,
+  //   default: null,
+  //   required: function () {
+  //     return !this.draft;
+  //   },
+  // },
   responsableLegal: {
     required: function () {
       // If date de naissance to now < 18
