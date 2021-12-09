@@ -1,22 +1,10 @@
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
-const { MaintenanceMessage, Role, Workspace, Dossier, Cerfa } = require("../../common/model/index");
+const { MaintenanceMessage, Role, Dossier, Cerfa } = require("../../common/model/index");
 
 const defaultRolesAcls = require("./defaultRolesAcls");
 
-runScript(async ({ users }) => {
-  for (let index = 0; index < Object.keys(defaultRolesAcls).length; index++) {
-    const key = Object.keys(defaultRolesAcls)[index];
-    await Role.create(defaultRolesAcls[key]);
-    logger.info(`Role ${key} created`);
-  }
-
-  const user = await users.createUser("testAdmin", "password", {
-    email: "antoine.bigard@beta.gouv.fr",
-    permissions: { isAdmin: true },
-  });
-  logger.info(`User 'testAdmin' with password 'password' and admin is successfully created `);
-
+runScript(async ({ users, workspaces }) => {
   await MaintenanceMessage.create({
     context: "automatique",
     type: "alert",
@@ -27,14 +15,37 @@ runScript(async ({ users }) => {
   });
   logger.info(`MaintenanceMessage default created`);
 
-  const wks = await Workspace.findOne({
-    owner: user._id,
-  }).lean();
+  for (let index = 0; index < Object.keys(defaultRolesAcls).length; index++) {
+    const key = Object.keys(defaultRolesAcls)[index];
+    await Role.create(defaultRolesAcls[key]);
+    logger.info(`Role ${key} created`);
+  }
+
+  const userAdmin = await users.createUser("testAdmin", "password", {
+    nom: "Bigard",
+    prenom: "Antoine",
+    telephone: "+33612647513",
+    email: "antoine.bigard@beta.gouv.fr",
+    permissions: { isAdmin: true },
+  });
+  logger.info(`User 'testAdmin' with password 'password' and admin is successfully created `);
+
+  const userEntreprise = await users.createUser("testEntreprise", "password", {
+    nom: "Damien",
+    prenom: "Arthur",
+    telephone: "+33102030405",
+    email: "antoine.bigard+testEntreprise@beta.gouv.fr",
+  });
+  logger.info(`User 'testEntreprise' with password 'password' is successfully created `);
+
+  const wks = await workspaces.getUserWorkspace(userAdmin, { _id: 1 });
+
+  await workspaces.addContributeur(wks._id, userEntreprise, "wks.admin");
 
   const dossier = await Dossier.create({
     nom: "Dossier Test",
     draft: true,
-    owner: user._id,
+    owner: userAdmin._id,
     workspaceId: wks._id,
     saved: true,
   });

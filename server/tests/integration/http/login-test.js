@@ -11,6 +11,9 @@ describe("[Routes] Login", () => {
     const { httpClient, components } = await startServer();
     await components.users.createUser("user", "password", {
       email: "h@ck.me",
+      nom: "hack",
+      prenom: "me",
+      telephone: "+33102030405",
     });
 
     const response = await httpClient.post("/api/v1/auth/login", {
@@ -27,6 +30,8 @@ describe("[Routes] Login", () => {
       account_status: "FORCE_RESET_PASSWORD",
       acl: [],
       email: "h@ck.me",
+      nom: "hack",
+      prenom: "me",
       roles: [],
       sub: "user",
       iss: config.appName,
@@ -40,6 +45,9 @@ describe("[Routes] Login", () => {
     const { httpClient, components } = await startServer();
     await components.users.createUser("user", "password", {
       email: "h@ck.me",
+      nom: "hack",
+      prenom: "me",
+      telephone: "+33102030405",
     });
 
     const response = await httpClient.post("/api/v1/auth/login", {
@@ -63,7 +71,13 @@ describe("[Routes] Login", () => {
 
   it("Vérifie que le mot de passe est rehashé si trop faible", async () => {
     const { httpClient, components } = await startServer();
-    await components.users.createUser("user", "password", { hash: hash("password", 1000), email: "h@ck.me" });
+    await components.users.createUser("user", "password", {
+      hash: hash("password", 1000),
+      email: "h@ck.me",
+      nom: "hack",
+      prenom: "me",
+      telephone: "+33102030405",
+    });
 
     let response = await httpClient.post("/api/v1/auth/login", {
       username: "user",
@@ -83,7 +97,13 @@ describe("[Routes] Login", () => {
 
   it("Vérifie que le mot de passe n'est pas rehashé si ok", async () => {
     const { httpClient, components } = await startServer();
-    await components.users.createUser("user", "password", { hash: hash("password", 1001), email: "h@ck.me" });
+    await components.users.createUser("user", "password", {
+      hash: hash("password", 1001),
+      email: "h@ck.me",
+      nom: "hack",
+      prenom: "me",
+      telephone: "+33102030405",
+    });
     const previous = await User.findOne({ username: "user" });
 
     const response = await httpClient.post("/api/v1/auth/login", {
@@ -98,7 +118,13 @@ describe("[Routes] Login", () => {
 
   it("Vérifie que le mot de passe n'est pas rehashé si invalide", async () => {
     const { httpClient, components } = await startServer();
-    await components.users.createUser("user", "password", { hash: hash("password", 1001), email: "h@ck.me" });
+    await components.users.createUser("user", "password", {
+      hash: hash("password", 1001),
+      email: "h@ck.me",
+      nom: "hack",
+      prenom: "me",
+      telephone: "+33102030405",
+    });
     const previous = await User.findOne({ username: "user" });
 
     const response = await httpClient.post("/api/v1/auth/login", {

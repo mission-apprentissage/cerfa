@@ -11,6 +11,7 @@ module.exports = () =>
       .unknown()
       .validateAsync(data, { abortEarly: false });
 
+    // TODO Check perms
     if (workspaceId !== user.workspaceId) {
       return res.status(401).json({ message: "Accès non autorisé" });
     }

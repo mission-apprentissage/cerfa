@@ -1,15 +1,15 @@
 const { Permission, Role } = require("../model/index");
 const Joi = require("joi");
-const Boom = require("boom");
 
 module.exports = async () => {
   return {
     createPermission: async (data) => {
-      let { workspaceId, dossierId, userEmail, role } = await Joi.object({
+      let { workspaceId, dossierId, userEmail, role, acl } = await Joi.object({
         workspaceId: Joi.string().required(),
         dossierId: Joi.string().allow(null),
         userEmail: Joi.string().required(),
         role: Joi.string().required(),
+        acl: Joi.array().items(Joi.string()).default([]),
       }).validateAsync(data, { abortEarly: false });
 
       const roleDb = await Role.findOne({ name: role });
@@ -24,19 +24,34 @@ module.exports = async () => {
           dossierId,
           userEmail,
           role: roleDb._id,
+          acl,
         });
       } catch (error) {
         throw new Error(error);
       }
       return result;
     },
-    findPermissions: async ({ workspaceId, dossierId, userEmail }) =>
-      await Permission.find({ workspaceId, dossierId, userEmail }),
+    findPermissions: async ({ workspaceId, dossierId, userEmail }, select = {}) =>
+      await Permission.find({ workspaceId, dossierId, userEmail }, select),
+    hasPermission: async ({ workspaceId, dossierId, userEmail }, select = {}) =>
+      await Permission.findOne({ workspaceId, dossierId, userEmail }, select),
+    updatePermission: async ({ workspaceId, dossierId, userEmail, roleId, acl = [] }) => {
+      const found = await Permission.findOne({ workspaceId, dossierId, userEmail });
+
+      if (!found) {
+        throw new Error("Role doesn't exist");
+      }
+
+      found.role = roleId;
+      found.acl = acl;
+
+      return await found.save();
+    },
     removePermission: async (_id) => {
       const found = await Permission.findById(_id).lean();
 
       if (!found) {
-        throw Boom.notFound("Doesn't exist");
+        throw new Error("Role doesn't exist");
       }
 
       return await Permission.deleteOne({ _id });

@@ -21,7 +21,13 @@ describe("users component", () => {
       userOpt: {
         username: "userAdmin",
         password: "password",
-        options: { email: "h@ck.me", permissions: { isAdmin: true } },
+        options: {
+          email: "h@ck.me",
+          nom: "hack",
+          prenom: "me",
+          telephone: "+33102030405",
+          permissions: { isAdmin: true },
+        },
       },
     });
 
@@ -36,7 +42,13 @@ describe("users component", () => {
       userOpt: {
         username: "userToDelete",
         password: "password",
-        options: { email: "h@ck.me", permissions: { isAdmin: true } },
+        options: {
+          email: "h@ck.me",
+          nom: "hack",
+          prenom: "me",
+          telephone: "+33102030405",
+          permissions: { isAdmin: true },
+        },
       },
     });
 
@@ -51,7 +63,7 @@ describe("users component", () => {
       userOpt: {
         username: "user",
         password: "password",
-        options: { email: "h@ck.me" },
+        options: { email: "h@ck.me", nom: "hack", prenom: "me", telephone: "+33102030405" },
       },
     });
     const user = await components.users.authenticate("user", "password");
@@ -64,7 +76,7 @@ describe("users component", () => {
       userOpt: {
         username: "user",
         password: "password",
-        options: { email: "h@ck.me" },
+        options: { email: "h@ck.me", nom: "hack", prenom: "me", telephone: "+33102030405" },
       },
     });
     const user = await components.users.authenticate("user", "INVALID");
@@ -77,7 +89,7 @@ describe("users component", () => {
       userOpt: {
         username: "user",
         password: "password",
-        options: { email: "h@ck.me" },
+        options: { email: "h@ck.me", nom: "hack", prenom: "me", telephone: "+33102030405" },
       },
     });
 

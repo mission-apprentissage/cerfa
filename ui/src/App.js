@@ -23,7 +23,7 @@ const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 const NouveauDossier = lazy(() => import("./pages/Dossier/NouveauDossier"));
-const Parametres = lazy(() => import("./pages/Dossier/Parametres"));
+const Parametres = lazy(() => import("./pages/Dossier/ParametresEspace/Parametres"));
 const Dossier = lazy(() => import("./pages/Dossier/Dossier"));
 
 function PrivateRoute({ component, ...rest }) {

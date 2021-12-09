@@ -23,5 +23,16 @@ module.exports = async () => {
 
       return result;
     },
+    findRolePermission: async (query, select = {}) => await Role.find({ ...query, type: "permission" }, select),
+    findRolePermissionById: async (id, select = {}) =>
+      await Role.findOne({ _id: id, type: "permission" }, select).lean(),
+    hasAclsByRoleId: async (id, acl) => {
+      const roleDb = await Role.findById(id).lean();
+      if (!roleDb) {
+        throw new Error("Role doesn't exist");
+      }
+
+      return acl.every((page) => roleDb.acl.includes(page));
+    },
   };
 };

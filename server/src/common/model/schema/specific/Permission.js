@@ -42,5 +42,10 @@ const permissionSchema = {
     default: [],
     description: "Custom Access Control Level array",
   },
+  addedAt: {
+    type: Date,
+    default: Date.now,
+    description: "Date d'ajout de la permission",
+  },
 };
 module.exports = permissionSchema;

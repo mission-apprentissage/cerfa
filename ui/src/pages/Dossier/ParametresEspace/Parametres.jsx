@@ -1,9 +1,11 @@
 import React from "react";
 import { Box, Container, Heading, Flex, List, ListItem, Link, Divider } from "@chakra-ui/react";
 import { NavLink, useLocation } from "react-router-dom";
-import Layout from "../layout/Layout";
-import { Breadcrumb } from "../../common/components/Breadcrumb";
-import { setTitle } from "../../common/utils/pageUtils";
+import Layout from "../../layout/Layout";
+import { Breadcrumb } from "../../../common/components/Breadcrumb";
+import { setTitle } from "../../../common/utils/pageUtils";
+
+import AccesEspace from "./AccesEspace";
 
 const NavItem = ({ children, to = "/", sub, ...rest }) => {
   const { pathname } = useLocation();
@@ -60,15 +62,7 @@ export default ({ match }) => {
                 </List>
               </Box>
               <Box px={[1, 5]} mt={[4, 4, 4, 0]} flexGrow="1">
-                {match.params.sub === "gestion-acces" && (
-                  <>
-                    <Heading textStyle="rf-text" fontWeight="700" p={2} as="h1" fontSize="1.4rem">
-                      Gérer les accès à votre espace
-                    </Heading>
-                    <Divider borderWidth={1} mt={2} mb={4} />
-                    <Box>Table des accès</Box>
-                  </>
-                )}
+                {match.params.sub === "gestion-acces" && <AccesEspace />}
                 {match.params.sub === "notifications" && (
                   <>
                     <Heading textStyle="rf-text" fontWeight="700" p={2} as="h1" fontSize="1.4rem">

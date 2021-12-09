@@ -12,6 +12,11 @@ const rolesSchema = {
     description: "type du rôle",
     required: true,
   },
+  title: {
+    type: String,
+    default: null,
+    description: "titre du rôle",
+  },
   description: {
     type: String,
     default: null,

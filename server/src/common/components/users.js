@@ -27,6 +27,7 @@ module.exports = async () => {
       return null;
     },
     getUser: async (username) => await User.findOne({ username }),
+    getUserById: async (id, select = {}) => await User.findById(id, select).lean(),
     getUserByEmail: async (email) => await User.findOne({ email }),
     getUsers: async (filters = {}) => await User.find(filters, { password: 0, _id: 0, __v: 0 }).lean(),
     createUser: async (username, password, options = {}) => {
@@ -45,7 +46,10 @@ module.exports = async () => {
         username,
         password: hash,
         isAdmin: !!permissions.isAdmin,
-        email: options.email || "",
+        email: options.email,
+        nom: options.nom,
+        prenom: options.prenom,
+        telephone: options.telephone,
         roles: rolesDb,
         acl: options.acl || [],
       });
@@ -105,6 +109,8 @@ module.exports = async () => {
         permissions,
         sub: user.username,
         email: user.email,
+        nom: user.nom,
+        prenom: user.prenom,
         account_status: user.account_status,
         roles: permissions.isAdmin ? ["admin", ...rolesList] : rolesList,
         acl: uniq([...rolesAcl, ...user.acl]),

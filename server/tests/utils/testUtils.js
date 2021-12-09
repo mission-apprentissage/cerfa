@@ -19,7 +19,11 @@ async function initComponents(options) {
   let { components, helpers } = await testContext();
 
   const defaultOptions = {
-    userOpt: { username: "user", password: "password", options: { email: "h@ck.me" } },
+    userOpt: {
+      username: "user",
+      password: "password",
+      options: { email: "h@ck.me", nom: "hack", prenom: "me", telephone: "+33102030405" },
+    },
     roleOpt: { name: "wks.admin", type: "permission", acl: [] },
   };
 
