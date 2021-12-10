@@ -1,6 +1,7 @@
 const { Workspace, Dossier, Cerfa, User } = require("../model/index");
 const Boom = require("boom");
-const { prettyPrintDate } = require("../utils/dateUtils");
+const moment = require("moment");
+moment.locale("fr-FR");
 
 module.exports = async () => {
   return {
@@ -18,7 +19,7 @@ module.exports = async () => {
       let result = null;
       try {
         result = await Dossier.create({
-          nom: `Dossier ${prettyPrintDate(Date.now())}`,
+          nom: `Dossier ${moment(new Date()).add(1, "hour").format("DD MMM YYYY à HH:mm")}`,
           draft: true,
           workspaceId: wks._id,
           owner: userDb._id,

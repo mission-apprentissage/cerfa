@@ -1,4 +1,4 @@
-import React, { lazy, useState } from "react";
+import React, { lazy, useState, useMemo } from "react";
 import { Switch, useRouteMatch, useLocation } from "react-router-dom";
 import { Box, Container } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
@@ -19,54 +19,60 @@ export default () => {
   let { path } = useRouteMatch();
   const { pathname } = useLocation();
   let [auth] = useAuth();
-  const [breadcrumbDetails, setBreadcrumbDetails] = useState([{ title: "Mon espace" }, { title: "Mes dossiers" }]);
-  const [title, setTitle] = useState("Mes dossiers");
-  const [onLeave, setOnLeave] = useState();
+  const [title, setTitle] = useState();
 
-  // let title = "Mes dossiers";
-  // let breadcrumbDetails = [{ title: title }];
-  // switch (pathname) {
-  //   case `${path}/parametres/utilisateurs`:
-  //     title = "Paramètres Utilisateurs";
-  //     breadcrumbDetails = [
-  //       { title: "Mon espace", to: `${path}/mes-dossiers` },
-  //       { title: "Paramètres" },
-  //       { title: "Utilisateurs" },
-  //     ];
-  //     break;
-  //   case `${path}/parametres/notifications`:
-  //     title = "Paramètres Notifications";
-  //     breadcrumbDetails = [
-  //       { title: "Mon espace", to: `${path}/mes-dossiers` },
-  //       { title: "Paramètres", to: `${path}/parametres/utilisateurs` },
-  //       { title: "Notifications" },
-  //     ];
-  //     break;
-  //   case `${path}/mes-dossiers/nouveau-dossier`:
-  //     title = "Commencer un nouveau dossier";
-  //     breadcrumbDetails = [
-  //       { title: "Mon espace", to: `${path}/mes-dossiers` },
-  //       { title: "Mes dossiers", to: `${path}/mes-dossiers` },
-  //       { title: "Nouveau dossier" },
-  //     ];
-  //     break;
-  //   case `${path}/mes-dossiers`:
-  //   default:
-  //     title = "Mes dossiers";
-  //     breadcrumbDetails = [{ title: "Mon espace" }, { title: title }];
-  //     break;
-  // }
+  const breadcrumbDetails = useMemo(() => {
+    let bcDetails = [{ title: "Mes dossiers" }];
+    switch (pathname) {
+      case `${path}/parametres/utilisateurs`:
+        setTitlePage("Paramètres Utilisateurs");
+        bcDetails = [
+          { title: "Mon espace", to: `${path}/mes-dossiers` },
+          { title: "Paramètres" },
+          { title: "Utilisateurs" },
+        ];
+        break;
+      case `${path}/parametres/notifications`:
+        setTitlePage("Paramètres Notifications");
+        bcDetails = [
+          { title: "Mon espace", to: `${path}/mes-dossiers` },
+          { title: "Paramètres", to: `${path}/parametres/utilisateurs` },
+          { title: "Notifications" },
+        ];
+        break;
+      case `${path}/mes-dossiers`:
+        setTitlePage("Mes dossiers");
+        bcDetails = [{ title: "Mon espace" }, { title: "Mes dossiers" }];
+        break;
+      case `${path}/mes-dossiers/nouveau-dossier`:
+        setTitlePage("Commencer un nouveau dossier");
+        bcDetails = [
+          { title: "Mon espace", to: `${path}/mes-dossiers` },
+          { title: "Mes dossiers", to: `${path}/mes-dossiers` },
+          { title: "Nouveau dossier" },
+        ];
+        break;
+      default:
+        setTitlePage("Mes dossiers");
+        bcDetails = [{ title: "Mon espace" }, { title: "Mes dossiers" }];
+        break;
+    }
 
-  const onDossierPageLoaded = (data) => {
-    console.log(data);
-    setTitlePage(data.title);
-    setOnLeave(data.onLeave);
-  };
-
-  setTitlePage(title);
+    // case of ${path}/mes-dossiers/:id/:step`
+    const contratPath = new RegExp(`^${path}/mes-dossiers/[0-9A-Fa-f]{24}/[a-z]+$`);
+    if (contratPath.test(pathname) && title) {
+      setTitlePage(title);
+      bcDetails = [
+        { title: "Mon espace", to: `${path}/mes-dossiers` },
+        { title: "Mes dossiers", to: `${path}/mes-dossiers` },
+        { title: title },
+      ];
+    }
+    return bcDetails;
+  }, [path, pathname, title]);
 
   return (
-    <Layout onLeave={onLeave}>
+    <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
         <Container maxW="xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, ...breadcrumbDetails]} />
@@ -100,8 +106,13 @@ export default () => {
             <PrivateRoute
               exact
               path={`${path}/mes-dossiers/:id/:step`}
-              component={Dossier}
-              onLoaded={onDossierPageLoaded}
+              component={() => (
+                <Dossier
+                  onLoaded={(data) => {
+                    setTitle(data.title);
+                  }}
+                />
+              )}
             />
           )}
           {auth && hasAccessTo(auth, "wks/page_espace/page_dossiers/ajouter_nouveau_dossier") && (

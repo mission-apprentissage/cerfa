@@ -1,7 +1,8 @@
 import React from "react";
-import { Box, Text, Badge, Button, HStack, Link } from "@chakra-ui/react";
+import { Box, Text, Badge, Button, HStack, Link, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { prettyPrintDate } from "../../../common/utils/dateUtils";
+import { Parametre } from "../../../theme/components/icons";
 import { Table } from "../../../common/components/Table";
 
 export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers" }) => {
@@ -28,8 +29,8 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
           width: 60,
           value: null,
         },
-        Supprimer: {
-          Header: "",
+        Actions: {
+          Header: "Actions",
           width: 50,
           value: null,
         },
@@ -93,24 +94,24 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
             </Box>
           );
         },
-        Supprimer: (value, i) => {
+        Actions: (value, i) => {
           // TODO has right to delete
           return (
-            <Button
-              variant="pill"
-              color="tomato"
-              borderRadius="5px"
-              _hover={{ fontWeigth: "bold", bg: "redmarianne", color: "white" }}
-              onClick={() => {
-                onDeleteClicked(dossiers[i]);
-              }}
-              cursor="pointer"
-              ml="2"
-            >
-              <Text display="block" px={2}>
-                Supprimer
-              </Text>
-            </Button>
+            <Menu>
+              <MenuButton as={Button} variant="unstyled" width="auto" height="full">
+                <Parametre width={"2rem"} height={"1.2rem"} color="bluefrance" />
+              </MenuButton>
+              <MenuList>
+                <MenuItem
+                  color="redmarianne"
+                  onClick={async () => {
+                    await onDeleteClicked(dossiers[i]);
+                  }}
+                >
+                  Supprimer
+                </MenuItem>
+              </MenuList>
+            </Menu>
           );
         },
       }}

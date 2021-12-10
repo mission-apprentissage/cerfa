@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { _delete } from "../../common/httpClient";
 import { prettyPrintDate } from "../../common/utils/dateUtils";
 
 import Cerfa from "./Cerfa/Cerfa";
@@ -42,6 +41,17 @@ export default ({ onLoaded }) => {
   const { isloaded, dossier } = useDossier(match.params.id);
   const history = useHistory();
 
+  useEffect(() => {
+    const run = async () => {
+      if (onLoaded && isloaded && dossier) {
+        onLoaded({
+          title: dossier.nom,
+        });
+      }
+    };
+    run();
+  }, [dossier, history, isloaded, onLoaded]);
+
   const onClickNextStep = async () => {
     setStepState("loading"); // type StateValue = "loading" | "error" | undefined
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -58,24 +68,6 @@ export default ({ onLoaded }) => {
   }
 
   // TODO not Authorize handler
-
-  // TODO useeffect
-  onLoaded({
-    title: dossier.nom,
-    onLeave: async ({ internalLeave }) => {
-      if (internalLeave) {
-        if (!dossier.saved) {
-          // eslint-disable-next-line no-restricted-globals
-          const leave = confirm("Voulez-vous vraiment quitter cette page ?");
-          if (leave) {
-            await _delete(`/api/v1/dossier/${dossier._id}`);
-          } else {
-            history.goBack();
-          }
-        }
-      }
-    },
-  });
 
   return (
     <Box w="100%" px={[1, 1, 12, 24]}>

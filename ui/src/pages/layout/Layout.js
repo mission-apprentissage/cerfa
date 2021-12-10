@@ -4,12 +4,11 @@ import { Box, Container } from "@chakra-ui/react";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import NavigationMenu from "./components/NavigationMenu";
+// import { useUnloadEffect } from "../../common/hooks/useBeforeUnload";
 
-import { useUnloadEffect } from "../../common/hooks/useBeforeUnload";
-
-const Layout = ({ children, onLeave, ...rest }) => {
+const Layout = ({ children, ...rest }) => {
+  // useUnloadEffect();
   let { path } = useRouteMatch();
-  useUnloadEffect(onLeave);
   const isDashboard = path.includes("/mon-espace");
   return (
     <Container maxW="full" minH="100vh" d="flex" flexDirection="column" p={0} {...rest}>
