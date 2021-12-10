@@ -1,75 +1,26 @@
-import React, { lazy, useState, useMemo } from "react";
-import { Switch, useRouteMatch, useLocation } from "react-router-dom";
+import React, { lazy } from "react";
+import { Switch, useRouteMatch } from "react-router-dom";
 import { Box, Container } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import PrivateRoute from "../../common/components/PrivateRoute";
 import useAuth from "../../common/hooks/useAuth";
+import { useWorkspace } from "../../common/hooks/useWorkspace";
 import { hasAccessTo } from "../../common/utils/rolesUtils";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
-import { setTitle as setTitlePage } from "../../common/utils/pageUtils";
 import WorkspaceLayout from "./components/WorkspaceLayout";
-import WorkspaceDossiers from "./WorkspaceDossiers";
-import WorkspaceParametresAcces from "./WorkspaceParametresAcces";
-import WorkspaceParametresNotifications from "./WorkspaceParametresNotifications";
+import * as WorkspaceDossiers from "./WorkspaceDossiers";
+import * as WorkspaceParametresAcces from "./WorkspaceParametresAcces";
+import * as WorkspaceParametresNotifications from "./WorkspaceParametresNotifications";
 
 const NouveauDossier = lazy(() => import("../Dossier/NouveauDossier"));
 const Dossier = lazy(() => import("../Dossier/Dossier"));
 
 export default () => {
-  let { path } = useRouteMatch();
-  const { pathname } = useLocation();
   let [auth] = useAuth();
-  const [title, setTitle] = useState();
+  let { path } = useRouteMatch();
+  let { isloaded, breadcrumbDetails, paths, setTitle } = useWorkspace(path);
 
-  const breadcrumbDetails = useMemo(() => {
-    let bcDetails = [{ title: "Mes dossiers" }];
-    switch (pathname) {
-      case `${path}/parametres/utilisateurs`:
-        setTitlePage("Paramètres Utilisateurs");
-        bcDetails = [
-          { title: "Mon espace", to: `${path}/mes-dossiers` },
-          { title: "Paramètres" },
-          { title: "Utilisateurs" },
-        ];
-        break;
-      case `${path}/parametres/notifications`:
-        setTitlePage("Paramètres Notifications");
-        bcDetails = [
-          { title: "Mon espace", to: `${path}/mes-dossiers` },
-          { title: "Paramètres", to: `${path}/parametres/utilisateurs` },
-          { title: "Notifications" },
-        ];
-        break;
-      case `${path}/mes-dossiers`:
-        setTitlePage("Mes dossiers");
-        bcDetails = [{ title: "Mon espace" }, { title: "Mes dossiers" }];
-        break;
-      case `${path}/mes-dossiers/nouveau-dossier`:
-        setTitlePage("Commencer un nouveau dossier");
-        bcDetails = [
-          { title: "Mon espace", to: `${path}/mes-dossiers` },
-          { title: "Mes dossiers", to: `${path}/mes-dossiers` },
-          { title: "Nouveau dossier" },
-        ];
-        break;
-      default:
-        setTitlePage("Mes dossiers");
-        bcDetails = [{ title: "Mon espace" }, { title: "Mes dossiers" }];
-        break;
-    }
-
-    // case of ${path}/mes-dossiers/:id/:step`
-    const contratPath = new RegExp(`^${path}/mes-dossiers/[0-9A-Fa-f]{24}/[a-z]+$`);
-    if (contratPath.test(pathname) && title) {
-      setTitlePage(title);
-      bcDetails = [
-        { title: "Mon espace", to: `${path}/mes-dossiers` },
-        { title: "Mes dossiers", to: `${path}/mes-dossiers` },
-        { title: title },
-      ];
-    }
-    return bcDetails;
-  }, [path, pathname, title]);
+  if (!isloaded) return null;
 
   return (
     <Layout>
@@ -83,29 +34,41 @@ export default () => {
           {auth && hasAccessTo(auth, "wks/page_espace/page_dossiers") && (
             <PrivateRoute
               exact
-              path={`${path}/mes-dossiers`}
-              component={() => <WorkspaceLayout>{WorkspaceDossiers()}</WorkspaceLayout>}
+              path={paths.dossiers}
+              component={() => (
+                <WorkspaceLayout header={<WorkspaceDossiers.Header />} content={<WorkspaceDossiers.Content />} />
+              )}
             />
           )}
           {auth && hasAccessTo(auth, "wks/page_espace/page_parametres") && (
             <PrivateRoute
               exact
-              path={`${path}/parametres/utilisateurs`}
-              component={() => <WorkspaceLayout>{WorkspaceParametresAcces()}</WorkspaceLayout>}
+              path={paths.parametresUtilisateurs}
+              component={() => (
+                <WorkspaceLayout
+                  header={<WorkspaceParametresAcces.Header />}
+                  content={<WorkspaceParametresAcces.Content />}
+                />
+              )}
             />
           )}
           {auth && hasAccessTo(auth, "wks/page_espace/page_parametres") && (
             <PrivateRoute
               exact
-              path={`${path}/parametres/notifications`}
-              component={() => <WorkspaceLayout>{WorkspaceParametresNotifications()}</WorkspaceLayout>}
+              path={paths.parametresNotifications}
+              component={() => (
+                <WorkspaceLayout
+                  header={<WorkspaceParametresNotifications.Header />}
+                  content={<WorkspaceParametresNotifications.Content />}
+                />
+              )}
             />
           )}
 
           {auth && hasAccessTo(auth, "wks/page_espace/page_dossiers") && (
             <PrivateRoute
               exact
-              path={`${path}/mes-dossiers/:id/:step`}
+              path={paths.dossier}
               component={() => (
                 <Dossier
                   onLoaded={(data) => {
@@ -116,7 +79,7 @@ export default () => {
             />
           )}
           {auth && hasAccessTo(auth, "wks/page_espace/page_dossiers/ajouter_nouveau_dossier") && (
-            <PrivateRoute exact path={`${path}/mes-dossiers/nouveau-dossier`} component={NouveauDossier} />
+            <PrivateRoute exact path={paths.nouveauDossier} component={NouveauDossier} />
           )}
         </Switch>
       </Box>

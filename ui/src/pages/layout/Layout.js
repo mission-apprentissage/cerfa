@@ -9,11 +9,12 @@ import NavigationMenu from "./components/NavigationMenu";
 const Layout = ({ children, ...rest }) => {
   // useUnloadEffect();
   let { path } = useRouteMatch();
-  const isDashboard = path.includes("/mon-espace");
+  const isMyWorkspace = path.includes("/mon-espace");
+  const isSharedWithMe = path.includes("/partages-avec-moi");
   return (
     <Container maxW="full" minH="100vh" d="flex" flexDirection="column" p={0} {...rest}>
       <Header />
-      <NavigationMenu isDashboard={isDashboard} />
+      <NavigationMenu isMyWorkspace={isMyWorkspace} isSharedWithMe={isSharedWithMe} />
       <Box minH={"60vh"} flexGrow="1">
         {children}
       </Box>

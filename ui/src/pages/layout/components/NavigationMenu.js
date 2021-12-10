@@ -19,7 +19,7 @@ import { isUserAdmin, hasAccessTo } from "../../../common/utils/rolesUtils";
 import { MenuFill, Close, AccountFill, DownloadLine, InfoCircle, LockFill } from "../../../theme/components/icons";
 import { _get } from "../../../common/httpClient";
 
-const NavigationMenu = ({ isDashboard, ...props }) => {
+const NavigationMenu = ({ isMyWorkspace, isSharedWithMe, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
@@ -27,7 +27,7 @@ const NavigationMenu = ({ isDashboard, ...props }) => {
   return (
     <NavBarContainer {...props}>
       <NavToggle toggle={toggle} isOpen={isOpen} />
-      <NavLinks isOpen={isOpen} isDashboard={isDashboard} />
+      <NavLinks isOpen={isOpen} isMyWorkspace={isMyWorkspace} isSharedWithMe={isSharedWithMe} />
       <UserMenu />
     </NavBarContainer>
   );
@@ -111,7 +111,7 @@ const NavToggle = ({ toggle, isOpen }) => {
   );
 };
 
-const NavItem = ({ children, to = "/", isDashboard, ...rest }) => {
+const NavItem = ({ children, to = "/", isMyWorkspace, isSharedWithMe, ...rest }) => {
   const { pathname } = useLocation();
   const isActive = pathname === to;
 
@@ -120,10 +120,10 @@ const NavItem = ({ children, to = "/", isDashboard, ...rest }) => {
       p={4}
       as={NavLink}
       to={to}
-      color={isActive || isDashboard ? "bluefrance" : "grey.800"}
+      color={isActive || isMyWorkspace || isSharedWithMe ? "bluefrance" : "grey.800"}
       _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
       borderBottom="3px solid"
-      borderColor={isActive || isDashboard ? "bluefrance" : "transparent"}
+      borderColor={isActive || isMyWorkspace || isSharedWithMe ? "bluefrance" : "transparent"}
       bg={"transparent"}
     >
       <Text display="block" {...rest}>
@@ -133,7 +133,7 @@ const NavItem = ({ children, to = "/", isDashboard, ...rest }) => {
   );
 };
 
-const NavLinks = ({ isDashboard, isOpen }) => {
+const NavLinks = ({ isMyWorkspace, isSharedWithMe, isOpen }) => {
   let [auth] = useAuth();
   return (
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
@@ -146,8 +146,13 @@ const NavLinks = ({ isDashboard, isOpen }) => {
       >
         <NavItem to="/">Accueil</NavItem>
         {hasAccessTo(auth, "wks/page_espace") && (
-          <NavItem to="/mon-espace/mes-dossiers" isDashboard={isDashboard}>
+          <NavItem to="/mon-espace/mes-dossiers" isMyWorkspace={isMyWorkspace}>
             Mon espace
+          </NavItem>
+        )}
+        {hasAccessTo(auth, "wks/page_espace") && (
+          <NavItem to="/partages-avec-moi/espace/6666666666/dossiers" isSharedWithMe={isSharedWithMe}>
+            Partagés avec moi
           </NavItem>
         )}
       </Flex>
@@ -155,8 +160,8 @@ const NavLinks = ({ isDashboard, isOpen }) => {
   );
 };
 
-const NavBarContainer = ({ children, isWorkspace, ...props }) => {
-  const boxProps = !isWorkspace
+const NavBarContainer = ({ children, isMyWorkspace, ...props }) => {
+  const boxProps = !isMyWorkspace
     ? {
         boxShadow: "md",
       }

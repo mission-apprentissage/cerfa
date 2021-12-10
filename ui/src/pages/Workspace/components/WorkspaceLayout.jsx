@@ -14,26 +14,21 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { NavLink, useLocation, useRouteMatch } from "react-router-dom";
+
+import { useRecoilValue } from "recoil";
+import { workspacePathsAtom, workspaceTitlesAtom } from "../../../common/hooks/workspaceAtoms";
+
 import { MenuFill, IoArrowBackward, Parametre, Folder, ArrowDownLine } from "../../../theme/components/icons";
+
+const AsLink = ({ children, ...rest }) => (
+  <Link as={NavLink} display="inline-block" {...rest}>
+    {children}
+  </Link>
+);
 
 const NavItem = ({ icon, children, to, shoudBeActive, isSubItem, ...rest }) => {
   const { pathname } = useLocation();
   const isActive = pathname === to;
-
-  const AsLink = (props) => (
-    <Link
-      as={NavLink}
-      to={to}
-      color={props.color}
-      px={props.px}
-      py={props.py}
-      pl={props.pl}
-      w={props.w}
-      display="inline-block"
-    >
-      {props.children}
-    </Link>
-  );
 
   const Component = to ? AsLink : Center;
   return (
@@ -54,7 +49,7 @@ const NavItem = ({ icon, children, to, shoudBeActive, isSubItem, ...rest }) => {
       borderColor={(isActive || shoudBeActive) && !isSubItem ? "bluefrance" : "transparent"}
       {...rest}
     >
-      <Component px="4" pl="4" py="3" w="full" color={isActive || shoudBeActive ? "bluefrance" : "grey.800"}>
+      <Component px="4" pl="4" py="3" w="full" color={isActive || shoudBeActive ? "bluefrance" : "grey.800"} to={to}>
         {icon && (
           <Icon
             mx="2"
@@ -71,17 +66,19 @@ const NavItem = ({ icon, children, to, shoudBeActive, isSubItem, ...rest }) => {
   );
 };
 
-export default ({ children, topBarContent }) => {
+export default ({ header, content }) => {
+  const paths = useRecoilValue(workspacePathsAtom);
+  const titles = useRecoilValue(workspaceTitlesAtom);
   let { path } = useRouteMatch();
-  const isParametresPages = path.includes("/mon-espace/parametres");
+  const isParametresPages = path.includes(`${paths.base}/parametres`);
   const sidebarMobile = useDisclosure();
   const sidebar = useDisclosure({ defaultIsOpen: true });
   const parametres = useDisclosure({ defaultIsOpen: isParametresPages });
 
   const SidebarContent = (props) => (
     <Flex direction="column" as="nav" fontSize="sm" color="gray.600" aria-label="Sub Navigation" {...props}>
-      <NavItem icon={() => <Folder w={"1rem"} h={"1rem"} mb={"0.125rem"} mr={2} />} to="/mon-espace/mes-dossiers">
-        Mes Dossiers
+      <NavItem icon={() => <Folder w={"1rem"} h={"1rem"} mb={"0.125rem"} mr={2} />} to={paths.dossiers}>
+        {titles.dossiers}
       </NavItem>
       <NavItem
         icon={() => <Parametre w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr={2} />}
@@ -89,7 +86,7 @@ export default ({ children, topBarContent }) => {
         shoudBeActive={isParametresPages}
       >
         <Center w="full" mb={"0.125rem"}>
-          <Text flexGrow={1}>Paramètres</Text>
+          <Text flexGrow={1}>{titles.parametres}</Text>
           <Icon
             as={() => (
               <ArrowDownLine
@@ -103,11 +100,11 @@ export default ({ children, topBarContent }) => {
         </Center>
       </NavItem>
       <Collapse in={parametres.isOpen}>
-        <NavItem pl="8" to="/mon-espace/parametres/utilisateurs" isSubItem={true}>
-          Utilisateurs
+        <NavItem pl="8" to={paths.parametresUtilisateurs} isSubItem={true}>
+          {titles.utilisateurs}
         </NavItem>
-        <NavItem pl="8" to="/mon-espace/parametres/notifications" isSubItem={true}>
-          Notifications
+        <NavItem pl="8" to={paths.parametresNotifications} isSubItem={true}>
+          {titles.notifications}
         </NavItem>
       </Collapse>
     </Flex>
@@ -168,10 +165,10 @@ export default ({ children, topBarContent }) => {
             mr={2}
           />
 
-          {children().Header}
+          {header}
         </Flex>
 
-        <Box as="main">{children().Content}</Box>
+        <Box as="main">{content}</Box>
       </Box>
     </Flex>
   );

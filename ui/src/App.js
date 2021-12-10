@@ -82,10 +82,12 @@ export default () => {
                 <Route exact path="/" component={HomePage} />
 
                 {/* Mon espaces pages */}
-                {/* <PrivateRoute exact path="/partages-avec-moi" component={WorkspacePage} />
-                <PrivateRoute exact path="/partages-avec-moi/:workspaceid/dossiers" component={WorkspacePage} /> */}
                 {auth && hasAccessTo(auth, "wks/page_espace") && (
                   <PrivateRoute path="/mon-espace" component={WorkspacePage} />
+                )}
+                {/*  Espace partagé  pages */}
+                {auth && hasAccessTo(auth, "wks/page_espace") && (
+                  <PrivateRoute path="/partages-avec-moi/espace/:workspaceId" component={WorkspacePage} />
                 )}
 
                 {/* Admin pages */}
