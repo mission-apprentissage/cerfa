@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useRouteMatch } from "react-router-dom";
 import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { dossierAtom } from "./dossierAtom";
 
@@ -11,17 +11,17 @@ const isListeningAtom = atom({
   default: false,
 });
 
-export const useUnloadEffect = (match, onLeave) => {
+export const useUnloadEffect = (onLeave) => {
   const beforeUnload = useRef(async (e) => {
     if (!window.manuallyTriggered) {
       e.preventDefault();
       e.returnValue = "";
     }
-    if (window.dossierId) {
+    if (window.dossierId && onLeave) {
       onLeave({ dossierId: window.dossierId, internalLeave: window.manuallyTriggered });
     }
   });
-
+  let match = useRouteMatch();
   let location = useLocation();
   const [isListening, setIsListening] = useRecoilState(isListeningAtom);
   const dossier = useRecoilValue(dossierAtom);

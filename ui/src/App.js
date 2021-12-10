@@ -1,13 +1,14 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
-import { BrowserRouter as Router, Switch, Route, Redirect, useHistory } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, useHistory } from "react-router-dom";
 import useAuth from "./common/hooks/useAuth";
 import { _post, _get } from "./common/httpClient";
 import ScrollToTop from "./common/components/ScrollToTop";
+import PrivateRoute from "./common/components/PrivateRoute";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { hasAccessTo } from "./common/utils/rolesUtils";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
-const DashboardPage = lazy(() => import("./pages/DashboardPage"));
+const WorkspacePage = lazy(() => import("./pages/Workspace/WorkspacePage"));
 const StatsPage = lazy(() => import("./pages/StatsPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
@@ -22,26 +23,6 @@ const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
-const NouveauDossier = lazy(() => import("./pages/Dossier/NouveauDossier"));
-const Parametres = lazy(() => import("./pages/Dossier/ParametresEspace/Parametres"));
-const Dossier = lazy(() => import("./pages/Dossier/Dossier"));
-
-function PrivateRoute({ component, ...rest }) {
-  let [auth] = useAuth();
-
-  if (auth.sub !== "anonymous") {
-    return <Route {...rest} component={component} />;
-  }
-
-  return (
-    <Route
-      {...rest}
-      render={() => {
-        return <Redirect to="/login" />;
-      }}
-    />
-  );
-}
 
 const ResetPasswordWrapper = ({ children }) => {
   let [auth] = useAuth();
@@ -94,21 +75,20 @@ export default () => {
             <ResetPasswordWrapper>
               <ScrollToTop />
               <Switch>
-                <Route exact path="/stats" component={StatsPage} />
-
                 <Route exact path="/login" component={LoginPage} />
                 <Route exact path="/reset-password" component={ResetPasswordPage} />
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
 
-                <PrivateRoute exact path="/" component={HomePage} />
+                <Route exact path="/" component={HomePage} />
 
+                {/* Mon espaces pages */}
+                {/* <PrivateRoute exact path="/partages-avec-moi" component={WorkspacePage} />
+                <PrivateRoute exact path="/partages-avec-moi/:workspaceid/dossiers" component={WorkspacePage} /> */}
                 {auth && hasAccessTo(auth, "wks/page_espace") && (
-                  <PrivateRoute exact path="/mon-espace/mes-dossiers" component={DashboardPage} />
+                  <PrivateRoute path="/mon-espace" component={WorkspacePage} />
                 )}
-                <PrivateRoute exact path="/mon-espace/mes-dossiers/nouveau-dossier" component={NouveauDossier} />
-                <PrivateRoute exact path="/mon-espace/mes-dossiers/:id/:step" component={Dossier} />
-                <PrivateRoute exact path="/mon-espace/parametres/:sub" component={Parametres} />
 
+                {/* Admin pages */}
                 {auth && hasAccessTo(auth, "admin/page_gestion_utilisateurs") && (
                   <PrivateRoute exact path="/admin/users" component={Users} />
                 )}
@@ -122,6 +102,7 @@ export default () => {
                   <PrivateRoute exact path="/admin/upload" component={UploadFiles} />
                 )}
 
+                <Route exact path="/stats" component={StatsPage} />
                 <Route exact path="/contact" component={Contact} />
                 <Route exact path="/cookies" component={Cookies} />
                 <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />

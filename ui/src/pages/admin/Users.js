@@ -286,7 +286,7 @@ const UserLine = ({ user, roles }) => {
   );
 };
 
-export default ({ match }) => {
+export default () => {
   const { data: roles } = useQuery("roles", () => _get(`/api/v1/admin/roles/`), {
     refetchOnWindowFocus: false,
   });
@@ -299,7 +299,7 @@ export default ({ match }) => {
   setTitle(title);
 
   return (
-    <Layout match={match}>
+    <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
         <Container maxW="xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />

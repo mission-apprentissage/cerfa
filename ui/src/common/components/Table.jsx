@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { useTable, useFlexLayout, useGlobalFilter, useSortBy } from "react-table";
 import { Box, Flex, Text, Stack } from "@chakra-ui/react";
 
-const Table = React.memo(({ data, onRowClick, components }) => {
+const Table = ({ data, onRowClick, components }) => {
   const tableData = useMemo(
     () =>
       data.reduce((acc, item) => {
@@ -118,6 +118,6 @@ const Table = React.memo(({ data, onRowClick, components }) => {
       </Box>
     </>
   );
-});
+};
 
 export { Table };

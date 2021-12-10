@@ -9,6 +9,47 @@ const pageAccessMiddleware = require("../../middlewares/pageAccessMiddleware");
 module.exports = ({ permissions, roles, workspaces, users }) => {
   const router = express.Router();
 
+  const buildResult = async (userId, workspaceId) => {
+    const userSelectFields = { email: 1, nom: 1, prenom: 1, _id: 0 };
+    const permSelectFields = { addedAt: 1, role: 1, acl: 1 };
+    const roleSelectFields = { name: 1, description: 1, title: 1, _id: 1 };
+
+    const currentUser = await users.getUserById(userId, userSelectFields);
+    if (!currentUser) {
+      throw Boom.badRequest("Something went wrong");
+    }
+    const currentUserPerm = await permissions.hasPermission(
+      { workspaceId, dossierId: null, userEmail: currentUser.email },
+      permSelectFields
+    );
+    if (!currentUserPerm) {
+      throw Boom.badRequest("Something went wrong");
+    }
+    const currentUserRole = await roles.findRolePermissionById(currentUserPerm.role, roleSelectFields);
+    if (!currentUserRole) {
+      throw Boom.badRequest("Something went wrong");
+    }
+    return {
+      user: currentUser,
+      permission: {
+        permId: currentUserPerm._id,
+        addedAt: currentUserPerm.addedAt,
+        customAcl: currentUserPerm.acl,
+        ...currentUserRole,
+      },
+    };
+  };
+
+  const hasParametresRights = async (role) => {
+    const hasRight = await roles.hasAclsByRoleId(role, [
+      "wks/page_espace/page_parametres",
+      "wks/page_espace/page_parametres/gestion_acces",
+    ]);
+    if (!hasRight) {
+      throw Boom.badRequest("Accès non autorisé");
+    }
+  };
+
   router.get(
     "/contributors",
     pageAccessMiddleware(["wks/page_espace/page_parametres", "wks/page_espace/page_parametres/gestion_acces"]),
@@ -23,48 +64,10 @@ module.exports = ({ permissions, roles, workspaces, users }) => {
       if (!perm) {
         throw Boom.unauthorized("Accès non autorisé");
       }
-      //
-      const hasRight = await roles.hasAclsByRoleId(perm.role, [
-        "wks/page_espace/page_parametres",
-        "wks/page_espace/page_parametres/gestion_acces",
-      ]);
-      if (!hasRight) {
-        throw Boom.badRequest("Accès non autorisé");
-      }
+      await hasParametresRights(perm.role);
 
       // BL
       const wks = await workspaces.findWorkspaceById(workspaceId, { contributeurs: 1, owner: 1 });
-
-      const buildResult = async (userId, workspaceId) => {
-        const userSelectFields = { email: 1, nom: 1, prenom: 1, _id: 0 };
-        const permSelectFields = { addedAt: 1, role: 1, acl: 1 };
-        const roleSelectFields = { name: 1, description: 1, title: 1, _id: 1 };
-
-        const currentUser = await users.getUserById(userId, userSelectFields);
-        if (!currentUser) {
-          throw Boom.badRequest("Something went wrong");
-        }
-        const currentUserPerm = await permissions.hasPermission(
-          { workspaceId, dossierId: null, userEmail: currentUser.email },
-          permSelectFields
-        );
-        if (!currentUserPerm) {
-          throw Boom.badRequest("Something went wrong");
-        }
-        const currentUserRole = await roles.findRolePermissionById(currentUserPerm.role, roleSelectFields);
-        if (!currentUserRole) {
-          throw Boom.badRequest("Something went wrong");
-        }
-        return {
-          user: currentUser,
-          permission: {
-            permId: currentUserPerm._id,
-            addedAt: currentUserPerm.addedAt,
-            customAcl: currentUserPerm.acl,
-            ...currentUserRole,
-          },
-        };
-      };
 
       const owner = await buildResult(wks.owner, workspaceId);
       const contributeurs = [];
@@ -92,14 +95,7 @@ module.exports = ({ permissions, roles, workspaces, users }) => {
       if (!perm) {
         throw Boom.unauthorized("Accès non autorisé");
       }
-      //
-      const hasRight = await roles.hasAclsByRoleId(perm.role, [
-        "wks/page_espace/page_parametres",
-        "wks/page_espace/page_parametres/gestion_acces",
-      ]);
-      if (!hasRight) {
-        throw Boom.badRequest("Accès non autorisé");
-      }
+      await hasParametresRights(perm.role);
 
       // BL
       const rolesList = await roles.findRolePermission({}, { name: 1, description: 1, title: 1, _id: 1, acl: 1 });
@@ -114,6 +110,7 @@ module.exports = ({ permissions, roles, workspaces, users }) => {
       //   acl: ["wks", "wks/page_espace", "wks/page_espace/page_dossiers"],
       // };
       // return res.json([...defaultList, custonRole]);
+
       return res.json(defaultList);
     })
   );
@@ -123,11 +120,11 @@ module.exports = ({ permissions, roles, workspaces, users }) => {
     pageAccessMiddleware(["wks/page_espace/page_parametres", "wks/page_espace/page_parametres/gestion_acces"]),
     permissionsMiddleware(),
     tryCatch(async ({ body, user }, res) => {
-      let { workspaceId, userEmail, roleId, acl } = await Joi.object({
+      let { workspaceId, userEmail, roleId } = await Joi.object({
         workspaceId: Joi.string().required(),
         userEmail: Joi.string().required(),
         roleId: Joi.string().required(),
-        acl: Joi.array().items(Joi.string()).default([]),
+        // acl: Joi.array().items(Joi.string()).default([]), // TODO
       }).validateAsync(body, { abortEarly: false });
 
       // TODO to check perm middleware
@@ -135,53 +132,15 @@ module.exports = ({ permissions, roles, workspaces, users }) => {
       if (!perm) {
         throw Boom.unauthorized("Accès non autorisé");
       }
-      //
-      const hasRight = await roles.hasAclsByRoleId(perm.role, [
-        "wks/page_espace/page_parametres",
-        "wks/page_espace/page_parametres/gestion_acces",
-      ]);
-      if (!hasRight) {
-        throw Boom.badRequest("Accès non autorisé");
-      }
+      await hasParametresRights(perm.role);
 
       // BL
       const newUserRole = await roles.findRolePermissionById(roleId);
-      if (!newUserRole) {
+      if (!newUserRole || !newUserRole.name.includes("wks.")) {
         throw Boom.badRequest("Something went wrong");
       }
 
       const wks = await workspaces.findWorkspaceById(workspaceId, { contributeurs: 1, owner: 1 });
-
-      const buildResult = async (userId, workspaceId) => {
-        const userSelectFields = { email: 1, nom: 1, prenom: 1, _id: 0 };
-        const permSelectFields = { addedAt: 1, role: 1, acl: 1 };
-        const roleSelectFields = { name: 1, description: 1, title: 1, _id: 1 };
-
-        const currentUser = await users.getUserById(userId, userSelectFields);
-        if (!currentUser) {
-          throw Boom.badRequest("Something went wrong");
-        }
-        const currentUserPerm = await permissions.hasPermission(
-          { workspaceId, dossierId: null, userEmail: currentUser.email },
-          permSelectFields
-        );
-        if (!currentUserPerm) {
-          throw Boom.badRequest("Something went wrong");
-        }
-        const currentUserRole = await roles.findRolePermissionById(currentUserPerm.role, roleSelectFields);
-        if (!currentUserRole) {
-          throw Boom.badRequest("Something went wrong");
-        }
-        return {
-          user: currentUser,
-          permission: {
-            permId: currentUserPerm._id,
-            addedAt: currentUserPerm.addedAt,
-            customAcl: currentUserPerm.acl,
-            ...currentUserRole,
-          },
-        };
-      };
 
       const owner = await buildResult(wks.owner, workspaceId);
 
@@ -194,12 +153,57 @@ module.exports = ({ permissions, roles, workspaces, users }) => {
         dossierId: null,
         userEmail,
         roleId: newUserRole._id,
-        acl,
+        //acl,
       });
 
       const contributeurs = [];
       for (let index = 0; index < wks.contributeurs.length; index++) {
         const contributeurId = wks.contributeurs[index];
+        const contributeur = await buildResult(contributeurId, workspaceId);
+        contributeurs.push(contributeur);
+      }
+
+      return res.json([{ ...owner, owner: true }, ...contributeurs]);
+    })
+  );
+
+  router.delete(
+    "/contributors",
+    pageAccessMiddleware(["wks/page_espace/page_parametres", "wks/page_espace/page_parametres/gestion_acces"]),
+    permissionsMiddleware(),
+    tryCatch(async ({ query, user }, res) => {
+      let { workspaceId, userEmail, permId } = await Joi.object({
+        workspaceId: Joi.string().required(),
+        userEmail: Joi.string().required(),
+        permId: Joi.string().required(),
+      }).validateAsync(query, { abortEarly: false });
+
+      // TODO to check perm middleware
+      const perm = await permissions.hasPermission({ workspaceId, dossierId: null, userEmail: user.email });
+      if (!perm) {
+        throw Boom.unauthorized("Accès non autorisé");
+      }
+      await hasParametresRights(perm.role);
+
+      // BL
+      const wks = await workspaces.findWorkspaceById(workspaceId, { contributeurs: 1, owner: 1 });
+
+      const owner = await buildResult(wks.owner, workspaceId);
+
+      if (owner.email === userEmail) {
+        throw Boom.badRequest("Something went wrong");
+      }
+
+      const removePermUser = await users.getUserByEmail(userEmail);
+      if (!removePermUser) {
+        throw Boom.badRequest("Something went wrong");
+      }
+
+      const wksContributeurs = await workspaces.removeContributeur(workspaceId, removePermUser._id, permId);
+
+      const contributeurs = [];
+      for (let index = 0; index < wksContributeurs.length; index++) {
+        const contributeurId = wksContributeurs[index];
         const contributeur = await buildResult(contributeurId, workspaceId);
         contributeurs.push(contributeur);
       }

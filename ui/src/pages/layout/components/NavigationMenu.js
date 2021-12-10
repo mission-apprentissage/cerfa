@@ -16,15 +16,7 @@ import {
 } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
 import { isUserAdmin, hasAccessTo } from "../../../common/utils/rolesUtils";
-import {
-  MenuFill,
-  Close,
-  AccountFill,
-  DownloadLine,
-  InfoCircle,
-  ExternalLinkLine,
-  LockFill,
-} from "../../../theme/components/icons";
+import { MenuFill, Close, AccountFill, DownloadLine, InfoCircle, LockFill } from "../../../theme/components/icons";
 import { _get } from "../../../common/httpClient";
 
 const NavigationMenu = ({ isDashboard, ...props }) => {
@@ -128,11 +120,11 @@ const NavItem = ({ children, to = "/", isDashboard, ...rest }) => {
       p={4}
       as={NavLink}
       to={to}
-      color={isDashboard ? "white" : isActive ? "bluefrance" : "grey.800"}
+      color={isActive || isDashboard ? "bluefrance" : "grey.800"}
       _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
       borderBottom="3px solid"
-      borderColor={isDashboard ? "bluefrance" : isActive ? "bluefrance" : "transparent"}
-      bg={isDashboard ? "bluefrance" : "transparent"}
+      borderColor={isActive || isDashboard ? "bluefrance" : "transparent"}
+      bg={"transparent"}
     >
       <Text display="block" {...rest}>
         {children}
@@ -141,7 +133,7 @@ const NavItem = ({ children, to = "/", isDashboard, ...rest }) => {
   );
 };
 
-const NavLinks = ({ isOpen, isDashboard }) => {
+const NavLinks = ({ isDashboard, isOpen }) => {
   let [auth] = useAuth();
   return (
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
@@ -158,27 +150,13 @@ const NavLinks = ({ isOpen, isDashboard }) => {
             Mon espace
           </NavItem>
         )}
-        <Link
-          href="https://github.com/mission-apprentissage/cerfa/releases"
-          p={4}
-          color="grey.800"
-          _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
-          borderBottom="3px solid"
-          borderColor="transparent"
-          isExternal
-        >
-          <Text display="block">
-            Journal des modifications
-            <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} ml={2} />{" "}
-          </Text>
-        </Link>
       </Flex>
     </Box>
   );
 };
 
-const NavBarContainer = ({ children, isDashboard, ...props }) => {
-  const boxProps = !isDashboard
+const NavBarContainer = ({ children, isWorkspace, ...props }) => {
+  const boxProps = !isWorkspace
     ? {
         boxShadow: "md",
       }

@@ -232,7 +232,7 @@ const RoleLine = ({ role }) => {
   );
 };
 
-export default ({ match }) => {
+export default () => {
   const [roles, setRoles] = useState([]);
   useEffect(() => {
     async function run() {
@@ -246,7 +246,7 @@ export default ({ match }) => {
   setTitle(title);
 
   return (
-    <Layout match={match}>
+    <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
         <Container maxW="xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />

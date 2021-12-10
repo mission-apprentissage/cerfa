@@ -1,10 +1,23 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { Flex, Box, Heading, Divider, Container, Button, Avatar, HStack, Text, Select } from "@chakra-ui/react";
-import { _get, _put } from "../../../common/httpClient";
-import useAuth from "../../../common/hooks/useAuth";
-import { Table } from "../../../common/components/Table";
-import { Parametre } from "../../../theme/components/icons";
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  Flex,
+  Box,
+  Heading,
+  Button,
+  Avatar,
+  HStack,
+  Text,
+  Select,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+} from "@chakra-ui/react";
 import { DateTime } from "luxon";
+import { _get, _put, _delete } from "../../common/httpClient";
+import useAuth from "../../common/hooks/useAuth";
+import { Table } from "../../common/components/Table";
+import { Parametre } from "../../theme/components/icons";
 
 export default () => {
   let [auth] = useAuth();
@@ -15,10 +28,8 @@ export default () => {
     const run = async () => {
       try {
         const wksContributors = await _get(`/api/v1/workspace/contributors?workspaceId=${auth.workspaceId}`);
-        // console.log(wksContributors);
         setWorkspaceContributors(wksContributors);
         const rolesList = await _get(`/api/v1/workspace/roles_list?workspaceId=${auth.workspaceId}`);
-        // console.log(rolesList);
         setRoles(rolesList);
       } catch (e) {
         console.error(e);
@@ -39,7 +50,6 @@ export default () => {
           body.acl = acl;
         }
         const newContributors = await _put(`/api/v1/workspace/contributors`, body);
-        // console.log(newContributors);
         setWorkspaceContributors(newContributors);
       } catch (e) {
         console.error(e);
@@ -48,35 +58,54 @@ export default () => {
     [auth.workspaceId]
   );
 
-  // const onDeleteClicked = async () => {
-  //   // eslint-disable-next-line no-restricted-globals
-  //   const remove = confirm("Voulez-vous vraiment supprimer cet utilisateur ?");
-  //   if (remove) {
-  //     try {
-  //       // await _delete(`/api/v1/dossier/${dossier._id}`);
-  //       window.location.reload();
-  //     } catch (e) {
-  //       console.error(e);
-  //     }
-  //   }
-  // };
+  const onDeleteClicked = useCallback(
+    async (contributor) => {
+      // eslint-disable-next-line no-restricted-globals
+      const remove = confirm("Voulez-vous vraiment supprimer cet utilisateur ?");
+      if (remove) {
+        try {
+          await _delete(
+            `/api/v1/workspace/contributors?workspaceId=${auth.workspaceId}&userEmail=${contributor.user.email.replace(
+              "+",
+              "%2B"
+            )}&permId=${contributor.permission.permId}`
+          );
+          window.location.reload();
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+    [auth.workspaceId]
+  );
 
-  if (!workspaceContributors.length && !roles.length) return null;
+  if (!workspaceContributors.length && !roles.length)
+    return () => ({
+      Header: null,
+      Content: null,
+    });
 
-  return (
-    <Container maxW="xl">
+  return () => ({
+    Header: (
       <Flex as="nav" align="center" justify="space-between" wrap="wrap" w="100%">
-        <Box flexBasis={{ base: "100%", md: "auto" }}>
-          <Heading fontWeight="700" p={2} as="h1" fontSize="1.4rem" flexGrow="1">
-            Utilisateur(s) ({workspaceContributors.length})
+        <Box flexBasis={{ base: "auto", md: "auto" }}>
+          <Heading as="h1" flexGrow="1" fontSize={{ base: "sm", md: "1.5rem" }}>
+            Utilisateurs ({workspaceContributors.length})
           </Heading>
         </Box>
-        <Button size="md" onClick={() => {}} variant="primary">
+        <Button
+          size="md"
+          fontSize={{ base: "sm", md: "md" }}
+          p={{ base: 2, md: 4 }}
+          h={{ base: 8, md: 10 }}
+          onClick={() => {}}
+          variant="primary"
+        >
           + Ajouter un utilisateur
         </Button>
       </Flex>
-
-      <Divider borderWidth={1} mt={2} mb={4} />
+    ),
+    Content: (
       <Box mt={8}>
         <Table
           data={workspaceContributors.map((d) => ({
@@ -161,16 +190,21 @@ export default () => {
               return (
                 <>
                   {!workspaceContributors[i].owner && (
-                    <Button
-                      onClick={() => {
-                        console.log("actions clicked");
-                      }}
-                      variant="unstyled"
-                      width="full"
-                      height="full"
-                    >
-                      <Parametre width={"2rem"} height={"1.2rem"} color="bluefrance" />
-                    </Button>
+                    <Menu>
+                      <MenuButton as={Button} variant="unstyled" width="full" height="full">
+                        <Parametre width={"2rem"} height={"1.2rem"} color="bluefrance" />
+                      </MenuButton>
+                      <MenuList>
+                        <MenuItem
+                          color="redmarianne"
+                          onClick={async () => {
+                            await onDeleteClicked(workspaceContributors[i]);
+                          }}
+                        >
+                          Supprimer
+                        </MenuItem>
+                      </MenuList>
+                    </Menu>
                   )}
                 </>
               );
@@ -178,6 +212,6 @@ export default () => {
           }}
         />
       </Box>
-    </Container>
-  );
+    ),
+  });
 };
