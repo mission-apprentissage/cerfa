@@ -42,7 +42,7 @@ module.exports = async () => {
       return result;
     },
     getUserWorkspace: async (user, select = {}) => await Workspace.findOne({ owner: user._id }, select),
-    findWorkspaceById: async (id, select = {}) => await Workspace.findById(id, select),
+    findWorkspaceById: async (id, select = {}) => await Workspace.findById(id, select).lean(),
     addContributeur: async (workspaceId, user, as, acl = []) => {
       const wksDb = await Workspace.findById(workspaceId);
       if (!wksDb) {

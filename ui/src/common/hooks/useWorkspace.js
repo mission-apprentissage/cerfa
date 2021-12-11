@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { workspacePathsAtom, workspaceTitlesAtom, workspaceTitleAtom } from "./workspaceAtoms";
+import { workspacePathsAtom, workspaceTitlesAtom, workspaceTitleAtom, workspaceAtom } from "./workspaceAtoms";
 import { setTitle as setTitlePage } from "../utils/pageUtils";
+import { _get } from "../httpClient";
+import useAuth from "./useAuth";
 
 const hydrate = async (workspaceId) => {
   if (!workspaceId) return { workspace: null };
   try {
-    await new Promise((resolve) => setTimeout(resolve, 200)); // TODO Fetch
-    return { workspace: null };
+    const workspace = await _get(`/api/v1/workspace/entity/${workspaceId}?workspaceId=${workspaceId}`);
+    return { workspace };
   } catch (e) {
     if (e.statusCode === 404) {
       return { workspace: null };
@@ -21,14 +23,15 @@ const hydrate = async (workspaceId) => {
 
 export function useWorkspace(path) {
   const { pathname } = useLocation();
+  let [auth] = useAuth();
   let { workspaceId } = useParams();
   const [isloaded, setIsLoaded] = useState(false);
   const [isReloaded, setIsReloaded] = useState(false);
   const [error, setError] = useState(null);
 
-  const [workspace, setWorkspace] = useState(null);
   const [breadcrumbDetails, setBreadcrumbDetails] = useState([]);
 
+  const [workspace, setWorkspace] = useRecoilState(workspaceAtom);
   const [paths, setPaths] = useRecoilState(workspacePathsAtom);
   const [titles, setTitles] = useRecoilState(workspaceTitlesAtom);
   const [title] = useRecoilState(workspaceTitleAtom);
@@ -36,7 +39,7 @@ export function useWorkspace(path) {
   useEffect(() => {
     const abortController = new AbortController();
     setIsReloaded(false);
-    hydrate(workspaceId)
+    hydrate(workspaceId || auth.workspaceId)
       .then(({ workspace }) => {
         if (!abortController.signal.aborted) {
           const pathTo = workspaceId ? path.replace(":workspaceId", workspaceId) : path;
@@ -73,7 +76,7 @@ export function useWorkspace(path) {
               }
             : {
                 base: "Dossiers",
-                workspace: `Espace ${workspaceId}`,
+                workspace: `${workspace?.nom}`,
                 dossiers: "Dossiers",
                 parametres: "Paramètres",
                 utilisateurs: "Utilisateurs",
@@ -153,11 +156,11 @@ export function useWorkspace(path) {
     return () => {
       abortController.abort();
     };
-  }, [path, pathname, setPaths, setTitles, title, workspaceId]);
+  }, [auth.workspaceId, path, pathname, setPaths, setTitles, setWorkspace, title, workspaceId]);
 
   if (error !== null) {
     throw error;
   }
 
-  return { isloaded, isReloaded, workspace, breadcrumbDetails, paths, titles, workspaceId };
+  return { isloaded, isReloaded, workspace, breadcrumbDetails, paths, titles };
 }

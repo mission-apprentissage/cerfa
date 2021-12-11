@@ -57,8 +57,8 @@ module.exports = async () => {
       const { createWorkspace } = await workspaces();
       await createWorkspace({
         username,
-        nom: "Votre espace",
-        description: "Votre espace de travail",
+        nom: `Espace ${options.nom}`,
+        description: `L'espace de travail de ${options.prenom} ${options.nom}`,
       });
 
       return user;

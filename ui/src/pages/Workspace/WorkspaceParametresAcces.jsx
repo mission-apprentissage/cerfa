@@ -14,23 +14,24 @@ import {
   MenuItem,
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
+import { useRecoilValue } from "recoil";
+import { workspaceAtom } from "../../common/hooks/workspaceAtoms";
 import { _get, _put, _delete } from "../../common/httpClient";
 import { useQueries, useQueryClient, useMutation } from "react-query";
-import useAuth from "../../common/hooks/useAuth";
 import { Table } from "../../common/components/Table";
 import { Parametre } from "../../theme/components/icons";
 
 function useWorkspaceParametresAcces() {
-  let [auth] = useAuth();
+  const workspace = useRecoilValue(workspaceAtom);
   const [
     { data: workspaceContributors, isLoading: isLoadingContributors },
     { data: roles, isLoading: isLoadingRoles },
   ] = useQueries([
     {
       queryKey: ["wksContributors", 1],
-      queryFn: () => _get(`/api/v1/workspace/contributors?workspaceId=${auth.workspaceId}`),
+      queryFn: () => _get(`/api/v1/workspace/contributors?workspaceId=${workspace._id}`),
     },
-    { queryKey: ["roles", 2], queryFn: () => _get(`/api/v1/workspace/roles_list?workspaceId=${auth.workspaceId}`) },
+    { queryKey: ["roles", 2], queryFn: () => _get(`/api/v1/workspace/roles_list?workspaceId=${workspace._id}`) },
   ]);
 
   return { workspaceContributors, roles, isLoading: isLoadingContributors || isLoadingRoles };
@@ -63,14 +64,14 @@ export const Header = () => {
 };
 
 export const Content = () => {
-  let [auth] = useAuth();
   const queryClient = useQueryClient();
   const { workspaceContributors, roles, isLoading } = useWorkspaceParametresAcces();
+  const workspace = useRecoilValue(workspaceAtom);
 
   const onChangeContributorRole = useMutation(
     ({ userEmail, roleId, acl = [] }) => {
       return _put(`/api/v1/workspace/contributors`, {
-        workspaceId: auth.workspaceId,
+        workspaceId: workspace._id,
         userEmail,
         roleId,
         acl,
@@ -88,7 +89,7 @@ export const Content = () => {
       if (remove) {
         try {
           await _delete(
-            `/api/v1/workspace/contributors?workspaceId=${auth.workspaceId}&userEmail=${contributor.user.email.replace(
+            `/api/v1/workspace/contributors?workspaceId=${workspace._id}&userEmail=${contributor.user.email.replace(
               "+",
               "%2B"
             )}&permId=${contributor.permission.permId}`
@@ -99,7 +100,7 @@ export const Content = () => {
         }
       }
     },
-    [auth.workspaceId]
+    [workspace._id]
   );
 
   if (isLoading) return null;

@@ -15,6 +15,12 @@ import * as WorkspaceParametresNotifications from "./WorkspaceParametresNotifica
 const NouveauDossier = lazy(() => import("../Dossier/NouveauDossier"));
 const Dossier = lazy(() => import("../Dossier/Dossier"));
 
+const Loader = () => (
+  <Center>
+    <Spinner />
+  </Center>
+);
+
 export default () => {
   let [auth] = useAuth();
   let { path } = useRouteMatch();
@@ -38,15 +44,7 @@ export default () => {
               component={() => (
                 <WorkspaceLayout
                   header={isReloaded && <WorkspaceDossiers.Header />}
-                  content={
-                    !isReloaded ? (
-                      <Center>
-                        <Spinner />
-                      </Center>
-                    ) : (
-                      <WorkspaceDossiers.Content />
-                    )
-                  }
+                  content={!isReloaded ? <Loader /> : <WorkspaceDossiers.Content />}
                 />
               )}
             />
@@ -58,15 +56,7 @@ export default () => {
               component={() => (
                 <WorkspaceLayout
                   header={isReloaded && <WorkspaceParametresAcces.Header />}
-                  content={
-                    !isReloaded ? (
-                      <Center>
-                        <Spinner />
-                      </Center>
-                    ) : (
-                      <WorkspaceParametresAcces.Content />
-                    )
-                  }
+                  content={!isReloaded ? <Loader /> : <WorkspaceParametresAcces.Content />}
                 />
               )}
             />
@@ -78,15 +68,7 @@ export default () => {
               component={() => (
                 <WorkspaceLayout
                   header={isReloaded && <WorkspaceParametresNotifications.Header />}
-                  content={
-                    !isReloaded ? (
-                      <Center>
-                        <Spinner />
-                      </Center>
-                    ) : (
-                      <WorkspaceParametresNotifications.Content />
-                    )
-                  }
+                  content={!isReloaded ? <Loader /> : <WorkspaceParametresNotifications.Content />}
                 />
               )}
             />

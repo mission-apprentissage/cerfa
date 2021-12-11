@@ -2,7 +2,7 @@ const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
-const permissionsMiddleware = require("../../middlewares/permissionsMiddleware");
+// const permissionsMiddleware = require("../../middlewares/permissionsMiddleware");
 const pageAccessMiddleware = require("../../middlewares/pageAccessMiddleware");
 // const { find } = require("lodash");
 
@@ -40,6 +40,13 @@ module.exports = ({ permissions, roles, workspaces, users }) => {
     };
   };
 
+  const hasWorkspaceRights = async (role) => {
+    const hasRight = await roles.hasAclsByRoleId(role, ["wks/page_espace"]);
+    if (!hasRight) {
+      throw Boom.badRequest("Accès non autorisé");
+    }
+  };
+
   const hasParametresRights = async (role) => {
     const hasRight = await roles.hasAclsByRoleId(role, [
       "wks/page_espace/page_parametres",
@@ -51,9 +58,80 @@ module.exports = ({ permissions, roles, workspaces, users }) => {
   };
 
   router.get(
+    "/entity/:id",
+    pageAccessMiddleware(["wks/page_espace"]),
+    // permissionsMiddleware(), // TODO permissionsWorkspaceMiddleware
+    tryCatch(async ({ params, user }, res) => {
+      const workspaceId = params.id;
+      const perm = await permissions.hasPermission({ workspaceId, dossierId: null, userEmail: user.email });
+      if (!perm) {
+        throw Boom.unauthorized("Accès non autorisé");
+      }
+      await hasWorkspaceRights(perm.role);
+
+      // BL
+      const wks = await workspaces.findWorkspaceById(workspaceId, {
+        description: 1,
+        nom: 1,
+        siren: 1,
+        owner: 1,
+        _id: 1,
+      });
+      const owner = await users.getUserById(wks.owner, { email: 1, nom: 1, prenom: 1, _id: 0 });
+      if (!owner) {
+        throw Boom.badRequest("Something went wrong");
+      }
+      res.json({
+        ...wks,
+        owner: {
+          ...owner,
+        },
+      });
+    })
+  );
+
+  router.get(
+    "/sharedwithme",
+    pageAccessMiddleware(["wks/page_espace"]),
+    tryCatch(async ({ user }, res) => {
+      const permWorkspaceIds = await permissions.findPermissions(
+        { dossierId: null, userEmail: user.email },
+        { workspaceId: 1 }
+      );
+      if (!permWorkspaceIds) {
+        throw Boom.unauthorized("Accès non autorisé");
+      }
+
+      let results = [];
+      for (let index = 0; index < permWorkspaceIds.length; index++) {
+        const permWorkspaceId = permWorkspaceIds[index];
+        const wks = await workspaces.findWorkspaceById(permWorkspaceId, {
+          description: 1,
+          nom: 1,
+          siren: 1,
+          owner: 1,
+          _id: 1,
+        });
+        const owner = await users.getUserById(wks.owner, { email: 1, nom: 1, prenom: 1, _id: 0 });
+        if (!owner) {
+          throw Boom.badRequest("Something went wrong");
+        }
+        results.push({
+          ...wks,
+          owner: {
+            ...owner,
+          },
+        });
+      }
+
+      res.json(results);
+    })
+  );
+
+  router.get(
     "/contributors",
     pageAccessMiddleware(["wks/page_espace/page_parametres", "wks/page_espace/page_parametres/gestion_acces"]),
-    permissionsMiddleware(),
+    // permissionsMiddleware(), // TODO permissionsWorkspaceMiddleware
     tryCatch(async ({ query, user }, res) => {
       let { workspaceId } = await Joi.object({
         workspaceId: Joi.string().required(),
@@ -84,7 +162,7 @@ module.exports = ({ permissions, roles, workspaces, users }) => {
   router.get(
     "/roles_list",
     pageAccessMiddleware(["wks/page_espace/page_parametres", "wks/page_espace/page_parametres/gestion_acces"]),
-    permissionsMiddleware(),
+    // permissionsMiddleware(), // TODO permissionsWorkspaceMiddleware
     tryCatch(async ({ query, user }, res) => {
       let { workspaceId } = await Joi.object({
         workspaceId: Joi.string().required(),
@@ -118,7 +196,7 @@ module.exports = ({ permissions, roles, workspaces, users }) => {
   router.put(
     "/contributors",
     pageAccessMiddleware(["wks/page_espace/page_parametres", "wks/page_espace/page_parametres/gestion_acces"]),
-    permissionsMiddleware(),
+    // permissionsMiddleware(), // TODO permissionsWorkspaceMiddleware
     tryCatch(async ({ body, user }, res) => {
       let { workspaceId, userEmail, roleId } = await Joi.object({
         workspaceId: Joi.string().required(),
@@ -170,7 +248,7 @@ module.exports = ({ permissions, roles, workspaces, users }) => {
   router.delete(
     "/contributors",
     pageAccessMiddleware(["wks/page_espace/page_parametres", "wks/page_espace/page_parametres/gestion_acces"]),
-    permissionsMiddleware(),
+    // permissionsMiddleware(), // TODO permissionsWorkspaceMiddleware
     tryCatch(async ({ query, user }, res) => {
       let { workspaceId, userEmail, permId } = await Joi.object({
         workspaceId: Joi.string().required(),

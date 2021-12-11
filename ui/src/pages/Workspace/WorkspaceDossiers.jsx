@@ -2,18 +2,17 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { Flex, Box, Heading, Button } from "@chakra-ui/react";
 import { _get, _delete } from "../../common/httpClient";
-import useAuth from "../../common/hooks/useAuth";
 import { useQuery } from "react-query";
 import { useRecoilValue } from "recoil";
-import { workspacePathsAtom, workspaceTitlesAtom } from "../../common/hooks/workspaceAtoms";
+import { workspacePathsAtom, workspaceTitlesAtom, workspaceAtom } from "../../common/hooks/workspaceAtoms";
 import TableDossiers from "./components/TableDossiers";
 
 function useWorkspaceDossiers() {
-  let [auth] = useAuth();
+  const workspace = useRecoilValue(workspaceAtom);
 
   const { data: workspaceDossiers, isLoading } = useQuery(
     "workspaceDossiers",
-    () => _get(`/api/v1/dossier?workspaceId=${auth.workspaceId}`),
+    () => _get(`/api/v1/dossier?workspaceId=${workspace._id}`),
     {
       refetchOnWindowFocus: false,
     }

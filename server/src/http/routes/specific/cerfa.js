@@ -4,7 +4,7 @@ const Boom = require("boom");
 const { cloneDeep, mergeWith } = require("lodash");
 const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
-const permissionsMiddleware = require("../../middlewares/permissionsMiddleware");
+// const permissionsMiddleware = require("../../middlewares/permissionsMiddleware");
 const cerfaSchema = require("../../../common/model/schema/specific/cerfa/Cerfa");
 const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfaController");
 
@@ -13,7 +13,7 @@ module.exports = ({ cerfas }) => {
 
   router.get(
     "/",
-    permissionsMiddleware(),
+    // permissionsMiddleware(), // TODO permissionsDossierMiddleware
     tryCatch(async (req, res) => {
       let { dossierId } = await Joi.object({
         dossierId: Joi.string().required(),

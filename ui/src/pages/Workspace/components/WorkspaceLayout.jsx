@@ -77,6 +77,9 @@ export default ({ header, content }) => {
 
   const SidebarContent = React.memo((props) => (
     <Flex direction="column" as="nav" fontSize="sm" color="gray.600" aria-label="Sub Navigation" {...props}>
+      <Flex alignItems="flex-start" px="4" pl="2" py="3" w="full" fontSize="md">
+        {titles.workspace}
+      </Flex>
       <NavItem icon={() => <Folder w={"1rem"} h={"1rem"} mb={"0.125rem"} mr={2} />} to={paths.dossiers}>
         {titles.dossiers}
       </NavItem>

@@ -48,6 +48,9 @@ module.exports = async (components) => {
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/password", password(components));
 
+  // Controled access
+  app.use("/api/v1/maintenanceMessage", maintenanceMessage(checkJwtToken));
+
   // private access
   app.use("/api/v1/authentified", checkJwtToken, authentified(components));
   app.use("/api/v1/admin", checkJwtToken, pageAccessMiddleware(["admin/page_gestion_utilisateurs"]), user(components));
@@ -56,12 +59,6 @@ module.exports = async (components) => {
     checkJwtToken,
     pageAccessMiddleware(["admin/page_gestion_utilisateurs", "admin/page_gestion_roles"]),
     role(components)
-  );
-  app.use(
-    "/api/v1/maintenanceMessage",
-    checkJwtToken,
-    pageAccessMiddleware(["admin/page_message_maintenance"]),
-    maintenanceMessage()
   );
 
   // below specific

@@ -3,14 +3,14 @@ const Joi = require("joi");
 const Boom = require("boom");
 const { Dossier } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
-const permissionsMiddleware = require("../../middlewares/permissionsMiddleware");
+// const permissionsMiddleware = require("../../middlewares/permissionsMiddleware");
 
 module.exports = ({ permissions, cerfas, dossiers }) => {
   const router = express.Router();
 
   router.get(
     "/",
-    permissionsMiddleware(),
+    // permissionsMiddleware(), // TODO permissionsDossierMiddleware
     tryCatch(async ({ query, user }, res) => {
       let { workspaceId } = await Joi.object({
         workspaceId: Joi.string().required(),
