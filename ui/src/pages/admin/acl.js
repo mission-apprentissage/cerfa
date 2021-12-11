@@ -61,6 +61,12 @@ export default [
               {
                 feature: "Gestion des accès à l'espace",
                 ref: "wks/page_espace/page_parametres/gestion_acces",
+                subFeatures: [
+                  {
+                    feature: "Retirer un contributeur de l'espace",
+                    ref: "wks/page_espace/page_parametres/gestion_acces/supprimer_contributeur",
+                  },
+                ],
               },
               {
                 feature: "Gestion des notifications de l'espace",

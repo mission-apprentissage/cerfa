@@ -16,8 +16,8 @@ import {
 import { NavLink, useLocation, useRouteMatch } from "react-router-dom";
 
 import { useRecoilValue } from "recoil";
-import { workspacePathsAtom, workspaceTitlesAtom } from "../../../common/hooks/workspaceAtoms";
-
+import { workspacePathsAtom, workspaceTitlesAtom, workspaceAtom } from "../../../common/hooks/workspaceAtoms";
+import { hasWorkspaceAccessTo } from "../../../common/utils/rolesUtils";
 import { MenuFill, IoArrowBackward, Parametre, Folder, ArrowDownLine } from "../../../theme/components/icons";
 
 const AsLink = ({ children, ...rest }) => (
@@ -69,6 +69,7 @@ const NavItem = ({ icon, children, to, shoudBeActive, isSubItem, ...rest }) => {
 export default ({ header, content }) => {
   const paths = useRecoilValue(workspacePathsAtom);
   const titles = useRecoilValue(workspaceTitlesAtom);
+  const workspace = useRecoilValue(workspaceAtom);
   let { path } = useRouteMatch();
   const isParametresPages = path.includes(`${paths.base}/parametres`);
   const sidebarMobile = useDisclosure();
@@ -83,32 +84,38 @@ export default ({ header, content }) => {
       <NavItem icon={() => <Folder w={"1rem"} h={"1rem"} mb={"0.125rem"} mr={2} />} to={paths.dossiers}>
         {titles.dossiers}
       </NavItem>
-      <NavItem
-        icon={() => <Parametre w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr={2} />}
-        onClick={parametres.onToggle}
-        shoudBeActive={isParametresPages}
-      >
-        <Center w="full" mb={"0.125rem"}>
-          <Text flexGrow={1}>{titles.parametres}</Text>
-          <Icon
-            as={() => (
-              <ArrowDownLine
-                w={"0.75rem"}
-                h={"0.75rem"}
-                mt={"0.125rem"}
-                transform={parametres.isOpen && "rotate(180deg)"}
-              />
-            )}
-          />
-        </Center>
-      </NavItem>
+      {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_parametres") && (
+        <NavItem
+          icon={() => <Parametre w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr={2} />}
+          onClick={parametres.onToggle}
+          shoudBeActive={isParametresPages}
+        >
+          <Center w="full" mb={"0.125rem"}>
+            <Text flexGrow={1}>{titles.parametres}</Text>
+            <Icon
+              as={() => (
+                <ArrowDownLine
+                  w={"0.75rem"}
+                  h={"0.75rem"}
+                  mt={"0.125rem"}
+                  transform={parametres.isOpen && "rotate(180deg)"}
+                />
+              )}
+            />
+          </Center>
+        </NavItem>
+      )}
       <Collapse in={parametres.isOpen}>
-        <NavItem pl="8" to={paths.parametresUtilisateurs} isSubItem={true}>
-          {titles.utilisateurs}
-        </NavItem>
-        <NavItem pl="8" to={paths.parametresNotifications} isSubItem={true}>
-          {titles.notifications}
-        </NavItem>
+        {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_parametres/gestion_acces") && (
+          <NavItem pl="8" to={paths.parametresUtilisateurs} isSubItem={true}>
+            {titles.utilisateurs}
+          </NavItem>
+        )}
+        {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_parametres/gestion_notifications") && (
+          <NavItem pl="8" to={paths.parametresNotifications} isSubItem={true}>
+            {titles.notifications}
+          </NavItem>
+        )}
       </Collapse>
     </Flex>
   ));

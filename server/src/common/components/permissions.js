@@ -31,10 +31,9 @@ module.exports = async () => {
       }
       return result;
     },
-    findPermissions: async ({ workspaceId, dossierId, userEmail }, select = {}) =>
-      await Permission.find({ workspaceId, dossierId, userEmail }, select),
+    findPermissions: async (query, select = {}) => await Permission.find(query, select).lean(),
     hasPermission: async ({ workspaceId, dossierId, userEmail }, select = {}) =>
-      await Permission.findOne({ workspaceId, dossierId, userEmail }, select),
+      await Permission.findOne({ workspaceId, dossierId, userEmail }, select).lean(),
     updatePermission: async ({ workspaceId, dossierId, userEmail, roleId, acl = [] }) => {
       const found = await Permission.findOne({ workspaceId, dossierId, userEmail });
 

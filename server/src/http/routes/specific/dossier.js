@@ -3,33 +3,10 @@ const Joi = require("joi");
 const Boom = require("boom");
 const { Dossier } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
-// const permissionsMiddleware = require("../../middlewares/permissionsMiddleware");
+// const permissionsDossierMiddleware = require("../../middlewares/_permissionsDossierMiddleware");
 
-module.exports = ({ permissions, cerfas, dossiers }) => {
+module.exports = ({ cerfas, dossiers }) => {
   const router = express.Router();
-
-  router.get(
-    "/",
-    // permissionsMiddleware(), // TODO permissionsDossierMiddleware
-    tryCatch(async ({ query, user }, res) => {
-      let { workspaceId } = await Joi.object({
-        workspaceId: Joi.string().required(),
-      }).validateAsync(query, { abortEarly: false });
-
-      const perms = await permissions.findPermissions({ workspaceId, dossierId: null, userEmail: user.email });
-      // Check Acl
-      if (!perms.lenght === 0) {
-        throw Boom.unauthorized("Accès non autorisé");
-      }
-      if (!perms.lenght > 1) {
-        throw Boom.badRequest("something went wrong");
-      }
-
-      const results = await Dossier.find({ workspaceId });
-
-      return res.json(results);
-    })
-  );
 
   router.get(
     "/:id",

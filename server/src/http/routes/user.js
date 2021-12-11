@@ -9,13 +9,22 @@ const getEmailTemplate = (type = "forgotten-password") => {
   return path.join(__dirname, `../../assets/templates/${type}.mjml.ejs`);
 };
 
-module.exports = ({ users, mailer }) => {
+module.exports = ({ users, roles, mailer }) => {
   const router = express.Router();
 
   router.get(
     "/users",
     tryCatch(async (req, res) => {
-      const usersList = await users.getUsers();
+      let usersList = await users.getUsers();
+      for (let index = 0; index < usersList.length; index++) {
+        const user = usersList[index];
+        for (let j = 0; j < user.roles.length; j++) {
+          const roleId = user.roles[j];
+          const roleName = await roles.findRoleById(roleId, { name: 1 });
+          user.roles[j] = roleName.name;
+        }
+      }
+
       return res.json(usersList);
     })
   );
@@ -62,11 +71,14 @@ module.exports = ({ users, mailer }) => {
     tryCatch(async ({ body, params }, res) => {
       const username = params.username;
 
+      let rolesId = await roles.findRolesByName(body.options.roles, { _id: 1 });
+      rolesId = rolesId.map(({ _id }) => _id);
+
       await users.updateUser(username, {
         isAdmin: body.options.permissions.isAdmin,
         email: body.options.email,
         username: body.username,
-        roles: body.options.roles,
+        roles: rolesId,
         acl: body.options.acl,
         invalided_token: true,
       });

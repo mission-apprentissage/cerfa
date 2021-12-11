@@ -13,6 +13,7 @@ module.exports = {
       "wks/page_espace/page_dossiers/voir_liste_dossiers/tous",
       "wks/page_espace/page_parametres",
       "wks/page_espace/page_parametres/gestion_acces",
+      "wks/page_espace/page_parametres/gestion_acces/supprimer_contributeur",
       "wks/page_espace/page_parametres/gestion_notifications",
     ],
   },

@@ -57,7 +57,7 @@ module.exports = async () => {
       const { createWorkspace } = await workspaces();
       await createWorkspace({
         username,
-        nom: `Espace ${options.nom}`,
+        nom: `Espace - ${options.prenom} ${options.nom}`,
         description: `L'espace de travail de ${options.prenom} ${options.nom}`,
       });
 
@@ -112,7 +112,7 @@ module.exports = async () => {
         nom: user.nom,
         prenom: user.prenom,
         account_status: user.account_status,
-        roles: permissions.isAdmin ? ["admin", ...rolesList] : rolesList,
+        roles: rolesList,
         acl: uniq([...rolesAcl, ...user.acl]),
         workspaceId: workspace?._id.toString(),
       };

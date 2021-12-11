@@ -4,28 +4,29 @@ import { Flex, Box, Heading, Button } from "@chakra-ui/react";
 import { _get, _delete } from "../../common/httpClient";
 import { useQuery } from "react-query";
 import { useRecoilValue } from "recoil";
+import { hasWorkspaceAccessTo } from "../../common/utils/rolesUtils";
 import { workspacePathsAtom, workspaceTitlesAtom, workspaceAtom } from "../../common/hooks/workspaceAtoms";
 import TableDossiers from "./components/TableDossiers";
 
 function useWorkspaceDossiers() {
   const workspace = useRecoilValue(workspaceAtom);
 
-  const { data: workspaceDossiers, isLoading } = useQuery(
-    "workspaceDossiers",
-    () => _get(`/api/v1/dossier?workspaceId=${workspace._id}`),
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
+  const {
+    data: workspaceDossiers,
+    isLoading,
+    isFetching,
+  } = useQuery("workspaceDossiers", () => _get(`/api/v1/workspace/dossiers?workspaceId=${workspace._id}`), {
+    refetchOnWindowFocus: false,
+  });
 
-  return { isLoading, workspaceDossiers };
+  return { isLoading: isFetching || isLoading, workspaceDossiers };
 }
 
 export const Header = () => {
   const history = useHistory();
-  // TODO workspaceId
   const paths = useRecoilValue(workspacePathsAtom);
   const titles = useRecoilValue(workspaceTitlesAtom);
+  const workspace = useRecoilValue(workspaceAtom);
   const { isLoading, workspaceDossiers } = useWorkspaceDossiers();
 
   if (isLoading) return null;
@@ -37,18 +38,20 @@ export const Header = () => {
           {titles.dossiers} ({workspaceDossiers.length})
         </Heading>
       </Box>
-      <Button
-        size="md"
-        fontSize={{ base: "sm", md: "md" }}
-        p={{ base: 2, md: 4 }}
-        h={{ base: 8, md: 10 }}
-        onClick={() => {
-          history.push(paths.nouveauDossier);
-        }}
-        variant="primary"
-      >
-        + {titles.nouveauDossier}
-      </Button>
+      {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_dossiers/ajouter_nouveau_dossier") && (
+        <Button
+          size="md"
+          fontSize={{ base: "sm", md: "md" }}
+          p={{ base: 2, md: 4 }}
+          h={{ base: 8, md: 10 }}
+          onClick={() => {
+            history.push(paths.nouveauDossier);
+          }}
+          variant="primary"
+        >
+          + {titles.nouveauDossier}
+        </Button>
+      )}
     </Flex>
   );
 };

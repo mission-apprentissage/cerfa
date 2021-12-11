@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import { useRecoilValue } from "recoil";
+import { hasWorkspaceAccessTo } from "../../common/utils/rolesUtils";
 import { workspaceAtom } from "../../common/hooks/workspaceAtoms";
 import { _get, _put, _delete } from "../../common/httpClient";
 import { useQueries, useQueryClient, useMutation } from "react-query";
@@ -24,17 +25,26 @@ import { Parametre } from "../../theme/components/icons";
 function useWorkspaceParametresAcces() {
   const workspace = useRecoilValue(workspaceAtom);
   const [
-    { data: workspaceContributors, isLoading: isLoadingContributors },
-    { data: roles, isLoading: isLoadingRoles },
+    { data: workspaceContributors, isLoading: isLoadingContributors, isFetching: isFetchingContributors },
+    { data: roles, isLoading: isLoadingRoles, isFetching: isFetchingRoles },
   ] = useQueries([
     {
       queryKey: ["wksContributors", 1],
       queryFn: () => _get(`/api/v1/workspace/contributors?workspaceId=${workspace._id}`),
+      refetchOnWindowFocus: false,
     },
-    { queryKey: ["roles", 2], queryFn: () => _get(`/api/v1/workspace/roles_list?workspaceId=${workspace._id}`) },
+    {
+      queryKey: ["roles", 2],
+      queryFn: () => _get(`/api/v1/workspace/roles_list?workspaceId=${workspace._id}`),
+      refetchOnWindowFocus: false,
+    },
   ]);
 
-  return { workspaceContributors, roles, isLoading: isLoadingContributors || isLoadingRoles };
+  return {
+    workspaceContributors,
+    roles,
+    isLoading: isLoadingContributors || isLoadingRoles || isFetchingRoles || isFetchingContributors,
+  };
 }
 
 export const Header = () => {
@@ -194,14 +204,19 @@ export const Content = () => {
                       <Parametre width={"2rem"} height={"1.2rem"} color="bluefrance" />
                     </MenuButton>
                     <MenuList>
-                      <MenuItem
-                        color="redmarianne"
-                        onClick={async () => {
-                          await onDeleteClicked(workspaceContributors[i]);
-                        }}
-                      >
-                        Supprimer
-                      </MenuItem>
+                      {hasWorkspaceAccessTo(
+                        workspace,
+                        "wks/page_espace/page_parametres/gestion_acces/supprimer_contributeur"
+                      ) && (
+                        <MenuItem
+                          color="redmarianne"
+                          onClick={async () => {
+                            await onDeleteClicked(workspaceContributors[i]);
+                          }}
+                        >
+                          Supprimer
+                        </MenuItem>
+                      )}
                     </MenuList>
                   </Menu>
                 )}

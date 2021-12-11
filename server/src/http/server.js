@@ -62,7 +62,7 @@ module.exports = async (components) => {
   );
 
   // below specific
-  app.use("/api/v1/workspace", checkJwtToken, pageAccessMiddleware(["wks", "wks/page_espace"]), workspace(components));
+  app.use("/api/v1/workspace", checkJwtToken, workspace(components));
   app.use("/api/v1/dossier", checkJwtToken, dossier(components));
   app.use("/api/v1/cerfa", checkJwtToken, cerfa(components));
   app.use("/api/v1/upload", checkJwtToken, pageAccessMiddleware(["admin/page_upload"]), upload());

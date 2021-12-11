@@ -5,7 +5,7 @@ import { _post, _get } from "./common/httpClient";
 import ScrollToTop from "./common/components/ScrollToTop";
 import PrivateRoute from "./common/components/PrivateRoute";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { hasAccessTo } from "./common/utils/rolesUtils";
+import { hasPageAccessTo } from "./common/utils/rolesUtils";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const WorkspacePage = lazy(() => import("./pages/Workspace/WorkspacePage"));
@@ -76,39 +76,11 @@ export default () => {
             <ResetPasswordWrapper>
               <ScrollToTop />
               <Switch>
+                {/* PUBLIC PAGES */}
+                <Route exact path="/" component={HomePage} />
                 <Route exact path="/login" component={LoginPage} />
                 <Route exact path="/reset-password" component={ResetPasswordPage} />
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
-
-                <Route exact path="/" component={HomePage} />
-
-                {/* Mon espaces pages */}
-                {auth && hasAccessTo(auth, "wks/page_espace") && (
-                  <PrivateRoute path="/mon-espace" component={WorkspacePage} />
-                )}
-
-                {/*  Espace partagé  pages */}
-                {auth && hasAccessTo(auth, "wks/page_espace") && (
-                  <PrivateRoute exact path="/partages-avec-moi" component={SharedPage} />
-                )}
-                {auth && hasAccessTo(auth, "wks/page_espace") && (
-                  <PrivateRoute path="/partages-avec-moi/espaces/:workspaceId" component={WorkspacePage} />
-                )}
-
-                {/* Admin pages */}
-                {auth && hasAccessTo(auth, "admin/page_gestion_utilisateurs") && (
-                  <PrivateRoute exact path="/admin/users" component={Users} />
-                )}
-                {auth && hasAccessTo(auth, "admin/page_gestion_roles") && (
-                  <PrivateRoute exact path="/admin/roles" component={Roles} />
-                )}
-                {auth && hasAccessTo(auth, "admin/page_message_maintenance") && (
-                  <PrivateRoute exact path="/admin/maintenance" component={Maintenance} />
-                )}
-                {auth && hasAccessTo(auth, "page_upload") && (
-                  <PrivateRoute exact path="/admin/upload" component={UploadFiles} />
-                )}
-
                 <Route exact path="/stats" component={StatsPage} />
                 <Route exact path="/contact" component={Contact} />
                 <Route exact path="/cookies" component={Cookies} />
@@ -116,6 +88,29 @@ export default () => {
                 <Route exact path="/mentions-legales" component={MentionsLegales} />
                 <Route exact path="/accessibilite" component={Accessibilite} />
 
+                {/* PRIVATE PAGES */}
+
+                {/* Mon espaces pages */}
+                <PrivateRoute path="/mon-espace" component={WorkspacePage} />
+                {/*  Espace partagé  pages */}
+                <PrivateRoute exact path="/partages-avec-moi" component={SharedPage} />
+                <PrivateRoute path="/partages-avec-moi/espaces/:workspaceId" component={WorkspacePage} />
+
+                {/* PRIVATE ADMIN PAGES */}
+                {auth && hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
+                  <PrivateRoute exact path="/admin/users" component={Users} />
+                )}
+                {auth && hasPageAccessTo(auth, "admin/page_gestion_roles") && (
+                  <PrivateRoute exact path="/admin/roles" component={Roles} />
+                )}
+                {auth && hasPageAccessTo(auth, "admin/page_message_maintenance") && (
+                  <PrivateRoute exact path="/admin/maintenance" component={Maintenance} />
+                )}
+                {auth && hasPageAccessTo(auth, "page_upload") && (
+                  <PrivateRoute exact path="/admin/upload" component={UploadFiles} />
+                )}
+
+                {/* Fallback */}
                 <Route component={NotFoundPage} />
               </Switch>
             </ResetPasswordWrapper>

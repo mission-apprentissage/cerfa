@@ -34,6 +34,7 @@ module.exports = async () => {
       }
       return result;
     },
+    findDossiers: async (query, select = {}) => await Dossier.find(query, select).lean(),
     saveDossier: async (id) => {
       const found = await Dossier.findById(id).lean();
 

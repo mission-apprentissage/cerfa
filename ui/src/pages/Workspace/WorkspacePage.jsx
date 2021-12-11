@@ -3,9 +3,8 @@ import { Switch, useRouteMatch } from "react-router-dom";
 import { Box, Center, Container, Spinner } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import PrivateRoute from "../../common/components/PrivateRoute";
-import useAuth from "../../common/hooks/useAuth";
 import { useWorkspace } from "../../common/hooks/useWorkspace";
-import { hasAccessTo } from "../../common/utils/rolesUtils";
+import { hasWorkspaceAccessTo } from "../../common/utils/rolesUtils";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import WorkspaceLayout from "./components/WorkspaceLayout";
 import * as WorkspaceDossiers from "./WorkspaceDossiers";
@@ -22,11 +21,10 @@ const Loader = () => (
 );
 
 export default () => {
-  let [auth] = useAuth();
   let { path } = useRouteMatch();
-  let { isloaded, isReloaded, breadcrumbDetails, paths } = useWorkspace(path);
+  let { isloaded, isReloaded, breadcrumbDetails, paths, workspace } = useWorkspace(path);
 
-  if (!isloaded) return null;
+  if (!isloaded || !workspace) return null;
 
   return (
     <Layout>
@@ -37,7 +35,7 @@ export default () => {
       </Box>
       <Box w="100%" py={[4, 4]} px={[1, 1, 12, 24]} color="#1E1E1E">
         <Switch>
-          {auth && hasAccessTo(auth, "wks/page_espace/page_dossiers") && (
+          {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_dossiers") && (
             <PrivateRoute
               exact
               path={paths.dossiers}
@@ -49,7 +47,7 @@ export default () => {
               )}
             />
           )}
-          {auth && hasAccessTo(auth, "wks/page_espace/page_parametres/gestion_acces") && (
+          {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_parametres/gestion_acces") && (
             <PrivateRoute
               exact
               path={paths.parametresUtilisateurs}
@@ -61,7 +59,7 @@ export default () => {
               )}
             />
           )}
-          {auth && hasAccessTo(auth, "wks/page_espace/page_parametres/gestion_notifications") && (
+          {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_parametres/gestion_notifications") && (
             <PrivateRoute
               exact
               path={paths.parametresNotifications}
@@ -74,10 +72,10 @@ export default () => {
             />
           )}
 
-          {auth && hasAccessTo(auth, "wks/page_espace/page_dossiers") && (
+          {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_dossiers") && (
             <PrivateRoute exact path={paths.dossier} component={() => <Dossier />} />
           )}
-          {auth && hasAccessTo(auth, "wks/page_espace/page_dossiers/ajouter_nouveau_dossier") && (
+          {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_dossiers/ajouter_nouveau_dossier") && (
             <PrivateRoute exact path={paths.nouveauDossier} component={NouveauDossier} />
           )}
         </Switch>

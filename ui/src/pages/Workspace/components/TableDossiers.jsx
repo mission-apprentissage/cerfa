@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Text, Badge, Button, HStack, Link, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
-import { prettyPrintDate } from "../../../common/utils/dateUtils";
+import { DateTime } from "luxon";
 import { Parametre } from "../../../theme/components/icons";
 import { Table } from "../../../common/components/Table";
 
@@ -22,7 +22,7 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
         Last: {
           Header: "Modifié le",
           width: 90,
-          value: prettyPrintDate(m.lastModified),
+          value: DateTime.fromISO(m.lastModified).setLocale("fr-FR").toLocaleString(),
         },
         Etat: {
           Header: "Statut",

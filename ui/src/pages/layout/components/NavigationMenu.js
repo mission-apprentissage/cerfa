@@ -15,7 +15,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
-import { isUserAdmin, hasAccessTo } from "../../../common/utils/rolesUtils";
+import { isUserAdmin, hasPageAccessTo } from "../../../common/utils/rolesUtils";
 import { MenuFill, Close, AccountFill, DownloadLine, InfoCircle, LockFill } from "../../../theme/components/icons";
 import { _get } from "../../../common/httpClient";
 
@@ -44,7 +44,7 @@ const UserMenu = () => {
       history.push("/");
     }
   };
-
+  let accountType = auth.roles.length ? auth.roles[0].name : isUserAdmin(auth) ? "admin" : "utilisateur";
   return (
     <>
       {auth?.sub === "anonymous" && (
@@ -64,7 +64,7 @@ const UserMenu = () => {
                 <Text color="bluefrance" textStyle="sm">
                   {auth.sub}{" "}
                   <Text color="grey.600" as="span">
-                    ({isUserAdmin(auth) ? "admin" : "Utilisateur"})
+                    ({accountType})
                   </Text>
                 </Text>
               </Box>
@@ -72,22 +72,22 @@ const UserMenu = () => {
           </MenuButton>
           <MenuList>
             <MenuGroup title="Profile">
-              {hasAccessTo(auth, "admin/page_gestion_utilisateurs") && (
+              {hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
                 <MenuItem as={NavLink} to="/admin/users" icon={<AccountFill boxSize={4} />}>
                   Gestion des utilisateurs
                 </MenuItem>
               )}
-              {hasAccessTo(auth, "admin/page_gestion_roles") && (
+              {hasPageAccessTo(auth, "admin/page_gestion_roles") && (
                 <MenuItem as={NavLink} to="/admin/roles" icon={<AccountFill boxSize={4} />}>
                   Gestion des rôles
                 </MenuItem>
               )}
-              {hasAccessTo(auth, "admin/page_upload") && (
+              {hasPageAccessTo(auth, "admin/page_upload") && (
                 <MenuItem as={NavLink} to="/admin/upload" icon={<DownloadLine boxSize={4} />}>
                   Upload de fichiers
                 </MenuItem>
               )}
-              {hasAccessTo(auth, "admin/page_message_maintenance") && (
+              {hasPageAccessTo(auth, "admin/page_message_maintenance") && (
                 <MenuItem as={NavLink} to="/admin/maintenance" icon={<InfoCircle boxSize={4} />}>
                   Message de maintenance
                 </MenuItem>
@@ -134,7 +134,6 @@ const NavItem = ({ children, to = "/", isMyWorkspace, isSharedWithMe, ...rest })
 };
 
 const NavLinks = ({ isMyWorkspace, isSharedWithMe, isOpen }) => {
-  let [auth] = useAuth();
   return (
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
       <Flex
@@ -145,16 +144,13 @@ const NavLinks = ({ isMyWorkspace, isSharedWithMe, isOpen }) => {
         textStyle="sm"
       >
         <NavItem to="/">Accueil</NavItem>
-        {hasAccessTo(auth, "wks/page_espace") && (
-          <NavItem to="/mon-espace/mes-dossiers" isMyWorkspace={isMyWorkspace}>
-            Mon espace
-          </NavItem>
-        )}
-        {hasAccessTo(auth, "wks/page_espace") && (
-          <NavItem to="/partages-avec-moi" isSharedWithMe={isSharedWithMe}>
-            Partagés avec moi
-          </NavItem>
-        )}
+        <NavItem to="/mon-espace/mes-dossiers" isMyWorkspace={isMyWorkspace}>
+          Mon espace
+        </NavItem>
+
+        <NavItem to="/partages-avec-moi" isSharedWithMe={isSharedWithMe}>
+          Partagés avec moi
+        </NavItem>
       </Flex>
     </Box>
   );

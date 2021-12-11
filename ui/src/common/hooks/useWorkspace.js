@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
+// import { useQuery } from "react-query";
 import { workspacePathsAtom, workspaceTitlesAtom, workspaceTitleAtom, workspaceAtom } from "./workspaceAtoms";
 import { setTitle as setTitlePage } from "../utils/pageUtils";
 import { _get } from "../httpClient";
@@ -35,6 +36,14 @@ export function useWorkspace(path) {
   const [paths, setPaths] = useRecoilState(workspacePathsAtom);
   const [titles, setTitles] = useRecoilState(workspaceTitlesAtom);
   const [title] = useRecoilState(workspaceTitleAtom);
+
+  // const {
+  //   data: workspace,
+  //   isLoading,
+  //   isFetching,
+  // } = useQuery("workspace", () => _get(`/api/v1/workspace/entity/${workspaceId}?workspaceId=${workspaceId}`), {
+  //   refetchOnWindowFocus: false,
+  // });
 
   useEffect(() => {
     const abortController = new AbortController();
