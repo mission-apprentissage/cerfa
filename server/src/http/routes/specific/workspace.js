@@ -124,7 +124,7 @@ module.exports = ({ permissions, roles, workspaces, users }) => {
         workspaceId: Joi.string().required(),
         userEmail: Joi.string().required(),
         roleId: Joi.string().required(),
-        // acl: Joi.array().items(Joi.string()).default([]), // TODO
+        acl: Joi.array().items(Joi.string()).default([]), // TODO
       }).validateAsync(body, { abortEarly: false });
 
       // TODO to check perm middleware

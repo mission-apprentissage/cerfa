@@ -1,28 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
 import { Flex, Box, Heading, Button } from "@chakra-ui/react";
 import { _get, _delete } from "../../common/httpClient";
 import useAuth from "../../common/hooks/useAuth";
+import { useQuery } from "react-query";
 import { useRecoilValue } from "recoil";
 import { workspacePathsAtom, workspaceTitlesAtom } from "../../common/hooks/workspaceAtoms";
 import TableDossiers from "./components/TableDossiers";
 
 function useWorkspaceDossiers() {
   let [auth] = useAuth();
-  const [workspaceDossiers, setWorkspaceDossiers] = useState([]);
 
-  useEffect(() => {
-    const run = async () => {
-      try {
-        const ds = await _get(`/api/v1/dossier?workspaceId=${auth.workspaceId}`);
-        setWorkspaceDossiers(ds);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    run();
-  }, [auth]);
-  return { workspaceDossiers };
+  const { data: workspaceDossiers, isLoading } = useQuery(
+    "workspaceDossiers",
+    () => _get(`/api/v1/dossier?workspaceId=${auth.workspaceId}`),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  return { isLoading, workspaceDossiers };
 }
 
 export const Header = () => {
@@ -30,7 +27,9 @@ export const Header = () => {
   // TODO workspaceId
   const paths = useRecoilValue(workspacePathsAtom);
   const titles = useRecoilValue(workspaceTitlesAtom);
-  const { workspaceDossiers } = useWorkspaceDossiers();
+  const { isLoading, workspaceDossiers } = useWorkspaceDossiers();
+
+  if (isLoading) return null;
 
   return (
     <Flex as="nav" align="center" justify="space-between" wrap="wrap" w="100%">
@@ -56,7 +55,8 @@ export const Header = () => {
 };
 
 export const Content = () => {
-  const { workspaceDossiers } = useWorkspaceDossiers();
+  const { isLoading, workspaceDossiers } = useWorkspaceDossiers();
+  const paths = useRecoilValue(workspacePathsAtom);
 
   const onDeleteClicked = async (dossier) => {
     // eslint-disable-next-line no-restricted-globals
@@ -71,9 +71,13 @@ export const Content = () => {
     }
   };
 
+  if (isLoading) return null;
+
   return (
     <Box mt={8}>
-      {workspaceDossiers.length > 0 && <TableDossiers dossiers={workspaceDossiers} onDeleteClicked={onDeleteClicked} />}
+      {workspaceDossiers.length > 0 && (
+        <TableDossiers dossiers={workspaceDossiers} onDeleteClicked={onDeleteClicked} baseUrl={paths.dossiers} />
+      )}
     </Box>
   );
 };

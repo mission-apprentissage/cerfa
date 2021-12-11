@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import {
   Flex,
   Box,
@@ -15,35 +15,31 @@ import {
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import { _get, _put, _delete } from "../../common/httpClient";
+import { useQueries, useQueryClient, useMutation } from "react-query";
 import useAuth from "../../common/hooks/useAuth";
 import { Table } from "../../common/components/Table";
 import { Parametre } from "../../theme/components/icons";
 
 function useWorkspaceParametresAcces() {
   let [auth] = useAuth();
-  const [workspaceContributors, setWorkspaceContributors] = useState([]);
-  const [roles, setRoles] = useState([]);
+  const [
+    { data: workspaceContributors, isLoading: isLoadingContributors },
+    { data: roles, isLoading: isLoadingRoles },
+  ] = useQueries([
+    {
+      queryKey: ["wksContributors", 1],
+      queryFn: () => _get(`/api/v1/workspace/contributors?workspaceId=${auth.workspaceId}`),
+    },
+    { queryKey: ["roles", 2], queryFn: () => _get(`/api/v1/workspace/roles_list?workspaceId=${auth.workspaceId}`) },
+  ]);
 
-  useEffect(() => {
-    const run = async () => {
-      try {
-        const wksContributors = await _get(`/api/v1/workspace/contributors?workspaceId=${auth.workspaceId}`);
-        setWorkspaceContributors(wksContributors);
-        const rolesList = await _get(`/api/v1/workspace/roles_list?workspaceId=${auth.workspaceId}`);
-        setRoles(rolesList);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    run();
-  }, [auth]);
-  return { workspaceContributors, roles, setWorkspaceContributors };
+  return { workspaceContributors, roles, isLoading: isLoadingContributors || isLoadingRoles };
 }
 
 export const Header = () => {
-  const { workspaceContributors, roles } = useWorkspaceParametresAcces();
+  const { workspaceContributors, isLoading } = useWorkspaceParametresAcces();
 
-  if (!workspaceContributors.length && !roles.length) return null;
+  if (isLoading) return null;
 
   return (
     <Flex as="nav" align="center" justify="space-between" wrap="wrap" w="100%">
@@ -68,26 +64,21 @@ export const Header = () => {
 
 export const Content = () => {
   let [auth] = useAuth();
-  const { workspaceContributors, roles, setWorkspaceContributors } = useWorkspaceParametresAcces();
+  const queryClient = useQueryClient();
+  const { workspaceContributors, roles, isLoading } = useWorkspaceParametresAcces();
 
-  let onChangeRole = useCallback(
-    async (userEmail, roleId, acl = []) => {
-      try {
-        let body = {
-          workspaceId: auth.workspaceId,
-          userEmail,
-          roleId,
-        };
-        if (acl.length) {
-          body.acl = acl;
-        }
-        const newContributors = await _put(`/api/v1/workspace/contributors`, body);
-        setWorkspaceContributors(newContributors);
-      } catch (e) {
-        console.error(e);
-      }
+  const onChangeContributorRole = useMutation(
+    ({ userEmail, roleId, acl = [] }) => {
+      return _put(`/api/v1/workspace/contributors`, {
+        workspaceId: auth.workspaceId,
+        userEmail,
+        roleId,
+        acl,
+      });
     },
-    [auth.workspaceId, setWorkspaceContributors]
+    {
+      onSuccess: () => queryClient.invalidateQueries("wksContributors"),
+    }
   );
 
   const onDeleteClicked = useCallback(
@@ -111,7 +102,7 @@ export const Content = () => {
     [auth.workspaceId]
   );
 
-  if (!workspaceContributors.length && !roles.length) return null;
+  if (isLoading) return null;
 
   return (
     <Box mt={8}>
@@ -169,9 +160,8 @@ export const Content = () => {
                       const roleId = e.target.value;
                       if (roleId === "custom") {
                         console.log("TODO");
-                        //await onChangeRole(workspaceContributors[i].user.email, roleId);
                       } else {
-                        await onChangeRole(workspaceContributors[i].user.email, roleId);
+                        onChangeContributorRole.mutate({ userEmail: workspaceContributors[i].user.email, roleId });
                       }
                     }}
                     iconColor={"gray.800"}

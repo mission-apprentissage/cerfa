@@ -35,6 +35,7 @@ runScript(async ({ users, workspaces }) => {
     prenom: "Arthur",
     telephone: "+33102030405",
     email: "antoine.bigard+testEntreprise@beta.gouv.fr",
+    roles: ["entreprise"],
   });
   logger.info(`User 'testEntreprise' with password 'password' is successfully created `);
 

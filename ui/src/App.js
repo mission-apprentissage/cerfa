@@ -9,6 +9,7 @@ import { hasAccessTo } from "./common/utils/rolesUtils";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const WorkspacePage = lazy(() => import("./pages/Workspace/WorkspacePage"));
+const SharedPage = lazy(() => import("./pages/SharedPage"));
 const StatsPage = lazy(() => import("./pages/StatsPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
@@ -85,9 +86,13 @@ export default () => {
                 {auth && hasAccessTo(auth, "wks/page_espace") && (
                   <PrivateRoute path="/mon-espace" component={WorkspacePage} />
                 )}
+
                 {/*  Espace partagé  pages */}
                 {auth && hasAccessTo(auth, "wks/page_espace") && (
-                  <PrivateRoute path="/partages-avec-moi/espace/:workspaceId" component={WorkspacePage} />
+                  <PrivateRoute exact path="/partages-avec-moi" component={SharedPage} />
+                )}
+                {auth && hasAccessTo(auth, "wks/page_espace") && (
+                  <PrivateRoute path="/partages-avec-moi/espaces/:workspaceId" component={WorkspacePage} />
                 )}
 
                 {/* Admin pages */}

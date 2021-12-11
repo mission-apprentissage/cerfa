@@ -9,3 +9,8 @@ export const workspaceTitlesAtom = atom({
   key: "workspace/titles",
   default: null,
 });
+
+export const workspaceTitleAtom = atom({
+  key: "workspace/title",
+  default: null,
+});

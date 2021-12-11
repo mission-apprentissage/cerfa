@@ -75,7 +75,7 @@ export default ({ header, content }) => {
   const sidebar = useDisclosure({ defaultIsOpen: true });
   const parametres = useDisclosure({ defaultIsOpen: isParametresPages });
 
-  const SidebarContent = (props) => (
+  const SidebarContent = React.memo((props) => (
     <Flex direction="column" as="nav" fontSize="sm" color="gray.600" aria-label="Sub Navigation" {...props}>
       <NavItem icon={() => <Folder w={"1rem"} h={"1rem"} mb={"0.125rem"} mr={2} />} to={paths.dossiers}>
         {titles.dossiers}
@@ -108,7 +108,7 @@ export default ({ header, content }) => {
         </NavItem>
       </Collapse>
     </Flex>
-  );
+  ));
 
   return (
     <Flex as="section" minH="50vh" overflowX="hidden">

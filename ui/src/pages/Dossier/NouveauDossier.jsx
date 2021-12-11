@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { Box, Flex, Heading, Container, Button, Text } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { workspacePathsAtom } from "../../common/hooks/workspaceAtoms";
 import { useDossier } from "../../common/hooks/useDossier";
 
 export default () => {
   const { isloaded, createDossier, saveDossier } = useDossier();
   const [isCreating, setIsCreating] = useState(false);
+  const paths = useRecoilValue(workspacePathsAtom);
   const history = useHistory();
 
   const onStartClicked = async () => {
@@ -14,7 +17,7 @@ export default () => {
     setIsCreating(false);
     // TODO Temporary saved
     await saveDossier(_id);
-    history.push(`/mon-espace/mes-dossiers/${_id}/cerfa`);
+    history.push(`${paths.dossiers}/${_id}/cerfa`);
   };
 
   if (!isloaded) return null;

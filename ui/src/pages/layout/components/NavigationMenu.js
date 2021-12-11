@@ -151,7 +151,7 @@ const NavLinks = ({ isMyWorkspace, isSharedWithMe, isOpen }) => {
           </NavItem>
         )}
         {hasAccessTo(auth, "wks/page_espace") && (
-          <NavItem to="/partages-avec-moi/espace/6666666666/dossiers" isSharedWithMe={isSharedWithMe}>
+          <NavItem to="/partages-avec-moi" isSharedWithMe={isSharedWithMe}>
             Partagés avec moi
           </NavItem>
         )}

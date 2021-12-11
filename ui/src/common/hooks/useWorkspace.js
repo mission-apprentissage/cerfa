@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { workspacePathsAtom, workspaceTitlesAtom } from "./workspaceAtoms";
+import { workspacePathsAtom, workspaceTitlesAtom, workspaceTitleAtom } from "./workspaceAtoms";
 import { setTitle as setTitlePage } from "../utils/pageUtils";
 
 const hydrate = async (workspaceId) => {
@@ -23,20 +23,19 @@ export function useWorkspace(path) {
   const { pathname } = useLocation();
   let { workspaceId } = useParams();
   const [isloaded, setIsLoaded] = useState(false);
+  const [isReloaded, setIsReloaded] = useState(false);
   const [error, setError] = useState(null);
 
   const [workspace, setWorkspace] = useState(null);
-  const [title, setTitle] = useState();
   const [breadcrumbDetails, setBreadcrumbDetails] = useState([]);
 
   const [paths, setPaths] = useRecoilState(workspacePathsAtom);
   const [titles, setTitles] = useRecoilState(workspaceTitlesAtom);
-
-  //bcDetails = [{ title: "Partagés avec moi" }, { title: "Dossiers" }];
+  const [title] = useRecoilState(workspaceTitleAtom);
 
   useEffect(() => {
     const abortController = new AbortController();
-
+    setIsReloaded(false);
     hydrate(workspaceId)
       .then(({ workspace }) => {
         if (!abortController.signal.aborted) {
@@ -86,10 +85,12 @@ export function useWorkspace(path) {
               };
 
           let bcDetails = [{ title: titles.base }];
+          const baseBc = workspaceId ? [{ title: "Partagés avec moi", to: "/partages-avec-moi" }] : [];
           switch (pathname) {
             case paths.parametresUtilisateurs:
               setTitlePage(titles.parametresUtilisateurs);
               bcDetails = [
+                ...baseBc,
                 { title: titles.workspace, to: paths.dossiers },
                 { title: titles.parametres },
                 { title: titles.utilisateurs },
@@ -98,6 +99,7 @@ export function useWorkspace(path) {
             case paths.parametresNotifications:
               setTitlePage(titles.parametresNotifications);
               bcDetails = [
+                ...baseBc,
                 { title: titles.workspace, to: paths.dossiers },
                 { title: titles.parametres, to: paths.parametresUtilisateurs },
                 { title: titles.notifications },
@@ -105,11 +107,12 @@ export function useWorkspace(path) {
               break;
             case paths.dossiers:
               setTitlePage(titles.dossiers);
-              bcDetails = [{ title: titles.workspace }, { title: titles.dossiers }];
+              bcDetails = [...baseBc, { title: titles.workspace }, { title: titles.dossiers }];
               break;
             case paths.nouveauDossier:
               setTitlePage(titles.commencerNouveauDossier);
               bcDetails = [
+                ...baseBc,
                 { title: titles.workspace, to: paths.dossiers },
                 { title: titles.dossiers, to: paths.dossiers },
                 { title: titles.nouveauDossier },
@@ -117,7 +120,7 @@ export function useWorkspace(path) {
               break;
             default:
               setTitlePage(titles.dossiers);
-              bcDetails = [{ title: titles.workspace }, { title: titles.dossiers }];
+              bcDetails = [...baseBc, { title: titles.workspace }, { title: titles.dossiers }];
               break;
           }
 
@@ -126,6 +129,7 @@ export function useWorkspace(path) {
           if (contratPath.test(pathname) && title) {
             setTitlePage(title);
             bcDetails = [
+              ...baseBc,
               { title: titles.workspace, to: paths.dossiers },
               { title: titles.dossiers, to: paths.dossiers },
               { title: title },
@@ -135,12 +139,15 @@ export function useWorkspace(path) {
           setPaths(paths);
           setTitles(titles);
           setWorkspace(workspace);
+          setIsReloaded(true);
           setIsLoaded(true);
         }
       })
       .catch((e) => {
         if (!abortController.signal.aborted) {
           setError(e);
+          setIsReloaded(false);
+          setIsLoaded(false);
         }
       });
     return () => {
@@ -152,5 +159,5 @@ export function useWorkspace(path) {
     throw error;
   }
 
-  return { isloaded, workspace, breadcrumbDetails, setTitle, paths, titles, workspaceId };
+  return { isloaded, isReloaded, workspace, breadcrumbDetails, paths, titles, workspaceId };
 }

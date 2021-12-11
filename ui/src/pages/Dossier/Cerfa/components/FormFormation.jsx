@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, FormLabel, Flex } from "@chakra-ui/react";
+import { Box, FormLabel, Flex, Center, Spinner } from "@chakra-ui/react";
 
 import { useCerfa } from "../../../../common/hooks/useCerfa";
 import InputCerfa from "./Input";
@@ -33,7 +33,12 @@ const FormFormation = React.memo((props) => {
     onSubmittedOrganismeFormationUaiCfa,
   } = useCerfa();
 
-  if (!isloaded) return null;
+  if (!isloaded)
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
 
   return (
     <Box>

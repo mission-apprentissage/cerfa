@@ -11,9 +11,11 @@ import {
   AvatarGroup,
   Avatar,
   Text,
+  Spinner,
 } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { useHistory, useRouteMatch } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import { prettyPrintDate } from "../../common/utils/dateUtils";
 
 import Cerfa from "./Cerfa/Cerfa";
@@ -22,6 +24,7 @@ import Signatures from "./Signatures/Signatures";
 import Statuts from "./Statuts/Statuts";
 
 import { useDossier } from "../../common/hooks/useDossier";
+import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
 
 const steps = [
   { label: "Cerfa", description: "Information contenu dans le Cerfa" },
@@ -32,7 +35,7 @@ const steps = [
 
 const stepByPath = ["cerfa", "documents", "signatures", "etat"];
 
-export default ({ onLoaded }) => {
+export default () => {
   let match = useRouteMatch();
   const { nextStep, prevStep, reset, activeStep, setStep } = useSteps({
     initialStep: stepByPath.indexOf(match.params.step),
@@ -40,17 +43,16 @@ export default ({ onLoaded }) => {
   const [stepState, setStepState] = useState();
   const { isloaded, dossier } = useDossier(match.params.id);
   const history = useHistory();
+  const setWorkspaceTitle = useSetRecoilState(workspaceTitleAtom);
 
   useEffect(() => {
     const run = async () => {
-      if (onLoaded && isloaded && dossier) {
-        onLoaded({
-          title: dossier.nom,
-        });
+      if (isloaded && dossier) {
+        setWorkspaceTitle(dossier.nom);
       }
     };
     run();
-  }, [dossier, history, isloaded, onLoaded]);
+  }, [dossier, history, isloaded, setWorkspaceTitle]);
 
   const onClickNextStep = async () => {
     setStepState("loading"); // type StateValue = "loading" | "error" | undefined
@@ -61,7 +63,12 @@ export default ({ onLoaded }) => {
     nextStep();
   };
 
-  if (!isloaded) return null;
+  if (!isloaded)
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
 
   if (!dossier) {
     history.push("/404");
