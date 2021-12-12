@@ -1,8 +1,9 @@
 const express = require("express");
 const { MaintenanceMessage } = require("../../common/model/index");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
+const pageAccessMiddleware = require("../middlewares/pageAccessMiddleware");
 
-module.exports = () => {
+module.exports = (checkJwtToken) => {
   const router = express.Router();
 
   router.get(
@@ -15,6 +16,8 @@ module.exports = () => {
 
   router.post(
     "/",
+    checkJwtToken,
+    pageAccessMiddleware(["admin/page_message_maintenance"]),
     tryCatch(async ({ body }, res) => {
       const { msg, name, type, enabled, context } = body;
 
@@ -39,6 +42,8 @@ module.exports = () => {
 
   router.put(
     "/:id",
+    checkJwtToken,
+    pageAccessMiddleware(["admin/page_message_maintenance"]),
     tryCatch(async ({ body, params }, res) => {
       const { msg, name, type, context } = body;
       const itemId = params.id;
@@ -57,6 +62,8 @@ module.exports = () => {
 
   router.delete(
     "/:id",
+    checkJwtToken,
+    pageAccessMiddleware(["admin/page_message_maintenance"]),
     tryCatch(async (req, res) => {
       const itemId = req.params.id;
       const result = await MaintenanceMessage.deleteOne({ _id: itemId });

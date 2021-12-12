@@ -2,20 +2,20 @@ const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
+const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 const apiTco = require("../../../common/apis/ApiTco");
 
-module.exports = () => {
+module.exports = (components) => {
   const router = express.Router();
 
   router.post(
     "/",
+    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async ({ body }, res) => {
       const { cfd, rncp } = await Joi.object({
         cfd: Joi.string().pattern(new RegExp("^[0-9A-Z]{8}[A-Z]?$")),
         rncp: Joi.string().pattern(new RegExp("^(RNCP)?[0-9]{2,5}$")),
       }).validateAsync(body, { abortEarly: false });
-
-      // TODO HAS RIGHTS
 
       if (!cfd && !rncp) {
         return res.json({ error: "Cfd ou rncp doivent être défini et formaté" });

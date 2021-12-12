@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { setTitle } from "../../common/utils/pageUtils";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -12,13 +11,12 @@ import {
   AvatarGroup,
   Avatar,
   Text,
+  Spinner,
 } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
-import { useHistory } from "react-router-dom";
-import { _delete } from "../../common/httpClient";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import { prettyPrintDate } from "../../common/utils/dateUtils";
-import Layout from "../layout/Layout";
-import { Breadcrumb } from "../../common/components/Breadcrumb";
 
 import Cerfa from "./Cerfa/Cerfa";
 import PiecesJustificatives from "./PiecesJustificatives/PiecesJustificatives";
@@ -26,6 +24,7 @@ import Signatures from "./Signatures/Signatures";
 import Statuts from "./Statuts/Statuts";
 
 import { useDossier } from "../../common/hooks/useDossier";
+import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
 
 const steps = [
   { label: "Cerfa", description: "Information contenu dans le Cerfa" },
@@ -36,13 +35,24 @@ const steps = [
 
 const stepByPath = ["cerfa", "documents", "signatures", "etat"];
 
-export default ({ match }) => {
+export default () => {
+  let match = useRouteMatch();
   const { nextStep, prevStep, reset, activeStep, setStep } = useSteps({
     initialStep: stepByPath.indexOf(match.params.step),
   });
   const [stepState, setStepState] = useState();
   const { isloaded, dossier } = useDossier(match.params.id);
   const history = useHistory();
+  const setWorkspaceTitle = useSetRecoilState(workspaceTitleAtom);
+
+  useEffect(() => {
+    const run = async () => {
+      if (isloaded && dossier) {
+        setWorkspaceTitle(dossier.nom);
+      }
+    };
+    run();
+  }, [dossier, history, isloaded, setWorkspaceTitle]);
 
   const onClickNextStep = async () => {
     setStepState("loading"); // type StateValue = "loading" | "error" | undefined
@@ -53,7 +63,12 @@ export default ({ match }) => {
     nextStep();
   };
 
-  if (!isloaded) return null;
+  if (!isloaded)
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
 
   if (!dossier) {
     history.push("/404");
@@ -61,109 +76,77 @@ export default ({ match }) => {
 
   // TODO not Authorize handler
 
-  const title = dossier.nom;
-  setTitle(title);
-
   return (
-    <Layout
-      match={match}
-      onLeave={async ({ internalLeave }) => {
-        if (internalLeave) {
-          if (!dossier.saved) {
-            // eslint-disable-next-line no-restricted-globals
-            const leave = confirm("Voulez-vous vraiment quitter cette page ?");
-            if (leave) {
-              await _delete(`/api/v1/dossier/${dossier._id}`);
-            } else {
-              history.goBack();
-            }
-          }
-        }
-      }}
-    >
-      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
-        <Container maxW="xl">
-          <Breadcrumb
-            pages={[
-              { title: "Accueil", to: "/" },
-              // { title: "Mon espace", to: "/mon-espace/mes-dossiers" },
-              { title: "Mes dossiers", to: "/mon-espace/mes-dossiers" },
-              { title: title },
-            ]}
-          />
-        </Container>
-      </Box>
-      <Box w="100%" px={[1, 1, 12, 24]}>
-        <Container maxW="xl">
-          <HStack mt={6}>
-            <Heading as="h1" flexGrow="1">
-              {title}
-              <Badge
-                variant="solid"
-                bg="orangedark.300"
-                borderRadius="16px"
-                color="grey.800"
-                textStyle="sm"
-                px="15px"
-                ml="10px"
-              >
-                Brouillon
-              </Badge>
-              <Badge variant="solid" bg="grey.100" color="grey.500" textStyle="sm" px="15px" ml="10px">
-                <Text as="i">
-                  {!dossier.saved ? "Non sauvegardé" : `Dernière sauvegarde ${prettyPrintDate(dossier.lastModified)}`}
-                </Text>
-              </Badge>
-            </Heading>
-            <HStack>
-              <AvatarGroup size="md" max={2}>
-                <Avatar name="Paul Pierre" />
-                <Avatar name="Pablo Hanry" />
-              </AvatarGroup>
-              <Button size="md" onClick={() => {}} variant="secondary">
-                Partager
-              </Button>
-            </HStack>
-          </HStack>
-
-          <Flex flexDir="column" width="100%" mt={9}>
-            <Steps
-              onClickStep={(step) => {
-                // if (step === 0 || step === 1) return setStep(step);
-                return setStep(step);
-              }}
-              activeStep={activeStep}
-              state={stepState}
+    <Box w="100%" px={[1, 1, 12, 24]}>
+      <Container maxW="xl">
+        <HStack mt={6}>
+          <Heading as="h1" flexGrow="1">
+            {dossier.nom}
+            <Badge
+              variant="solid"
+              bg="orangedark.300"
+              borderRadius="16px"
+              color="grey.800"
+              textStyle="sm"
+              px="15px"
+              ml="10px"
             >
-              {steps.map(({ label, description }, index) => (
-                <Step label={label} key={label} description={description}>
-                  {index === 0 && <Cerfa />}
-                  {index === 1 && <PiecesJustificatives />}
-                  {index === 2 && <Signatures dossierId={dossier._id} />}
-                  {index === 3 && <Statuts />}
-                </Step>
-              ))}
-            </Steps>
-            {activeStep === 4 ? (
-              <Center p={4} flexDir="column">
-                <Heading fontSize="xl">Woohoo! C'est fini!</Heading>
-                <Button mt={6} size="sm" onClick={reset}>
-                  Remise à zero
-                </Button>
-              </Center>
-            ) : (
-              <Flex width="100%" justify="flex-end" mt={8} mb={10}>
-                <Button mr={4} size="md" variant="primary" onClick={prevStep} isDisabled={activeStep === 0}>
-                  Retourner à l'étape précédente
-                </Button>
-                <Button size="md" onClick={onClickNextStep} variant="primary">
-                  {activeStep === steps.length - 1 ? "Soumettre" : "Passer à l'étape suivante"}
-                </Button>
-              </Flex>
-            )}
-          </Flex>
-        </Container>
-      </Box>
-    </Layout>
+              Brouillon
+            </Badge>
+            <Badge variant="solid" bg="grey.100" color="grey.500" textStyle="sm" px="15px" ml="10px">
+              <Text as="i">
+                {!dossier.saved ? "Non sauvegardé" : `Dernière sauvegarde ${prettyPrintDate(dossier.lastModified)}`}
+              </Text>
+            </Badge>
+          </Heading>
+          <HStack>
+            <AvatarGroup size="md" max={2}>
+              <Avatar name="Paul Pierre" />
+              <Avatar name="Pablo Hanry" />
+            </AvatarGroup>
+            <Button size="md" onClick={() => {}} variant="secondary">
+              Partager
+            </Button>
+          </HStack>
+        </HStack>
+
+        <Flex flexDir="column" width="100%" mt={9}>
+          <Steps
+            onClickStep={(step) => {
+              // if (step === 0 || step === 1) return setStep(step);
+              return setStep(step);
+            }}
+            activeStep={activeStep}
+            state={stepState}
+          >
+            {steps.map(({ label, description }, index) => (
+              <Step label={label} key={label} description={description}>
+                {index === 0 && <Cerfa />}
+                {index === 1 && <PiecesJustificatives />}
+                {index === 2 && <Signatures dossierId={dossier._id} />}
+                {index === 3 && <Statuts />}
+              </Step>
+            ))}
+          </Steps>
+          {activeStep === 4 ? (
+            <Center p={4} flexDir="column">
+              <Heading fontSize="xl">Woohoo! C'est fini!</Heading>
+              <Button mt={6} size="sm" onClick={reset}>
+                Remise à zero
+              </Button>
+            </Center>
+          ) : (
+            <Flex width="100%" justify="flex-end" mt={8} mb={10}>
+              <Button mr={4} size="md" variant="primary" onClick={prevStep} isDisabled={activeStep === 0}>
+                Retourner à l'étape précédente
+              </Button>
+              <Button size="md" onClick={onClickNextStep} variant="primary">
+                {activeStep === steps.length - 1 ? "Soumettre" : "Passer à l'étape suivante"}
+              </Button>
+            </Flex>
+          )}
+        </Flex>
+      </Container>
+    </Box>
   );
 };

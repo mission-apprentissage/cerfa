@@ -1,20 +1,10 @@
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
-const { MaintenanceMessage, Role, Workspace, Dossier, Cerfa } = require("../../common/model/index");
+const { MaintenanceMessage, Role, Cerfa } = require("../../common/model/index");
 
-runScript(async ({ users }) => {
-  await Role.create({
-    name: "wks.admin",
-    acl: [],
-  });
-  logger.info(`Role wks.admin created`);
+const defaultRolesAcls = require("./defaultRolesAcls");
 
-  const user = await users.createUser("testAdmin", "password", {
-    email: "antoine.bigard@beta.gouv.fr",
-    permissions: { isAdmin: true },
-  });
-  logger.info(`User 'testAdmin' with password 'password' and admin is successfully created `);
-
+runScript(async ({ users, workspaces, dossiers }) => {
   await MaintenanceMessage.create({
     context: "automatique",
     type: "alert",
@@ -25,17 +15,36 @@ runScript(async ({ users }) => {
   });
   logger.info(`MaintenanceMessage default created`);
 
-  const wks = await Workspace.findOne({
-    owner: user._id,
-  }).lean();
+  for (let index = 0; index < Object.keys(defaultRolesAcls).length; index++) {
+    const key = Object.keys(defaultRolesAcls)[index];
+    await Role.create(defaultRolesAcls[key]);
+    logger.info(`Role ${key} created`);
+  }
 
-  const dossier = await Dossier.create({
-    nom: "Dossier Test",
-    draft: true,
-    owner: user._id,
-    workspaceId: wks._id,
-    saved: true,
+  const userAdmin = await users.createUser("testAdmin", "password", {
+    nom: "Bigard",
+    prenom: "Antoine",
+    telephone: "+33612647513",
+    email: "antoine.bigard@beta.gouv.fr",
+    permissions: { isAdmin: true },
   });
+  logger.info(`User 'testAdmin' with password 'password' and admin is successfully created `);
+
+  const userEntreprise = await users.createUser("testEntreprise", "password", {
+    nom: "Damien",
+    prenom: "Arthur",
+    telephone: "+33102030405",
+    email: "antoine.bigard+testEntreprise@beta.gouv.fr",
+    roles: ["entreprise"],
+  });
+  logger.info(`User 'testEntreprise' with password 'password' is successfully created `);
+
+  const wks = await workspaces.getUserWorkspace(userAdmin, { _id: 1 });
+
+  await workspaces.addContributeur(wks._id, userEntreprise, "wks.member");
+
+  const dossier = await dossiers.createDossier({ sub: userAdmin.username }, { nom: "Dossier Test", saved: true });
+
   logger.info(`Dossier test created`);
 
   await Cerfa.create({
@@ -112,7 +121,7 @@ runScript(async ({ users }) => {
       rncp: "RNCP15516",
       codeDiplome: "32322111",
       typeDiplome: 13,
-      intituleQualification: "string",
+      intituleQualification: "Analyses agricoles biologiques et biotechnologiques",
       dateDebutFormation: "2021-05-04T21:13:43+00:00",
       dateFinFormation: "2021-05-04T21:13:43+00:00",
       dureeFormation: 0,
@@ -146,21 +155,35 @@ runScript(async ({ users }) => {
           typeSalaire: "SMIC",
           ordre: "1.1",
         },
+        {
+          dateDebut: "2021-02-01T00:00:00+00:00",
+          dateFin: "2021-02-28T00:00:00+00:00",
+          taux: 30.5,
+          typeSalaire: "SMC",
+          ordre: "2.1",
+        },
+        {
+          dateDebut: "2021-02-01T00:00:00+00:00",
+          dateFin: "2021-02-28T00:00:00+00:00",
+          taux: 75.5,
+          typeSalaire: "SMIC",
+          ordre: "3.1",
+        },
       ],
     },
     organismeFormation: {
-      siret: "12345678901234",
-      denomination: "string",
-      formationInterne: true,
+      siret: "30291412200015",
+      denomination: "ASS DES MAISONS FAMILIALES",
+      formationInterne: false,
       uaiCfa: "0123456A",
-      visaCfa: true,
+      visaCfa: false,
       adresse: {
-        numero: 14,
-        voie: "Boulevard de la liberté",
+        numero: 5,
+        voie: "PL DU GENERAL DE GAULLE",
         complement: "Etage 6 - Appartement 654",
-        label: "14 Boulevard de la liberté",
-        codePostal: "75000",
-        commune: "PARIS",
+        label: "5 PL DU GENERAL DE GAULLE",
+        codePostal: "60380",
+        commune: "SONGEONS",
       },
     },
     dossierId: dossier._id,

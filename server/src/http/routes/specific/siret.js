@@ -1,19 +1,19 @@
 const express = require("express");
 const Joi = require("joi");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
+const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 const { getDataFromSiret } = require("../../../logic/handlers/siretHandler");
 
-module.exports = () => {
+module.exports = (components) => {
   const router = express.Router();
 
   router.post(
     "/",
+    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async ({ body }, res) => {
       const { siret } = await Joi.object({
         siret: Joi.string().required(),
       }).validateAsync(body, { abortEarly: false });
-
-      // TODO HAS RIGHTS
 
       const data = await getDataFromSiret(siret);
 

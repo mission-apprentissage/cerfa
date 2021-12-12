@@ -5,7 +5,7 @@ const usersSchema = {
     type: String,
     default: null,
     description: "Le nom de l'utilisateur",
-    unique: true,
+    unique: true, // TODO
   },
   password: {
     type: String,
@@ -15,21 +15,25 @@ const usersSchema = {
   email: {
     type: String,
     default: null,
+    required: true,
     description: "Email",
   },
   nom: {
     type: String,
     default: null,
+    required: true,
     description: "Nom",
   },
   prenom: {
     type: String,
     default: null,
+    required: true,
     description: "Prenom",
   },
   telephone: {
     default: null,
     type: String,
+    required: true,
     description: "Téléphone",
   },
   siret: {
@@ -73,13 +77,14 @@ const usersSchema = {
     description: "true si l'utilisateur est administrateur",
   },
   roles: {
-    type: [String],
-    default: [],
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "role",
     description: "Roles de l'utilisateur",
+    default: [],
   },
   acl: {
     type: [String],
-    default: null,
+    default: [],
     description: "Access control level array",
   },
   last_connection: {

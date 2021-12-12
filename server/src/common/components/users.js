@@ -27,26 +27,38 @@ module.exports = async () => {
       return null;
     },
     getUser: async (username) => await User.findOne({ username }),
+    getUserById: async (id, select = {}) => await User.findById(id, select).lean(),
     getUserByEmail: async (email) => await User.findOne({ email }),
     getUsers: async (filters = {}) => await User.find(filters, { password: 0, _id: 0, __v: 0 }).lean(),
     createUser: async (username, password, options = {}) => {
       const hash = options.hash || sha512Utils.hash(password);
       const permissions = options.permissions || {};
 
+      let rolesDb = [];
+      if (options.roles && options.roles.length > 0) {
+        rolesDb = await Role.find({ name: { $in: options.roles } }, { _id: 1 });
+        if (!rolesDb.length === 0) {
+          throw new Error("Roles doesn't exist");
+        }
+      }
+
       const user = await User.create({
         username,
         password: hash,
         isAdmin: !!permissions.isAdmin,
-        email: options.email || "",
-        roles: options.roles || [],
+        email: options.email,
+        nom: options.nom,
+        prenom: options.prenom,
+        telephone: options.telephone,
+        roles: rolesDb,
         acl: options.acl || [],
       });
 
       const { createWorkspace } = await workspaces();
       await createWorkspace({
         username,
-        nom: "Votre espace",
-        description: "Votre espace de travail",
+        nom: `Espace - ${options.prenom} ${options.nom}`,
+        description: `L'espace de travail de ${options.prenom} ${options.nom}`,
       });
 
       return user;
@@ -87,7 +99,7 @@ module.exports = async () => {
     structureUser: async (user) => {
       const permissions = pick(user, ["isAdmin"]);
 
-      const rolesList = await Role.find({ name: { $in: user.roles } }).lean();
+      const rolesList = await Role.find({ _id: { $in: user.roles } }).lean();
       const rolesAcl = rolesList.reduce((acc, { acl }) => [...acc, ...acl], []);
 
       const { getUserWorkspace } = await workspaces();
@@ -97,8 +109,10 @@ module.exports = async () => {
         permissions,
         sub: user.username,
         email: user.email,
+        nom: user.nom,
+        prenom: user.prenom,
         account_status: user.account_status,
-        roles: permissions.isAdmin ? ["admin", ...user.roles] : user.roles,
+        roles: rolesList,
         acl: uniq([...rolesAcl, ...user.acl]),
         workspaceId: workspace?._id.toString(),
       };

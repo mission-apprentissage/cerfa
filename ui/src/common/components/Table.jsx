@@ -68,10 +68,10 @@ const Table = ({ data, onRowClick, components }) => {
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   display={"flex"}
                   fontWeight="bold"
+                  fontSize="0.9rem"
                   overflow="hidden"
                   borderColor="grey.800"
                   color="grey.800"
-                  px={3}
                 >
                   <Stack direction="row" alignItems="center" justifyContent="center">
                     <Text>{column.render("Header")}</Text>
@@ -100,7 +100,7 @@ const Table = ({ data, onRowClick, components }) => {
               >
                 {row.cells.map((cell, i) => {
                   return (
-                    <Box as="td" {...cell.getCellProps()} display={"flex"} px={3} overflow="hidden">
+                    <Box as="td" {...cell.getCellProps()} display={"flex"} px={0} overflow="hidden">
                       {components && components[cell.column.id] ? (
                         components[cell.column.id](cell.value, cell.row.id)
                       ) : !cell.value ? (

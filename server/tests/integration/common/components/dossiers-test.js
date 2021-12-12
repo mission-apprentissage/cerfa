@@ -5,7 +5,8 @@ const { initComponents } = require("../../../utils/testUtils");
 
 describe("Dossiers component", () => {
   it("Permet de créer un dossier", async () => {
-    const { testUser } = await initComponents();
+    const { testUser, components } = await initComponents();
+    await components.roles.createRole({ name: "dossier.admin", type: "permission", acl: [] });
 
     const { createDossier } = await dossiers();
 
@@ -23,8 +24,8 @@ describe("Dossiers component", () => {
     assert.strictEqual(found.draft, true);
   });
   it("Permet de sauvegarder un dossier", async () => {
-    const { testUser } = await initComponents();
-
+    const { testUser, components } = await initComponents();
+    await components.roles.createRole({ name: "dossier.admin", type: "permission", acl: [] });
     const { createDossier, saveDossier } = await dossiers();
 
     const created = await createDossier({ sub: testUser.username });

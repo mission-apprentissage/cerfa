@@ -10,44 +10,33 @@ import {
   AccordionPanel,
   Box,
   Button,
-  Checkbox,
   Container,
   FormControl,
   FormLabel,
   Heading,
-  HStack,
   Input,
   Stack,
-  Flex,
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
-import ACL from "./acl";
+
+import Acl from "./components/Acl";
 
 const RoleLine = ({ role }) => {
-  const { values, handleSubmit, handleChange } = useFormik({
+  const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
-      newName: role?.name || "",
-      newAcl: role?.acl || [],
+      name: role?.name || "",
+      acl: role?.acl || [],
     },
-    onSubmit: ({ newAcl, newName }, { setSubmitting }) => {
+    onSubmit: (res, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
         try {
           if (role) {
-            const body = {
-              name: newName,
-              acl: newAcl,
-            };
-            await _put(`/api/v1/admin/role/${role.name}`, body);
-            document.location.reload(true);
+            await _put(`/api/v1/admin/role/${role.name}`, res);
           } else {
-            const body = {
-              name: newName,
-              acl: newAcl,
-            };
-            await _post(`/api/v1/admin/role/`, body);
-            document.location.reload(true);
+            await _post(`/api/v1/admin/role/`, res);
           }
+          document.location.reload(true);
         } catch (e) {
           console.log(e);
         }
@@ -71,57 +60,10 @@ const RoleLine = ({ role }) => {
     <form onSubmit={handleSubmit}>
       <FormControl py={2}>
         <FormLabel>Nom du rôle</FormLabel>
-        <Input type="text" id="newName" name="newName" value={values.newName} onChange={handleChange} />
+        <Input type="text" id="name" name="name" value={values.name} onChange={handleChange} />
       </FormControl>
 
-      <Accordion bg="white" mt={3} allowToggle>
-        <AccordionItem>
-          <AccordionButton _expanded={{ bg: "grey.200" }} border={"none"}>
-            <Box flex="1" textAlign="left" fontSize="sm">
-              Droits d'accès
-            </Box>
-            <AccordionIcon />
-          </AccordionButton>
-          <AccordionPanel pb={4} border={"none"} bg="grey.100">
-            <FormControl p={2}>
-              {ACL.map((item, i) => {
-                return (
-                  <Flex flexDirection="column" mb={5} key={i}>
-                    <Box mb={2}>
-                      <Checkbox
-                        name="newAcl"
-                        onChange={handleChange}
-                        value={item.ref}
-                        isChecked={values.newAcl.includes(item.ref)}
-                        fontWeight="bold"
-                      >
-                        {item.feature}
-                      </Checkbox>
-                    </Box>
-                    <Flex ml={5} pr={14}>
-                      {item.subFeatures?.map((subitem, j) => {
-                        return (
-                          <HStack spacing={5} ml={5} key={`${i}_${j}`}>
-                            <Checkbox
-                              name="newAcl"
-                              onChange={handleChange}
-                              value={subitem.ref}
-                              isChecked={values.newAcl.includes(subitem.ref)}
-                              isDisabled={!values.newAcl.includes(item.ref)}
-                            >
-                              {subitem.feature}
-                            </Checkbox>
-                          </HStack>
-                        );
-                      })}
-                    </Flex>
-                  </Flex>
-                );
-              })}
-            </FormControl>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+      <Acl acl={values.acl} onChanged={(newAcl) => setFieldValue("acl", newAcl)} />
 
       {role && (
         <Box>
@@ -142,7 +84,7 @@ const RoleLine = ({ role }) => {
   );
 };
 
-export default ({ match }) => {
+export default () => {
   const [roles, setRoles] = useState([]);
   useEffect(() => {
     async function run() {
@@ -156,7 +98,7 @@ export default ({ match }) => {
   setTitle(title);
 
   return (
-    <Layout match={match}>
+    <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
         <Container maxW="xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
@@ -186,9 +128,16 @@ export default ({ match }) => {
               return (
                 <Accordion bg="white" key={i} allowToggle>
                   <AccordionItem>
-                    <AccordionButton _expanded={{ bg: "grey.200" }} border={"1px solid"} borderColor={"bluefrance"}>
+                    <AccordionButton
+                      _expanded={{ bg: roleAttr.type === "user" ? "greensoft.300" : "grey.200", color: "bluefrance" }}
+                      _hover={{ bg: "grey.200", color: "bluefrance" }}
+                      bg={roleAttr.type === "user" ? "greensoft.500" : "transparent"}
+                      color={roleAttr.type === "user" ? "white" : "bluefrance"}
+                      border={"1px solid"}
+                      borderColor={"bluefrance"}
+                    >
                       <Box flex="1" textAlign="left" fontSize="gamma">
-                        {roleAttr.name}
+                        {roleAttr.name} {roleAttr.type === "user" ? "(Utilisateur)" : "(Permission)"}
                       </Box>
                       <AccordionIcon />
                     </AccordionButton>

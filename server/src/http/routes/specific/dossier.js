@@ -3,60 +3,38 @@ const Joi = require("joi");
 const Boom = require("boom");
 const { Dossier } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
-const permissionsMiddleware = require("../../middlewares/permissionsMiddleware");
+const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 
-module.exports = ({ permissions, cerfas, dossiers }) => {
+module.exports = (components) => {
   const router = express.Router();
-
-  router.get(
-    "/",
-    permissionsMiddleware(),
-    tryCatch(async ({ query, user }, res) => {
-      let { workspaceId } = await Joi.object({
-        workspaceId: Joi.string().required(),
-      }).validateAsync(query, { abortEarly: false });
-
-      const perms = await permissions.findPermissions({ workspaceId, dossierId: null, userEmail: user.email });
-      // Check Acl
-      if (!perms.lenght === 0) {
-        throw Boom.unauthorized("Accès non autorisé");
-      }
-      if (!perms.lenght > 1) {
-        throw Boom.badRequest("something went wrong");
-      }
-
-      const results = await Dossier.find({ workspaceId });
-
-      return res.json(results);
-    })
-  );
-
+  const { dossiers, users } = components;
   router.get(
     "/:id",
-    tryCatch(async ({ params }, res) => {
-      const dossier = await Dossier.findById(params.id);
+    permissionsDossierMiddleware(components, ["dossier"]),
+    tryCatch(async ({ user, params }, res) => {
+      const dossier = await dossiers.findDossierById(params.id);
       if (!dossier) {
         throw Boom.notFound("Doesn't exist");
       }
 
-      // TODO HAS RIGHTS
+      const owner = await users.getUserById(dossier.owner, { email: 1, nom: 1, prenom: 1, _id: 0 });
+      if (!owner) {
+        throw Boom.badRequest("Something went wrong");
+      }
 
-      res.json(dossier);
-    })
-  );
-
-  router.post(
-    "/",
-    tryCatch(async ({ user }, res) => {
-      const result = await dossiers.createDossier(user);
-      await cerfas.createCerfa({ dossierId: result._id.toString() });
-
-      return res.json(result);
+      res.json({
+        ...dossier,
+        acl: user.currentPermissionAcl,
+        owner: {
+          ...owner,
+        },
+      });
     })
   );
 
   router.put(
     "/:id",
+    permissionsDossierMiddleware(components, ["dossier/sauvegarder"]),
     tryCatch(async ({ body, params }, res) => {
       const data = await Joi.object({
         documents: Joi.array().items({
@@ -72,8 +50,6 @@ module.exports = ({ permissions, cerfas, dossiers }) => {
         saved: Joi.string(),
       }).validateAsync(body, { abortEarly: false });
 
-      // TODO HAS RIGHTS
-
       const result = await Dossier.findOneAndUpdate({ _id: params.id }, data, {
         new: true,
       });
@@ -84,8 +60,8 @@ module.exports = ({ permissions, cerfas, dossiers }) => {
 
   router.put(
     "/:id/saved",
+    permissionsDossierMiddleware(components, ["dossier/sauvegarder"]),
     tryCatch(async ({ params }, res) => {
-      // TODO HAS RIGHTS
       const saved = await dossiers.saveDossier(params.id);
 
       return res.json(saved);
@@ -94,8 +70,8 @@ module.exports = ({ permissions, cerfas, dossiers }) => {
 
   router.put(
     "/:id/publish",
+    permissionsDossierMiddleware(components, ["dossier/publication"]),
     tryCatch(async ({ params }, res) => {
-      // TODO HAS RIGHTS
       await dossiers.publishDossier(params.id);
 
       return res.json({ publish: true });
@@ -104,8 +80,8 @@ module.exports = ({ permissions, cerfas, dossiers }) => {
 
   router.put(
     "/:id/unpublish",
+    permissionsDossierMiddleware(components, ["dossier/publication"]),
     tryCatch(async ({ params }, res) => {
-      // TODO HAS RIGHTS
       await dossiers.unpublishDossier(params.id);
 
       return res.json({ publish: false });
@@ -114,8 +90,8 @@ module.exports = ({ permissions, cerfas, dossiers }) => {
 
   router.delete(
     "/:id",
+    permissionsDossierMiddleware(components, ["dossier/supprimer"]),
     tryCatch(async ({ params }, res) => {
-      // TODO HAS RIGHTS
       const result = await dossiers.removeDossier(params.id);
       return res.json(result);
     })

@@ -15,19 +15,11 @@ import {
   Button,
 } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
-import { isUserAdmin, hasAccessTo } from "../../../common/utils/rolesUtils";
-import {
-  MenuFill,
-  Close,
-  AccountFill,
-  DownloadLine,
-  InfoCircle,
-  ExternalLinkLine,
-  LockFill,
-} from "../../../theme/components/icons";
+import { isUserAdmin, hasPageAccessTo } from "../../../common/utils/rolesUtils";
+import { MenuFill, Close, AccountFill, DownloadLine, InfoCircle, LockFill } from "../../../theme/components/icons";
 import { _get } from "../../../common/httpClient";
 
-const NavigationMenu = ({ isDashboard, ...props }) => {
+const NavigationMenu = ({ isMyWorkspace, isSharedWithMe, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
@@ -35,7 +27,7 @@ const NavigationMenu = ({ isDashboard, ...props }) => {
   return (
     <NavBarContainer {...props}>
       <NavToggle toggle={toggle} isOpen={isOpen} />
-      <NavLinks isOpen={isOpen} isDashboard={isDashboard} />
+      <NavLinks isOpen={isOpen} isMyWorkspace={isMyWorkspace} isSharedWithMe={isSharedWithMe} />
       <UserMenu />
     </NavBarContainer>
   );
@@ -52,7 +44,7 @@ const UserMenu = () => {
       history.push("/");
     }
   };
-
+  let accountType = auth.roles.length ? auth.roles[0].name : isUserAdmin(auth) ? "admin" : "utilisateur";
   return (
     <>
       {auth?.sub === "anonymous" && (
@@ -72,7 +64,7 @@ const UserMenu = () => {
                 <Text color="bluefrance" textStyle="sm">
                   {auth.sub}{" "}
                   <Text color="grey.600" as="span">
-                    ({isUserAdmin(auth) ? "admin" : "Utilisateur"})
+                    ({accountType})
                   </Text>
                 </Text>
               </Box>
@@ -80,22 +72,22 @@ const UserMenu = () => {
           </MenuButton>
           <MenuList>
             <MenuGroup title="Profile">
-              {hasAccessTo(auth, "page_gestion_utilisateurs") && (
+              {hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
                 <MenuItem as={NavLink} to="/admin/users" icon={<AccountFill boxSize={4} />}>
                   Gestion des utilisateurs
                 </MenuItem>
               )}
-              {hasAccessTo(auth, "page_gestion_roles") && (
+              {hasPageAccessTo(auth, "admin/page_gestion_roles") && (
                 <MenuItem as={NavLink} to="/admin/roles" icon={<AccountFill boxSize={4} />}>
                   Gestion des rôles
                 </MenuItem>
               )}
-              {hasAccessTo(auth, "page_upload") && (
+              {hasPageAccessTo(auth, "admin/page_upload") && (
                 <MenuItem as={NavLink} to="/admin/upload" icon={<DownloadLine boxSize={4} />}>
                   Upload de fichiers
                 </MenuItem>
               )}
-              {hasAccessTo(auth, "page_message_maintenance") && (
+              {hasPageAccessTo(auth, "admin/page_message_maintenance") && (
                 <MenuItem as={NavLink} to="/admin/maintenance" icon={<InfoCircle boxSize={4} />}>
                   Message de maintenance
                 </MenuItem>
@@ -119,7 +111,7 @@ const NavToggle = ({ toggle, isOpen }) => {
   );
 };
 
-const NavItem = ({ children, to = "/", isDashboard, ...rest }) => {
+const NavItem = ({ children, to = "/", isMyWorkspace, isSharedWithMe, ...rest }) => {
   const { pathname } = useLocation();
   const isActive = pathname === to;
 
@@ -128,11 +120,11 @@ const NavItem = ({ children, to = "/", isDashboard, ...rest }) => {
       p={4}
       as={NavLink}
       to={to}
-      color={isDashboard ? "white" : isActive ? "bluefrance" : "grey.800"}
+      color={isActive || isMyWorkspace || isSharedWithMe ? "bluefrance" : "grey.800"}
       _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
       borderBottom="3px solid"
-      borderColor={isDashboard ? "bluefrance" : isActive ? "bluefrance" : "transparent"}
-      bg={isDashboard ? "bluefrance" : "transparent"}
+      borderColor={isActive || isMyWorkspace || isSharedWithMe ? "bluefrance" : "transparent"}
+      bg={"transparent"}
     >
       <Text display="block" {...rest}>
         {children}
@@ -141,7 +133,7 @@ const NavItem = ({ children, to = "/", isDashboard, ...rest }) => {
   );
 };
 
-const NavLinks = ({ isOpen, isDashboard }) => {
+const NavLinks = ({ isMyWorkspace, isSharedWithMe, isOpen }) => {
   let [auth] = useAuth();
   return (
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
@@ -153,32 +145,24 @@ const NavLinks = ({ isOpen, isDashboard }) => {
         textStyle="sm"
       >
         <NavItem to="/">Accueil</NavItem>
-        {hasAccessTo(auth, "page_dashboard") && (
-          <NavItem to="/mon-espace/mes-dossiers" isDashboard={isDashboard}>
-            Mon espace
-          </NavItem>
+        {auth?.sub !== "anonymous" && (
+          <>
+            {" "}
+            <NavItem to="/mon-espace/mes-dossiers" isMyWorkspace={isMyWorkspace}>
+              Mon espace
+            </NavItem>
+            <NavItem to="/partages-avec-moi" isSharedWithMe={isSharedWithMe}>
+              Partagés avec moi
+            </NavItem>
+          </>
         )}
-        <Link
-          href="https://github.com/mission-apprentissage/cerfa/releases"
-          p={4}
-          color="grey.800"
-          _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
-          borderBottom="3px solid"
-          borderColor="transparent"
-          isExternal
-        >
-          <Text display="block">
-            Journal des modifications
-            <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} ml={2} />{" "}
-          </Text>
-        </Link>
       </Flex>
     </Box>
   );
 };
 
-const NavBarContainer = ({ children, isDashboard, ...props }) => {
-  const boxProps = !isDashboard
+const NavBarContainer = ({ children, isMyWorkspace, ...props }) => {
+  const boxProps = !isMyWorkspace
     ? {
         boxShadow: "md",
       }

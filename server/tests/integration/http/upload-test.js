@@ -8,6 +8,9 @@ describe("[Routes] Upload", () => {
     let { httpClient, createAndLogUser } = await startServer();
     let { Cookie } = await createAndLogUser("user", "password", {
       email: "user1@apprentissage.beta.gouv.fr",
+      nom: "hack",
+      prenom: "me",
+      telephone: "+33102030405",
       permissions: { isAdmin: true },
     });
 

@@ -19,14 +19,14 @@ import {
   HStack,
   Input,
   Stack,
-  Flex,
   useToast,
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
-import ACL from "./acl";
 import generator from "generate-password-browser";
 import { useQuery } from "react-query";
+
+import Acl from "./components/Acl";
 
 const buildRolesAcl = (newRoles, roles) => {
   let acl = [];
@@ -43,7 +43,7 @@ const buildRolesAcl = (newRoles, roles) => {
 
 const UserLine = ({ user, roles }) => {
   const toast = useToast();
-  const [rolesAcl, setRolesAcl] = useState(buildRolesAcl(user?.roles || [], roles));
+  const [, setRolesAcl] = useState(buildRolesAcl(user?.roles || [], roles));
 
   useEffect(() => {
     async function run() {
@@ -199,73 +199,31 @@ const UserLine = ({ user, roles }) => {
       </FormControl>
 
       <FormControl py={2}>
-        <FormLabel>Rôles</FormLabel>
+        <FormLabel>Type de compte</FormLabel>
         <HStack spacing={5}>
-          {roles.map((role, i) => {
-            return (
-              <Checkbox
-                name="roles"
-                key={i}
-                onChange={() => handleRoleChange(role.name)}
-                value={role.name}
-                isChecked={values.roles.includes(role.name)}
-              >
-                {role.name}
-              </Checkbox>
-            );
-          })}
+          {roles
+            .filter((role) => role.type === "user")
+            .map((role, i) => {
+              return (
+                <Checkbox
+                  name="roles"
+                  key={i}
+                  onChange={() => handleRoleChange(role.name)}
+                  value={role.name}
+                  isChecked={values.roles.includes(role.name)}
+                >
+                  {role.name}
+                </Checkbox>
+              );
+            })}
         </HStack>
       </FormControl>
 
-      <Accordion bg="white" mt={3} allowToggle>
-        <AccordionItem>
-          <AccordionButton _expanded={{ bg: "grey.200" }} border={"none"}>
-            <Box flex="1" textAlign="left" fontSize="sm">
-              Droits d'accès Supplémentaire
-            </Box>
-            <AccordionIcon />
-          </AccordionButton>
-          <AccordionPanel pb={4} border={"none"} bg="grey.100">
-            <Box mt={5} ml={5}>
-              {ACL.map((item, i) => {
-                return (
-                  <Flex flexDirection="column" mb={5} key={i}>
-                    <Box mb={2}>
-                      <Checkbox
-                        name="acl"
-                        onChange={handleChange}
-                        value={item.ref}
-                        isChecked={values.acl.includes(item.ref) || rolesAcl.includes(item.ref)}
-                        isDisabled={rolesAcl.includes(item.ref)}
-                        fontWeight="bold"
-                      >
-                        {item.feature}
-                      </Checkbox>
-                    </Box>
-                    <Flex ml={5} pr={14}>
-                      {item.subFeatures?.map((subitem, j) => {
-                        return (
-                          <HStack spacing={5} ml={5} key={`${i}_${j}`}>
-                            <Checkbox
-                              name="acl"
-                              onChange={handleChange}
-                              value={subitem.ref}
-                              isChecked={values.acl.includes(subitem.ref) || rolesAcl.includes(subitem.ref)}
-                              isDisabled={rolesAcl.includes(subitem.ref)}
-                            >
-                              {subitem.feature}
-                            </Checkbox>
-                          </HStack>
-                        );
-                      })}
-                    </Flex>
-                  </Flex>
-                );
-              })}
-            </Box>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+      <Acl
+        acl={values.acl}
+        title=" Droits d'accès Supplémentaire"
+        onChanged={(newAcl) => setFieldValue("acl", newAcl)}
+      />
 
       {user && (
         <Box>
@@ -286,7 +244,7 @@ const UserLine = ({ user, roles }) => {
   );
 };
 
-export default ({ match }) => {
+export default () => {
   const { data: roles } = useQuery("roles", () => _get(`/api/v1/admin/roles/`), {
     refetchOnWindowFocus: false,
   });
@@ -299,7 +257,7 @@ export default ({ match }) => {
   setTitle(title);
 
   return (
-    <Layout match={match}>
+    <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
         <Container maxW="xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />

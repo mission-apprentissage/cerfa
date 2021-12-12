@@ -19,8 +19,12 @@ async function initComponents(options) {
   let { components, helpers } = await testContext();
 
   const defaultOptions = {
-    userOpt: { username: "user", password: "password", options: { email: "h@ck.me" } },
-    roleOpt: { name: "wks.admin", acl: [] },
+    userOpt: {
+      username: "user",
+      password: "password",
+      options: { email: "h@ck.me", nom: "hack", prenom: "me", telephone: "+33102030405" },
+    },
+    roleOpt: { name: "wks.admin", type: "permission", acl: [] },
   };
 
   const roleOpt = options?.roleOpt || defaultOptions.roleOpt;
@@ -42,7 +46,7 @@ async function startServer() {
   const app = await server(components);
   const httpClient = axiosist(app);
 
-  await components.roles.createRole({ name: "wks.admin" });
+  await components.roles.createRole({ name: "wks.admin", type: "permission" });
 
   return {
     httpClient,

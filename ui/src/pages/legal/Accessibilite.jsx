@@ -5,12 +5,12 @@ import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
 import { ExternalLinkLine } from "../../theme/components/icons";
 
-export default ({ match }) => {
+export default () => {
   const title = "Accessibilité";
   setTitle(title);
 
   return (
-    <Layout match={match}>
+    <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />

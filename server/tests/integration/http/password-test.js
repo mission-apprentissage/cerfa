@@ -9,6 +9,9 @@ describe("[Routes] Password", () => {
     const { httpClient, createAndLogUser, getEmailsSent } = await startServer();
     await createAndLogUser("user", "password", {
       email: "user1@apprentissage.beta.gouv.fr",
+      nom: "hack",
+      prenom: "me",
+      telephone: "+33102030405",
       permissions: { isAdmin: true },
     });
 
@@ -26,7 +29,13 @@ describe("[Routes] Password", () => {
 
   it("Vérifie qu'on ne peut pas demander la réinitialisation du mot de passe pour un utilisateur inconnu", async () => {
     const { httpClient, createAndLogUser } = await startServer();
-    await createAndLogUser("admin", "password", { email: "h@ck.me", permissions: { isAdmin: true } });
+    await createAndLogUser("admin", "password", {
+      email: "h@ck.me",
+      nom: "hack",
+      prenom: "me",
+      telephone: "+33102030405",
+      permissions: { isAdmin: true },
+    });
 
     const response = await httpClient.post("/api/v1/password/forgotten-password", {
       username: "inconnu",
@@ -37,7 +46,12 @@ describe("[Routes] Password", () => {
 
   it("Vérifie qu'on ne peut pas demander la réinitialisation du mot de passe pour un utilisateur invalide", async () => {
     const { httpClient, createAndLogUser } = await startServer();
-    await createAndLogUser("user123", "password", { email: "h@ck.me" });
+    await createAndLogUser("user123", "password", {
+      email: "h@ck.me",
+      nom: "hack",
+      prenom: "me",
+      telephone: "+33102030405",
+    });
 
     const response = await httpClient.post("/api/v1/password/forgotten-password", {
       type: "cfa",
@@ -49,7 +63,13 @@ describe("[Routes] Password", () => {
 
   it("Vérifie qu'un utilisateur peut changer son mot de passe", async () => {
     const { httpClient, createAndLogUser } = await startServer();
-    await createAndLogUser("admin", "password", { email: "h@ck.me", permissions: { isAdmin: true } });
+    await createAndLogUser("admin", "password", {
+      email: "h@ck.me",
+      nom: "hack",
+      prenom: "me",
+      telephone: "+33102030405",
+      permissions: { isAdmin: true },
+    });
 
     const response = await httpClient.post("/api/v1/password/reset-password", {
       passwordToken: createPasswordToken("admin"),
@@ -65,7 +85,13 @@ describe("[Routes] Password", () => {
 
   it("Vérifie qu'on doit spécifier un mot de passe valide", async () => {
     const { httpClient, createAndLogUser } = await startServer();
-    await createAndLogUser("admin", "password", { email: "h@ck.me", permissions: { isAdmin: true } });
+    await createAndLogUser("admin", "password", {
+      email: "h@ck.me",
+      nom: "hack",
+      prenom: "me",
+      telephone: "+33102030405",
+      permissions: { isAdmin: true },
+    });
 
     const response = await httpClient.post("/api/v1/password/reset-password", {
       passwordToken: createPasswordToken("admin"),

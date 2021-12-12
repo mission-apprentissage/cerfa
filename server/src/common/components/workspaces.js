@@ -41,19 +41,39 @@ module.exports = async () => {
 
       return result;
     },
-    getUserWorkspace: async (user) => await Workspace.findOne({ owner: user._id }),
-    // TODO Permission
-    // addContributeur: async (data) => {
-    //   let { workspaceId, username } = await Joi.object({
-    //     username: Joi.string().required(),
-    //     workspaceId: Joi.string().required(),
-    //   }).validateAsync(data, { abortEarly: false });
+    getUserWorkspace: async (user, select = {}) => await Workspace.findOne({ owner: user._id }, select),
+    findWorkspaceById: async (id, select = {}) => await Workspace.findById(id, select).lean(),
+    addContributeur: async (workspaceId, user, as, acl = []) => {
+      const wksDb = await Workspace.findById(workspaceId);
+      if (!wksDb) {
+        throw new Error("wks doesn't exist");
+      }
 
-    //   const userDb = await User.findOne({ username });
-    //   if (!userDb) {
-    //     throw new Error("User doesn't exist");
-    //   }
-    //   //workspaceId
-    // },
+      const { createPermission } = await permissions();
+      await createPermission({
+        workspaceId: wksDb._id.toString(),
+        dossierId: null,
+        userEmail: user.email,
+        role: as,
+        acl,
+      });
+
+      wksDb.contributeurs = [...wksDb.contributeurs, user._id];
+      await wksDb.save();
+    },
+    removeContributeur: async (workspaceId, userId, permId) => {
+      const wksDb = await Workspace.findById(workspaceId);
+      if (!wksDb) {
+        throw new Error("wks doesn't exist");
+      }
+
+      const { removePermission } = await permissions();
+      await removePermission(permId);
+
+      wksDb.contributeurs = wksDb.contributeurs.filter((contributeur) => contributeur === userId);
+
+      await wksDb.save();
+      return wksDb.contributeurs;
+    },
   };
 };

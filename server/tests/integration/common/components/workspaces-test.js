@@ -21,8 +21,8 @@ describe("Workspace component", () => {
     const created = await Workspace.findOne({ owner: testUser._id });
 
     assert.strictEqual(created.owner.toString(), testUser._id.toString());
-    assert.strictEqual(created.nom, "Votre espace");
-    assert.strictEqual(created.description, "Votre espace de travail");
+    assert.strictEqual(created.nom, "Espace - me hack");
+    assert.strictEqual(created.description, "L'espace de travail de me hack");
     assert.strictEqual(created.siren, null);
     // assert.strictEqual(created.contributeurs[0].toString(), testContributeurId);
 
@@ -30,8 +30,8 @@ describe("Workspace component", () => {
       owner: testUser._id.toString(),
     });
     assert.strictEqual(found.owner.toString(), testUser._id.toString());
-    assert.strictEqual(found.nom, "Votre espace");
-    assert.strictEqual(found.description, "Votre espace de travail");
+    assert.strictEqual(found.nom, "Espace - me hack");
+    assert.strictEqual(found.description, "L'espace de travail de me hack");
     assert.strictEqual(found.siren, null);
     // assert.strictEqual(found.contributeurs[0].toString(), testContributeurId);
   });
