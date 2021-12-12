@@ -4,8 +4,12 @@ import { NavLink } from "react-router-dom";
 import { DateTime } from "luxon";
 import { Parametre } from "../../../theme/components/icons";
 import { Table } from "../../../common/components/Table";
+import { useRecoilValue } from "recoil";
+import { hasContextAccessTo } from "../../../common/utils/rolesUtils";
+import { workspaceAtom } from "../../../common/hooks/workspaceAtoms";
 
 export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers" }) => {
+  const workspace = useRecoilValue(workspaceAtom);
   return (
     <Table
       data={dossiers.map((m) => ({
@@ -95,21 +99,22 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
           );
         },
         Actions: (value, i) => {
-          // TODO has right to delete
           return (
             <Menu>
               <MenuButton as={Button} variant="unstyled" width="auto" height="full">
                 <Parametre width={"2rem"} height={"1.2rem"} color="bluefrance" />
               </MenuButton>
               <MenuList>
-                <MenuItem
-                  color="redmarianne"
-                  onClick={async () => {
-                    await onDeleteClicked(dossiers[i]);
-                  }}
-                >
-                  Supprimer
-                </MenuItem>
+                {hasContextAccessTo(workspace, "wks/page_espace/page_dossiers/supprimer_dossier") && (
+                  <MenuItem
+                    color="redmarianne"
+                    onClick={async () => {
+                      await onDeleteClicked(dossiers[i]);
+                    }}
+                  >
+                    Supprimer
+                  </MenuItem>
+                )}
               </MenuList>
             </Menu>
           );

@@ -1,10 +1,10 @@
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
-const { MaintenanceMessage, Role, Dossier, Cerfa } = require("../../common/model/index");
+const { MaintenanceMessage, Role, Cerfa } = require("../../common/model/index");
 
 const defaultRolesAcls = require("./defaultRolesAcls");
 
-runScript(async ({ users, workspaces }) => {
+runScript(async ({ users, workspaces, dossiers }) => {
   await MaintenanceMessage.create({
     context: "automatique",
     type: "alert",
@@ -41,15 +41,10 @@ runScript(async ({ users, workspaces }) => {
 
   const wks = await workspaces.getUserWorkspace(userAdmin, { _id: 1 });
 
-  await workspaces.addContributeur(wks._id, userEntreprise, "wks.admin");
+  await workspaces.addContributeur(wks._id, userEntreprise, "wks.member");
 
-  const dossier = await Dossier.create({
-    nom: "Dossier Test",
-    draft: true,
-    owner: userAdmin._id,
-    workspaceId: wks._id,
-    saved: true,
-  });
+  const dossier = await dossiers.createDossier({ sub: userAdmin.username }, { nom: "Dossier Test", saved: true });
+
   logger.info(`Dossier test created`);
 
   await Cerfa.create({

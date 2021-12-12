@@ -8,7 +8,7 @@ const permissionsWorkspaceMiddleware = require("../../middlewares/permissionsWor
 module.exports = (components) => {
   const router = express.Router();
 
-  const { permissions, roles, workspaces, users, dossiers } = components;
+  const { permissions, roles, workspaces, users, dossiers, cerfas } = components;
 
   const buildContributorsResult = async (userId, workspaceId) => {
     const userSelectFields = { email: 1, nom: 1, prenom: 1, _id: 0 };
@@ -77,6 +77,17 @@ module.exports = (components) => {
     })
   );
 
+  router.post(
+    "/dossier",
+    permissionsWorkspaceMiddleware(components, ["wks/page_espace/page_dossiers/ajouter_nouveau_dossier"]),
+    tryCatch(async ({ user }, res) => {
+      const result = await dossiers.createDossier(user);
+      await cerfas.createCerfa({ dossierId: result._id.toString() });
+
+      return res.json(result);
+    })
+  );
+
   router.get(
     "/sharedwithme",
     tryCatch(async ({ user }, res) => {
@@ -111,7 +122,6 @@ module.exports = (components) => {
           });
         }
       }
-      console.log(results, user);
 
       res.json(results);
     })

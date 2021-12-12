@@ -4,7 +4,7 @@ import { Flex, Box, Heading, Button } from "@chakra-ui/react";
 import { _get, _delete } from "../../common/httpClient";
 import { useQuery } from "react-query";
 import { useRecoilValue } from "recoil";
-import { hasWorkspaceAccessTo } from "../../common/utils/rolesUtils";
+import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 import { workspacePathsAtom, workspaceTitlesAtom, workspaceAtom } from "../../common/hooks/workspaceAtoms";
 import TableDossiers from "./components/TableDossiers";
 
@@ -38,7 +38,7 @@ export const Header = () => {
           {titles.dossiers} ({workspaceDossiers.length})
         </Heading>
       </Box>
-      {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_dossiers/ajouter_nouveau_dossier") && (
+      {hasContextAccessTo(workspace, "wks/page_espace/page_dossiers/ajouter_nouveau_dossier") && (
         <Button
           size="md"
           fontSize={{ base: "sm", md: "md" }}
@@ -59,16 +59,19 @@ export const Header = () => {
 export const Content = () => {
   const { isLoading, workspaceDossiers } = useWorkspaceDossiers();
   const paths = useRecoilValue(workspacePathsAtom);
+  const workspace = useRecoilValue(workspaceAtom);
 
   const onDeleteClicked = async (dossier) => {
-    // eslint-disable-next-line no-restricted-globals
-    const remove = confirm("Voulez-vous vraiment supprimer ce dossier ?");
-    if (remove) {
-      try {
-        await _delete(`/api/v1/dossier/${dossier._id}`);
-        window.location.reload();
-      } catch (e) {
-        console.error(e);
+    if (hasContextAccessTo(workspace, "wks/page_espace/page_dossiers/supprimer_dossier")) {
+      // eslint-disable-next-line no-restricted-globals
+      const remove = confirm("Voulez-vous vraiment supprimer ce dossier ?");
+      if (remove) {
+        try {
+          await _delete(`/api/v1/dossier/${dossier._id}`);
+          window.location.reload();
+        } catch (e) {
+          console.error(e);
+        }
       }
     }
   };

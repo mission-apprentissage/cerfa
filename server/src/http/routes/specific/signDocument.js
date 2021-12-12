@@ -2,15 +2,17 @@ const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
+const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 const { Dossier, Cerfa } = require("../../../common/model/index");
 const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfaController");
 const apiYousign = require("../../../common/apis/yousign/ApiYousign");
 
-module.exports = () => {
+module.exports = (components) => {
   const router = express.Router();
 
   router.post(
     "/",
+    permissionsDossierMiddleware(components, ["dossier/page_signatures/signer"]),
     tryCatch(async (req, res) => {
       let { cerfaId, dossierId } = await Joi.object({
         dossierId: Joi.string().required(),
@@ -18,7 +20,6 @@ module.exports = () => {
       })
         .unknown()
         .validateAsync(req.body, { abortEarly: false });
-      // TODO HAS RIGHTS
 
       const dossier = await Dossier.findById(dossierId).lean();
       if (!dossier) {
@@ -26,11 +27,9 @@ module.exports = () => {
       }
 
       const cerfa = await Cerfa.findOne({ _id: cerfaId }).lean();
-
       if (!cerfa) {
         throw Boom.notFound("Cerfa Doesn't exist");
       }
-      // TODO HAS RIGHTS
 
       const pdfBytes = await pdfCerfaController.createPdfCerfa(cerfa);
 

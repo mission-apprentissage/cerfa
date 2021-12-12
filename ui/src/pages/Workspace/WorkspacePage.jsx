@@ -4,7 +4,7 @@ import { Box, Center, Container, Spinner } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import PrivateRoute from "../../common/components/PrivateRoute";
 import { useWorkspace } from "../../common/hooks/useWorkspace";
-import { hasWorkspaceAccessTo } from "../../common/utils/rolesUtils";
+import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import WorkspaceLayout from "./components/WorkspaceLayout";
 import * as WorkspaceDossiers from "./WorkspaceDossiers";
@@ -35,7 +35,7 @@ export default () => {
       </Box>
       <Box w="100%" py={[4, 4]} px={[1, 1, 12, 24]} color="#1E1E1E">
         <Switch>
-          {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_dossiers") && (
+          {hasContextAccessTo(workspace, "wks/page_espace/page_dossiers") && (
             <PrivateRoute
               exact
               path={paths.dossiers}
@@ -47,7 +47,7 @@ export default () => {
               )}
             />
           )}
-          {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_parametres/gestion_acces") && (
+          {hasContextAccessTo(workspace, "wks/page_espace/page_parametres/gestion_acces") && (
             <PrivateRoute
               exact
               path={paths.parametresUtilisateurs}
@@ -59,7 +59,7 @@ export default () => {
               )}
             />
           )}
-          {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_parametres/gestion_notifications") && (
+          {hasContextAccessTo(workspace, "wks/page_espace/page_parametres/gestion_notifications") && (
             <PrivateRoute
               exact
               path={paths.parametresNotifications}
@@ -72,10 +72,10 @@ export default () => {
             />
           )}
 
-          {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_dossiers") && (
+          {hasContextAccessTo(workspace, "wks/page_espace/page_dossiers") && (
             <PrivateRoute exact path={paths.dossier} component={() => <Dossier />} />
           )}
-          {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_dossiers/ajouter_nouveau_dossier") && (
+          {hasContextAccessTo(workspace, "wks/page_espace/page_dossiers/ajouter_nouveau_dossier") && (
             <PrivateRoute exact path={paths.nouveauDossier} component={NouveauDossier} />
           )}
         </Switch>

@@ -17,7 +17,7 @@ import { NavLink, useLocation, useRouteMatch } from "react-router-dom";
 
 import { useRecoilValue } from "recoil";
 import { workspacePathsAtom, workspaceTitlesAtom, workspaceAtom } from "../../../common/hooks/workspaceAtoms";
-import { hasWorkspaceAccessTo } from "../../../common/utils/rolesUtils";
+import { hasContextAccessTo } from "../../../common/utils/rolesUtils";
 import { MenuFill, IoArrowBackward, Parametre, Folder, ArrowDownLine } from "../../../theme/components/icons";
 
 const AsLink = ({ children, ...rest }) => (
@@ -84,7 +84,7 @@ export default ({ header, content }) => {
       <NavItem icon={() => <Folder w={"1rem"} h={"1rem"} mb={"0.125rem"} mr={2} />} to={paths.dossiers}>
         {titles.dossiers}
       </NavItem>
-      {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_parametres") && (
+      {hasContextAccessTo(workspace, "wks/page_espace/page_parametres") && (
         <NavItem
           icon={() => <Parametre w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr={2} />}
           onClick={parametres.onToggle}
@@ -106,12 +106,12 @@ export default ({ header, content }) => {
         </NavItem>
       )}
       <Collapse in={parametres.isOpen}>
-        {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_parametres/gestion_acces") && (
+        {hasContextAccessTo(workspace, "wks/page_espace/page_parametres/gestion_acces") && (
           <NavItem pl="8" to={paths.parametresUtilisateurs} isSubItem={true}>
             {titles.utilisateurs}
           </NavItem>
         )}
-        {hasWorkspaceAccessTo(workspace, "wks/page_espace/page_parametres/gestion_notifications") && (
+        {hasContextAccessTo(workspace, "wks/page_espace/page_parametres/gestion_notifications") && (
           <NavItem pl="8" to={paths.parametresNotifications} isSubItem={true}>
             {titles.notifications}
           </NavItem>

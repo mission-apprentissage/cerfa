@@ -4,16 +4,18 @@ const Boom = require("boom");
 const { cloneDeep, mergeWith } = require("lodash");
 const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
-// const permissionsMiddleware = require("../../middlewares/permissionsMiddleware");
+const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 const cerfaSchema = require("../../../common/model/schema/specific/cerfa/Cerfa");
 const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfaController");
 
-module.exports = ({ cerfas }) => {
+module.exports = (components) => {
   const router = express.Router();
+
+  const { cerfas } = components;
 
   router.get(
     "/",
-    // permissionsMiddleware(), // TODO permissionsDossierMiddleware
+    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async (req, res) => {
       let { dossierId } = await Joi.object({
         dossierId: Joi.string().required(),
@@ -22,8 +24,6 @@ module.exports = ({ cerfas }) => {
         .validateAsync(req.query, { abortEarly: false });
 
       const cerfa = await Cerfa.findOne({ dossierId }).lean();
-
-      // TODO HAS RIGHTS
 
       function customizer(objValue, srcValue) {
         if (objValue !== undefined) {
@@ -116,13 +116,12 @@ module.exports = ({ cerfas }) => {
 
   router.get(
     "/:id",
+    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async ({ params }, res) => {
       const cerfa = await Cerfa.findById(params.id);
       if (!cerfa) {
         throw Boom.notFound("Doesn't exist");
       }
-
-      // TODO HAS RIGHTS
 
       res.json(cerfa);
     })
@@ -130,6 +129,7 @@ module.exports = ({ cerfas }) => {
 
   router.post(
     "/",
+    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async ({ body }, res) => {
       const result = await cerfas.createCerfa(body);
 
@@ -139,6 +139,7 @@ module.exports = ({ cerfas }) => {
 
   router.put(
     "/:id",
+    permissionsDossierMiddleware(components, ["dossier/sauvegarder"]),
     tryCatch(async ({ body, params }, res) => {
       const data = await Joi.object({
         employeur: Joi.object({
@@ -271,8 +272,6 @@ module.exports = ({ cerfas }) => {
         }),
       }).validateAsync(body, { abortEarly: false });
 
-      // TODO HAS RIGHTS
-
       const result = await Cerfa.findOneAndUpdate({ _id: params.id }, data, {
         new: true,
       });
@@ -283,29 +282,26 @@ module.exports = ({ cerfas }) => {
 
   router.put(
     "/:id/publish",
+    permissionsDossierMiddleware(components, ["dossier/publication"]),
     tryCatch(async ({ params }, res) => {
-      // TODO HAS RIGHTS
-
       await cerfas.publishCerfa(params.id);
-
       return res.json({ publish: true });
     })
   );
 
   router.put(
     "/:id/unpublish",
+    permissionsDossierMiddleware(components, ["dossier/publication"]),
     tryCatch(async ({ params }, res) => {
-      // TODO HAS RIGHTS
       await cerfas.unpublishCerfa(params.id);
-
       return res.json({ publish: false });
     })
   );
 
   router.delete(
     "/:id",
+    permissionsDossierMiddleware(components, ["dossier/supprimer"]),
     tryCatch(async ({ params }, res) => {
-      // TODO HAS RIGHTS
       const result = await cerfas.removeCerfa(params.id);
       return res.json(result);
     })
@@ -313,17 +309,15 @@ module.exports = ({ cerfas }) => {
 
   router.get(
     "/pdf/:id",
+    permissionsDossierMiddleware(components, ["dossier/voir_contrat_pdf/telecharger"]),
     tryCatch(async ({ params }, res) => {
       const cerfa = await Cerfa.findOne({ _id: params.id }).lean();
 
       if (!cerfa) {
         throw Boom.notFound("Doesn't exist");
       }
-      // TODO HAS RIGHTS
 
       const pdfBytes = await pdfCerfaController.createPdfCerfa(cerfa);
-
-      console.log(pdfBytes);
 
       const pdfBuffer = Buffer.from(pdfBytes.buffer, "binary");
       res.header("Content-Type", "application/pdf");
@@ -338,13 +332,13 @@ module.exports = ({ cerfas }) => {
 
   router.post(
     "/pdf/:id",
+    permissionsDossierMiddleware(components, ["dossier/voir_contrat_pdf"]),
     tryCatch(async ({ params }, res) => {
       const cerfa = await Cerfa.findOne({ _id: params.id }).lean();
 
       if (!cerfa) {
         throw Boom.notFound("Doesn't exist");
       }
-      // TODO HAS RIGHTS
 
       const pdfBytes = await pdfCerfaController.createPdfCerfa(cerfa);
 

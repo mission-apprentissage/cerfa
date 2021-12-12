@@ -1,11 +1,12 @@
 const { Workspace, Dossier, Cerfa, User } = require("../model/index");
 const Boom = require("boom");
+const permissions = require("./permissions");
 const moment = require("moment");
 moment.locale("fr-FR");
 
 module.exports = async () => {
   return {
-    createDossier: async (user) => {
+    createDossier: async (user, option = { nom: null, saved: false }) => {
       const userDb = await User.findOne({ username: user.sub });
       if (!userDb) {
         throw new Error("User doesn't exist");
@@ -19,10 +20,11 @@ module.exports = async () => {
       let result = null;
       try {
         result = await Dossier.create({
-          nom: `Dossier ${moment(new Date()).add(1, "hour").format("DD MMM YYYY à HH:mm")}`,
+          nom: option.nom || `Dossier ${moment(new Date()).add(1, "hour").format("DD MMM YYYY à HH:mm")}`,
           draft: true,
           workspaceId: wks._id,
           owner: userDb._id,
+          saved: option.saved,
         });
       } catch (error) {
         const { code, name, message } = error;
@@ -32,8 +34,18 @@ module.exports = async () => {
           throw new Error(error);
         }
       }
+
+      const { createPermission } = await permissions();
+      await createPermission({
+        workspaceId: wks._id.toString(),
+        dossierId: result._id.toString(),
+        userEmail: userDb.email,
+        role: "dossier.admin",
+      });
+
       return result;
     },
+    findDossierById: async (id, select = {}) => await Dossier.findById(id, select).lean(),
     findDossiers: async (query, select = {}) => await Dossier.find(query, select).lean(),
     saveDossier: async (id) => {
       const found = await Dossier.findById(id).lean();

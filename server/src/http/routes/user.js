@@ -71,7 +71,7 @@ module.exports = ({ users, roles, mailer }) => {
     tryCatch(async ({ body, params }, res) => {
       const username = params.username;
 
-      let rolesId = await roles.findRolesByName(body.options.roles, { _id: 1 });
+      let rolesId = await roles.findRolesByNames(body.options.roles, { _id: 1 });
       rolesId = rolesId.map(({ _id }) => _id);
 
       await users.updateUser(username, {

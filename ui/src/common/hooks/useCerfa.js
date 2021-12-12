@@ -16,7 +16,7 @@ import useAuth from "./useAuth";
 
 const hydrate = async (auth, dossier) => {
   try {
-    const cerfa = await _get(`/api/v1/cerfa?workspaceId=${auth.workspaceId}&dossierId=${dossier._id}`);
+    const cerfa = await _get(`/api/v1/cerfa?dossierId=${dossier._id}`);
     console.log(cerfa);
 
     return {
@@ -33,6 +33,7 @@ const hydrate = async (auth, dossier) => {
             try {
               const response = await _post(`/api/v1/cfdrncp`, {
                 rncp: value,
+                dossierId: dossier._id,
               });
               // TODO All cases
               if (response.messages.code_rncp === "Ok") {
@@ -94,6 +95,7 @@ const hydrate = async (auth, dossier) => {
             try {
               const response = await _post(`/api/v1/cfdrncp`, {
                 cfd: value,
+                dossierId: dossier._id,
               });
               // TODO outdated cfd
               if (response.messages.rncp.code_rncp === "Ok") {
@@ -179,6 +181,7 @@ const hydrate = async (auth, dossier) => {
           doAsyncActions: async (value) => {
             const response = await _post(`/api/v1/siret`, {
               siret: value,
+              dossierId: dossier._id,
             });
 
             // await _put("/api/v1/history", {

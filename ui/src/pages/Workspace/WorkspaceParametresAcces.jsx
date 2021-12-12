@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import { useRecoilValue } from "recoil";
-import { hasWorkspaceAccessTo } from "../../common/utils/rolesUtils";
+import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 import { workspaceAtom } from "../../common/hooks/workspaceAtoms";
 import { _get, _put, _delete } from "../../common/httpClient";
 import { useQueries, useQueryClient, useMutation } from "react-query";
@@ -204,7 +204,7 @@ export const Content = () => {
                       <Parametre width={"2rem"} height={"1.2rem"} color="bluefrance" />
                     </MenuButton>
                     <MenuList>
-                      {hasWorkspaceAccessTo(
+                      {hasContextAccessTo(
                         workspace,
                         "wks/page_espace/page_parametres/gestion_acces/supprimer_contributeur"
                       ) && (

@@ -4,6 +4,6 @@ export const hasPageAccessTo = (auth, aclRef) => {
   return isUserAdmin(auth) || auth.acl?.includes(aclRef);
 };
 
-export const hasWorkspaceAccessTo = (workspace, aclRef) => {
-  return workspace.acl?.includes(aclRef);
+export const hasContextAccessTo = (context, aclRef) => {
+  return context.acl?.includes(aclRef);
 };

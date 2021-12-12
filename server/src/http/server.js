@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 const logMiddleware = require("./middlewares/logMiddleware");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 const tryCatch = require("./middlewares/tryCatchMiddleware");
-// const apiKeyAuthMiddleware = require("./middlewares/apiKeyAuthMiddleware");
 const corsMiddleware = require("./middlewares/corsMiddleware");
 const authMiddleware = require("./middlewares/authMiddleware");
 const pageAccessMiddleware = require("./middlewares/pageAccessMiddleware");
@@ -17,7 +16,6 @@ const role = require("./routes/role");
 const password = require("./routes/password");
 const upload = require("./routes/specific/upload");
 const auth = require("./routes/auth");
-// const secured = require("./routes/securedAPI");
 const maintenanceMessage = require("./routes/maintenanceMessage");
 const workspace = require("./routes/specific/workspace");
 const dossier = require("./routes/specific/dossier");
@@ -42,8 +40,6 @@ module.exports = async (components) => {
 
   app.use(passport.initialize());
 
-  // app.use("/api/v1/securedAPI", apiKeyAuthMiddleware, secured());
-
   // public access
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/password", password(components));
@@ -65,11 +61,11 @@ module.exports = async (components) => {
   app.use("/api/v1/workspace", checkJwtToken, workspace(components));
   app.use("/api/v1/dossier", checkJwtToken, dossier(components));
   app.use("/api/v1/cerfa", checkJwtToken, cerfa(components));
-  app.use("/api/v1/upload", checkJwtToken, pageAccessMiddleware(["admin/page_upload"]), upload());
-  app.use("/api/v1/history", checkJwtToken, history());
-  app.use("/api/v1/siret", checkJwtToken, siret());
-  app.use("/api/v1/cfdrncp", checkJwtToken, cfdrncp());
-  app.use("/api/v1/sign_document", checkJwtToken, signDocument());
+  app.use("/api/v1/upload", checkJwtToken, pageAccessMiddleware(["admin/page_upload"]), upload(components));
+  app.use("/api/v1/history", checkJwtToken, history(components));
+  app.use("/api/v1/siret", checkJwtToken, siret(components));
+  app.use("/api/v1/cfdrncp", checkJwtToken, cfdrncp(components));
+  app.use("/api/v1/sign_document", checkJwtToken, signDocument(components));
 
   app.get(
     "/api",

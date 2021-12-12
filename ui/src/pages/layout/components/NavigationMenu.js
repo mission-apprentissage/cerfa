@@ -134,6 +134,7 @@ const NavItem = ({ children, to = "/", isMyWorkspace, isSharedWithMe, ...rest })
 };
 
 const NavLinks = ({ isMyWorkspace, isSharedWithMe, isOpen }) => {
+  let [auth] = useAuth();
   return (
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
       <Flex
@@ -144,13 +145,17 @@ const NavLinks = ({ isMyWorkspace, isSharedWithMe, isOpen }) => {
         textStyle="sm"
       >
         <NavItem to="/">Accueil</NavItem>
-        <NavItem to="/mon-espace/mes-dossiers" isMyWorkspace={isMyWorkspace}>
-          Mon espace
-        </NavItem>
-
-        <NavItem to="/partages-avec-moi" isSharedWithMe={isSharedWithMe}>
-          Partagés avec moi
-        </NavItem>
+        {auth?.sub !== "anonymous" && (
+          <>
+            {" "}
+            <NavItem to="/mon-espace/mes-dossiers" isMyWorkspace={isMyWorkspace}>
+              Mon espace
+            </NavItem>
+            <NavItem to="/partages-avec-moi" isSharedWithMe={isSharedWithMe}>
+              Partagés avec moi
+            </NavItem>
+          </>
+        )}
       </Flex>
     </Box>
   );

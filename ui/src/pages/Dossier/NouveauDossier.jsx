@@ -2,18 +2,20 @@ import React, { useState } from "react";
 import { Box, Flex, Heading, Container, Button, Text } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { workspacePathsAtom } from "../../common/hooks/workspaceAtoms";
+import { workspacePathsAtom, workspaceAtom } from "../../common/hooks/workspaceAtoms";
 import { useDossier } from "../../common/hooks/useDossier";
+import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 
 export default () => {
   const { isloaded, createDossier, saveDossier } = useDossier();
   const [isCreating, setIsCreating] = useState(false);
   const paths = useRecoilValue(workspacePathsAtom);
+  const workspace = useRecoilValue(workspaceAtom);
   const history = useHistory();
 
   const onStartClicked = async () => {
     setIsCreating(true);
-    const { _id } = await createDossier();
+    const { _id } = await createDossier(workspace._id);
     setIsCreating(false);
     // TODO Temporary saved
     await saveDossier(_id);
@@ -46,7 +48,13 @@ export default () => {
             reprehenderit aut aspernatur commodi.
           </Text>
           <Flex width="100%" justifyContent="flex-end" mt={9}>
-            <Button size="lg" onClick={onStartClicked} variant="primary" isLoading={isCreating}>
+            <Button
+              size="lg"
+              onClick={onStartClicked}
+              variant="primary"
+              isLoading={isCreating}
+              isDisabled={!hasContextAccessTo(workspace, "wks/page_espace/page_dossiers/ajouter_nouveau_dossier")}
+            >
               Commencer la saisie
             </Button>
           </Flex>

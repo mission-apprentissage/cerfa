@@ -38,6 +38,10 @@ export default [
                 ref: "wks/page_espace/page_dossiers/ajouter_nouveau_dossier",
               },
               {
+                feature: "Supprimer un dossier de l'espace",
+                ref: "wks/page_espace/page_dossiers/supprimer_dossier",
+              },
+              {
                 feature: "Voir la liste des dossiers",
                 ref: "wks/page_espace/page_dossiers/voir_liste_dossiers",
                 uniqSubFeature: true,
@@ -87,6 +91,10 @@ export default [
         ref: "dossier/sauvegarder",
       },
       {
+        feature: "Supprimer un dossier",
+        ref: "dossier/supprimer",
+      },
+      {
         feature: "Voir le formulaire",
         ref: "dossier/page_formulaire",
       },
@@ -101,12 +109,32 @@ export default [
         ],
       },
       {
+        feature: "Voir le contrat pdf",
+        ref: "dossier/voir_contrat_pdf",
+        subFeatures: [
+          {
+            feature: "Télécharger",
+            ref: "dossier/voir_contrat_pdf/telecharger",
+          },
+        ],
+      },
+      {
         feature: "Voir la page de signature",
         ref: "dossier/page_signatures",
+        subFeatures: [
+          {
+            feature: "Signer",
+            ref: "dossier/page_signatures/signer",
+          },
+        ],
       },
       {
         feature: "Voir la page de statut",
         ref: "dossier/page_statut",
+      },
+      {
+        feature: "Publication dossier",
+        ref: "dossier/publication",
       },
       {
         feature: "Envoyer le dossier",

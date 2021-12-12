@@ -2,18 +2,18 @@ const express = require("express");
 const Joi = require("joi");
 const { History } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
+const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 
-module.exports = () => {
+module.exports = (components) => {
   const router = express.Router();
 
   router.get(
     "/",
+    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async (req, res) => {
       let { query } = await Joi.object({
         query: Joi.string().default("{}"),
       }).validateAsync(req.query, { abortEarly: false });
-
-      // TODO HAS RIGHTS
 
       let json = JSON.parse(query);
       const result = await History.find(json);
@@ -24,6 +24,7 @@ module.exports = () => {
 
   router.post(
     "/",
+    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async ({ body }, res) => {
       let { dossierId, context, history } = await Joi.object({
         dossierId: Joi.string().required(),
@@ -39,8 +40,6 @@ module.exports = () => {
           .default([]),
       }).validateAsync(body, { abortEarly: false });
 
-      // TODO HAS RIGHTS
-
       const result = await History.create({
         dossierId,
         context,
@@ -53,6 +52,7 @@ module.exports = () => {
 
   router.put(
     "/:id",
+    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async ({ body, params }, res) => {
       await Joi.object({
         from: Joi.string().allow("").required(),
@@ -61,8 +61,6 @@ module.exports = () => {
         who: Joi.string().required(),
         when: Joi.date().default(Date.now),
       }).validateAsync(body, { abortEarly: false });
-
-      // TODO HAS RIGHTS
 
       const result = await History.findOneAndUpdate(
         { _id: params.id },
@@ -80,6 +78,7 @@ module.exports = () => {
 
   router.put(
     "/",
+    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async ({ body }, res) => {
       await Joi.object({
         dossierId: Joi.string().required(),
@@ -90,8 +89,6 @@ module.exports = () => {
         who: Joi.string().required(),
         when: Joi.date().default(Date.now),
       }).validateAsync(body, { abortEarly: false });
-
-      // TODO HAS RIGHTS
 
       const { dossierId, context, ...rest } = body;
       const result = await History.findOneAndUpdate(
@@ -110,8 +107,8 @@ module.exports = () => {
 
   router.delete(
     "/:id",
+    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async ({ params }, res) => {
-      // TODO HAS RIGHTS
       const result = await History.deleteOne({ _id: params.id });
       return res.json(result);
     })

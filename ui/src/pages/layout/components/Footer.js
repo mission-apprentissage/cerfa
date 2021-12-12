@@ -106,7 +106,7 @@ const Footer = () => {
               </ListItem>
               <ListItem>
                 <Link href="https://github.com/mission-apprentissage/cerfa/releases" isExternal>
-                  Journal des modifications
+                  Journal des versions
                   <ExternalLinkLine w={"0.55rem"} h={"0.55rem"} mb={"0.125rem"} ml={1} />
                 </Link>
               </ListItem>

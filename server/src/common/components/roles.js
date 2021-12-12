@@ -26,7 +26,7 @@ module.exports = async () => {
     findRolePermission: async (query, select = {}) => await Role.find({ ...query, type: "permission" }, select),
     findRolePermissionById: async (id, select = {}) =>
       await Role.findOne({ _id: id, type: "permission" }, select).lean(),
-    findRolesByName: async (names, select = {}) => await Role.find({ name: { $in: names } }, select).lean(),
+    findRolesByNames: async (names, select = {}) => await Role.find({ name: { $in: names } }, select).lean(),
     findRoleById: async (id, select = {}) => await Role.findById(id, select).lean(),
     hasAclsByRoleId: async (id, acl) => {
       const roleDb = await Role.findById(id).lean();
