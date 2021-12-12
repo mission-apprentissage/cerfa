@@ -78,4 +78,54 @@ export default [
       },
     ],
   },
+  {
+    feature: "Afficher un dossier",
+    ref: "dossier",
+    subFeatures: [
+      {
+        feature: "Sauvegarder un dossier",
+        ref: "dossier/sauvegarder",
+      },
+      {
+        feature: "Voir le formulaire",
+        ref: "dossier/page_formulaire",
+      },
+      {
+        feature: "Voir les pièces justificatives",
+        ref: "dossier/page_documents",
+        subFeatures: [
+          {
+            feature: "Ajouter un document",
+            ref: "dossier/page_documents/ajouter_un_document",
+          },
+        ],
+      },
+      {
+        feature: "Voir la page de signature",
+        ref: "dossier/page_signatures",
+      },
+      {
+        feature: "Voir la page de statut",
+        ref: "dossier/page_statut",
+      },
+      {
+        feature: "Envoyer le dossier",
+        ref: "dossier/envoyer",
+      },
+      {
+        feature: "Voir les paramètres du dossier",
+        ref: "dossier/page_parametres",
+        subFeatures: [
+          {
+            feature: "Gestion des accès de dossier",
+            ref: "dossier/page_parametres/gestion_acces",
+          },
+          {
+            feature: "Gestion des notifications du dossier",
+            ref: "dossier/page_parametres/gestion_notifications",
+          },
+        ],
+      },
+    ],
+  },
 ];
