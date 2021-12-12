@@ -10,8 +10,7 @@ const endpointTCO =
 const FormEmployer = ({ onFetched }) => {
   const [isFetching, setIsFetching] = useState(false);
 
-  const phoneRegExp =
-    /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
+  const phoneRegExp = /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
   const { values, handleChange, handleSubmit, errors, touched, setFieldValue } = useFormik({
     initialValues: {
       priveOrPublic: "",

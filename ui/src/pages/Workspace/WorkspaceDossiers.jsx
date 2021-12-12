@@ -11,13 +11,13 @@ import TableDossiers from "./components/TableDossiers";
 function useWorkspaceDossiers() {
   const workspace = useRecoilValue(workspaceAtom);
 
-  const {
-    data: workspaceDossiers,
-    isLoading,
-    isFetching,
-  } = useQuery("workspaceDossiers", () => _get(`/api/v1/workspace/dossiers?workspaceId=${workspace._id}`), {
-    refetchOnWindowFocus: false,
-  });
+  const { data: workspaceDossiers, isLoading, isFetching } = useQuery(
+    "workspaceDossiers",
+    () => _get(`/api/v1/workspace/dossiers?workspaceId=${workspace._id}`),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   return { isLoading: isFetching || isLoading, workspaceDossiers };
 }

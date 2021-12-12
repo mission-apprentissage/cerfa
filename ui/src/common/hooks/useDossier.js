@@ -53,7 +53,7 @@ export function useDossier(dossierId = null) {
       }
       return d;
     },
-    [dossier?._id, setDossier]
+    [dossier._id, setDossier]
   );
 
   // const {

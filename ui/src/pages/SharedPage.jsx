@@ -11,13 +11,13 @@ export default () => {
   const title = "Partagés avec moi";
   setTitle(title);
 
-  const {
-    data: sharedWithMeWorkspaces,
-    isLoading,
-    isFetching,
-  } = useQuery("workspaceDossiers", () => _get(`/api/v1/workspace/sharedwithme`), {
-    refetchOnWindowFocus: false,
-  });
+  const { data: sharedWithMeWorkspaces, isLoading, isFetching } = useQuery(
+    "workspaceDossiers",
+    () => _get(`/api/v1/workspace/sharedwithme`),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   return (
     <Layout>
