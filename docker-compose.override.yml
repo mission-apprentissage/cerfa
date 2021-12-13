@@ -41,6 +41,11 @@ services:
     volumes:
       - cerfa_mongodb_data:/data
 
+  clamav:
+    image: clamav/clamav
+    ports:
+      - 3310:3310
+
   smtp:
     image: mailhog/mailhog
     container_name: cerfa_smtp

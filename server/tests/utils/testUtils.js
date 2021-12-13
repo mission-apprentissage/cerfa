@@ -1,3 +1,4 @@
+const { PassThrough } = require("stream");
 const { getDatabase } = require("./mongoMemoryServer");
 const createComponents = require("../../src/common/components/components");
 const server = require("../../src/http/server");
@@ -5,12 +6,15 @@ const axiosist = require("axiosist");
 const fakeMailer = require("./fakeMailer");
 const models = require("../../src/common/model");
 
-async function testContext() {
+async function testContext(custom = {}) {
   const db = getDatabase();
   let emailsSents = [];
   const mailer = fakeMailer({ calls: emailsSents });
   return {
-    components: await createComponents({ db, mailer }),
+    components: {
+      ...(await createComponents({ db, mailer, clamav: fakeClamav({}) })),
+      ...custom,
+    },
     helpers: { getEmailsSent: () => emailsSents },
   };
 }
@@ -41,8 +45,8 @@ async function initComponents(options) {
   };
 }
 
-async function startServer() {
-  let { components, helpers } = await testContext();
+async function startServer(custom) {
+  let { components, helpers } = await testContext(custom);
   const app = await server(components);
   const httpClient = axiosist(app);
 
@@ -82,9 +86,21 @@ function getTokenFromCookie(response) {
   return jwt.split("=")[1];
 }
 
+function fakeClamav(results) {
+  return {
+    getScanner: () => {
+      return {
+        scanStream: new PassThrough(),
+        getScanResults: () => Promise.resolve(results),
+      };
+    },
+  };
+}
+
 module.exports = {
   startServer,
   cleanDatabase,
   getTokenFromCookie,
   initComponents,
+  fakeClamav,
 };
