@@ -12,13 +12,13 @@ const apprentiSchema = {
       return !this.draft;
     },
   },
-  nomUsage: {
-    maxLength: 80,
-    type: String,
-    description: "Nom d'usage de l'apprenti",
-    nullable: true,
-    example: "DUPONT",
-  },
+  // nomUsage: {
+  //   maxLength: 80,
+  //   type: String,
+  //   description: "Nom d'usage de l'apprenti",
+  //   nullable: true,
+  //   example: "DUPONT",
+  // },
   prenom: {
     maxLength: 80,
     type: String,
@@ -65,7 +65,7 @@ const apprentiSchema = {
         if (!v) return true;
         return /^[0-9]{1,3}$/.test(v);
       },
-      message: (props) => `${props.value} n'est pas un NIR valide`,
+      message: (props) => `${props.value} n'est pas un departement valide`,
     },
     type: String,
     description: "Département de naissance de l'apprenti",
@@ -174,7 +174,7 @@ const apprentiSchema = {
     validate: {
       validator: function (v) {
         if (!v) return true;
-        return /^[0-9]{10}$/.test(v);
+        return /([+])?((\d)[.-]?)?[\s]?\(?(\d{3})\)?[.-]?[\s]?(\d{3})[.-]?[\s]?(\d{4,})/.test(v);
       },
       message: (props) => `${props.value} n'est pas un numéro de télephone valide`,
     },
@@ -206,6 +206,15 @@ const apprentiSchema = {
   adresse: {
     ...adresseSchema,
   },
+  // apprentiMineurNonEmancipe: {
+  //   type: Boolean,
+  //   description: "l'apprenti(e) est mineur non emancipé",
+  //   example: false,
+  //   default: null,
+  //   required: function () {
+  //     return !this.draft;
+  //   },
+  // },
   responsableLegal: {
     required: function () {
       // If date de naissance to now < 18
@@ -235,6 +244,17 @@ const apprentiSchema = {
       },
       adresse: {
         ...adresseSchema,
+      },
+    },
+    default: {
+      nom: null,
+      prenom: null,
+      adresse: {
+        numero: 0,
+        voie: null,
+        complement: null,
+        codePostal: null,
+        commune: null,
       },
     },
   },

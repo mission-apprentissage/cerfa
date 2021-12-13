@@ -1,54 +1,40 @@
 const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
-const mongoose = require("mongoose");
 const { Dossier } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
+const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 
-module.exports = ({ cerfas, dossiers }) => {
+module.exports = (components) => {
   const router = express.Router();
-
-  router.get("/", async (req, res) => {
-    let { query } = await Joi.object({
-      query: Joi.string().default("{}"),
-    }).validateAsync(req.query, { abortEarly: false });
-
-    let json = JSON.parse(query);
-    const results = await Dossier.find(json);
-
-    // TODO HAS RIGHTS
-
-    return res.json(results);
-  });
-
+  const { dossiers, users } = components;
   router.get(
     "/:id",
-    tryCatch(async ({ params }, res) => {
-      const dossier = await Dossier.findById(params.id);
+    permissionsDossierMiddleware(components, ["dossier"]),
+    tryCatch(async ({ user, params }, res) => {
+      const dossier = await dossiers.findDossierById(params.id);
       if (!dossier) {
         throw Boom.notFound("Doesn't exist");
       }
 
-      // TODO HAS RIGHTS
+      const owner = await users.getUserById(dossier.owner, { email: 1, nom: 1, prenom: 1, _id: 0 });
+      if (!owner) {
+        throw Boom.badRequest("Something went wrong");
+      }
 
-      res.json(dossier);
-    })
-  );
-
-  router.post(
-    "/",
-    tryCatch(async ({ user }, res) => {
-      const temporaryDossierId = mongoose.Types.ObjectId().toString();
-      const { _id: cerfaId } = await cerfas.createCerfa({ dossierId: temporaryDossierId }, user);
-      const result = await dossiers.createDossier({ cerfaId: cerfaId.toString() }, user);
-      await cerfas.updateDossierId(cerfaId, result._id);
-
-      return res.json(result);
+      res.json({
+        ...dossier,
+        acl: user.currentPermissionAcl,
+        owner: {
+          ...owner,
+        },
+      });
     })
   );
 
   router.put(
     "/:id",
+    permissionsDossierMiddleware(components, ["dossier/sauvegarder"]),
     tryCatch(async ({ body, params }, res) => {
       const data = await Joi.object({
         documents: Joi.array().items({
@@ -64,8 +50,6 @@ module.exports = ({ cerfas, dossiers }) => {
         saved: Joi.string(),
       }).validateAsync(body, { abortEarly: false });
 
-      // TODO HAS RIGHTS
-
       const result = await Dossier.findOneAndUpdate({ _id: params.id }, data, {
         new: true,
       });
@@ -75,9 +59,19 @@ module.exports = ({ cerfas, dossiers }) => {
   );
 
   router.put(
-    "/:id/publish",
+    "/:id/saved",
+    permissionsDossierMiddleware(components, ["dossier/sauvegarder"]),
     tryCatch(async ({ params }, res) => {
-      // TODO HAS RIGHTS
+      const saved = await dossiers.saveDossier(params.id);
+
+      return res.json(saved);
+    })
+  );
+
+  router.put(
+    "/:id/publish",
+    permissionsDossierMiddleware(components, ["dossier/publication"]),
+    tryCatch(async ({ params }, res) => {
       await dossiers.publishDossier(params.id);
 
       return res.json({ publish: true });
@@ -86,8 +80,8 @@ module.exports = ({ cerfas, dossiers }) => {
 
   router.put(
     "/:id/unpublish",
+    permissionsDossierMiddleware(components, ["dossier/publication"]),
     tryCatch(async ({ params }, res) => {
-      // TODO HAS RIGHTS
       await dossiers.unpublishDossier(params.id);
 
       return res.json({ publish: false });
@@ -96,8 +90,8 @@ module.exports = ({ cerfas, dossiers }) => {
 
   router.delete(
     "/:id",
+    permissionsDossierMiddleware(components, ["dossier/supprimer"]),
     tryCatch(async ({ params }, res) => {
-      // TODO HAS RIGHTS
       const result = await dossiers.removeDossier(params.id);
       return res.json(result);
     })

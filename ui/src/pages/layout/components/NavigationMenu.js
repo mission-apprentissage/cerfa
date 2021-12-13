@@ -1,11 +1,25 @@
 import React, { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
+import { NavLink, useLocation, useHistory } from "react-router-dom";
+import {
+  Box,
+  Container,
+  Flex,
+  Link,
+  Text,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuGroup,
+  MenuItem,
+  MenuList,
+  Button,
+} from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
-import { hasAccessTo } from "../../../common/utils/rolesUtils";
-import { MenuFill, Close } from "../../../theme/components/icons";
+import { isUserAdmin, hasPageAccessTo } from "../../../common/utils/rolesUtils";
+import { MenuFill, Close, AccountFill, DownloadLine, InfoCircle, LockFill } from "../../../theme/components/icons";
+import { _get } from "../../../common/httpClient";
 
-const NavigationMenu = (props) => {
+const NavigationMenu = ({ isMyWorkspace, isSharedWithMe, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
@@ -13,8 +27,79 @@ const NavigationMenu = (props) => {
   return (
     <NavBarContainer {...props}>
       <NavToggle toggle={toggle} isOpen={isOpen} />
-      <NavLinks isOpen={isOpen} />
+      <NavLinks isOpen={isOpen} isMyWorkspace={isMyWorkspace} isSharedWithMe={isSharedWithMe} />
+      <UserMenu />
     </NavBarContainer>
+  );
+};
+
+const UserMenu = () => {
+  let [auth, setAuth] = useAuth();
+  let history = useHistory();
+
+  let logout = async () => {
+    const { loggedOut } = await _get("/api/v1/auth/logout");
+    if (loggedOut) {
+      setAuth(null);
+      history.push("/");
+    }
+  };
+  let accountType = auth.roles.length ? auth.roles[0].name : isUserAdmin(auth) ? "admin" : "utilisateur";
+  return (
+    <>
+      {auth?.sub === "anonymous" && (
+        <Box>
+          <Link as={NavLink} to="/login" variant="pill">
+            <LockFill boxSize={3} mb={1} mr={2} />
+            Connexion
+          </Link>
+        </Box>
+      )}
+      {auth?.sub !== "anonymous" && (
+        <Menu placement="bottom">
+          <MenuButton as={Button} variant="pill">
+            <Flex>
+              <AccountFill color={"bluefrance"} mt="0.3rem" boxSize={4} />
+              <Box display={["none", "block"]} ml={2}>
+                <Text color="bluefrance" textStyle="sm">
+                  {auth.sub}{" "}
+                  <Text color="grey.600" as="span">
+                    ({accountType})
+                  </Text>
+                </Text>
+              </Box>
+            </Flex>
+          </MenuButton>
+          <MenuList>
+            <MenuGroup title="Profile">
+              {hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
+                <MenuItem as={NavLink} to="/admin/users" icon={<AccountFill boxSize={4} />}>
+                  Gestion des utilisateurs
+                </MenuItem>
+              )}
+              {hasPageAccessTo(auth, "admin/page_gestion_roles") && (
+                <MenuItem as={NavLink} to="/admin/roles" icon={<AccountFill boxSize={4} />}>
+                  Gestion des rôles
+                </MenuItem>
+              )}
+              {hasPageAccessTo(auth, "admin/page_upload") && (
+                <MenuItem as={NavLink} to="/admin/upload" icon={<DownloadLine boxSize={4} />}>
+                  Upload de fichiers
+                </MenuItem>
+              )}
+              {hasPageAccessTo(auth, "admin/page_message_maintenance") && (
+                <MenuItem as={NavLink} to="/admin/maintenance" icon={<InfoCircle boxSize={4} />}>
+                  Message de maintenance
+                </MenuItem>
+              )}
+            </MenuGroup>
+
+            <MenuDivider />
+            <MenuItem onClick={logout}>Déconnexion</MenuItem>
+          </MenuList>
+        </Menu>
+      )}
+    </>
   );
 };
 
@@ -26,7 +111,7 @@ const NavToggle = ({ toggle, isOpen }) => {
   );
 };
 
-const NavItem = ({ children, to = "/", ...rest }) => {
+const NavItem = ({ children, to = "/", isMyWorkspace, isSharedWithMe, ...rest }) => {
   const { pathname } = useLocation();
   const isActive = pathname === to;
 
@@ -35,10 +120,11 @@ const NavItem = ({ children, to = "/", ...rest }) => {
       p={4}
       as={NavLink}
       to={to}
-      color={isActive ? "bluefrance" : "grey.800"}
+      color={isActive || isMyWorkspace || isSharedWithMe ? "bluefrance" : "grey.800"}
       _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
       borderBottom="3px solid"
-      borderColor={isActive ? "bluefrance" : "transparent"}
+      borderColor={isActive || isMyWorkspace || isSharedWithMe ? "bluefrance" : "transparent"}
+      bg={"transparent"}
     >
       <Text display="block" {...rest}>
         {children}
@@ -47,7 +133,7 @@ const NavItem = ({ children, to = "/", ...rest }) => {
   );
 };
 
-const NavLinks = ({ isOpen }) => {
+const NavLinks = ({ isMyWorkspace, isSharedWithMe, isOpen }) => {
   let [auth] = useAuth();
   return (
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
@@ -59,19 +145,33 @@ const NavLinks = ({ isOpen }) => {
         textStyle="sm"
       >
         <NavItem to="/">Accueil</NavItem>
-        {hasAccessTo(auth, "page_dashboard") && <NavItem to="/dossiers">Mes Dossiers</NavItem>}
-        <NavItem to="/dossiers/contrat">Remplir un nouveau contrat</NavItem>
-        {/* <Link href="https://github.com/mission-apprentissage/cerfa/releases" mr={4} isExternal>
-          Journal des modifications
-        </Link> */}
+        {auth?.sub !== "anonymous" && (
+          <>
+            {" "}
+            <NavItem to="/mon-espace/mes-dossiers" isMyWorkspace={isMyWorkspace}>
+              Mon espace
+            </NavItem>
+            <NavItem to="/partages-avec-moi" isSharedWithMe={isSharedWithMe}>
+              Partagés avec moi
+            </NavItem>
+          </>
+        )}
       </Flex>
     </Box>
   );
 };
 
-const NavBarContainer = ({ children, ...props }) => {
+const NavBarContainer = ({ children, isMyWorkspace, ...props }) => {
+  const boxProps = !isMyWorkspace
+    ? {
+        boxShadow: "md",
+      }
+    : {
+        borderBottom: "1px solid",
+        borderColor: "bluefrance",
+      };
   return (
-    <Box w="full" boxShadow="md">
+    <Box w="full" {...boxProps}>
       <Container maxW="xl">
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" w="100%" {...props}>
           {children}

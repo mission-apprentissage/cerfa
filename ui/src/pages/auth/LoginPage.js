@@ -35,7 +35,7 @@ const LoginPage = () => {
         const user = jwt.decode(result.token);
         setAuth(user);
         setToken(result.token);
-        history.push("/");
+        history.push("/mon-espace/mes-dossiers");
       }
     } catch (e) {
       console.error(e);

@@ -1,6 +1,7 @@
 const { User, Role } = require("../model/index");
 const sha512Utils = require("../utils/sha512Utils");
 const { pick, uniq } = require("lodash");
+const workspaces = require("./workspaces");
 
 const rehashPassword = (user, password) => {
   user.password = sha512Utils.hash(password);
@@ -26,23 +27,41 @@ module.exports = async () => {
       return null;
     },
     getUser: async (username) => await User.findOne({ username }),
-    getUserByEmail: async (email) => await User.findOne({ email }),
+    getUserById: async (id, select = {}) => await User.findById(id, select).lean(),
+    getUserByEmail: async (email, select = {}) => await User.findOne({ email }, select).lean(),
     getUsers: async (filters = {}) => await User.find(filters, { password: 0, _id: 0, __v: 0 }).lean(),
     createUser: async (username, password, options = {}) => {
       const hash = options.hash || sha512Utils.hash(password);
       const permissions = options.permissions || {};
 
-      const user = new User({
+      let rolesDb = [];
+      if (options.roles && options.roles.length > 0) {
+        rolesDb = await Role.find({ name: { $in: options.roles } }, { _id: 1 });
+        if (!rolesDb.length === 0) {
+          throw new Error("Roles doesn't exist");
+        }
+      }
+
+      const user = await User.create({
         username,
         password: hash,
         isAdmin: !!permissions.isAdmin,
-        email: options.email || "",
-        roles: options.roles || ["public"],
+        email: options.email,
+        nom: options.nom,
+        prenom: options.prenom,
+        telephone: options.telephone,
+        roles: rolesDb,
         acl: options.acl || [],
       });
 
-      await user.save();
-      return user.toObject();
+      const { createWorkspace } = await workspaces();
+      await createWorkspace({
+        username,
+        nom: `Espace - ${options.prenom} ${options.nom}`,
+        description: `L'espace de travail de ${options.prenom} ${options.nom}`,
+      });
+
+      return user;
     },
     removeUser: async (username) => {
       const user = await User.findOne({ username });
@@ -80,16 +99,22 @@ module.exports = async () => {
     structureUser: async (user) => {
       const permissions = pick(user, ["isAdmin"]);
 
-      const rolesList = await Role.find({ name: { $in: user.roles } }).lean();
+      const rolesList = await Role.find({ _id: { $in: user.roles } }).lean();
       const rolesAcl = rolesList.reduce((acc, { acl }) => [...acc, ...acl], []);
+
+      const { getUserWorkspace } = await workspaces();
+      const workspace = await getUserWorkspace(user);
 
       const structure = {
         permissions,
         sub: user.username,
         email: user.email,
+        nom: user.nom,
+        prenom: user.prenom,
         account_status: user.account_status,
-        roles: permissions.isAdmin ? ["admin", ...user.roles] : user.roles,
+        roles: rolesList,
         acl: uniq([...rolesAcl, ...user.acl]),
+        workspaceId: workspace?._id.toString(),
       };
       return structure;
     },

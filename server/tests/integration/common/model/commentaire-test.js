@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { Commentaire } = require("../../../src/common/model");
+const { Commentaire } = require("../../../../src/common/model");
 
 describe("Commentaire", () => {
   it("Doit créer un commentaire", async () => {

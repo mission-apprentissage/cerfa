@@ -1,12 +1,55 @@
 import React from "react";
-import { Box, FormControl, FormLabel, Input, FormErrorMessage, Flex } from "@chakra-ui/react";
+import { Box, FormLabel, Flex, Center, Spinner } from "@chakra-ui/react";
 
+import { useCerfa } from "../../../../common/hooks/useCerfa";
 import InputCerfa from "./Input";
 
-const FormFormation = () => {
+const FormFormation = React.memo((props) => {
+  const {
+    isloaded,
+    organismeFormation: {
+      siret,
+      denomination,
+      uaiCfa,
+      adresse: { numero, voie, complement, codePostal, commune },
+    },
+    formation: {
+      rncp,
+      codeDiplome,
+      dateDebutFormation,
+      dateFinFormation,
+      dureeFormation,
+      intituleQualification,
+      typeDiplome,
+    },
+    onSubmittedOrganismeFormationSiret,
+    onSubmittedFormationCodeDiplome,
+    onSubmittedRncp,
+    onSubmittedFormationDateDebutFormation,
+    onSubmittedFormationDateFinFormation,
+    onSubmittedFormationDureeFormation,
+    // onSubmittedFormationIntituleQualification,
+    onSubmittedFormationTypeDiplome,
+    onSubmittedOrganismeFormationUaiCfa,
+  } = useCerfa();
+
+  if (!isloaded)
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
+
   return (
     <Box>
-      <InputCerfa path="organismeFormation.siret" mb="10" hasComments />
+      <InputCerfa
+        path="organismeFormation.siret"
+        field={siret}
+        type="text"
+        mb="10"
+        hasComments
+        onSubmittedField={onSubmittedOrganismeFormationSiret}
+      />
       {/* <FormControl>
         <FormLabel>CFA d’entreprise :</FormLabel>
         <HStack w="40%">
@@ -35,82 +78,82 @@ const FormFormation = () => {
       </FormControl> */}
       <Flex>
         <Box w="55%" flex="1">
-          <InputCerfa path="organismeFormation.denomination" mt="2" isDisabled />
-          <InputCerfa path="organismeFormation.uaiCfa" mt="2" isDisabled />
-          <InputCerfa path="organismeFormation.siret" mt="2" isDisabled noHistory />
+          <InputCerfa path="organismeFormation.denomination" field={denomination} type="text" mt="2" />
+          <InputCerfa
+            path="organismeFormation.uaiCfa"
+            field={uaiCfa}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedOrganismeFormationUaiCfa}
+          />
           <FormLabel fontWeight={700} my={3}>
             Adresse du CFA responsable :{" "}
           </FormLabel>
-          <InputCerfa path="organismeFormation.adresse.numero" mt="2" isDisabled />
-          <InputCerfa path="organismeFormation.adresse.voie" mt="2" isDisabled />
-          <InputCerfa path="organismeFormation.adresse.complement" mt="2" isDisabled />
-          <InputCerfa path="organismeFormation.adresse.codePostal" mt="2" isDisabled />
-          <InputCerfa path="organismeFormation.adresse.commune" mt="2" isDisabled />
+          <InputCerfa path="organismeFormation.adresse.numero" field={numero} type="text" mt="2" />
+          <InputCerfa path="organismeFormation.adresse.voie" field={voie} type="text" mt="2" />
+          <InputCerfa path="organismeFormation.adresse.complement" field={complement} type="text" mt="2" />
+          <InputCerfa path="organismeFormation.adresse.codePostal" field={codePostal} type="text" mt="2" />
+          <InputCerfa path="organismeFormation.adresse.commune" field={commune} type="text" mt="2" />
         </Box>
         <Box w="45%" flex="1" ml="5w">
-          {/* <FormControl isRequired mt={2} isInvalid={errors.titleTargeted}>
-            <FormLabel>Diplôme ou titre visé par l’apprenti :</FormLabel>
-            <Input type="text" name="titleTargeted" onChange={handleChange} value={values.titleTargeted} required />
-            {errors.titleTargeted && touched.titleTargeted && (
-              <FormErrorMessage>{errors.titleTargeted}</FormErrorMessage>
-            )}
-          </FormControl> */}
-          {/* <FormControl isRequired mt={2} isInvalid={errors.preciseTitle}>
-            <FormLabel>Intitulé précis :</FormLabel>
-            <Input type="text" name="preciseTitle" onChange={handleChange} value={values.preciseTitle} required />
-            {errors.preciseTitle && touched.preciseTitle && <FormErrorMessage>{errors.preciseTitle}</FormErrorMessage>}
-          </FormControl> */}
-          <InputCerfa path="formation.codeDiplome" mt="2" />
-          {/* <FormControl isRequired mt={2} isInvalid={errors.diplomaCode}>
-            <FormLabel>Code du diplôme :</FormLabel>
-            <Input type="text" name="diplomaCode" onChange={handleChange} value={values.diplomaCode} required />
-            {errors.diplomaCode && touched.diplomaCode && <FormErrorMessage>{errors.diplomaCode}</FormErrorMessage>}
-          </FormControl> */}
-          <InputCerfa path="formation.rncp" mt="2" />
-          {/* <FormControl isRequired mt={2} isInvalid={errors.codeRNCP}>
-            <FormLabel>Code RNCP :</FormLabel>
-            <Input type="text" name="codeRNCP" onChange={handleChange} value={values.codeRNCP} required />
-            {errors.codeRNCP && touched.codeRNCP && <FormErrorMessage>{errors.codeRNCP}</FormErrorMessage>}
-          </FormControl> */}
+          <InputCerfa
+            path="formation.typeDiplome"
+            field={typeDiplome}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedFormationTypeDiplome}
+          />
+          <InputCerfa
+            path="formation.intituleQualification"
+            field={intituleQualification}
+            type="text"
+            mt="2"
+            // onSubmittedField={onSubmittedFormationIntituleQualification}
+          />
+          <InputCerfa
+            path="formation.codeDiplome"
+            field={codeDiplome}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedFormationCodeDiplome}
+            // onAsyncData={{ value: rncp.value }}
+          />
+          <InputCerfa
+            path="formation.rncp"
+            field={rncp}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedRncp}
+            // onAsyncData={{ value: codeDiplome.value }}
+          />
           <FormLabel fontWeight={700} my={3}>
             Organisation de la formation en CFA :
           </FormLabel>
-          {/* <FormControl isRequired mt={2} isInvalid={errors.startDateTrainingCycle}>
-            <FormLabel>Date de début du cycle de formation : </FormLabel>
-            <Input
-              type="date"
-              name="startDateTrainingCycle"
-              onChange={handleChange}
-              value={values.startDateTrainingCycle}
-              required
-            />
-            {errors.startDateTrainingCycle && touched.startDateTrainingCycle && (
-              <FormErrorMessage>{errors.startDateTrainingCycle}</FormErrorMessage>
-            )}
-          </FormControl>
-          <FormControl isRequired mt={2} isInvalid={errors.endDateExams}>
-            <FormLabel>Date prévue de fin des épreuves ou examens :</FormLabel>
-            <Input type="date" name="endDateExams" onChange={handleChange} value={values.endDateExams} required />
-            {errors.endDateExams && touched.endDateExams && <FormErrorMessage>{errors.endDateExams}</FormErrorMessage>}
-          </FormControl>
+          <InputCerfa
+            path="formation.dateDebutFormation"
+            field={dateDebutFormation}
+            type="date"
+            mt="2"
+            onSubmittedField={onSubmittedFormationDateDebutFormation}
+            onAsyncData={{ value: dateFinFormation.value }}
+          />
+          <InputCerfa
+            path="formation.dateFinFormation"
+            field={dateFinFormation}
+            type="date"
+            mt="2"
+            onSubmittedField={onSubmittedFormationDateFinFormation}
+            onAsyncData={{ value: dateDebutFormation.value }}
+          />
           <Flex mt={4}>
-            <FormControl isRequired mt={4} isInvalid={errors.trainingDuration}>
-              <Flex>
-                <FormLabel>Durée de la formation :</FormLabel>
-                <Input
-                  type="text"
-                  name="trainingDuration"
-                  onChange={handleChange}
-                  value={values.trainingDuration}
-                  required
-                />
-                <FormLabel>heures</FormLabel>
-              </Flex>
-              {errors.trainingDuration && touched.trainingDuration && (
-                <FormErrorMessage>{errors.trainingDuration}</FormErrorMessage>
-              )}
-            </FormControl>
-          </Flex> */}
+            <InputCerfa
+              path="formation.dureeFormation"
+              field={dureeFormation}
+              type="number"
+              mt="2"
+              onSubmittedField={onSubmittedFormationDureeFormation}
+            />
+          </Flex>
         </Box>
       </Flex>
       {/* <Box>
@@ -136,6 +179,6 @@ const FormFormation = () => {
       </Box> */}
     </Box>
   );
-};
+});
 
 export default FormFormation;

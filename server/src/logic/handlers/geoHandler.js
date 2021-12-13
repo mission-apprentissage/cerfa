@@ -37,9 +37,8 @@ const getDataFromCP = async (providedCP, providedCodeInsee) => {
 
   const { insee_com, code_dept, postal_code, nom_comm } = value;
 
-  const { nom_dept, nom_region, code_region, nom_academie, num_academie } = geoController.findDataByDepartementNum(
-    code_dept
-  );
+  const { nom_dept, nom_region, code_region, nom_academie, num_academie } =
+    geoController.findDataByDepartementNum(code_dept);
 
   return {
     result: {
@@ -102,9 +101,8 @@ const getAddressDataFromCoordinates = async ({ latitude, longitude }) => {
 
   const { insee_com, code_dept, postal_code, nom_comm, nom_voie, numero_voie, type_voie } = result.value;
 
-  const { nom_dept, nom_region, code_region, nom_academie, num_academie } = geoController.findDataByDepartementNum(
-    code_dept
-  );
+  const { nom_dept, nom_region, code_region, nom_academie, num_academie } =
+    geoController.findDataByDepartementNum(code_dept);
 
   return {
     result: {

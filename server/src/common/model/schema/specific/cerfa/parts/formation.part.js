@@ -45,6 +45,10 @@ const formationSchema = {
   },
   typeDiplome: {
     ...diplomeSchema,
+    label: "Diplôme ou titre visé par l’apprenti :",
+    example: 74,
+    requiredMessage: "Le diplôme ou titre visé est obligatoire",
+    validateMessage: ` n'est pas un diplôme ou titre valide`,
     default: null,
     required: function () {
       return !this.draft;
@@ -54,6 +58,10 @@ const formationSchema = {
     maxLength: 255,
     type: String,
     description: "Intitulé précis du diplôme ou titre visé par l'Alternant",
+    label: "Intitulé précis :",
+    example: "PRODUCTION ET SERVICE EN RESTAURATION (RAPIDE, COLLECTIVE, CAFETERIA) (CAP)",
+    requiredMessage: "L'intitulé du diplôme ou titre est obligatoire",
+    validateMessage: ` n'est pas un intitulé valide`,
     default: null,
     required: function () {
       return !this.draft;
@@ -62,6 +70,10 @@ const formationSchema = {
   dateDebutFormation: {
     type: Date,
     description: "Date de début du cycle de formation",
+    label: "Date de début du cycle de formation : ",
+    example: "05/11/2021",
+    requiredMessage: "la date de début de cycle est obligatoire",
+    validateMessage: ` n'est pas une date valide`,
     default: null,
     required: function () {
       return !this.draft;
@@ -70,6 +82,10 @@ const formationSchema = {
   dateFinFormation: {
     type: Date,
     description: "Date de fin du cycle de formation",
+    label: "Date prévue de fin des épreuves ou examens : ",
+    example: "18/11/2021",
+    requiredMessage: "la date de fin de cycle est obligatoire",
+    validateMessage: ` n'est pas une date valide`,
     default: null,
     required: function () {
       return !this.draft;
@@ -78,6 +94,10 @@ const formationSchema = {
   dureeFormation: {
     type: Number,
     description: "Durée de formation (heures)",
+    label: "Durée de la formation :",
+    example: "400",
+    requiredMessage: "Le nombre d'heures de la formation est obligatoire",
+    validateMessage: ` n'est pas un nombre d'heures valide`,
     default: null,
     required: function () {
       return !this.draft;

@@ -23,13 +23,17 @@ import { ArrowDropRightLine } from "../../theme/components/icons";
 import useAuth from "../../common/hooks/useAuth";
 import { Table } from "../../common/components/Table";
 
-const Message = ({ match }) => {
+const Message = () => {
   const [messageAutomatique, setMessageAutomatique] = useState([]);
   const [messagesManuel, setMessagesManuel] = useState([]);
 
   const [user] = useAuth();
 
-  const { values: valuesM, handleSubmit: handleSubmitM, handleChange: handleChangeM } = useFormik({
+  const {
+    values: valuesM,
+    handleSubmit: handleSubmitM,
+    handleChange: handleChangeM,
+  } = useFormik({
     initialValues: {
       msg: "",
       type: "",
@@ -104,8 +108,7 @@ const Message = ({ match }) => {
           const newMaintenanceMessage = {
             type: "alert",
             context: "automatique",
-            msg:
-              "Une mise à jour des données est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.",
+            msg: "Une mise à jour des données est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.",
             name: "auto",
             enabled: false,
           };
@@ -158,7 +161,7 @@ const Message = ({ match }) => {
   };
 
   return (
-    <Layout match={match}>
+    <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 24]} color="grey.800">
         <Container maxW="xl">
           <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
@@ -183,10 +186,22 @@ const Message = ({ match }) => {
               {messagesManuel.length > 0 && (
                 <Table
                   data={messagesManuel.map((m) => ({
-                    Message: m.msg,
-                    Type: m.type,
-                    Actif: m.enabled,
-                    Supprimer: null,
+                    Message: {
+                      Header: "Message",
+                      value: m.msg,
+                    },
+                    Type: {
+                      Header: "Type",
+                      value: m.type,
+                    },
+                    Actif: {
+                      Header: "Actif",
+                      value: m.enabled,
+                    },
+                    Supprimer: {
+                      Header: "Supprimer",
+                      value: null,
+                    },
                   }))}
                   components={{
                     Actif: (value, i) => {

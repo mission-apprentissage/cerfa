@@ -1,9 +1,11 @@
+const { mongoose } = require("../../../../mongodb");
 const employeurCerfaSchema = require("./parts/employeurCerfa.part");
 const apprentiSchema = require("./parts/apprenti.part");
 const maitreApprentissageSchema = require("./parts/maitreApprentissage.part");
 const formationSchema = require("./parts/formation.part");
 const contratSchema = require("./parts/contrat.part");
 const organismeFormationSchema = require("./parts/organismeFormation.part");
+const fieldLockedSchema = require("./parts/fieldLocked.part");
 
 const cerfaSchema = {
   employeur: {
@@ -27,23 +29,21 @@ const cerfaSchema = {
   organismeFormation: {
     ...organismeFormationSchema,
   },
+  isLockedField: {
+    ...fieldLockedSchema,
+  },
   draft: {
     type: Boolean,
     default: true,
     required: true,
     description: "Statut interne brouillon",
   },
-  createdBy: {
-    type: String,
-    default: null,
-    required: true,
-    description: "Qui a initié le cerfa",
-  },
   dossierId: {
-    type: String,
-    description: "Identifiant interne du dossier",
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "dossier",
     required: true,
     unique: true,
+    description: "Identifiant interne du dossier",
   },
 };
 module.exports = cerfaSchema;

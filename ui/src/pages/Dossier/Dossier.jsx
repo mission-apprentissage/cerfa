@@ -1,72 +1,152 @@
-import React, { useState } from "react";
-import { Box, Flex, Heading, Container, Button, Text } from "@chakra-ui/react";
-import { useHistory } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Flex,
+  Center,
+  Heading,
+  Button,
+  Container,
+  Badge,
+  HStack,
+  AvatarGroup,
+  Avatar,
+  Text,
+  Spinner,
+} from "@chakra-ui/react";
+import { Step, Steps, useSteps } from "chakra-ui-steps";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { prettyPrintDate } from "../../common/utils/dateUtils";
+
+import Cerfa from "./Cerfa/Cerfa";
+import PiecesJustificatives from "./PiecesJustificatives/PiecesJustificatives";
+import Signatures from "./Signatures/Signatures";
+import Statuts from "./Statuts/Statuts";
+
 import { useDossier } from "../../common/hooks/useDossier";
-import { setTitle } from "../../common/utils/pageUtils";
+import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
 
-import Layout from "../layout/Layout";
-import { Breadcrumb } from "../../common/components/Breadcrumb";
+const steps = [
+  { label: "Cerfa", description: "Information contenu dans le Cerfa" },
+  { label: "Piéces justificatives", description: "À ajouter au dossier" },
+  { label: "Signatures", description: "Signatures électronique" },
+  { label: "État", description: "Statut de votre dossier" },
+];
 
-export default ({ match }) => {
-  const { isloaded, createDossier } = useDossier();
-  const [isCreating, setIsCreating] = useState(false);
+const stepByPath = ["cerfa", "documents", "signatures", "etat"];
+
+export default () => {
+  let match = useRouteMatch();
+  const { nextStep, prevStep, reset, activeStep, setStep } = useSteps({
+    initialStep: stepByPath.indexOf(match.params.step),
+  });
+  const [stepState, setStepState] = useState();
+  const { isloaded, dossier } = useDossier(match.params.id);
   const history = useHistory();
+  const setWorkspaceTitle = useSetRecoilState(workspaceTitleAtom);
 
-  const title = "Commencer un nouveau contrat";
-  setTitle(title);
+  useEffect(() => {
+    const run = async () => {
+      if (isloaded && dossier) {
+        setWorkspaceTitle(dossier.nom);
+      }
+    };
+    run();
+  }, [dossier, history, isloaded, setWorkspaceTitle]);
 
-  const onStartClicked = async () => {
-    setIsCreating(true);
-    const { _id } = await createDossier();
-    setIsCreating(false);
-    history.push(`/dossiers/contrat/${_id}`);
+  const onClickNextStep = async () => {
+    setStepState("loading"); // type StateValue = "loading" | "error" | undefined
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setStepState("error");
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setStepState();
+    nextStep();
   };
 
-  if (!isloaded) return null;
+  if (!isloaded)
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
+
+  if (!dossier) {
+    history.push("/404");
+  }
+
+  // TODO not Authorize handler
 
   return (
-    <Layout match={match}>
-      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
-        <Container maxW="xl">
-          <Breadcrumb
-            pages={[
-              { title: "Accueil", to: "/" },
-              { title: "Mes dossiers", to: "/dossiers" },
-              { title: "Nouveau contrat" },
-            ]}
-          />
-        </Container>
-      </Box>
-      <Box w="100%" px={[1, 1, 12, 24]} mt={5}>
-        <Container maxW="xl">
+    <Box w="100%" px={[1, 1, 12, 24]}>
+      <Container maxW="xl">
+        <HStack mt={6}>
           <Heading as="h1" flexGrow="1">
-            Créer un nouveau contrat
+            {dossier.nom}
+            <Badge
+              variant="solid"
+              bg="orangedark.300"
+              borderRadius="16px"
+              color="grey.800"
+              textStyle="sm"
+              px="15px"
+              ml="10px"
+            >
+              Brouillon
+            </Badge>
+            <Badge variant="solid" bg="grey.100" color="grey.500" textStyle="sm" px="15px" ml="10px">
+              <Text as="i">
+                {!dossier.saved ? "Non sauvegardé" : `Dernière sauvegarde ${prettyPrintDate(dossier.lastModified)}`}
+              </Text>
+            </Badge>
           </Heading>
+          <HStack>
+            <AvatarGroup size="md" max={2}>
+              <Avatar name="Paul Pierre" />
+              <Avatar name="Pablo Hanry" />
+            </AvatarGroup>
+            <Button size="md" onClick={() => {}} variant="secondary">
+              Partager
+            </Button>
+          </HStack>
+        </HStack>
 
-          <Flex flexDir="column" width="100%" mt={9}>
-            <Text>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-              industry's standard dummy text ever since the 1500s, when an unknow.
-              <br />
-              <br />
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-              industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book. Qui velit provident est Quis aperiam sit placeat culpa. Sed
-              fugiat quae aut officia eius est neque animi? Et esse delectus est perspiciatis Quis eum enim voluptate
-              aut totam voluptatibus. Aut voluptates soluta sit delectus ipsa eum dolores officia.
-              <br />
-              <br />
-              Sed consequuntur rerum sed minima consequuntur non quia voluptates aut cumque repellendus a cumque
-              reprehenderit aut aspernatur commodi.
-            </Text>
-            <Flex width="100%" justifyContent="flex-end" mt={9}>
-              <Button size="lg" onClick={onStartClicked} variant="primary" isLoading={isCreating}>
-                Commencer la saisie
+        <Flex flexDir="column" width="100%" mt={9}>
+          <Steps
+            onClickStep={(step) => {
+              // if (step === 0 || step === 1) return setStep(step);
+              return setStep(step);
+            }}
+            activeStep={activeStep}
+            state={stepState}
+          >
+            {steps.map(({ label, description }, index) => (
+              <Step label={label} key={label} description={description}>
+                {index === 0 && <Cerfa />}
+                {index === 1 && <PiecesJustificatives />}
+                {index === 2 && <Signatures dossierId={dossier._id} />}
+                {index === 3 && <Statuts />}
+              </Step>
+            ))}
+          </Steps>
+          {activeStep === 4 ? (
+            <Center p={4} flexDir="column">
+              <Heading fontSize="xl">Woohoo! C'est fini!</Heading>
+              <Button mt={6} size="sm" onClick={reset}>
+                Remise à zero
+              </Button>
+            </Center>
+          ) : (
+            <Flex width="100%" justify="flex-end" mt={8} mb={10}>
+              <Button mr={4} size="md" variant="primary" onClick={prevStep} isDisabled={activeStep === 0}>
+                Retourner à l'étape précédente
+              </Button>
+              <Button size="md" onClick={onClickNextStep} variant="primary">
+                {activeStep === steps.length - 1 ? "Soumettre" : "Passer à l'étape suivante"}
               </Button>
             </Flex>
-          </Flex>
-        </Container>
-      </Box>
-    </Layout>
+          )}
+        </Flex>
+      </Container>
+    </Box>
   );
 };

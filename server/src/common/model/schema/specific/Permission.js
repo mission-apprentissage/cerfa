@@ -1,28 +1,51 @@
+const { mongoose } = require("../../../mongodb");
+
 const permissionSchema = {
-  cerfaId: {
-    type: String,
-    description: "Identifiant interne du cerfa",
+  workspaceId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "workspace",
+    description: "Workspace id",
     required: true,
-    index: true,
   },
   dossierId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "dossier",
     description: "Identifiant interne du dossier",
-    required: true,
-    index: true,
+    required: function () {
+      return !(this.dossierId === null);
+    },
+    nullable: true,
+    default: null,
   },
-  username: {
+  userEmail: {
     type: String,
+    description: "User email",
     required: true,
-    index: true,
-    description: "Qui a le droit sur le dossier",
+    maxLength: 80,
+    validate: {
+      validator: function (v) {
+        if (!v) return true;
+        return /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@[*[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+]*/.test(v);
+      },
+      message: (props) => `${props.value} n'est pas un couriel valide`,
+    },
+    example: "energie3000.pro@gmail.com",
   },
   role: {
-    type: String,
-    enum: ["initiateur_cerfa", "utilisateur", "signataire"],
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "role",
+    description: "Role id",
     required: true,
-    index: true,
-    description: "Avec quel role",
+  },
+  acl: {
+    type: [String],
+    default: [],
+    description: "Custom Access Control Level array",
+  },
+  addedAt: {
+    type: Date,
+    default: Date.now,
+    description: "Date d'ajout de la permission",
   },
 };
 module.exports = permissionSchema;

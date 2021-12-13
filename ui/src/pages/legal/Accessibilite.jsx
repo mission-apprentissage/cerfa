@@ -5,12 +5,12 @@ import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
 import { ExternalLinkLine } from "../../theme/components/icons";
 
-export default ({ match }) => {
+export default () => {
   const title = "Accessibilité";
   setTitle(title);
 
   return (
-    <Layout match={match}>
+    <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
@@ -92,7 +92,7 @@ export default ({ match }) => {
               <Heading as={"h3"} textStyle="h6" mb={2}>
                 Voie de recours
               </Heading>
-              <Text>
+              <Box>
                 Cette procédure est à utiliser dans le cas suivant : vous avez signalé au responsable du site internet
                 un défaut d’accessibilité qui vous empêche d’accéder à un contenu ou à un des services du portail et
                 vous n’avez pas obtenu de réponse satisfaisante.
@@ -124,7 +124,7 @@ export default ({ match }) => {
                     Libre réponse 71120 75342 Paris CEDEX 07
                   </ListItem>
                 </UnorderedList>
-              </Text>
+              </Box>
             </Box>
           </Box>
         </Container>

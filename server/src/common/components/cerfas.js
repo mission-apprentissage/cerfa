@@ -1,20 +1,22 @@
 const { Cerfa } = require("../model/index");
+const { mongoose } = require("../../common/mongodb");
 const Joi = require("joi");
 const Boom = require("boom");
 
 module.exports = async () => {
   return {
-    createCerfa: async (data, user) => {
+    createCerfa: async (data) => {
       let { dossierId } = await Joi.object({
         dossierId: Joi.string().required(),
       }).validateAsync(data, { abortEarly: false });
+
+      // TODO IF DOSSIER ID EXIST
 
       let result = null;
       try {
         result = await Cerfa.create({
           draft: true,
           dossierId,
-          createdBy: user.sub,
         });
       } catch (error) {
         const { code, name, message } = error;
@@ -35,7 +37,7 @@ module.exports = async () => {
 
       // eslint-disable-next-line no-unused-vars
       const { _id, __v, dossierId, ...cerfa } = found;
-      const validate = await Cerfa.create({ ...cerfa, dossierId: "619baec6fcdd030ba4e13c41", draft: false });
+      const validate = await Cerfa.create({ ...cerfa, dossierId: mongoose.Types.ObjectId().toString(), draft: false });
       await validate.delete();
 
       return await Cerfa.findOneAndUpdate({ _id: id }, { draft: false }, { new: true });

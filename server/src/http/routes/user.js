@@ -5,29 +5,26 @@ const config = require("../../config");
 const path = require("path");
 const Boom = require("boom");
 
-const userSchema = Joi.object({
-  username: Joi.string().required(),
-  password: Joi.string().required(),
-  options: Joi.object({
-    email: Joi.string().required(),
-    roles: Joi.array().required(),
-    permissions: Joi.object({
-      isAdmin: Joi.boolean().required(),
-    }).unknown(),
-  }).unknown(),
-});
-
 const getEmailTemplate = (type = "forgotten-password") => {
   return path.join(__dirname, `../../assets/templates/${type}.mjml.ejs`);
 };
 
-module.exports = ({ users, mailer }) => {
+module.exports = ({ users, roles, mailer }) => {
   const router = express.Router();
 
   router.get(
     "/users",
     tryCatch(async (req, res) => {
-      const usersList = await users.getUsers();
+      let usersList = await users.getUsers();
+      for (let index = 0; index < usersList.length; index++) {
+        const user = usersList[index];
+        for (let j = 0; j < user.roles.length; j++) {
+          const roleId = user.roles[j];
+          const roleName = await roles.findRoleById(roleId, { name: 1 });
+          user.roles[j] = roleName.name;
+        }
+      }
+
       return res.json(usersList);
     })
   );
@@ -35,9 +32,17 @@ module.exports = ({ users, mailer }) => {
   router.post(
     "/user",
     tryCatch(async ({ body }, res) => {
-      await userSchema.validateAsync(body, { abortEarly: false });
-
-      const { username, password, options } = body;
+      const { username, password, options } = await Joi.object({
+        username: Joi.string().required(),
+        password: Joi.string().required(),
+        options: Joi.object({
+          email: Joi.string().required(),
+          roles: Joi.array().required(),
+          permissions: Joi.object({
+            isAdmin: Joi.boolean().required(),
+          }).unknown(),
+        }).unknown(),
+      }).validateAsync(body, { abortEarly: false });
 
       const alreadyExists = await users.getUser(username);
       if (alreadyExists) {
@@ -66,11 +71,14 @@ module.exports = ({ users, mailer }) => {
     tryCatch(async ({ body, params }, res) => {
       const username = params.username;
 
+      let rolesId = await roles.findRolesByNames(body.options.roles, { _id: 1 });
+      rolesId = rolesId.map(({ _id }) => _id);
+
       await users.updateUser(username, {
         isAdmin: body.options.permissions.isAdmin,
         email: body.options.email,
         username: body.username,
-        roles: body.options.roles,
+        roles: rolesId,
         acl: body.options.acl,
         invalided_token: true,
       });

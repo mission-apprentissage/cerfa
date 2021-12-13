@@ -1,9 +1,12 @@
 import { useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useRouteMatch, useHistory } from "react-router-dom";
 import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { dossierAtom } from "./dossierAtom";
+import { _delete } from "../httpClient";
 
 window.dossierId = null;
+window.dossierNotSaved = false;
+window.historyDossier = null;
 window.manuallyTriggered = false;
 
 const isListeningAtom = atom({
@@ -11,27 +14,42 @@ const isListeningAtom = atom({
   default: false,
 });
 
-export const useUnloadEffect = (match, onLeave) => {
+export const useUnloadEffect = () => {
   const beforeUnload = useRef(async (e) => {
     if (!window.manuallyTriggered) {
       e.preventDefault();
       e.returnValue = "";
     }
     if (window.dossierId) {
-      onLeave({ dossierId: window.dossierId, internalLeave: window.manuallyTriggered });
+      if (window.manuallyTriggered) {
+        if (window.dossierNotSaved) {
+          // eslint-disable-next-line no-restricted-globals
+          const leave = confirm("Voulez-vous vraiment quitter cette page ?");
+          if (leave) {
+            await _delete(`/api/v1/dossier/${window.dossierId}`);
+          } else {
+            window.historyDossier.goBack();
+          }
+        }
+      }
     }
   });
-
-  let location = useLocation();
+  const history = useHistory();
+  let { path } = useRouteMatch();
+  let { pathname } = useLocation();
   const [isListening, setIsListening] = useRecoilState(isListeningAtom);
   const dossier = useRecoilValue(dossierAtom);
 
   useEffect(() => {
     const onBeforeUnload = (e) => beforeUnload.current(e);
 
-    if (match?.params?.id && match?.path === "/dossiers/contrat/:id") {
+    const contratPath = new RegExp(`^${path}/mes-dossiers/([0-9A-Fa-f]{24})/[a-z]+$`);
+    const [, dId] = contratPath.exec(pathname) || [null, null];
+    if (dId && contratPath.test(pathname)) {
       if (!isListening && dossier?.saved === false) {
-        window.dossierId = match.params.id;
+        window.dossierId = dId;
+        window.historyDossier = history;
+        window.dossierNotSaved = true;
         window.removeEventListener("beforeunload", onBeforeUnload);
         window.addEventListener("beforeunload", onBeforeUnload);
         setIsListening(true);
@@ -40,8 +58,8 @@ export const useUnloadEffect = (match, onLeave) => {
 
     return async () => {
       if (isListening) {
-        const contratPath = new RegExp("^/dossiers/contrat/[0-9A-Fa-f]{24}$");
-        if (contratPath.test(location.pathname)) {
+        const contratPath = new RegExp("^/mon-espace/mes-dossiers/[0-9A-Fa-f]{24}/[a-z]+$");
+        if (contratPath.test(pathname)) {
           window.manuallyTriggered = true;
           window.dispatchEvent(new Event("beforeunload"));
         }
@@ -50,5 +68,5 @@ export const useUnloadEffect = (match, onLeave) => {
         setIsListening(false);
       }
     };
-  }, [beforeUnload, dossier, isListening, location.pathname, match, setIsListening]);
+  }, [beforeUnload, dossier, isListening, pathname, path, setIsListening, history]);
 };

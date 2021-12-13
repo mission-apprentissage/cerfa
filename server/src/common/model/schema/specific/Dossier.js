@@ -1,10 +1,12 @@
+const { mongoose } = require("../../../mongodb");
 const documentSchema = require("./document.part");
 
 const dossierSchema = {
-  cerfaId: {
+  nom: {
     type: String,
-    description: "Identifiant interne du cerfa",
     required: true,
+    description: "Nom du dossier",
+    default: "Nouveau Dossier",
   },
   documents: {
     type: [
@@ -63,11 +65,23 @@ const dossierSchema = {
     default: Date.now,
     description: "Date derniere modification",
   },
-  createdBy: {
-    type: String,
+  contributeurs: {
+    type: [String],
+    default: [],
+    description: "Contributeurs du dossier",
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
     default: null,
     required: true,
-    description: "Qui a initié le dossier",
+    description: "Propriétaire du dossier",
+  },
+  workspaceId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "workspace",
+    required: true,
+    description: "Workspace id",
   },
 };
 module.exports = dossierSchema;

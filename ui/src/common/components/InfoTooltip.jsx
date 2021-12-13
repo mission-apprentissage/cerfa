@@ -40,7 +40,7 @@ const InfoTooltip = ({ description, example, history, noHistory }) => {
         <PopoverHeader fontWeight="bold">Description</PopoverHeader>
         <PopoverBody>
           <Stack>
-            <Text>{description}</Text>
+            <Text dangerouslySetInnerHTML={{ __html: description }} />
             <Text as="samp">Exemple: {example}</Text>
           </Stack>
         </PopoverBody>

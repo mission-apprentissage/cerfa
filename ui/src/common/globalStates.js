@@ -5,7 +5,8 @@ const anonymous = {
   sub: "anonymous",
   acl: [],
   permissions: {},
-  roles: ["public"],
+  roles: [],
+  workspaceId: null,
 };
 
 const { useGlobalState, getGlobalState, setGlobalState } = createGlobalState({
