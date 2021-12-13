@@ -1,3 +1,30 @@
+# [1.9.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.9.0-beta.1...v1.9.0-beta.2) (2021-12-13)
+
+
+### Bug Fixes
+
+* **eslint:** prettier dependencies ([b4c2c4f](https://github.com/mission-apprentissage/cerfa/commit/b4c2c4f724f2b9e2faa6b11eb2c48ddc74d2895c))
+* **eslint:** version 8 dependencies ([a3c67ae](https://github.com/mission-apprentissage/cerfa/commit/a3c67ae74aa261075def5e51ef574d43026c7fbf))
+
+
+### Features
+
+* add clamav and scan files ([393d73b](https://github.com/mission-apprentissage/cerfa/commit/393d73b31d48765bda1c1388e4632a46296fbb11))
+* add myWorkspace, sharedWorkspace, base permissions, acl front and back ([#34](https://github.com/mission-apprentissage/cerfa/issues/34)) ([9a25b60](https://github.com/mission-apprentissage/cerfa/commit/9a25b604bd475c2e6a91d959510566ca0b87adc2))
+* add wks contributor modal ([5379fdf](https://github.com/mission-apprentissage/cerfa/commit/5379fdf90d8477dc4fffb81821bc335a3ad4747a))
+* change contributors as email ([9915931](https://github.com/mission-apprentissage/cerfa/commit/9915931930d0628dd2e5c3d856f9e4ba4990f37c))
+* **pdf:** base of pdf generation ([#31](https://github.com/mission-apprentissage/cerfa/issues/31)) ([5a5905c](https://github.com/mission-apprentissage/cerfa/commit/5a5905c23cc60fccecb3b28bc277d4da1359cac1))
+* **server:** some tests workspace component ([13c7b86](https://github.com/mission-apprentissage/cerfa/commit/13c7b8672b69d4db046b23eccdcd5b52fe1c855c))
+* **sign:** base sign ([13d702b](https://github.com/mission-apprentissage/cerfa/commit/13d702b7597b308fe5d3b2066d00e340fc04974c))
+* **ui-form:** cleaning ([c58f811](https://github.com/mission-apprentissage/cerfa/commit/c58f8110f097c5e63cd144eb9d22d392b1d00592))
+* **ui-input:** add remaining fields to formation part ([3ee268f](https://github.com/mission-apprentissage/cerfa/commit/3ee268ff396aea9688dd0b19521b807588e19c5a))
+* **ui-input:** conditional validation + improve performances ([afce044](https://github.com/mission-apprentissage/cerfa/commit/afce044f7184c245ba2045b016bec42d43d12091))
+* **ui-input:** lookup cfd and rncp data ([ca960fe](https://github.com/mission-apprentissage/cerfa/commit/ca960feaa1b23eb3ef4f65b5fc3aba9eb1236793))
+* **ui-input:** refactor input interoperability ([b082ceb](https://github.com/mission-apprentissage/cerfa/commit/b082cebde249c5e4620f195664b56e33da8fa99f))
+* **ui:** retract after 8s ([6e01564](https://github.com/mission-apprentissage/cerfa/commit/6e01564cb9da37a8dcd1a8cb5b73c9993284e0f0))
+* **ui:** retract left panel after 2sec ([497b756](https://github.com/mission-apprentissage/cerfa/commit/497b756dd47d5128618bf95cf9793bb2d64db73c))
+* Workspaces, Roles, Signature, Permissions, Front ([#32](https://github.com/mission-apprentissage/cerfa/issues/32)) ([f635c8d](https://github.com/mission-apprentissage/cerfa/commit/f635c8dcda0302cfb5b6592d854b96b5a4e9bf22))
+
 # [1.9.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.8.0...v1.9.0-beta.1) (2021-11-29)
 
 
