@@ -12,7 +12,7 @@ describe("[Routes] Upload", () => {
 
   it("Vérifie qu'on ne peut uploader un fichier", async () => {
     let { httpClient, createAndLogUser } = await startServerWithClamav({ isInfected: false });
-    let { Cookie } = await createAndLogUser("user", "password", {
+    let { Cookie } = await createAndLogUser("user1@apprentissage.beta.gouv.fr", "password", {
       email: "user1@apprentissage.beta.gouv.fr",
       nom: "Robert",
       prenom: "Henri",
@@ -39,7 +39,7 @@ describe("[Routes] Upload", () => {
 
   it("Vérifie qu'on ne peut pas uploader un fichier qui n'a pas le bon content type", async () => {
     let { httpClient, createAndLogUser } = await startServerWithClamav({ isInfected: false });
-    let { Cookie } = await createAndLogUser("user", "password", {
+    let { Cookie } = await createAndLogUser("user1@apprentissage.beta.gouv.fr", "password", {
       email: "user1@apprentissage.beta.gouv.fr",
       nom: "Robert",
       prenom: "Henri",
@@ -65,7 +65,7 @@ describe("[Routes] Upload", () => {
 
   it("Vérifie qu'on ne peut pas uploader un fichier avec un virus", async () => {
     let { httpClient, createAndLogUser } = await startServerWithClamav({ isInfected: true });
-    let { Cookie } = await createAndLogUser("user", "password", {
+    let { Cookie } = await createAndLogUser("user1@apprentissage.beta.gouv.fr", "password", {
       email: "user1@apprentissage.beta.gouv.fr",
       nom: "Robert",
       prenom: "Henri",

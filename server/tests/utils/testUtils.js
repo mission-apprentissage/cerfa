@@ -24,7 +24,7 @@ async function initComponents(options) {
 
   const defaultOptions = {
     userOpt: {
-      username: "user",
+      email: "h@ck.me",
       password: "password",
       options: { email: "h@ck.me", nom: "hack", prenom: "me", telephone: "+33102030405" },
     },
@@ -35,7 +35,7 @@ async function initComponents(options) {
   const userOpt = options?.userOpt || defaultOptions.userOpt;
 
   const testRole = await components.roles.createRole(roleOpt);
-  const testUser = await components.users.createUser(userOpt.username, userOpt.password, userOpt.options);
+  const testUser = await components.users.createUser(userOpt.email, userOpt.password, userOpt.options);
 
   return {
     components,
@@ -56,11 +56,11 @@ async function startServer(custom) {
     httpClient,
     components,
     ...helpers,
-    createAndLogUser: async (username, password, options) => {
-      await components.users.createUser(username, password, options);
+    createAndLogUser: async (userEmail, password, options) => {
+      await components.users.createUser(userEmail, password, options);
 
       const response = await httpClient.post("/api/v1/auth/login", {
-        username: username,
+        username: userEmail,
         password: password,
       });
 

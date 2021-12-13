@@ -32,8 +32,8 @@ module.exports = ({ users, roles, mailer }) => {
   router.post(
     "/user",
     tryCatch(async ({ body }, res) => {
-      const { username, password, options } = await Joi.object({
-        username: Joi.string().required(),
+      const { password, options } = await Joi.object({
+        // username: Joi.string().required(),
         password: Joi.string().required(),
         options: Joi.object({
           email: Joi.string().required(),
@@ -44,19 +44,19 @@ module.exports = ({ users, roles, mailer }) => {
         }).unknown(),
       }).validateAsync(body, { abortEarly: false });
 
-      const alreadyExists = await users.getUser(username);
+      const alreadyExists = await users.getUser(options.email);
       if (alreadyExists) {
-        throw Boom.conflict(`Unable to create, user ${username} already exists`);
+        throw Boom.conflict(`Unable to create, user ${options.email} already exists`);
       }
 
-      const user = await users.createUser(username, password, options);
+      const user = await users.createUser(options.email, password, options);
 
       await mailer.sendEmail(
         user.email,
         `[${config.env} Contrat publique apprentissage] Bienvenue`,
         getEmailTemplate("grettings"),
         {
-          username,
+          username: user.username,
           tmpPwd: password,
           publicUrl: config.publicUrl,
         }
@@ -67,14 +67,14 @@ module.exports = ({ users, roles, mailer }) => {
   );
 
   router.put(
-    "/user/:username",
+    "/user/:userid",
     tryCatch(async ({ body, params }, res) => {
-      const username = params.username;
+      const userid = params.userid;
 
       let rolesId = await roles.findRolesByNames(body.options.roles, { _id: 1 });
       rolesId = rolesId.map(({ _id }) => _id);
 
-      await users.updateUser(username, {
+      await users.updateUser(userid, {
         isAdmin: body.options.permissions.isAdmin,
         email: body.options.email,
         username: body.username,
@@ -83,18 +83,18 @@ module.exports = ({ users, roles, mailer }) => {
         invalided_token: true,
       });
 
-      res.json({ message: `User ${username} updated !` });
+      res.json({ message: `User ${userid} updated !` });
     })
   );
 
   router.delete(
-    "/user/:username",
+    "/user/:userid",
     tryCatch(async ({ params }, res) => {
-      const username = params.username;
+      const userid = params.userid;
 
-      await users.removeUser(username);
+      await users.removeUser(userid);
 
-      res.json({ message: `User ${username} deleted !` });
+      res.json({ message: `User ${userid} deleted !` });
     })
   );
 

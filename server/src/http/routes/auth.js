@@ -12,13 +12,18 @@ module.exports = ({ users }) => {
     "/login",
     tryCatch(async (req, res) => {
       const { username, password } = req.body;
-      const user = await users.authenticate(username, password);
+      const user = (await users.getUser(username)) ?? (await users.getUserByUsername(username));
+      if (!user) {
+        return res.status(401).json({ message: "Utilisateur non trouvé" });
+      }
 
-      if (!user) return res.status(401).json({ message: "Utilisateur non trouvé" });
+      const auth = await users.authenticate(user.email, password);
+
+      if (!auth) return res.status(401).json({ message: "Utilisateur non trouvé" });
 
       const payload = await users.structureUser(user);
 
-      await users.registerUser(payload.email);
+      await users.loggedInUser(payload.email);
 
       const token = createUserToken({ payload });
 

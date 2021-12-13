@@ -50,14 +50,14 @@ module.exports = ({ users, mailer }) => {
         username: Joi.string().required(),
       }).validateAsync(req.body, { abortEarly: false });
 
-      // try also by email since users tends to do that
-      const user = (await users.getUser(username)) ?? (await users.getUserByEmail(username));
+      // try also by username since users tends to do that
+      const user = (await users.getUser(username)) ?? (await users.getUserByUsername(username));
       if (!user) {
         throw Boom.badRequest();
       }
       let noEmail = req.query.noEmail;
 
-      const token = createPasswordToken(user.username);
+      const token = createPasswordToken(user.email);
       const url = `${config.publicUrl}/reset-password?passwordToken=${token}`;
 
       if (noEmail) {
@@ -89,11 +89,11 @@ module.exports = ({ users, mailer }) => {
         newPassword: validators.password().required(),
       }).validateAsync(req.body, { abortEarly: false });
 
-      const updatedUser = await users.changePassword(user.username, newPassword);
+      const updatedUser = await users.changePassword(user.email, newPassword);
 
       const payload = await users.structureUser(updatedUser);
 
-      await users.registerUser(payload.email);
+      await users.loggedInUser(payload.email);
 
       const token = createUserToken({ payload });
 

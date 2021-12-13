@@ -1,5 +1,18 @@
-import { Box, Button, FormControl, FormErrorMessage, FormLabel, HStack, Input, Link, Text } from "@chakra-ui/react";
-import { Field, Form, Formik } from "formik";
+import {
+  Flex,
+  Box,
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  HStack,
+  Input,
+  Link,
+  Text,
+  RadioGroup,
+  Radio,
+} from "@chakra-ui/react";
+import { useFormik } from "formik";
 import React from "react";
 import { NavLink, useHistory } from "react-router-dom";
 import * as Yup from "yup";
@@ -9,12 +22,12 @@ import useAuth from "../../../common/hooks/useAuth";
 import useToken from "../../../common/hooks/useToken";
 import { _post } from "../../../common/httpClient";
 
-const Login = () => {
+const Register = () => {
   const [, setAuth] = useAuth();
   const [, setToken] = useToken();
   const history = useHistory();
 
-  const login = async (values, { setStatus }) => {
+  const register = async (values, { setStatus }) => {
     try {
       const result = await _post("/api/v1/auth/login", values);
       if (result.loggedIn) {
@@ -29,71 +42,67 @@ const Login = () => {
     }
   };
 
+  const { values, handleChange, handleSubmit, errors, touched } = useFormik({
+    initialValues: {
+      compte: "",
+      email: "",
+      nom: "",
+      prenom: "",
+      // password: "",
+    },
+    validationSchema: Yup.object().shape({
+      compte: Yup.string().required("Requis"),
+      email: Yup.string().email("Format d'email invalide").required("Requis"),
+      nom: Yup.string().required("Requis"),
+      prenom: Yup.string().required("Requis"),
+      // password: Yup.string().required("Requis"),
+    }),
+    onSubmit: (values, rest) => {
+      return new Promise(async (resolve) => {
+        await register(values, rest);
+        resolve("onSubmitHandler publish complete");
+      });
+    },
+  });
+
   return (
-    <Box width={["auto", "28rem"]}>
+    <Flex w="full" flexDirection="column" h="full">
       <Box>
-        <Formik
-          initialValues={{ username: "", password: "" }}
-          validationSchema={Yup.object().shape({
-            username: Yup.string().required("Requis"),
-            email: Yup.string().email("Format invalide").required("Requis"),
-            nom: Yup.string().required("Requis"),
-            prenom: Yup.string().required("Requis"),
-            telephone: Yup.string().required("Requis"),
-            password: Yup.string().required("Requis"),
-          })}
-          onSubmit={login}
-        >
-          {({ status = {} }) => {
-            return (
-              <Form>
-                <Box marginBottom="2w">
-                  <Field name="username">
-                    {({ field, meta }) => (
-                      <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
-                        <FormLabel>Identifiant</FormLabel>
-                        <Input {...field} id={field.name} placeholder="Votre identifiant..." />
-                        <FormErrorMessage>{meta.error}</FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
+        <Box marginBottom="2w">
+          <FormControl py={2} isRequired isInvalid={errors.compte && touched.compte}>
+            <FormLabel>Je représente</FormLabel>
+            <RadioGroup id="compte" name="compte" value={values.compte}>
+              <HStack spacing={5}>
+                <Radio value="entreprise" onChange={handleChange}>
+                  une entreprise
+                </Radio>
+                <Radio value="cfa" onChange={handleChange}>
+                  un CFA
+                </Radio>
+              </HStack>
+            </RadioGroup>
+            {errors.compte && touched.compte && <FormErrorMessage>{errors.compte}</FormErrorMessage>}
+          </FormControl>
 
-                  <Field name="email">
-                    {({ field, meta }) => (
-                      <FormControl py={2} isRequired isInvalid={meta.error && meta.touched}>
-                        <FormLabel>Email</FormLabel>
-                        <Input {...field} id={field.name} placeholder="Votre email..." />
-                      </FormControl>
-                    )}
-                  </Field>
+          <FormControl py={2} isRequired isInvalid={errors.email && touched.email}>
+            <FormLabel>Email</FormLabel>
+            <Input id="email" name="email" placeholder="Votre email..." onChange={handleChange} value={values.email} />
+            {errors.email && touched.email && <FormErrorMessage>{errors.email}</FormErrorMessage>}
+          </FormControl>
 
-                  <Field name="nom">
-                    {({ field, meta }) => (
-                      <FormControl py={2} isRequired isInvalid={meta.error && meta.touched}>
-                        <FormLabel>Nom</FormLabel>
-                        <Input {...field} id={field.name} placeholder="Votre nom" />
-                      </FormControl>
-                    )}
-                  </Field>
-                  <Field name="prenom">
-                    {({ field, meta }) => (
-                      <FormControl py={2} isRequired isInvalid={meta.error && meta.touched}>
-                        <FormLabel>Prénom</FormLabel>
-                        <Input {...field} id={field.name} placeholder="Votre prénom" />
-                      </FormControl>
-                    )}
-                  </Field>
+          <FormControl py={2} isRequired isInvalid={errors.nom && touched.nom}>
+            <FormLabel>Nom</FormLabel>
+            <Input id="nom" name="nom" onChange={handleChange} placeholder="Votre nom" value={values.nom} />
+            {errors.nom && touched.nom && <FormErrorMessage>{errors.nom}</FormErrorMessage>}
+          </FormControl>
 
-                  <Field name="telephone">
-                    {({ field, meta }) => (
-                      <FormControl py={2} isRequired isInvalid={meta.error && meta.touched}>
-                        <FormLabel>Télephone</FormLabel>
-                        <Input {...field} id={field.name} placeholder="Votre télephone" />
-                      </FormControl>
-                    )}
-                  </Field>
+          <FormControl py={2} isRequired isInvalid={errors.prenom && touched.prenom}>
+            <FormLabel>Prénom</FormLabel>
+            <Input id="prenom" name="prenom" onChange={handleChange} placeholder="Votre prénom" value={values.prenom} />
+            {errors.prenom && touched.prenom && <FormErrorMessage>{errors.prenom}</FormErrorMessage>}
+          </FormControl>
 
-                  <Field name="password">
+          {/* <Field name="password">
                     {({ field, meta }) => {
                       return (
                         <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
@@ -103,22 +112,13 @@ const Login = () => {
                         </FormControl>
                       );
                     }}
-                  </Field>
-                </Box>
-                <HStack spacing="4w">
-                  <Button variant="primary" type="submit" size="lg">
-                    S'inscrire
-                  </Button>
-                </HStack>
-                {status.error && (
-                  <Text color="error" mt={2}>
-                    {status.error}
-                  </Text>
-                )}
-              </Form>
-            );
-          }}
-        </Formik>
+                  </Field> */}
+        </Box>
+        <HStack spacing="4w">
+          <Button size="lg" type="submit" variant="primary" onClick={handleSubmit} px={6}>
+            S'inscrire
+          </Button>
+        </HStack>
       </Box>
       <Text mt={12} fontSize="1rem">
         Vous avez déjà un compte ?
@@ -126,8 +126,8 @@ const Login = () => {
           Connexion
         </Link>
       </Text>
-    </Box>
+    </Flex>
   );
 };
 
-export default Login;
+export default Register;

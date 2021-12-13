@@ -1,6 +1,6 @@
 const { User, Role } = require("../model/index");
 const sha512Utils = require("../utils/sha512Utils");
-const { pick, uniq } = require("lodash");
+const { pick, uniq, random } = require("lodash");
 const workspaces = require("./workspaces");
 
 const rehashPassword = (user, password) => {
@@ -10,8 +10,8 @@ const rehashPassword = (user, password) => {
 
 module.exports = async () => {
   return {
-    authenticate: async (username, password) => {
-      const user = await User.findOne({ username });
+    authenticate: async (email, password) => {
+      const user = await User.findOne({ email });
 
       if (!user) {
         return null;
@@ -26,11 +26,11 @@ module.exports = async () => {
       }
       return null;
     },
-    getUser: async (username) => await User.findOne({ username }),
+    getUser: async (email) => await User.findOne({ email }),
     getUserById: async (id, select = {}) => await User.findById(id, select).lean(),
-    getUserByEmail: async (email, select = {}) => await User.findOne({ email }, select).lean(),
+    getUserByUsername: async (username, select = {}) => await User.findOne({ username }, select).lean(),
     getUsers: async (filters = {}) => await User.find(filters, { password: 0, _id: 0, __v: 0 }).lean(),
-    createUser: async (username, password, options = {}) => {
+    createUser: async (userEmail, password, options = {}) => {
       const hash = options.hash || sha512Utils.hash(password);
       const permissions = options.permissions || {};
 
@@ -40,6 +40,13 @@ module.exports = async () => {
         if (!rolesDb.length === 0) {
           throw new Error("Roles doesn't exist");
         }
+      }
+
+      let username = options.prenom[0] + options.nom;
+
+      const exist = await User.findOne({ username });
+      if (exist) {
+        username += random(1, 1000);
       }
 
       const user = await User.create({
@@ -56,35 +63,35 @@ module.exports = async () => {
 
       const { createWorkspace } = await workspaces();
       await createWorkspace({
-        username,
+        email: options.email,
         nom: `Espace - ${options.prenom} ${options.nom}`,
         description: `L'espace de travail de ${options.prenom} ${options.nom}`,
       });
 
       return user;
     },
-    removeUser: async (username) => {
-      const user = await User.findOne({ username });
+    removeUser: async (userid) => {
+      const user = await User.findOne({ _id: userid });
       if (!user) {
-        throw new Error(`Unable to find user ${username}`);
+        throw new Error(`Unable to find user ${userid}`);
       }
 
-      return await user.deleteOne({ username });
+      return await user.deleteOne({ _id: userid });
     },
-    updateUser: async (username, data) => {
-      let user = await User.findOne({ username });
+    updateUser: async (userid, data) => {
+      let user = await User.findById(userid);
       if (!user) {
-        throw new Error(`Unable to find user ${username}`);
+        throw new Error(`Unable to find user ${userid}`);
       }
 
       const result = await User.findOneAndUpdate({ _id: user._id }, data, { new: true });
 
       return result.toObject();
     },
-    changePassword: async (username, newPassword) => {
-      const user = await User.findOne({ username });
+    changePassword: async (email, newPassword) => {
+      const user = await User.findOne({ email });
       if (!user) {
-        throw new Error(`Unable to find user ${username}`);
+        throw new Error(`Unable to find user ${email}`);
       }
 
       if (user.account_status === "FORCE_RESET_PASSWORD") {
@@ -107,7 +114,7 @@ module.exports = async () => {
 
       const structure = {
         permissions,
-        sub: user.username,
+        sub: user.email,
         email: user.email,
         nom: user.nom,
         prenom: user.prenom,
@@ -118,7 +125,7 @@ module.exports = async () => {
       };
       return structure;
     },
-    registerUser: (email) =>
+    loggedInUser: (email) =>
       User.findOneAndUpdate({ email }, { last_connection: new Date(), $push: { connection_history: new Date() } }),
   };
 };

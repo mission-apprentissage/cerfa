@@ -4,31 +4,32 @@ const usersSchema = {
   username: {
     type: String,
     default: null,
-    description: "Le nom de l'utilisateur",
-    unique: true, // TODO
+    description: "username",
+    unique: true,
+  },
+  email: {
+    type: String,
+    default: null,
+    required: true,
+    unique: true,
+    description: "Email utilisateur",
   },
   password: {
     type: String,
     default: null,
     description: "Le mot de passe hashé",
   },
-  email: {
-    type: String,
-    default: null,
-    required: true,
-    description: "Email",
-  },
   nom: {
     type: String,
     default: null,
     required: true,
-    description: "Nom",
+    description: "Le nom de l'utilisateur",
   },
   prenom: {
     type: String,
     default: null,
     required: true,
-    description: "Prenom",
+    description: "Le prénom de l'utilisateur",
   },
   telephone: {
     default: null,

@@ -35,7 +35,7 @@ module.exports = ({ users }) => {
               return done("Unauthorized", false);
             }
             if (user.invalided_token) {
-              await users.updateUser(user.username, { invalided_token: false });
+              await users.updateUser(user._id, { invalided_token: false });
               return done(null, { invalided_token: true });
             }
             const result = await users.structureUser(user);

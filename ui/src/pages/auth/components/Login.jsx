@@ -59,7 +59,7 @@ const Login = () => {
                     {({ field, meta }) => (
                       <FormControl isRequired isInvalid={meta.error && meta.touched} mb={5}>
                         <FormLabel>Identifiant</FormLabel>
-                        <Input {...field} id={field.name} placeholder="Votre email..." />
+                        <Input {...field} id={field.name} placeholder="Votre email ou identifiant..." />
                         <FormErrorMessage>{meta.error}</FormErrorMessage>
                       </FormControl>
                     )}

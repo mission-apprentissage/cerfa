@@ -18,7 +18,7 @@ const ResetPasswordPage = () => {
   const history = useHistory();
   const location = useLocation();
   const { passwordToken } = queryString.parse(location.search);
-  const username = decodeJWT(passwordToken).sub;
+  const email = decodeJWT(passwordToken).sub;
 
   const changePassword = async (values, { setStatus }) => {
     try {
@@ -44,7 +44,7 @@ const ResetPasswordPage = () => {
     }
   };
 
-  const title = `Changement du mot de passe pour l'utilisateur ${username}`;
+  const title = `Changement du mot de passe pour l'utilisateur ${email}`;
   setTitle(title);
 
   return (
