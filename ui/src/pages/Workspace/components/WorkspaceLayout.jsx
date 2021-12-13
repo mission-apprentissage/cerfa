@@ -76,7 +76,7 @@ export default ({ header, content }) => {
   const sidebar = useDisclosure({ defaultIsOpen: true });
   const parametres = useDisclosure({ defaultIsOpen: isParametresPages });
 
-  // Auto closing
+  // TODO to decide with business - Auto closing
   // useEffect(() => {
   //   const toogler = setTimeout(() => {
   //     sidebar.onToggle();
