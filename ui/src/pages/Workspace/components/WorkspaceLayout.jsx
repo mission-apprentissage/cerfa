@@ -80,7 +80,7 @@ export default ({ header, content }) => {
   useEffect(() => {
     const toogler = setTimeout(() => {
       sidebar.onToggle();
-    }, 2000);
+    }, 8000);
     return () => {
       clearTimeout(toogler);
     };
