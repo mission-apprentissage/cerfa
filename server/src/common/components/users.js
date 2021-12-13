@@ -28,7 +28,7 @@ module.exports = async () => {
     },
     getUser: async (username) => await User.findOne({ username }),
     getUserById: async (id, select = {}) => await User.findById(id, select).lean(),
-    getUserByEmail: async (email) => await User.findOne({ email }),
+    getUserByEmail: async (email, select = {}) => await User.findOne({ email }, select).lean(),
     getUsers: async (filters = {}) => await User.find(filters, { password: 0, _id: 0, __v: 0 }).lean(),
     createUser: async (username, password, options = {}) => {
       const hash = options.hash || sha512Utils.hash(password);

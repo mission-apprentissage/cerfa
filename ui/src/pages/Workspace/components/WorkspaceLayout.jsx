@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"; // useEffect
 import {
   Box,
   Collapse,
@@ -76,6 +76,17 @@ export default ({ header, content }) => {
   const sidebar = useDisclosure({ defaultIsOpen: true });
   const parametres = useDisclosure({ defaultIsOpen: isParametresPages });
 
+  // Auto closing
+  // useEffect(() => {
+  //   const toogler = setTimeout(() => {
+  //     sidebar.onToggle();
+  //   }, 4000);
+  //   return () => {
+  //     clearTimeout(toogler);
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
   const SidebarContent = React.memo((props) => (
     <Flex direction="column" as="nav" fontSize="sm" color="gray.600" aria-label="Sub Navigation" {...props}>
       <Flex alignItems="flex-start" px="4" pl="2" py="3" w="full" fontSize="md">
@@ -133,7 +144,7 @@ export default ({ header, content }) => {
         overflowY="auto"
         bg="white"
         w="68"
-        transition=".3s ease"
+        transition=".5s ease"
         ml={{ base: 0, md: sidebar.isOpen ? 0 : -60 }}
       >
         <SidebarContent w="60" />

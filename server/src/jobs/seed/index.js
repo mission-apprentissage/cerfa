@@ -30,7 +30,7 @@ runScript(async ({ users, workspaces, dossiers }) => {
   });
   logger.info(`User 'testAdmin' with password 'password' and admin is successfully created `);
 
-  const userEntreprise = await users.createUser("testEntreprise", "password", {
+  await users.createUser("testEntreprise", "password", {
     nom: "Damien",
     prenom: "Arthur",
     telephone: "+33102030405",
@@ -41,7 +41,7 @@ runScript(async ({ users, workspaces, dossiers }) => {
 
   const wks = await workspaces.getUserWorkspace(userAdmin, { _id: 1 });
 
-  await workspaces.addContributeur(wks._id, userEntreprise, "wks.member");
+  await workspaces.addContributeur(wks._id, "antoine.bigard+testEntreprise@beta.gouv.fr", "wks.member");
 
   const dossier = await dossiers.createDossier({ sub: userAdmin.username }, { nom: "Dossier Test", saved: true });
 

@@ -10,7 +10,7 @@ module.exports = (components) => {
 
   const { permissions, roles, workspaces, users, dossiers, cerfas } = components;
 
-  const buildContributorsResult = async (userId, workspaceId) => {
+  const buildOwnerResult = async (userId, workspaceId) => {
     const userSelectFields = { email: 1, nom: 1, prenom: 1, _id: 0 };
     const permSelectFields = { addedAt: 1, role: 1, acl: 1 };
     const roleSelectFields = { name: 1, description: 1, title: 1, _id: 1 };
@@ -21,6 +21,39 @@ module.exports = (components) => {
     }
     const currentUserPerm = await permissions.hasPermission(
       { workspaceId, dossierId: null, userEmail: currentUser.email },
+      permSelectFields
+    );
+    if (!currentUserPerm) {
+      throw Boom.badRequest("Something went wrong");
+    }
+    const currentUserRole = await roles.findRolePermissionById(currentUserPerm.role, roleSelectFields);
+    if (!currentUserRole) {
+      throw Boom.badRequest("Something went wrong");
+    }
+    return {
+      user: currentUser,
+      permission: {
+        permId: currentUserPerm._id,
+        addedAt: currentUserPerm.addedAt,
+        customAcl: currentUserPerm.acl,
+        ...currentUserRole,
+      },
+    };
+  };
+
+  const buildContributorsResult = async (contributeurEmail, workspaceId) => {
+    const userSelectFields = { email: 1, nom: 1, prenom: 1, _id: 0 };
+    const permSelectFields = { addedAt: 1, role: 1, acl: 1 };
+    const roleSelectFields = { name: 1, description: 1, title: 1, _id: 1 };
+
+    const currentUser = (await users.getUserByEmail(contributeurEmail, userSelectFields)) || {
+      email: contributeurEmail,
+      nom: "",
+      prenom: "",
+    };
+
+    const currentUserPerm = await permissions.hasPermission(
+      { workspaceId, dossierId: null, userEmail: contributeurEmail },
       permSelectFields
     );
     if (!currentUserPerm) {
@@ -136,11 +169,131 @@ module.exports = (components) => {
     tryCatch(async ({ query: { workspaceId } }, res) => {
       const wks = await workspaces.findWorkspaceById(workspaceId, { contributeurs: 1, owner: 1 });
 
-      const owner = await buildContributorsResult(wks.owner, workspaceId);
+      const owner = await buildOwnerResult(wks.owner, workspaceId);
       const contributeurs = [];
       for (let index = 0; index < wks.contributeurs.length; index++) {
-        const contributeurId = wks.contributeurs[index];
-        const contributeur = await buildContributorsResult(contributeurId, workspaceId);
+        const contributeurEmail = wks.contributeurs[index];
+        const contributeur = await buildContributorsResult(contributeurEmail, workspaceId);
+        contributeurs.push(contributeur);
+      }
+
+      return res.json([{ ...owner, owner: true }, ...contributeurs]);
+    })
+  );
+
+  router.post(
+    "/contributors",
+    permissionsWorkspaceMiddleware(components, [
+      "wks/page_espace/page_parametres",
+      "wks/page_espace/page_parametres/gestion_acces",
+    ]),
+    tryCatch(async ({ body }, res) => {
+      let { workspaceId, userEmail, roleId } = await Joi.object({
+        workspaceId: Joi.string().required(),
+        userEmail: Joi.string().required(),
+        roleId: Joi.string().required(),
+        acl: Joi.array().items(Joi.string()).default([]), // TODO
+      }).validateAsync(body, { abortEarly: false });
+
+      const newUserRole = await roles.findRolePermissionById(roleId);
+      if (!newUserRole || !newUserRole.name.includes("wks.")) {
+        throw Boom.badRequest("Something went wrong");
+      }
+
+      const wks = await workspaces.findWorkspaceById(workspaceId, { contributeurs: 1, owner: 1 });
+
+      const owner = await buildOwnerResult(wks.owner, workspaceId);
+
+      if (owner.email === userEmail) {
+        throw Boom.badRequest("Something went wrong");
+      }
+
+      const wksContributeurs = await workspaces.addContributeur(wks._id, userEmail, "wks.member");
+
+      const contributeurs = [];
+      for (let index = 0; index < wksContributeurs.length; index++) {
+        const contributeurEmail = wksContributeurs[index];
+        const contributeur = await buildContributorsResult(contributeurEmail, workspaceId);
+        contributeurs.push(contributeur);
+      }
+
+      return res.json([{ ...owner, owner: true }, ...contributeurs]);
+    })
+  );
+
+  router.put(
+    "/contributors",
+    permissionsWorkspaceMiddleware(components, [
+      "wks/page_espace/page_parametres",
+      "wks/page_espace/page_parametres/gestion_acces",
+    ]),
+    tryCatch(async ({ body }, res) => {
+      let { workspaceId, userEmail, roleId } = await Joi.object({
+        workspaceId: Joi.string().required(),
+        userEmail: Joi.string().required(),
+        roleId: Joi.string().required(),
+        acl: Joi.array().items(Joi.string()).default([]), // TODO
+      }).validateAsync(body, { abortEarly: false });
+
+      const newUserRole = await roles.findRolePermissionById(roleId);
+      if (!newUserRole || !newUserRole.name.includes("wks.")) {
+        throw Boom.badRequest("Something went wrong");
+      }
+
+      const wks = await workspaces.findWorkspaceById(workspaceId, { contributeurs: 1, owner: 1 });
+
+      const owner = await buildOwnerResult(wks.owner, workspaceId);
+
+      if (owner.email === userEmail) {
+        throw Boom.badRequest("Something went wrong");
+      }
+
+      await permissions.updatePermission({
+        workspaceId,
+        dossierId: null,
+        userEmail,
+        roleId: newUserRole._id,
+        //acl,
+      });
+
+      const contributeurs = [];
+      for (let index = 0; index < wks.contributeurs.length; index++) {
+        const contributeurEmail = wks.contributeurs[index];
+        const contributeur = await buildContributorsResult(contributeurEmail, workspaceId);
+        contributeurs.push(contributeur);
+      }
+
+      return res.json([{ ...owner, owner: true }, ...contributeurs]);
+    })
+  );
+
+  router.delete(
+    "/contributors",
+    permissionsWorkspaceMiddleware(components, [
+      "wks/page_espace/page_parametres",
+      "wks/page_espace/page_parametres/gestion_acces",
+      "wks/page_espace/page_parametres/gestion_acces/supprimer_contributeur",
+    ]),
+    tryCatch(async ({ query }, res) => {
+      let { workspaceId, userEmail, permId } = await Joi.object({
+        workspaceId: Joi.string().required(),
+        userEmail: Joi.string().required(),
+        permId: Joi.string().required(),
+      }).validateAsync(query, { abortEarly: false });
+
+      const wks = await workspaces.findWorkspaceById(workspaceId, { contributeurs: 1, owner: 1 });
+
+      const owner = await buildOwnerResult(wks.owner, workspaceId);
+
+      if (owner.email === userEmail) {
+        throw Boom.badRequest("Something went wrong");
+      }
+
+      const wksContributeurs = await workspaces.removeContributeur(workspaceId, userEmail, permId);
+      const contributeurs = [];
+      for (let index = 0; index < wksContributeurs.length; index++) {
+        const contributeurEmail = wksContributeurs[index];
+        const contributeur = await buildContributorsResult(contributeurEmail, workspaceId);
         contributeurs.push(contributeur);
       }
 
@@ -169,92 +322,6 @@ module.exports = (components) => {
       // return res.json([...defaultList, custonRole]);
 
       return res.json(defaultList);
-    })
-  );
-
-  router.put(
-    "/contributors",
-    permissionsWorkspaceMiddleware(components, [
-      "wks/page_espace/page_parametres",
-      "wks/page_espace/page_parametres/gestion_acces",
-    ]),
-    tryCatch(async ({ body }, res) => {
-      let { workspaceId, userEmail, roleId } = await Joi.object({
-        workspaceId: Joi.string().required(),
-        userEmail: Joi.string().required(),
-        roleId: Joi.string().required(),
-        acl: Joi.array().items(Joi.string()).default([]), // TODO
-      }).validateAsync(body, { abortEarly: false });
-
-      const newUserRole = await roles.findRolePermissionById(roleId);
-      if (!newUserRole || !newUserRole.name.includes("wks.")) {
-        throw Boom.badRequest("Something went wrong");
-      }
-
-      const wks = await workspaces.findWorkspaceById(workspaceId, { contributeurs: 1, owner: 1 });
-
-      const owner = await buildContributorsResult(wks.owner, workspaceId);
-
-      if (owner.email === userEmail) {
-        throw Boom.badRequest("Something went wrong");
-      }
-
-      await permissions.updatePermission({
-        workspaceId,
-        dossierId: null,
-        userEmail,
-        roleId: newUserRole._id,
-        //acl,
-      });
-
-      const contributeurs = [];
-      for (let index = 0; index < wks.contributeurs.length; index++) {
-        const contributeurId = wks.contributeurs[index];
-        const contributeur = await buildContributorsResult(contributeurId, workspaceId);
-        contributeurs.push(contributeur);
-      }
-
-      return res.json([{ ...owner, owner: true }, ...contributeurs]);
-    })
-  );
-
-  router.delete(
-    "/contributors",
-    permissionsWorkspaceMiddleware(components, [
-      "wks/page_espace/page_parametres",
-      "wks/page_espace/page_parametres/gestion_acces",
-      "wks/page_espace/page_parametres/gestion_acces/supprimer_contributeur",
-    ]),
-    tryCatch(async ({ query }, res) => {
-      let { workspaceId, userEmail, permId } = await Joi.object({
-        workspaceId: Joi.string().required(),
-        userEmail: Joi.string().required(),
-        permId: Joi.string().required(),
-      }).validateAsync(query, { abortEarly: false });
-
-      const wks = await workspaces.findWorkspaceById(workspaceId, { contributeurs: 1, owner: 1 });
-
-      const owner = await buildContributorsResult(wks.owner, workspaceId);
-
-      if (owner.email === userEmail) {
-        throw Boom.badRequest("Something went wrong");
-      }
-
-      const removePermUser = await users.getUserByEmail(userEmail);
-      if (!removePermUser) {
-        throw Boom.badRequest("Something went wrong");
-      }
-
-      const wksContributeurs = await workspaces.removeContributeur(workspaceId, removePermUser._id, permId);
-
-      const contributeurs = [];
-      for (let index = 0; index < wksContributeurs.length; index++) {
-        const contributeurId = wksContributeurs[index];
-        const contributeur = await buildContributorsResult(contributeurId, workspaceId);
-        contributeurs.push(contributeur);
-      }
-
-      return res.json([{ ...owner, owner: true }, ...contributeurs]);
     })
   );
 

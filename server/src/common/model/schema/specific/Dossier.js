@@ -66,10 +66,9 @@ const dossierSchema = {
     description: "Date derniere modification",
   },
   contributeurs: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "user",
+    type: [String],
     default: [],
-    description: "Contributeurs du workspace",
+    description: "Contributeurs du dossier",
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
