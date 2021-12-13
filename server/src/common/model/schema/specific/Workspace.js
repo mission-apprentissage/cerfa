@@ -17,8 +17,7 @@ const workspaceSchema = {
     description: "N° Siren",
   },
   contributeurs: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "user",
+    type: [String],
     default: [],
     description: "Contributeurs du workspace",
   },

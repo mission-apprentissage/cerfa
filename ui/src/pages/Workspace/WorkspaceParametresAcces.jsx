@@ -12,14 +12,16 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import { useRecoilValue } from "recoil";
 import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 import { workspaceAtom } from "../../common/hooks/workspaceAtoms";
-import { _get, _put, _delete } from "../../common/httpClient";
+import { _get, _post, _put, _delete } from "../../common/httpClient";
 import { useQueries, useQueryClient, useMutation } from "react-query";
 import { Table } from "../../common/components/Table";
+import { InviteModal } from "./components/InviteModal";
 import { Parametre } from "../../theme/components/icons";
 
 function useWorkspaceParametresAcces() {
@@ -48,7 +50,24 @@ function useWorkspaceParametresAcces() {
 }
 
 export const Header = () => {
-  const { workspaceContributors, isLoading } = useWorkspaceParametresAcces();
+  const queryClient = useQueryClient();
+  const inviteModal = useDisclosure();
+  const { workspaceContributors, roles, isLoading } = useWorkspaceParametresAcces();
+  const workspace = useRecoilValue(workspaceAtom);
+
+  const onAddContributor = useMutation(
+    ({ userEmail, roleId, acl = [] }) => {
+      return _post(`/api/v1/workspace/contributors`, {
+        workspaceId: workspace._id,
+        userEmail,
+        roleId,
+        acl,
+      });
+    },
+    {
+      onSuccess: () => queryClient.invalidateQueries("wksContributors"),
+    }
+  );
 
   if (isLoading) return null;
 
@@ -64,11 +83,21 @@ export const Header = () => {
         fontSize={{ base: "sm", md: "md" }}
         p={{ base: 2, md: 4 }}
         h={{ base: 8, md: 10 }}
-        onClick={() => {}}
+        onClick={inviteModal.onOpen}
         variant="primary"
       >
         + Ajouter un utilisateur
       </Button>
+      <InviteModal
+        title="Ajouter un utilisateur"
+        size="md"
+        roles={roles}
+        isOpen={inviteModal.isOpen}
+        onClose={inviteModal.onClose}
+        onInvite={async ({ userEmail, roleId }) => {
+          onAddContributor.mutate({ userEmail, roleId });
+        }}
+      />
     </Flex>
   );
 };
@@ -127,7 +156,7 @@ export const Content = () => {
           Username: {
             Header: "Utilisateur",
             width: 120,
-            value: `${d.user.prenom} ${d.user.nom}`,
+            value: "",
           },
           Email: {
             Header: "Courriel",
@@ -150,10 +179,13 @@ export const Content = () => {
             return <>{DateTime.fromISO(value).setLocale("fr-FR").toLocaleString()}</>;
           },
           Username: (value, i) => {
+            const constrib = workspaceContributors[i];
+            const hasAccount = constrib.user.prenom && constrib.user.nom;
+            const username = hasAccount ? `${constrib.user.prenom} ${constrib.user.nom}` : "Invité non enregistré";
             return (
               <HStack>
-                <Avatar size="sm" name={value} />
-                <Text>{value}</Text>
+                <Avatar size="sm" name={hasAccount ? username : ""} />
+                <Text>{username}</Text>
               </HStack>
             );
           },
