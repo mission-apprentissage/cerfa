@@ -7,7 +7,7 @@ moment.locale("fr-FR");
 module.exports = async () => {
   return {
     createDossier: async (user, option = { nom: null, saved: false }) => {
-      const userDb = await User.findOne({ username: user.sub });
+      const userDb = await User.findOne({ email: user.sub });
       if (!userDb) {
         throw new Error("User doesn't exist");
       }
@@ -91,6 +91,39 @@ module.exports = async () => {
       await Cerfa.deleteOne({ dossierId: found._id });
 
       return await Dossier.deleteOne({ _id });
+    },
+    addContributeur: async (dossierId, userEmail, as, acl = []) => {
+      const dossierDb = await Dossier.findById(dossierId);
+      if (!dossierDb) {
+        throw new Error("wks doesn't exist");
+      }
+
+      const { createPermission } = await permissions();
+      await createPermission({
+        workspaceId: dossierDb.workspaceId.toString(),
+        dossierId: dossierDb._id.toString(),
+        userEmail,
+        role: as,
+        acl,
+      });
+
+      dossierDb.contributeurs = [...dossierDb.contributeurs, userEmail];
+      await dossierDb.save();
+      return dossierDb.contributeurs;
+    },
+    removeContributeur: async (dossierId, userEmail, permId) => {
+      const dossierDb = await Dossier.findById(dossierId);
+      if (!dossierDb) {
+        throw new Error("wks doesn't exist");
+      }
+
+      const { removePermission } = await permissions();
+      await removePermission(permId);
+
+      dossierDb.contributeurs = dossierDb.contributeurs.filter((contributeur) => contributeur !== userEmail);
+
+      await dossierDb.save();
+      return dossierDb.contributeurs;
     },
   };
 };

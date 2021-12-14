@@ -26,7 +26,7 @@ export const useUnloadEffect = () => {
           // eslint-disable-next-line no-restricted-globals
           const leave = confirm("Voulez-vous vraiment quitter cette page ?");
           if (leave) {
-            await _delete(`/api/v1/dossier/${window.dossierId}`);
+            await _delete(`/api/v1/dossier/entity/${window.dossierId}`);
           } else {
             window.historyDossier.goBack();
           }

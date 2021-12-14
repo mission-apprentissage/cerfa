@@ -13,7 +13,7 @@ export default ({ component, ...rest }) => {
     <Route
       {...rest}
       render={() => {
-        return <Redirect to="/login" />;
+        return <Redirect to="/auth/connexion" />;
       }}
     />
   );

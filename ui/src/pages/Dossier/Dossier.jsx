@@ -12,16 +12,19 @@ import {
   Avatar,
   Text,
   Spinner,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { prettyPrintDate } from "../../common/utils/dateUtils";
+import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 
 import Cerfa from "./Cerfa/Cerfa";
 import PiecesJustificatives from "./PiecesJustificatives/PiecesJustificatives";
 import Signatures from "./Signatures/Signatures";
 import Statuts from "./Statuts/Statuts";
+import { InviteModal } from "./components/InviteModal";
 
 import { useDossier } from "../../common/hooks/useDossier";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
@@ -37,6 +40,7 @@ const stepByPath = ["cerfa", "documents", "signatures", "etat"];
 
 export default () => {
   let match = useRouteMatch();
+  const inviteModal = useDisclosure();
   const { nextStep, prevStep, reset, activeStep, setStep } = useSteps({
     initialStep: stepByPath.indexOf(match.params.step),
   });
@@ -104,9 +108,19 @@ export default () => {
               <Avatar name="Paul Pierre" />
               <Avatar name="Pablo Hanry" />
             </AvatarGroup>
-            <Button size="md" onClick={() => {}} variant="secondary">
-              Partager
-            </Button>
+            {hasContextAccessTo(dossier, "dossier/page_parametres/gestion_acces") && (
+              <>
+                <Button size="md" onClick={inviteModal.onOpen} variant="secondary">
+                  Partager
+                </Button>
+                <InviteModal
+                  title="Partager le dossier"
+                  size="md"
+                  isOpen={inviteModal.isOpen}
+                  onClose={inviteModal.onClose}
+                />
+              </>
+            )}
           </HStack>
         </HStack>
 

@@ -49,7 +49,7 @@ const UserMenu = () => {
     <>
       {auth?.sub === "anonymous" && (
         <Box>
-          <Link as={NavLink} to="/login" variant="pill">
+          <Link as={NavLink} to="/auth/connexion" variant="pill">
             <LockFill boxSize={3} mb={1} mr={2} />
             Connexion
           </Link>
