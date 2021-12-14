@@ -2,12 +2,7 @@ const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const Joi = require("joi");
 const config = require("../../config");
-const path = require("path");
 const Boom = require("boom");
-
-const getEmailTemplate = (type = "forgotten-password") => {
-  return path.join(__dirname, `../../assets/templates/${type}.mjml.ejs`);
-};
 
 module.exports = ({ users, roles, mailer }) => {
   const router = express.Router();
@@ -51,16 +46,11 @@ module.exports = ({ users, roles, mailer }) => {
 
       const user = await users.createUser(options.email, password, options);
 
-      await mailer.sendEmail(
-        user.email,
-        `[${config.env} Contrat publique apprentissage] Bienvenue`,
-        getEmailTemplate("grettings"),
-        {
-          username: user.username,
-          tmpPwd: password,
-          publicUrl: config.publicUrl,
-        }
-      );
+      await mailer.sendEmail(user.email, `[${config.env} Contrat publique apprentissage] Bienvenue`, "grettings", {
+        username: user.username,
+        tmpPwd: password,
+        publicUrl: config.publicUrl,
+      });
 
       return res.json(user);
     })

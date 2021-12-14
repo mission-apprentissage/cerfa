@@ -7,7 +7,6 @@ const { Strategy, ExtractJwt } = require("passport-jwt");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const validators = require("../utils/validators");
 const { createPasswordToken, createUserToken } = require("../../common/utils/jwtUtils");
-const path = require("path");
 
 const IS_OFFLINE = Boolean(config.isOffline);
 
@@ -34,10 +33,6 @@ const checkPasswordToken = (users) => {
   );
 
   return passport.authenticate("jwt-password", { session: false, failWithError: true });
-};
-
-const getEmailTemplate = (type = "forgotten-password") => {
-  return path.join(__dirname, `../../assets/templates/${type}.mjml.ejs`);
 };
 
 module.exports = ({ users, mailer }) => {
@@ -67,7 +62,7 @@ module.exports = ({ users, mailer }) => {
       await mailer.sendEmail(
         user.email,
         `[${config.env} Contrat publique apprentissage] Réinitialiser votre mot de passe`,
-        getEmailTemplate("forgotten-password"),
+        "forgotten-password",
         {
           url,
           username: user.username,

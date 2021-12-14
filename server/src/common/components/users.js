@@ -129,6 +129,7 @@ module.exports = async () => {
         permissions,
         sub: user.email,
         email: user.email,
+        username: user.username,
         nom: user.nom,
         prenom: user.prenom,
         account_status: user.account_status,

@@ -1,7 +1,6 @@
 const express = require("express");
 const config = require("../../config");
 const Joi = require("joi");
-const path = require("path");
 const Boom = require("boom");
 const passport = require("passport");
 const { Strategy, ExtractJwt } = require("passport-jwt");
@@ -9,10 +8,6 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { createUserToken, createActivationToken } = require("../../common/utils/jwtUtils");
 
 const IS_OFFLINE = Boolean(config.isOffline);
-
-const getEmailTemplate = (type = "forgotten-password") => {
-  return path.join(__dirname, `../../assets/templates/${type}.mjml.ejs`);
-};
 
 const checkActivationToken = (users) => {
   passport.use(
@@ -104,17 +99,12 @@ module.exports = ({ users, mailer }) => {
         throw Boom.badRequest("Something went wrong");
       }
 
-      await mailer.sendEmail(
-        user.email,
-        `[${config.env} Contrat publique apprentissage] Bienvenue`,
-        getEmailTemplate("grettings"),
-        {
-          username: user.username,
-          tmpPwd: password,
-          publicUrl: config.publicUrl,
-          activationToken: createActivationToken(email, { payload: { tmpPwd: password } }),
-        }
-      );
+      await mailer.sendEmail(user.email, `[${config.env} Contrat publique apprentissage] Bienvenue`, "grettings", {
+        username: user.username,
+        tmpPwd: password,
+        publicUrl: config.publicUrl,
+        activationToken: createActivationToken(email, { payload: { tmpPwd: password } }),
+      });
 
       return res.json({ succeeded: true });
     })

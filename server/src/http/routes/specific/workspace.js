@@ -1,6 +1,7 @@
 const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
+const config = require("../../../config");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsWorkspaceMiddleware = require("../../middlewares/permissionsWorkspaceMiddleware");
 // const { find } = require("lodash");
@@ -8,7 +9,7 @@ const permissionsWorkspaceMiddleware = require("../../middlewares/permissionsWor
 module.exports = (components) => {
   const router = express.Router();
 
-  const { permissions, roles, workspaces, users, dossiers, cerfas } = components;
+  const { permissions, roles, workspaces, users, dossiers, cerfas, mailer } = components;
 
   const buildOwnerResult = async (userId, workspaceId) => {
     const userSelectFields = { email: 1, nom: 1, prenom: 1, _id: 0 };
@@ -187,7 +188,7 @@ module.exports = (components) => {
       "wks/page_espace/page_parametres",
       "wks/page_espace/page_parametres/gestion_acces",
     ]),
-    tryCatch(async ({ body }, res) => {
+    tryCatch(async ({ body, user }, res) => {
       let { workspaceId, userEmail, roleId } = await Joi.object({
         workspaceId: Joi.string().required(),
         userEmail: Joi.string().required(),
@@ -200,7 +201,7 @@ module.exports = (components) => {
         throw Boom.badRequest("Something went wrong");
       }
 
-      const wks = await workspaces.findWorkspaceById(workspaceId, { contributeurs: 1, owner: 1 });
+      const wks = await workspaces.findWorkspaceById(workspaceId, { contributeurs: 1, owner: 1, nom: 1 });
 
       const owner = await buildOwnerResult(wks.owner, workspaceId);
 
@@ -208,7 +209,20 @@ module.exports = (components) => {
         throw Boom.badRequest("Something went wrong");
       }
 
-      const wksContributeurs = await workspaces.addContributeur(wks._id, userEmail, "wks.member");
+      const wksContributeurs = await workspaces.addContributeur(wks._id, userEmail, newUserRole.name);
+
+      await mailer.sendEmail(
+        userEmail,
+        `[${config.env} Contrat publique apprentissage] Invitation à rejoindre l'espace ${wks.nom}`,
+        "inviteWorkspace",
+        {
+          username: user.username,
+          wksname: wks.nom,
+          user2role: newUserRole.title,
+          publicUrl: config.publicUrl,
+          tospaceUrl: "",
+        }
+      );
 
       const contributeurs = [];
       for (let index = 0; index < wksContributeurs.length; index++) {
