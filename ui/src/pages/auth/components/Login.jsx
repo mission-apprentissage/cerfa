@@ -32,7 +32,11 @@ const Login = () => {
         const user = jwt.decode(result.token);
         setAuth(user);
         setToken(result.token);
-        history.push("/mon-espace/mes-dossiers");
+        if (!user.confirmed) {
+          history.push(`/en-attente-confirmation`);
+        } else {
+          history.push("/mon-espace/mes-dossiers");
+        }
       }
     } catch (e) {
       console.error(e);

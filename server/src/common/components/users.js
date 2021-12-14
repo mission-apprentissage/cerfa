@@ -135,6 +135,8 @@ module.exports = async () => {
         roles: rolesList,
         acl: uniq([...rolesAcl, ...user.acl]),
         workspaceId: workspace?._id.toString(),
+        siret: user.siret || null,
+        confirmed: user.confirmed || false,
       };
       return structure;
     },
