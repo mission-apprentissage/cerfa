@@ -98,7 +98,7 @@ module.exports = ({ users, mailer }) => {
         siret,
         nom,
         prenom,
-        roles: compte === "entreprise" || compte === "cfa" ? ["compte"] : [],
+        roles: compte === "entreprise" || compte === "cfa" ? [compte] : [],
       });
       if (!user) {
         throw Boom.badRequest("Something went wrong");
