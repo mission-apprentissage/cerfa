@@ -46,7 +46,7 @@ const ForgottenPasswordPage = () => {
                     return (
                       <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
                         <FormLabel>Identifiant</FormLabel>
-                        <Input {...field} id={field.name} placeholder="Votre identifiant..." />
+                        <Input {...field} id={field.name} placeholder="Votre email ou identifiant..." />
                         <FormErrorMessage>{meta.error}</FormErrorMessage>
                       </FormControl>
                     );

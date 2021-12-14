@@ -46,7 +46,7 @@ module.exports = (components) => {
     const permSelectFields = { addedAt: 1, role: 1, acl: 1 };
     const roleSelectFields = { name: 1, description: 1, title: 1, _id: 1 };
 
-    const currentUser = (await users.getUserByEmail(contributeurEmail, userSelectFields)) || {
+    const currentUser = (await users.getUser(contributeurEmail, userSelectFields)) || {
       email: contributeurEmail,
       nom: "",
       prenom: "",

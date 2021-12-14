@@ -10,7 +10,7 @@ describe("Dossiers component", () => {
 
     const { createDossier } = await dossiers();
 
-    const created = await createDossier({ sub: testUser.username });
+    const created = await createDossier({ sub: testUser.email });
 
     const wks = await Workspace.findOne({ owner: testUser._id });
 
@@ -28,7 +28,7 @@ describe("Dossiers component", () => {
     await components.roles.createRole({ name: "dossier.admin", type: "permission", acl: [] });
     const { createDossier, saveDossier } = await dossiers();
 
-    const created = await createDossier({ sub: testUser.username });
+    const created = await createDossier({ sub: testUser.email });
 
     const saved = await saveDossier(created._id.toString());
 

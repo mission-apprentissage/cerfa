@@ -8,13 +8,16 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { hasPageAccessTo } from "./common/utils/rolesUtils";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
+
+const AuthPage = lazy(() => import("./pages/auth/AuthPage"));
+const WaitingConfirmationPage = lazy(() => import("./pages/auth/WaitingConfirmationPage"));
+const ResetPasswordPage = lazy(() => import("./pages/auth/ResetPasswordPage"));
+const ForgottenPasswordPage = lazy(() => import("./pages/auth/ForgottenPasswordPage"));
+
 const WorkspacePage = lazy(() => import("./pages/Workspace/WorkspacePage"));
 const SharedPage = lazy(() => import("./pages/SharedPage"));
 const StatsPage = lazy(() => import("./pages/StatsPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
-const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
-const ResetPasswordPage = lazy(() => import("./pages/auth/ResetPasswordPage"));
-const ForgottenPasswordPage = lazy(() => import("./pages/auth/ForgottenPasswordPage"));
 const Users = lazy(() => import("./pages/admin/Users"));
 const Roles = lazy(() => import("./pages/admin/Roles"));
 const UploadFiles = lazy(() => import("./pages/admin/UploadFiles"));
@@ -32,9 +35,13 @@ const ResetPasswordWrapper = ({ children }) => {
   useEffect(() => {
     (async () => {
       if (auth.sub !== "anonymous") {
-        if (auth.account_status === "FORCE_RESET_PASSWORD") {
-          let { token } = await _post("/api/v1/password/forgotten-password?noEmail=true", { username: auth.sub });
-          history.push(`/reset-password?passwordToken=${token}`);
+        if (!auth.confirmed) {
+          history.push(`/en-attente-confirmation`);
+        } else {
+          if (auth.account_status === "FORCE_RESET_PASSWORD") {
+            let { token } = await _post("/api/v1/password/forgotten-password?noEmail=true", { username: auth.sub });
+            history.push(`/reset-password?passwordToken=${token}`);
+          }
         }
       }
     })();
@@ -78,9 +85,12 @@ export default () => {
               <Switch>
                 {/* PUBLIC PAGES */}
                 <Route exact path="/" component={HomePage} />
-                <Route exact path="/login" component={LoginPage} />
+
+                <Route exact path="/auth/:slug" component={AuthPage} />
+                <Route exact path="/en-attente-confirmation" component={WaitingConfirmationPage} />
                 <Route exact path="/reset-password" component={ResetPasswordPage} />
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
+
                 <Route exact path="/stats" component={StatsPage} />
                 <Route exact path="/contact" component={Contact} />
                 <Route exact path="/cookies" component={Cookies} />

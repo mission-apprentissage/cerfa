@@ -21,21 +21,19 @@ runScript(async ({ users, workspaces, dossiers }) => {
     logger.info(`Role ${key} created`);
   }
 
-  const userAdmin = await users.createUser("testAdmin", "password", {
+  const userAdmin = await users.createUser("antoine.bigard@beta.gouv.fr", "password", {
     nom: "Bigard",
     prenom: "Antoine",
-    telephone: "+33612647513",
-    email: "antoine.bigard@beta.gouv.fr",
     permissions: { isAdmin: true },
+    confirmed: true,
   });
   logger.info(`User 'testAdmin' with password 'password' and admin is successfully created `);
 
-  await users.createUser("testEntreprise", "password", {
+  await users.createUser("antoine.bigard+testEntreprise@beta.gouv.fr", "password", {
     nom: "Damien",
     prenom: "Arthur",
-    telephone: "+33102030405",
-    email: "antoine.bigard+testEntreprise@beta.gouv.fr",
     roles: ["entreprise"],
+    confirmed: true,
   });
   logger.info(`User 'testEntreprise' with password 'password' is successfully created `);
 
@@ -43,7 +41,7 @@ runScript(async ({ users, workspaces, dossiers }) => {
 
   await workspaces.addContributeur(wks._id, "antoine.bigard+testEntreprise@beta.gouv.fr", "wks.member");
 
-  const dossier = await dossiers.createDossier({ sub: userAdmin.username }, { nom: "Dossier Test", saved: true });
+  const dossier = await dossiers.createDossier({ sub: userAdmin.email }, { nom: "Dossier Test", saved: true });
 
   logger.info(`Dossier test created`);
 

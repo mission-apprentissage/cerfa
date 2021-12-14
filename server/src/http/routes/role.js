@@ -58,7 +58,7 @@ module.exports = ({ users }) => {
       const allRoleUsers = await users.getUsers({ roles: { $in: [role._id] } });
       for (let index = 0; index < allRoleUsers.length; index++) {
         const user = allRoleUsers[index];
-        await users.updateUser(user.username, { invalided_token: true });
+        await users.updateUser(user._id, { invalided_token: true });
       }
 
       res.json({ message: `Rôle ${name} updated !` });
@@ -81,7 +81,7 @@ module.exports = ({ users }) => {
       for (let index = 0; index < allRoleUsers.length; index++) {
         const user = allRoleUsers[index];
         const roles = user.roles.filter((r) => r !== role._id);
-        await users.updateUser(user.username, { invalided_token: true, roles });
+        await users.updateUser(user._id, { invalided_token: true, roles });
       }
 
       res.json({ message: `Rôle ${name} deleted !` });

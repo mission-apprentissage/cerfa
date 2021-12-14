@@ -7,7 +7,7 @@ moment.locale("fr-FR");
 module.exports = async () => {
   return {
     createDossier: async (user, option = { nom: null, saved: false }) => {
-      const userDb = await User.findOne({ username: user.sub });
+      const userDb = await User.findOne({ email: user.sub });
       if (!userDb) {
         throw new Error("User doesn't exist");
       }

@@ -5,15 +5,15 @@ const permissions = require("./permissions");
 module.exports = async () => {
   return {
     createWorkspace: async (data) => {
-      let { username, nom, description, siren, contributeurs } = await Joi.object({
+      let { email, nom, description, siren, contributeurs } = await Joi.object({
         nom: Joi.string().allow(null),
         description: Joi.string().allow(null),
         siren: Joi.string().allow(null),
-        username: Joi.string().required(),
+        email: Joi.string().required(),
         contributeurs: Joi.array().items(Joi.string().required()).default([]),
       }).validateAsync(data, { abortEarly: false });
 
-      const userDb = await User.findOne({ username });
+      const userDb = await User.findOne({ email });
       if (!userDb) {
         throw new Error("User doesn't exist");
       }
