@@ -103,7 +103,7 @@ const Register = () => {
 
     setFieldValue("siret", siret);
     setIsFetching(true);
-    const response = await _post(`/api/v1/siret`, {
+    const response = await _post(`/api/v1/siret/adresse`, {
       siret,
     });
     setIsFetching(false);
