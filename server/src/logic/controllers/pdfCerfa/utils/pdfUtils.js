@@ -7,18 +7,18 @@ const fieldsPositions = {
     denomination: {
       x: 28,
       y: 685,
-      maxLength: 40,
+      maxLength: 47,
     },
     adresse: {
       numero: {
         x: 50,
         y: 649,
-        maxLength: 30,
+        maxLength: 9,
       },
       voie: {
         x: 155,
         y: 649,
-        maxLength: 30,
+        maxLength: 25,
         title: (value) => {
           const voieWordToReplace = [
             ["Boulevard", "blvd"],
@@ -37,28 +37,28 @@ const fieldsPositions = {
       complement: {
         x: 95,
         y: 630,
-        maxLength: 20,
+        maxLength: 35,
       },
       codePostal: {
         x: 97,
         y: 610,
-        maxLength: 30,
+        maxLength: 5,
       },
       commune: {
         x: 89,
         y: 592,
-        maxLength: 30,
+        maxLength: 35,
       },
     },
     telephone: {
       x: 90,
       y: 574,
-      maxLength: 40,
+      maxLength: 10,
     },
     courriel: {
       x: 27,
       y: 544,
-      maxLength: 100,
+      maxLength: 47,
       title: async (value, options) => {
         let [user, domain] = value.split("@");
         const helveticaFont = await options.pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -72,26 +72,27 @@ const fieldsPositions = {
     siret: {
       x: 305,
       y: 685,
-      maxLength: 40,
+      maxLength: 14,
     },
     typeEmployeur: {
       x: 400,
       y: 669,
+      maxLength: 10,
     },
     employeurSpecifique: {
       x: 418,
       y: 648,
-      maxLength: 40,
+      maxLength: 1,
     },
     naf: {
       x: 480,
       y: 630,
-      maxLength: 40,
+      maxLength: 6,
     },
     nombreDeSalaries: {
       x: 305,
       y: 597,
-      maxLength: 40,
+      maxLength: 15,
     },
     libelleIdcc: {
       x: 305,
@@ -102,7 +103,7 @@ const fieldsPositions = {
     codeIdcc: {
       x: 452,
       y: 530,
-      maxLength: 40,
+      maxLength: 4,
     },
     regimeSpecifique: {
       x: 473,
@@ -114,28 +115,28 @@ const fieldsPositions = {
     nom: {
       x: 216,
       y: 481,
-      maxLength: 50,
+      maxLength: 100,
     },
     prenom: {
       x: 160,
       y: 464,
-      maxLength: 50,
+      maxLength: 100,
     },
     nir: {
       x: 135,
       y: 445,
-      maxLength: 50,
+      maxLength: 15,
     },
     adresse: {
       numero: {
         x: 39,
-        y: 394,
-        maxLength: 30,
+        y: 395,
+        maxLength: 6,
       },
       voie: {
         x: 110,
         y: 395,
-        maxLength: 30,
+        maxLength: 25,
         title: (value) => {
           const voieWordToReplace = [
             ["Boulevard", "blvd"],
@@ -154,12 +155,12 @@ const fieldsPositions = {
       complement: {
         x: 100,
         y: 376,
-        maxLength: 20,
+        maxLength: 35,
       },
       codePostal: {
         x: 96,
         y: 359,
-        maxLength: 30,
+        maxLength: 5,
       },
       commune: {
         x: 88,
@@ -170,7 +171,7 @@ const fieldsPositions = {
     telephone: {
       x: 90,
       y: 324,
-      maxLength: 50,
+      maxLength: 10,
     },
     courriel: {
       x: 27,
@@ -190,7 +191,7 @@ const fieldsPositions = {
       nom: {
         x: 28,
         y: 240,
-        maxLength: 30,
+        maxLength: 47,
         title: async (value, options) => {
           const helveticaFont = await options.pdfDoc.embedFont(StandardFonts.Helvetica);
           return [
@@ -208,7 +209,7 @@ const fieldsPositions = {
         voie: {
           x: 110,
           y: 214,
-          maxLength: 30,
+          maxLength: 25,
           title: (value) => {
             const voieWordToReplace = [
               ["Boulevard", "blvd"],
@@ -226,17 +227,17 @@ const fieldsPositions = {
         },
         complement: {
           x: 100,
-          y: 196,
-          maxLength: 20,
+          y: 197,
+          maxLength: 35,
         },
         codePostal: {
           x: 96,
-          y: 178,
+          y: 179,
           maxLength: 30,
         },
         commune: {
           x: 89,
-          y: 160,
+          y: 161,
           maxLength: 30,
         },
       },
@@ -244,7 +245,7 @@ const fieldsPositions = {
     dateNaissance: {
       x: 405,
       y: 442,
-      maxLength: 50,
+      maxLength: 10,
     },
     sexe: {
       x: (value) => {
@@ -252,27 +253,27 @@ const fieldsPositions = {
       },
       y: 425,
       title: "X",
-      maxLength: 50,
+      maxLength: 1,
     },
     departementNaissance: {
       x: 445,
       y: 407,
-      maxLength: 50,
+      maxLength: 25,
     },
     communeNaissance: {
       x: 430,
       y: 390,
-      maxLength: 50,
+      maxLength: 20,
     },
     nationalite: {
       x: 365,
       y: 356,
-      maxLength: 50,
+      maxLength: 1,
     },
     regimeSocial: {
       x: 472,
       y: 356,
-      maxLength: 50,
+      maxLength: 1,
     },
     inscriptionSportifDeHautNiveau: {
       x: (value) => {
@@ -293,27 +294,27 @@ const fieldsPositions = {
     situationAvantContrat: {
       x: 438,
       y: 268,
-      maxLength: 50,
+      maxLength: 2,
     },
     diplomePrepare: {
       x: 468,
       y: 251,
-      maxLength: 50,
+      maxLength: 2,
     },
     derniereClasse: {
       x: 460,
       y: 233,
-      maxLength: 50,
+      maxLength: 2,
     },
     intituleDiplomePrepare: {
       x: 304,
       y: 203,
-      maxLength: 50,
+      maxLength: 45,
     },
     diplome: {
       x: 493,
       y: 185,
-      maxLength: 50,
+      maxLength: 2,
     },
   },
   maitre: {
@@ -321,34 +322,34 @@ const fieldsPositions = {
       nom: {
         x: 27,
         y: 98,
-        maxLength: 50,
+        maxLength: 46,
       },
       prenom: {
         x: 27,
         y: 68,
-        maxLength: 50,
+        maxLength: 46,
       },
       dateNaissance: {
         x: 128,
         y: 50,
-        maxLength: 50,
+        maxLength: 10,
       },
     },
     maitre2: {
       nom: {
         x: 304,
         y: 98,
-        maxLength: 50,
+        maxLength: 46,
       },
       prenom: {
         x: 304,
         y: 68,
-        maxLength: 50,
+        maxLength: 46,
       },
       dateNaissance: {
         x: 405,
         y: 50,
-        maxLength: 50,
+        maxLength: 10,
       },
     },
   },
@@ -356,100 +357,100 @@ const fieldsPositions = {
     typeContratApp: {
       x: 182,
       y: 805,
-      maxLength: 50,
+      maxLength: 2,
     },
     typeDerogation: {
       x: 406,
       y: 802,
-      maxLength: 50,
+      maxLength: 2,
     },
     numeroContratPrecedent: {
       x: 373,
       y: 775,
-      maxLength: 50,
+      maxLength: 25,
     },
     dateConclusion: {
       x: 127,
       y: 756,
-      maxLength: 50,
+      maxLength: 10,
     },
     dateDebutContrat: {
       x: 237,
       y: 743,
-      maxLength: 50,
+      maxLength: 10,
     },
     dateEffetAvenant: {
       x: 505,
       y: 756,
-      maxLength: 50,
+      maxLength: 10,
     },
     dateFinContrat: {
       x: 113,
       y: 692,
-      maxLength: 50,
+      maxLength: 10,
     },
     dureeTravailHebdoHeures: {
       x: 306,
       y: 691,
-      maxLength: 50,
+      maxLength: 2,
     },
     dureeTravailHebdoMinutes: {
       x: 370,
       y: 691,
-      maxLength: 50,
+      maxLength: 2,
     },
     travailRisque: {
       x: (value) => {
         return value === true ? 398 : 453;
       },
       y: 669,
-      maxLength: 50,
+      maxLength: 1,
       title: "X",
     },
     salaireEmbauche: {
       x: 29,
       y: 559,
-      maxLength: 50,
+      maxLength: 10,
     },
     avantageNourriture: {
       x: 252,
       y: 538,
-      maxLength: 50,
+      maxLength: 10,
     },
     avantageLogement: {
       x: 408,
       y: 538,
-      maxLength: 50,
+      maxLength: 10,
     },
     autreAvantageEnNature: {
       x: 555,
       y: 538,
-      maxLength: 50,
+      maxLength: 10,
     },
     remunerationsAnnuelles: {
       1.1: {
         dateDebut: {
           x: 85,
           y: 632,
-          maxLength: 50,
+          maxLength: 10,
           defaultSize: 9,
         },
         dateFin: {
           x: 170,
           y: 632,
-          maxLength: 50,
+          maxLength: 10,
           defaultSize: 9,
         },
         taux: {
           x: 236,
           y: 632,
-          maxLength: 50,
+          maxLength: 10,
           defaultSize: 9,
         },
         typeSalaire: {
           x: 285,
           y: 632,
-          maxLength: 50,
+          maxLength: 4,
           defaultSize: 9,
         },
       },
@@ -457,25 +458,25 @@ const fieldsPositions = {
         dateDebut: {
           x: 85 + 255,
           y: 632,
-          maxLength: 50,
+          maxLength: 10,
           defaultSize: 9,
         },
         dateFin: {
           x: 170 + 255,
           y: 632,
-          maxLength: 50,
+          maxLength: 10,
           defaultSize: 9,
         },
         taux: {
           x: 236 + 255,
           y: 632,
-          maxLength: 50,
+          maxLength: 10,
           defaultSize: 9,
         },
         typeSalaire: {
           x: 285 + 255,
           y: 632,
-          maxLength: 50,
+          maxLength: 4,
           defaultSize: 9,
         },
       },
@@ -483,25 +484,25 @@ const fieldsPositions = {
         dateDebut: {
           x: 85,
           y: 632 - 12,
-          maxLength: 12,
+          maxLength: 10,
           defaultSize: 9,
         },
         dateFin: {
           x: 170,
           y: 632 - 12,
-          maxLength: 12,
+          maxLength: 10,
           defaultSize: 9,
         },
         taux: {
           x: 236,
           y: 632 - 12,
-          maxLength: 12,
+          maxLength: 10,
           defaultSize: 9,
         },
         typeSalaire: {
           x: 285,
           y: 632 - 12,
-          maxLength: 12,
+          maxLength: 4,
           defaultSize: 9,
         },
       },
@@ -509,25 +510,25 @@ const fieldsPositions = {
         dateDebut: {
           x: 85 + 255,
           y: 632 - 12,
-          maxLength: 12,
+          maxLength: 10,
           defaultSize: 9,
         },
         dateFin: {
           x: 170 + 255,
           y: 632 - 12,
-          maxLength: 12,
+          maxLength: 10,
           defaultSize: 9,
         },
         taux: {
           x: 236 + 255,
           y: 632 - 12,
-          maxLength: 12,
+          maxLength: 10,
           defaultSize: 9,
         },
         typeSalaire: {
           x: 285 + 255,
           y: 632 - 12,
-          maxLength: 12,
+          maxLength: 4,
           defaultSize: 9,
         },
       },
@@ -535,25 +536,25 @@ const fieldsPositions = {
         dateDebut: {
           x: 85,
           y: 632 - 25,
-          maxLength: 25,
+          maxLength: 10,
           defaultSize: 9,
         },
         dateFin: {
           x: 170,
           y: 632 - 25,
-          maxLength: 25,
+          maxLength: 10,
           defaultSize: 9,
         },
         taux: {
           x: 236,
           y: 632 - 25,
-          maxLength: 25,
+          maxLength: 10,
           defaultSize: 9,
         },
         typeSalaire: {
           x: 285,
           y: 632 - 25,
-          maxLength: 25,
+          maxLength: 4,
           defaultSize: 9,
         },
       },
@@ -561,25 +562,25 @@ const fieldsPositions = {
         dateDebut: {
           x: 85 + 255,
           y: 632 - 25,
-          maxLength: 25,
+          maxLength: 10,
           defaultSize: 9,
         },
         dateFin: {
           x: 170 + 255,
           y: 632 - 25,
-          maxLength: 25,
+          maxLength: 10,
           defaultSize: 9,
         },
         taux: {
           x: 236 + 255,
           y: 632 - 25,
-          maxLength: 25,
+          maxLength: 10,
           defaultSize: 9,
         },
         typeSalaire: {
           x: 285 + 255,
           y: 632 - 25,
-          maxLength: 12,
+          maxLength: 4,
           defaultSize: 9,
         },
       },
@@ -587,25 +588,25 @@ const fieldsPositions = {
         dateDebut: {
           x: 85,
           y: 632 - 40,
-          maxLength: 40,
+          maxLength: 10,
           defaultSize: 9,
         },
         dateFin: {
           x: 170,
           y: 632 - 40,
-          maxLength: 40,
+          maxLength: 10,
           defaultSize: 9,
         },
         taux: {
           x: 236,
           y: 632 - 40,
-          maxLength: 40,
+          maxLength: 10,
           defaultSize: 9,
         },
         typeSalaire: {
           x: 285,
           y: 632 - 40,
-          maxLength: 40,
+          maxLength: 4,
           defaultSize: 9,
         },
       },
@@ -613,25 +614,25 @@ const fieldsPositions = {
         dateDebut: {
           x: 85 + 255,
           y: 632 - 40,
-          maxLength: 40,
+          maxLength: 10,
           defaultSize: 9,
         },
         dateFin: {
           x: 170 + 255,
           y: 632 - 40,
-          maxLength: 40,
+          maxLength: 10,
           defaultSize: 9,
         },
         taux: {
           x: 236 + 255,
           y: 632 - 40,
-          maxLength: 40,
+          maxLength: 10,
           defaultSize: 9,
         },
         typeSalaire: {
           x: 285 + 255,
           y: 632 - 40,
-          maxLength: 40,
+          maxLength: 4,
           defaultSize: 9,
         },
       },
@@ -643,53 +644,54 @@ const fieldsPositions = {
         return value === true ? 123 : 177;
       },
       y: 503,
-      maxLength: 50,
+      maxLength: 1,
+      title: "X",
     },
     denomination: {
       x: 27,
       y: 477,
-      maxLength: 50,
+      maxLength: 47,
     },
     intituleQualification: {
       x: 380,
       y: 491,
-      maxLength: 50,
+      maxLength: 35,
     },
     typeDiplome: {
       x: 480,
       y: 504,
-      maxLength: 50,
+      maxLength: 2,
     },
     uaiCfa: {
       x: 110,
       y: 463,
-      maxLength: 50,
+      maxLength: 8,
     },
     codeDiplome: {
       x: 396,
       y: 463,
-      maxLength: 50,
+      maxLength: 8,
     },
     siret: {
       x: 109,
       y: 448,
-      maxLength: 50,
+      maxLength: 14,
     },
     rncp: {
       x: 376,
       y: 449,
-      maxLength: 50,
+      maxLength: 9,
     },
     adresse: {
       numero: {
         x: 41,
         y: 416,
-        maxLength: 30,
+        maxLength: 4,
       },
       voie: {
         x: 109,
         y: 415,
-        maxLength: 30,
+        maxLength: 25,
         title: (value) => {
           const voieWordToReplace = [
             ["Boulevard", "blvd"],
@@ -708,12 +710,12 @@ const fieldsPositions = {
       complement: {
         x: 99,
         y: 398,
-        maxLength: 20,
+        maxLength: 25,
       },
       codePostal: {
         x: 97,
         y: 380,
-        maxLength: 30,
+        maxLength: 5,
       },
       commune: {
         x: 89,
@@ -724,17 +726,17 @@ const fieldsPositions = {
     dateDebutFormation: {
       x: 304,
       y: 403,
-      maxLength: 50,
+      maxLength: 10,
     },
     dateFinFormation: {
       x: 304,
       y: 371,
-      maxLength: 50,
+      maxLength: 10,
     },
     dureeFormation: {
       x: 419,
       y: 357,
-      maxLength: 50,
+      maxLength: 2,
     },
   },
 };
