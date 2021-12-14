@@ -427,7 +427,7 @@ const fieldsPositions = {
       maxLength: 50,
     },
     remunerationsAnnuelles: {
-      "1.1": {
+      1.1: {
         dateDebut: {
           x: 85,
           y: 632,
@@ -453,7 +453,7 @@ const fieldsPositions = {
           defaultSize: 9,
         },
       },
-      "1.2": {
+      1.2: {
         dateDebut: {
           x: 85 + 255,
           y: 632,
@@ -479,7 +479,7 @@ const fieldsPositions = {
           defaultSize: 9,
         },
       },
-      "2.1": {
+      2.1: {
         dateDebut: {
           x: 85,
           y: 632 - 12,
@@ -505,7 +505,7 @@ const fieldsPositions = {
           defaultSize: 9,
         },
       },
-      "2.2": {
+      2.2: {
         dateDebut: {
           x: 85 + 255,
           y: 632 - 12,
@@ -531,7 +531,7 @@ const fieldsPositions = {
           defaultSize: 9,
         },
       },
-      "3.1": {
+      3.1: {
         dateDebut: {
           x: 85,
           y: 632 - 25,
@@ -557,7 +557,7 @@ const fieldsPositions = {
           defaultSize: 9,
         },
       },
-      "3.2": {
+      3.2: {
         dateDebut: {
           x: 85 + 255,
           y: 632 - 25,
@@ -583,7 +583,7 @@ const fieldsPositions = {
           defaultSize: 9,
         },
       },
-      "4.1": {
+      4.1: {
         dateDebut: {
           x: 85,
           y: 632 - 40,
@@ -609,7 +609,7 @@ const fieldsPositions = {
           defaultSize: 9,
         },
       },
-      "4.2": {
+      4.2: {
         dateDebut: {
           x: 85 + 255,
           y: 632 - 40,
