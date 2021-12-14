@@ -1,3 +1,22 @@
+# [1.9.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.9.0-beta.2...v1.9.0-beta.3) (2021-12-14)
+
+
+### Bug Fixes
+
+* missing url invite ([4e32901](https://github.com/mission-apprentissage/cerfa/commit/4e32901fabcdfe1416b43204fedd932630b68c8c))
+* server test ([05dc0af](https://github.com/mission-apprentissage/cerfa/commit/05dc0af4c4ff222de0a7fde8fe70a51a2300b68d))
+
+
+### Features
+
+* invite to workspace email + rework templating email ([52f64b2](https://github.com/mission-apprentissage/cerfa/commit/52f64b2f2bacab453fdab165f39669692210af70))
+* make dossier Page accesible without workspace ([2dcead3](https://github.com/mission-apprentissage/cerfa/commit/2dcead3283aca32fe0f678829e91efbf2474573f))
+* **pdf:** update maxLength ([79cbcc7](https://github.com/mission-apprentissage/cerfa/commit/79cbcc7bd7922e672da122a344922c969c9efeb1))
+* reduce data from siret register form ([de8be62](https://github.com/mission-apprentissage/cerfa/commit/de8be6270fcfbfd9e55f7320b6d1acc6109f912f))
+* register form + change users to email uniq ([#39](https://github.com/mission-apprentissage/cerfa/issues/39)) ([a451d7a](https://github.com/mission-apprentissage/cerfa/commit/a451d7aa0003c95063b889c4fb3cd76a6268f4fb))
+* shared dossier feature ([bd12ffe](https://github.com/mission-apprentissage/cerfa/commit/bd12ffe06170173d9dae1ba6d00bc80202d04bf7))
+* update pdf generation ([#38](https://github.com/mission-apprentissage/cerfa/issues/38)) ([6cf6e27](https://github.com/mission-apprentissage/cerfa/commit/6cf6e2755277344ecf88d86fe38779ecabf7adf2))
+
 # [1.9.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.9.0-beta.1...v1.9.0-beta.2) (2021-12-13)
 
 
