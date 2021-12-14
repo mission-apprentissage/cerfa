@@ -174,7 +174,7 @@ module.exports = (components) => {
         { dossierId: 1, workspaceId: 1, _id: 0 }
       );
       if (!permDossierIds.length) {
-        throw Boom.unauthorized("Accès non autorisé");
+        res.json([]);
       }
 
       let results = [];

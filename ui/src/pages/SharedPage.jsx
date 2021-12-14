@@ -81,7 +81,7 @@ export default () => {
                   <Link
                     mt={8}
                     as={NavLink}
-                    to={`/partages-avec-moi/espaces/${sharedWithMeDossier.workspaceId}/dossiers/${sharedWithMeDossier._id}/cerfa`}
+                    to={`/partages-avec-moi/dossiers/${sharedWithMeDossier._id}/cerfa`}
                     color="bluefrance"
                     _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
                     borderBottom="1px solid"

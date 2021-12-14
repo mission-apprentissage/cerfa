@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Box,
   Collapse,
@@ -77,15 +77,15 @@ export default ({ header, content }) => {
   const parametres = useDisclosure({ defaultIsOpen: isParametresPages });
 
   // TODO to decide with business - Auto closing
-  useEffect(() => {
-    const toogler = setTimeout(() => {
-      sidebar.onToggle();
-    }, 8000);
-    return () => {
-      clearTimeout(toogler);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   const toogler = setTimeout(() => {
+  //     sidebar.onToggle();
+  //   }, 8000);
+  //   return () => {
+  //     clearTimeout(toogler);
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const SidebarContent = React.memo((props) => (
     <Flex direction="column" as="nav" fontSize="sm" color="gray.600" aria-label="Sub Navigation" {...props}>

@@ -49,6 +49,7 @@ function useDossiersAcces() {
   return {
     dossierContributors,
     roles: roles || [],
+    initRole: roles?.length > 0 ? roles[0]._id : "",
     isLoading: isLoadingDossiers || isLoadingRoles || isFetchingRoles || isFetchingDossiers,
   };
 }
@@ -56,7 +57,7 @@ function useDossiersAcces() {
 const InviteModal = ({ title, size = "md", isOpen, onClose, onInvite, defaultRoleValue = undefined }) => {
   const queryClient = useQueryClient();
   const dossier = useRecoilValue(dossierAtom);
-  const { dossierContributors, roles, isLoading } = useDossiersAcces();
+  const { dossierContributors, roles, isLoading, initRole } = useDossiersAcces();
 
   const onAddContributor = useMutation(
     ({ userEmail, roleId, acl = [] }) => {
@@ -112,7 +113,7 @@ const InviteModal = ({ title, size = "md", isOpen, onClose, onInvite, defaultRol
   const { values, handleChange, handleSubmit, errors, touched, resetForm } = useFormik({
     initialValues: {
       userEmail: "",
-      roleId: roles && !isLoading ? roles[0]._id : defaultRoleValue,
+      roleId: initRole,
     },
     validationSchema: Yup.object().shape({
       userEmail: Yup.string().email("L'email n'est pas au bon format").required("L'email est obligatoire"),
