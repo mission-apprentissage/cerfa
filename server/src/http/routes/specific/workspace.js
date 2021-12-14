@@ -213,7 +213,7 @@ module.exports = (components) => {
 
       await mailer.sendEmail(
         userEmail,
-        `[${config.env} Contrat publique apprentissage] Invitation à rejoindre l'espace ${wks.nom}`,
+        `[${config.env} Contrat publique apprentissage] Invitation à rejoindre l'espace "${wks.nom}"`,
         "inviteWorkspace",
         {
           username: user.username,

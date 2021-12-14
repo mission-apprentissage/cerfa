@@ -15,6 +15,7 @@ const ResetPasswordPage = lazy(() => import("./pages/auth/ResetPasswordPage"));
 const ForgottenPasswordPage = lazy(() => import("./pages/auth/ForgottenPasswordPage"));
 
 const WorkspacePage = lazy(() => import("./pages/Workspace/WorkspacePage"));
+const DossierPage = lazy(() => import("./pages/Dossier/DossierPage"));
 const SharedPage = lazy(() => import("./pages/SharedPage"));
 const StatsPage = lazy(() => import("./pages/StatsPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
@@ -104,6 +105,7 @@ export default () => {
                 <PrivateRoute path="/mon-espace" component={WorkspacePage} />
                 {/*  Espace partagé  pages */}
                 <PrivateRoute exact path="/partages-avec-moi" component={SharedPage} />
+                <PrivateRoute exact path="/partages-avec-moi/dossiers/:id/:step" component={DossierPage} />
                 <PrivateRoute path="/partages-avec-moi/espaces/:workspaceId" component={WorkspacePage} />
 
                 {/* PRIVATE ADMIN PAGES */}

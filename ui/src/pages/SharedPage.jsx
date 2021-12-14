@@ -2,22 +2,40 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { Box, Container, Heading, Link, Center, Spinner, Flex } from "@chakra-ui/react";
 import { _get } from "../common/httpClient";
-import { useQuery } from "react-query";
+import { useQueries } from "react-query";
 import Layout from "./layout/Layout";
 import { Breadcrumb } from "../common/components/Breadcrumb";
 import { setTitle } from "../common/utils/pageUtils";
 
+function useSharedWithMe() {
+  const [
+    { data: sharedWithMeWorkspaces, isLoading: isLoadingSharedWks, isFetching: isFetchingSharedwks },
+    { data: sharedWithMeDossiers, isLoading: isLoadingSharedDossiers, isFetching: isFetchingSharedDossiers },
+  ] = useQueries([
+    {
+      queryKey: ["workspaceDossiers", 1],
+      queryFn: () => _get(`/api/v1/workspace/sharedwithme`),
+      refetchOnWindowFocus: false,
+    },
+    {
+      queryKey: ["dossiers", 2],
+      queryFn: () => _get(`/api/v1/dossier/sharedwithme`),
+      refetchOnWindowFocus: false,
+    },
+  ]);
+
+  return {
+    sharedWithMeWorkspaces,
+    sharedWithMeDossiers,
+    isLoading: isLoadingSharedWks || isLoadingSharedDossiers,
+    isFetching: isFetchingSharedwks || isFetchingSharedDossiers,
+  };
+}
+
 export default () => {
+  const { sharedWithMeWorkspaces, sharedWithMeDossiers, isLoading, isFetching } = useSharedWithMe();
   const title = "Partagés avec moi";
   setTitle(title);
-
-  const {
-    data: sharedWithMeWorkspaces,
-    isLoading,
-    isFetching,
-  } = useQuery("workspaceDossiers", () => _get(`/api/v1/workspace/sharedwithme`), {
-    refetchOnWindowFocus: false,
-  });
 
   return (
     <Layout>
@@ -38,7 +56,9 @@ export default () => {
           )}
           {!isLoading && !isFetching && (
             <Flex flexDirection="column">
-              {!sharedWithMeWorkspaces.length && "Vous n'avez aucun partage pour le moment."}
+              {!sharedWithMeWorkspaces.length &&
+                !sharedWithMeDossiers.length &&
+                "Vous n'avez aucun partage pour le moment."}
               {sharedWithMeWorkspaces.map((sharedWithMeWorkspace) => {
                 return (
                   <Link
@@ -53,6 +73,23 @@ export default () => {
                     key={sharedWithMeWorkspace._id}
                   >
                     > {sharedWithMeWorkspace.nom}
+                  </Link>
+                );
+              })}
+              {sharedWithMeDossiers.map((sharedWithMeDossier) => {
+                return (
+                  <Link
+                    mt={8}
+                    as={NavLink}
+                    to={`/partages-avec-moi/dossiers/${sharedWithMeDossier._id}/cerfa`}
+                    color="bluefrance"
+                    _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
+                    borderBottom="1px solid"
+                    borderColor="bluefrance"
+                    bg={"transparent"}
+                    key={sharedWithMeDossier._id}
+                  >
+                    > {sharedWithMeDossier.nom}
                   </Link>
                 );
               })}

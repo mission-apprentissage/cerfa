@@ -36,7 +36,7 @@ function useWorkspaceParametresAcces() {
       refetchOnWindowFocus: false,
     },
     {
-      queryKey: ["roles", 2],
+      queryKey: ["wksroles", 2],
       queryFn: () => _get(`/api/v1/workspace/roles_list?workspaceId=${workspace._id}`),
       refetchOnWindowFocus: false,
     },
@@ -181,7 +181,7 @@ export const Content = () => {
           Username: (value, i) => {
             const constrib = workspaceContributors[i];
             const hasAccount = constrib.user.prenom && constrib.user.nom;
-            const username = hasAccount ? `${constrib.user.prenom} ${constrib.user.nom}` : "Invité non enregistré";
+            const username = hasAccount ? `${constrib.user.prenom} ${constrib.user.nom}` : `Invité non vérifié`;
             return (
               <HStack>
                 <Avatar size="sm" name={hasAccount ? username : ""} />

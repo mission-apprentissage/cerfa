@@ -67,7 +67,7 @@ export const Content = () => {
       const remove = confirm("Voulez-vous vraiment supprimer ce dossier ?");
       if (remove) {
         try {
-          await _delete(`/api/v1/dossier/${dossier._id}`);
+          await _delete(`/api/v1/dossier/entity/${dossier._id}`);
           window.location.reload();
         } catch (e) {
           console.error(e);
