@@ -34,7 +34,6 @@ const usersSchema = {
   telephone: {
     default: null,
     type: String,
-    required: true,
     description: "Téléphone",
   },
   siret: {
@@ -128,6 +127,11 @@ const usersSchema = {
     type: Boolean,
     default: true,
     description: "true si le tour guide est actif",
+  },
+  confirmed: {
+    type: Boolean,
+    default: false,
+    description: "l'utilisateur est confirmé",
   },
   created_at: {
     type: Date,

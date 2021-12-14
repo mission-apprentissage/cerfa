@@ -1,15 +1,15 @@
 const express = require("express");
 const Joi = require("joi");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
-const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
+// const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 const { getDataFromSiret } = require("../../../logic/handlers/siretHandler");
 
-module.exports = (components) => {
+module.exports = () => {
   const router = express.Router();
 
   router.post(
     "/",
-    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
+    // permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async ({ body }, res) => {
       const { siret } = await Joi.object({
         siret: Joi.string().required(),

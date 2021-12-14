@@ -43,8 +43,8 @@
                     Votre compte utilisateur (<%= data.username %>) vient d'être créé sur le Contrat publique Apprentissage
                 </mj-text>
                 <mj-text align="left" padding-top="20px" color="#19414C">
-                    <a href="<%= data.publicUrl %>/login"
-                        class="button">Cliquez ici pour vous connecter</a>
+                    <a href="<%= data.publicUrl %>/auth/confirmation?activationToken=<%= data.activationToken %>"
+                        class="button">Cliquez ici pour confirmer votre compte</a>
                 </mj-text>
                 <mj-text align="left" padding-top="20px" color="#19414C">
                     Votre identifiant : <%= data.username %><br>

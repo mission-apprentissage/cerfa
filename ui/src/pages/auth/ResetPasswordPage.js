@@ -49,7 +49,7 @@ const ResetPasswordPage = () => {
 
   return (
     <Flex height="100vh" justifyContent="center" mt="10">
-      <Box width={["auto", "28rem"]}>
+      <Box width={["auto", "32rem"]}>
         <Heading fontFamily="Marianne" fontWeight="700" marginBottom="2w">
           {title}
         </Heading>

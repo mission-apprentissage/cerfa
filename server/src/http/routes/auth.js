@@ -1,11 +1,46 @@
 const express = require("express");
 const config = require("../../config");
+const Joi = require("joi");
+const path = require("path");
+const Boom = require("boom");
+const passport = require("passport");
+const { Strategy, ExtractJwt } = require("passport-jwt");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { createUserToken } = require("../../common/utils/jwtUtils");
+const { createUserToken, createActivationToken } = require("../../common/utils/jwtUtils");
 
 const IS_OFFLINE = Boolean(config.isOffline);
 
-module.exports = ({ users }) => {
+const getEmailTemplate = (type = "forgotten-password") => {
+  return path.join(__dirname, `../../assets/templates/${type}.mjml.ejs`);
+};
+
+const checkActivationToken = (users) => {
+  passport.use(
+    "jwt-activation",
+    new Strategy(
+      {
+        jwtFromRequest: ExtractJwt.fromBodyField("activationToken"),
+        secretOrKey: config.auth.activation.jwtSecret,
+      },
+      (jwt_payload, done) => {
+        console.log(jwt_payload);
+        return users
+          .getUser(jwt_payload.sub)
+          .then((user) => {
+            if (!user) {
+              return done(null, false);
+            }
+            return done(null, { ...user, tmpPwd: jwt_payload.tmpPwd });
+          })
+          .catch((err) => done(err));
+      }
+    )
+  );
+
+  return passport.authenticate("jwt-activation", { session: false, failWithError: true });
+};
+
+module.exports = ({ users, mailer }) => {
   const router = express.Router(); // eslint-disable-line new-cap
 
   router.post(
@@ -37,6 +72,86 @@ module.exports = ({ users }) => {
         .status(200)
         .json({
           loggedIn: true,
+          token,
+        });
+    })
+  );
+
+  router.post(
+    "/register",
+    tryCatch(async ({ body }, res) => {
+      const { compte, siret, email, password, nom, prenom } = await Joi.object({
+        compte: Joi.string().required(),
+        email: Joi.string().required(),
+        password: Joi.string().required(),
+        siret: Joi.string().required(),
+        nom: Joi.string().required(),
+        prenom: Joi.string().required(),
+      }).validateAsync(body, { abortEarly: false });
+
+      const alreadyExists = await users.getUser(email);
+      if (alreadyExists) {
+        throw Boom.conflict(`Unable to create, user ${email} already exists`);
+      }
+
+      const user = await users.createUser(email, password, {
+        siret,
+        nom,
+        prenom,
+        roles: compte === "entreprise" || compte === "cfa" ? ["compte"] : [],
+      });
+      if (!user) {
+        throw Boom.badRequest("Something went wrong");
+      }
+
+      await mailer.sendEmail(
+        user.email,
+        `[${config.env} Contrat publique apprentissage] Bienvenue`,
+        getEmailTemplate("grettings"),
+        {
+          username: user.username,
+          tmpPwd: password,
+          publicUrl: config.publicUrl,
+          activationToken: createActivationToken(email, { payload: { tmpPwd: password } }),
+        }
+      );
+
+      return res.json({ succeeded: true });
+    })
+  );
+
+  router.post(
+    "/activation",
+    checkActivationToken(users),
+    tryCatch(async ({ body, user }, res) => {
+      await Joi.object({
+        activationToken: Joi.string().required(),
+      }).validateAsync(body, { abortEarly: false });
+
+      const auth = await users.authenticate(user.email, user.tmpPwd);
+
+      if (!auth) {
+        throw Boom.unauthorized("Accès non autorisé");
+      }
+
+      const updatedUser = await users.activate(user.email);
+
+      const payload = await users.structureUser(updatedUser);
+
+      await users.loggedInUser(payload.email);
+
+      const token = createUserToken({ payload });
+
+      res
+        .cookie(`cerfa-${config.env}-jwt`, token, {
+          maxAge: 365 * 24 * 3600000,
+          httpOnly: !IS_OFFLINE,
+          sameSite: IS_OFFLINE ? "lax" : "none",
+          secure: !IS_OFFLINE,
+        })
+        .status(200)
+        .json({
+          succeeded: true,
           token,
         });
     })

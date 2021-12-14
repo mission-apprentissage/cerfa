@@ -24,18 +24,16 @@ runScript(async ({ users, workspaces, dossiers }) => {
   const userAdmin = await users.createUser("antoine.bigard@beta.gouv.fr", "password", {
     nom: "Bigard",
     prenom: "Antoine",
-    telephone: "+33612647513",
-    email: "antoine.bigard@beta.gouv.fr",
     permissions: { isAdmin: true },
+    confirmed: true,
   });
   logger.info(`User 'testAdmin' with password 'password' and admin is successfully created `);
 
   await users.createUser("antoine.bigard+testEntreprise@beta.gouv.fr", "password", {
     nom: "Damien",
     prenom: "Arthur",
-    telephone: "+33102030405",
-    email: "antoine.bigard+testEntreprise@beta.gouv.fr",
     roles: ["entreprise"],
+    confirmed: true,
   });
   logger.info(`User 'testEntreprise' with password 'password' is successfully created `);
 

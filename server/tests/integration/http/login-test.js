@@ -10,10 +10,8 @@ describe("[Routes] Login", () => {
   it("Vérifie qu'on peut se connecter", async () => {
     const { httpClient, components } = await startServer();
     await components.users.createUser("h@ck.me", "password", {
-      email: "h@ck.me",
       nom: "hack",
       prenom: "me",
-      telephone: "+33102030405",
     });
 
     const response = await httpClient.post("/api/v1/auth/login", {
@@ -44,10 +42,8 @@ describe("[Routes] Login", () => {
   it("Vérifie qu'un mot de passe invalide est rejeté", async () => {
     const { httpClient, components } = await startServer();
     await components.users.createUser("h@ck.me", "password", {
-      email: "h@ck.me",
       nom: "hack",
       prenom: "me",
-      telephone: "+33102030405",
     });
 
     const response = await httpClient.post("/api/v1/auth/login", {
@@ -73,10 +69,8 @@ describe("[Routes] Login", () => {
     const { httpClient, components } = await startServer();
     await components.users.createUser("h@ck.me", "password", {
       hash: hash("password", 1000),
-      email: "h@ck.me",
       nom: "hack",
       prenom: "me",
-      telephone: "+33102030405",
     });
 
     let response = await httpClient.post("/api/v1/auth/login", {
@@ -99,10 +93,8 @@ describe("[Routes] Login", () => {
     const { httpClient, components } = await startServer();
     await components.users.createUser("h@ck.me", "password", {
       hash: hash("password", 1001),
-      email: "h@ck.me",
       nom: "hack",
       prenom: "me",
-      telephone: "+33102030405",
     });
     const previous = await User.findOne({ email: "h@ck.me" });
 
@@ -120,10 +112,8 @@ describe("[Routes] Login", () => {
     const { httpClient, components } = await startServer();
     await components.users.createUser("h@ck.me", "password", {
       hash: hash("password", 1001),
-      email: "h@ck.me",
       nom: "hack",
       prenom: "me",
-      telephone: "+33102030405",
     });
     const previous = await User.findOne({ email: "h@ck.me" });
 

@@ -26,7 +26,7 @@ async function initComponents(options) {
     userOpt: {
       email: "h@ck.me",
       password: "password",
-      options: { email: "h@ck.me", nom: "hack", prenom: "me", telephone: "+33102030405" },
+      options: { email: "h@ck.me", nom: "hack", prenom: "me" },
     },
     roleOpt: { name: "wks.admin", type: "permission", acl: [] },
   };

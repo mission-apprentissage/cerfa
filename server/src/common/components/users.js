@@ -26,7 +26,7 @@ module.exports = async () => {
       }
       return null;
     },
-    getUser: async (email) => await User.findOne({ email }),
+    getUser: async (email) => await User.findOne({ email }).lean(),
     getUserById: async (id, select = {}) => await User.findById(id, select).lean(),
     getUserByUsername: async (username, select = {}) => await User.findOne({ username }, select).lean(),
     getUsers: async (filters = {}) => await User.find(filters, { password: 0, _id: 0, __v: 0 }).lean(),
@@ -53,17 +53,19 @@ module.exports = async () => {
         username,
         password: hash,
         isAdmin: !!permissions.isAdmin,
-        email: options.email,
+        email: userEmail,
         nom: options.nom,
         prenom: options.prenom,
-        telephone: options.telephone,
+        telephone: options.telephone || null,
         roles: rolesDb,
         acl: options.acl || [],
+        siret: options.siret || null,
+        confirmed: options.confirmed || false,
       });
 
       const { createWorkspace } = await workspaces();
       await createWorkspace({
-        email: options.email,
+        email: userEmail,
         nom: `Espace - ${options.prenom} ${options.nom}`,
         description: `L'espace de travail de ${options.prenom} ${options.nom}`,
       });
@@ -87,6 +89,17 @@ module.exports = async () => {
       const result = await User.findOneAndUpdate({ _id: user._id }, data, { new: true });
 
       return result.toObject();
+    },
+    activate: async (email) => {
+      const user = await User.findOne({ email });
+      if (!user) {
+        throw new Error(`Unable to find user ${email}`);
+      }
+
+      user.confirmed = true;
+      await user.save();
+
+      return user.toObject();
     },
     changePassword: async (email, newPassword) => {
       const user = await User.findOne({ email });

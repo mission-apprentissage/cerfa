@@ -19,7 +19,7 @@ const Header = () => {
 
             <Box p={[1, 6]} flex="1">
               <Heading as="h6" textStyle="h6" fontSize="xl">
-                Générateur de contrat publique d'apprentissage
+                Contrat d'apprentissage dématérialisé pour la fonction publique
               </Heading>
             </Box>
           </Flex>

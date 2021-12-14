@@ -8,10 +8,8 @@ describe("[Routes] Password", () => {
   it("Vérifie qu'un utilisateur peut faire une demande de réinitialisation de mot de passe", async () => {
     const { httpClient, createAndLogUser, getEmailsSent } = await startServer();
     await createAndLogUser("user1@apprentissage.beta.gouv.fr", "password", {
-      email: "user1@apprentissage.beta.gouv.fr",
       nom: "hack",
       prenom: "me",
-      telephone: "+33102030405",
       permissions: { isAdmin: true },
     });
 
@@ -30,10 +28,8 @@ describe("[Routes] Password", () => {
   it("Vérifie qu'on ne peut pas demander la réinitialisation du mot de passe pour un utilisateur inconnu", async () => {
     const { httpClient, createAndLogUser } = await startServer();
     await createAndLogUser("h@ck.me", "password", {
-      email: "h@ck.me",
       nom: "hack",
       prenom: "me",
-      telephone: "+33102030405",
       permissions: { isAdmin: true },
     });
 
@@ -47,10 +43,8 @@ describe("[Routes] Password", () => {
   it("Vérifie qu'on ne peut pas demander la réinitialisation du mot de passe pour un utilisateur invalide", async () => {
     const { httpClient, createAndLogUser } = await startServer();
     await createAndLogUser("h@ck.me", "password", {
-      email: "h@ck.me",
       nom: "hack",
       prenom: "me",
-      telephone: "+33102030405",
     });
 
     const response = await httpClient.post("/api/v1/password/forgotten-password", {
@@ -64,10 +58,8 @@ describe("[Routes] Password", () => {
   it("Vérifie qu'un utilisateur peut changer son mot de passe", async () => {
     const { httpClient, createAndLogUser } = await startServer();
     await createAndLogUser("h@ck.me", "password", {
-      email: "h@ck.me",
       nom: "hack",
       prenom: "me",
-      telephone: "+33102030405",
       permissions: { isAdmin: true },
     });
 
@@ -86,10 +78,8 @@ describe("[Routes] Password", () => {
   it("Vérifie qu'on doit spécifier un mot de passe valide", async () => {
     const { httpClient, createAndLogUser } = await startServer();
     await createAndLogUser("h@ck.me", "password", {
-      email: "h@ck.me",
       nom: "hack",
       prenom: "me",
-      telephone: "+33102030405",
       permissions: { isAdmin: true },
     });
 
