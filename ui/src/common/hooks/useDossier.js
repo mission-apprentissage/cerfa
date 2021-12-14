@@ -8,7 +8,7 @@ import { dossierAtom } from "./dossierAtom";
 const hydrate = async (dossierId) => {
   if (!dossierId) return { dossier: null };
   try {
-    const dossier = await _get(`/api/v1/dossier/${dossierId}?dossierId=${dossierId}`);
+    const dossier = await _get(`/api/v1/dossier/entity/${dossierId}?dossierId=${dossierId}`);
     return { dossier };
   } catch (e) {
     if (e.statusCode === 404) {
@@ -45,7 +45,7 @@ export function useDossier(dossierId = null) {
       const dossierId = dossier?._id || id;
       let d = null;
       try {
-        d = await _put(`/api/v1/dossier/${dossierId}/saved`, { dossierId });
+        d = await _put(`/api/v1/dossier/entity/${dossierId}/saved`, { dossierId });
       } catch (e) {
         setError(e);
       } finally {
@@ -60,7 +60,7 @@ export function useDossier(dossierId = null) {
   //   data: dossier,
   //   isLoading,
   //   isFetching,
-  // } = useQuery("dossier", () => _get(`/api/v1/dossier/${dossierId}?dossierId=${dossierId}`), {
+  // } = useQuery("dossier", () => _get(`/api/v1/dossier/entity/${dossierId}?dossierId=${dossierId}`), {
   //   refetchOnWindowFocus: false,
   // });
 
