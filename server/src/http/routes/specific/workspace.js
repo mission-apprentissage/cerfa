@@ -220,7 +220,7 @@ module.exports = (components) => {
           wksname: wks.nom,
           user2role: newUserRole.title,
           publicUrl: config.publicUrl,
-          tospaceUrl: "",
+          tospaceUrl: `partages-avec-moi/espaces/${wks._id}/`,
         }
       );
 
