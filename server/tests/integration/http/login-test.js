@@ -33,6 +33,8 @@ describe("[Routes] Login", () => {
       roles: [],
       sub: "h@ck.me",
       iss: config.appName,
+      confirmed: false,
+      siret: null,
       permissions: {
         isAdmin: false,
       },
