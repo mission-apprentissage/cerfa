@@ -25,14 +25,14 @@ module.exports = ({ users }) => {
         const { expiration } = jwtPayload;
 
         if (Date.now() > expiration) {
-          done("Unauthorized", false);
+          done(new Error("Unauthorized"), false);
         }
 
         return users
           .getUser(jwtPayload.sub)
           .then(async (user) => {
             if (!user) {
-              return done("Unauthorized", false);
+              return done(new Error("Unauthorized"), false);
             }
             if (user.invalided_token) {
               await users.updateUser(user._id, { invalided_token: false });

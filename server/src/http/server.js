@@ -1,11 +1,12 @@
 require("dotenv").config();
 const express = require("express");
+const { createServer } = require("http");
 const config = require("../config");
 const logger = require("../common/logger");
 const bodyParser = require("body-parser");
+const tryCatch = require("./middlewares/tryCatchMiddleware");
 const logMiddleware = require("./middlewares/logMiddleware");
 const errorMiddleware = require("./middlewares/errorMiddleware");
-const tryCatch = require("./middlewares/tryCatchMiddleware");
 const corsMiddleware = require("./middlewares/corsMiddleware");
 const authMiddleware = require("./middlewares/authMiddleware");
 const pageAccessMiddleware = require("./middlewares/pageAccessMiddleware");
@@ -25,19 +26,22 @@ const siret = require("./routes/specific/siret");
 const cfdrncp = require("./routes/specific/cfdrncp");
 const signDocument = require("./routes/specific/signDocument");
 
+const startWebsocket = require("./websockets/ws");
+
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 
 module.exports = async (components) => {
   const { db } = components;
   const app = express();
-  const checkJwtToken = authMiddleware(components);
+  const httpServer = createServer(app);
+  startWebsocket(httpServer, components);
 
+  const checkJwtToken = authMiddleware(components);
   app.use(bodyParser.json());
   app.use(corsMiddleware());
   app.use(logMiddleware());
   app.use(cookieParser());
-
   app.use(passport.initialize());
 
   // public access
@@ -93,5 +97,5 @@ module.exports = async (components) => {
 
   app.use(errorMiddleware());
 
-  return app;
+  return httpServer;
 };

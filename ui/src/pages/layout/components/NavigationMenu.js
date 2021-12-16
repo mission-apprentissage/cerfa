@@ -19,10 +19,21 @@ import { isUserAdmin, hasPageAccessTo } from "../../../common/utils/rolesUtils";
 import { MenuFill, Close, AccountFill, DownloadLine, InfoCircle, LockFill } from "../../../theme/components/icons";
 import { _get } from "../../../common/httpClient";
 
+import { io } from "socket.io-client";
+
 const NavigationMenu = ({ isMyWorkspace, isSharedWithMe, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
+
+  const socket = io("/dossier");
+  socket.on("connect", () => {
+    console.log(socket.id);
+
+    socket.emit("dossier:whereIs", { dossierId: "61bb790a17bde53d0d073336" }, (response) => {
+      console.log(response);
+    });
+  });
 
   return (
     <NavBarContainer {...props}>
