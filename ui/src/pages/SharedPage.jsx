@@ -41,7 +41,7 @@ export default () => {
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
         <Container maxW="xl">
-          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
+          <Breadcrumb pages={[{ title: title }]} />
         </Container>
       </Box>
       <Box w="100%" py={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
