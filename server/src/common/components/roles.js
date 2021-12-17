@@ -12,7 +12,7 @@ module.exports = async () => {
 
       let result = null;
       try {
-        result = await await Role.create({
+        result = await Role.create({
           name,
           type,
           acl,

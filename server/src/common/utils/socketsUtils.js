@@ -20,7 +20,7 @@ const ioUseNamespace = (io, name, components, callback) => {
       socket.disconnect();
     });
 
-    callback({ socket, components });
+    callback({ io, namespace, socket, components });
   });
 };
 

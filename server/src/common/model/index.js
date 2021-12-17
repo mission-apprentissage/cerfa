@@ -2,7 +2,7 @@ const { mongoose } = require("../mongodb");
 const schema = require("../model/schema");
 
 const createModel = (modelName, descriptor, options = {}) => {
-  const schema = new mongoose.Schema(descriptor);
+  const schema = new mongoose.Schema(descriptor, options.schemaOptions);
   schema.plugin(require("mongoose-paginate"));
   if (options.createMongoDBIndexes) {
     options.createMongoDBIndexes(schema);
@@ -35,6 +35,17 @@ module.exports = {
   Permission: createModel("permission", schema.permissionSchema, {
     createMongoDBIndexes: (schema) => {
       schema.index({ workspaceId: 1, dossierId: 1, userEmail: 1, role: 1 }, { unique: true });
+    },
+  }),
+  ConnectionDossier: createModel("connectiondossier", schema.connectionDossierSchema, {
+    schemaOptions: {
+      minimize: false,
+      timestamps: true,
+      toJSON: { getters: true, virtuals: true },
+      toObject: { getters: true, virtuals: true },
+    },
+    createMongoDBIndexes: (schema) => {
+      schema.index({ dossierId: 1, email: 1 });
     },
   }),
 

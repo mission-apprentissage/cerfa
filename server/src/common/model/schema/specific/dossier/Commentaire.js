@@ -1,4 +1,4 @@
-const { mongoose } = require("../../../mongodb");
+const { mongoose } = require("../../../../mongodb");
 
 const commentaireSchema = {
   dossierId: {
