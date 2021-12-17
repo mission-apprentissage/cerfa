@@ -34,8 +34,6 @@ const cookieParser = require("cookie-parser");
 module.exports = async (components) => {
   const { db } = components;
   const app = express();
-  const httpServer = createServer(app);
-  startWebsocket(httpServer, components);
 
   const checkJwtToken = authMiddleware(components);
   app.use(bodyParser.json());
@@ -96,6 +94,9 @@ module.exports = async (components) => {
   );
 
   app.use(errorMiddleware());
+
+  const httpServer = createServer(app);
+  startWebsocket(httpServer, components);
 
   return httpServer;
 };

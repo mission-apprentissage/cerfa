@@ -1,4 +1,4 @@
-const { mongoose } = require("../../../mongodb");
+const { mongoose } = require("../../../../mongodb");
 const documentSchema = require("./document.part");
 
 const dossierSchema = {
