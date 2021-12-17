@@ -3,32 +3,50 @@ import { Box, Accordion, AccordionItem, AccordionButton, AccordionPanel } from "
 
 import { AddFill, SubtractLine } from "../../../theme/components/icons";
 
-// import FormEmployer from "./components/FormEmployer";
-// import FormLearner from "./components/FormLearner";
-// import FormLearningMaster from "./components/FormLearningMaster";
-// import FormContract from "./components/FormContract";
-// import FormSubmittingContract from "./components/FormSubmittingContract";
-
-// {
-//   title: "EMPLOYEUR",
-//   Component: FormEmployer,
-// },
-// {
-//   title: "APPRENTI(E)",
-//   Component: FormLearner,
-// },
-// {
-//   title: "LE MAÎTRE D’APPRENTISSAGE",
-//   Component: FormLearningMaster,
-// },
-// {
-//   title: "LE CONTRAT",
-//   Component: FormContract,
-// },
+import { io } from "socket.io-client";
+import { useQueryClient } from "react-query";
 
 const FormFormation = lazy(() => import("./components/FormFormation"));
 
+// const queryClient = new QueryClient({
+//   defaultOptions: {
+//     queries: {
+//       staleTime: Infinity,
+//     },
+//   },
+// });
+
+function useDossierSocket() {
+  const queryClient = useQueryClient();
+
+  React.useEffect(() => {
+    const socket = io("/dossier");
+    socket.on("connect", () => {
+      console.log(socket.id);
+
+      socket.emit("dossier:iamhere", { dossierId: "61bb790a17bde53d0d073336" }, ({ status, result }) => {
+        if (status === "KO") {
+          return socket.disconnect();
+        }
+        console.log(result);
+        // queryClient.invalidateQueries(result);
+        // queryClient.setQueriesData("wsQuery", (oldData) => {
+        //   return result;
+        // })
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [queryClient]);
+
+  return {};
+}
+
 export default () => {
+  useDossierSocket();
+
   return (
     <Accordion allowMultiple allowToggle mt={12}>
       {[

@@ -1,8 +1,11 @@
 const Joi = require("joi");
-const tryCatchSocket = require("../middlewares/tryCatchWebsocketMiddleware");
-const permissionsDossierMiddleware = require("../middlewares/permissionsDossierMiddleware");
+const tryCatchSocket = require("../../middlewares/tryCatchWebsocketMiddleware");
+const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 
 module.exports = ({ socket, components }) => {
+  // do stuff on connection with socket (socket.id)
+
+  // permission middleware
   socket.use(([, ...[query]], next) =>
     permissionsDossierMiddleware(components, ["dossier"])(
       {
@@ -15,8 +18,13 @@ module.exports = ({ socket, components }) => {
     )
   );
 
+  socket.on("disconnect", (reason) => {
+    // TODO remove connection
+    console.log(reason);
+  });
+
   socket.on(
-    "dossier:whereIs",
+    "dossier:iamhere",
     tryCatchSocket(async (payload) => {
       // eslint-disable-next-line no-unused-vars
       let { dossierId } = await Joi.object({
@@ -26,6 +34,7 @@ module.exports = ({ socket, components }) => {
         .validateAsync(payload, { abortEarly: false });
 
       // TODO Get users etc..
+      console.log(socket.id);
 
       return [
         {

@@ -26,7 +26,7 @@ const siret = require("./routes/specific/siret");
 const cfdrncp = require("./routes/specific/cfdrncp");
 const signDocument = require("./routes/specific/signDocument");
 
-const startWebsocket = require("./websockets/ws");
+const startWebsocket = require("./websockets/socket");
 
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
