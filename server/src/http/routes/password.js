@@ -5,7 +5,7 @@ const config = require("../../config");
 const passport = require("passport");
 const { Strategy, ExtractJwt } = require("passport-jwt");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const validators = require("../utils/validators");
+const validators = require("../../common/utils/validators");
 const { createPasswordToken, createUserToken } = require("../../common/utils/jwtUtils");
 
 const IS_OFFLINE = Boolean(config.isOffline);

@@ -5,7 +5,7 @@ const { cloneDeep, mergeWith } = require("lodash");
 const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
-const cerfaSchema = require("../../../common/model/schema/specific/cerfa/Cerfa");
+const cerfaSchema = require("../../../common/model/schema/specific/dossier/cerfa/Cerfa");
 const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfaController");
 
 module.exports = (components) => {

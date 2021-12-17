@@ -52,6 +52,13 @@ const ResetPasswordWrapper = ({ children }) => {
 };
 
 const queryClient = new QueryClient();
+// const queryClient = new QueryClient({
+//   defaultOptions: {
+//     queries: {
+//       staleTime: Infinity
+//     }
+//   }
+// });
 
 export default () => {
   let [auth, setAuth] = useAuth();
