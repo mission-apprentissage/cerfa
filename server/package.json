@@ -48,7 +48,7 @@
     "lodash": "4.17.21",
     "mjml": "4.10.4",
     "moment": "2.29.1",
-    "mongoose": "5.13.7",
+    "mongoose": "5.13.13",
     "mongoose-paginate": "5.0.3",
     "multiparty": "4.2.2",
     "multipipe": "4.0.0",
