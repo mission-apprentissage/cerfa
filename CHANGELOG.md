@@ -1,3 +1,15 @@
+# [1.9.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.9.0-beta.3...v1.9.0-beta.4) (2021-12-19)
+
+
+### Bug Fixes
+
+* **ui:** cosmetics ([4e2555a](https://github.com/mission-apprentissage/cerfa/commit/4e2555a014bbe93ec6b46e4ff689b8b5c82c3036))
+
+
+### Features
+
+* **websocket:** ajout du mécanisme de websocket ([#42](https://github.com/mission-apprentissage/cerfa/issues/42)) ([8b206c6](https://github.com/mission-apprentissage/cerfa/commit/8b206c6a7fe54af0ead4a7d9157640f50379c6a9))
+
 # [1.9.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.9.0-beta.2...v1.9.0-beta.3) (2021-12-14)
 
 
