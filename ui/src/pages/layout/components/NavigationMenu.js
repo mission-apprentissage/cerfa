@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
 import { isUserAdmin, hasPageAccessTo } from "../../../common/utils/rolesUtils";
-import { MenuFill, Close, AccountFill, DownloadLine, InfoCircle, LockFill } from "../../../theme/components/icons";
+import { MenuFill, Close, AccountFill, InfoCircle, LockFill } from "../../../theme/components/icons";
 import { _get } from "../../../common/httpClient";
 
 const NavigationMenu = ({ isMyWorkspace, isSharedWithMe, ...props }) => {
@@ -80,11 +80,6 @@ const UserMenu = () => {
               {hasPageAccessTo(auth, "admin/page_gestion_roles") && (
                 <MenuItem as={NavLink} to="/admin/roles" icon={<AccountFill boxSize={4} />}>
                   Gestion des rôles
-                </MenuItem>
-              )}
-              {hasPageAccessTo(auth, "admin/page_upload") && (
-                <MenuItem as={NavLink} to="/admin/upload" icon={<DownloadLine boxSize={4} />}>
-                  Upload de fichiers
                 </MenuItem>
               )}
               {hasPageAccessTo(auth, "admin/page_message_maintenance") && (
