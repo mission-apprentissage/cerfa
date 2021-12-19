@@ -3,6 +3,7 @@ const createMailer = require("../../common/mailer");
 const createUsers = require("./users");
 const createWorkspaces = require("./workspaces");
 const createDossiers = require("./dossiers");
+const createConnectionsDossiers = require("./connectionsDossiers");
 const createCerfas = require("./cerfas");
 const createPermissions = require("./permissions");
 const createRoles = require("./roles");
@@ -21,6 +22,7 @@ module.exports = async (options = {}) => {
   const cerfas = options.cerfa || (await createCerfas());
   const permissions = options.permission || (await createPermissions());
   const roles = options.role || (await createRoles());
+  const connectionsDossiers = options.connectionsDossier || (await createConnectionsDossiers());
   const clamav = options.clamav || (await createClamav(config.clamav.uri));
   const crypto = options.crypto || createCrypto(config.ovh.storage.encryptionKey);
 
@@ -32,6 +34,7 @@ module.exports = async (options = {}) => {
     // below specific
     workspaces,
     dossiers,
+    connectionsDossiers,
     cerfas,
     permissions,
     roles,

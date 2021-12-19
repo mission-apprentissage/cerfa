@@ -21,7 +21,6 @@ const StatsPage = lazy(() => import("./pages/StatsPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const Users = lazy(() => import("./pages/admin/Users"));
 const Roles = lazy(() => import("./pages/admin/Roles"));
-const UploadFiles = lazy(() => import("./pages/admin/UploadFiles"));
 const Maintenance = lazy(() => import("./pages/admin/Maintenance"));
 const Contact = lazy(() => import("./pages/legal/Contact"));
 const Cookies = lazy(() => import("./pages/legal/Cookies"));
@@ -52,6 +51,13 @@ const ResetPasswordWrapper = ({ children }) => {
 };
 
 const queryClient = new QueryClient();
+// const queryClient = new QueryClient({
+//   defaultOptions: {
+//     queries: {
+//       staleTime: Infinity
+//     }
+//   }
+// });
 
 export default () => {
   let [auth, setAuth] = useAuth();
@@ -117,9 +123,6 @@ export default () => {
                 )}
                 {auth && hasPageAccessTo(auth, "admin/page_message_maintenance") && (
                   <PrivateRoute exact path="/admin/maintenance" component={Maintenance} />
-                )}
-                {auth && hasPageAccessTo(auth, "page_upload") && (
-                  <PrivateRoute exact path="/admin/upload" component={UploadFiles} />
                 )}
 
                 {/* Fallback */}

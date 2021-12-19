@@ -3,29 +3,6 @@ import { Box, Accordion, AccordionItem, AccordionButton, AccordionPanel } from "
 
 import { AddFill, SubtractLine } from "../../../theme/components/icons";
 
-// import FormEmployer from "./components/FormEmployer";
-// import FormLearner from "./components/FormLearner";
-// import FormLearningMaster from "./components/FormLearningMaster";
-// import FormContract from "./components/FormContract";
-// import FormSubmittingContract from "./components/FormSubmittingContract";
-
-// {
-//   title: "EMPLOYEUR",
-//   Component: FormEmployer,
-// },
-// {
-//   title: "APPRENTI(E)",
-//   Component: FormLearner,
-// },
-// {
-//   title: "LE MAÎTRE D’APPRENTISSAGE",
-//   Component: FormLearningMaster,
-// },
-// {
-//   title: "LE CONTRAT",
-//   Component: FormContract,
-// },
-
 const FormFormation = lazy(() => import("./components/FormFormation"));
 
 export default () => {

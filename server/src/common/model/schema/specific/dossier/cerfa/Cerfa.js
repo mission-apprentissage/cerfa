@@ -1,4 +1,4 @@
-const { mongoose } = require("../../../../mongodb");
+const { mongoose } = require("../../../../../mongodb");
 const employeurCerfaSchema = require("./parts/employeurCerfa.part");
 const apprentiSchema = require("./parts/apprenti.part");
 const maitreApprentissageSchema = require("./parts/maitreApprentissage.part");

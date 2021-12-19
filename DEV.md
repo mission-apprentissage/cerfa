@@ -59,20 +59,6 @@ Dans la configuration de nginx, on fait référence au fichier `/reverse_proxy/a
 
 Le base de données est une MongoDb et utilise le port par défaut 27017.
 
-### Elasticsearch & Kibana
-
-Elasticsearch est accessible à l'adresse :
-
-```bash
-http://localhost/es
-```
-
-Kibana est accessible à l'adresse :
-
-```bash
-http://localhost/kibana
-```
-
 ### Démarrage de la stack
 
 Pour créer la stack et monter l'environnement il suffit de lancer la commande suivante :

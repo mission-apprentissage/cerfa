@@ -130,7 +130,7 @@ const InviteModal = ({ title, size = "md", isOpen, onClose, onInvite, defaultRol
 
   if (isLoading) return null;
 
-  console.log(dossierContributors);
+  // console.log(dossierContributors); // TODO separate component to avoid re-rendering when submit form
 
   return (
     <Modal

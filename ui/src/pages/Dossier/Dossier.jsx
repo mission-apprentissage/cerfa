@@ -8,8 +8,6 @@ import {
   Container,
   Badge,
   HStack,
-  AvatarGroup,
-  Avatar,
   Text,
   Spinner,
   useDisclosure,
@@ -25,6 +23,7 @@ import PiecesJustificatives from "./PiecesJustificatives/PiecesJustificatives";
 import Signatures from "./Signatures/Signatures";
 import Statuts from "./Statuts/Statuts";
 import { InviteModal } from "./components/InviteModal";
+import LivePeopleAvatar from "./components/LivePeopleAvatar";
 
 import { useDossier } from "../../common/hooks/useDossier";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
@@ -104,10 +103,7 @@ export default () => {
             </Badge>
           </Heading>
           <HStack>
-            <AvatarGroup size="md" max={2}>
-              <Avatar name="Paul Pierre" />
-              <Avatar name="Pablo Hanry" />
-            </AvatarGroup>
+            <LivePeopleAvatar />
             {hasContextAccessTo(dossier, "dossier/page_parametres/gestion_acces") && (
               <>
                 <Button size="md" onClick={inviteModal.onOpen} variant="secondary">

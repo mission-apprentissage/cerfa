@@ -157,7 +157,7 @@ module.exports = (components) => {
         }
       }
 
-      res.json(results);
+      return res.json(results); // TODO Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
     })
   );
 

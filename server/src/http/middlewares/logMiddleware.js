@@ -48,8 +48,10 @@ module.exports = () => {
         };
 
         const level = error || (statusCode >= 400 && statusCode < 600) ? "error" : "info";
-
-        logger[level](data, `Http Request ${level === "error" ? "KO" : "OK"}`);
+        const shouldLog = !relativeUrl.includes("/api/v1/authentified/current");
+        if (shouldLog) {
+          logger[level](data, `Http Request ${level === "error" ? "KO" : "OK"}`);
+        }
       } finally {
         res.removeListener("finish", log);
         res.removeListener("close", log);
