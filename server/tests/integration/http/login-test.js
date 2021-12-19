@@ -9,10 +9,13 @@ const { omit } = require("lodash");
 describe("[Routes] Login", () => {
   it("Vérifie qu'on peut se connecter", async () => {
     const { httpClient, components } = await startServer();
-    await components.users.createUser("user", "password");
+    await components.users.createUser("h@ck.me", "password", {
+      nom: "hack",
+      prenom: "me",
+    });
 
     const response = await httpClient.post("/api/v1/auth/login", {
-      username: "user",
+      username: "h@ck.me",
       password: "password",
     });
 
@@ -21,13 +24,18 @@ describe("[Routes] Login", () => {
     const decoded = jwt.verify(token, config.auth.user.jwtSecret);
     assert.ok(decoded.iat);
     assert.ok(decoded.exp);
-    assert.deepStrictEqual(omit(decoded, ["iat", "exp"]), {
+    assert.deepStrictEqual(omit(decoded, ["iat", "exp", "workspaceId"]), {
       account_status: "FORCE_RESET_PASSWORD",
       acl: [],
-      email: "",
-      roles: ["public"],
-      sub: "user",
+      email: "h@ck.me",
+      nom: "hack",
+      prenom: "me",
+      roles: [],
+      sub: "h@ck.me",
+      username: "mhack",
       iss: config.appName,
+      confirmed: false,
+      siret: null,
       permissions: {
         isAdmin: false,
       },
@@ -36,10 +44,13 @@ describe("[Routes] Login", () => {
 
   it("Vérifie qu'un mot de passe invalide est rejeté", async () => {
     const { httpClient, components } = await startServer();
-    await components.users.createUser("user", "password");
+    await components.users.createUser("h@ck.me", "password", {
+      nom: "hack",
+      prenom: "me",
+    });
 
     const response = await httpClient.post("/api/v1/auth/login", {
-      username: "user",
+      username: "h@ck.me",
       password: "INVALID",
     });
 
@@ -50,7 +61,7 @@ describe("[Routes] Login", () => {
     const { httpClient } = await startServer();
 
     const response = await httpClient.post("/api/v1/auth/login", {
-      username: "INVALID",
+      email: "h@ck.me",
       password: "INVALID",
     });
 
@@ -59,19 +70,23 @@ describe("[Routes] Login", () => {
 
   it("Vérifie que le mot de passe est rehashé si trop faible", async () => {
     const { httpClient, components } = await startServer();
-    await components.users.createUser("user", "password", { hash: hash("password", 1000) });
+    await components.users.createUser("h@ck.me", "password", {
+      hash: hash("password", 1000),
+      nom: "hack",
+      prenom: "me",
+    });
 
     let response = await httpClient.post("/api/v1/auth/login", {
-      username: "user",
+      username: "h@ck.me",
       password: "password",
     });
 
     assert.strictEqual(response.status, 200);
-    const found = await User.findOne({ username: "user" });
+    const found = await User.findOne({ email: "h@ck.me" });
     assert.strictEqual(found.password.startsWith("$6$rounds=1001"), true);
 
     response = await httpClient.post("/api/v1/auth/login", {
-      username: "user",
+      username: "h@ck.me",
       password: "password",
     });
     assert.strictEqual(response.status, 200);
@@ -79,31 +94,39 @@ describe("[Routes] Login", () => {
 
   it("Vérifie que le mot de passe n'est pas rehashé si ok", async () => {
     const { httpClient, components } = await startServer();
-    await components.users.createUser("user", "password", { hash: hash("password", 1001) });
-    const previous = await User.findOne({ username: "user" });
+    await components.users.createUser("h@ck.me", "password", {
+      hash: hash("password", 1001),
+      nom: "hack",
+      prenom: "me",
+    });
+    const previous = await User.findOne({ email: "h@ck.me" });
 
     const response = await httpClient.post("/api/v1/auth/login", {
-      username: "user",
+      username: "h@ck.me",
       password: "password",
     });
 
     assert.strictEqual(response.status, 200);
-    const found = await User.findOne({ username: "user" });
+    const found = await User.findOne({ email: "h@ck.me" });
     assert.strictEqual(previous.password, found.password);
   });
 
   it("Vérifie que le mot de passe n'est pas rehashé si invalide", async () => {
     const { httpClient, components } = await startServer();
-    await components.users.createUser("user", "password", { hash: hash("password", 1001) });
-    const previous = await User.findOne({ username: "user" });
+    await components.users.createUser("h@ck.me", "password", {
+      hash: hash("password", 1001),
+      nom: "hack",
+      prenom: "me",
+    });
+    const previous = await User.findOne({ email: "h@ck.me" });
 
     const response = await httpClient.post("/api/v1/auth/login", {
-      username: "user",
+      username: "h@ck.me",
       password: "invalid",
     });
 
     assert.strictEqual(response.status, 401);
-    const found = await User.findOne({ username: "user" });
+    const found = await User.findOne({ email: "h@ck.me" });
     assert.strictEqual(previous.password, found.password);
   });
 });

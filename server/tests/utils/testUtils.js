@@ -1,3 +1,4 @@
+const { PassThrough } = require("stream");
 const { getDatabase } = require("./mongoMemoryServer");
 const createComponents = require("../../src/common/components/components");
 const server = require("../../src/http/server");
@@ -5,30 +6,61 @@ const axiosist = require("axiosist");
 const fakeMailer = require("./fakeMailer");
 const models = require("../../src/common/model");
 
-async function testContext() {
+async function testContext(custom = {}) {
   const db = getDatabase();
   let emailsSents = [];
   const mailer = fakeMailer({ calls: emailsSents });
   return {
-    components: await createComponents({ db, mailer }),
+    components: {
+      ...(await createComponents({ db, mailer, clamav: fakeClamav({}) })),
+      ...custom,
+    },
     helpers: { getEmailsSent: () => emailsSents },
   };
 }
 
-async function startServer() {
+async function initComponents(options) {
   let { components, helpers } = await testContext();
+
+  const defaultOptions = {
+    userOpt: {
+      email: "h@ck.me",
+      password: "password",
+      options: { email: "h@ck.me", nom: "hack", prenom: "me" },
+    },
+    roleOpt: { name: "wks.admin", type: "permission", acl: [] },
+  };
+
+  const roleOpt = options?.roleOpt || defaultOptions.roleOpt;
+  const userOpt = options?.userOpt || defaultOptions.userOpt;
+
+  const testRole = await components.roles.createRole(roleOpt);
+  const testUser = await components.users.createUser(userOpt.email, userOpt.password, userOpt.options);
+
+  return {
+    components,
+    testRole,
+    testUser,
+    ...helpers,
+  };
+}
+
+async function startServer(custom) {
+  let { components, helpers } = await testContext(custom);
   const app = await server(components);
   const httpClient = axiosist(app);
+
+  await components.roles.createRole({ name: "wks.admin", type: "permission" });
 
   return {
     httpClient,
     components,
     ...helpers,
-    createAndLogUser: async (username, password, options) => {
-      await components.users.createUser(username, password, options);
+    createAndLogUser: async (userEmail, password, options) => {
+      await components.users.createUser(userEmail, password, options);
 
       const response = await httpClient.post("/api/v1/auth/login", {
-        username: username,
+        username: userEmail,
         password: password,
       });
 
@@ -54,8 +86,21 @@ function getTokenFromCookie(response) {
   return jwt.split("=")[1];
 }
 
+function fakeClamav(results) {
+  return {
+    getScanner: () => {
+      return {
+        scanStream: new PassThrough(),
+        getScanResults: () => Promise.resolve(results),
+      };
+    },
+  };
+}
+
 module.exports = {
   startServer,
   cleanDatabase,
   getTokenFromCookie,
+  initComponents,
+  fakeClamav,
 };

@@ -18,7 +18,7 @@ const ResetPasswordPage = () => {
   const history = useHistory();
   const location = useLocation();
   const { passwordToken } = queryString.parse(location.search);
-  const username = decodeJWT(passwordToken).sub;
+  const email = decodeJWT(passwordToken).sub;
 
   const changePassword = async (values, { setStatus }) => {
     try {
@@ -44,12 +44,12 @@ const ResetPasswordPage = () => {
     }
   };
 
-  const title = `Changement du mot de passe pour l'utilisateur ${username}`;
+  const title = `Changement du mot de passe pour l'utilisateur ${email}`;
   setTitle(title);
 
   return (
     <Flex height="100vh" justifyContent="center" mt="10">
-      <Box width={["auto", "28rem"]}>
+      <Box width={["auto", "32rem"]}>
         <Heading fontFamily="Marianne" fontWeight="700" marginBottom="2w">
           {title}
         </Heading>

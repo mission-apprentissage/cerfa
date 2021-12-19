@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Container, Flex, Link, List, ListItem, Text } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
+import { ExternalLinkLine } from "../../../theme/components/icons";
 import { Logo } from "./Logo";
 
 const Footer = () => {
@@ -90,18 +91,29 @@ const Footer = () => {
                 </Link>
               </ListItem>
               <ListItem>
-                <Link href="https://mission-apprentissage.gitbook.io/" isExternal>
+                <Link as={NavLink} to={"/contact"}>
+                  Contact
+                </Link>
+              </ListItem>
+              <ListItem>
+                <Link
+                  href="https://mission-apprentissage.notion.site/Documentation-32235dc713c04bbf9b44e6963e02c07e"
+                  isExternal
+                >
                   Documentation
+                  <ExternalLinkLine w={"0.55rem"} h={"0.55rem"} mb={"0.125rem"} ml={1} />
+                </Link>
+              </ListItem>
+              <ListItem>
+                <Link href="https://github.com/mission-apprentissage/cerfa/releases" isExternal>
+                  Journal des versions
+                  <ExternalLinkLine w={"0.55rem"} h={"0.55rem"} mb={"0.125rem"} ml={1} />
                 </Link>
               </ListItem>
               <ListItem>
                 <Link href="https://github.com/mission-apprentissage/cerfa" isExternal>
                   Code source
-                </Link>
-              </ListItem>
-              <ListItem>
-                <Link as={NavLink} to={"/contact"}>
-                  Contact
+                  <ExternalLinkLine w={"0.55rem"} h={"0.55rem"} mb={"0.125rem"} ml={1} />
                 </Link>
               </ListItem>
             </List>

@@ -6,7 +6,8 @@ import * as Yup from "yup";
 // import { _post, _get, _put } from "../../common/httpClient";
 
 const FormLearner = () => {
-  const phoneRegExp = /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
+  const phoneRegExp =
+    /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
   const { values, handleChange, handleSubmit, errors, touched } = useFormik({
     initialValues: {
       name: "",

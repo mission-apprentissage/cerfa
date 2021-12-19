@@ -21,7 +21,7 @@ const getIframeUrl = ({ id }) => {
   return METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=false&titled=false";
 };
 
-export default ({ match }) => {
+export default () => {
   const dashboards = [
     {
       title: "Général",
@@ -33,7 +33,7 @@ export default ({ match }) => {
   setTitle(title);
 
   return (
-    <Layout match={match}>
+    <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />

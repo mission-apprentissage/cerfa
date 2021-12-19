@@ -8,13 +8,13 @@ module.exports = ({ users }) => {
     "/current",
     tryCatch(async (req, res) => {
       if (req.user) {
-        await users.registerUser(req.user.email);
+        await users.loggedInUser(req.user.email);
         return res.status(200).json({
           ...req.user,
           loggedIn: true,
         });
       }
-      const payload = await users.structureUser({ username: "anonymous", roles: ["public"], acl: [] });
+      const payload = await users.structureUser({ email: "anonymous", roles: [], acl: [] });
       return res.json(payload);
     })
   );

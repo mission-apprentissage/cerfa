@@ -5,9 +5,8 @@ const config = require("../../config");
 const passport = require("passport");
 const { Strategy, ExtractJwt } = require("passport-jwt");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const validators = require("../utils/validators");
+const validators = require("../../common/utils/validators");
 const { createPasswordToken, createUserToken } = require("../../common/utils/jwtUtils");
-const path = require("path");
 
 const IS_OFFLINE = Boolean(config.isOffline);
 
@@ -36,10 +35,6 @@ const checkPasswordToken = (users) => {
   return passport.authenticate("jwt-password", { session: false, failWithError: true });
 };
 
-const getEmailTemplate = (type = "forgotten-password") => {
-  return path.join(__dirname, `../../assets/templates/${type}.mjml.ejs`);
-};
-
 module.exports = ({ users, mailer }) => {
   const router = express.Router(); // eslint-disable-line new-cap
 
@@ -50,14 +45,14 @@ module.exports = ({ users, mailer }) => {
         username: Joi.string().required(),
       }).validateAsync(req.body, { abortEarly: false });
 
-      // try also by email since users tends to do that
-      const user = (await users.getUser(username)) ?? (await users.getUserByEmail(username));
+      // try also by username since users tends to do that
+      const user = (await users.getUser(username)) ?? (await users.getUserByUsername(username));
       if (!user) {
         throw Boom.badRequest();
       }
       let noEmail = req.query.noEmail;
 
-      const token = createPasswordToken(user.username);
+      const token = createPasswordToken(user.email);
       const url = `${config.publicUrl}/reset-password?passwordToken=${token}`;
 
       if (noEmail) {
@@ -67,7 +62,7 @@ module.exports = ({ users, mailer }) => {
       await mailer.sendEmail(
         user.email,
         `[${config.env} Contrat publique apprentissage] Réinitialiser votre mot de passe`,
-        getEmailTemplate("forgotten-password"),
+        "forgotten-password",
         {
           url,
           username: user.username,
@@ -89,11 +84,11 @@ module.exports = ({ users, mailer }) => {
         newPassword: validators.password().required(),
       }).validateAsync(req.body, { abortEarly: false });
 
-      const updatedUser = await users.changePassword(user.username, newPassword);
+      const updatedUser = await users.changePassword(user.email, newPassword);
 
       const payload = await users.structureUser(updatedUser);
 
-      await users.registerUser(payload.email);
+      await users.loggedInUser(payload.email);
 
       const token = createUserToken({ payload });
 

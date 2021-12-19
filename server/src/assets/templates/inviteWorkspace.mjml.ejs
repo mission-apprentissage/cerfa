@@ -1,0 +1,27 @@
+<mj-section padding-bottom="10px" padding-top="10px" background-color="#ffffff">
+    <mj-column padding-top="5px" color="#19414C" >
+        <mj-text color="#19414C" font-size="16px" font-weight="600" font-family="sans-serif">
+            Vous êtes invité par <span class="bluefrance"><%= data.username %></span>
+            à rejoindre l'espace <span class="bluefrance"><%= data.wksname %></span>
+            en tant que <span class="bluefrance"><%= data.user2role %></span>
+        </mj-text>
+        <mj-text padding-top="20px" color="#19414C">
+            <a href="<%= data.publicUrl %>/<%= data.tospaceUrl %>"
+                class="button">Cliquez ici pour rejoindre l'espace</a>
+        </mj-text>
+    </mj-column>
+</mj-section>
+
+<mj-section background-color="#ffffff">
+    <mj-column>
+        <mj-divider border-width="1px" border-color="lightgrey"/>
+    </mj-column>
+</mj-section>
+
+<mj-section background-color="#ffffff" padding-bottom="0">
+    <mj-column padding-top="0">
+        <mj-text font-size="14px" line-height="20px" color="#19414C">
+            Vous avez reçu cet email car un utilisateur vous a invité sur <a href="<%= data.publicUrl %>" class="link-nostyle"><%= data.publicUrl %></a>.
+        </mj-text>
+    </mj-column>
+</mj-section>

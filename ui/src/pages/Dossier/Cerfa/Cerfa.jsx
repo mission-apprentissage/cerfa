@@ -1,52 +1,23 @@
-import React from "react";
+import React, { lazy } from "react";
 import { Box, Accordion, AccordionItem, AccordionButton, AccordionPanel } from "@chakra-ui/react";
 
 import { AddFill, SubtractLine } from "../../../theme/components/icons";
 
-import { useCerfa } from "../../../common/hooks/useCerfa";
-
-import FormEmployer from "./components/FormEmployer";
-import FormLearner from "./components/FormLearner";
-import FormLearningMaster from "./components/FormLearningMaster";
-import FormContract from "./components/FormContract";
-import FormFormation from "./components/FormFormation";
-// import FormSubmittingContract from "./components/FormSubmittingContract";
-
-const tabsFormAccordion = [
-  {
-    title: "EMPLOYEUR",
-    Component: FormEmployer,
-  },
-  {
-    title: "APPRENTI(E)",
-    Component: FormLearner,
-  },
-  {
-    title: "LE MAÎTRE D’APPRENTISSAGE",
-    Component: FormLearningMaster,
-  },
-  {
-    title: "LE CONTRAT",
-    Component: FormContract,
-  },
-  {
-    title: "LA FORMATION",
-    Component: FormFormation,
-  },
-  // {
-  //   title: "CADRE RÉSERVÉ À L’ORGANISME EN CHARGE DU DÉPÔT DU CONTRAT",
-  //   Component: FormSubmittingContract,
-  // },
-];
+const FormFormation = lazy(() => import("./components/FormFormation"));
 
 export default () => {
-  const { isloaded } = useCerfa();
-
-  if (!isloaded) return null;
-
   return (
     <Accordion allowMultiple allowToggle mt={12}>
-      {tabsFormAccordion.map(({ title, Component }, key) => {
+      {[
+        {
+          title: "LA FORMATION",
+          Component: FormFormation,
+        },
+        // {
+        //   title: "CADRE RÉSERVÉ À L’ORGANISME EN CHARGE DU DÉPÔT DU CONTRAT",
+        //   Component: FormSubmittingContract,
+        // },
+      ].map(({ title, Component }, key) => {
         return (
           <AccordionItem border="none" key={key}>
             {({ isExpanded }) => (

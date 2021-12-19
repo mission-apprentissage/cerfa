@@ -37,9 +37,11 @@ services:
       - cerfa_network
     depends_on:
       - mongodb
+      - clamav
     environment:
       - CERFA_MONGODB_URI=mongodb://mongodb:27017/cerfa?retryWrites=true&w=majority
       - CERFA_LOG_DESTINATIONS=stdout,mongodb
+      - CERFA_CLAMAV_URI=clamav:3310
 
   mongodb:
     image: mongo:5.0.2-focal
@@ -48,6 +50,18 @@ services:
     restart: unless-stopped
     networks:
       - cerfa_network
+
+  clamav:
+    image: clamav/clamav
+    container_name: cerfa_clamav
+    restart: unless-stopped
+    networks:
+      - cerfa_network
+    healthcheck:
+      test: [ "CMD", "/usr/local/bin/clamdcheck.sh" ]
+      interval: 60s
+      retries: 3
+      start_period: 120s
 
 networks:
   cerfa_network:

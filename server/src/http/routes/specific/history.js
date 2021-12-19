@@ -2,23 +2,29 @@ const express = require("express");
 const Joi = require("joi");
 const { History } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
+const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 
-module.exports = () => {
+module.exports = (components) => {
   const router = express.Router();
 
-  router.get("/", async (req, res) => {
-    let { query } = await Joi.object({
-      query: Joi.string().default("{}"),
-    }).validateAsync(req.query, { abortEarly: false });
+  router.get(
+    "/",
+    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
+    tryCatch(async (req, res) => {
+      let { query } = await Joi.object({
+        query: Joi.string().default("{}"),
+      }).validateAsync(req.query, { abortEarly: false });
 
-    let json = JSON.parse(query);
-    const result = await History.find(json);
+      let json = JSON.parse(query);
+      const result = await History.find(json);
 
-    return res.json(result);
-  });
+      return res.json(result);
+    })
+  );
 
   router.post(
     "/",
+    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async ({ body }, res) => {
       let { dossierId, context, history } = await Joi.object({
         dossierId: Joi.string().required(),
@@ -46,6 +52,7 @@ module.exports = () => {
 
   router.put(
     "/:id",
+    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async ({ body, params }, res) => {
       await Joi.object({
         from: Joi.string().allow("").required(),
@@ -71,6 +78,7 @@ module.exports = () => {
 
   router.put(
     "/",
+    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async ({ body }, res) => {
       await Joi.object({
         dossierId: Joi.string().required(),
@@ -99,6 +107,7 @@ module.exports = () => {
 
   router.delete(
     "/:id",
+    permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async ({ params }, res) => {
       const result = await History.deleteOne({ _id: params.id });
       return res.json(result);

@@ -5,9 +5,26 @@ const rolesSchema = {
     description: "Nom du rôle",
     unique: true,
   },
+  type: {
+    type: String,
+    enum: ["user", "permission"],
+    default: null,
+    description: "type du rôle",
+    required: true,
+  },
+  title: {
+    type: String,
+    default: null,
+    description: "titre du rôle",
+  },
+  description: {
+    type: String,
+    default: null,
+    description: "description du rôle",
+  },
   acl: {
     type: [String],
-    default: null,
+    default: [],
     description: "Access control level array",
   },
 };

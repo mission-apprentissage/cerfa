@@ -1,6 +1,7 @@
 const { User, Role } = require("../model/index");
 const sha512Utils = require("../utils/sha512Utils");
-const { pick, uniq } = require("lodash");
+const { pick, uniq, random } = require("lodash");
+const workspaces = require("./workspaces");
 
 const rehashPassword = (user, password) => {
   user.password = sha512Utils.hash(password);
@@ -9,8 +10,8 @@ const rehashPassword = (user, password) => {
 
 module.exports = async () => {
   return {
-    authenticate: async (username, password) => {
-      const user = await User.findOne({ username });
+    authenticate: async (email, password) => {
+      const user = await User.findOne({ email });
 
       if (!user) {
         return null;
@@ -25,47 +26,86 @@ module.exports = async () => {
       }
       return null;
     },
-    getUser: async (username) => await User.findOne({ username }),
-    getUserByEmail: async (email) => await User.findOne({ email }),
+    getUser: async (email) => await User.findOne({ email }).lean(),
+    getUserById: async (id, select = {}) => await User.findById(id, select).lean(),
+    getUserByUsername: async (username, select = {}) => await User.findOne({ username }, select).lean(),
     getUsers: async (filters = {}) => await User.find(filters, { password: 0, _id: 0, __v: 0 }).lean(),
-    createUser: async (username, password, options = {}) => {
+    getUsersByEmails: async (emails, select = {}) => await User.find({ email: { $in: emails } }, select).lean(),
+    createUser: async (userEmail, password, options = {}) => {
       const hash = options.hash || sha512Utils.hash(password);
       const permissions = options.permissions || {};
 
-      const user = new User({
+      let rolesDb = [];
+      if (options.roles && options.roles.length > 0) {
+        rolesDb = await Role.find({ name: { $in: options.roles } }, { _id: 1 });
+        if (!rolesDb.length === 0) {
+          throw new Error("Roles doesn't exist");
+        }
+      }
+
+      let username = options.prenom[0] + options.nom;
+
+      const exist = await User.findOne({ username });
+      if (exist) {
+        username += random(1, 1000);
+      }
+
+      const user = await User.create({
         username,
         password: hash,
         isAdmin: !!permissions.isAdmin,
-        email: options.email || "",
-        roles: options.roles || ["public"],
+        email: userEmail,
+        nom: options.nom,
+        prenom: options.prenom,
+        telephone: options.telephone || null,
+        roles: rolesDb,
         acl: options.acl || [],
+        siret: options.siret || null,
+        confirmed: options.confirmed || false,
       });
 
-      await user.save();
-      return user.toObject();
+      const { createWorkspace } = await workspaces();
+      await createWorkspace({
+        email: userEmail,
+        nom: `Espace - ${options.prenom} ${options.nom}`,
+        description: `L'espace de travail de ${options.prenom} ${options.nom}`,
+      });
+
+      return user;
     },
-    removeUser: async (username) => {
-      const user = await User.findOne({ username });
+    removeUser: async (userid) => {
+      const user = await User.findOne({ _id: userid });
       if (!user) {
-        throw new Error(`Unable to find user ${username}`);
+        throw new Error(`Unable to find user ${userid}`);
       }
 
-      return await user.deleteOne({ username });
+      return await user.deleteOne({ _id: userid });
     },
-    updateUser: async (username, data) => {
-      let user = await User.findOne({ username });
+    updateUser: async (userid, data) => {
+      let user = await User.findById(userid);
       if (!user) {
-        throw new Error(`Unable to find user ${username}`);
+        throw new Error(`Unable to find user ${userid}`);
       }
 
       const result = await User.findOneAndUpdate({ _id: user._id }, data, { new: true });
 
       return result.toObject();
     },
-    changePassword: async (username, newPassword) => {
-      const user = await User.findOne({ username });
+    activate: async (email) => {
+      const user = await User.findOne({ email });
       if (!user) {
-        throw new Error(`Unable to find user ${username}`);
+        throw new Error(`Unable to find user ${email}`);
+      }
+
+      user.confirmed = true;
+      await user.save();
+
+      return user.toObject();
+    },
+    changePassword: async (email, newPassword) => {
+      const user = await User.findOne({ email });
+      if (!user) {
+        throw new Error(`Unable to find user ${email}`);
       }
 
       if (user.account_status === "FORCE_RESET_PASSWORD") {
@@ -80,20 +120,29 @@ module.exports = async () => {
     structureUser: async (user) => {
       const permissions = pick(user, ["isAdmin"]);
 
-      const rolesList = await Role.find({ name: { $in: user.roles } }).lean();
+      const rolesList = await Role.find({ _id: { $in: user.roles } }).lean();
       const rolesAcl = rolesList.reduce((acc, { acl }) => [...acc, ...acl], []);
+
+      const { getUserWorkspace } = await workspaces();
+      const workspace = await getUserWorkspace(user);
 
       const structure = {
         permissions,
-        sub: user.username,
+        sub: user.email,
         email: user.email,
+        username: user.username,
+        nom: user.nom,
+        prenom: user.prenom,
         account_status: user.account_status,
-        roles: permissions.isAdmin ? ["admin", ...user.roles] : user.roles,
+        roles: rolesList,
         acl: uniq([...rolesAcl, ...user.acl]),
+        workspaceId: workspace?._id.toString(),
+        siret: user.siret || null,
+        confirmed: user.confirmed || false,
       };
       return structure;
     },
-    registerUser: (email) =>
+    loggedInUser: (email) =>
       User.findOneAndUpdate({ email }, { last_connection: new Date(), $push: { connection_history: new Date() } }),
   };
 };

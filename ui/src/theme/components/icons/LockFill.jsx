@@ -3,7 +3,7 @@ import { Icon } from "@chakra-ui/react";
 
 export function LockFill(props) {
   return (
-    <Icon width="18" height="20" viewBox="0 0 18 20" {...props}>
+    <Icon w="18" h="20" viewBox="0 0 18 20" {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"

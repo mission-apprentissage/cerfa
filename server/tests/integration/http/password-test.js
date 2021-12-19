@@ -7,13 +7,14 @@ const { startServer, getTokenFromCookie } = require("../../utils/testUtils");
 describe("[Routes] Password", () => {
   it("Vérifie qu'un utilisateur peut faire une demande de réinitialisation de mot de passe", async () => {
     const { httpClient, createAndLogUser, getEmailsSent } = await startServer();
-    await createAndLogUser("user", "password", {
-      email: "user1@apprentissage.beta.gouv.fr",
+    await createAndLogUser("user1@apprentissage.beta.gouv.fr", "password", {
+      nom: "hack",
+      prenom: "me",
       permissions: { isAdmin: true },
     });
 
     const response = await httpClient.post("/api/v1/password/forgotten-password", {
-      username: "user",
+      username: "user1@apprentissage.beta.gouv.fr",
     });
 
     assert.strictEqual(response.status, 200);
@@ -26,10 +27,14 @@ describe("[Routes] Password", () => {
 
   it("Vérifie qu'on ne peut pas demander la réinitialisation du mot de passe pour un utilisateur inconnu", async () => {
     const { httpClient, createAndLogUser } = await startServer();
-    await createAndLogUser("admin", "password", { permissions: { isAdmin: true } });
+    await createAndLogUser("h@ck.me", "password", {
+      nom: "hack",
+      prenom: "me",
+      permissions: { isAdmin: true },
+    });
 
     const response = await httpClient.post("/api/v1/password/forgotten-password", {
-      username: "inconnu",
+      username: "user9999@apprentissage.beta.gouv.fr",
     });
 
     assert.strictEqual(response.status, 400);
@@ -37,11 +42,14 @@ describe("[Routes] Password", () => {
 
   it("Vérifie qu'on ne peut pas demander la réinitialisation du mot de passe pour un utilisateur invalide", async () => {
     const { httpClient, createAndLogUser } = await startServer();
-    await createAndLogUser("user123", "password");
+    await createAndLogUser("h@ck.me", "password", {
+      nom: "hack",
+      prenom: "me",
+    });
 
     const response = await httpClient.post("/api/v1/password/forgotten-password", {
       type: "cfa",
-      username: "user123456",
+      username: "user9999@apprentissage.beta.gouv.fr",
     });
 
     assert.strictEqual(response.status, 400);
@@ -49,10 +57,14 @@ describe("[Routes] Password", () => {
 
   it("Vérifie qu'un utilisateur peut changer son mot de passe", async () => {
     const { httpClient, createAndLogUser } = await startServer();
-    await createAndLogUser("admin", "password", { permissions: { isAdmin: true } });
+    await createAndLogUser("h@ck.me", "password", {
+      nom: "hack",
+      prenom: "me",
+      permissions: { isAdmin: true },
+    });
 
     const response = await httpClient.post("/api/v1/password/reset-password", {
-      passwordToken: createPasswordToken("admin"),
+      passwordToken: createPasswordToken("h@ck.me"),
       newPassword: "Password!123456",
     });
 
@@ -65,10 +77,14 @@ describe("[Routes] Password", () => {
 
   it("Vérifie qu'on doit spécifier un mot de passe valide", async () => {
     const { httpClient, createAndLogUser } = await startServer();
-    await createAndLogUser("admin", "password", { permissions: { isAdmin: true } });
+    await createAndLogUser("h@ck.me", "password", {
+      nom: "hack",
+      prenom: "me",
+      permissions: { isAdmin: true },
+    });
 
     const response = await httpClient.post("/api/v1/password/reset-password", {
-      passwordToken: createPasswordToken("admin"),
+      passwordToken: createPasswordToken("h@ck.me"),
       newPassword: "invalid",
     });
 

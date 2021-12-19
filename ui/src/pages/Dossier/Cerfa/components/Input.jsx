@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useMemo, useRef, useEffect } from "react";
 import {
   FormControl,
   FormLabel,
@@ -15,37 +15,134 @@ import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
+import { LockFill } from "../../../../theme/components/icons/LockFill";
 import InfoTooltip from "../../../../common/components/InfoTooltip";
 import Comment from "../../../../common/components/Comments/Comment";
 
-import { useCerfa } from "../../../../common/hooks/useCerfa";
+const validate = async (validationSchema, obj) => {
+  let isValid = false;
+  let error = null;
+  try {
+    await validationSchema.validate(obj);
+    isValid = true;
+  } catch (err) {
+    error = err;
+  }
+  return { isValid, error };
+};
 
-export default ({ path, ...props }) => {
+export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComments, noHistory, type, ...props }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [validated, setValidated] = useState(false);
   const [isErrored, setIsErrored] = useState(false);
-  const { cerfa, getField } = useCerfa();
+  const [shouldBeDisabled, setShouldBeDisabled] = useState(false);
+  const [fromInternal, setFromInternal] = useState(false);
 
-  const { label, requiredMessage, pattern, description, example, maxLength, onSubmitted, onFetch, history } = getField(
-    cerfa,
-    path
+  const prevOnAsyncDataRef = useRef();
+  const prevFieldValueRef = useRef("");
+  const initRef = useRef(0);
+
+  const borderBottomColor = useMemo(
+    () => (validated ? "green.500" : isErrored ? "error" : "grey.600"),
+    [isErrored, validated]
   );
+  const name = useMemo(() => path.replaceAll(".", "_"), [path]);
 
-  const name = path.replace(".", "_");
-  const { values, handleChange: handleChangeFormik, handleSubmit, errors, setFieldValue, setErrors } = useFormik({
+  const { values, errors, setFieldValue, setErrors } = useFormik({
     initialValues: {
       [name]: "",
     },
-    validationSchema: Yup.object().shape({
-      [name]: Yup.string().required(requiredMessage),
-    }),
-    onSubmit: (values) => {
-      return new Promise(async (resolve) => {
-        await onSubmitted({ [path]: values[name] });
-        resolve("onSubmitHandler publish complete");
-      });
-    },
   });
+
+  useEffect(() => {
+    (async () => {
+      prevOnAsyncDataRef.current = onAsyncData;
+
+      const validationSchema = Yup.object().shape({
+        [name]: Yup.string()
+          .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
+          .required(field?.requiredMessage),
+      });
+
+      if (
+        path === "formation.rncp" ||
+        path === "formation.codeDiplome" ||
+        path === "formation.intituleQualification" ||
+        //
+        path === "formation.dateDebutFormation" ||
+        path === "formation.dateFinFormation" ||
+        path === "formation.dureeFormation" ||
+        path === "formation.typeDiplome" ||
+        path === "organismeFormation.adresse.commune" ||
+        path === "organismeFormation.adresse.codePostal" ||
+        path === "organismeFormation.adresse.voie" ||
+        path === "organismeFormation.adresse.numero" ||
+        path === "organismeFormation.adresse.complement" ||
+        path === "organismeFormation.uaiCfa" ||
+        path === "organismeFormation.denomination" ||
+        path === "organismeFormation.siret"
+      ) {
+        const { isValid: isValidFieldValue } = await validate(validationSchema, {
+          [name]: field?.value,
+        });
+
+        console.log(path, ">>>>", initRef.current, values[name], field?.value, isValidFieldValue);
+        if (initRef.current === 0) {
+          if (field) {
+            console.log("Init");
+            setShouldBeDisabled(field.locked);
+            if (values[name] === "") {
+              if (field?.value !== "") {
+                if (isValidFieldValue) {
+                  setFieldValue(name, field?.value);
+                  setIsErrored(false);
+                  setValidated(true);
+                } else {
+                  setShouldBeDisabled(false);
+                  setFieldValue(name, field?.value);
+                }
+              }
+            }
+            initRef.current = 1;
+          }
+        } else {
+          if (prevFieldValueRef.current !== field?.value || field?.forceUpdate) {
+            console.log("Outside Update", prevFieldValueRef, field?.value, field?.forceUpdate);
+            setFieldValue(name, field?.value);
+            setShouldBeDisabled(field?.locked);
+            if (isValidFieldValue) {
+              setIsErrored(false);
+              setValidated(true);
+            } else {
+              setShouldBeDisabled(false);
+              setFromInternal(true);
+              setIsErrored(true);
+              setValidated(false);
+            }
+            prevFieldValueRef.current = field?.value;
+            if (field?.forceUpdate) {
+              await onSubmittedField(path, field?.value);
+            }
+          } else {
+            if (fromInternal) {
+              const { isValid: isValidInternalValue, error: errorInternalValue } = await validate(validationSchema, {
+                [name]: values[name],
+              });
+              console.log(isValidInternalValue, errorInternalValue);
+              if (!isValidInternalValue) {
+                setErrors({ [name]: errorInternalValue.message });
+                setIsErrored(true);
+                setValidated(false);
+              }
+              setFromInternal(false);
+            }
+          }
+        }
+      }
+    })();
+  }, [onAsyncData, field, path, name, setFieldValue, values, setErrors, onSubmittedField, fromInternal]);
+
+  const prevOnAsyncData = prevOnAsyncDataRef.current;
 
   let handleChange = useCallback(
     async (e) => {
@@ -54,44 +151,80 @@ export default ({ path, ...props }) => {
       setValidated(false);
       setIsErrored(false);
 
-      const regex = new RegExp(pattern);
-      const valid = regex.test(val);
-      if (!valid) {
-        return handleChangeFormik(e);
+      console.log("handleChange");
+
+      const validationSchema = Yup.object().shape({
+        [name]: Yup.string()
+          .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
+          .required(field?.requiredMessage),
+      });
+
+      const { isValid } = await validate(validationSchema, { [name]: val });
+
+      if (!isValid) {
+        setFromInternal(true);
+        return setFieldValue(name, val);
       }
+
+      if (!field?.doAsyncActions) {
+        if (!onSubmittedField) {
+          return setFieldValue(name, val);
+        }
+        return await onSubmittedField(path, val);
+      }
+
       setFieldValue(name, val);
       setIsLoading(true);
-      const { successed, message } = await onFetch(val);
+      const { successed, data, message } = await field?.doAsyncActions(val, onAsyncData);
       setIsLoading(false);
+
+      console.log({ successed, data, message });
+      setErrors({ [name]: message });
+      if (data) {
+        return await onSubmittedField(path, data);
+      }
       if (successed) {
+        setIsErrored(false);
         setValidated(true);
-        handleSubmit();
       } else {
-        setErrors({ [name]: message });
+        setValidated(false);
         setIsErrored(true);
       }
     },
-    [handleChangeFormik, handleSubmit, name, onFetch, pattern, setErrors, setFieldValue]
+    [name, field, setFieldValue, onAsyncData, setErrors, onSubmittedField, path]
   );
 
-  const borderBottomColor = validated ? "green.500" : isErrored ? "error" : "grey.600";
+  if (
+    prevOnAsyncData &&
+    prevOnAsyncData.value &&
+    onAsyncData &&
+    onAsyncData.value &&
+    prevOnAsyncData.value !== onAsyncData.value
+  ) {
+    prevOnAsyncDataRef.current = { value: null };
+    console.log("onAsyncData");
+    handleChange({ persist: () => {}, target: { value: values[name] } });
+  }
+
+  if (!field) return null;
 
   return (
     <FormControl isRequired mt={2} isInvalid={errors[name]} {...props}>
-      <FormLabel>{label}</FormLabel>
+      <FormLabel>{field?.label}</FormLabel>
       <HStack>
         <InputGroup>
           <Input
-            type="text"
+            type={type}
             name={name}
             onChange={handleChange}
             value={values[name]}
             required
-            pattern={pattern}
-            placeholder={description}
+            pattern={field?.pattern}
+            placeholder={field?.description}
             variant={validated ? "valid" : "outline"}
             isInvalid={isErrored}
-            maxLength={maxLength}
+            maxLength={field?.maxLength}
+            isDisabled={shouldBeDisabled}
             _focus={{
               borderBottomColor: borderBottomColor,
               boxShadow: "none",
@@ -114,41 +247,63 @@ export default ({ path, ...props }) => {
             _hover={{
               borderBottomColor: borderBottomColor,
             }}
+            _disabled={{
+              fontStyle: "italic",
+              cursor: "not-allowed",
+              opacity: 1,
+            }}
           />
-          <InputRightElement
-            children={
-              <Center
-                bg="grey.200"
-                w="40px"
-                h="40px"
-                ml={isLoading || validated || isErrored ? "0 !important" : "-40px !important"}
-                borderBottom="2px solid"
-                borderBottomColor={borderBottomColor}
-              >
-                {isLoading && <Spinner />}
-                {validated && <CheckIcon color="green.500" />}
-                {isErrored && (
-                  <CloseIcon
-                    color="error"
-                    onClick={() => {
-                      setFieldValue(name, "");
-                    }}
-                    cursor="pointer"
-                  />
-                )}
-              </Center>
-            }
-          />
+          {(shouldBeDisabled || isLoading || validated || isErrored) && (
+            <InputRightElement
+              children={
+                <Center
+                  bg="grey.200"
+                  w="40px"
+                  h="40px"
+                  ml={
+                    isLoading || validated || isErrored
+                      ? "0 !important"
+                      : shouldBeDisabled
+                      ? "-3px !important"
+                      : "-40px !important"
+                  }
+                  borderBottom="2px solid"
+                  borderBottomColor={borderBottomColor}
+                >
+                  {shouldBeDisabled && <LockFill color={"grey.600"} w="20px" h="20px" />}
+                  {isLoading && <Spinner />}
+                  {validated && !shouldBeDisabled && <CheckIcon color="green.500" />}
+                  {isErrored && (
+                    <CloseIcon
+                      color="error"
+                      onClick={() => {
+                        setFromInternal(true);
+                        setFieldValue(name, "");
+                      }}
+                      cursor="pointer"
+                    />
+                  )}
+                </Center>
+              }
+            />
+          )}
         </InputGroup>
 
         <Box>
-          <InfoTooltip description={description} example={example} history={history} />
+          <InfoTooltip
+            description={field?.description}
+            example={field?.example}
+            history={field?.history}
+            noHistory={noHistory}
+          />
         </Box>
-        <Box>
-          <Comment context={path} />
-        </Box>
+        {hasComments && (
+          <Box>
+            <Comment context={path} />
+          </Box>
+        )}
       </HStack>
       {errors[name] && <FormErrorMessage>{errors[name]}</FormErrorMessage>}
     </FormControl>
   );
-};
+});

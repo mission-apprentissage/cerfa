@@ -1,8 +1,23 @@
-const logger = require("../../common/logger");
-const { User } = require("../../common/model/index");
+const {
+  User,
+  MaintenanceMessage,
+  Role,
+  Workspace,
+  Dossier,
+  Cerfa,
+  History,
+  Commentaire,
+  Permission,
+} = require("../../common/model/index");
 
 module.exports = async () => {
-  logger.info("test");
   await User.deleteMany({});
-  logger.info(`All users deleted`);
+  await MaintenanceMessage.deleteMany({});
+  await History.deleteMany({});
+  await Commentaire.deleteMany({});
+  await Role.deleteMany({});
+  await Permission.deleteMany({});
+  await Workspace.deleteMany({});
+  await Dossier.deleteMany({});
+  await Cerfa.deleteMany({});
 };
