@@ -1,3 +1,11 @@
+# [1.9.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.9.0-beta.4...v1.9.0-beta.5) (2021-12-19)
+
+
+### Bug Fixes
+
+* few dependencies ([d000d15](https://github.com/mission-apprentissage/cerfa/commit/d000d1528d7b6257e71f85ffe81a1bdcc2a098c5))
+* **security:** update mongoose ([f892c5a](https://github.com/mission-apprentissage/cerfa/commit/f892c5a794a08108f3444b6b6c863fc109f70466))
+
 # [1.9.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.9.0-beta.3...v1.9.0-beta.4) (2021-12-19)
 
 
