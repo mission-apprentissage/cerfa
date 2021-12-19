@@ -1,3 +1,10 @@
+## [1.9.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.9.0...v1.9.1-beta.1) (2021-12-19)
+
+
+### Bug Fixes
+
+* **security:** update axiosist, xlsx dependencies ([5297b4e](https://github.com/mission-apprentissage/cerfa/commit/5297b4eeface642d093d6523685bf6193479cdda))
+
 # [1.9.0](https://github.com/mission-apprentissage/cerfa/compare/v1.8.0...v1.9.0) (2021-12-19)
 
 
