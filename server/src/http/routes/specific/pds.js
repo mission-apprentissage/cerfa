@@ -94,7 +94,7 @@ module.exports = () => {
       const client = await getPdsClient();
       const params = client.callbackParams(req);
       console.log(params);
-      const tokenSet = await client.callback("https://client.example.com/callback", params, {
+      const tokenSet = await client.callback(`${config.publicUrl}`, params, {
         code_verifier: req.user.code_verifier,
       });
       console.log("received and validated tokens %j", tokenSet);
