@@ -115,7 +115,7 @@ module.exports = ({ users }) => {
             secure: !IS_OFFLINE,
           })
           .status(200)
-          .redirect("/mon-espace");
+          .redirect("/mon-espace/mes-dossiers");
       } else {
         // Register
       }
