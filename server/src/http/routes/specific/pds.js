@@ -98,8 +98,9 @@ module.exports = () => {
       console.log("validated ID Token claims %j", tokenSet.claims());
 
       const tokenSetJson = JSON.parse(tokenSet);
-      const userinfo = await client.userinfo(tokenSetJson.access_token);
-      console.log("userinfo %j", userinfo);
+      console.log(tokenSetJson);
+      // const userinfo = await client.userinfo(tokenSetJson.access_token);
+      // console.log("userinfo %j", userinfo);
 
       return res.redirect("/");
     })
