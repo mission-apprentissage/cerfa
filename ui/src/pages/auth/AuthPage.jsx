@@ -1,15 +1,26 @@
 import React from "react";
-import { Box, Flex, Container, HStack, Heading, Text, forwardRef, chakra } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Container,
+  HStack,
+  Heading,
+  Text,
+  forwardRef,
+  chakra,
+  Button,
+  useDisclosure,
+} from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
-import { ArrowRightLine } from "../../theme/components/icons";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Confirmed from "./components/Confirmed";
+import { PdsModal } from "./components/PdsModal";
 
 const MotionBox = motion(
   forwardRef((props, ref) => {
@@ -48,6 +59,7 @@ const FormBoxMotion = ({ children, isOpen, ...rest }) => {
 
 const AuthPage = () => {
   let { slug } = useParams();
+  const pdsModal = useDisclosure();
 
   const title = "Connexion";
   setTitle(title);
@@ -87,9 +99,11 @@ const AuthPage = () => {
                   {slug === "connexion" ? "Connectez-vous" : "Inscrivez-vous"} pour accéder au service de contrat
                   d'apprentissage dématérialisé.
                 </Text>
-                <Text as={"span"} mt={12} ml="auto">
-                  <ArrowRightLine boxSize={26} />
-                </Text>
+                <Button variant="secondary" type="submit" mt={12} onClick={pdsModal.onOpen}>
+                  S'identifier via Portail de service
+                </Button>
+
+                <PdsModal isOpen={pdsModal.isOpen} onClose={pdsModal.onClose} />
               </Flex>
 
               <Box w="50%" h="55vh">
