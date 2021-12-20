@@ -5,7 +5,7 @@ const { Strategy: JWTStrategy } = require("passport-jwt");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const config = require("../../../config");
 
-const { createPdsToken } = require("../../../common/utils/jwtUtils");
+const { createUserToken, createPdsToken } = require("../../../common/utils/jwtUtils");
 
 const IS_OFFLINE = Boolean(config.isOffline);
 
@@ -19,7 +19,7 @@ const cookieExtractor = (req) => {
   return jwt;
 };
 
-module.exports = () => {
+module.exports = ({ users }) => {
   const router = express.Router();
 
   const getPdsClient = async () => {
@@ -28,7 +28,7 @@ module.exports = () => {
     const client = new pdsIssuer.Client({
       client_id: config.pds.clientId,
       client_secret: config.pds.clientSecret,
-      redirect_uris: [`${config.publicUrl}/api/v1/pds/cb`],
+      redirect_uris: [`${config.publicUrl}/api/v1/pds/loginOrRegister`],
       response_types: ["code"],
     });
     return client;
@@ -54,7 +54,7 @@ module.exports = () => {
   );
 
   router.get(
-    "/discover",
+    "/getUrl",
     tryCatch(async (req, res) => {
       const client = await getPdsClient();
 
@@ -85,7 +85,7 @@ module.exports = () => {
   );
 
   router.get(
-    "/cb",
+    "/loginOrRegister",
     passport.authenticate("pds", { session: false }),
     tryCatch(async (req, res) => {
       const client = await getPdsClient();
@@ -94,12 +94,46 @@ module.exports = () => {
       const tokenSet = await client.callback(`${config.publicUrl}`, params, {
         code_verifier: req.user.code_verifier,
       });
-      console.log("received and validated tokens %j", tokenSet);
-      console.log("validated ID Token claims %j", tokenSet.claims());
 
-      console.log(tokenSet.access_token);
       const userinfo = await client.userinfo(tokenSet.access_token);
       console.log("userinfo %j", userinfo);
+
+      const user = await users.getUser(userinfo.sub);
+      if (user) {
+        // Login
+        const payload = await users.structureUser(user);
+
+        await users.loggedInUser(payload.email);
+
+        const token = createUserToken({ payload });
+
+        return res
+          .cookie(`cerfa-${config.env}-jwt`, token, {
+            maxAge: 365 * 24 * 3600000,
+            httpOnly: !IS_OFFLINE,
+            sameSite: IS_OFFLINE ? "lax" : "none",
+            secure: !IS_OFFLINE,
+          })
+          .status(200)
+          .redirect("/mon-espace");
+      } else {
+        // Register
+      }
+      // {
+      //   "sub": "antoine.bigard@beta.gouv.fr",
+      //   "auth_time": 1640019095,
+      //   "attributes": {
+      //     "civility": "Monsieur",
+      //     "email": "antoine.bigard@beta.gouv.fr",
+      //     "given_name": "Antoine",
+      //     "habilitations": "PDIGI:USER:E13002526500013",
+      //     "id": "4179",
+      //     "name": "Bigard",
+      //     "phone_number": "0612647513",
+      //     "siret": "13002526500013"
+      //   },
+      //   "id": "antoine.bigard@beta.gouv.fr"
+      // }
 
       return res.redirect("/");
     })

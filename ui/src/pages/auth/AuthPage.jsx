@@ -67,7 +67,7 @@ const AuthPage = () => {
 
   useEffect(() => {
     const run = async () => {
-      const data = await _get(`/api/v1/pds/discover`);
+      const data = await _get(`/api/v1/pds/getUrl`);
       setLinkToPds(data.authorizationUrl);
     };
     run();
