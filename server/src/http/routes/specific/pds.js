@@ -79,9 +79,7 @@ module.exports = () => {
           secure: !IS_OFFLINE,
         })
         .status(200)
-        .json({
-          authorizationUrl,
-        });
+        .redirect(authorizationUrl);
     })
   );
 
@@ -89,19 +87,19 @@ module.exports = () => {
     "/cb",
     passport.authenticate("pds", { session: false }),
     tryCatch(async (req, res) => {
-      console.log(req.user);
-
       const client = await getPdsClient();
       const params = client.callbackParams(req);
-      console.log(params);
+
       const tokenSet = await client.callback(`${config.publicUrl}`, params, {
         code_verifier: req.user.code_verifier,
       });
       console.log("received and validated tokens %j", tokenSet);
       console.log("validated ID Token claims %j", tokenSet.claims());
 
-      // const userinfo = await client.userinfo(access_token);
-      // console.log("userinfo %j", userinfo);
+      const tokenSetJson = JSON.parse(tokenSet);
+      const userinfo = await client.userinfo(tokenSetJson.access_token);
+      console.log("userinfo %j", userinfo);
+
       return res.json({});
     })
   );
