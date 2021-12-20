@@ -18,7 +18,7 @@ export default () => {
           </Heading>
           <Box mt={4}>
             <Text>
-              Une remarque, un avis, une suggestion d’amélioration ?{" "}
+              Une remarque, un avis, une suggestion d'amélioration ?{" "}
               <Link href="mailto:cerfa@apprentissage.beta.gouv.fr" textDecoration={"underline"}>
                 Contactez-nous !
               </Link>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -12,8 +12,17 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ArrowRightLine, Close } from "../../../theme/components/icons";
+import { _get } from "../../../common/httpClient";
 
 const PdsModal = ({ isOpen, onClose }) => {
+  useEffect(() => {
+    const run = async () => {
+      const data = await _get(`/api/v1/pds/discover`);
+      console.log(data);
+    };
+    run();
+  }, []);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -55,13 +64,13 @@ const PdsModal = ({ isOpen, onClose }) => {
         </ModalHeader>
         <ModalBody p={0}>
           <Box px={[4, 8]} mb={5}>
-            <iframe
+            {/* <iframe
               src="/api/v1/pds/discover"
               frameBorder="0"
               style={{ height: "50vh", width: "100%" }}
               title={`Mire de connexion`}
               allowtransparency={"true"}
-            />
+            /> */}
           </Box>
         </ModalBody>
       </ModalContent>

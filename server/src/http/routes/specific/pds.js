@@ -79,7 +79,8 @@ module.exports = () => {
           secure: !IS_OFFLINE,
         })
         .status(200)
-        .redirect(authorizationUrl);
+        .json({ authorizationUrl });
+      // .redirect(authorizationUrl);
     })
   );
 
@@ -100,7 +101,7 @@ module.exports = () => {
       const userinfo = await client.userinfo(tokenSetJson.access_token);
       console.log("userinfo %j", userinfo);
 
-      return res.json({});
+      return res.redirect("/");
     })
   );
 
