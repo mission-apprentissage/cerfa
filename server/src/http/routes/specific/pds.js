@@ -39,7 +39,7 @@ module.exports = () => {
     new JWTStrategy(
       {
         jwtFromRequest: cookieExtractor,
-        secretOrKey: config.auth.user.jwtSecret,
+        secretOrKey: config.auth.pds.jwtSecret,
       },
       (jwtPayload, done) => {
         const { expiration } = jwtPayload;
