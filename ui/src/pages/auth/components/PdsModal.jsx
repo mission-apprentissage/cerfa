@@ -12,8 +12,22 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ArrowRightLine, Close } from "../../../theme/components/icons";
+import { useQuery } from "react-query";
+import { _get } from "../../../common/httpClient";
+
+function usePdsLogin() {
+  const { data, isLoading, isFetching } = useQuery("pds:discovery", () => _get(`/api/v1/pds/discover`), {
+    refetchOnWindowFocus: false,
+  });
+
+  return { isLoading: isFetching || isLoading, data };
+}
 
 const PdsModal = ({ isOpen, onClose }) => {
+  const { isLoading, data } = usePdsLogin();
+  if (isLoading) return null;
+  console.log(data);
+
   return (
     <Modal
       isOpen={isOpen}
