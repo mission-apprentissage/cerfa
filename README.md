@@ -30,7 +30,7 @@ Pour plus d'informations sur la structure du projet [DEV](./DEV.md)
 
 ## Environnements
 
-cerfa est déployé sur deux environnements :
+contrat est déployé sur deux environnements :
 
-- [Recette](https://cerfa-recette.apprentissage.beta.gouv.fr)
-- [Production](https://cerfa.apprentissage.beta.gouv.fr)
+- [Recette](https://contrat-recette.apprentissage.beta.gouv.fr)
+- [Production](https://contrat.apprentissage.beta.gouv.fr)
