@@ -1,3 +1,10 @@
+# [1.10.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.9.1...v1.10.0-beta.1) (2021-12-21)
+
+
+### Features
+
+* Ajout du Portail de services DGEFP pour se connecter à la plateforme ([#48](https://github.com/mission-apprentissage/cerfa/issues/48)) ([e08bfed](https://github.com/mission-apprentissage/cerfa/commit/e08bfeddb42decc28f2b4305256fb0e4ae241657))
+
 ## [1.9.1](https://github.com/mission-apprentissage/cerfa/compare/v1.9.0...v1.9.1) (2021-12-20)
 
 
