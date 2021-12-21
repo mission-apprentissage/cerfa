@@ -2,8 +2,10 @@ const express = require("express");
 const { Issuer, generators } = require("openid-client");
 const passport = require("passport");
 const { Strategy: JWTStrategy } = require("passport-jwt");
+const generator = require("generate-password");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const config = require("../../../config");
+const Boom = require("boom");
 
 const { createUserToken, createPdsToken } = require("../../../common/utils/jwtUtils");
 
@@ -19,7 +21,7 @@ const cookieExtractor = (req) => {
   return jwt;
 };
 
-module.exports = ({ users }) => {
+module.exports = ({ users, mailer }) => {
   const router = express.Router();
 
   const getPdsClient = async () => {
@@ -96,7 +98,6 @@ module.exports = ({ users }) => {
       });
 
       const userinfo = await client.userinfo(tokenSet.access_token);
-      console.log("userinfo %j", userinfo);
 
       const user = await users.getUser(userinfo.sub);
       if (user) {
@@ -118,24 +119,37 @@ module.exports = ({ users }) => {
           .redirect("/mon-espace/mes-dossiers");
       } else {
         // Register
+        const tmpPassword = generator.generate({
+          length: 10,
+          numbers: true,
+          lowercase: true,
+          uppercase: true,
+          strict: true,
+        });
+        const user = await users.createUser(userinfo.sub, tmpPassword, {
+          siret: userinfo.attributes.siret,
+          nom: userinfo.attributes.name,
+          prenom: userinfo.attributes.given_name,
+          telephone: userinfo.attributes.phone_number,
+          civility: userinfo.attributes.civility,
+          account_status: "FORCE_COMPLETE_PROFILE",
+          confirmed: true,
+          orign_register: "PDS",
+        });
+        if (!user) {
+          throw Boom.badRequest("Something went wrong");
+        }
+        await mailer.sendEmail(
+          user.email,
+          `[${config.env} Contrat publique apprentissage] Bienvenue`,
+          "simple-grettings",
+          {
+            username: user.username,
+            publicUrl: config.publicUrl,
+          }
+        );
+        return res.redirect("/");
       }
-      // {
-      //   "sub": "antoine.bigard@beta.gouv.fr",
-      //   "auth_time": 1640019095,
-      //   "attributes": {
-      //     "civility": "Monsieur",
-      //     "email": "antoine.bigard@beta.gouv.fr",
-      //     "given_name": "Antoine",
-      //     "habilitations": "PDIGI:USER:E13002526500013",
-      //     "id": "4179",
-      //     "name": "Bigard",
-      //     "phone_number": "0612647513",
-      //     "siret": "13002526500013"
-      //   },
-      //   "id": "antoine.bigard@beta.gouv.fr"
-      // }
-
-      return res.redirect("/");
     })
   );
 

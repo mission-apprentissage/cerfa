@@ -27,6 +27,9 @@ const getEmailTemplatePath = (type = "forgotten-password", data) => {
     case "forgotten-password":
       title = "Réinitialiser votre mot de passe";
       break;
+    case "simple-grettings":
+      title = "Bienvenue sur la plateforme du Contrat publique Apprentissage";
+      break;
 
     default:
       break;

@@ -61,7 +61,10 @@ module.exports = async () => {
         roles: rolesDb,
         acl: options.acl || [],
         siret: options.siret || null,
+        civility: options.civility || null,
         confirmed: options.confirmed || false,
+        account_status: options.account_status || "FORCE_RESET_PASSWORD",
+        orign_register: options.orign_register || "ORIGIN",
       });
 
       const { createWorkspace } = await workspaces();
