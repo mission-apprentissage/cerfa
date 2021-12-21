@@ -21,9 +21,9 @@ runScript(async ({ users, workspaces, dossiers }) => {
     logger.info(`Role ${key} created`);
   }
 
-  const userAdmin = await users.createUser("antoine.bigard@beta.gouv.fr", "password", {
-    nom: "Bigard",
-    prenom: "Antoine",
+  const userAdmin = await users.createUser("antoine.bigard+testAdmin@beta.gouv.fr", "password", {
+    nom: "Admin",
+    prenom: "test",
     permissions: { isAdmin: true },
     confirmed: true,
   });
