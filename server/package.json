@@ -19,10 +19,12 @@
     "seed": "node src/jobs/seed/index.js",
     "playground": "node src/jobs/playground/index.js",
     "jobs": "node src/jobs/index.js",
+    "zipStorage": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/zipStorage.js",
     "clear": "node src/jobs/clear/index.js",
     "stats": "node src/jobs/stats/index.js"
   },
   "dependencies": {
+    "archiver": "5.3.0",
     "axios": "0.24.0",
     "body-parser": "1.19.1",
     "boom": "7.3.0",

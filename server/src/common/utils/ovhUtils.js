@@ -39,17 +39,29 @@ async function authenticate(uri) {
   return { baseUrl, token };
 }
 
-async function requestObjectAccess(path, options) {
+async function requestObjectAccess(path, options = {}) {
   let storage = options.storage || DEFAULT_STORAGE_NAME;
   let { baseUrl, token } = await authenticate(config.ovh.storage.uri);
 
   return {
-    url: encodeURI(`${baseUrl}/${storage}/${path}`),
+    url: encodeURI(`${baseUrl}/${storage}${path === "/" ? "" : `/${path}`}`),
     token,
   };
 }
 
 module.exports = {
+  listStorage: async () => {
+    logger.debug(`Fetching OVH Object Storage file list`);
+    let { url, token } = await requestObjectAccess("/");
+    let response = await axios.get(url, {
+      headers: {
+        "X-Auth-Token": token,
+        Accept: "application/json",
+      },
+    });
+
+    return response.data;
+  },
   getFromStorage: async (path, options = {}) => {
     logger.debug(`Fetching OVH Object Storage file ${path}`);
     let { url, token } = await requestObjectAccess(path, options);
