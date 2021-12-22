@@ -5,22 +5,21 @@ const PrettyStream = require("bunyan-prettystream");
 const BunyanSlack = require("bunyan-slack");
 const BunyanMongodbStream = require("bunyan-mongodb-stream");
 const { Log } = require("./model/index");
+const { throttle } = require("lodash");
 
 const createStreams = () => {
-  const { type, level } = config.log;
+  const { level, destinations } = config.log;
   const envName = config.env;
-
-  const jsonStream = () => {
-    return {
-      name: "json",
-      level,
-      stream: process.stdout,
-    };
+  const availableDestinations = {
+    stdout: () => consoleStream("stdout"),
+    stderr: () => consoleStream("stderr"),
+    mongodb: () => mongoDBStream(),
+    slack: () => slackStream(),
   };
 
-  const consoleStream = () => {
+  const consoleStream = (outputName) => {
     const pretty = new PrettyStream();
-    pretty.pipe(process.stdout);
+    pretty.pipe(process[outputName]);
     return {
       name: "console",
       level,
@@ -58,6 +57,8 @@ const createStreams = () => {
       }
     );
 
+    stream.write = throttle(stream.write, 5000);
+
     return {
       name: "slack",
       level: "error",
@@ -65,11 +66,7 @@ const createStreams = () => {
     };
   };
 
-  const streams = [type === "console" ? consoleStream() : jsonStream(), mongoDBStream()];
-  if (config.slackWebhookUrl) {
-    streams.push(slackStream());
-  }
-  return streams;
+  return destinations.split(",").map((type) => availableDestinations[type]());
 };
 
 module.exports = bunyan.createLogger({
