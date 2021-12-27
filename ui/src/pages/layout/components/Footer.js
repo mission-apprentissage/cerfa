@@ -91,8 +91,8 @@ const Footer = () => {
                 </Link>
               </ListItem>
               <ListItem>
-                <Link as={NavLink} to={"/contact"}>
-                  Contact
+                <Link as={NavLink} to={"/support"}>
+                  Support
                 </Link>
               </ListItem>
               <ListItem>
