@@ -1,3 +1,10 @@
+# [1.10.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.10.0-beta.1...v1.10.0-beta.2) (2021-12-27)
+
+
+### Features
+
+* **pdf:** add espace ([#47](https://github.com/mission-apprentissage/cerfa/issues/47)) ([06893e0](https://github.com/mission-apprentissage/cerfa/commit/06893e0bf4ed0b6e462e13cf891e71729605f226))
+
 # [1.10.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.9.1...v1.10.0-beta.1) (2021-12-21)
 
 
