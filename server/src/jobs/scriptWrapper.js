@@ -23,8 +23,8 @@ const createTimer = () => {
     stop: (results) => {
       const duration = moment.utc(new Date().getTime() - launchTime).format("HH:mm:ss.SSS");
       const data = results && results.toJSON ? results.toJSON() : results;
-      data && console.log(JSON.stringify(data || {}, null, 2));
-      console.log(`Completed in ${duration}`);
+      data && logger.info(JSON.stringify(data || {}, null, 2));
+      logger.info(`Completed in ${duration}`);
     },
   };
 };
