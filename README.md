@@ -30,7 +30,7 @@ Pour plus d'informations sur la structure du projet [DEV](./DEV.md)
 
 ## Environnements
 
-la plateforme est déployé sur deux environnements :
+La plateforme est déployé sur deux environnements :
 
 - [Recette](https://contrat-recette.apprentissage.beta.gouv.fr)
 - [Production](https://contrat.apprentissage.beta.gouv.fr)
