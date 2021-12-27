@@ -1,4 +1,4 @@
-FROM node:14.16.1-stretch
+FROM node:14.18.2-stretch
 
 #Install and cache node_modules
 COPY package.json yarn.lock /tmp/

@@ -94,6 +94,7 @@ module.exports = ({ users, mailer }) => {
         nom,
         prenom,
         roles: compte === "entreprise" || compte === "cfa" ? [compte] : [],
+        orign_register: "ORIGIN",
       });
       if (!user) {
         throw Boom.badRequest("Something went wrong");

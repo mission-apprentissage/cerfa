@@ -1,4 +1,4 @@
-FROM node:14.15.3-alpine
+FROM node:14.18.2-stretch
 
 ARG REACT_APP_ENV
 ARG REACT_APP_BASE_URL

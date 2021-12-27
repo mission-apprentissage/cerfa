@@ -36,6 +36,11 @@ const usersSchema = {
     type: String,
     description: "Téléphone",
   },
+  civility: {
+    default: null,
+    type: String,
+    description: "civilité",
+  },
   siret: {
     maxLength: 14,
     minLength: 14,

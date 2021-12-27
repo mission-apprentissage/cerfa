@@ -21,4 +21,5 @@ module.exports = {
   createPasswordToken: (subject, options = {}) => createToken("password", subject, options),
   createActivationToken: (subject, options = {}) => createToken("activation", subject, options),
   createUserToken: (options = {}) => createToken("user", null, options),
+  createPdsToken: (options = {}) => createToken("pds", null, options),
 };

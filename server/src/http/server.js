@@ -26,6 +26,8 @@ const siret = require("./routes/specific/siret");
 const cfdrncp = require("./routes/specific/cfdrncp");
 const signDocument = require("./routes/specific/signDocument");
 
+const pds = require("./routes/specific/pds");
+
 const startWebsocket = require("./websockets/socket");
 
 const passport = require("passport");
@@ -45,6 +47,8 @@ module.exports = async (components) => {
   // public access
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/password", password(components));
+
+  app.use("/api/v1/pds", pds(components));
 
   // Controled access
   app.use("/api/v1/maintenanceMessage", maintenanceMessage(checkJwtToken));

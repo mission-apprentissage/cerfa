@@ -15,6 +15,10 @@ module.exports = {
       jwtSecret: env.get("CERFA_AUTH_USER_JWT_SECRET").default("1234").asString(),
       expiresIn: "24h",
     },
+    pds: {
+      jwtSecret: env.get("CERFA_AUTH_PDS_JWT_SECRET").default("1234").asString(),
+      expiresIn: "24h",
+    },
     activation: {
       jwtSecret: env.get("CERFA_AUTH_ACTIVATION_JWT_SECRET").default("45678").asString(),
       expiresIn: "96h",
@@ -51,5 +55,9 @@ module.exports = {
   },
   clamav: {
     uri: env.get("CERFA_CLAMAV_URI").default("127.0.0.1:3310").asString(),
+  },
+  pds: {
+    clientId: env.get("CERFA_PDS_CLIENT_ID").asString(),
+    clientSecret: env.get("CERFA_PDS_CLIENT_SECRET").asString(),
   },
 };
