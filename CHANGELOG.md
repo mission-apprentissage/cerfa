@@ -1,3 +1,21 @@
+# [1.10.0](https://github.com/mission-apprentissage/cerfa/compare/v1.9.1...v1.10.0) (2021-12-27)
+
+
+### Bug Fixes
+
+* changelog ([d6d26ec](https://github.com/mission-apprentissage/cerfa/commit/d6d26ec63dd4ef338c57b620c4df8871b909a708))
+* cosmetics ([#51](https://github.com/mission-apprentissage/cerfa/issues/51)) ([2c936fa](https://github.com/mission-apprentissage/cerfa/commit/2c936fa1a8dd63c3a443b806b57e6d484c216cb3))
+
+
+### Features
+
+* Ajout d'un script permettant la sauvegarde du storage ([#50](https://github.com/mission-apprentissage/cerfa/issues/50)) ([4a41ccb](https://github.com/mission-apprentissage/cerfa/commit/4a41ccbdb6e873145cc452e6386db63ff93b292b))
+* Ajout du Portail de services DGEFP pour se connecter à la plateforme ([#48](https://github.com/mission-apprentissage/cerfa/issues/48)) ([e08bfed](https://github.com/mission-apprentissage/cerfa/commit/e08bfeddb42decc28f2b4305256fb0e4ae241657))
+* dummy commit ([22228f3](https://github.com/mission-apprentissage/cerfa/commit/22228f3c846223a7458173367c129c1866dbe75c))
+* dummy commit ([0a9dce8](https://github.com/mission-apprentissage/cerfa/commit/0a9dce85284f3abd9ffd565560831abd568d5236))
+* manual bump ([0641e2b](https://github.com/mission-apprentissage/cerfa/commit/0641e2b52c804095ec6ec33ecbbf910874a1adc0))
+* **pdf:** add espace ([#47](https://github.com/mission-apprentissage/cerfa/issues/47)) ([42c7872](https://github.com/mission-apprentissage/cerfa/commit/42c78726e5ae82ae18e3bb90d96a76ff930a4715))
+
 # [1.10.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.10.0-beta.1...v1.10.0-beta.2) (2021-12-27)
 
 ### Features
