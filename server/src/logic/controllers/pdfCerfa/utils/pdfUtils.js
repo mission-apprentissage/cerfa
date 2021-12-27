@@ -43,6 +43,9 @@ const fieldsPositions = {
         x: 97,
         y: 610,
         maxLength: 5,
+        title: (value) => {
+          return value.match(/\d{1}/g).join(" ");
+        },
       },
       commune: {
         x: 89,
@@ -54,6 +57,9 @@ const fieldsPositions = {
       x: 90,
       y: 574,
       maxLength: 10,
+      title: (value) => {
+        return value.match(/\d{2}/g).join(".");
+      },
     },
     courriel: {
       x: 27,
@@ -73,6 +79,9 @@ const fieldsPositions = {
       x: 305,
       y: 685,
       maxLength: 14,
+      title: (value) => {
+        return value.match(/\d{1}/g).join(" ");
+      },
     },
     typeEmployeur: {
       x: 400,
@@ -88,6 +97,9 @@ const fieldsPositions = {
       x: 480,
       y: 630,
       maxLength: 6,
+      title: (value) => {
+        return value.match(/\d{1}/g).join(" ");
+      },
     },
     nombreDeSalaries: {
       x: 305,
@@ -97,8 +109,28 @@ const fieldsPositions = {
     libelleIdcc: {
       x: 305,
       y: 560,
-      maxLength: 70,
-      sliced: "Convention collective ",
+      title: (value) => {
+        const maxLength = 50;
+        const word = value.split(" ");
+        const splitWord = value.slice(0, maxLength - 1);
+        const words = splitWord.split(" ");
+        let newWord = "";
+        let newWords = "";
+
+        if (value.length > maxLength) {
+          for (let index = 0; index < words.length - 1; index++) {
+            const element = words[index];
+            newWord += element + " ";
+          }
+          for (let jndex = words.length - 1; jndex < word.length; jndex++) {
+            const element = word[jndex];
+            newWords += element + " ";
+          }
+          const splitWord2 = newWords.slice(0, maxLength - 1) + ".";
+          value = [{ text: newWord }, { text: splitWord2, options: { y: 543 } }];
+        }
+        return value;
+      },
     },
     codeIdcc: {
       x: 452,
@@ -126,6 +158,9 @@ const fieldsPositions = {
       x: 135,
       y: 445,
       maxLength: 15,
+      title: (value) => {
+        return value.match(/\d{1}/g).join(" ");
+      },
     },
     adresse: {
       numero: {
@@ -161,6 +196,9 @@ const fieldsPositions = {
         x: 96,
         y: 359,
         maxLength: 5,
+        title: (value) => {
+          return value.match(/\d{1}/g).join(" ");
+        },
       },
       commune: {
         x: 88,
@@ -172,6 +210,9 @@ const fieldsPositions = {
       x: 90,
       y: 324,
       maxLength: 10,
+      title: (value) => {
+        return value.match(/\d{2}/g).join(".");
+      },
     },
     courriel: {
       x: 27,
@@ -234,6 +275,9 @@ const fieldsPositions = {
           x: 96,
           y: 179,
           maxLength: 30,
+          title: (value) => {
+            return value.match(/\d{1}/g).join(" ");
+          },
         },
         commune: {
           x: 89,
@@ -368,6 +412,9 @@ const fieldsPositions = {
       x: 373,
       y: 775,
       maxLength: 25,
+      title: (value) => {
+        return value.match(/\d{1}/g).join(" ");
+      },
     },
     dateConclusion: {
       x: 127,
@@ -666,21 +713,33 @@ const fieldsPositions = {
       x: 110,
       y: 463,
       maxLength: 8,
+      title: (value) => {
+        return value.match(/\d{1}/g).join(" ");
+      },
     },
     codeDiplome: {
       x: 396,
       y: 463,
       maxLength: 8,
+      title: (value) => {
+        return value.match(/\d{1}/g).join(" ");
+      },
     },
     siret: {
       x: 109,
       y: 448,
       maxLength: 14,
+      title: (value) => {
+        return value.match(/\d{1}/g).join(" ");
+      },
     },
     rncp: {
       x: 376,
       y: 449,
       maxLength: 9,
+      title: (value) => {
+        return value.match(/\d{1}/g).join(" ");
+      },
     },
     adresse: {
       numero: {
@@ -716,6 +775,9 @@ const fieldsPositions = {
         x: 97,
         y: 380,
         maxLength: 5,
+        title: (value) => {
+          return value.match(/\d{1}/g).join(" ");
+        },
       },
       commune: {
         x: 89,
@@ -741,7 +803,6 @@ const fieldsPositions = {
   },
 };
 const capitalizeFirstLetter = (value) => value.charAt(0).toUpperCase() + value.slice(1);
-const slicedLetter = (str, value) => capitalizeFirstLetter(str.toLowerCase().slice(value.length));
 
 const buildFieldDraw = async (value, fieldDefinition, options = {}) => {
   const isDate = moment.isDate(value) ? moment(value).utc().format("MM/DD/YYYY") : `${value}`;
@@ -752,7 +813,6 @@ const buildFieldDraw = async (value, fieldDefinition, options = {}) => {
       title,
     x: isFunction(fieldDefinition.x) ? await fieldDefinition.x(value, options) : fieldDefinition.x,
     y: fieldDefinition.y,
-    sliced: fieldDefinition.sliced ? fieldDefinition.sliced : "",
     defaultColor: rgb(0.9, 0.4, 0.3),
     defaultSize: fieldDefinition.defaultSize ? fieldDefinition.defaultSize : 11,
   };
@@ -807,7 +867,7 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
       await buildFieldDraw(cerfa.employeur.adresse.commune, fieldsPositions.employeur.adresse.commune),
       await buildFieldDraw(cerfa.employeur.telephone, fieldsPositions.employeur.telephone),
       await buildFieldDraw(cerfa.employeur.courriel, fieldsPositions.employeur.courriel, { pdfDoc }),
-      await buildFieldDraw(cerfa.employeur.siret, fieldsPositions.employeur.siret),
+      await buildFieldDraw(cerfa.employeur.siret, fieldsPositions.employeur.siret, { pdfDoc }),
       await buildFieldDraw(cerfa.employeur.typeEmployeur, fieldsPositions.employeur.typeEmployeur),
       await buildFieldDraw(cerfa.employeur.employeurSpecifique, fieldsPositions.employeur.employeurSpecifique),
       await buildFieldDraw(cerfa.employeur.naf, fieldsPositions.employeur.naf),
@@ -920,11 +980,11 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
     const pdfPageContent = pdfPagesContent[index];
     const page = pages[index];
     for (let jndex = 0; jndex < pdfPageContent.length; jndex++) {
-      const { title, x, y, sliced, defaultColor, defaultSize } = pdfPageContent[jndex];
+      const { title, x, y, defaultColor, defaultSize } = pdfPageContent[jndex];
       let pablo = Array.isArray(title) ? title : [title];
       pablo.forEach((t) => {
         let text = isObject(t) ? t.text : t;
-        const titles = slicedLetter(text, sliced);
+        const titles = capitalizeFirstLetter(text);
         for (let kndex = 0; kndex < titles.length; kndex++) {
           page.drawText(titles, {
             x: x,
