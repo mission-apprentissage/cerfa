@@ -1,3 +1,10 @@
+# [1.11.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.2...v1.11.0-beta.3) (2022-01-03)
+
+
+### Bug Fixes
+
+* **ui:** plausible public url ([ed68bb9](https://github.com/mission-apprentissage/cerfa/commit/ed68bb988421a5addf2c83db0b65aa0ee5804c6b))
+
 # [1.11.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.1...v1.11.0-beta.2) (2022-01-03)
 
 
