@@ -1,3 +1,10 @@
+# [1.11.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.4...v1.11.0-beta.5) (2022-01-03)
+
+
+### Features
+
+* **ui:** add REACT_APP_BASE_HOST env ([10487b4](https://github.com/mission-apprentissage/cerfa/commit/10487b49d0982a7e57ff93bb0b739f792c74722a))
+
 # [1.11.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.3...v1.11.0-beta.4) (2022-01-03)
 
 
