@@ -1,3 +1,10 @@
+# [1.11.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.3...v1.11.0-beta.4) (2022-01-03)
+
+
+### Bug Fixes
+
+* **ui:** env Base Url ([17126e8](https://github.com/mission-apprentissage/cerfa/commit/17126e8dfd1012b7bbdd9b18e776d6e48f8ea0f2))
+
 # [1.11.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.2...v1.11.0-beta.3) (2022-01-03)
 
 
