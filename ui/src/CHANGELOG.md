@@ -1,3 +1,18 @@
+# [1.11.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.10.0...v1.11.0-beta.1) (2022-01-03)
+
+
+### Bug Fixes
+
+* **ui:** test ([97c93b9](https://github.com/mission-apprentissage/cerfa/commit/97c93b9009138b795c28995e0c8af8fbe1e16f27))
+
+
+### Features
+
+* add plausible cdn library ([2febca0](https://github.com/mission-apprentissage/cerfa/commit/2febca0954c542f325ef910ef25a842043826192))
+* add secrets env ([e29b74c](https://github.com/mission-apprentissage/cerfa/commit/e29b74c1086df81243b218ae4696b0a1044e67d0))
+* ajout pages de support Notion ([b80fe73](https://github.com/mission-apprentissage/cerfa/commit/b80fe7353eedab8ee724897349ae75840ac5a38a))
+* suppression des valeurs par defaut Jwt dans le fichier de config ([94ff8e1](https://github.com/mission-apprentissage/cerfa/commit/94ff8e13e83bb1816cf787d16d242d24afd87407))
+
 # [1.10.0](https://github.com/mission-apprentissage/cerfa/compare/v1.9.1...v1.10.0) (2021-12-27)
 
 
