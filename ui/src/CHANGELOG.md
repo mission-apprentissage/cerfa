@@ -1,3 +1,10 @@
+# [1.11.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.1...v1.11.0-beta.2) (2022-01-03)
+
+
+### Bug Fixes
+
+* **reverse-proxy:** whitelist plausible default-src ([a8c8711](https://github.com/mission-apprentissage/cerfa/commit/a8c871184535ca799e12ba9cc5ff3f4e24b3cf01))
+
 # [1.11.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.10.0...v1.11.0-beta.1) (2022-01-03)
 
 
