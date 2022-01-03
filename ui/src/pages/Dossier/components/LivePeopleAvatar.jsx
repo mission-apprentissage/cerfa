@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import { AvatarGroup, Avatar, Fade } from "@chakra-ui/react";
+import { useRouteMatch } from "react-router-dom";
 
 import { io } from "socket.io-client";
 import { useQueryClient, useQuery } from "react-query";
 
 const useWebSocketSubscription = () => {
   const queryClient = useQueryClient();
+  let match = useRouteMatch();
 
   const { data: liveUsers } = useQuery("dossier:live_users", () => Promise.resolve([]), {
     refetchOnWindowFocus: false,
@@ -16,7 +18,7 @@ const useWebSocketSubscription = () => {
     socket.on("connect", () => {
       console.log(socket.id);
 
-      socket.emit("dossier:connect", { dossierId: "61bb790a17bde53d0d073336" }, ({ status, ...rest }) => {
+      socket.emit("dossier:connect", { dossierId: match.params.id }, ({ status, ...rest }) => {
         if (status === "KO") {
           console.log(rest);
           return socket.disconnect();
@@ -32,7 +34,7 @@ const useWebSocketSubscription = () => {
     return () => {
       socket.disconnect();
     };
-  }, [queryClient]);
+  }, [match.params.id, queryClient]);
 
   return { liveUsers: liveUsers || [] };
 };
