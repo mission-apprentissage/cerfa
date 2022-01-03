@@ -1,10 +1,10 @@
 import React from "react";
 import { render } from "@testing-library/react";
 import { RecoilRoot } from "recoil";
-import Contact from "./Contact";
+import Contact from "./Support";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-test("should display contact", () => {
+test("should display support", () => {
   const { queryByText } = render(
     <Router>
       <RecoilRoot>
@@ -13,7 +13,7 @@ test("should display contact", () => {
     </Router>
   );
 
-  const title = queryByText("Contactez-nous !");
+  const title = queryByText("Connexion");
   expect(title).toBeInTheDocument();
   // expect(title).toHaveStyle("color: gray.800");
 });

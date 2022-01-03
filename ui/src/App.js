@@ -22,7 +22,7 @@ const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const Users = lazy(() => import("./pages/admin/Users"));
 const Roles = lazy(() => import("./pages/admin/Roles"));
 const Maintenance = lazy(() => import("./pages/admin/Maintenance"));
-const Contact = lazy(() => import("./pages/legal/Contact"));
+const Support = lazy(() => import("./pages/legal/Support"));
 const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
@@ -92,7 +92,8 @@ export default () => {
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
 
                 <Route exact path="/stats" component={StatsPage} />
-                <Route exact path="/contact" component={Contact} />
+                <Route exact path="/support" component={Support} />
+                <Route exact path="/support/:id" component={Support} />
                 <Route exact path="/cookies" component={Cookies} />
                 <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
                 <Route exact path="/mentions-legales" component={MentionsLegales} />
