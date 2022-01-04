@@ -150,7 +150,7 @@ module.exports = (components) => {
             publicUrl: config.publicUrl,
           }
         );
-        return res.redirect("/");
+        return res.redirect("/auth/finalize");
       }
     })
   );
