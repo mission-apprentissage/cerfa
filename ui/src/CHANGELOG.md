@@ -1,3 +1,10 @@
+# [1.11.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.6...v1.11.0-beta.7) (2022-01-04)
+
+
+### Bug Fixes
+
+* **admin:** suppression utilisateur ([5d25548](https://github.com/mission-apprentissage/cerfa/commit/5d25548b156acb36bc2e06fbca8772ad6a28a618))
+
 # [1.11.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.5...v1.11.0-beta.6) (2022-01-04)
 
 
