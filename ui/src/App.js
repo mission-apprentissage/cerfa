@@ -42,7 +42,24 @@ const AccountWrapper = ({ children }) => {
           if (auth.account_status === "FORCE_RESET_PASSWORD") {
             let { token } = await _post("/api/v1/password/forgotten-password?noEmail=true", { username: auth.sub });
             history.push(`/reset-password?passwordToken=${token}`);
-          } else if (auth.account_status === "FORCE_COMPLETE_PROFILE") {
+          }
+        }
+      }
+    })();
+  }, [auth, history]);
+
+  return <>{children}</>;
+};
+
+const ForceCompleteProfile = ({ children }) => {
+  let [auth] = useAuth();
+  let history = useHistory();
+
+  useEffect(() => {
+    (async () => {
+      if (auth.sub !== "anonymous") {
+        if (auth.confirmed) {
+          if (auth.account_status === "FORCE_COMPLETE_PROFILE") {
             history.push(`/auth/finalize`);
           }
         }
@@ -103,25 +120,27 @@ export default () => {
                 <Route exact path="/accessibilite" component={Accessibilite} />
 
                 {/* PRIVATE PAGES */}
-                <PrivateRoute path="/mon-compte" component={ProfilePage} />
+                <ForceCompleteProfile>
+                  <PrivateRoute path="/mon-compte" component={ProfilePage} />
 
-                {/* Mon espaces pages */}
-                <PrivateRoute path="/mon-espace" component={WorkspacePage} />
-                {/*  Espace partagé  pages */}
-                <PrivateRoute exact path="/partages-avec-moi" component={SharedPage} />
-                <PrivateRoute exact path="/partages-avec-moi/dossiers/:id/:step" component={DossierPage} />
-                <PrivateRoute path="/partages-avec-moi/espaces/:workspaceId" component={WorkspacePage} />
+                  {/* Mon espaces pages */}
+                  <PrivateRoute path="/mon-espace" component={WorkspacePage} />
+                  {/*  Espace partagé  pages */}
+                  <PrivateRoute exact path="/partages-avec-moi" component={SharedPage} />
+                  <PrivateRoute exact path="/partages-avec-moi/dossiers/:id/:step" component={DossierPage} />
+                  <PrivateRoute path="/partages-avec-moi/espaces/:workspaceId" component={WorkspacePage} />
 
-                {/* PRIVATE ADMIN PAGES */}
-                {auth && hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
-                  <PrivateRoute exact path="/admin/users" component={Users} />
-                )}
-                {auth && hasPageAccessTo(auth, "admin/page_gestion_roles") && (
-                  <PrivateRoute exact path="/admin/roles" component={Roles} />
-                )}
-                {auth && hasPageAccessTo(auth, "admin/page_message_maintenance") && (
-                  <PrivateRoute exact path="/admin/maintenance" component={Maintenance} />
-                )}
+                  {/* PRIVATE ADMIN PAGES */}
+                  {auth && hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
+                    <PrivateRoute exact path="/admin/users" component={Users} />
+                  )}
+                  {auth && hasPageAccessTo(auth, "admin/page_gestion_roles") && (
+                    <PrivateRoute exact path="/admin/roles" component={Roles} />
+                  )}
+                  {auth && hasPageAccessTo(auth, "admin/page_message_maintenance") && (
+                    <PrivateRoute exact path="/admin/maintenance" component={Maintenance} />
+                  )}
+                </ForceCompleteProfile>
 
                 {/* Fallback */}
                 <Route component={NotFoundPage} />

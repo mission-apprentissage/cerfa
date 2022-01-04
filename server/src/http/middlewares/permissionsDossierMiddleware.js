@@ -4,6 +4,10 @@ const tryCatch = require("./tryCatchMiddleware");
 
 module.exports = ({ permissions, roles, dossiers }, acls) =>
   tryCatch(async ({ method, body, query, user }, res, next) => {
+    if (user.account_status !== "CONFIRMED") {
+      throw Boom.unauthorized("Accès non autorisé");
+    }
+
     const data = method === "GET" || method === "DELETE" ? query : body;
 
     let { dossierId } = await Joi.object({
