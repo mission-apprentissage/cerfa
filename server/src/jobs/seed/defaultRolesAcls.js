@@ -139,11 +139,11 @@ module.exports = {
     description: "Rôle utilisateur Organisme de formation",
     acl: [],
   },
-  instructeur: {
-    name: "instructeur",
-    type: "user",
-    title: "Instructeur",
-    description: "Rôle utilisateur DR(I)EETS",
-    acl: [],
-  },
+  // instructeur: {
+  //   name: "instructeur",
+  //   type: "user",
+  //   title: "Instructeur",
+  //   description: "Rôle utilisateur DR(I)EETS",
+  //   acl: [],
+  // },
 };
