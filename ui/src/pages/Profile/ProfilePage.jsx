@@ -1,13 +1,22 @@
 import React, { useState } from "react";
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import ProfileInformation from "./components/ProfileInformation";
-import NotificationPage from "./components/ProfileNotification";
+import ProfileNotification from "./components/ProfileNotification";
+import { setTitle } from "../../common/utils/pageUtils";
+import { Breadcrumb } from "../../common/components/Breadcrumb";
 
 const ProfileLayout = () => {
   const [information, setInformation] = useState(true);
+  const title = information ? "Mes Informations" : "Mes Notifications";
+  setTitle(title);
   return (
     <Layout>
+      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
+        <Container maxW="xl">
+          <Breadcrumb pages={[{ title: "Mon Compte", to: "/" }, { title: title }]} />
+        </Container>
+      </Box>
       <Flex>
         <Box w="30%" pt={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
           <Box
@@ -35,7 +44,7 @@ const ProfileLayout = () => {
           </Box>
         </Box>
         <Box w="100%" pt={[4, 8]}>
-          {information ? <ProfileInformation /> : <NotificationPage />}
+          {information ? <ProfileInformation /> : <ProfileNotification />}
         </Box>
       </Flex>
     </Layout>

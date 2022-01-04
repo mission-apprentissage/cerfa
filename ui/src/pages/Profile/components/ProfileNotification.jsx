@@ -1,11 +1,7 @@
 import React from "react";
 import { Box, Container, Heading, Flex, Text, Switch, Divider } from "@chakra-ui/react";
-import { setTitle } from "../../../common/utils/pageUtils";
 
 const NotificationPage = () => {
-  const title = "Mes Notifications";
-  setTitle(title);
-
   return (
     <Box w="100%" color="#1E1E1E">
       <Container maxW="xl">

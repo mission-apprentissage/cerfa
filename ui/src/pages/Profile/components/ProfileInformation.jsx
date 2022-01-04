@@ -1,23 +1,5 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Container,
-  Heading,
-  UnorderedList,
-  ListItem,
-  FormControl,
-  FormLabel,
-  Input,
-  FormErrorMessage,
-  Button,
-  Flex,
-  Text,
-  Switch,
-  Divider,
-} from "@chakra-ui/react";
-import Layout from "../../layout/Layout";
-import { Breadcrumb } from "../../../common/components/Breadcrumb";
-import { setTitle } from "../../../common/utils/pageUtils";
+import React from "react";
+import { Box, Heading, FormControl, FormLabel, Input, FormErrorMessage, Button, Flex } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -25,8 +7,6 @@ import * as Yup from "yup";
 const ProfileInformation = () => {
   let [auth] = useAuth();
 
-  const title = "Mes informations";
-  setTitle(title);
   const phoneRegExp =
     /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
   const { values, handleChange, handleSubmit, errors, touched } = useFormik({
