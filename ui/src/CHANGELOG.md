@@ -1,3 +1,10 @@
+# [1.11.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.8...v1.11.0-beta.9) (2022-01-04)
+
+
+### Bug Fixes
+
+* logins and stuff ([1098274](https://github.com/mission-apprentissage/cerfa/commit/10982748a8d1120242473c0dbaf26a99acf95bf7))
+
 # [1.11.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.7...v1.11.0-beta.8) (2022-01-04)
 
 
