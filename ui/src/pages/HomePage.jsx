@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, Heading } from "@chakra-ui/react";
+import { Box, Container, Heading, Text } from "@chakra-ui/react";
 import Layout from "./layout/Layout";
 import { Breadcrumb } from "../common/components/Breadcrumb";
 import { setTitle } from "../common/utils/pageUtils";
@@ -20,6 +20,23 @@ export default () => {
           <Heading as="h1" fontSize="lg">
             Plateforme de gestion des Contrats en apprentissage du secteur publique.
           </Heading>
+          <Box pt={4} pb={16}>
+            <Text>
+              Cette plateforme permet est une aide à la complétion de contrats en Apprentissage pour la fonction
+              publique.
+              <br />
+              <br />
+            </Text>
+            <Text>
+              Vous y trouverez un générateur de contrat d'apprentissage permettant le pré-remplissage et contrôle de la
+              donnée saisie.
+              <br />
+              <br />
+              Ce générateur donne un accès collaboratif à chacun des acteurs (Organisme de formation, Employeur et
+              Apprenti(e)). Il permet de notifier les acteurs lors d'un changement d'état (Cycle de vie de complétion du
+              CERFA).
+            </Text>
+          </Box>
         </Container>
       </Box>
     </Layout>
