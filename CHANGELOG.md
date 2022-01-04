@@ -1,3 +1,10 @@
+# [1.11.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.7...v1.11.0-beta.8) (2022-01-04)
+
+
+### Bug Fixes
+
+* prep pentest ([a2399ef](https://github.com/mission-apprentissage/cerfa/commit/a2399ef98f5d32a2b48b3e2ee2cd0c21b3d9c886))
+
 # [1.11.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.6...v1.11.0-beta.7) (2022-01-04)
 
 
