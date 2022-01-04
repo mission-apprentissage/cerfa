@@ -1,3 +1,10 @@
+# [1.11.0-beta.14](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.13...v1.11.0-beta.14) (2022-01-04)
+
+
+### Bug Fixes
+
+* **pds:** redirect after register ([e7b2970](https://github.com/mission-apprentissage/cerfa/commit/e7b2970c18abd3ec71548fc66513cd053c3a66c8))
+
 # [1.11.0-beta.13](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.12...v1.11.0-beta.13) (2022-01-04)
 
 
