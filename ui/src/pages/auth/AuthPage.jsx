@@ -1,17 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Flex,
-  Container,
-  HStack,
-  Heading,
-  Text,
-  forwardRef,
-  chakra,
-  Button,
-  // useDisclosure,
-  Link,
-} from "@chakra-ui/react";
+import { Box, Flex, Container, HStack, Heading, Text, forwardRef, chakra, Button, Link } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -24,7 +12,6 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Finalize from "./components/Finalize";
 import Confirmed from "./components/Confirmed";
-// import { PdsModal } from "./components/PdsModal";
 
 const MotionBox = motion(
   forwardRef((props, ref) => {
@@ -63,7 +50,6 @@ const FormBoxMotion = ({ children, isOpen, ...rest }) => {
 
 const AuthPage = () => {
   let { slug } = useParams();
-  // const pdsModal = useDisclosure();
   const [linkToPds, setLinkToPds] = useState(null);
 
   useEffect(() => {
@@ -121,11 +107,6 @@ const AuthPage = () => {
                   S'identifier via Portail de service{" "}
                   <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} ml={"0.25rem"} mt={"0.125rem"} />
                 </Button>
-                {/* <Button variant="secondary" type="submit" mt={12} onClick={pdsModal.onOpen}>
-                  S'identifier via Portail de service
-                </Button>
-
-                <PdsModal isOpen={pdsModal.isOpen} onClose={pdsModal.onClose} /> */}
               </Flex>
 
               <Box w="50%" h="55vh">
