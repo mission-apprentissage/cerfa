@@ -1,3 +1,10 @@
+# [1.11.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.10...v1.11.0-beta.11) (2022-01-04)
+
+
+### Bug Fixes
+
+* **ui:** force complete profile ([35d3a54](https://github.com/mission-apprentissage/cerfa/commit/35d3a54a9aab2c8d8a3b84296d8aad491c45fabc))
+
 # [1.11.0-beta.10](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.9...v1.11.0-beta.10) (2022-01-04)
 
 
