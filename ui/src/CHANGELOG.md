@@ -1,3 +1,10 @@
+# [1.11.0-beta.10](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.9...v1.11.0-beta.10) (2022-01-04)
+
+
+### Features
+
+* delete workspace when deleting user ([03058cb](https://github.com/mission-apprentissage/cerfa/commit/03058cb2f4662cdaa2699ba71e08cfcbe5fa11f4))
+
 # [1.11.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.8...v1.11.0-beta.9) (2022-01-04)
 
 
