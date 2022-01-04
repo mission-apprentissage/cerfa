@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
 import { isUserAdmin, hasPageAccessTo } from "../../../common/utils/rolesUtils";
-import { MenuFill, Close, AccountFill, InfoCircle, LockFill } from "../../../theme/components/icons";
+import { MenuFill, Close, AccountFill, LockFill, Parametre } from "../../../theme/components/icons";
 import { _get } from "../../../common/httpClient";
 
 const NavigationMenu = ({ isMyWorkspace, isSharedWithMe, ...props }) => {
@@ -71,24 +71,28 @@ const UserMenu = () => {
             </Flex>
           </MenuButton>
           <MenuList>
-            <MenuGroup title="Profile">
-              {hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
-                <MenuItem as={NavLink} to="/admin/users" icon={<AccountFill boxSize={4} />}>
-                  Gestion des utilisateurs
-                </MenuItem>
-              )}
-              {hasPageAccessTo(auth, "admin/page_gestion_roles") && (
-                <MenuItem as={NavLink} to="/admin/roles" icon={<AccountFill boxSize={4} />}>
-                  Gestion des rôles
-                </MenuItem>
-              )}
-              {hasPageAccessTo(auth, "admin/page_message_maintenance") && (
-                <MenuItem as={NavLink} to="/admin/maintenance" icon={<InfoCircle boxSize={4} />}>
-                  Message de maintenance
-                </MenuItem>
-              )}
-            </MenuGroup>
-
+            <MenuItem as={NavLink} to="/mon-compte" icon={<AccountFill boxSize={4} color={"bluefrance"} />}>
+              Mon compte
+            </MenuItem>
+            {hasPageAccessTo(auth, "admin") && (
+              <MenuGroup title="Administration">
+                {hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
+                  <MenuItem as={NavLink} to="/admin/users" icon={<Parametre boxSize={4} />}>
+                    Gestion des utilisateurs
+                  </MenuItem>
+                )}
+                {hasPageAccessTo(auth, "admin/page_gestion_roles") && (
+                  <MenuItem as={NavLink} to="/admin/roles" icon={<Parametre boxSize={4} />}>
+                    Gestion des rôles
+                  </MenuItem>
+                )}
+                {hasPageAccessTo(auth, "admin/page_message_maintenance") && (
+                  <MenuItem as={NavLink} to="/admin/maintenance" icon={<Parametre boxSize={4} />}>
+                    Message de maintenance
+                  </MenuItem>
+                )}
+              </MenuGroup>
+            )}
             <MenuDivider />
             <MenuItem onClick={logout}>Déconnexion</MenuItem>
           </MenuList>

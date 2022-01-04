@@ -173,6 +173,7 @@ module.exports = async () => {
         siret: user.siret || null,
         confirmed: user.confirmed || false,
         orign_register: user.orign_register,
+        telephone: user.telephone,
       };
       return structure;
     },
