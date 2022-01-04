@@ -14,7 +14,7 @@ const WaitingConfirmationPage = lazy(() => import("./pages/auth/WaitingConfirmat
 const ResetPasswordPage = lazy(() => import("./pages/auth/ResetPasswordPage"));
 const ForgottenPasswordPage = lazy(() => import("./pages/auth/ForgottenPasswordPage"));
 
-const ProfilePage = lazy(() => import("./pages/ProfilePage"));
+const ProfilePage = lazy(() => import("./pages/Profile/ProfilePage"));
 const WorkspacePage = lazy(() => import("./pages/Workspace/WorkspacePage"));
 const DossierPage = lazy(() => import("./pages/Dossier/DossierPage"));
 const SharedPage = lazy(() => import("./pages/SharedPage"));
