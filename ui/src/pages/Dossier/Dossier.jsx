@@ -140,9 +140,9 @@ export default () => {
           </Steps>
           {activeStep === 4 ? (
             <Center p={4} flexDir="column">
-              <Heading fontSize="xl">Woohoo! C'est fini!</Heading>
+              <Heading fontSize="xl">Ce dossier est terminé.</Heading>
               <Button mt={6} size="sm" onClick={reset}>
-                Remise à zero
+                (Test) Remise à zero
               </Button>
             </Center>
           ) : (

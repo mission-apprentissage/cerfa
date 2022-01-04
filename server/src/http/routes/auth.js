@@ -18,7 +18,6 @@ const checkActivationToken = (users) => {
         secretOrKey: config.auth.activation.jwtSecret,
       },
       (jwt_payload, done) => {
-        console.log(jwt_payload);
         return users
           .getUser(jwt_payload.sub)
           .then((user) => {
