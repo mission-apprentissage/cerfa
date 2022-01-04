@@ -85,7 +85,7 @@ const UserLine = ({ user, roles }) => {
                 },
               },
             };
-            await _put(`/api/v1/admin/user/${user.username}`, body);
+            await _put(`/api/v1/admin/user/${user._id}`, body);
             document.location.reload(true);
           } else {
             const body = {
@@ -126,7 +126,7 @@ const UserLine = ({ user, roles }) => {
     e.preventDefault();
     // eslint-disable-next-line no-restricted-globals
     if (confirm("Delete user !?")) {
-      await _delete(`/api/v1/admin/user/${user.username}`);
+      await _delete(`/api/v1/admin/user/${user._id}`);
       document.location.reload(true);
     }
   };
