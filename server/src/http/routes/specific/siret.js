@@ -15,7 +15,9 @@ module.exports = (components) => {
     tryCatch(async ({ body }, res) => {
       const { siret } = await Joi.object({
         siret: Joi.string().required(),
-      }).validateAsync(body, { abortEarly: false });
+      })
+        .unknown()
+        .validateAsync(body, { abortEarly: false });
 
       const data = await getDataFromSiret(siret);
 

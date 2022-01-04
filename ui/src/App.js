@@ -28,7 +28,7 @@ const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 
-const ResetPasswordWrapper = ({ children }) => {
+const AccountWrapper = ({ children }) => {
   let [auth] = useAuth();
   let history = useHistory();
 
@@ -41,6 +41,8 @@ const ResetPasswordWrapper = ({ children }) => {
           if (auth.account_status === "FORCE_RESET_PASSWORD") {
             let { token } = await _post("/api/v1/password/forgotten-password?noEmail=true", { username: auth.sub });
             history.push(`/reset-password?passwordToken=${token}`);
+          } else if (auth.account_status === "FORCE_COMPLETE_PROFILE") {
+            history.push(`/auth/finalize`);
           }
         }
       }
@@ -80,25 +82,25 @@ export default () => {
       <div className="App">
         <Router>
           <Suspense fallback={<div></div>}>
-            <ResetPasswordWrapper>
-              <ScrollToTop />
-              <Switch>
-                {/* PUBLIC PAGES */}
-                <Route exact path="/" component={HomePage} />
+            <ScrollToTop />
+            <Switch>
+              {/* PUBLIC PAGES */}
+              <Route exact path="/" component={HomePage} />
 
-                <Route exact path="/auth/:slug" component={AuthPage} />
-                <Route exact path="/en-attente-confirmation" component={WaitingConfirmationPage} />
-                <Route exact path="/reset-password" component={ResetPasswordPage} />
-                <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
+              <Route exact path="/auth/:slug" component={AuthPage} />
+              <Route exact path="/en-attente-confirmation" component={WaitingConfirmationPage} />
+              <Route exact path="/reset-password" component={ResetPasswordPage} />
+              <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
 
-                <Route exact path="/stats" component={StatsPage} />
-                <Route exact path="/support" component={Support} />
-                <Route exact path="/support/:id" component={Support} />
-                <Route exact path="/cookies" component={Cookies} />
-                <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
-                <Route exact path="/mentions-legales" component={MentionsLegales} />
-                <Route exact path="/accessibilite" component={Accessibilite} />
+              <Route exact path="/stats" component={StatsPage} />
+              <Route exact path="/support" component={Support} />
+              <Route exact path="/support/:id" component={Support} />
+              <Route exact path="/cookies" component={Cookies} />
+              <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
+              <Route exact path="/mentions-legales" component={MentionsLegales} />
+              <Route exact path="/accessibilite" component={Accessibilite} />
 
+              <AccountWrapper>
                 {/* PRIVATE PAGES */}
 
                 {/* Mon espaces pages */}
@@ -118,11 +120,11 @@ export default () => {
                 {auth && hasPageAccessTo(auth, "admin/page_message_maintenance") && (
                   <PrivateRoute exact path="/admin/maintenance" component={Maintenance} />
                 )}
+              </AccountWrapper>
 
-                {/* Fallback */}
-                <Route component={NotFoundPage} />
-              </Switch>
-            </ResetPasswordWrapper>
+              {/* Fallback */}
+              <Route component={NotFoundPage} />
+            </Switch>
           </Suspense>
         </Router>
       </div>

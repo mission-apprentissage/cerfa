@@ -4,8 +4,10 @@ const passport = require("passport");
 const { Strategy: JWTStrategy } = require("passport-jwt");
 const generator = require("generate-password");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
+const authMiddleware = require("../../middlewares/authMiddleware");
 const config = require("../../../config");
 const Boom = require("boom");
+const Joi = require("joi");
 
 const { createUserToken, createPdsToken } = require("../../../common/utils/jwtUtils");
 
@@ -21,8 +23,10 @@ const cookieExtractor = (req) => {
   return jwt;
 };
 
-module.exports = ({ users, mailer }) => {
+module.exports = (components) => {
   const router = express.Router();
+
+  const { users, mailer } = components;
 
   const getPdsClient = async () => {
     const pdsIssuer = await Issuer.discover("https://agadir-app.rct01.kleegroup.com/identification/oidc/");
@@ -71,7 +75,6 @@ module.exports = ({ users, mailer }) => {
       });
 
       const token = createPdsToken({ payload: { code_verifier } });
-      console.log(code_verifier);
 
       return res
         .cookie(`cerfa-${config.env}-pds-code-verifier`, token, {
@@ -82,7 +85,6 @@ module.exports = ({ users, mailer }) => {
         })
         .status(200)
         .json({ authorizationUrl });
-      // .redirect(authorizationUrl);
     })
   );
 
@@ -150,6 +152,55 @@ module.exports = ({ users, mailer }) => {
         );
         return res.redirect("/");
       }
+    })
+  );
+
+  router.post(
+    "/finalize",
+    authMiddleware(components),
+    tryCatch(async ({ body, user }, res) => {
+      const { compte, siret } = await Joi.object({
+        compte: Joi.string().required(),
+        siret: Joi.string().required(),
+      }).validateAsync(body, { abortEarly: false });
+
+      const userDb = await users.getUser(user.email);
+      if (!userDb) {
+        throw Boom.conflict(`Unable to retrieve user`);
+      }
+
+      if (userDb.orign_register !== "PDS" && userDb.account_status !== "FORCE_COMPLETE_PROFILE") {
+        throw Boom.badRequest("Something went wrong");
+      }
+
+      // TODO tack if siret different than the one in PDS
+
+      const updateUser = await users.finalizePdsUser(userDb._id, {
+        siret,
+        roles: compte === "entreprise" || compte === "cfa" ? [compte] : [],
+      });
+      if (!updateUser) {
+        throw Boom.badRequest("Something went wrong");
+      }
+
+      const payload = await users.structureUser(updateUser);
+
+      await users.loggedInUser(payload.email);
+
+      const token = createUserToken({ payload });
+
+      return res
+        .cookie(`cerfa-${config.env}-jwt`, token, {
+          maxAge: 365 * 24 * 3600000,
+          httpOnly: !IS_OFFLINE,
+          sameSite: IS_OFFLINE ? "lax" : "none",
+          secure: !IS_OFFLINE,
+        })
+        .status(200)
+        .json({
+          loggedIn: true,
+          token,
+        });
     })
   );
 

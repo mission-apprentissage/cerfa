@@ -94,6 +94,36 @@ module.exports = async () => {
 
       return result.toObject();
     },
+    finalizePdsUser: async (userid, data) => {
+      let user = await User.findById(userid);
+      if (!user) {
+        throw new Error(`Unable to find user ${userid}`);
+      }
+
+      if (user.orign_register !== "PDS") {
+        throw new Error(`User has not been registered through PDS`);
+      }
+
+      let rolesDb = [];
+      if (data.roles && data.roles.length > 0) {
+        rolesDb = await Role.find({ name: { $in: data.roles } }, { _id: 1 });
+        if (!rolesDb.length === 0) {
+          throw new Error("Roles doesn't exist");
+        }
+      }
+
+      const result = await User.findOneAndUpdate(
+        { _id: user._id },
+        {
+          siret: data.siret,
+          roles: rolesDb,
+          account_status: "CONFIRMED",
+        },
+        { new: true }
+      );
+
+      return result.toObject();
+    },
     activate: async (email) => {
       const user = await User.findOne({ email });
       if (!user) {
@@ -142,6 +172,7 @@ module.exports = async () => {
         workspaceId: workspace?._id.toString(),
         siret: user.siret || null,
         confirmed: user.confirmed || false,
+        orign_register: user.orign_register,
       };
       return structure;
     },
