@@ -1,3 +1,19 @@
+# [1.11.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.5...v1.11.0-beta.6) (2022-01-04)
+
+
+### Bug Fixes
+
+* **server:** test ([ff85aa4](https://github.com/mission-apprentissage/cerfa/commit/ff85aa4c8a89411bc742a59efd79c021a463c3b9))
+
+
+### Features
+
+* **pds:** formulaire de fin de création de compte via pds ([874a2c4](https://github.com/mission-apprentissage/cerfa/commit/874a2c4b67ecfa19ee32403107016558cdf4ec8f))
+* **ui:** ajout page profile brut ([3a2eda4](https://github.com/mission-apprentissage/cerfa/commit/3a2eda4ad7142c5299180e22192a12d09915d87e))
+* **ui:** cosmétiques pour présentation ([b3a1556](https://github.com/mission-apprentissage/cerfa/commit/b3a1556113671a211c88331b9cbff4e58ee73cd6))
+* **ui:** pass down dossierId to socket ([61c5fea](https://github.com/mission-apprentissage/cerfa/commit/61c5feabcf1fea54701c3719d4c8ebbda794f1e0))
+* **ui:** update sitemap ([cdaca86](https://github.com/mission-apprentissage/cerfa/commit/cdaca868fd9b69f802f9d700c63f4d8cc5e3031e))
+
 # [1.11.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.4...v1.11.0-beta.5) (2022-01-03)
 
 
