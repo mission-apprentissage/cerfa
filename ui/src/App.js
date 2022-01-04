@@ -14,7 +14,7 @@ const WaitingConfirmationPage = lazy(() => import("./pages/auth/WaitingConfirmat
 const ResetPasswordPage = lazy(() => import("./pages/auth/ResetPasswordPage"));
 const ForgottenPasswordPage = lazy(() => import("./pages/auth/ForgottenPasswordPage"));
 
-const ProfilePage = lazy(() => import("./pages/ProfilePage"));
+const ProfileLayout = lazy(() => import("./pages/Profile/ProfileLayout"));
 const WorkspacePage = lazy(() => import("./pages/Workspace/WorkspacePage"));
 const DossierPage = lazy(() => import("./pages/Dossier/DossierPage"));
 const SharedPage = lazy(() => import("./pages/SharedPage"));
@@ -103,7 +103,7 @@ export default () => {
 
               <AccountWrapper>
                 {/* PRIVATE PAGES */}
-                <PrivateRoute path="/mon-compte" component={ProfilePage} />
+                <PrivateRoute path="/mon-compte" component={ProfileLayout} />
 
                 {/* Mon espaces pages */}
                 <PrivateRoute path="/mon-espace" component={WorkspacePage} />
