@@ -125,6 +125,7 @@ module.exports = (components) => {
   router.get(
     "/sharedwithme",
     tryCatch(async ({ user }, res) => {
+      console.log(user.email);
       const permWorkspaceIds = await permissions.findPermissions(
         { dossierId: null, userEmail: user.email },
         { workspaceId: 1, _id: 0 }

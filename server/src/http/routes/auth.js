@@ -132,7 +132,7 @@ module.exports = ({ users, mailer }) => {
 
       const token = createUserToken({ payload });
 
-      res
+      return res
         .cookie(`cerfa-${config.env}-jwt`, token, {
           maxAge: 365 * 24 * 3600000,
           httpOnly: !IS_OFFLINE,

@@ -83,25 +83,25 @@ export default () => {
       <div className="App">
         <Router>
           <Suspense fallback={<div></div>}>
-            <ScrollToTop />
-            <Switch>
-              {/* PUBLIC PAGES */}
-              <Route exact path="/" component={HomePage} />
+            <AccountWrapper>
+              <ScrollToTop />
+              <Switch>
+                {/* PUBLIC PAGES */}
+                <Route exact path="/" component={HomePage} />
 
-              <Route exact path="/auth/:slug" component={AuthPage} />
-              <Route exact path="/en-attente-confirmation" component={WaitingConfirmationPage} />
-              <Route exact path="/reset-password" component={ResetPasswordPage} />
-              <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
+                <Route exact path="/auth/:slug" component={AuthPage} />
+                <Route exact path="/en-attente-confirmation" component={WaitingConfirmationPage} />
+                <Route exact path="/reset-password" component={ResetPasswordPage} />
+                <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
 
-              <Route exact path="/stats" component={StatsPage} />
-              <Route exact path="/support" component={Support} />
-              <Route exact path="/support/:id" component={Support} />
-              <Route exact path="/cookies" component={Cookies} />
-              <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
-              <Route exact path="/mentions-legales" component={MentionsLegales} />
-              <Route exact path="/accessibilite" component={Accessibilite} />
+                <Route exact path="/stats" component={StatsPage} />
+                <Route exact path="/support" component={Support} />
+                <Route exact path="/support/:id" component={Support} />
+                <Route exact path="/cookies" component={Cookies} />
+                <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
+                <Route exact path="/mentions-legales" component={MentionsLegales} />
+                <Route exact path="/accessibilite" component={Accessibilite} />
 
-              <AccountWrapper>
                 {/* PRIVATE PAGES */}
                 <PrivateRoute path="/mon-compte" component={ProfilePage} />
 
@@ -122,11 +122,11 @@ export default () => {
                 {auth && hasPageAccessTo(auth, "admin/page_message_maintenance") && (
                   <PrivateRoute exact path="/admin/maintenance" component={Maintenance} />
                 )}
-              </AccountWrapper>
 
-              {/* Fallback */}
-              <Route component={NotFoundPage} />
-            </Switch>
+                {/* Fallback */}
+                <Route component={NotFoundPage} />
+              </Switch>
+            </AccountWrapper>
           </Suspense>
         </Router>
       </div>

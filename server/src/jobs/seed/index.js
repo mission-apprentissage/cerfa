@@ -27,7 +27,7 @@ runScript(async ({ users, workspaces, dossiers }) => {
     permissions: { isAdmin: true },
     confirmed: true,
   });
-  logger.info(`User 'testAdmin' with password 'password' and admin is successfully created `);
+  logger.info(`User 'tAdmin' with password 'password' and admin is successfully created `);
 
   await users.createUser("antoine.bigard+testEntreprise@beta.gouv.fr", "password", {
     nom: "Damien",
@@ -35,7 +35,7 @@ runScript(async ({ users, workspaces, dossiers }) => {
     roles: ["entreprise"],
     confirmed: true,
   });
-  logger.info(`User 'testEntreprise' with password 'password' is successfully created `);
+  logger.info(`User 'tEntreprise' with password 'password' is successfully created `);
 
   const wks = await workspaces.getUserWorkspace(userAdmin, { _id: 1 });
 

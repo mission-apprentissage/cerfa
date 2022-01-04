@@ -68,7 +68,8 @@ module.exports = ({ users, roles, mailer }) => {
       await users.updateUser(userid, {
         isAdmin: body.options.permissions.isAdmin,
         email: body.options.email,
-        username: body.username,
+        prenom: body.options.prenom,
+        nom: body.options.nom,
         roles: rolesId,
         acl: body.options.acl,
         invalided_token: true,
