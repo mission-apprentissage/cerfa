@@ -65,18 +65,23 @@ const UserLine = ({ user, roles }) => {
       accessAllCheckbox: user?.isAdmin ? ["on"] : [],
       roles: user?.roles || [],
       acl: user?.acl || [],
-      newUsername: user?.username || "",
+      newNom: user?.nom || "",
+      newPrenom: user?.prenom || "",
       newEmail: user?.email || "",
       newTmpPassword,
     },
-    onSubmit: ({ apiKey, accessAllCheckbox, newUsername, newEmail, newTmpPassword, roles, acl }, { setSubmitting }) => {
+    onSubmit: (
+      { apiKey, accessAllCheckbox, newNom, newPrenom, newEmail, newTmpPassword, roles, acl },
+      { setSubmitting }
+    ) => {
       return new Promise(async (resolve) => {
         const accessAll = accessAllCheckbox.includes("on");
         try {
           if (user) {
             const body = {
-              username: newUsername,
               options: {
+                prenom: newPrenom,
+                nom: newNom,
                 email: newEmail,
                 roles,
                 acl,
@@ -89,9 +94,10 @@ const UserLine = ({ user, roles }) => {
             document.location.reload(true);
           } else {
             const body = {
-              username: newUsername,
               password: newTmpPassword,
               options: {
+                prenom: newPrenom,
+                nom: newNom,
                 email: newEmail,
                 roles,
                 acl,
@@ -162,8 +168,12 @@ const UserLine = ({ user, roles }) => {
   return (
     <form onSubmit={handleSubmit}>
       <FormControl py={2}>
-        <FormLabel>Username</FormLabel>
-        <Input type="text" id="newUsername" name="newUsername" value={values.newUsername} onChange={handleChange} />
+        <FormLabel>Nom</FormLabel>
+        <Input type="text" id="newNom" name="newNom" value={values.newNom} onChange={handleChange} />
+      </FormControl>
+      <FormControl py={2}>
+        <FormLabel>Prenom</FormLabel>
+        <Input type="text" id="newPrenom" name="newPrenom" value={values.newPrenom} onChange={handleChange} />
       </FormControl>
 
       <FormControl py={2}>

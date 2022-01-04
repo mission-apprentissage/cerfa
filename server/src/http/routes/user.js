@@ -28,9 +28,10 @@ module.exports = ({ users, roles, mailer }) => {
     "/user",
     tryCatch(async ({ body }, res) => {
       const { password, options } = await Joi.object({
-        // username: Joi.string().required(),
         password: Joi.string().required(),
         options: Joi.object({
+          prenom: Joi.string().required(),
+          nom: Joi.string().required(),
           email: Joi.string().required(),
           roles: Joi.array().required(),
           permissions: Joi.object({
