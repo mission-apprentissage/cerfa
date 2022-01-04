@@ -1,3 +1,10 @@
+# [1.11.0-beta.12](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.11...v1.11.0-beta.12) (2022-01-04)
+
+
+### Features
+
+* **ui:** page Profile and add new switch style ([#55](https://github.com/mission-apprentissage/cerfa/issues/55)) ([99afa12](https://github.com/mission-apprentissage/cerfa/commit/99afa1292030628c62b88b0ef5194be656e1d754))
+
 # [1.11.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.10...v1.11.0-beta.11) (2022-01-04)
 
 
