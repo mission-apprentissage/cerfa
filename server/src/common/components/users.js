@@ -82,7 +82,10 @@ module.exports = async () => {
         throw new Error(`Unable to find user ${userid}`);
       }
 
-      return await user.deleteOne({ _id: userid });
+      const { removeUserWorkspace } = await workspaces();
+      await removeUserWorkspace(userid);
+
+      return await User.deleteOne({ _id: userid });
     },
     updateUser: async (userid, data) => {
       let user = await User.findById(userid);
