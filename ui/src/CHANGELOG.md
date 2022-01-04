@@ -1,3 +1,10 @@
+# [1.11.0-beta.13](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.12...v1.11.0-beta.13) (2022-01-04)
+
+
+### Bug Fixes
+
+* **ui:** create new dossier ([2654c54](https://github.com/mission-apprentissage/cerfa/commit/2654c544d0e1f53cda234009520861e1bb05aa9c))
+
 # [1.11.0-beta.12](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.11...v1.11.0-beta.12) (2022-01-04)
 
 
