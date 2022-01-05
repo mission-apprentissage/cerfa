@@ -1,3 +1,10 @@
+# [1.11.0-beta.16](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.15...v1.11.0-beta.16) (2022-01-05)
+
+
+### Features
+
+* **documents:** ajout du système de piéces justificatives dans un dossier ([#57](https://github.com/mission-apprentissage/cerfa/issues/57)) ([#58](https://github.com/mission-apprentissage/cerfa/issues/58)) ([9de8bd3](https://github.com/mission-apprentissage/cerfa/commit/9de8bd3e87adcc7de054813818b670532bb142ae))
+
 # [1.11.0-beta.15](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.14...v1.11.0-beta.15) (2022-01-05)
 
 
