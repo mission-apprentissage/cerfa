@@ -1,3 +1,38 @@
+# [1.11.0](https://github.com/mission-apprentissage/cerfa/compare/v1.10.0...v1.11.0) (2022-01-05)
+
+
+### Bug Fixes
+
+* **admin:** suppression utilisateur ([5d25548](https://github.com/mission-apprentissage/cerfa/commit/5d25548b156acb36bc2e06fbca8772ad6a28a618))
+* logins and stuff ([1098274](https://github.com/mission-apprentissage/cerfa/commit/10982748a8d1120242473c0dbaf26a99acf95bf7))
+* **pds:** redirect after register ([e7b2970](https://github.com/mission-apprentissage/cerfa/commit/e7b2970c18abd3ec71548fc66513cd053c3a66c8))
+* prep pentest ([a2399ef](https://github.com/mission-apprentissage/cerfa/commit/a2399ef98f5d32a2b48b3e2ee2cd0c21b3d9c886))
+* **reverse-proxy:** whitelist plausible default-src ([a8c8711](https://github.com/mission-apprentissage/cerfa/commit/a8c871184535ca799e12ba9cc5ff3f4e24b3cf01))
+* **server:** test ([ff85aa4](https://github.com/mission-apprentissage/cerfa/commit/ff85aa4c8a89411bc742a59efd79c021a463c3b9))
+* **ui:** create new dossier ([2654c54](https://github.com/mission-apprentissage/cerfa/commit/2654c544d0e1f53cda234009520861e1bb05aa9c))
+* **ui:** env Base Url ([17126e8](https://github.com/mission-apprentissage/cerfa/commit/17126e8dfd1012b7bbdd9b18e776d6e48f8ea0f2))
+* **ui:** force complete profile ([35d3a54](https://github.com/mission-apprentissage/cerfa/commit/35d3a54a9aab2c8d8a3b84296d8aad491c45fabc))
+* **ui:** plausible public url ([ed68bb9](https://github.com/mission-apprentissage/cerfa/commit/ed68bb988421a5addf2c83db0b65aa0ee5804c6b))
+* **ui:** suppression de dossier depuis un espace ([16e85f8](https://github.com/mission-apprentissage/cerfa/commit/16e85f826b6eb72ccfd543dbd1c6f58381ccd8b0))
+* **ui:** test ([97c93b9](https://github.com/mission-apprentissage/cerfa/commit/97c93b9009138b795c28995e0c8af8fbe1e16f27))
+
+
+### Features
+
+* add plausible cdn library ([2febca0](https://github.com/mission-apprentissage/cerfa/commit/2febca0954c542f325ef910ef25a842043826192))
+* add secrets env ([e29b74c](https://github.com/mission-apprentissage/cerfa/commit/e29b74c1086df81243b218ae4696b0a1044e67d0))
+* ajout pages de support Notion ([b80fe73](https://github.com/mission-apprentissage/cerfa/commit/b80fe7353eedab8ee724897349ae75840ac5a38a))
+* delete workspace when deleting user ([03058cb](https://github.com/mission-apprentissage/cerfa/commit/03058cb2f4662cdaa2699ba71e08cfcbe5fa11f4))
+* **documents:** ajout du système de piéces justificatives dans un dossier ([#57](https://github.com/mission-apprentissage/cerfa/issues/57)) ([#58](https://github.com/mission-apprentissage/cerfa/issues/58)) ([9de8bd3](https://github.com/mission-apprentissage/cerfa/commit/9de8bd3e87adcc7de054813818b670532bb142ae))
+* **pds:** formulaire de fin de création de compte via pds ([874a2c4](https://github.com/mission-apprentissage/cerfa/commit/874a2c4b67ecfa19ee32403107016558cdf4ec8f))
+* suppression des valeurs par defaut Jwt dans le fichier de config ([94ff8e1](https://github.com/mission-apprentissage/cerfa/commit/94ff8e13e83bb1816cf787d16d242d24afd87407))
+* **ui:** add REACT_APP_BASE_HOST env ([10487b4](https://github.com/mission-apprentissage/cerfa/commit/10487b49d0982a7e57ff93bb0b739f792c74722a))
+* **ui:** ajout page profile brut ([3a2eda4](https://github.com/mission-apprentissage/cerfa/commit/3a2eda4ad7142c5299180e22192a12d09915d87e))
+* **ui:** cosmétiques pour présentation ([b3a1556](https://github.com/mission-apprentissage/cerfa/commit/b3a1556113671a211c88331b9cbff4e58ee73cd6))
+* **ui:** page Profile and add new switch style ([#55](https://github.com/mission-apprentissage/cerfa/issues/55)) ([99afa12](https://github.com/mission-apprentissage/cerfa/commit/99afa1292030628c62b88b0ef5194be656e1d754))
+* **ui:** pass down dossierId to socket ([61c5fea](https://github.com/mission-apprentissage/cerfa/commit/61c5feabcf1fea54701c3719d4c8ebbda794f1e0))
+* **ui:** update sitemap ([cdaca86](https://github.com/mission-apprentissage/cerfa/commit/cdaca868fd9b69f802f9d700c63f4d8cc5e3031e))
+
 # [1.11.0-beta.16](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.15...v1.11.0-beta.16) (2022-01-05)
 
 
