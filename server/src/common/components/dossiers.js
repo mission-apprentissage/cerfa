@@ -65,6 +65,15 @@ module.exports = async () => {
         { new: true }
       );
     },
+    getDocuments: async (id) => {
+      const found = await Dossier.findById(id).lean();
+
+      if (!found) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      return found.documents;
+    },
     addDocument: async (id, data) => {
       const found = await Dossier.findById(id);
 
@@ -72,7 +81,7 @@ module.exports = async () => {
         throw Boom.notFound("Doesn't exist");
       }
 
-      let { typeDocument, nomFichier, cheminFichier, userEmail } = await Joi.object({
+      let { typeDocument, nomFichier, cheminFichier, tailleFichier, userEmail } = await Joi.object({
         typeDocument: Joi.string()
           .valid(
             "CONVENTION_FORMATION",
@@ -85,6 +94,7 @@ module.exports = async () => {
         // typeFichier: Joi.string().required(), // "pdf"
         nomFichier: Joi.string().required(),
         cheminFichier: Joi.string().required(),
+        tailleFichier: Joi.number().required(),
         userEmail: Joi.string().required(),
       }).validateAsync(data, { abortEarly: false });
 
@@ -93,6 +103,7 @@ module.exports = async () => {
         typeFichier: "pdf",
         nomFichier,
         cheminFichier,
+        tailleFichier,
         dateAjout: Date.now(),
         dateMiseAJour: Date.now(),
         quiMiseAJour: userEmail,
@@ -102,6 +113,7 @@ module.exports = async () => {
       const foundIndexDocument = findIndex(newDocuments, {
         typeDocument: newDocument.typeDocument,
         nomFichier: newDocument.nomFichier,
+        tailleFichier: newDocument.tailleFichier,
       });
       if (foundIndexDocument != -1) {
         newDocuments.splice(foundIndexDocument, 1);
@@ -109,9 +121,60 @@ module.exports = async () => {
       newDocuments = [...newDocuments, newDocument];
 
       found._doc.documents = newDocuments;
-      found.lastModified = Date.now();
+      found._doc.lastModified = Date.now();
 
       return await found.save();
+    },
+    removeDocument: async (id, data) => {
+      const found = await Dossier.findById(id);
+
+      if (!found) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      let { typeDocument, nomFichier, cheminFichier, tailleFichier } = await Joi.object({
+        typeDocument: Joi.string()
+          .valid(
+            "CONVENTION_FORMATION",
+            "CONVENTION_REDUCTION_DUREE",
+            "CONVENTION_MOBILITE",
+            "FACTURE",
+            "CERTIFICAT_REALISATION"
+          )
+          .required(),
+        nomFichier: Joi.string().required(),
+        cheminFichier: Joi.string().required(),
+        tailleFichier: Joi.number().required(),
+      }).validateAsync(data, { abortEarly: false });
+
+      const lookupDocument = {
+        typeDocument,
+        nomFichier,
+        cheminFichier,
+        tailleFichier,
+      };
+
+      let newDocuments = [...found._doc.documents];
+      const foundIndexDocument = findIndex(newDocuments, {
+        typeDocument: lookupDocument.typeDocument,
+        nomFichier: lookupDocument.nomFichier,
+        cheminFichier: lookupDocument.cheminFichier,
+        tailleFichier: lookupDocument.tailleFichier,
+      });
+      if (foundIndexDocument === -1) {
+        throw new Error("Something went wrong");
+      }
+
+      newDocuments.splice(foundIndexDocument, 1);
+
+      return await Dossier.findOneAndUpdate(
+        { _id: id },
+        {
+          documents: newDocuments,
+          lastModified: Date.now(),
+        },
+        { new: true }
+      );
     },
     publishDossier: async (id) => {
       const found = await Dossier.findById(id).lean();

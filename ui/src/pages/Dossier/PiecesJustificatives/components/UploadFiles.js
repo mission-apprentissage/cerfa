@@ -2,9 +2,11 @@ import React, { useCallback, useMemo, useState } from "react";
 import { Box, HStack, Button, Heading, Input, ListItem, Text, List, useToast, Spinner } from "@chakra-ui/react";
 import { useDropzone } from "react-dropzone";
 import { useRecoilValue } from "recoil";
-import { _postFile } from "../../../../common/httpClient";
+import { _postFile, _delete } from "../../../../common/httpClient";
 import { DownloadLine, File, Bin } from "../../../../theme/components/icons";
 import { dossierAtom } from "../../../../common/hooks/dossierAtom";
+import { hasContextAccessTo } from "../../../../common/utils/rolesUtils";
+import queryString from "query-string";
 
 const endpoint = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -42,22 +44,23 @@ export default ({ title, onUploadSuccessed, typeDocument }) => {
   const toast = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadError, setUploadError] = useState(null);
-  const [uploadSuccess, setUploadSuccess] = useState(null);
+  const [documents, setDocuments] = useState(dossier.documents.filter((i) => i.typeDocument === typeDocument));
 
   const maxFiles = 1;
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
       setUploadError(null);
-      setUploadSuccess(null);
       setIsSubmitting(true);
 
       try {
         const data = new FormData();
         data.append("file", acceptedFiles[0]);
-        await _postFile(`${endpoint}/v1/upload?dossierId=${dossier._id}&typeDocument=${typeDocument}`, data);
-        setUploadSuccess(`Le fichier a bien été déposé`);
-        onUploadSuccessed();
+        const { documents } = await _postFile(
+          `${endpoint}/v1/upload?dossierId=${dossier._id}&typeDocument=${typeDocument}`,
+          data
+        );
+        setDocuments(documents.filter((i) => i.typeDocument === typeDocument));
         toast({
           title: "Le fichier a bien été déposé",
           status: "success",
@@ -75,7 +78,7 @@ export default ({ title, onUploadSuccessed, typeDocument }) => {
         setIsSubmitting(false);
       }
     },
-    [dossier._id, onUploadSuccessed, toast, typeDocument]
+    [dossier._id, toast, typeDocument]
   );
 
   const onDropRejected = useCallback(
@@ -90,7 +93,25 @@ export default ({ title, onUploadSuccessed, typeDocument }) => {
     [toast]
   );
 
-  const { acceptedFiles, getRootProps, getInputProps, isDragActive } = useDropzone({
+  const onDeleteClicked = async (file) => {
+    if (hasContextAccessTo(dossier, "dossier/page_documents/ajouter_un_document")) {
+      // eslint-disable-next-line no-restricted-globals
+      const remove = confirm("Voulez-vous vraiment supprimer ce dossier ?");
+      if (remove) {
+        try {
+          let data = file;
+          const { documents } = await _delete(
+            `${endpoint}/v1/upload?dossierId=${dossier._id}&${queryString.stringify(data)}`
+          );
+          setDocuments(documents.filter((i) => i.typeDocument === typeDocument));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+  };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     maxFiles,
     onDrop,
     onDropRejected,
@@ -112,17 +133,17 @@ export default ({ title, onUploadSuccessed, typeDocument }) => {
       </Heading>
       <Box mb={8}>
         {uploadError && <Text color="error">{uploadError}</Text>}
-        {acceptedFiles.length > 0 && uploadSuccess && (
+        {documents.length > 0 && (
           <>
             <List>
-              {acceptedFiles.map((file) => (
-                <ListItem key={file.path} borderBottom="solid 1px" borderColor="dgalt" pb={3}>
+              {documents.map((file) => (
+                <ListItem key={file.path || file.nomFichier} borderBottom="solid 1px" borderColor="dgalt" pb={3}>
                   <HStack>
                     <File boxSize="5" color="bluefrance" />
                     <Box flexGrow={1}>
-                      {file.path} - {formatBytes(file.size)}
+                      {file.path || file.nomFichier} - {formatBytes(file.size || file.tailleFichier)}
                     </Box>
-                    <Bin boxSize="5" color="redmarianne" />
+                    <Bin boxSize="5" color="redmarianne" cursor="pointer" onClick={() => onDeleteClicked(file)} />
                   </HStack>
                 </ListItem>
               ))}

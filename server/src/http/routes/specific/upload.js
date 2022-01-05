@@ -23,12 +23,16 @@ module.exports = (components) => {
 
   const { clamav, crypto, dossiers } = components;
 
-  function handlePDFMultipartForm(req, res, callback) {
+  function handlePDFMultipartForm(req, res, dossierId, callback) {
     let form = new multiparty.Form();
     const formEvents = new EventEmitter();
     // 'close' event is fired just after the form has been read but before file is scanned and uploaded to storage.
     // So instead of using form.on('close',...) we use a custom event to end response when everything is finished
-    formEvents.on("terminated", (e) => (e ? res.status(400).json({ error: e.message }) : res.json({})));
+    formEvents.on("terminated", async (e) => {
+      if (e) return res.status(400).json({ error: e.message });
+      const documents = await dossiers.getDocuments(dossierId);
+      return res.json({ documents });
+    });
 
     form.on("error", (e) => {
       return res.status(400).json({ error: e.message || "Une erreur est survenue lors de l'envoi du fichier" });
@@ -58,8 +62,13 @@ module.exports = (components) => {
     "/",
     permissionsDossierMiddleware(components, ["dossier/page_documents/ajouter_un_document"]),
     tryCatch(async (req, res) => {
-      // TODO add size limitations
-      handlePDFMultipartForm(req, res, async (part) => {
+      let { dossierId } = await Joi.object({
+        dossierId: Joi.string().required(),
+      })
+        .unknown()
+        .validateAsync(req.query, { abortEarly: false });
+
+      handlePDFMultipartForm(req, res, dossierId, async (part) => {
         let { test, dossierId, typeDocument } = await Joi.object({
           test: Joi.boolean(),
           dossierId: Joi.string().required(),
@@ -93,13 +102,51 @@ module.exports = (components) => {
           }
           throw new Error("Le contenu du fichier est invalide");
         }
+        // TODO add size limitations
         await dossiers.addDocument(dossierId, {
           typeDocument,
           nomFichier: part.filename,
           cheminFichier: path,
+          tailleFichier: part.byteCount,
           userEmail: req.user.email,
         });
       });
+    })
+  );
+
+  router.delete(
+    "/",
+    permissionsDossierMiddleware(components, ["dossier/page_documents/ajouter_un_document"]),
+    tryCatch(async (req, res) => {
+      let { dossierId, typeDocument, nomFichier, cheminFichier, tailleFichier } = await Joi.object({
+        dossierId: Joi.string().required(),
+        tailleFichier: Joi.string().required(),
+        cheminFichier: Joi.string().required(),
+        nomFichier: Joi.string().required(),
+        typeDocument: Joi.string()
+          .valid(
+            "CONVENTION_FORMATION",
+            "CONVENTION_REDUCTION_DUREE",
+            "CONVENTION_MOBILITE",
+            "FACTURE",
+            "CERTIFICAT_REALISATION"
+          )
+          .required(),
+      })
+        .unknown()
+        .validateAsync(req.query, { abortEarly: false });
+
+      await dossiers.removeDocument(dossierId, {
+        typeDocument,
+        nomFichier,
+        cheminFichier,
+        tailleFichier,
+      });
+
+      await deleteFromStorage(cheminFichier);
+
+      const documents = await dossiers.getDocuments(dossierId);
+      return res.json({ documents });
     })
   );
 

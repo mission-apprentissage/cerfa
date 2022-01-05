@@ -6,12 +6,8 @@ const UploadFiles = lazy(() => import("./components/UploadFiles"));
 export default () => {
   return (
     <Box mt={8} pt={2}>
-      <UploadFiles title="Convention de formation" typeDocument="CONVENTION_FORMATION" onUploadSuccessed={() => {}} />
-      <UploadFiles
-        title="Convention d'aménagement de durée"
-        typeDocument="CONVENTION_REDUCTION_DUREE"
-        onUploadSuccessed={() => {}}
-      />
+      <UploadFiles title="Convention de formation" typeDocument="CONVENTION_FORMATION" />
+      <UploadFiles title="Convention d'aménagement de durée" typeDocument="CONVENTION_REDUCTION_DUREE" />
     </Box>
   );
 };
