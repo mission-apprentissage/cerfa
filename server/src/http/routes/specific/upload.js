@@ -102,12 +102,13 @@ module.exports = (components) => {
           }
           throw new Error("Le contenu du fichier est invalide");
         }
+
         // TODO add size limitations
         await dossiers.addDocument(dossierId, {
           typeDocument,
           nomFichier: part.filename,
           cheminFichier: path,
-          tailleFichier: part.byteCount,
+          tailleFichier: test ? 0 : part.byteCount,
           userEmail: req.user.email,
         });
       });
