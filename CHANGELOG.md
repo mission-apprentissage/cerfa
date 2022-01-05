@@ -1,3 +1,10 @@
+## [1.11.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0...v1.11.1-beta.1) (2022-01-05)
+
+
+### Bug Fixes
+
+* **server:** coverage ([90bbeae](https://github.com/mission-apprentissage/cerfa/commit/90bbeae2c8aa7035e817aee7241399f82bb6be7e))
+
 # [1.11.0](https://github.com/mission-apprentissage/cerfa/compare/v1.10.0...v1.11.0) (2022-01-05)
 
 

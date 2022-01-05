@@ -1,6 +1,6 @@
 {
   "name": "mna-cerfa-server",
-  "version": "1.11.0",
+  "version": "1.11.1-beta.1",
   "description": "[MNA] Générateur Cerfa Serveer",
   "repository": "https://github.com/mission-apprentissage/cerfa.git",
   "private": true,
@@ -11,7 +11,7 @@
     "start": "nodemon --ignore tests/ src/index.js",
     "debug": "nodemon --inspect=0.0.0.0 --signal SIGINT --ignore tests/ src/index.js",
     "test": "CERFA_LOG_LEVEL=fatal dotenv cross-var mocha tests",
-    "test:coverage": "nyc --temp-dir .coverage/.nyc_output --report-dir .coverage --reporter=lcov --reporter=html yarn test",
+    "test:coverage": "nyc --temp-dir coverage/.nyc_output --report-dir coverage --reporter=lcov --reporter=html yarn test",
     "lint": "eslint src/ tests/",
     "docker:start": "docker-compose up -d --build --force-recreate",
     "docker:stop": "docker-compose down",
