@@ -12,10 +12,11 @@ describe("[Routes] Upload", () => {
 
   it("Vérifie qu'on ne peut uploader un fichier", async () => {
     let { httpClient, createAndLogUser } = await startServerWithClamav({ isInfected: false });
-    let { Cookie } = await createAndLogUser("user1@apprentissage.beta.gouv.fr", "password", {
+    let { Cookie, testDossier } = await createAndLogUser("user1@apprentissage.beta.gouv.fr", "password", {
       nom: "Robert",
       prenom: "Henri",
       permissions: { isAdmin: true },
+      account_status: "CONFIRMED",
     });
 
     var form = new FormData();
@@ -24,23 +25,37 @@ describe("[Routes] Upload", () => {
       contentType: "application/pdf",
     });
 
-    const response = await httpClient.post("/api/v1/upload?test=true", form, {
-      headers: {
-        ...form.getHeaders(),
-        cookie: Cookie,
-      },
-    });
+    const response = await httpClient.post(
+      `/api/v1/upload?test=true&dossierId=${testDossier._id.toString()}&typeDocument=CONVENTION_FORMATION`,
+      form,
+      {
+        headers: {
+          ...form.getHeaders(),
+          cookie: Cookie,
+        },
+      }
+    );
 
     assert.strictEqual(response.status, 200);
-    assert.deepStrictEqual(response.data, {});
+    // eslint-disable-next-line no-unused-vars
+    const { dateAjout, dateMiseAJour, ...restData } = response.data.documents[0];
+    assert.deepStrictEqual(restData, {
+      cheminFichier: `contrats/${testDossier._id.toString()}/testFile.pdf`,
+      nomFichier: "testFile.pdf",
+      quiMiseAJour: "user1@apprentissage.beta.gouv.fr",
+      tailleFichier: 0,
+      typeDocument: "CONVENTION_FORMATION",
+      typeFichier: "pdf",
+    });
   });
 
   it("Vérifie qu'on ne peut pas uploader un fichier qui n'a pas le bon content type", async () => {
     let { httpClient, createAndLogUser } = await startServerWithClamav({ isInfected: false });
-    let { Cookie } = await createAndLogUser("user1@apprentissage.beta.gouv.fr", "password", {
+    let { Cookie, testDossier } = await createAndLogUser("user1@apprentissage.beta.gouv.fr", "password", {
       nom: "Robert",
       prenom: "Henri",
       permissions: { isAdmin: true },
+      account_status: "CONFIRMED",
     });
 
     var form = new FormData();
@@ -48,12 +63,16 @@ describe("[Routes] Upload", () => {
       filename: "testFile.pdf",
     });
 
-    const response = await httpClient.post("/api/v1/upload?test=true", form, {
-      headers: {
-        ...form.getHeaders(),
-        cookie: Cookie,
-      },
-    });
+    const response = await httpClient.post(
+      `/api/v1/upload?test=true&dossierId=${testDossier._id.toString()}&typeDocument=CONVENTION_FORMATION`,
+      form,
+      {
+        headers: {
+          ...form.getHeaders(),
+          cookie: Cookie,
+        },
+      }
+    );
 
     assert.strictEqual(response.status, 400);
     assert.deepStrictEqual(response.data, { error: "Le fichier n'est pas au bon format" });
@@ -61,10 +80,11 @@ describe("[Routes] Upload", () => {
 
   it("Vérifie qu'on ne peut pas uploader un fichier avec un virus", async () => {
     let { httpClient, createAndLogUser } = await startServerWithClamav({ isInfected: true });
-    let { Cookie } = await createAndLogUser("user1@apprentissage.beta.gouv.fr", "password", {
+    let { Cookie, testDossier } = await createAndLogUser("user1@apprentissage.beta.gouv.fr", "password", {
       nom: "Robert",
       prenom: "Henri",
       permissions: { isAdmin: true },
+      account_status: "CONFIRMED",
     });
 
     var form = new FormData();
@@ -73,12 +93,16 @@ describe("[Routes] Upload", () => {
       contentType: "application/pdf",
     });
 
-    const response = await httpClient.post("/api/v1/upload?test=true", form, {
-      headers: {
-        ...form.getHeaders(),
-        cookie: Cookie,
-      },
-    });
+    const response = await httpClient.post(
+      `/api/v1/upload?test=true&dossierId=${testDossier._id.toString()}&typeDocument=CONVENTION_FORMATION`,
+      form,
+      {
+        headers: {
+          ...form.getHeaders(),
+          cookie: Cookie,
+        },
+      }
+    );
 
     assert.strictEqual(response.status, 400);
     assert.deepStrictEqual(response.data, { error: "Le contenu du fichier est invalide" });
