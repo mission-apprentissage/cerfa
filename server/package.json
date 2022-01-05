@@ -17,6 +17,7 @@
     "docker:stop": "docker-compose down",
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",
     "seed": "node src/jobs/seed/index.js",
+    "seed:pen": "node src/jobs/seed-pen/index.js",
     "playground": "node src/jobs/playground/index.js",
     "jobs": "node src/jobs/index.js",
     "zipStorage": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/zipStorage.js",
