@@ -76,5 +76,20 @@ module.exports = async () => {
       await wksDb.save();
       return wksDb.contributeurs;
     },
+    removeUserWorkspace: async (userid) => {
+      const wksDb = await Workspace.findOne({ owner: userid });
+      if (!wksDb) {
+        throw new Error("wks doesn't exist");
+      }
+
+      const { findPermissions, removePermission } = await permissions();
+      const perms = await findPermissions({ workspaceId: wksDb._id });
+      for (let index = 0; index < perms.length; index++) {
+        const perm = perms[index];
+        await removePermission(perm._id);
+      }
+
+      return await Workspace.deleteOne({ _id: wksDb._id });
+    },
   };
 };

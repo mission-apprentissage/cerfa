@@ -26,6 +26,7 @@ const siret = require("./routes/specific/siret");
 const cfdrncp = require("./routes/specific/cfdrncp");
 const signDocument = require("./routes/specific/signDocument");
 
+const supportPage = require("./routes/specific/supportPage");
 const pds = require("./routes/specific/pds");
 
 const startWebsocket = require("./websockets/socket");
@@ -48,6 +49,7 @@ module.exports = async (components) => {
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/password", password(components));
 
+  app.use("/api/v1/support", supportPage());
   app.use("/api/v1/pds", pds(components));
 
   // Controled access
@@ -67,7 +69,7 @@ module.exports = async (components) => {
   app.use("/api/v1/workspace", checkJwtToken, workspace(components));
   app.use("/api/v1/dossier", checkJwtToken, dossier(components));
   app.use("/api/v1/cerfa", checkJwtToken, cerfa(components));
-  app.use("/api/v1/upload", checkJwtToken, pageAccessMiddleware(["admin/page_upload"]), upload(components));
+  app.use("/api/v1/upload", checkJwtToken, upload(components));
   app.use("/api/v1/history", checkJwtToken, history(components));
   app.use("/api/v1/siret", siret(components));
   app.use("/api/v1/cfdrncp", checkJwtToken, cfdrncp(components));

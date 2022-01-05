@@ -29,7 +29,7 @@ export function useDossier(dossierId = null) {
     async (workspaceId) => {
       let d = null;
       try {
-        d = await _post(`/api/v1/workspace/dossier?workspaceId=${workspaceId}`);
+        d = await _post(`/api/v1/workspace/dossier?workspaceId=${workspaceId}`, { workspaceId });
       } catch (e) {
         setError(e);
       } finally {

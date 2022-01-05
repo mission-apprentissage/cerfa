@@ -68,3 +68,7 @@
   font-weight: 300;
   font-display: swap;
 }
+
+.notion-viewport {
+  pointer-events: none;
+}

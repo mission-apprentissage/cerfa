@@ -3,6 +3,10 @@ import { Box, Accordion, AccordionItem, AccordionButton, AccordionPanel } from "
 
 import { AddFill, SubtractLine } from "../../../theme/components/icons";
 
+const FormEmployer = lazy(() => import("./components/FormEmployer"));
+const FormLearner = lazy(() => import("./components/FormLearner"));
+const FormLearningMaster = lazy(() => import("./components/FormLearningMaster"));
+const FormContract = lazy(() => import("./components/FormContract"));
 const FormFormation = lazy(() => import("./components/FormFormation"));
 
 export default () => {
@@ -10,7 +14,23 @@ export default () => {
     <Accordion allowMultiple allowToggle mt={12}>
       {[
         {
-          title: "LA FORMATION",
+          title: "Employeur",
+          Component: FormEmployer,
+        },
+        {
+          title: "Apprenti(e)",
+          Component: FormLearner,
+        },
+        {
+          title: "Maître d'apprentissage",
+          Component: FormLearningMaster,
+        },
+        {
+          title: "Contrat",
+          Component: FormContract,
+        },
+        {
+          title: "Formation",
           Component: FormFormation,
         },
         // {

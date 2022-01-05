@@ -14,6 +14,7 @@ const WaitingConfirmationPage = lazy(() => import("./pages/auth/WaitingConfirmat
 const ResetPasswordPage = lazy(() => import("./pages/auth/ResetPasswordPage"));
 const ForgottenPasswordPage = lazy(() => import("./pages/auth/ForgottenPasswordPage"));
 
+const ProfilePage = lazy(() => import("./pages/Profile/ProfilePage"));
 const WorkspacePage = lazy(() => import("./pages/Workspace/WorkspacePage"));
 const DossierPage = lazy(() => import("./pages/Dossier/DossierPage"));
 const SharedPage = lazy(() => import("./pages/SharedPage"));
@@ -22,13 +23,13 @@ const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const Users = lazy(() => import("./pages/admin/Users"));
 const Roles = lazy(() => import("./pages/admin/Roles"));
 const Maintenance = lazy(() => import("./pages/admin/Maintenance"));
-const Contact = lazy(() => import("./pages/legal/Contact"));
+const Support = lazy(() => import("./pages/legal/Support"));
 const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 
-const ResetPasswordWrapper = ({ children }) => {
+const AccountWrapper = ({ children }) => {
   let [auth] = useAuth();
   let history = useHistory();
 
@@ -41,6 +42,25 @@ const ResetPasswordWrapper = ({ children }) => {
           if (auth.account_status === "FORCE_RESET_PASSWORD") {
             let { token } = await _post("/api/v1/password/forgotten-password?noEmail=true", { username: auth.sub });
             history.push(`/reset-password?passwordToken=${token}`);
+          }
+        }
+      }
+    })();
+  }, [auth, history]);
+
+  return <>{children}</>;
+};
+
+const ForceCompleteProfile = ({ children }) => {
+  let [auth] = useAuth();
+  let history = useHistory();
+
+  useEffect(() => {
+    (async () => {
+      if (auth.sub !== "anonymous") {
+        if (auth.confirmed) {
+          if (auth.account_status === "FORCE_COMPLETE_PROFILE") {
+            history.push(`/auth/finalize`);
           }
         }
       }
@@ -80,7 +100,7 @@ export default () => {
       <div className="App">
         <Router>
           <Suspense fallback={<div></div>}>
-            <ResetPasswordWrapper>
+            <AccountWrapper>
               <ScrollToTop />
               <Switch>
                 {/* PUBLIC PAGES */}
@@ -92,36 +112,40 @@ export default () => {
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
 
                 <Route exact path="/stats" component={StatsPage} />
-                <Route exact path="/contact" component={Contact} />
+                <Route exact path="/support" component={Support} />
+                <Route exact path="/support/:id" component={Support} />
                 <Route exact path="/cookies" component={Cookies} />
                 <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
                 <Route exact path="/mentions-legales" component={MentionsLegales} />
                 <Route exact path="/accessibilite" component={Accessibilite} />
 
                 {/* PRIVATE PAGES */}
+                <ForceCompleteProfile>
+                  <PrivateRoute path="/mon-compte" component={ProfilePage} />
 
-                {/* Mon espaces pages */}
-                <PrivateRoute path="/mon-espace" component={WorkspacePage} />
-                {/*  Espace partagé  pages */}
-                <PrivateRoute exact path="/partages-avec-moi" component={SharedPage} />
-                <PrivateRoute exact path="/partages-avec-moi/dossiers/:id/:step" component={DossierPage} />
-                <PrivateRoute path="/partages-avec-moi/espaces/:workspaceId" component={WorkspacePage} />
+                  {/* Mon espaces pages */}
+                  <PrivateRoute path="/mon-espace" component={WorkspacePage} />
+                  {/*  Espace partagé  pages */}
+                  <PrivateRoute exact path="/partages-avec-moi" component={SharedPage} />
+                  <PrivateRoute exact path="/partages-avec-moi/dossiers/:id/:step" component={DossierPage} />
+                  <PrivateRoute path="/partages-avec-moi/espaces/:workspaceId" component={WorkspacePage} />
 
-                {/* PRIVATE ADMIN PAGES */}
-                {auth && hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
-                  <PrivateRoute exact path="/admin/users" component={Users} />
-                )}
-                {auth && hasPageAccessTo(auth, "admin/page_gestion_roles") && (
-                  <PrivateRoute exact path="/admin/roles" component={Roles} />
-                )}
-                {auth && hasPageAccessTo(auth, "admin/page_message_maintenance") && (
-                  <PrivateRoute exact path="/admin/maintenance" component={Maintenance} />
-                )}
+                  {/* PRIVATE ADMIN PAGES */}
+                  {auth && hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
+                    <PrivateRoute exact path="/admin/users" component={Users} />
+                  )}
+                  {auth && hasPageAccessTo(auth, "admin/page_gestion_roles") && (
+                    <PrivateRoute exact path="/admin/roles" component={Roles} />
+                  )}
+                  {auth && hasPageAccessTo(auth, "admin/page_message_maintenance") && (
+                    <PrivateRoute exact path="/admin/maintenance" component={Maintenance} />
+                  )}
+                </ForceCompleteProfile>
 
                 {/* Fallback */}
                 <Route component={NotFoundPage} />
               </Switch>
-            </ResetPasswordWrapper>
+            </AccountWrapper>
           </Suspense>
         </Router>
       </div>

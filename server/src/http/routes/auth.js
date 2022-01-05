@@ -18,7 +18,6 @@ const checkActivationToken = (users) => {
         secretOrKey: config.auth.activation.jwtSecret,
       },
       (jwt_payload, done) => {
-        console.log(jwt_payload);
         return users
           .getUser(jwt_payload.sub)
           .then((user) => {
@@ -133,7 +132,7 @@ module.exports = ({ users, mailer }) => {
 
       const token = createUserToken({ payload });
 
-      res
+      return res
         .cookie(`cerfa-${config.env}-jwt`, token, {
           maxAge: 365 * 24 * 3600000,
           httpOnly: !IS_OFFLINE,

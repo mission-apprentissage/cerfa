@@ -8,23 +8,23 @@ module.exports = {
   mongodb: {
     uri: env.get("CERFA_MONGODB_URI").default("mongodb://127.0.0.1:27017/cerfa?retryWrites=true&w=majority").asString(),
   },
-  apiKey: env.get("CERFA_API_KEY").default("12345").asString(),
+  apiKey: env.get("CERFA_API_KEY").asString(),
   auth: {
-    passwordHashRounds: env.get("CERFA_AUTH_PASSWORD_HASH_ROUNDS").default(1001).asString(),
+    passwordHashRounds: env.get("CERFA_AUTH_PASSWORD_HASH_ROUNDS").asString(),
     user: {
-      jwtSecret: env.get("CERFA_AUTH_USER_JWT_SECRET").default("1234").asString(),
+      jwtSecret: env.get("CERFA_AUTH_USER_JWT_SECRET").asString(),
       expiresIn: "24h",
     },
     pds: {
-      jwtSecret: env.get("CERFA_AUTH_PDS_JWT_SECRET").default("1234").asString(),
+      jwtSecret: env.get("CERFA_AUTH_PDS_JWT_SECRET").asString(),
       expiresIn: "24h",
     },
     activation: {
-      jwtSecret: env.get("CERFA_AUTH_ACTIVATION_JWT_SECRET").default("45678").asString(),
+      jwtSecret: env.get("CERFA_AUTH_ACTIVATION_JWT_SECRET").asString(),
       expiresIn: "96h",
     },
     password: {
-      jwtSecret: env.get("CERFA_AUTH_PASSWORD_JWT_SECRET").default("91011").asString(),
+      jwtSecret: env.get("CERFA_AUTH_PASSWORD_JWT_SECRET").asString(),
       expiresIn: "1h",
     },
   },

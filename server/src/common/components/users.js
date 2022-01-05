@@ -29,7 +29,7 @@ module.exports = async () => {
     getUser: async (email) => await User.findOne({ email }).lean(),
     getUserById: async (id, select = {}) => await User.findById(id, select).lean(),
     getUserByUsername: async (username, select = {}) => await User.findOne({ username }, select).lean(),
-    getUsers: async (filters = {}) => await User.find(filters, { password: 0, _id: 0, __v: 0 }).lean(),
+    getUsers: async (filters = {}) => await User.find(filters, { password: 0, __v: 0 }).lean(),
     getUsersByEmails: async (emails, select = {}) => await User.find({ email: { $in: emails } }, select).lean(),
     createUser: async (userEmail, password, options = {}) => {
       const hash = options.hash || sha512Utils.hash(password);
@@ -82,7 +82,10 @@ module.exports = async () => {
         throw new Error(`Unable to find user ${userid}`);
       }
 
-      return await user.deleteOne({ _id: userid });
+      const { removeUserWorkspace } = await workspaces();
+      await removeUserWorkspace(userid);
+
+      return await User.deleteOne({ _id: userid });
     },
     updateUser: async (userid, data) => {
       let user = await User.findById(userid);
@@ -91,6 +94,36 @@ module.exports = async () => {
       }
 
       const result = await User.findOneAndUpdate({ _id: user._id }, data, { new: true });
+
+      return result.toObject();
+    },
+    finalizePdsUser: async (userid, data) => {
+      let user = await User.findById(userid);
+      if (!user) {
+        throw new Error(`Unable to find user ${userid}`);
+      }
+
+      if (user.orign_register !== "PDS") {
+        throw new Error(`User has not been registered through PDS`);
+      }
+
+      let rolesDb = [];
+      if (data.roles && data.roles.length > 0) {
+        rolesDb = await Role.find({ name: { $in: data.roles } }, { _id: 1 });
+        if (!rolesDb.length === 0) {
+          throw new Error("Roles doesn't exist");
+        }
+      }
+
+      const result = await User.findOneAndUpdate(
+        { _id: user._id },
+        {
+          siret: data.siret,
+          roles: rolesDb,
+          account_status: "CONFIRMED",
+        },
+        { new: true }
+      );
 
       return result.toObject();
     },
@@ -142,6 +175,8 @@ module.exports = async () => {
         workspaceId: workspace?._id.toString(),
         siret: user.siret || null,
         confirmed: user.confirmed || false,
+        orign_register: user.orign_register,
+        telephone: user.telephone,
       };
       return structure;
     },

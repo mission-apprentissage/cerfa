@@ -28,9 +28,10 @@ module.exports = ({ users, roles, mailer }) => {
     "/user",
     tryCatch(async ({ body }, res) => {
       const { password, options } = await Joi.object({
-        // username: Joi.string().required(),
         password: Joi.string().required(),
         options: Joi.object({
+          prenom: Joi.string().required(),
+          nom: Joi.string().required(),
           email: Joi.string().required(),
           roles: Joi.array().required(),
           permissions: Joi.object({
@@ -67,7 +68,8 @@ module.exports = ({ users, roles, mailer }) => {
       await users.updateUser(userid, {
         isAdmin: body.options.permissions.isAdmin,
         email: body.options.email,
-        username: body.username,
+        prenom: body.options.prenom,
+        nom: body.options.nom,
         roles: rolesId,
         acl: body.options.acl,
         invalided_token: true,

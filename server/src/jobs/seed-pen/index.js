@@ -21,27 +21,64 @@ runScript(async ({ users, workspaces, dossiers }) => {
     logger.info(`Role ${key} created`);
   }
 
-  const userAdmin = await users.createUser("antoine.bigard+testAdmin@beta.gouv.fr", "password", {
-    nom: "Admin",
-    prenom: "test",
+  await users.createUser("contrat-pentest+admin1@apprentissage.beta.gouv.fr", "password", {
+    nom: "admin",
+    prenom: "1",
     permissions: { isAdmin: true },
     confirmed: true,
   });
-  logger.info(`User 'tAdmin' with password 'password' and admin is successfully created `);
+  await users.createUser("contrat-pentest+admin2@apprentissage.beta.gouv.fr", "password", {
+    nom: "admin",
+    prenom: "2",
+    permissions: { isAdmin: true },
+    confirmed: true,
+  });
+  logger.info(`User '1admin' with password 'password' and admin is successfully created `);
 
-  await users.createUser("antoine.bigard+testEntreprise@beta.gouv.fr", "password", {
-    nom: "Damien",
-    prenom: "Arthur",
+  await users.createUser("contrat-pentest+support1@apprentissage.beta.gouv.fr", "password", {
+    nom: "support",
+    prenom: "1",
+    roles: ["support"],
+    confirmed: true,
+  });
+  await users.createUser("contrat-pentest+support2@apprentissage.beta.gouv.fr", "password", {
+    nom: "support",
+    prenom: "2",
+    roles: ["support"],
+    confirmed: true,
+  });
+
+  await users.createUser("contrat-pentest+entreprise1@apprentissage.beta.gouv.fr", "password", {
+    nom: "entreprise",
+    prenom: "1",
     roles: ["entreprise"],
     confirmed: true,
   });
-  logger.info(`User 'tEntreprise' with password 'password' is successfully created `);
+  await users.createUser("contrat-pentest+entreprise2@apprentissage.beta.gouv.fr", "password", {
+    nom: "entreprise",
+    prenom: "2",
+    roles: ["entreprise"],
+    confirmed: true,
+  });
+  const userCfa = await users.createUser("contrat-pentest+cfa1@apprentissage.beta.gouv.fr", "password", {
+    nom: "cfa",
+    prenom: "1",
+    roles: ["cfa"],
+    confirmed: true,
+  });
+  await users.createUser("contrat-pentest+cfa2@apprentissage.beta.gouv.fr", "password", {
+    nom: "cfa",
+    prenom: "2",
+    roles: ["cfa"],
+    confirmed: true,
+  });
+  logger.info(`User '1entreprise' with password 'password' is successfully created `);
 
-  const wks = await workspaces.getUserWorkspace(userAdmin, { _id: 1 });
+  const wks = await workspaces.getUserWorkspace(userCfa, { _id: 1 });
 
-  await workspaces.addContributeur(wks._id, "antoine.bigard+testEntreprise@beta.gouv.fr", "wks.member");
+  await workspaces.addContributeur(wks._id, "contrat-pentest+entreprise1@apprentissage.beta.gouv.fr", "wks.member");
 
-  const dossier = await dossiers.createDossier({ sub: userAdmin.email }, { nom: "Dossier Test", saved: true });
+  const dossier = await dossiers.createDossier({ sub: userCfa.email }, { nom: "Dossier Test", saved: true });
 
   logger.info(`Dossier test created`);
 

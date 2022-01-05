@@ -20,6 +20,7 @@ const apiParams = {
   context: "CERFA MNA",
   recipient: "13002526500013", // Siret Dinum
   object: "Construction d'un générateur de CERFA pour les contrats publique d'apprentissage",
+  non_diffusables: true,
 };
 
 class ApiEntreprise {

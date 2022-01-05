@@ -51,13 +51,22 @@ async function startServer(custom) {
   const httpClient = axiosist(app);
 
   await components.roles.createRole({ name: "wks.admin", type: "permission" });
+  await components.roles.createRole({
+    name: "dossier.admin",
+    type: "permission",
+    acl: ["dossier/page_documents/ajouter_un_document"],
+  });
 
   return {
     httpClient,
     components,
     ...helpers,
     createAndLogUser: async (userEmail, password, options) => {
-      await components.users.createUser(userEmail, password, options);
+      const testUser = await components.users.createUser(userEmail, password, options);
+      const testDossier = await components.dossiers.createDossier(
+        { sub: testUser.email },
+        { nom: "Dossier Test", saved: true }
+      );
 
       const response = await httpClient.post("/api/v1/auth/login", {
         username: userEmail,
@@ -66,6 +75,7 @@ async function startServer(custom) {
 
       return {
         Cookie: response.headers["set-cookie"].join(";"),
+        testDossier,
       };
     },
   };

@@ -4,6 +4,9 @@ const tryCatch = require("./tryCatchMiddleware");
 
 module.exports = ({ permissions, roles }, acls) =>
   tryCatch(async ({ method, body, query, user }, res, next) => {
+    if (user.account_status !== "CONFIRMED") {
+      throw Boom.unauthorized("Accès non autorisé");
+    }
     const data = method === "GET" || method === "DELETE" ? query : body;
 
     let { workspaceId } = await Joi.object({
