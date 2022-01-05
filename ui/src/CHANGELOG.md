@@ -1,3 +1,10 @@
+# [1.11.0-beta.15](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.14...v1.11.0-beta.15) (2022-01-05)
+
+
+### Bug Fixes
+
+* **ui:** suppression de dossier depuis un espace ([16e85f8](https://github.com/mission-apprentissage/cerfa/commit/16e85f826b6eb72ccfd543dbd1c6f58381ccd8b0))
+
 # [1.11.0-beta.14](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0-beta.13...v1.11.0-beta.14) (2022-01-04)
 
 
