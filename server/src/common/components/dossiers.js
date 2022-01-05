@@ -1,7 +1,9 @@
 const { Workspace, Dossier, Cerfa, User } = require("../model/index");
 const Boom = require("boom");
+const Joi = require("joi");
 const permissions = require("./permissions");
 const moment = require("moment");
+const { findIndex } = require("lodash");
 moment.locale("fr-FR");
 
 module.exports = async () => {
@@ -62,6 +64,54 @@ module.exports = async () => {
         },
         { new: true }
       );
+    },
+    addDocument: async (id, data) => {
+      const found = await Dossier.findById(id);
+
+      if (!found) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      let { typeDocument, nomFichier, cheminFichier, userEmail } = await Joi.object({
+        typeDocument: Joi.string()
+          .valid(
+            "CONVENTION_FORMATION",
+            "CONVENTION_REDUCTION_DUREE",
+            "CONVENTION_MOBILITE",
+            "FACTURE",
+            "CERTIFICAT_REALISATION"
+          )
+          .required(),
+        // typeFichier: Joi.string().required(), // "pdf"
+        nomFichier: Joi.string().required(),
+        cheminFichier: Joi.string().required(),
+        userEmail: Joi.string().required(),
+      }).validateAsync(data, { abortEarly: false });
+
+      const newDocument = {
+        typeDocument,
+        typeFichier: "pdf",
+        nomFichier,
+        cheminFichier,
+        dateAjout: Date.now(),
+        dateMiseAJour: Date.now(),
+        quiMiseAJour: userEmail,
+      };
+
+      let newDocuments = [...found._doc.documents];
+      const foundIndexDocument = findIndex(newDocuments, {
+        typeDocument: newDocument.typeDocument,
+        nomFichier: newDocument.nomFichier,
+      });
+      if (foundIndexDocument != -1) {
+        newDocuments.splice(foundIndexDocument, 1);
+      }
+      newDocuments = [...newDocuments, newDocument];
+
+      found._doc.documents = newDocuments;
+      found.lastModified = Date.now();
+
+      return await found.save();
     },
     publishDossier: async (id) => {
       const found = await Dossier.findById(id).lean();

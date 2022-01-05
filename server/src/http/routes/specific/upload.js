@@ -1,7 +1,6 @@
 const express = require("express");
 const Joi = require("joi");
 const { createWriteStream } = require("fs");
-const mongoose = require("mongoose");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const { uploadToStorage, deleteFromStorage } = require("../../../common/utils/ovhUtils");
 const { oleoduc } = require("oleoduc");
@@ -9,6 +8,7 @@ const multiparty = require("multiparty");
 const { EventEmitter } = require("events");
 const { PassThrough } = require("stream");
 const logger = require("../../../common/logger");
+const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 
 function discard() {
   return createWriteStream("/dev/null");
@@ -18,8 +18,10 @@ function noop() {
   return new PassThrough();
 }
 
-module.exports = ({ clamav, crypto }) => {
+module.exports = (components) => {
   const router = express.Router();
+
+  const { clamav, crypto, dossiers } = components;
 
   function handlePDFMultipartForm(req, res, callback) {
     let form = new multiparty.Form();
@@ -52,25 +54,27 @@ module.exports = ({ clamav, crypto }) => {
     form.parse(req);
   }
 
-  /**
-   * FIXME Fake implementation
-   * @returns {*}
-   */
-  function getContratIdForUser() {
-    return mongoose.Types.ObjectId().toString();
-  }
-
   router.post(
     "/",
+    permissionsDossierMiddleware(components, ["dossier/page_documents/ajouter_un_document"]),
     tryCatch(async (req, res) => {
-      // TODO HAS RIGHTS
       // TODO add size limitations
       handlePDFMultipartForm(req, res, async (part) => {
-        let { test } = await Joi.object({
+        let { test, dossierId, typeDocument } = await Joi.object({
           test: Joi.boolean(),
+          dossierId: Joi.string().required(),
+          typeDocument: Joi.string()
+            .valid(
+              "CONVENTION_FORMATION",
+              "CONVENTION_REDUCTION_DUREE",
+              "CONVENTION_MOBILITE",
+              "FACTURE",
+              "CERTIFICAT_REALISATION"
+            )
+            .required(),
         }).validateAsync(req.query, { abortEarly: false });
 
-        let contratId = getContratIdForUser();
+        let contratId = dossierId;
         let path = `contrats/${contratId}/${part.filename}`;
         let scanner = await clamav.getScanner();
 
@@ -89,6 +93,12 @@ module.exports = ({ clamav, crypto }) => {
           }
           throw new Error("Le contenu du fichier est invalide");
         }
+        await dossiers.addDocument(dossierId, {
+          typeDocument,
+          nomFichier: part.filename,
+          cheminFichier: path,
+          userEmail: req.user.email,
+        });
       });
     })
   );
