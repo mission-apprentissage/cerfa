@@ -23,10 +23,10 @@ jobs:
           yarn --cwd ui test:coverage
 
       # codecov
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./ui/coverage
-          name: codecov-ui
-          verbose: true
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v2
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     directory: ./ui/coverage
+      #     name: codecov-ui
+      #     verbose: true

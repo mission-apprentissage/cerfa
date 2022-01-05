@@ -34,6 +34,8 @@ export * from "./CloseCircleLine";
 export * from "./CheckLine";
 export * from "./SentPaperPlane";
 export * from "./LockFill";
+export * from "./File";
+export * from "./Bin";
 export * from "./Folder";
 export * from "./IoArrowForward";
 export * from "./IoArrowBackward";

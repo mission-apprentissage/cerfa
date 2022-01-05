@@ -69,7 +69,7 @@ module.exports = async (components) => {
   app.use("/api/v1/workspace", checkJwtToken, workspace(components));
   app.use("/api/v1/dossier", checkJwtToken, dossier(components));
   app.use("/api/v1/cerfa", checkJwtToken, cerfa(components));
-  app.use("/api/v1/upload", checkJwtToken, pageAccessMiddleware(["admin/page_upload"]), upload(components));
+  app.use("/api/v1/upload", checkJwtToken, upload(components));
   app.use("/api/v1/history", checkJwtToken, history(components));
   app.use("/api/v1/siret", siret(components));
   app.use("/api/v1/cfdrncp", checkJwtToken, cfdrncp(components));

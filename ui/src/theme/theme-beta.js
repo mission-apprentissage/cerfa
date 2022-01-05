@@ -9,6 +9,8 @@ const colors = {
   warning: "#fa5c00",
   info: "#3a55d1",
   galt: "#f9f8f6",
+  mgalt: "#666666",
+  dgalt: "#E5E5E5",
   grey: {
     800: "#1e1e1e",
     750: "#2a2a2a",

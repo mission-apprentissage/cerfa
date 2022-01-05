@@ -32,6 +32,12 @@ const documentSchema = {
     required: true,
     description: "Chemin du fichier binaire",
   },
+  tailleFichier: {
+    type: Number,
+    default: 0,
+    required: true,
+    description: "Taille du fichier en bytes",
+  },
   dateAjout: {
     type: Date,
     default: Date.now,
