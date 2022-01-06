@@ -4,6 +4,7 @@ import { dossierAtom } from "../useDossier/dossierAtom";
 import { useQuery } from "react-query";
 import { CerfaFormationController, useCerfaFormation } from "./parts/useCerfaFormation";
 import { CerfaEmployeurController, useCerfaEmployeur } from "./parts/useCerfaEmployeur";
+import { CerfaApprentiController, useCerfaApprenti } from "./parts/useCerfaApprenti";
 
 const hydrate = async (dossier) => {
   try {
@@ -12,6 +13,7 @@ const hydrate = async (dossier) => {
 
     const cerfaFormationController = await CerfaFormationController(dossier);
     const cerfaEmployeurController = await CerfaEmployeurController(dossier);
+    const cerfaApprentiController = await CerfaApprentiController(dossier);
 
     return {
       ...cerfa,
@@ -22,7 +24,10 @@ const hydrate = async (dossier) => {
           ...cerfaEmployeurController.employeur.siret,
         },
       },
-      // apprenti: {},
+      apprenti: {
+        ...cerfa.apprenti,
+        ...cerfaApprentiController.apprenti,
+      },
       // maitre1: {},
       // maitre2: {},
       formation: {
@@ -63,6 +68,7 @@ export function useCerfa() {
   const dossier = useRecoilValue(dossierAtom);
   const { setAll: setCerfaFormation } = useCerfaFormation();
   const { setAll: setCerfaEmployeur } = useCerfaEmployeur();
+  const { setAll: setCerfaApprenti } = useCerfaApprenti();
 
   const {
     data: cerfa,
@@ -74,6 +80,7 @@ export function useCerfa() {
       const res = await hydrate(dossier);
       setCerfaFormation(res);
       setCerfaEmployeur(res);
+      setCerfaApprenti(res);
       return Promise.resolve(res);
     },
     {

@@ -91,6 +91,134 @@ const fieldLockedSchema = {
       default: false,
     },
   },
+  apprenti: {
+    nom: {
+      type: Boolean,
+      default: false,
+    },
+    prenom: {
+      type: Boolean,
+      default: false,
+    },
+    sexe: {
+      type: Boolean,
+      default: false,
+    },
+    nationalite: {
+      type: Boolean,
+      default: false,
+    },
+    dateNaissance: {
+      type: Boolean,
+      default: false,
+    },
+    departementNaissance: {
+      type: Boolean,
+      default: false,
+    },
+    communeNaissance: {
+      type: Boolean,
+      default: false,
+    },
+    nir: {
+      type: Boolean,
+      default: false,
+    },
+    regimeSocial: {
+      type: Boolean,
+      default: false,
+    },
+    handicap: {
+      type: Boolean,
+      default: false,
+    },
+    situationAvantContrat: {
+      type: Boolean,
+      default: false,
+    },
+    diplome: {
+      type: Boolean,
+      default: false,
+    },
+    derniereClasse: {
+      type: Boolean,
+      default: false,
+    },
+    diplomePrepare: {
+      type: Boolean,
+      default: false,
+    },
+    intituleDiplomePrepare: {
+      type: Boolean,
+      default: false,
+    },
+    telephone: {
+      type: Boolean,
+      default: false,
+    },
+    courriel: {
+      type: Boolean,
+      default: false,
+    },
+    adresse: {
+      numero: {
+        type: Boolean,
+        default: false,
+      },
+      voie: {
+        type: Boolean,
+        default: false,
+      },
+      complement: {
+        type: Boolean,
+        default: false,
+      },
+      codePostal: {
+        type: Boolean,
+        default: false,
+      },
+      commune: {
+        type: Boolean,
+        default: false,
+      },
+    },
+    responsableLegal: {
+      nom: {
+        type: Boolean,
+        default: false,
+      },
+      prenom: {
+        type: Boolean,
+        default: false,
+      },
+      adresse: {
+        numero: {
+          type: Boolean,
+          default: false,
+        },
+        voie: {
+          type: Boolean,
+          default: false,
+        },
+        complement: {
+          type: Boolean,
+          default: false,
+        },
+        codePostal: {
+          type: Boolean,
+          default: false,
+        },
+        commune: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    },
+    inscriptionSportifDeHautNiveau: {
+      type: Boolean,
+      default: false,
+    },
+  },
   formation: {
     rncp: {
       type: Boolean,
