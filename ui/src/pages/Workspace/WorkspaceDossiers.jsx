@@ -8,7 +8,7 @@ import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 import { workspacePathsAtom, workspaceTitlesAtom, workspaceAtom } from "../../common/hooks/workspaceAtoms";
 import TableDossiers from "./components/TableDossiers";
 import { Settings4Fill } from "../../theme/components/icons";
-import WorkspaceParameterModal from "./WorkspaceModal";
+import WorkspaceParameterModal from "./WorkspaceParameterModal";
 
 function useWorkspaceDossiers() {
   const workspace = useRecoilValue(workspaceAtom);
