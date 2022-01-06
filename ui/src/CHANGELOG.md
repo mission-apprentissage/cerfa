@@ -1,3 +1,11 @@
+# [1.12.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.11.1...v1.12.0-beta.1) (2022-01-06)
+
+
+### Features
+
+* **formulaire:** début de développement sur les bloques Employeur, Apprenti ([#61](https://github.com/mission-apprentissage/cerfa/issues/61)) ([d3c49e3](https://github.com/mission-apprentissage/cerfa/commit/d3c49e346caf96869c780358f1990fec056d650e))
+* **ui:** edition du profile ([e02a1b2](https://github.com/mission-apprentissage/cerfa/commit/e02a1b2b1d5437aa3c17c5c429842aa278564e7d))
+
 ## [1.11.1](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0...v1.11.1) (2022-01-05)
 
 
