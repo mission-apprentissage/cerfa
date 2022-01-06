@@ -81,22 +81,7 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
           );
         },
         Etat: (value, i) => {
-          return (
-            <Box>
-              {dossiers[i].draft && (
-                <Badge
-                  variant="solid"
-                  bg="orangedark.300"
-                  borderRadius="16px"
-                  color="grey.800"
-                  textStyle="sm"
-                  px="15px"
-                >
-                  Brouillon
-                </Badge>
-              )}
-            </Box>
-          );
+          return <Box>{dossiers[i].draft && <Badge variant="draft">Brouillon</Badge>}</Box>;
         },
         Actions: (value, i) => {
           return (

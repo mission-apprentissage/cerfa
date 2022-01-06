@@ -27,6 +27,7 @@ import LivePeopleAvatar from "./components/LivePeopleAvatar";
 
 import { useDossier } from "../../common/hooks/useDossier/useDossier";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
+import { AvatarPlus } from "../../theme/components/icons";
 
 const steps = [
   { label: "Cerfa", description: "Information contenu dans le Cerfa" },
@@ -85,17 +86,7 @@ export default () => {
         <HStack mt={6}>
           <Heading as="h1" flexGrow="1">
             {dossier.nom}
-            <Badge
-              variant="solid"
-              bg="orangedark.300"
-              borderRadius="16px"
-              color="grey.800"
-              textStyle="sm"
-              px="15px"
-              ml="10px"
-            >
-              Brouillon
-            </Badge>
+            <Badge variant="draft">Brouillon</Badge>
             <Badge variant="solid" bg="grey.100" color="grey.500" textStyle="sm" px="15px" ml="10px">
               <Text as="i">
                 {!dossier.saved ? "Non sauvegardé" : `Dernière sauvegarde ${prettyPrintDate(dossier.lastModified)}`}
@@ -107,7 +98,10 @@ export default () => {
             {hasContextAccessTo(dossier, "dossier/page_parametres/gestion_acces") && (
               <>
                 <Button size="md" onClick={inviteModal.onOpen} variant="secondary">
-                  Partager
+                  <AvatarPlus />
+                  <Text as="span" ml={2}>
+                    Partager
+                  </Text>
                 </Button>
                 <InviteModal
                   title="Partager le dossier"

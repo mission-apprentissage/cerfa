@@ -8,7 +8,6 @@ import {
   IconButton,
   FormControl,
   FormLabel,
-  Textarea,
   Stack,
   ButtonGroup,
   Button,
@@ -18,9 +17,10 @@ import {
   Checkbox,
   CheckboxGroup,
   Text,
-  Badge,
   Avatar,
   AvatarBadge,
+  Input,
+  Textarea,
 } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
@@ -31,10 +31,10 @@ import { useComment } from "../../../common/hooks/useComment";
 import CardComment from "./Card";
 
 const CommentIcon = (props) => (
-  <Icon viewBox="0 0 24 24" w="24px" h="24px" {...props}>
+  <Icon viewBox="0 0 25 25" w="24px" h="24px" {...props}>
     <path fill="none" d="M0 0h24v24H0z" />
     <path
-      d="M6.455 19L2 22.5V4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H6.455zm-.692-2H20V5H4v13.385L5.763 17zM11 10h2v2h-2v-2zm-4 0h2v2H7v-2zm8 0h2v2h-2v-2z"
+      d="M4.60449 4.30957H20.6045V16.3096H5.77449L4.60449 17.4796V4.30957ZM4.60449 2.30957C3.50449 2.30957 2.61449 3.20957 2.61449 4.30957L2.60449 22.3096L6.60449 18.3096H20.6045C21.7045 18.3096 22.6045 17.4096 22.6045 16.3096V4.30957C22.6045 3.20957 21.7045 2.30957 20.6045 2.30957H4.60449ZM6.60449 12.3096H14.6045V14.3096H6.60449V12.3096ZM6.60449 9.30957H18.6045V11.3096H6.60449V9.30957ZM6.60449 6.30957H18.6045V8.30957H6.60449V6.30957Z"
       fill="currentColor"
     />
   </Icon>
@@ -46,7 +46,7 @@ const CommentInput = React.forwardRef((props, ref) => {
       <FormLabel htmlFor={props.id} d="none">
         {props.label}
       </FormLabel>
-      <Textarea ref={ref} id={props.id} placeholder="Répondre ou notifier" {...props} />
+      <Textarea ref={ref} id={props.id} placeholder="Ajouter un commentaire" {...props} />
     </FormControl>
   );
 });
@@ -87,13 +87,11 @@ const Form = ({ firstFieldRef, onSubmitted, onCancel, feed }) => {
 
   return (
     <Stack spacing={4} mt={5}>
-      <Text onClick={toogle} cursor="pointer">
-        {!show ? "+" : "-"} Ajouter un nouveau commentaire
-      </Text>
-      <Stack spacing={4} mt={5} display={!show ? "none" : "flex"} opacity={!show ? "0" : "1"} transition="opacity 0.2s">
+      <Stack spacing={4} transition="opacity 0.2s">
         <CommentInput
-          label="ajouter un nouveau commentaire"
+          label="ajouter un commentaire"
           id="comment"
+          onClick={toogle}
           name="comment"
           value={values.comment}
           ref={firstFieldRef}
@@ -102,58 +100,50 @@ const Form = ({ firstFieldRef, onSubmitted, onCancel, feed }) => {
             handleChange(evt);
           }}
         />
-
-        <CheckboxGroup colorScheme="green" defaultValue={[]}>
-          <Text>Notifier:</Text>
-          <Stack>
-            {[
-              {
-                name: "Paul Pierre",
-                role: "Employeur",
-              },
-              {
-                name: "Antoine Bigard",
-                role: "CFA",
-              },
-              {
-                name: "Pablo Hanry",
-                role: "Apprenti",
-              },
-            ].map((user, i) => {
-              return (
-                <Checkbox
-                  value={user.name}
-                  key={i}
-                  name="notify"
-                  onChange={() => handleNotifyChange(user.name)}
-                  isChecked={values.notify.includes(user.name)}
-                >
-                  {user.name}
-                  <Badge
-                    variant="solid"
-                    bg="greenmedium.300"
-                    borderRadius="16px"
-                    color="grey.800"
-                    textStyle="sm"
-                    px="15px"
-                    ml="10px"
+        <Stack display={!show ? "none" : "flex"}>
+          <CheckboxGroup colorScheme="green" defaultValue={[]}>
+            <Text>Notifier:</Text>
+            <Stack>
+              {[
+                {
+                  name: "Paul Pierre",
+                  role: "Employeur",
+                },
+                {
+                  name: "Antoine Bigard",
+                  role: "CFA",
+                },
+                {
+                  name: "Pablo Hanry",
+                  role: "Apprenti",
+                },
+              ].map((user, i) => {
+                return (
+                  <Checkbox
+                    value={user.name}
+                    key={i}
+                    name="notify"
+                    onChange={() => handleNotifyChange(user.name)}
+                    isChecked={values.notify.includes(user.name)}
                   >
-                    {user.role}
-                  </Badge>
-                </Checkbox>
-              );
-            })}
-          </Stack>
-        </CheckboxGroup>
-
-        <ButtonGroup d="flex" justifyContent="flex-end">
-          <Button colorScheme="teal" variant="primary" onClick={handleSubmit} isDisabled={!canSubmit}>
-            {feed.length === 0 ? "Commenter" : "Répondre"}
-          </Button>
-          <Button variant="outline" onClick={onCancel}>
-            Annuler
-          </Button>
-        </ButtonGroup>
+                    {user.name}
+                    <Text as="span" ml={1} fontWeight={700}>
+                      ({user.role})
+                    </Text>
+                  </Checkbox>
+                );
+              })}
+            </Stack>
+          </CheckboxGroup>
+          <ButtonGroup d="flex" justifyContent="flex-end" pt={5}>
+            <Button variant="secondary" onClick={onCancel}>
+              Annuler
+            </Button>
+            <Button colorScheme="teal" variant="primary" onClick={handleSubmit} isDisabled={!canSubmit}>
+              Commenter
+            </Button>
+          </ButtonGroup>
+        </Stack>
       </Stack>
     </Stack>
   );
@@ -239,8 +229,8 @@ export default ({ context }) => {
           {feed.length > 0 && (
             <IconButton
               icon={
-                <Box>
-                  <CheckIcon color="bluefrance" /> Résourdre
+                <Box color="bluefrance" fontWeight={400} fontSize="13px">
+                  <CheckIcon w="10px" h="10px" mt="-0.5rem" /> Marquer comme résolu
                 </Box>
               }
               size="sm"
