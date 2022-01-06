@@ -1,44 +1,41 @@
 import React from "react";
-import { Box, FormLabel, Flex, Center, Spinner } from "@chakra-ui/react";
+import { Box, FormLabel, Flex } from "@chakra-ui/react";
 
-import { useCerfa } from "../../../../common/hooks/useCerfa";
+import { useCerfaFormation } from "../../../../common/hooks/useCerfa/parts/useCerfaFormation";
 import InputCerfa from "./Input";
 
 const FormFormation = React.memo((props) => {
   const {
-    isloaded,
-    organismeFormation: {
-      siret,
-      denomination,
-      uaiCfa,
-      adresse: { numero, voie, complement, codePostal, commune },
+    get: {
+      organismeFormation: {
+        siret,
+        denomination,
+        uaiCfa,
+        adresse: { numero, voie, complement, codePostal, commune },
+      },
+      formation: {
+        rncp,
+        codeDiplome,
+        dateDebutFormation,
+        dateFinFormation,
+        dureeFormation,
+        intituleQualification,
+        typeDiplome,
+      },
     },
-    formation: {
-      rncp,
-      codeDiplome,
-      dateDebutFormation,
-      dateFinFormation,
-      dureeFormation,
-      intituleQualification,
-      typeDiplome,
+    onSubmit: {
+      organismeFormation: { siret: onSubmittedOrganismeFormationSiret, uaiCfa: onSubmittedOrganismeFormationUaiCfa },
+      formation: {
+        rncp: onSubmittedRncp,
+        codeDiplome: onSubmittedFormationCodeDiplome,
+        dateDebutFormation: onSubmittedFormationDateDebutFormation,
+        dateFinFormation: onSubmittedFormationDateFinFormation,
+        dureeFormation: onSubmittedFormationDureeFormation,
+        typeDiplome: onSubmittedFormationTypeDiplome,
+        // onSubmittedFormationIntituleQualification,
+      },
     },
-    onSubmittedOrganismeFormationSiret,
-    onSubmittedFormationCodeDiplome,
-    onSubmittedRncp,
-    onSubmittedFormationDateDebutFormation,
-    onSubmittedFormationDateFinFormation,
-    onSubmittedFormationDureeFormation,
-    // onSubmittedFormationIntituleQualification,
-    onSubmittedFormationTypeDiplome,
-    onSubmittedOrganismeFormationUaiCfa,
-  } = useCerfa();
-
-  if (!isloaded)
-    return (
-      <Center>
-        <Spinner />
-      </Center>
-    );
+  } = useCerfaFormation();
 
   return (
     <Box>

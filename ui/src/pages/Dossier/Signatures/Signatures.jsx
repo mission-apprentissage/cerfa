@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Heading, Center, Button } from "@chakra-ui/react";
 
 import useAuth from "../../../common/hooks/useAuth";
-import { useCerfa } from "../../../common/hooks/useCerfa";
+import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
 import { _post } from "../../../common/httpClient";
 
 import { PdfViewer } from "../../../common/components/PdfViewer";
@@ -12,13 +12,13 @@ export default ({ dossierId }) => {
   let [auth] = useAuth();
   const [pdfBase64, setPdfBase64] = useState(null);
   const [pdfIsLoading, setPdfIsLoading] = useState(true);
-  const { isloaded, cerfaId } = useCerfa();
+  const { isLoading, cerfa } = useCerfa();
 
   useEffect(() => {
     const run = async () => {
       try {
-        if (dossierId && cerfaId) {
-          const { pdfBase64 } = await _post(`/api/v1/cerfa/pdf/${cerfaId}`, {
+        if (dossierId && cerfa.id) {
+          const { pdfBase64 } = await _post(`/api/v1/cerfa/pdf/${cerfa.id}`, {
             workspaceId: auth.workspaceId,
             dossierId,
           });
@@ -29,18 +29,18 @@ export default ({ dossierId }) => {
       }
     };
     run();
-  }, [auth, cerfaId, dossierId]);
+  }, [auth, cerfa, dossierId]);
 
   const onSignClicked = async () => {
     const reponse = await _post(`/api/v1/sign_document`, {
       workspaceId: auth.workspaceId,
       dossierId,
-      cerfaId,
+      cerfaId: cerfa.id,
     });
     console.log(reponse);
   };
 
-  if (!isloaded || !pdfBase64) {
+  if (isLoading || !pdfBase64) {
     return null;
   }
 
@@ -51,7 +51,7 @@ export default ({ dossierId }) => {
       </Heading>
       <Center>
         <PdfViewer
-          url={`/api/v1/cerfa/pdf/${cerfaId}/?workspaceId=${auth.workspaceId}&dossierId=${dossierId}`}
+          url={`/api/v1/cerfa/pdf/${cerfa.id}/?workspaceId=${auth.workspaceId}&dossierId=${dossierId}`}
           pdfBase64={pdfBase64}
           documentLoaded={() => {
             setPdfIsLoading(false);

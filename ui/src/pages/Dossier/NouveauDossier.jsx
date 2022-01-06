@@ -3,7 +3,7 @@ import { Box, Flex, Heading, Container, Button, Text } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { workspacePathsAtom, workspaceAtom } from "../../common/hooks/workspaceAtoms";
-import { useDossier } from "../../common/hooks/useDossier";
+import { useDossier } from "../../common/hooks/useDossier/useDossier";
 import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 
 export default () => {

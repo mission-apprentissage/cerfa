@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 // import { useQuery } from "react-query";
 import { useRecoilState } from "recoil";
 
-import { _post, _get, _put } from "../httpClient";
+import { _post, _get, _put } from "../../httpClient";
 import { dossierAtom } from "./dossierAtom";
 
 const hydrate = async (dossierId) => {
@@ -55,14 +55,6 @@ export function useDossier(dossierId = null) {
     },
     [dossier?._id, setDossier]
   );
-
-  // const {
-  //   data: dossier,
-  //   isLoading,
-  //   isFetching,
-  // } = useQuery("dossier", () => _get(`/api/v1/dossier/entity/${dossierId}?dossierId=${dossierId}`), {
-  //   refetchOnWindowFocus: false,
-  // });
 
   useEffect(() => {
     const abortController = new AbortController();
