@@ -5,7 +5,7 @@ const employeurCerfaSchema = {
     // maxLength: 80,
     type: String,
     description: "Dénomination de l'employeur",
-    label: "Dénomination de l'employeur :",
+    label: "Nom et prénom ou dénomination :",
     example: "ENERGIE 3000",
     default: null,
     required: function () {
@@ -111,7 +111,7 @@ const employeurCerfaSchema = {
     description: "Téléphone de l'employeur",
     label: "Téléphone de l'employeur :",
     example: "0908070605",
-    pattern: "^([+])?((d)[.-]?)?[s]?(?(d{3}))?[.-]?[s]?(d{3})[.-]?[s]?(d{4,})$",
+    // pattern: "^([+])?((d)[.-]?)?[s]?(?(d{3}))?[.-]?[s]?(d{3})[.-]?[s]?(d{4,})$",
   },
   courriel: {
     maxLength: 80,

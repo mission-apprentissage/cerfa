@@ -2,15 +2,70 @@
  * Multiple states on purpose to avoid full re-rendering at each modification
  */
 
-// import { useCallback } from "react";
+import { useCallback } from "react";
 // import { DateTime } from "luxon";
-// import { _post } from "../../../httpClient";
+import { _post } from "../../../httpClient";
 import { useRecoilState } from "recoil";
 import * as employeurAtoms from "./useCerfaEmployeurAtoms";
 
 export const CerfaEmployeurController = async (dossier) => {
   return {
-    employeur: {},
+    employeur: {
+      siret: {
+        doAsyncActions: async (value) => {
+          const response = await _post(`/api/v1/siret`, {
+            siret: value,
+            dossierId: dossier._id,
+          });
+
+          // await _put("/api/v1/history", {
+          //   // TODO
+          //   dossierId: "619baec6fcdd030ba4e13c40",
+          //   context: "organismeFormation.siret",
+          //   from: "98765432400070",
+          //   to: values["organismeFormation.siret"],
+          //   how: "manuel",
+          //   when: Date.now(),
+          //   who: "Antoine Bigard", // TODO Get user
+          // });
+          if (Object.keys(response.result).length === 0) {
+            return {
+              successed: false,
+              data: null,
+              message: response.messages.error,
+            };
+          }
+          if (response.result.ferme) {
+            return {
+              successed: false,
+              data: null,
+              message: `Le Siret ${value} est un établissement fermé.`,
+            };
+          }
+          return {
+            successed: true,
+            data: response.result,
+            message: null,
+          };
+        },
+        history: [
+          {
+            to: "98765432400070",
+            how: "manuel",
+            when: Date.now(),
+            who: "Antoine Bigard",
+            role: "CFA",
+          },
+          {
+            to: "98765432400019",
+            how: "manuel",
+            when: Date.now(),
+            who: "Paul Pierre",
+            role: "Employeur",
+          },
+        ],
+      },
+    },
   };
 };
 
@@ -62,6 +117,64 @@ export function useCerfaEmployeur() {
   );
   const [employeurAttestationPieces, setEmployeurAttestationPieces] = useRecoilState(
     employeurAtoms.cerfaEmployeurAttestationPiecesAtom
+  );
+
+  const onSubmittedEmployeurSiret = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "employeur.siret") {
+          const newV = {
+            employeur: {
+              siret: {
+                ...employeurSiret,
+                value: data.siret,
+              },
+              denomination: {
+                ...employeurDenomination,
+                value: data.enseigne || data.entreprise_raison_sociale,
+              },
+              adresse: {
+                numero: {
+                  ...employeurAdresseNumero,
+                  value: data.numero_voie, //parseInt(data.numero_voie),
+                },
+                voie: { ...employeurAdresseVoie, value: `${data.type_voie} ${data.nom_voie}` },
+                complement: { ...employeurAdresseComplement, value: data.complement_adresse || "" },
+                codePostal: { ...employeurAdresseCodePostal, value: data.code_postal },
+                commune: { ...employeurAdresseCommune, value: data.commune_implantation_nom },
+              },
+            },
+          };
+          if (employeurSiret.value !== newV.employeur.siret.value) {
+            setEmployeurSiret(newV.employeur.siret);
+            setEmployeurDenomination(newV.employeur.denomination);
+            setEmployeurAdresseNumero(newV.employeur.adresse.numero);
+            setEmployeurAdresseVoie(newV.employeur.adresse.voie);
+            setEmployeurAdresseComplement(newV.employeur.adresse.complement);
+            setEmployeurAdresseCodePostal(newV.employeur.adresse.codePostal);
+            setEmployeurAdresseCommune(newV.employeur.adresse.commune);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [
+      employeurAdresseCodePostal,
+      employeurAdresseCommune,
+      employeurAdresseComplement,
+      employeurAdresseNumero,
+      employeurAdresseVoie,
+      employeurDenomination,
+      employeurSiret,
+      setEmployeurAdresseCodePostal,
+      setEmployeurAdresseCommune,
+      setEmployeurAdresseComplement,
+      setEmployeurAdresseNumero,
+      setEmployeurAdresseVoie,
+      setEmployeurDenomination,
+      setEmployeurSiret,
+    ]
   );
 
   const setAll = async (res) => {
@@ -120,7 +233,9 @@ export function useCerfaEmployeur() {
     },
     setAll,
     onSubmit: {
-      employeur: {},
+      employeur: {
+        siret: onSubmittedEmployeurSiret,
+      },
     },
   };
 }

@@ -17,7 +17,10 @@ const hydrate = async (dossier) => {
       ...cerfa,
       employeur: {
         ...cerfa.employeur,
-        ...cerfaEmployeurController.employeur,
+        siret: {
+          ...cerfa.employeur.siret,
+          ...cerfaEmployeurController.employeur.siret,
+        },
       },
       // apprenti: {},
       // maitre1: {},
