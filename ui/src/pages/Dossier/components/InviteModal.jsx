@@ -24,7 +24,7 @@ import { useRecoilValue } from "recoil";
 import { ArrowRightLine, Close } from "../../../theme/components/icons";
 import { useQueries, useQueryClient, useMutation } from "react-query";
 import { _get, _post, _put, _delete } from "../../../common/httpClient";
-import { dossierAtom } from "../../../common/hooks/dossierAtom";
+import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
 import { Table } from "../../../common/components/Table";
 
 function useDossiersAcces() {

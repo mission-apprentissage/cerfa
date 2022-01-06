@@ -2,9 +2,10 @@ const adresseSchema = require("./adresse.part");
 
 const employeurCerfaSchema = {
   denomination: {
-    maxLength: 80,
+    // maxLength: 80,
     type: String,
     description: "Dénomination de l'employeur",
+    label: "Nom et prénom ou dénomination :",
     example: "ENERGIE 3000",
     default: null,
     required: function () {
@@ -16,6 +17,7 @@ const employeurCerfaSchema = {
     default: null,
     example: "OCTO-TECHNOLOGY",
     description: "Raison sociale de l'employeur",
+    label: "Raison sociale de l'employeur :",
   },
   siret: {
     maxLength: 14,
@@ -33,10 +35,14 @@ const employeurCerfaSchema = {
     nullable: function () {
       return this.draft;
     },
-    example: "98765432400019",
     required: function () {
       return !this.draft;
     },
+    example: "98765432400019",
+    label: "N° SIRET de l'employeur :",
+    requiredMessage: "Le siret est obligatoire",
+    validateMessage: `n'est pas un siret valide`,
+    pattern: "^([0-9]{14}|[0-9]{9} [0-9]{4})$",
   },
   naf: {
     maxLength: 6,
@@ -53,6 +59,7 @@ const employeurCerfaSchema = {
       return !this.draft;
     },
     description: "Code NAF de l'employeur",
+    label: "Code NAF de l'employeur :",
     example: "1031Z",
   },
   nombreDeSalaries: {
@@ -62,6 +69,7 @@ const employeurCerfaSchema = {
     },
     default: 0,
     description: "Effectif salarié de l'entreprise",
+    label: "Effectif salarié de l'entreprise :",
     example: 123,
   },
   codeIdcc: {
@@ -72,6 +80,7 @@ const employeurCerfaSchema = {
       return !this.draft;
     },
     description: "Code IDCC de la convention collective appliquée",
+    label: "Code IDCC de la convention collective appliquée : ",
     example: "0043",
   },
   libelleIdcc: {
@@ -79,6 +88,7 @@ const employeurCerfaSchema = {
     default: null,
     type: String,
     description: "Libellé de la convention collective appliquée",
+    label: "Libellé de la convention collective appliquée:",
     nullable: true,
     example:
       "Convention collective nationale des entreprises de commission, de courtage et de commerce intracommunautaire et d'importation-exportation de France métropolitaine",
@@ -99,7 +109,9 @@ const employeurCerfaSchema = {
     },
     type: String,
     description: "Téléphone de l'employeur",
+    label: "Téléphone de l'employeur :",
     example: "0908070605",
+    // pattern: "^([+])?((d)[.-]?)?[s]?(?(d{3}))?[.-]?[s]?(d{3})[.-]?[s]?(d{4,})$",
   },
   courriel: {
     maxLength: 80,
@@ -109,6 +121,7 @@ const employeurCerfaSchema = {
       return !this.draft;
     },
     description: "Courriel de l'employeur",
+    label: "Courriel de l'employeur :",
     validate: {
       validator: function (v) {
         if (!v) return true;
@@ -126,6 +139,7 @@ const employeurCerfaSchema = {
     type: String,
     default: null,
     description: "Nom de l'employeur",
+    label: "Nom de l'employeur :",
     nullable: true,
     example: "LEFEVBRE",
   },
@@ -133,6 +147,7 @@ const employeurCerfaSchema = {
     maxLength: 50,
     type: String,
     description: "Prénom de l'employeur",
+    label: "Prénom de l'employeur :",
     nullable: true,
     default: null,
     example: "MARTINE",
@@ -145,6 +160,7 @@ const employeurCerfaSchema = {
     type: Number,
     nullable: true,
     default: null,
+    label: "Type d'employeur :",
     description:
       "**Type d'mployeur** :\r\n<br /> *Privé*\r\n<br /> 11 : Entreprise inscrite au répertoire des métiers ou au registre des entreprises pour l’Alsace-Moselle\r\n<br /> 12 : Entreprise inscrite uniquement au registre du commerce et des sociétés\r\n<br /> 13 : Entreprises dont les salariés relèvent de la mutualité sociale agricole\r\n<br /> 14 : Profession libérale\r\n<br /> 15 : Association\r\n<br /> 16 : Autre employeur privé\r\n<br /> *Public*\r\n<br /> 21 : Service de l’Etat (administrations centrales et leurs services déconcentrés de la fonction publique d’Etat)\r\n<br /> 22 : Commune\r\n<br /> 23 : Département\r\n<br /> 24 : Région\r\n<br /> 25 : Etablissement public hospitalier\r\n<br /> 26 : Etablissement public local d’enseignement\r\n<br /> 27 : Etablissement public administratif de l’Etat\r\n<br /> 28 : Etablissement public administratif local(y compris établissement public de coopération intercommunale EPCI)\r\n<br /> 29 : Autre employeur public",
   },
@@ -153,6 +169,7 @@ const employeurCerfaSchema = {
     type: Number,
     nullable: true,
     default: null,
+    label: "Est un employeur spécifique :",
     description:
       "**Employeur spécifique** : \r\n<br />1 : Entreprise de travail temporaire\r\n<br />2 : Groupement d’employeurs\r\n<br />3 : Employeur saisonnier\r\n<br />4 : Apprentissage familial : l’employeur est un ascendant de l’apprenti\r\n<br />0 : Aucun de ces cas",
   },
@@ -164,11 +181,13 @@ const employeurCerfaSchema = {
       return !this.draft;
     },
     description: "Caisse de retraite complémentaire Alternant",
+    label: "Caisse de retraite complémentaire Alternant :",
     example: "AGIRC-ARRCO",
   },
   regimeSpecifique: {
     type: Boolean,
     description: "Adhère au régime spécifique d'assurance-chômage",
+    label: "Adhère au régime spécifique d'assurance-chômage: ",
     default: false,
     nullable: true,
     example: false,
@@ -176,6 +195,7 @@ const employeurCerfaSchema = {
   attestationEligibilite: {
     type: Boolean,
     description: "Atteste de l'éligibilité du tuteur / maître d'apprentissage",
+    label: "Atteste de l'éligibilité du tuteur / maître d'apprentissage :",
     default: false,
     example: false,
     required: function () {
@@ -185,6 +205,7 @@ const employeurCerfaSchema = {
   attestationPieces: {
     type: Boolean,
     description: "Atteste de disposer des pièces justificatives",
+    label: "Atteste de disposer des pièces justificatives :",
     default: false,
     example: false,
     required: function () {

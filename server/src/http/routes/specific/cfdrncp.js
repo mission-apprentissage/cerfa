@@ -15,7 +15,9 @@ module.exports = (components) => {
       const { cfd, rncp } = await Joi.object({
         cfd: Joi.string().pattern(new RegExp("^[0-9A-Z]{8}[A-Z]?$")),
         rncp: Joi.string().pattern(new RegExp("^(RNCP)?[0-9]{2,5}$")),
-      }).validateAsync(body, { abortEarly: false });
+      })
+        .unknown()
+        .validateAsync(body, { abortEarly: false });
 
       if (!cfd && !rncp) {
         return res.json({ error: "Cfd ou rncp doivent être défini et formaté" });

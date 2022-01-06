@@ -1,6 +1,6 @@
 import React, { lazy } from "react";
-import { Box, Accordion, AccordionItem, AccordionButton, AccordionPanel } from "@chakra-ui/react";
-
+import { Box, Center, Spinner, Accordion, AccordionItem, AccordionButton, AccordionPanel } from "@chakra-ui/react";
+import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
 import { AddFill, SubtractLine } from "../../../theme/components/icons";
 
 const FormEmployer = lazy(() => import("./components/FormEmployer"));
@@ -10,6 +10,15 @@ const FormContract = lazy(() => import("./components/FormContract"));
 const FormFormation = lazy(() => import("./components/FormFormation"));
 
 export default () => {
+  const { isLoading } = useCerfa();
+
+  if (isLoading)
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
+
   return (
     <Accordion allowMultiple allowToggle mt={12}>
       {[
