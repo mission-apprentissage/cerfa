@@ -5,6 +5,14 @@
 
 # Générateur de contrat publique en apprentissage
 
+## Statuts
+
+[Statuts de la plateforme](https://mission-apprentissage.github.io/upptime/history/cerfa-publique)
+[Statuts API de la plateforme](https://mission-apprentissage.github.io/upptime/history/cerfa-publique-api)
+[Statuts api entreprise](https://status.entreprise.api.gouv.fr/)
+
+## Développement
+
 ### Pré-requis
 
 - Docker 19+
