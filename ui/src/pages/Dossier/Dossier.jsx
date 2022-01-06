@@ -25,7 +25,7 @@ import Statuts from "./Statuts/Statuts";
 import { InviteModal } from "./components/InviteModal";
 import LivePeopleAvatar from "./components/LivePeopleAvatar";
 
-import { useDossier } from "../../common/hooks/useDossier";
+import { useDossier } from "../../common/hooks/useDossier/useDossier";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
 
 const steps = [

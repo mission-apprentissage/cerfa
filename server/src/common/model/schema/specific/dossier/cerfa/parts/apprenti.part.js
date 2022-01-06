@@ -6,6 +6,7 @@ const apprentiSchema = {
     maxLength: 80,
     type: String,
     description: "Nom (Nom de naissance/ patronymique) de l'apprenti",
+    label: "Nom de naissance de l'apprenti(e) :",
     example: "MARTIN",
     default: null,
     required: function () {
@@ -23,6 +24,7 @@ const apprentiSchema = {
     maxLength: 80,
     type: String,
     description: "Prénom de l'apprenti",
+    label: "Prénom de l'apprenti(e) :",
     example: "Jean-François",
     default: null,
     required: function () {
@@ -36,6 +38,7 @@ const apprentiSchema = {
       return !this.draft;
     },
     type: String,
+    label: "Sexe :",
     description: "**Sexe de l'apprenti**\r\n<br />M : Homme\r\n<br />F : Femme",
   },
   nationalite: {
@@ -45,12 +48,14 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
+    label: "Nationalité :",
     description:
       "**Nationalité** :\r\n<br />1 : Française\r\n<br />2 : Union Européenne\r\n<br />3 : Etranger hors Union Européenne",
   },
   dateNaissance: {
     type: Date,
     description: "Date de naissance  de l'apprenti",
+    label: "Date de naissance :",
     example: "2001-01-01T00:00:00+0000",
     default: null,
     required: function () {
@@ -69,6 +74,7 @@ const apprentiSchema = {
     },
     type: String,
     description: "Département de naissance de l'apprenti",
+    label: "Département de naissance :",
     example: "01",
     default: null,
     required: function () {
@@ -79,6 +85,7 @@ const apprentiSchema = {
     maxLength: 80,
     type: String,
     description: "Commune de naissance de l'apprenti",
+    label: "Commune de naissance :",
     example: "Bourg-en-Bresse",
     default: null,
     required: function () {
@@ -97,6 +104,7 @@ const apprentiSchema = {
     },
     type: String,
     description: "NIR de l'apprenti sur 13 ou 15 caractères",
+    label: "NIR de l'apprenti(e)* :",
     example: "101010100100153",
     default: null,
     nullable: function () {
@@ -114,6 +122,7 @@ const apprentiSchema = {
       return !this.draft;
     },
     description: "**Régime social** :\r\n<br />1 : MSA\r\n<br />2 : URSSAF",
+    label: "Régime social :",
   },
   handicap: {
     type: Boolean,
@@ -131,11 +140,13 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
+    label: "Situation avant ce contrat :",
     description:
       "**Situation de l'apprenti avant le contrat**\r\n<br />1 : Scolaire\r\n<br />2 : Prépa apprentissage\r\n<br />3 : Etudiant\r\n<br />4 : Contrat d’apprentissage\r\n<br />5 : Contrat de professionnalisation\r\n<br />6 : Contrat aidé\r\n<br />7 : En formation au CFA avant signature d’un contrat d’apprentissage (L6222-12-1 du code du travail)\r\n<br />8 : En formation, au CFA, sans contrat, suite à rupture (5° de L6231-2 du code du travail)\r\n<br />9 : Stagiaire de la formation professionnelle\r\n<br />10 : Salarié\r\n<br />11 : Personne à la recherche d’un emploi (inscrite ou non au Pôle Emploi)\r\n<br />12 : Inactif",
   },
   diplome: {
     ...diplomeSchema,
+    label: "Diplôme ou titre le plus élevé obtenu :",
     default: null,
     required: function () {
       return !this.draft;
@@ -148,11 +159,13 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
+    label: "Dernière classe / année suivie :",
     description:
       "**Dernière année ou classe suivie par l’apprenti** :\r\n<br /> 1 : l’apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre\r\n<br /> 11 : l’apprenti a suivi la 1ère année du cycle et l’a validée (examens réussis mais année non diplômante)\r\n<br /> 12 : l’apprenti a suivi la 1ère année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 21 : l’apprenti a suivi la 2è année du cycle et l’a validée (examens réussis mais année non diplômante)\r\n<br /> 22 : l’apprenti a suivi la 2è année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 31 : l’apprenti a suivi la 3è année du cycle et l’a validée (examens réussis mais année non diplômante, cycle adapté)\r\n<br /> 32 : l’apprenti a suivi la 3è année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 40 : l’apprenti a achevé le 1er cycle de l’enseignement secondaire (collège)\r\n<br /> 41 : l’apprenti a interrompu ses études en classe de 3è\r\n<br /> 42 : l’apprenti a interrompu ses études en classe de 4è",
   },
   diplomePrepare: {
     ...diplomeSchema,
+    label: "Dernier diplôme ou titre préparé :",
     default: null,
     required: function () {
       return !this.draft;
@@ -163,6 +176,7 @@ const apprentiSchema = {
     type: String,
     description: "Intitulé précis du dernier diplôme ou titre préparé par l'apprenti",
     example: "Master en sciences de l'éducation",
+    label: "Intitulé précis du dernier diplôme ou titre préparé :",
     default: null,
     required: function () {
       return !this.draft;
@@ -184,12 +198,14 @@ const apprentiSchema = {
       return !this.draft;
     },
     description: "Téléphone de l'apprenti",
+    label: "Téléphone de l'apprenti(e) :",
     example: "0102030405",
   },
   courriel: {
     maxLength: 80,
     type: String,
     description: "Courriel de l'apprenti",
+    label: "Courriel de l'apprenti(e) :",
     validate: {
       validator: function (v) {
         if (!v) return true;
@@ -230,6 +246,7 @@ const apprentiSchema = {
           return !this.draft;
         },
         description: "Nom du représentant légal",
+        label: "Nom du représentant légal:",
         example: "Honore",
       },
       prenom: {
@@ -240,6 +257,7 @@ const apprentiSchema = {
           return !this.draft;
         },
         description: "Prénom du représentant légal",
+        label: "Prénom du représentant légal:",
         example: "Robert",
       },
       adresse: {

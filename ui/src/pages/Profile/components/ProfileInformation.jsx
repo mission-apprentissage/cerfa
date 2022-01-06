@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Heading, FormControl, FormLabel, Input, FormErrorMessage, Button, Flex } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
+import { _put } from "../../../common/httpClient";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -11,11 +12,11 @@ const ProfileInformation = () => {
     /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
   const { values, handleChange, handleSubmit, errors, touched } = useFormik({
     initialValues: {
-      prenom: auth.prenom,
-      nom: auth.nom,
-      username: auth.username,
-      telephone: auth.telephone,
-      email: auth.email,
+      prenom: auth.prenom || "",
+      nom: auth.nom || "",
+      username: auth.username || "",
+      telephone: auth.telephone || "",
+      email: auth.email || "",
     },
     validationSchema: Yup.object().shape({
       prenom: Yup.string(),
@@ -24,8 +25,23 @@ const ProfileInformation = () => {
       phone: Yup.string().matches(phoneRegExp, "Phone number is not valid"),
       email: Yup.string().email("Email invalide"),
     }),
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: ({ nom, prenom, telephone, email }, { setSubmitting }) => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          await _put(`/api/v1/profile/user`, {
+            nom: nom || null,
+            prenom: prenom || null,
+            telephone: telephone || null,
+            email,
+          });
+          window.location.reload();
+        } catch (e) {
+          console.log(e);
+        }
+
+        setSubmitting(false);
+        resolve("onSubmitHandler complete");
+      });
     },
   });
 
@@ -49,7 +65,7 @@ const ProfileInformation = () => {
         </Flex>
         <FormControl isRequired isInvalid={errors.username} mt={5}>
           <FormLabel>Nom d'Utilisateur</FormLabel>
-          <Input type="text" name="username" value={values.username} onChange={handleChange} required />
+          <Input type="text" name="username" value={values.username} onChange={handleChange} required isDisabled />
           {errors.username && touched.username && <FormErrorMessage>{errors.username}</FormErrorMessage>}
         </FormControl>
         <Flex mt={5}>
