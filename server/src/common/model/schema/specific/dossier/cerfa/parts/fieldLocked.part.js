@@ -219,6 +219,112 @@ const fieldLockedSchema = {
       default: false,
     },
   },
+  maitre1: {
+    nom: {
+      type: Boolean,
+      default: false,
+    },
+    prenom: {
+      type: Boolean,
+      default: false,
+    },
+    dateNaissance: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  maitre2: {
+    nom: {
+      type: Boolean,
+      default: false,
+    },
+    prenom: {
+      type: Boolean,
+      default: false,
+    },
+    dateNaissance: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  contrat: {
+    modeContractuel: {
+      type: Boolean,
+      default: false,
+    },
+    typeContratApp: {
+      type: Boolean,
+      default: false,
+    },
+    numeroContratPrecedent: {
+      type: Boolean,
+      default: false,
+    },
+    noContrat: {
+      type: Boolean,
+      default: false,
+    },
+    noAvenant: {
+      type: Boolean,
+      default: false,
+    },
+    dateDebutContrat: {
+      type: Boolean,
+      default: false,
+    },
+    dateEffetAvenant: {
+      type: Boolean,
+      default: false,
+    },
+    dateConclusion: {
+      type: Boolean,
+      default: false,
+    },
+    dateFinContrat: {
+      type: Boolean,
+      default: false,
+    },
+    dateRupture: {
+      type: Boolean,
+      default: false,
+    },
+    lieuSignatureContrat: {
+      type: Boolean,
+      default: false,
+    },
+    typeDerogation: {
+      type: Boolean,
+      default: false,
+    },
+    dureeTravailHebdoHeures: {
+      type: Boolean,
+      default: false,
+    },
+    dureeTravailHebdoMinutes: {
+      type: Boolean,
+      default: false,
+    },
+    travailRisque: {
+      type: Boolean,
+      default: false,
+    },
+    salaireEmbauche: {
+      type: Boolean,
+      default: false,
+    },
+    avantageNourriture: {
+      type: Boolean,
+      default: false,
+    },
+    avantageLogement: {
+      type: Boolean,
+      default: false,
+    },
+    autreAvantageEnNature: {
+      type: Boolean,
+      default: false,
+    },
+  },
   formation: {
     rncp: {
       type: Boolean,

@@ -17,12 +17,14 @@ const contratSchema = {
     required: function () {
       return !this.draft;
     },
+    label: "Type de contrat ou d'avenant",
   },
   numeroContratPrecedent: {
     type: String,
     description: "N° du contrat précédent (suite de contrat)",
     nullable: true,
     example: "11111111111",
+    label: "Numéro du contrat précédent ou du contrat sur lequel porte l'avenant :",
   },
   noContrat: {
     type: String,
@@ -39,6 +41,7 @@ const contratSchema = {
   dateDebutContrat: {
     type: Date,
     description: "Date de début d'éxécution du contrat",
+    label: "Date de début d'exécution du contrat :",
     example: "2021-02-01T00:00:00+0000",
     default: null,
     required: function () {
@@ -48,12 +51,14 @@ const contratSchema = {
   dateEffetAvenant: {
     type: Date,
     description: "Date d'effet d'avenant",
+    label: "Si avenant, date d'effet :",
     nullable: true,
     example: "2021-03-01T00:00:00+0000",
   },
   dateConclusion: {
     type: Date,
     description: "Date de conclusion du contrat",
+    label: "Date de conclusion du contrat :",
     example: "2021-01-15T00:00:00+0000",
     default: null,
     required: function () {
@@ -63,6 +68,7 @@ const contratSchema = {
   dateFinContrat: {
     type: Date,
     description: "Date de fin du contrat prévue",
+    label: "Date de fin du contrat ou de la période d'apprentissage :",
     example: "2021-02-28T00:00:00+0000",
     default: null,
     required: function () {
@@ -86,10 +92,12 @@ const contratSchema = {
   },
   typeDerogation: {
     ...typeDerogationSchema,
+    label: "Type de dérogation (optionnel)",
   },
   dureeTravailHebdoHeures: {
     type: Number,
     description: "Durée hebdomadaire du travail (heures)",
+    label: "Heures:",
     example: 37,
     default: null,
     required: function () {
@@ -99,6 +107,7 @@ const contratSchema = {
   dureeTravailHebdoMinutes: {
     type: Number,
     description: "Durée hebdomadaire du travail (minutes)",
+    label: "Minutes:",
     example: 30,
     default: null,
     required: function () {
@@ -117,6 +126,7 @@ const contratSchema = {
   salaireEmbauche: {
     type: Number,
     description: "Salaire brut à l'embauche",
+    label: "Salaire brut mensuel à l'embauche:",
     example: 1530,
     default: null,
     required: function () {
@@ -126,18 +136,21 @@ const contratSchema = {
   avantageNourriture: {
     type: Number,
     description: "Nourriture €/repas",
+    label: "Nourriture:",
     nullable: true,
     example: 3,
   },
   avantageLogement: {
     type: Number,
     description: "Logement €/mois",
+    label: "Logement:",
     nullable: true,
     example: 456,
   },
   autreAvantageEnNature: {
     type: Boolean,
     description: "Autre avantage en nature",
+    label: "Autres avantages: ",
     nullable: true,
     example: true,
   },

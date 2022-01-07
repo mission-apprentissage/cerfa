@@ -132,7 +132,7 @@ const FormFormation = React.memo((props) => {
             type="date"
             mt="2"
             onSubmittedField={onSubmittedFormationDateDebutFormation}
-            onAsyncData={{ value: dateFinFormation.value }}
+            onAsyncData={{ value: dateFinFormation?.value }}
           />
           <InputCerfa
             path="formation.dateFinFormation"
@@ -140,7 +140,7 @@ const FormFormation = React.memo((props) => {
             type="date"
             mt="2"
             onSubmittedField={onSubmittedFormationDateFinFormation}
-            onAsyncData={{ value: dateDebutFormation.value }}
+            onAsyncData={{ value: dateDebutFormation?.value }}
           />
           <Flex mt={4}>
             <InputCerfa
