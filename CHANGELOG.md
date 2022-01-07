@@ -1,3 +1,10 @@
+# [1.12.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.3...v1.12.0-beta.4) (2022-01-07)
+
+
+### Features
+
+* change to lax forever ([ed880a5](https://github.com/mission-apprentissage/cerfa/commit/ed880a512fc35e83fec8f8053919db32c44fc9bc))
+
 # [1.12.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.2...v1.12.0-beta.3) (2022-01-07)
 
 
