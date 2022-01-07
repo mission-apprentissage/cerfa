@@ -61,9 +61,7 @@ export default () => {
                     <AddFill fontSize="12px" color="bluefrance" />
                   )}
                 </AccordionButton>
-                <AccordionPanel pb={4}>
-                  <Component />
-                </AccordionPanel>
+                <AccordionPanel pb={4}>{isExpanded && <Component />}</AccordionPanel>
               </>
             )}
           </AccordionItem>
