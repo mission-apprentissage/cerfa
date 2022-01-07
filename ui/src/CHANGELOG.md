@@ -1,3 +1,10 @@
+# [1.12.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.5...v1.12.0-beta.6) (2022-01-07)
+
+
+### Bug Fixes
+
+* **server:** samesite httponly ([340d457](https://github.com/mission-apprentissage/cerfa/commit/340d457998edc93bb3aa841bd145dd5460c1b82b))
+
 # [1.12.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.4...v1.12.0-beta.5) (2022-01-07)
 
 
