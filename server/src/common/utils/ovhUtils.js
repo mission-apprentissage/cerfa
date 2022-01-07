@@ -4,8 +4,6 @@ const config = require("../../config");
 const logger = require("../logger");
 const { createRequestStream, createUploadStream } = require("./httpUtils");
 
-const DEFAULT_STORAGE_NAME = "mna-cerfa";
-
 async function authenticate(uri) {
   let regExp = new RegExp(/^(https:\/\/)(.+):(.+):(.+)@(.*)$/);
 
@@ -40,7 +38,7 @@ async function authenticate(uri) {
 }
 
 async function requestObjectAccess(path, options = {}) {
-  let storage = options.storage || DEFAULT_STORAGE_NAME;
+  let storage = options.storage || config.storageName;
   let { baseUrl, token } = await authenticate(config.ovh.storage.uri);
 
   return {

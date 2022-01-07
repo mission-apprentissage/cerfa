@@ -46,6 +46,7 @@ module.exports = {
     storage: {
       encryptionKey: env.get("CERFA_OVH_STORAGE_ENCRYPTION_KEY").asString(),
       uri: env.get("CERFA_OVH_STORAGE_URI").asString(),
+      storageName: env.get("CERFA_OVH_STORAGE_NAME").default("mna-cerfa").asString(),
     },
   },
   apiEntreprise: env.get("CERFA_API_ENTREPRISE_KEY").asString(),
