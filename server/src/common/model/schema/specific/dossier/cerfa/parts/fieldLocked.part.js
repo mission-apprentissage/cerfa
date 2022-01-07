@@ -219,6 +219,34 @@ const fieldLockedSchema = {
       default: false,
     },
   },
+  maitre1: {
+    nom: {
+      type: Boolean,
+      default: false,
+    },
+    prenom: {
+      type: Boolean,
+      default: false,
+    },
+    dateNaissance: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  maitre2: {
+    nom: {
+      type: Boolean,
+      default: false,
+    },
+    prenom: {
+      type: Boolean,
+      default: false,
+    },
+    dateNaissance: {
+      type: Boolean,
+      default: false,
+    },
+  },
   formation: {
     rncp: {
       type: Boolean,
