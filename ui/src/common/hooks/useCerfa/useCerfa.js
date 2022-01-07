@@ -5,6 +5,8 @@ import { useQuery } from "react-query";
 import { CerfaFormationController, useCerfaFormation } from "./parts/useCerfaFormation";
 import { CerfaEmployeurController, useCerfaEmployeur } from "./parts/useCerfaEmployeur";
 import { CerfaApprentiController, useCerfaApprenti } from "./parts/useCerfaApprenti";
+import { CerfaMaitresController, useCerfaMaitres } from "./parts/useCerfaMaitres";
+import { CerfaContratController, useCerfaContrat } from "./parts/useCerfaContrat";
 
 const hydrate = async (dossier) => {
   try {
@@ -14,6 +16,8 @@ const hydrate = async (dossier) => {
     const cerfaFormationController = await CerfaFormationController(dossier);
     const cerfaEmployeurController = await CerfaEmployeurController(dossier);
     const cerfaApprentiController = await CerfaApprentiController(dossier);
+    const cerfaMaitresController = await CerfaMaitresController(dossier);
+    const cerfaContratController = await CerfaContratController(dossier);
 
     return {
       ...cerfa,
@@ -28,8 +32,18 @@ const hydrate = async (dossier) => {
         ...cerfa.apprenti,
         ...cerfaApprentiController.apprenti,
       },
-      // maitre1: {},
-      // maitre2: {},
+      maitre1: {
+        ...cerfa.maitre1,
+        ...cerfaMaitresController.maitre1,
+      },
+      maitre2: {
+        ...cerfa.maitre2,
+        ...cerfaMaitresController.maitre2,
+      },
+      contrat: {
+        ...cerfa.contrat,
+        ...cerfaContratController.contrat,
+      },
       formation: {
         ...cerfa.formation,
         rncp: {
@@ -49,7 +63,6 @@ const hydrate = async (dossier) => {
           ...cerfaFormationController.formation.dateFinFormation,
         },
       },
-      // contrat: {},
       organismeFormation: {
         ...cerfa.organismeFormation,
         siret: {
@@ -69,6 +82,8 @@ export function useCerfa() {
   const { setAll: setCerfaFormation } = useCerfaFormation();
   const { setAll: setCerfaEmployeur } = useCerfaEmployeur();
   const { setAll: setCerfaApprenti } = useCerfaApprenti();
+  const { setAll: setCerfaMaitres } = useCerfaMaitres();
+  const { setAll: setCerfaContrat } = useCerfaContrat();
 
   const {
     data: cerfa,
@@ -81,6 +96,8 @@ export function useCerfa() {
       setCerfaFormation(res);
       setCerfaEmployeur(res);
       setCerfaApprenti(res);
+      setCerfaMaitres(res);
+      setCerfaContrat(res);
       return Promise.resolve(res);
     },
     {
