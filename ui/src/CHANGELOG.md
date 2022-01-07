@@ -1,3 +1,10 @@
+# [1.12.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.6...v1.12.0-beta.7) (2022-01-07)
+
+
+### Bug Fixes
+
+* reject uploaded files with invalid extension ([cffa556](https://github.com/mission-apprentissage/cerfa/commit/cffa5566121147381fe33c5cc51f8f86985a5b64))
+
 # [1.12.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.5...v1.12.0-beta.6) (2022-01-07)
 
 
