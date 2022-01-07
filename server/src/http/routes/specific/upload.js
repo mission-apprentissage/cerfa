@@ -29,7 +29,7 @@ module.exports = (components) => {
     // 'close' event is fired just after the form has been read but before file is scanned and uploaded to storage.
     // So instead of using form.on('close',...) we use a custom event to end response when everything is finished
     formEvents.on("terminated", async (e) => {
-      if (e) return res.status(400).json({ error: e.message });
+      if (e) return res.status(400).json({ error: "Le contenu du fichier est invalide" });
       const documents = await dossiers.getDocuments(dossierId);
       return res.json({ documents });
     });
@@ -39,6 +39,11 @@ module.exports = (components) => {
     });
     form.on("part", async (part) => {
       if (part.headers["content-type"] !== "application/pdf") {
+        form.emit("error", new Error("Le fichier n'est pas au bon format"));
+        return part.pipe(discard());
+      }
+
+      if (!part.filename.endsWith(".pdf")) {
         form.emit("error", new Error("Le fichier n'est pas au bon format"));
         return part.pipe(discard());
       }
