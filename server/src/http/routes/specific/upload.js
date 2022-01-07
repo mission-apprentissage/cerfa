@@ -34,8 +34,8 @@ module.exports = (components) => {
       return res.json({ documents });
     });
 
-    form.on("error", (e) => {
-      return res.status(400).json({ error: e.message || "Une erreur est survenue lors de l'envoi du fichier" });
+    form.on("error", () => {
+      return res.status(400).json({ error: "Le contenu du fichier est invalide" });
     });
     form.on("part", async (part) => {
       if (part.headers["content-type"] !== "application/pdf") {

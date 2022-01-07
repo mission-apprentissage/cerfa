@@ -75,7 +75,7 @@ describe("[Routes] Upload", () => {
     );
 
     assert.strictEqual(response.status, 400);
-    assert.deepStrictEqual(response.data, { error: "Le fichier n'est pas au bon format" });
+    assert.deepStrictEqual(response.data, { error: "Le contenu du fichier est invalide" });
   });
 
   it("Vérifie qu'on ne peut pas uploader un fichier avec un virus", async () => {
