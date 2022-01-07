@@ -38,7 +38,7 @@ async function authenticate(uri) {
 }
 
 async function requestObjectAccess(path, options = {}) {
-  let storage = options.storage || config.storageName;
+  let storage = options.storage || config.ovh.storage.storageName;
   let { baseUrl, token } = await authenticate(config.ovh.storage.uri);
 
   return {
