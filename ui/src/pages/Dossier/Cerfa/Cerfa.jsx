@@ -1,15 +1,24 @@
-import React, { lazy } from "react";
-import { Box, Accordion, AccordionItem, AccordionButton, AccordionPanel } from "@chakra-ui/react";
-
+import React from "react";
+import { Box, Center, Spinner, Accordion, AccordionItem, AccordionButton, AccordionPanel } from "@chakra-ui/react";
+import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
 import { AddFill, SubtractLine } from "../../../theme/components/icons";
 
-const FormEmployer = lazy(() => import("./components/FormEmployer"));
-const FormLearner = lazy(() => import("./components/FormLearner"));
-const FormLearningMaster = lazy(() => import("./components/FormLearningMaster"));
-const FormContract = lazy(() => import("./components/FormContract"));
-const FormFormation = lazy(() => import("./components/FormFormation"));
+import FormEmployer from "./components/FormEmployer";
+import FormLearner from "./components/FormLearner";
+import FormLearningMaster from "./components/FormLearningMaster";
+import FormContract from "./components/FormContract";
+import FormFormation from "./components/FormFormation";
 
 export default () => {
+  const { isLoading } = useCerfa();
+
+  if (isLoading)
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
+
   return (
     <Accordion allowMultiple allowToggle mt={12}>
       {[
@@ -52,9 +61,7 @@ export default () => {
                     <AddFill fontSize="12px" color="bluefrance" />
                   )}
                 </AccordionButton>
-                <AccordionPanel pb={4}>
-                  <Component />
-                </AccordionPanel>
+                <AccordionPanel pb={4}>{isExpanded && <Component />}</AccordionPanel>
               </>
             )}
           </AccordionItem>

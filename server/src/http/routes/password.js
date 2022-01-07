@@ -1,5 +1,4 @@
 const express = require("express");
-const Boom = require("boom");
 const Joi = require("joi");
 const config = require("../../config");
 const passport = require("passport");
@@ -48,7 +47,7 @@ module.exports = ({ users, mailer }) => {
       // try also by username since users tends to do that
       const user = (await users.getUser(username)) ?? (await users.getUserByUsername(username));
       if (!user) {
-        throw Boom.badRequest();
+        return res.json({});
       }
       let noEmail = req.query.noEmail;
 
@@ -96,7 +95,7 @@ module.exports = ({ users, mailer }) => {
         .cookie(`cerfa-${config.env}-jwt`, token, {
           maxAge: 365 * 24 * 3600000,
           httpOnly: !IS_OFFLINE,
-          sameSite: IS_OFFLINE ? "lax" : "none",
+          sameSite: "lax",
           secure: !IS_OFFLINE,
         })
         .status(200)

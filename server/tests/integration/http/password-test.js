@@ -37,7 +37,7 @@ describe("[Routes] Password", () => {
       username: "user9999@apprentissage.beta.gouv.fr",
     });
 
-    assert.strictEqual(response.status, 400);
+    assert.strictEqual(response.status, 200);
   });
 
   it("Vérifie qu'on ne peut pas demander la réinitialisation du mot de passe pour un utilisateur invalide", async () => {
@@ -48,11 +48,10 @@ describe("[Routes] Password", () => {
     });
 
     const response = await httpClient.post("/api/v1/password/forgotten-password", {
-      type: "cfa",
       username: "user9999@apprentissage.beta.gouv.fr",
     });
 
-    assert.strictEqual(response.status, 400);
+    assert.strictEqual(response.status, 200);
   });
 
   it("Vérifie qu'un utilisateur peut changer son mot de passe", async () => {

@@ -64,81 +64,81 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
           .required(field?.requiredMessage),
       });
 
-      if (
-        path === "formation.rncp" ||
-        path === "formation.codeDiplome" ||
-        path === "formation.intituleQualification" ||
-        //
-        path === "formation.dateDebutFormation" ||
-        path === "formation.dateFinFormation" ||
-        path === "formation.dureeFormation" ||
-        path === "formation.typeDiplome" ||
-        path === "organismeFormation.adresse.commune" ||
-        path === "organismeFormation.adresse.codePostal" ||
-        path === "organismeFormation.adresse.voie" ||
-        path === "organismeFormation.adresse.numero" ||
-        path === "organismeFormation.adresse.complement" ||
-        path === "organismeFormation.uaiCfa" ||
-        path === "organismeFormation.denomination" ||
-        path === "organismeFormation.siret"
-      ) {
-        const { isValid: isValidFieldValue } = await validate(validationSchema, {
-          [name]: field?.value,
-        });
+      // if (
+      //   path === "formation.rncp" ||
+      //   path === "formation.codeDiplome" ||
+      //   path === "formation.intituleQualification" ||
+      //   //
+      //   path === "formation.dateDebutFormation" ||
+      //   path === "formation.dateFinFormation" ||
+      //   path === "formation.dureeFormation" ||
+      //   path === "formation.typeDiplome" ||
+      //   path === "organismeFormation.adresse.commune" ||
+      //   path === "organismeFormation.adresse.codePostal" ||
+      //   path === "organismeFormation.adresse.voie" ||
+      //   path === "organismeFormation.adresse.numero" ||
+      //   path === "organismeFormation.adresse.complement" ||
+      //   path === "organismeFormation.uaiCfa" ||
+      //   path === "organismeFormation.denomination" ||
+      //   path === "organismeFormation.siret"
+      // ) {
+      const { isValid: isValidFieldValue } = await validate(validationSchema, {
+        [name]: field?.value,
+      });
 
-        console.log(path, ">>>>", initRef.current, values[name], field?.value, isValidFieldValue);
-        if (initRef.current === 0) {
-          if (field) {
-            console.log("Init");
-            setShouldBeDisabled(field.locked);
-            if (values[name] === "") {
-              if (field?.value !== "") {
-                if (isValidFieldValue) {
-                  setFieldValue(name, field?.value);
-                  setIsErrored(false);
-                  setValidated(true);
-                } else {
-                  setShouldBeDisabled(false);
-                  setFieldValue(name, field?.value);
-                }
+      // console.log(path, ">>>>", initRef.current, values[name], field?.value, isValidFieldValue);
+      if (initRef.current === 0) {
+        if (field) {
+          // console.log("Init");
+          setShouldBeDisabled(field.locked);
+          if (values[name] === "") {
+            if (field?.value !== "") {
+              if (isValidFieldValue) {
+                setFieldValue(name, field?.value);
+                setIsErrored(false);
+                setValidated(true);
+              } else {
+                setShouldBeDisabled(false);
+                setFieldValue(name, field?.value);
               }
             }
-            initRef.current = 1;
+          }
+          initRef.current = 1;
+        }
+      } else {
+        if (prevFieldValueRef.current !== field?.value || field?.forceUpdate) {
+          // console.log("Outside Update", prevFieldValueRef, field?.value, field?.forceUpdate);
+          setFieldValue(name, field?.value);
+          setShouldBeDisabled(field?.locked);
+          if (isValidFieldValue) {
+            setIsErrored(false);
+            setValidated(true);
+          } else {
+            setShouldBeDisabled(false);
+            setFromInternal(true);
+            setIsErrored(true);
+            setValidated(false);
+          }
+          prevFieldValueRef.current = field?.value;
+          if (field?.forceUpdate) {
+            await onSubmittedField(path, field?.value);
           }
         } else {
-          if (prevFieldValueRef.current !== field?.value || field?.forceUpdate) {
-            console.log("Outside Update", prevFieldValueRef, field?.value, field?.forceUpdate);
-            setFieldValue(name, field?.value);
-            setShouldBeDisabled(field?.locked);
-            if (isValidFieldValue) {
-              setIsErrored(false);
-              setValidated(true);
-            } else {
-              setShouldBeDisabled(false);
-              setFromInternal(true);
+          if (fromInternal) {
+            const { isValid: isValidInternalValue, error: errorInternalValue } = await validate(validationSchema, {
+              [name]: values[name],
+            });
+            console.log(isValidInternalValue, errorInternalValue);
+            if (!isValidInternalValue) {
+              setErrors({ [name]: errorInternalValue.message });
               setIsErrored(true);
               setValidated(false);
             }
-            prevFieldValueRef.current = field?.value;
-            if (field?.forceUpdate) {
-              await onSubmittedField(path, field?.value);
-            }
-          } else {
-            if (fromInternal) {
-              const { isValid: isValidInternalValue, error: errorInternalValue } = await validate(validationSchema, {
-                [name]: values[name],
-              });
-              console.log(isValidInternalValue, errorInternalValue);
-              if (!isValidInternalValue) {
-                setErrors({ [name]: errorInternalValue.message });
-                setIsErrored(true);
-                setValidated(false);
-              }
-              setFromInternal(false);
-            }
+            setFromInternal(false);
           }
         }
       }
+      // }
     })();
   }, [onAsyncData, field, path, name, setFieldValue, values, setErrors, onSubmittedField, fromInternal]);
 

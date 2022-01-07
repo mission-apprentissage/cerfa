@@ -3,7 +3,7 @@ import { Box, Container } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import { useRouteMatch } from "react-router-dom";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
-import { useDossier } from "../../common/hooks/useDossier";
+import { useDossier } from "../../common/hooks/useDossier/useDossier";
 
 const Dossier = lazy(() => import("./Dossier"));
 

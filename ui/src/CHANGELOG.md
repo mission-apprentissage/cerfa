@@ -1,3 +1,60 @@
+# [1.12.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.6...v1.12.0-beta.7) (2022-01-07)
+
+
+### Bug Fixes
+
+* reject uploaded files with invalid extension ([cffa556](https://github.com/mission-apprentissage/cerfa/commit/cffa5566121147381fe33c5cc51f8f86985a5b64))
+
+# [1.12.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.5...v1.12.0-beta.6) (2022-01-07)
+
+
+### Bug Fixes
+
+* **server:** samesite httponly ([340d457](https://github.com/mission-apprentissage/cerfa/commit/340d457998edc93bb3aa841bd145dd5460c1b82b))
+
+# [1.12.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.4...v1.12.0-beta.5) (2022-01-07)
+
+
+### Bug Fixes
+
+* sanitize http client log messages ([72f2d1b](https://github.com/mission-apprentissage/cerfa/commit/72f2d1b7ca502f581be6cc0b5dcb38508b882ffb))
+* send a generic message when uploaded file is invalid ([0bf9c46](https://github.com/mission-apprentissage/cerfa/commit/0bf9c4602ba94037715089d2bfd5365f12411faa))
+* set valid path to ovh storageName property ([af9fe87](https://github.com/mission-apprentissage/cerfa/commit/af9fe878098834b8dd42402ee3f70ecbcdec9cdb))
+
+# [1.12.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.3...v1.12.0-beta.4) (2022-01-07)
+
+
+### Features
+
+* change to lax forever ([ed880a5](https://github.com/mission-apprentissage/cerfa/commit/ed880a512fc35e83fec8f8053919db32c44fc9bc))
+
+# [1.12.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.2...v1.12.0-beta.3) (2022-01-07)
+
+
+### Bug Fixes
+
+* **ui:** suppression chargement différé partie formulaire ([6eb3ee8](https://github.com/mission-apprentissage/cerfa/commit/6eb3ee8704dbee60574a114d708b498508d977cd))
+
+
+### Features
+
+* **ui:** formulaire base de travail avec données ([#63](https://github.com/mission-apprentissage/cerfa/issues/63)) ([a84dec4](https://github.com/mission-apprentissage/cerfa/commit/a84dec4f7fb5b16db3e887152394150fa1b9894b))
+
+# [1.12.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.1...v1.12.0-beta.2) (2022-01-07)
+
+
+### Features
+
+* add CERFA_OVH_STORAGE_NAME env variable ([#64](https://github.com/mission-apprentissage/cerfa/issues/64)) ([da16dbb](https://github.com/mission-apprentissage/cerfa/commit/da16dbb3e30aa2e7b37ab3f0a2f43a109be74fb8))
+
+# [1.12.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.11.1...v1.12.0-beta.1) (2022-01-06)
+
+
+### Features
+
+* **formulaire:** début de développement sur les bloques Employeur, Apprenti ([#61](https://github.com/mission-apprentissage/cerfa/issues/61)) ([d3c49e3](https://github.com/mission-apprentissage/cerfa/commit/d3c49e346caf96869c780358f1990fec056d650e))
+* **ui:** edition du profile ([e02a1b2](https://github.com/mission-apprentissage/cerfa/commit/e02a1b2b1d5437aa3c17c5c429842aa278564e7d))
+
 ## [1.11.1](https://github.com/mission-apprentissage/cerfa/compare/v1.11.0...v1.11.1) (2022-01-05)
 
 

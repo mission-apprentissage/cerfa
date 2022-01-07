@@ -80,7 +80,7 @@ module.exports = (components) => {
         .cookie(`cerfa-${config.env}-pds-code-verifier`, token, {
           maxAge: 365 * 24 * 3600000,
           httpOnly: !IS_OFFLINE,
-          sameSite: IS_OFFLINE ? "lax" : "none",
+          sameSite: "lax",
           secure: !IS_OFFLINE,
         })
         .status(200)
@@ -114,7 +114,7 @@ module.exports = (components) => {
           .cookie(`cerfa-${config.env}-jwt`, token, {
             maxAge: 365 * 24 * 3600000,
             httpOnly: !IS_OFFLINE,
-            sameSite: IS_OFFLINE ? "lax" : "none",
+            sameSite: "lax",
             secure: !IS_OFFLINE,
           })
           .status(200)
@@ -193,7 +193,7 @@ module.exports = (components) => {
         .cookie(`cerfa-${config.env}-jwt`, token, {
           maxAge: 365 * 24 * 3600000,
           httpOnly: !IS_OFFLINE,
-          sameSite: IS_OFFLINE ? "lax" : "none",
+          sameSite: "lax",
           secure: !IS_OFFLINE,
         })
         .status(200)

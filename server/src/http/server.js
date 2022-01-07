@@ -13,6 +13,7 @@ const pageAccessMiddleware = require("./middlewares/pageAccessMiddleware");
 const packageJson = require("../../package.json");
 const authentified = require("./routes/authentified");
 const user = require("./routes/user");
+const profile = require("./routes/profile");
 const role = require("./routes/role");
 const password = require("./routes/password");
 const upload = require("./routes/specific/upload");
@@ -64,6 +65,7 @@ module.exports = async (components) => {
     pageAccessMiddleware(["admin/page_gestion_utilisateurs", "admin/page_gestion_roles"]),
     role(components)
   );
+  app.use("/api/v1/profile", checkJwtToken, profile(components));
 
   // below specific
   app.use("/api/v1/workspace", checkJwtToken, workspace(components));
