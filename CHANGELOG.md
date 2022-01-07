@@ -1,3 +1,10 @@
+# [1.12.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.1...v1.12.0-beta.2) (2022-01-07)
+
+
+### Features
+
+* add CERFA_OVH_STORAGE_NAME env variable ([#64](https://github.com/mission-apprentissage/cerfa/issues/64)) ([da16dbb](https://github.com/mission-apprentissage/cerfa/commit/da16dbb3e30aa2e7b37ab3f0a2f43a109be74fb8))
+
 # [1.12.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.11.1...v1.12.0-beta.1) (2022-01-06)
 
 
