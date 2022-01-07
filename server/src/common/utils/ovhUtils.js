@@ -1,7 +1,6 @@
 // eslint-disable-next-line node/no-extraneous-require
 const axios = require("axios");
 const config = require("../../config");
-const logger = require("../logger");
 const { createRequestStream, createUploadStream } = require("./httpUtils");
 
 async function authenticate(uri) {
@@ -49,7 +48,6 @@ async function requestObjectAccess(path, options = {}) {
 
 module.exports = {
   listStorage: async () => {
-    logger.debug(`Fetching OVH Object Storage file list`);
     let { url, token } = await requestObjectAccess("/");
     let response = await axios.get(url, {
       headers: {
@@ -61,7 +59,6 @@ module.exports = {
     return response.data;
   },
   getFromStorage: async (path, options = {}) => {
-    logger.debug(`Fetching OVH Object Storage file ${path}`);
     let { url, token } = await requestObjectAccess(path, options);
     return createRequestStream(url, {
       method: "GET",
@@ -72,7 +69,6 @@ module.exports = {
     });
   },
   uploadToStorage: async (path, options = {}) => {
-    logger.debug(`Uploading OVH Object Storage file ${path}`);
     let { url, token } = await requestObjectAccess(path, options);
     return createUploadStream(url, {
       headers: {
@@ -83,7 +79,6 @@ module.exports = {
     });
   },
   deleteFromStorage: async (path, options = {}) => {
-    logger.debug(`Deleting OVH Object Storage file ${path}`);
     let { url, token } = await requestObjectAccess(path, options);
     return createRequestStream(url, {
       method: "DELETE",

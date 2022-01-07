@@ -10,7 +10,7 @@ async function createRequestStream(url, httpOptions = {}) {
       ...httpOptions,
     };
 
-    logger.info(`Downloading ${url}...`);
+    logger.info(`Send http request [${options.method}] ${url}...`);
     let req = https.request(options, (res) => {
       if (res.statusCode >= 400) {
         reject(new Error(`Unable to get ${url}. Status code ${res.statusCode}`));
