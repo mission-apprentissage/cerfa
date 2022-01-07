@@ -1,3 +1,12 @@
+# [1.12.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.4...v1.12.0-beta.5) (2022-01-07)
+
+
+### Bug Fixes
+
+* sanitize http client log messages ([72f2d1b](https://github.com/mission-apprentissage/cerfa/commit/72f2d1b7ca502f581be6cc0b5dcb38508b882ffb))
+* send a generic message when uploaded file is invalid ([0bf9c46](https://github.com/mission-apprentissage/cerfa/commit/0bf9c4602ba94037715089d2bfd5365f12411faa))
+* set valid path to ovh storageName property ([af9fe87](https://github.com/mission-apprentissage/cerfa/commit/af9fe878098834b8dd42402ee3f70ecbcdec9cdb))
+
 # [1.12.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.3...v1.12.0-beta.4) (2022-01-07)
 
 
