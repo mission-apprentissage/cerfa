@@ -1,3 +1,15 @@
+# [1.12.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.2...v1.12.0-beta.3) (2022-01-07)
+
+
+### Bug Fixes
+
+* **ui:** suppression chargement différé partie formulaire ([6eb3ee8](https://github.com/mission-apprentissage/cerfa/commit/6eb3ee8704dbee60574a114d708b498508d977cd))
+
+
+### Features
+
+* **ui:** formulaire base de travail avec données ([#63](https://github.com/mission-apprentissage/cerfa/issues/63)) ([a84dec4](https://github.com/mission-apprentissage/cerfa/commit/a84dec4f7fb5b16db3e887152394150fa1b9894b))
+
 # [1.12.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0-beta.1...v1.12.0-beta.2) (2022-01-07)
 
 
