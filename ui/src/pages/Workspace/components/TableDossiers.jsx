@@ -18,8 +18,8 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
           width: 150,
           value: m.nom,
         },
-        Contenu: {
-          Header: "",
+        Contributors: {
+          Header: "Contributeurs",
           width: 150,
           value: null,
         },
@@ -54,12 +54,13 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
             </Link>
           );
         },
-        Contenu: (value, i) => {
+        Contributors: (value, i) => {
+          console.log(dossiers[i]);
           return (
             <HStack>
               <NavLink to={`${baseUrl}/${dossiers[i]._id}/cerfa`}>
                 <Badge variant="solid" textStyle="xs">
-                  Cerfa
+                  Cerfa1
                 </Badge>
               </NavLink>
               <NavLink to={`${baseUrl}/${dossiers[i]._id}/documents`}>
