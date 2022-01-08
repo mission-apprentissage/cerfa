@@ -3,7 +3,7 @@ const Boom = require("boom");
 const Joi = require("joi");
 const permissions = require("./permissions");
 const moment = require("moment");
-const { findIndex } = require("lodash");
+const { findIndex, find } = require("lodash");
 moment.locale("fr-FR");
 
 module.exports = async () => {
@@ -73,6 +73,23 @@ module.exports = async () => {
       }
 
       return found.documents;
+    },
+    getDocument: async (dossierId, nomFichier, cheminFichier) => {
+      const found = await Dossier.findById(dossierId).lean();
+
+      if (!found) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      const foundDocument = find(found.documents, {
+        nomFichier,
+        cheminFichier,
+      });
+      if (!foundDocument) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      return foundDocument;
     },
     addDocument: async (id, data) => {
       const found = await Dossier.findById(id);
