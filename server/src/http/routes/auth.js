@@ -55,6 +55,10 @@ module.exports = ({ users, mailer, sessions }) => {
       await users.loggedInUser(payload.email);
 
       const token = createUserToken({ payload });
+
+      if (await sessions.findJwt(token)) {
+        await sessions.removeJwt(token);
+      }
       await sessions.addJwt(token);
 
       res
