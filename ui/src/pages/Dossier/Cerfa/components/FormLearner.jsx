@@ -100,7 +100,7 @@ const FormLearner = () => {
         </Box>
         <Box w="45%" ml="5w">
           <InputCerfa path="apprenti.dateNaissance" field={dateNaissance} type="date" mt="2" />
-          <InputCerfa path="apprenti.sexe" field={sexe} type="text" mt="2" />
+          <InputCerfa path="apprenti.sexe" field={sexe} type="select" mt="2" />
           {/* 
           <FormControl isRequired mt={2} isInvalid={errors.gender}>
             <FormLabel>Sexe :</FormLabel>
@@ -119,8 +119,8 @@ const FormLearner = () => {
           */}
           <InputCerfa path="apprenti.departementNaissance" field={departementNaissance} type="text" mt="2" />
           <InputCerfa path="apprenti.communeNaissance" field={communeNaissance} type="text" mt="2" />
-          <InputCerfa path="apprenti.nationalite" field={nationalite} type="text" mt="2" />
-          <InputCerfa path="apprenti.regimeSocial" field={regimeSocial} type="text" mt="2" />
+          <InputCerfa path="apprenti.nationalite" field={nationalite} type="select" mt="2" />
+          <InputCerfa path="apprenti.regimeSocial" field={regimeSocial} type="select" mt="2" />
           {/* 
          
           <FormControl isRequired mt={2} isInvalid={errors.sportList}>
@@ -178,11 +178,12 @@ const FormLearner = () => {
             {errors.handicapped && touched.handicapped && <FormErrorMessage>{errors.handicapped}</FormErrorMessage>}
           </FormControl>
 */}
-          <InputCerfa path="apprenti.situationAvantContrat" field={situationAvantContrat} type="text" mt="2" />
-          <InputCerfa path="apprenti.diplomePrepare" field={diplomePrepare} type="text" mt="2" />
-          <InputCerfa path="apprenti.derniereClasse" field={derniereClasse} type="text" mt="2" />
+
+          <InputCerfa path="apprenti.situationAvantContrat" field={situationAvantContrat} type="select" mt="2" />
+          <InputCerfa path="apprenti.diplomePrepare" field={diplomePrepare} type="select" mt="2" />
+          <InputCerfa path="apprenti.derniereClasse" field={derniereClasse} type="select" mt="2" />
           <InputCerfa path="apprenti.intituleDiplomePrepare" field={intituleDiplomePrepare} type="text" mt="2" />
-          <InputCerfa path="apprenti.diplome" field={diplome} type="text" mt="2" />
+          <InputCerfa path="apprenti.diplome" field={diplome} type="select" mt="2" />
         </Box>
       </Flex>
     </Box>

@@ -30,8 +30,8 @@ const FormContract = () => {
     <Box>
       <Flex>
         <Box w="55%" flex="1">
-          <InputCerfa path="contrat.typeContratApp" field={typeContratApp} type="text" mt="2" />
-          <InputCerfa path="contrat.typeDerogation" field={typeDerogation} type="text" mt="2" />
+          <InputCerfa path="contrat.typeContratApp" field={typeContratApp} type="select" mt="2" />
+          <InputCerfa path="contrat.typeDerogation" field={typeDerogation} type="select" mt="2" />
           <Text textStyle="sm" fontStyle="italic">
             à renseigner si une dérogation existe pour ce contrat
           </Text>

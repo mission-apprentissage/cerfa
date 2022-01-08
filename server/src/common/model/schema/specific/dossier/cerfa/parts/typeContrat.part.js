@@ -3,6 +3,32 @@ const typeContratSchema = {
   type: Number,
   description:
     "**Type de contrat** :\r\n<br />*Contrat initial*\r\n<br />11 : Premier contrat d’apprentissage de l’apprenti\r\n<br />*Succession de contrats*\r\n<br />21 : Nouveau contrat avec un apprenti qui a terminé son précédent contrat auprès d’un même employeur\r\n<br />22 : Nouveau contrat avec un apprenti qui a terminé son précédent contrat auprès d’un autre employeur\r\n<br />23 : Nouveau contrat avec un apprenti dont le précédent contrat auprès d’un autre employeur a été rompu\r\n<br />*Avenant : modification des conditions du contrat*\r\n<br />31 : Modification de la situation juridique de l’employeur\r\n<br />32 : Changement d’employeur dans le cadre d’un contrat saisonnier\r\n<br />33 : Prolongation du contrat suite à un échec à l’examen de l’apprenti\r\n<br />34 : Prolongation du contrat suite à la reconnaissance de l’apprenti comme travailleur handicapé\r\n<br />35 : Modification du diplôme préparé par l’apprenti\r\n<br />36 : Autres changements : changement de maître d’apprentissage, de durée de travail hebdomadaire, réduction de durée, etc.\r\n<br />37 : Modification du lieu d’exécution du contrat",
+  options: [
+    {
+      name: "Contrat initial",
+      options: ["11 Premier contrat d'apprentissage de l'apprenti"],
+    },
+    {
+      name: "Succession de contrats",
+      options: [
+        "21 Nouveau contrat avec un apprenti qui a terminé son précédent contrat auprès d'un même employeur",
+        "22 Nouveau contrat avec un apprenti qui a terminé son précédent contrat auprès d'un autre employeur",
+        "23 Nouveau contrat avec un apprenti dont le précédent contrat auprès d'un autre employeur a été rompu",
+      ],
+    },
+    {
+      name: "Avenant : modification des conditions du contrat",
+      options: [
+        "31 Modification de la situation juridique de l'employeur",
+        "32 Changement d'employeur dans le cadre d'un contrat saisonnier",
+        "33 Prolongation du contrat suite à un échec à l'examen de l'apprenti",
+        "34 Prolongation du contrat suite à la reconnaissance de l'apprenti comme travailleur handicapé",
+        "35 Modification du diplôme préparé par l'apprenti",
+        "36 Autres changements : changement de maître d'apprentissage, de durée de travail hebdomadaire, réduction de durée, etc.",
+        "37 Modification du lieu d'exécution du contrat ",
+      ],
+    },
+  ],
 };
 
 module.exports = typeContratSchema;

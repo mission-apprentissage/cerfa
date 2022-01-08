@@ -96,7 +96,7 @@ const FormFormation = React.memo((props) => {
           <InputCerfa
             path="formation.typeDiplome"
             field={typeDiplome}
-            type="text"
+            type="select"
             mt="2"
             onSubmittedField={onSubmittedFormationTypeDiplome}
           />

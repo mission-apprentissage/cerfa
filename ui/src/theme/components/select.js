@@ -46,6 +46,12 @@ const Select = {
         ...commonFieldStyle,
       },
     },
+    valid: {
+      field: {
+        ...commonFieldStyle,
+        borderBottomColor: "green.500",
+      },
+    },
   },
 };
 

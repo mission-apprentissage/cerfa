@@ -81,7 +81,7 @@ export default () => {
   // TODO not Authorize handler
 
   return (
-    <Box w="100%" px={[1, 1, 12, 24]}>
+    <Box w="100%" px={[1, 1, 6, 6]}>
       <Container maxW="xl">
         <HStack mt={6}>
           <Heading as="h1" flexGrow="1">

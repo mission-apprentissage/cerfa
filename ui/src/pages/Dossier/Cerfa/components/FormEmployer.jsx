@@ -84,8 +84,8 @@ const FormEmployer = ({ onFetched }) => {
           <InputCerfa path="employeur.courriel" field={courriel} type="text" mt="2" />
         </Box>
         <Box w="45%" ml="5w">
-          <InputCerfa path="employeur.typeEmployeur" field={typeEmployeur} type="text" mt="2" />
-          <InputCerfa path="employeur.employeurSpecifique" field={employeurSpecifique} type="text" mt="2" />
+          <InputCerfa path="employeur.typeEmployeur" field={typeEmployeur} type="select" mt="2" />
+          <InputCerfa path="employeur.employeurSpecifique" field={employeurSpecifique} type="select" mt="2" />
           <InputCerfa path="employeur.naf" field={naf} type="text" mt="2" />
           <InputCerfa path="employeur.nombreDeSalaries" field={nombreDeSalaries} type="text" mt="2" />
           <InputCerfa path="employeur.codeIdcc" field={codeIdcc} type="text" mt="2" />
