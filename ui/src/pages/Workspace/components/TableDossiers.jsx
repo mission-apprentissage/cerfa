@@ -1,5 +1,18 @@
 import React from "react";
-import { Box, Text, Badge, Button, HStack, Link, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import {
+  Text,
+  Badge,
+  Button,
+  HStack,
+  Link,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Avatar,
+  Center,
+  Flex,
+} from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { DateTime } from "luxon";
 import { Parametre } from "../../../theme/components/icons";
@@ -15,7 +28,7 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
       data={dossiers.map((m) => ({
         Nom: {
           Header: "Nom",
-          width: 150,
+          width: 120,
           value: m.nom,
         },
         Contributors: {
@@ -23,66 +36,62 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
           width: 150,
           value: null,
         },
-        Last: {
-          Header: "Modifié le",
-          width: 90,
-          value: DateTime.fromISO(m.lastModified).setLocale("fr-FR").toLocaleString(),
-        },
         Etat: {
           Header: "Statut",
           width: 60,
           value: null,
         },
+        Last: {
+          Header: "Modifié le",
+          width: 50,
+          value: DateTime.fromISO(m.lastModified).setLocale("fr-FR").toLocaleString(),
+        },
         Actions: {
           Header: "Actions",
-          width: 50,
+          width: 40,
           value: null,
         },
       }))}
       components={{
         Nom: (value, i) => {
           return (
-            <Link
-              as={NavLink}
-              to={`${baseUrl}/${dossiers[i]._id}/cerfa`}
-              _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.300" }}
-              w="full"
-              h="full"
-              textDecoration="none"
-            >
-              <Text display="block">{value}</Text>
-            </Link>
+            <Center>
+              <Link
+                as={NavLink}
+                to={`${baseUrl}/${dossiers[i]._id}/cerfa`}
+                _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.300" }}
+                w="full"
+                h="full"
+                textDecoration="none"
+                display="flex"
+                alignItems="center"
+              >
+                {value}
+              </Link>
+            </Center>
           );
         },
         Contributors: (value, i) => {
-          console.log(dossiers[i]);
           return (
-            <HStack>
-              <NavLink to={`${baseUrl}/${dossiers[i]._id}/cerfa`}>
-                <Badge variant="solid" textStyle="xs">
-                  Cerfa1
-                </Badge>
-              </NavLink>
-              <NavLink to={`${baseUrl}/${dossiers[i]._id}/documents`}>
-                <Badge variant="solid" textStyle="xs">
-                  Justificatives
-                </Badge>
-              </NavLink>
-              <NavLink to={`${baseUrl}/${dossiers[i]._id}/signatures`}>
-                <Badge variant="solid" textStyle="xs">
-                  Signatures
-                </Badge>
-              </NavLink>
-              <NavLink to={`${baseUrl}/${dossiers[i]._id}/etat`}>
-                <Badge variant="solid" textStyle="xs">
-                  Etat
-                </Badge>
-              </NavLink>
+            <HStack flexDirection={{ md: "column", lg: "row" }}>
+              {dossiers[i].contributeurs.map((constrib, j) => {
+                const hasAccount = constrib.user.prenom && constrib.user.nom;
+                const username = hasAccount ? `${constrib.user.prenom} ${constrib.user.nom}` : `Invité non vérifié`;
+                return (
+                  <HStack key={j}>
+                    <Avatar size="sm" name={hasAccount ? username : ""} />
+                    <Text>{username}</Text>
+                  </HStack>
+                );
+              })}
             </HStack>
           );
         },
         Etat: (value, i) => {
-          return <Box>{dossiers[i].draft && <Badge variant="draft">Brouillon</Badge>}</Box>;
+          return <Center>{dossiers[i].draft && <Badge variant="draft">Brouillon</Badge>}</Center>;
+        },
+        Last: (value, i) => {
+          return <Center>{value}</Center>;
         },
         Actions: (value, i) => {
           return (
