@@ -240,12 +240,17 @@ const employeurCerfaSchema = {
   attestationEligibilite: {
     type: Boolean,
     description: "Atteste de l'éligibilité du tuteur / maître d'apprentissage",
-    label: "Atteste de l'éligibilité du tuteur / maître d'apprentissage :",
     default: false,
-    example: false,
     required: function () {
       return !this.draft;
     },
+    options: [
+      {
+        label:
+          "L'employeur atteste sur l'honneur que le maître d'apprentissage répond à l'ensemble des critères d'éligibilité à cette fonction.",
+        value: true,
+      },
+    ],
   },
   attestationPieces: {
     type: Boolean,

@@ -112,9 +112,6 @@ export function useCerfaEmployeur() {
   const [employeurRegimeSpecifique, setEmployeurRegimeSpecifique] = useRecoilState(
     employeurAtoms.cerfaEmployeurRegimeSpecifiqueAtom
   );
-  const [employeurAttestationEligibilite, setEmployeurAttestationEligibilite] = useRecoilState(
-    employeurAtoms.cerfaEmployeurAttestationEligibiliteAtom
-  );
   const [employeurAttestationPieces, setEmployeurAttestationPieces] = useRecoilState(
     employeurAtoms.cerfaEmployeurAttestationPiecesAtom
   );
@@ -199,7 +196,6 @@ export function useCerfaEmployeur() {
     setEmployeurEmployeurSpecifique(res.employeur.employeurSpecifique);
     setEmployeurCaisseComplementaire(res.employeur.caisseComplementaire);
     setEmployeurRegimeSpecifique(res.employeur.regimeSpecifique);
-    setEmployeurAttestationEligibilite(res.employeur.attestationEligibilite);
     setEmployeurAttestationPieces(res.employeur.attestationPieces);
     setEmployeurPrivePublic(res.employeur.privePublic);
   };
@@ -229,7 +225,6 @@ export function useCerfaEmployeur() {
         employeurSpecifique: employeurEmployeurSpecifique,
         caisseComplementaire: employeurCaisseComplementaire,
         regimeSpecifique: employeurRegimeSpecifique,
-        attestationEligibilite: employeurAttestationEligibilite,
         attestationPieces: employeurAttestationPieces,
         privePublic: employeurPrivePublic,
       },

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, FormLabel, Text, Flex, HStack } from "@chakra-ui/react";
+import { Box, FormLabel, Text, Flex, HStack, Collapse } from "@chakra-ui/react";
 
 import { useCerfaContrat } from "../../../../common/hooks/useCerfa/parts/useCerfaContrat";
 import InputCerfa from "./Input";
@@ -26,6 +26,9 @@ const FormContract = () => {
         autreAvantageEnNature,
         remunerationsAnnuelles,
       },
+    },
+    onSubmit: {
+      contrat: { avantageNature: onSubmittedContratAvantageNature },
     },
   } = useCerfaContrat();
 
@@ -154,18 +157,26 @@ const FormContract = () => {
         <FormLabel my={4} fontWeight={700}>
           Avantages en nature, le cas échéant :
         </FormLabel>
-        <InputCerfa path="employeur.avantageNature" field={avantageNature} type="radio" mt="2" />
-        <Flex>
-          <Box flex="1">
-            <InputCerfa path="contrat.avantageNourriture" field={avantageNourriture} type="text" mt="2" />€ / repas
+        <InputCerfa
+          path="contrat.avantageNature"
+          field={avantageNature}
+          type="radio"
+          mt="2"
+          onSubmittedField={onSubmittedContratAvantageNature}
+        />
+        <Collapse in={avantageNature.value === "Oui"} animateOpacity>
+          <Flex>
+            <Box flex="1">
+              <InputCerfa path="contrat.avantageNourriture" field={avantageNourriture} type="text" mt="2" />€ / repas
+            </Box>
+            <Box ml={5}>
+              <InputCerfa path="contrat.avantageLogement" field={avantageLogement} type="text" mt="2" />€ / mois
+            </Box>
+          </Flex>
+          <Box>
+            <InputCerfa path="contrat.autreAvantageEnNature" field={autreAvantageEnNature} type="text" mt="2" />
           </Box>
-          <Box ml={5}>
-            <InputCerfa path="contrat.avantageLogement" field={avantageLogement} type="text" mt="2" />€ / mois
-          </Box>
-        </Flex>
-        <Box>
-          <InputCerfa path="contrat.autreAvantageEnNature" field={autreAvantageEnNature} type="text" mt="2" />
-        </Box>
+        </Collapse>
       </Box>
     </Box>
   );

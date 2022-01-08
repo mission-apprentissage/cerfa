@@ -82,10 +82,6 @@ export const cerfaEmployeurRegimeSpecifiqueAtom = atom({
   key: "cerfa/employeur/regimeSpecifique",
   default: null,
 });
-export const cerfaEmployeurAttestationEligibiliteAtom = atom({
-  key: "cerfa/employeur/attestationEligibilite",
-  default: null,
-});
 export const cerfaEmployeurAttestationPiecesAtom = atom({
   key: "cerfa/employeur/attestationPieces",
   default: null,

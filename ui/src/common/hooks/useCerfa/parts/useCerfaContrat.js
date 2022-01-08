@@ -2,7 +2,7 @@
  * Multiple states on purpose to avoid full re-rendering at each modification
  */
 
-// import { useCallback } from "react";
+import { useCallback } from "react";
 // import { DateTime } from "luxon";
 // import { _post } from "../../../httpClient";
 import { useRecoilState } from "recoil";
@@ -156,6 +156,29 @@ export function useCerfaContrat() {
   );
   const [contratRemunerationsAnnuelles42TypeSalaire, setContratRemunerationsAnnuelles42TypeSalaire] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles42TypeSalaireAtom
+  );
+
+  const onSubmittedContratAvantageNature = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "contrat.avantageNature") {
+          const newV = {
+            contrat: {
+              avantageNature: {
+                ...contratAvantageNature,
+                value: data,
+              },
+            },
+          };
+          if (contratAvantageNature.value !== newV.contrat.avantageNature.value) {
+            setContratAvantageNature(newV.contrat.avantageNature);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [contratAvantageNature, setContratAvantageNature]
   );
 
   const setAll = async (res) => {
@@ -320,7 +343,9 @@ export function useCerfaContrat() {
     },
     setAll,
     onSubmit: {
-      contrat: {},
+      contrat: {
+        avantageNature: onSubmittedContratAvantageNature,
+      },
     },
   };
 }

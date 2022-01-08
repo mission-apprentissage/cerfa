@@ -5,6 +5,7 @@ import {
   Input,
   Select,
   Radio,
+  Checkbox,
   FormErrorMessage,
   InputGroup,
   HStack,
@@ -316,6 +317,22 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
                 </HStack>
               </RadioGroup>
             </HStack>
+          )}
+          {type === "consent" && (
+            <>
+              {field.options.map((option, k) => (
+                <Checkbox
+                  name={name}
+                  onChange={handleChange}
+                  value={option.label}
+                  // isChecked={values[name] === option.label}
+                  isDisabled={shouldBeDisabled}
+                  key={k}
+                >
+                  {option.label}
+                </Checkbox>
+              ))}
+            </>
           )}
           {(shouldBeDisabled || isLoading || validated || isErrored) && (
             <InputRightElement
