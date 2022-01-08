@@ -39,3 +39,5 @@ export * from "./Bin";
 export * from "./Folder";
 export * from "./IoArrowForward";
 export * from "./IoArrowBackward";
+export * from "./Settings4Fill";
+export * from "./AvatarPlus";

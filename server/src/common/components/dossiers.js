@@ -7,6 +7,43 @@ const { findIndex, find } = require("lodash");
 moment.locale("fr-FR");
 
 module.exports = async () => {
+  const buildContributorsResult = async (contributeurEmail, workspaceId, dossierId, { users, permissions, roles }) => {
+    // components avoid circular dependencies
+
+    const userSelectFields = { email: 1, nom: 1, prenom: 1, _id: 0, roles: 1 };
+    const roleSelectFields = { name: 1, description: 1, title: 1, _id: 1 };
+    const permSelectFields = { addedAt: 1, role: 1, acl: 1 };
+
+    const currentUser = (await users.getUser(contributeurEmail, userSelectFields)) || {
+      email: contributeurEmail,
+      nom: "",
+      prenom: "",
+    };
+
+    const currentUserPerm = await permissions.hasPermission(
+      { workspaceId, dossierId, userEmail: contributeurEmail },
+      permSelectFields
+    );
+    if (!currentUserPerm) {
+      throw Boom.badRequest("Something went wrong");
+    }
+    const currentUserRole = await roles.findRolePermissionById(currentUserPerm.role, roleSelectFields);
+    if (!currentUserRole) {
+      throw Boom.badRequest("Something went wrong");
+    }
+    const type = currentUser && currentUser.roles ? await roles.findRoleById(currentUser?.roles[0]) : null;
+
+    return {
+      user: { ...currentUser, type: type?.name || null },
+      permission: {
+        permId: currentUserPerm._id,
+        addedAt: currentUserPerm.addedAt,
+        customAcl: currentUserPerm.acl,
+        ...currentUserRole,
+      },
+    };
+  };
+
   return {
     createDossier: async (user, option = { nom: null, saved: false }) => {
       const userDb = await User.findOne({ email: user.sub });
@@ -240,6 +277,33 @@ module.exports = async () => {
       dossierDb.contributeurs = [...dossierDb.contributeurs, userEmail];
       await dossierDb.save();
       return dossierDb.contributeurs;
+    },
+    getContributeurs: async (dossierId, components) => {
+      // components avoid circular dependencies
+
+      const dossier = await Dossier.findById(dossierId, { contributeurs: 1, owner: 1, workspaceId: 1 }).lean();
+      if (!dossier) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      const ownerUser = await components.users.getUserById(dossier.owner, { email: 1 });
+      if (!ownerUser) {
+        throw Boom.badRequest("Something went wrong");
+      }
+
+      const owner = await buildContributorsResult(ownerUser.email, dossier.workspaceId, dossierId, components);
+      const contributeurs = [];
+      for (let index = 0; index < dossier.contributeurs.length; index++) {
+        const contributeurEmail = dossier.contributeurs[index];
+        const contributeur = await buildContributorsResult(
+          contributeurEmail,
+          dossier.workspaceId,
+          dossierId,
+          components
+        );
+        contributeurs.push(contributeur);
+      }
+      return [{ ...owner, owner: true }, ...contributeurs];
     },
     removeContributeur: async (dossierId, userEmail, permId) => {
       const dossierDb = await Dossier.findById(dossierId);

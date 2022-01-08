@@ -1,5 +1,5 @@
 import React from "react";
-import { Badge, Text, Flex, Box, Divider, Wrap, WrapItem, Avatar } from "@chakra-ui/react";
+import { Text, Flex, Box, Divider, Wrap, WrapItem, Avatar } from "@chakra-ui/react";
 import { prettyPrintDate } from "../../utils/dateUtils";
 
 export default ({ data }) => {
@@ -14,17 +14,9 @@ export default ({ data }) => {
             <Text textStyle="sm" fontWeight="bold">
               {data.createdBy}
             </Text>
-            <Badge
-              variant="solid"
-              bg="greenmedium.300"
-              borderRadius="16px"
-              color="grey.800"
-              textStyle="sm"
-              px="15px"
-              ml="10px"
-            >
-              {data.role}
-            </Badge>
+            <Text ml={1} fontWeight={700}>
+              ({data.role})
+            </Text>
           </Flex>
           <Text textStyle="sm">{prettyPrintDate(data.dateAjout)}</Text>
         </Flex>
@@ -37,7 +29,7 @@ export default ({ data }) => {
           {data.notify.map((n) => `@${n} `)}
         </Text>
       </Box>
-      <Divider borderWidth="2px" color="grey.500" mt={2} />
+      <Divider color="grey.800" mt={2} />
     </Flex>
   );
 };

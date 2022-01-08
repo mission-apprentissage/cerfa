@@ -14,6 +14,7 @@ const Pagination = React.memo(({ totalPages, activePage, setPage }) => {
         mx={1}
         px={2}
         py={1}
+        borderRadius="20px"
         variant="primary"
         bg="white"
         color="gray.700"
