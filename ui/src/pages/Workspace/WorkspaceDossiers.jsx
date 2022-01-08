@@ -8,7 +8,7 @@ import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 import { workspacePathsAtom, workspaceTitlesAtom, workspaceAtom } from "../../common/hooks/workspaceAtoms";
 import TableDossiers from "./components/TableDossiers";
 import { Settings4Fill } from "../../theme/components/icons";
-import WorkspaceParameterModal from "./WorkspaceParameterModal";
+import ParameterModal from "./components/ParameterModal";
 
 function useWorkspaceDossiers() {
   const workspace = useRecoilValue(workspaceAtom);
@@ -25,13 +25,12 @@ function useWorkspaceDossiers() {
 }
 
 export const Header = () => {
-  const workspaceParameterModal = useDisclosure();
-
   const history = useHistory();
   const paths = useRecoilValue(workspacePathsAtom);
   const titles = useRecoilValue(workspaceTitlesAtom);
   const workspace = useRecoilValue(workspaceAtom);
   const { isLoading, workspaceDossiers } = useWorkspaceDossiers();
+  const parameterModal = useDisclosure();
 
   if (isLoading) return null;
 
@@ -47,7 +46,7 @@ export const Header = () => {
             w="20px"
             h="20px"
             color="bluefrance"
-            onClick={workspaceParameterModal.onOpen}
+            onClick={parameterModal.onOpen}
             border="1px solid"
             borderColor={"bluefrance"}
             ml={3}
@@ -56,8 +55,7 @@ export const Header = () => {
             <Settings4Fill mt="-1.8rem" ml="-0.5rem" />
           </Box>
         </Flex>
-
-        <WorkspaceParameterModal isOpen={workspaceParameterModal.isOpen} onClose={workspaceParameterModal.onClose} />
+        <ParameterModal isOpen={parameterModal.isOpen} onClose={parameterModal.onClose} />
       </Box>
       {hasContextAccessTo(workspace, "wks/page_espace/page_dossiers/ajouter_nouveau_dossier") && (
         <Button

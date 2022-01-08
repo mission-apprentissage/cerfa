@@ -25,7 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { ArrowRightLine, Close } from "../../theme/components/icons";
+import { ArrowRightLine, Close } from "../../../theme/components/icons";
 
 export default ({ isOpen, onClose }) => {
   const { values, handleChange, handleSubmit, errors, touched } = useFormik({
@@ -44,7 +44,7 @@ export default ({ isOpen, onClose }) => {
   return (
     <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} size={"4xl"}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent bg="white" color="primaryText" borderRadius="none">
         <Button
           display={"flex"}
           alignSelf={"flex-end"}
