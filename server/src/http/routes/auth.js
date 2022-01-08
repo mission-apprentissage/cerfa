@@ -34,7 +34,7 @@ const checkActivationToken = (users) => {
   return passport.authenticate("jwt-activation", { session: false, failWithError: true });
 };
 
-module.exports = ({ users, mailer }) => {
+module.exports = ({ users, mailer, sessions }) => {
   const router = express.Router(); // eslint-disable-line new-cap
 
   router.post(
@@ -55,6 +55,7 @@ module.exports = ({ users, mailer }) => {
       await users.loggedInUser(payload.email);
 
       const token = createUserToken({ payload });
+      await sessions.addJwt(token);
 
       res
         .cookie(`cerfa-${config.env}-jwt`, token, {
@@ -131,6 +132,7 @@ module.exports = ({ users, mailer }) => {
       await users.loggedInUser(payload.email);
 
       const token = createUserToken({ payload });
+      await sessions.addJwt(token);
 
       return res
         .cookie(`cerfa-${config.env}-jwt`, token, {
@@ -149,8 +151,9 @@ module.exports = ({ users, mailer }) => {
 
   router.get(
     "/logout",
-    tryCatch((req, res) => {
+    tryCatch(async (req, res) => {
       if (req.cookies[`cerfa-${config.env}-jwt`]) {
+        await sessions.removeJwt(req.cookies[`cerfa-${config.env}-jwt`]);
         res.clearCookie(`cerfa-${config.env}-jwt`).status(200).json({
           loggedOut: true,
         });

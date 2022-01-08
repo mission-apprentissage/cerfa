@@ -26,7 +26,7 @@ const cookieExtractor = (req) => {
 module.exports = (components) => {
   const router = express.Router();
 
-  const { users, mailer } = components;
+  const { users, sessions, mailer } = components;
 
   const getPdsClient = async () => {
     const pdsIssuer = await Issuer.discover("https://agadir-app.rct01.kleegroup.com/identification/oidc/");
@@ -109,7 +109,7 @@ module.exports = (components) => {
         await users.loggedInUser(payload.email);
 
         const token = createUserToken({ payload });
-
+        await sessions.addJwt(token);
         return res
           .cookie(`cerfa-${config.env}-jwt`, token, {
             maxAge: 365 * 24 * 3600000,
@@ -188,6 +188,7 @@ module.exports = (components) => {
       await users.loggedInUser(payload.email);
 
       const token = createUserToken({ payload });
+      await sessions.addJwt(token);
 
       return res
         .cookie(`cerfa-${config.env}-jwt`, token, {

@@ -1,5 +1,6 @@
 const logSchema = require("./log");
 const userSchema = require("./user");
+const jwtSessionSchema = require("./jwtSession");
 const roleSchema = require("./role");
 const maintenanceMessageSchema = require("./maintenanceMessage");
 const dossierSchema = require("./specific/dossier/Dossier");
@@ -13,6 +14,7 @@ const workspaceSchema = require("./specific/Workspace");
 module.exports = {
   logSchema,
   userSchema,
+  jwtSessionSchema,
   roleSchema,
   maintenanceMessageSchema,
 
