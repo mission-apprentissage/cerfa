@@ -13,9 +13,12 @@ services:
       - ./ui:/app #Allows source folders to be watched
       - /app/node_modules/
     build:
-      context: ui
-      dockerfile: Dockerfile.dev
-    env_file: ./ui/.env
+      args:
+        - REACT_APP_ENV=dev
+        - REACT_APP_BASE_URL=
+        - REACT_APP_BASE_HOST=
+        - REACT_APP_METABASE_URL=
+        - REACT_APP_METABASE_SECRET_KEY=
     environment:
       - FAST_REFRESH=false
 
