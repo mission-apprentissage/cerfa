@@ -86,7 +86,9 @@ export default () => {
         <HStack mt={6}>
           <Heading as="h1" flexGrow="1">
             {dossier.nom}
-            <Badge variant="draft">Brouillon</Badge>
+            <Badge variant="draft" ml={5}>
+              Brouillon
+            </Badge>
             <Badge variant="solid" bg="grey.100" color="grey.500" textStyle="sm" px="15px" ml="10px">
               <Text as="i">
                 {!dossier.saved ? "Non sauvegardé" : `Dernière sauvegarde ${prettyPrintDate(dossier.lastModified)}`}
