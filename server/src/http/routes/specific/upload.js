@@ -2,7 +2,7 @@ const express = require("express");
 const Joi = require("joi");
 const { createWriteStream } = require("fs");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
-const { uploadToStorage, deleteFromStorage } = require("../../../common/utils/ovhUtils");
+const { getFromStorage, uploadToStorage, deleteFromStorage } = require("../../../common/utils/ovhUtils");
 const { oleoduc } = require("oleoduc");
 const multiparty = require("multiparty");
 const { EventEmitter } = require("events");
@@ -126,6 +126,34 @@ module.exports = (components) => {
           userEmail: req.user.email,
         });
       });
+    })
+  );
+
+  router.get(
+    "/",
+    permissionsDossierMiddleware(components, ["dossier/page_documents"]),
+    tryCatch(async (req, res) => {
+      let { dossierId, path, name } = await Joi.object({
+        dossierId: Joi.string().required(),
+        path: Joi.string().required(),
+        name: Joi.string().required(),
+      }).validateAsync(req.query, { abortEarly: false });
+
+      const document = await dossiers.getDocument(dossierId, name, path);
+
+      const stream = await getFromStorage(document.cheminFichier);
+      // console.log(stream);
+      await oleoduc(stream, crypto.available() ? crypto.decipher(dossierId) : noop(), res);
+
+      // const buff = Buffer.from(stream.buffer, "binary");
+      // res.header("Content-Type", "application/pdf");
+      // res.header("Content-Disposition", `attachment; filename=${name}.pdf`);
+      // res.header("Content-Length", buff.length);
+      // res.status(200);
+      // res.type("pdf");
+
+      // return res.send(buff);
+      // return res.json({});
     })
   );
 

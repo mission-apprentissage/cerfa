@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Box, HStack, Button, Heading, Input, ListItem, Text, List, useToast, Spinner } from "@chakra-ui/react";
+import { Box, HStack, Button, Heading, Input, ListItem, Text, List, useToast, Spinner, Link } from "@chakra-ui/react";
 import { useDropzone } from "react-dropzone";
 import { useRecoilValue } from "recoil";
 import { _postFile, _delete } from "../../../../common/httpClient";
@@ -137,17 +137,25 @@ export default ({ title, onUploadSuccessed, typeDocument }) => {
         {documents.length > 0 && (
           <>
             <List>
-              {documents.map((file) => (
-                <ListItem key={file.path || file.nomFichier} borderBottom="solid 1px" borderColor="dgalt" pb={3}>
-                  <HStack>
-                    <File boxSize="5" color="bluefrance" />
-                    <Box flexGrow={1}>
-                      {file.path || file.nomFichier} - {formatBytes(file.size || file.tailleFichier)}
-                    </Box>
-                    <Bin boxSize="5" color="redmarianne" cursor="pointer" onClick={() => onDeleteClicked(file)} />
-                  </HStack>
-                </ListItem>
-              ))}
+              {documents.map((file) => {
+                return (
+                  <ListItem key={file.path || file.nomFichier} borderBottom="solid 1px" borderColor="dgalt" pb={3}>
+                    <HStack>
+                      <File boxSize="5" color="bluefrance" />
+                      <Box flexGrow={1}>
+                        <Link
+                          href={`/api/v1/upload?dossierId=${dossier._id}&path=${file.cheminFichier}&name=${file.nomFichier}`}
+                          textDecoration={"underline"}
+                          isExternal
+                        >
+                          {file.path || file.nomFichier} - {formatBytes(file.size || file.tailleFichier)}
+                        </Link>
+                      </Box>
+                      <Bin boxSize="5" color="redmarianne" cursor="pointer" onClick={() => onDeleteClicked(file)} />
+                    </HStack>
+                  </ListItem>
+                );
+              })}
             </List>
           </>
         )}
