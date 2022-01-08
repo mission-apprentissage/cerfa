@@ -29,7 +29,13 @@ module.exports = (components) => {
     // 'close' event is fired just after the form has been read but before file is scanned and uploaded to storage.
     // So instead of using form.on('close',...) we use a custom event to end response when everything is finished
     formEvents.on("terminated", async (e) => {
-      if (e) return res.status(400).json({ error: "Le contenu du fichier est invalide" });
+      if (e)
+        return res.status(400).json({
+          error:
+            e.message === "Le fichier est trop volumineux"
+              ? "Le fichier est trop volumineux"
+              : "Le contenu du fichier est invalide",
+        });
       const documents = await dossiers.getDocuments(dossierId);
       return res.json({ documents });
     });
@@ -99,6 +105,10 @@ module.exports = (components) => {
           test ? noop() : await uploadToStorage(path, { contentType: part.headers["content-type"] })
         );
 
+        if (part.byteCount > 10485760) {
+          throw new Error("Le fichier est trop volumineux");
+        }
+
         let { isInfected, viruses } = await scanner.getScanResults();
         if (isInfected) {
           if (!test) {
@@ -108,7 +118,6 @@ module.exports = (components) => {
           throw new Error("Le contenu du fichier est invalide");
         }
 
-        // TODO add size limitations
         await dossiers.addDocument(dossierId, {
           typeDocument,
           nomFichier: part.filename,

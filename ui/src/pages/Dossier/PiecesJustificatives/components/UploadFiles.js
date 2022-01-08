@@ -67,12 +67,12 @@ export default ({ title, onUploadSuccessed, typeDocument }) => {
           duration: 4000,
         });
       } catch (e) {
-        const messages = await e?.json;
+        const messages = e.messages;
         setUploadError(`Une erreur est survenue : ${messages?.error ?? e.message}`);
         toast({
           title: `Une erreur est survenue : ${messages?.error ?? e.message}`,
           status: "error",
-          duration: 5000,
+          duration: 8000,
         });
       } finally {
         setIsSubmitting(false);
@@ -116,6 +116,7 @@ export default ({ title, onUploadSuccessed, typeDocument }) => {
     onDrop,
     onDropRejected,
     accept: ".pdf",
+    maxSize: 10485760,
   });
 
   const style = useMemo(
