@@ -90,6 +90,10 @@ const fieldLockedSchema = {
       type: Boolean,
       default: false,
     },
+    privePublic: {
+      type: Boolean,
+      default: false,
+    },
   },
   apprenti: {
     nom: {
@@ -312,6 +316,14 @@ const fieldLockedSchema = {
       type: Boolean,
       default: false,
     },
+    caisseRetraiteComplementaire: {
+      type: Boolean,
+      default: false,
+    },
+    avantageNature: {
+      type: Boolean,
+      default: false,
+    },
     avantageNourriture: {
       type: Boolean,
       default: false,
@@ -366,7 +378,7 @@ const fieldLockedSchema = {
     },
     formationInterne: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     uaiCfa: {
       type: Boolean,

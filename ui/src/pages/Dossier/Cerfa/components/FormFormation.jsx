@@ -10,6 +10,7 @@ const FormFormation = React.memo((props) => {
       organismeFormation: {
         siret,
         denomination,
+        formationInterne,
         uaiCfa,
         adresse: { numero, voie, complement, codePostal, commune },
       },
@@ -39,6 +40,7 @@ const FormFormation = React.memo((props) => {
 
   return (
     <Box>
+      <InputCerfa path="organismeFormation.formationInterne" field={formationInterne} type="radio" mt="2" />
       <InputCerfa
         path="organismeFormation.siret"
         field={siret}
@@ -47,32 +49,7 @@ const FormFormation = React.memo((props) => {
         hasComments
         onSubmittedField={onSubmittedOrganismeFormationSiret}
       />
-      {/* <FormControl>
-        <FormLabel>CFA d’entreprise :</FormLabel>
-        <HStack w="40%">
-          <Flex alignItems="center">
-            <input
-              type="radio"
-              name="companyCfa"
-              value="oui"
-              checked={values.companyCfa === "oui"}
-              onChange={handleChange}
-            />
-            <FormLabel ml="1w">oui</FormLabel>
-          </Flex>
-          <Flex alignItems="center">
-            <input
-              type="radio"
-              name="companyCfa"
-              value="non"
-              checked={values.companyCfa === "non"}
-              onChange={handleChange}
-            />
-            <FormLabel ml="1w">non</FormLabel>
-          </Flex>
-        </HStack>
-        {errors.gender && touched.gender && <FormErrorMessage>{errors.gender}</FormErrorMessage>}
-      </FormControl> */}
+
       <Flex>
         <Box w="55%" flex="1">
           <InputCerfa path="organismeFormation.denomination" field={denomination} type="text" mt="2" />
@@ -169,11 +146,7 @@ const FormFormation = React.memo((props) => {
           {errors.madeIn && touched.madeIn && <FormErrorMessage>{errors.madeIn}</FormErrorMessage>}
         </FormControl>
       </Box>
-      <Box mt="2rem">
-        <Button variant="primary" ml={3} onClick={handleSubmit} type="submit">
-          Enregistrer
-        </Button>
-      </Box> */}
+*/}
     </Box>
   );
 });

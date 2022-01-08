@@ -8,6 +8,10 @@ export const cerfaOrganismeFormationDenominationAtom = atom({
   key: "cerfa/organismeFormation/denomination",
   default: null,
 });
+export const cerfaOrganismeFormationFormationInterneAtom = atom({
+  key: "cerfa/organismeFormation/formationInterne",
+  default: null,
+});
 export const cerfaOrganismeFormationUaiCfaAtom = atom({
   key: "cerfa/organismeFormation/uaicfa",
   default: null,

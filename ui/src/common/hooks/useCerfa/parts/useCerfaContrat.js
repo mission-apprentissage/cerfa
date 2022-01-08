@@ -47,6 +47,10 @@ export function useCerfaContrat() {
   const [contratSalaireEmbauche, setContratSalaireEmbauche] = useRecoilState(
     contratAtoms.cerfaContratSalaireEmbaucheAtom
   );
+  const [contratCaisseRetraiteComplementaire, setContratCaisseRetraiteComplementaire] = useRecoilState(
+    contratAtoms.cerfaContratCaisseRetraiteComplementaireAtom
+  );
+  const [contratAvantageNature, setContratAvantageNature] = useRecoilState(contratAtoms.cerfaContratAvantageNatureAtom);
   const [contratAvantageNourriture, setContratAvantageNourriture] = useRecoilState(
     contratAtoms.cerfaContratAvantageNourritureAtom
   );
@@ -171,6 +175,8 @@ export function useCerfaContrat() {
     setContratDureeTravailHebdoMinutes(res.contrat.dureeTravailHebdoMinutes);
     setContratTravailRisque(res.contrat.travailRisque);
     setContratSalaireEmbauche(res.contrat.salaireEmbauche);
+    setContratCaisseRetraiteComplementaire(res.contrat.caisseRetraiteComplementaire);
+    setContratAvantageNature(res.contrat.avantageNature);
     setContratAvantageNourriture(res.contrat.avantageNourriture);
     setContratAvantageLogement(res.contrat.avantageLogement);
     setContratAutreAvantageEnNature(res.contrat.autreAvantageEnNature);
@@ -255,6 +261,8 @@ export function useCerfaContrat() {
         dureeTravailHebdoMinutes: contratDureeTravailHebdoMinutes,
         travailRisque: contratTravailRisque,
         salaireEmbauche: contratSalaireEmbauche,
+        caisseRetraiteComplementaire: contratCaisseRetraiteComplementaire,
+        avantageNature: contratAvantageNature,
         avantageNourriture: contratAvantageNourriture,
         avantageLogement: contratAvantageLogement,
         autreAvantageEnNature: contratAutreAvantageEnNature,

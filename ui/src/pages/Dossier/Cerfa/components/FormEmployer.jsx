@@ -26,6 +26,7 @@ const FormEmployer = ({ onFetched }) => {
         regimeSpecifique,
         // attestationEligibilite,
         // attestationPieces,
+        privePublic,
       },
     },
     onSubmit: {
@@ -43,33 +44,9 @@ const FormEmployer = ({ onFetched }) => {
         // hasComments
         onSubmittedField={onSubmittedEmployeurSiret}
       />
-      {/* <FormControl>
-        <HStack w="40%">
-          <Flex alignItems="center">
-            <input
-              type="radio"
-              name="priveOrPublic"
-              value="prive"
-              checked={values.priveOrPublic === "prive"}
-              onChange={handleChange}
-            />
-            <Text ml="1w">employeur privé</Text>
-          </Flex>
-          <Flex alignItems="center">
-            <input
-              type="radio"
-              name="priveOrPublic"
-              value="public"
-              checked={values.priveOrPublic === "public"}
-              onChange={handleChange}
-            />
-            <Text ml="1w">employeur « public »</Text>
-          </Flex>
-        </HStack>
-        {errors.priveOrPublic && touched.priveOrPublic && <FormErrorMessage>{errors.priveOrPublic}</FormErrorMessage>}
-      </FormControl> */}
       <Flex>
         <Box w="55%" flex="1">
+          <InputCerfa path="employeur.privePublic" field={privePublic} type="radio" mt="2" />
           <InputCerfa path="employeur.denomination" field={denomination} type="text" mt="2" />
           <FormLabel fontWeight={700} my={3}>
             Adresse de l'établissement d'exécution du contrat :
@@ -91,7 +68,7 @@ const FormEmployer = ({ onFetched }) => {
           <InputCerfa path="employeur.codeIdcc" field={codeIdcc} type="text" mt="2" />
           <InputCerfa path="employeur.libelleIdcc" field={libelleIdcc} type="text" mt="2" />
           <InputCerfa path="employeur.caisseComplementaire" field={caisseComplementaire} type="text" mt="2" />
-          <InputCerfa path="employeur.regimeSpecifique" field={regimeSpecifique} type="text" mt="2" />
+          <InputCerfa path="employeur.regimeSpecifique" field={regimeSpecifique} type="radio" mt="2" />
           {/* <InputCerfa path="employeur.attestationEligibilite" field={attestationEligibilite} type="text" mt="2" /> */}
           {/* attestationPieces */}
         </Box>

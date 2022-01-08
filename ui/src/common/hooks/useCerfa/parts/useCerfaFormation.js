@@ -219,6 +219,9 @@ export function useCerfaFormation() {
   const [organismeFormationDenomination, setOrganismeFormationDenomination] = useRecoilState(
     formationAtoms.cerfaOrganismeFormationDenominationAtom
   );
+  const [organismeFormationFormationInterne, setOrganismeFormationFormationInterne] = useRecoilState(
+    formationAtoms.cerfaOrganismeFormationFormationInterneAtom
+  );
   const [organismeFormationUaiCfa, setOrganismeFormationUaiCfa] = useRecoilState(
     formationAtoms.cerfaOrganismeFormationUaiCfaAtom
   );
@@ -543,6 +546,7 @@ export function useCerfaFormation() {
   const setAll = async (res) => {
     setOrganismeFormationSiret(res.organismeFormation.siret);
     setOrganismeFormationDenomination(res.organismeFormation.denomination);
+    setOrganismeFormationFormationInterne(res.organismeFormation.formationInterne);
     setOrganismeFormationUaiCfa(res.organismeFormation.uaiCfa);
     setOrganismeFormationAdresseNumero(res.organismeFormation.adresse.numero);
     setOrganismeFormationAdresseVoie(res.organismeFormation.adresse.voie);
@@ -564,6 +568,7 @@ export function useCerfaFormation() {
       organismeFormation: {
         siret: organismeFormationSiret,
         denomination: organismeFormationDenomination,
+        formationInterne: organismeFormationFormationInterne,
         uaiCfa: organismeFormationUaiCfa,
         adresse: {
           numero: organismeFormationAdresseNumero,

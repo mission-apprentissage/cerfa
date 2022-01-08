@@ -90,3 +90,7 @@ export const cerfaEmployeurAttestationPiecesAtom = atom({
   key: "cerfa/employeur/attestationPieces",
   default: null,
 });
+export const cerfaEmployeurPrivePublicAtom = atom({
+  key: "cerfa/employeur/privePublic",
+  default: null,
+});

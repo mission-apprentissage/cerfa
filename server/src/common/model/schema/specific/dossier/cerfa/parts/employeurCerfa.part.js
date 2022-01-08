@@ -222,10 +222,20 @@ const employeurCerfaSchema = {
   regimeSpecifique: {
     type: Boolean,
     description: "Adhère au régime spécifique d'assurance-chômage",
-    label: "Adhère au régime spécifique d'assurance-chômage: ",
+    label: "Adhésion de l'apprenti au régime spécifique d'assurance chômage : ",
     default: false,
     nullable: true,
-    example: false,
+    example: "Non",
+    options: [
+      {
+        label: "Oui, adhérer",
+        value: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
   },
   attestationEligibilite: {
     type: Boolean,
@@ -246,6 +256,26 @@ const employeurCerfaSchema = {
     required: function () {
       return !this.draft;
     },
+  },
+  privePublic: {
+    type: Boolean,
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
+    description: "Employeur privé ou public",
+    label: "Je suis : ",
+    example: "Employeur public",
+    options: [
+      {
+        label: "Employeur public",
+        value: true,
+      },
+      {
+        label: "Employeur privé",
+        value: false,
+      },
+    ],
   },
 };
 module.exports = employeurCerfaSchema;

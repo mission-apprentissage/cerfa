@@ -118,6 +118,7 @@ export function useCerfaEmployeur() {
   const [employeurAttestationPieces, setEmployeurAttestationPieces] = useRecoilState(
     employeurAtoms.cerfaEmployeurAttestationPiecesAtom
   );
+  const [employeurPrivePublic, setEmployeurPrivePublic] = useRecoilState(employeurAtoms.cerfaEmployeurPrivePublicAtom);
 
   const onSubmittedEmployeurSiret = useCallback(
     async (path, data) => {
@@ -200,6 +201,7 @@ export function useCerfaEmployeur() {
     setEmployeurRegimeSpecifique(res.employeur.regimeSpecifique);
     setEmployeurAttestationEligibilite(res.employeur.attestationEligibilite);
     setEmployeurAttestationPieces(res.employeur.attestationPieces);
+    setEmployeurPrivePublic(res.employeur.privePublic);
   };
 
   return {
@@ -229,6 +231,7 @@ export function useCerfaEmployeur() {
         regimeSpecifique: employeurRegimeSpecifique,
         attestationEligibilite: employeurAttestationEligibilite,
         attestationPieces: employeurAttestationPieces,
+        privePublic: employeurPrivePublic,
       },
     },
     setAll,

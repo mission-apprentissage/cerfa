@@ -4,10 +4,12 @@ import {
   FormLabel,
   Input,
   Select,
+  Radio,
   FormErrorMessage,
   InputGroup,
   HStack,
   Box,
+  RadioGroup,
   Spinner,
   Center,
   InputRightElement,
@@ -200,7 +202,9 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
 
   return (
     <FormControl isRequired mt={2} isInvalid={errors[name]} {...props}>
-      <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>{field?.label}</FormLabel>
+      {(type === "text" || type === "number" || type === "date" || type === "select") && (
+        <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>{field?.label}</FormLabel>
+      )}
       <HStack>
         <InputGroup>
           {type === "select" && (
@@ -247,7 +251,7 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
               )}
             </Select>
           )}
-          {(type === "text" || type === "date") && (
+          {(type === "text" || type === "number" || type === "date") && (
             <Input
               type={type}
               name={name}
@@ -289,6 +293,29 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
                 borderBottomColor: "#E5E5E5",
               }}
             />
+          )}
+          {type === "radio" && (
+            <HStack>
+              <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>{field?.label}</FormLabel>
+              <RadioGroup value={values[name]}>
+                <HStack>
+                  {field.options.map((option, k) => {
+                    return (
+                      <Radio
+                        key={k}
+                        type={type}
+                        name={name}
+                        value={option.label}
+                        checked={values[name] === option.label}
+                        onChange={handleChange}
+                      >
+                        {option.label}
+                      </Radio>
+                    );
+                  })}
+                </HStack>
+              </RadioGroup>
+            </HStack>
           )}
           {(shouldBeDisabled || isLoading || validated || isErrored) && (
             <InputRightElement

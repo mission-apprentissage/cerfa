@@ -166,6 +166,7 @@ module.exports = (components) => {
           regimeSpecifique: Joi.boolean(),
           attestationEligibilite: Joi.boolean(),
           attestationPieces: Joi.boolean(),
+          privePublic: Joi.boolean(),
         }),
         apprenti: Joi.object({
           nom: Joi.string(),
@@ -244,6 +245,8 @@ module.exports = (components) => {
           dureeTravailHebdoMinutes: Joi.number(),
           travailRisque: Joi.boolean(),
           salaireEmbauche: Joi.number(),
+          caisseRetraiteComplementaire: Joi.string(),
+          avantageNature: Joi.boolean(),
           avantageNourriture: Joi.number(),
           avantageLogement: Joi.number(),
           autreAvantageEnNature: Joi.boolean(),

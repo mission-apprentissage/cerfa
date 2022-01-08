@@ -135,6 +135,17 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
+    label: "Déclare bénéficier de la reconnaissance travailleur handicapé :",
+    options: [
+      {
+        label: "Oui",
+        value: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
   },
   situationAvantContrat: {
     enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
@@ -251,15 +262,15 @@ const apprentiSchema = {
   adresse: {
     ...adresseSchema,
   },
-  // apprentiMineurNonEmancipe: {
-  //   type: Boolean,
-  //   description: "l'apprenti(e) est mineur non emancipé",
-  //   example: false,
-  //   default: null,
-  //   required: function () {
-  //     return !this.draft;
-  //   },
-  // },
+  apprentiMineurNonEmancipe: {
+    type: Boolean,
+    description: "l'apprenti(e) est mineur non emancipé",
+    example: false,
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
+  },
   responsableLegal: {
     required: function () {
       // If date de naissance to now < 18
@@ -309,11 +320,22 @@ const apprentiSchema = {
     type: Boolean,
     description:
       "Déclare être inscrit sur la liste des sportifs, entraîneurs, arbitres et juges sportifs de haut niveau",
+    label: "Déclare être inscrit sur la liste des sportifs, entraîneurs, arbitres et juges sportifs de haut niveau :",
     example: true,
     default: null,
     required: function () {
       return !this.draft;
     },
+    options: [
+      {
+        label: "Oui",
+        value: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
   },
 };
 
