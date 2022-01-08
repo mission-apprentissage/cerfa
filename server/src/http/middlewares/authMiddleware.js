@@ -13,7 +13,7 @@ const cookieExtractor = (req) => {
   return jwt;
 };
 
-module.exports = ({ users }) => {
+module.exports = ({ users, sessions }) => {
   passport.use(
     "jwt",
     new JWTStrategy(
@@ -49,7 +49,12 @@ module.exports = ({ users }) => {
   return compose([
     passport.authenticate("jwt", { session: false }),
     async (req, res, next) => {
+      const activeSession = await sessions.findJwt(req.cookies[`cerfa-${config.env}-jwt`]);
+      if (!activeSession) {
+        return res.status(400).json({ error: "Accès non autorisé" });
+      }
       if (req.user.invalided_token) {
+        await sessions.removeJwt(req.cookies[`cerfa-${config.env}-jwt`]);
         return res.clearCookie(`cerfa-${config.env}-jwt`).status(401).json({
           error: "Invalid jwt",
         });

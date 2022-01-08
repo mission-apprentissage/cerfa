@@ -34,7 +34,7 @@ const checkPasswordToken = (users) => {
   return passport.authenticate("jwt-password", { session: false, failWithError: true });
 };
 
-module.exports = ({ users, mailer }) => {
+module.exports = ({ users, sessions, mailer }) => {
   const router = express.Router(); // eslint-disable-line new-cap
 
   router.post(
@@ -90,6 +90,7 @@ module.exports = ({ users, mailer }) => {
       await users.loggedInUser(payload.email);
 
       const token = createUserToken({ payload });
+      await sessions.addJwt(token);
 
       res
         .cookie(`cerfa-${config.env}-jwt`, token, {
