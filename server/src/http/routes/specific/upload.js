@@ -142,18 +142,13 @@ module.exports = (components) => {
       const document = await dossiers.getDocument(dossierId, name, path);
 
       const stream = await getFromStorage(document.cheminFichier);
-      // console.log(stream);
+
+      res.header("Content-Type", "application/pdf");
+      res.header("Content-Length", document.tailleFichier);
+      res.status(200);
+      res.type("pdf");
+
       await oleoduc(stream, crypto.available() ? crypto.decipher(dossierId) : noop(), res);
-
-      // const buff = Buffer.from(stream.buffer, "binary");
-      // res.header("Content-Type", "application/pdf");
-      // res.header("Content-Disposition", `attachment; filename=${name}.pdf`);
-      // res.header("Content-Length", buff.length);
-      // res.status(200);
-      // res.type("pdf");
-
-      // return res.send(buff);
-      // return res.json({});
     })
   );
 
