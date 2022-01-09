@@ -31,6 +31,7 @@ describe("Cerfa", () => {
         regimeSpecifique: false,
         attestationEligibilite: false,
         attestationPieces: false,
+        privePublic: true,
       },
       apprenti: {
         nom: "MARTIN",
@@ -58,6 +59,7 @@ describe("Cerfa", () => {
           codePostal: "75000",
           commune: "PARIS",
         },
+        apprentiMineurNonEmancipe: true,
         responsableLegal: {
           nom: "Honore",
           prenom: "Robert",
@@ -101,9 +103,11 @@ describe("Cerfa", () => {
         dureeTravailHebdoMinutes: 30,
         travailRisque: true,
         salaireEmbauche: 1530.45,
+        avantageNature: true,
         avantageNourriture: 3.55,
         avantageLogement: 456.78,
         autreAvantageEnNature: true,
+        caisseRetraiteComplementaire: "null",
         remunerationsAnnuelles: [
           {
             dateDebut: "2021-02-01T00:00:00+00:00",

@@ -1,11 +1,14 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Switch, Route, useHistory } from "react-router-dom";
 import useAuth from "./common/hooks/useAuth";
-import { _post, _get } from "./common/httpClient";
+import { _post, _get, _put } from "./common/httpClient";
 import ScrollToTop from "./common/components/ScrollToTop";
 import PrivateRoute from "./common/components/PrivateRoute";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Box, Text } from "@chakra-ui/react";
 import { hasPageAccessTo } from "./common/utils/rolesUtils";
+import { MentionsLegalesPage, MentionsLegales, cguVersion } from "./pages/legal/MentionsLegales";
+import AcknowledgeModal from "./common/components/Modals/AcknowledgeModal";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 
@@ -26,7 +29,6 @@ const Maintenance = lazy(() => import("./pages/admin/Maintenance"));
 const Support = lazy(() => import("./pages/legal/Support"));
 const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
-const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 
 const AccountWrapper = ({ children }) => {
@@ -70,6 +72,46 @@ const ForceCompleteProfile = ({ children }) => {
   return <>{children}</>;
 };
 
+const ForceAcceptCGU = ({ children }) => {
+  let [auth, setAuth] = useAuth();
+
+  console.log(auth);
+
+  const onAcceptCguClicked = async (dossier) => {
+    try {
+      let user = await _put(`/api/v1/profile/acceptCgu`, {
+        cguVersion: cguVersion(),
+      });
+      setAuth(user);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  return (
+    <>
+      {auth.sub !== "anonymous" && auth.confirmed && auth.account_status === "CONFIRMED" && (
+        <AcknowledgeModal
+          title="Condition générale d'utilisation"
+          acknowledgeText="Accepter"
+          isOpen={auth.cgu !== cguVersion()}
+          onAcknowledgement={onAcceptCguClicked}
+          canBeClosed={false}
+          bgOverlay="rgba(0, 0, 0, 0.28)"
+        >
+          <Text fontSize="1.3rem" fontWeight="bold">
+            Nouvelle version => {cguVersion()}
+          </Text>
+          <Box borderColor={"dgalt"} borderWidth={1} overflowY="scroll" px={8} py={4} h="30vh">
+            <MentionsLegales />
+          </Box>
+        </AcknowledgeModal>
+      )}
+      {children}
+    </>
+  );
+};
+
 const queryClient = new QueryClient();
 
 export default () => {
@@ -101,50 +143,53 @@ export default () => {
         <Router>
           <Suspense fallback={<div></div>}>
             <AccountWrapper>
-              <ScrollToTop />
-              <Switch>
-                {/* PUBLIC PAGES */}
-                <Route exact path="/" component={HomePage} />
+              <ForceAcceptCGU>
+                <ScrollToTop />
+                <Switch>
+                  {/* PUBLIC PAGES */}
+                  <Route exact path="/" component={HomePage} />
 
-                <Route exact path="/auth/:slug" component={AuthPage} />
-                <Route exact path="/en-attente-confirmation" component={WaitingConfirmationPage} />
-                <Route exact path="/reset-password" component={ResetPasswordPage} />
-                <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
+                  <Route exact path="/auth/:slug" component={AuthPage} />
+                  <Route exact path="/en-attente-confirmation" component={WaitingConfirmationPage} />
+                  <Route exact path="/reset-password" component={ResetPasswordPage} />
+                  <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
 
-                <Route exact path="/stats" component={StatsPage} />
-                <Route exact path="/support" component={Support} />
-                <Route exact path="/support/:id" component={Support} />
-                <Route exact path="/cookies" component={Cookies} />
-                <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
-                <Route exact path="/mentions-legales" component={MentionsLegales} />
-                <Route exact path="/accessibilite" component={Accessibilite} />
+                  <Route exact path="/stats" component={StatsPage} />
+                  <Route exact path="/support" component={Support} />
+                  <Route exact path="/support/:id" component={Support} />
+                  <Route exact path="/cookies" component={Cookies} />
+                  <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
+                  <Route exact path="/mentions-legales" component={MentionsLegalesPage} />
+                  <Route exact path="/accessibilite" component={Accessibilite} />
 
-                {/* PRIVATE PAGES */}
-                <ForceCompleteProfile>
-                  <PrivateRoute path="/mon-compte" component={ProfilePage} />
+                  {/* PRIVATE PAGES */}
 
-                  {/* Mon espaces pages */}
-                  <PrivateRoute path="/mon-espace" component={WorkspacePage} />
-                  {/*  Espace partagé  pages */}
-                  <PrivateRoute exact path="/partages-avec-moi" component={SharedPage} />
-                  <PrivateRoute exact path="/partages-avec-moi/dossiers/:id/:step" component={DossierPage} />
-                  <PrivateRoute path="/partages-avec-moi/espaces/:workspaceId" component={WorkspacePage} />
+                  <ForceCompleteProfile>
+                    <PrivateRoute path="/mon-compte" component={ProfilePage} />
 
-                  {/* PRIVATE ADMIN PAGES */}
-                  {auth && hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
-                    <PrivateRoute exact path="/admin/users" component={Users} />
-                  )}
-                  {auth && hasPageAccessTo(auth, "admin/page_gestion_roles") && (
-                    <PrivateRoute exact path="/admin/roles" component={Roles} />
-                  )}
-                  {auth && hasPageAccessTo(auth, "admin/page_message_maintenance") && (
-                    <PrivateRoute exact path="/admin/maintenance" component={Maintenance} />
-                  )}
-                </ForceCompleteProfile>
+                    {/* Mon espaces pages */}
+                    <PrivateRoute path="/mon-espace" component={WorkspacePage} />
+                    {/*  Espace partagé  pages */}
+                    <PrivateRoute exact path="/partages-avec-moi" component={SharedPage} />
+                    <PrivateRoute exact path="/partages-avec-moi/dossiers/:id/:step" component={DossierPage} />
+                    <PrivateRoute path="/partages-avec-moi/espaces/:workspaceId" component={WorkspacePage} />
 
-                {/* Fallback */}
-                <Route component={NotFoundPage} />
-              </Switch>
+                    {/* PRIVATE ADMIN PAGES */}
+                    {auth && hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
+                      <PrivateRoute exact path="/admin/users" component={Users} />
+                    )}
+                    {auth && hasPageAccessTo(auth, "admin/page_gestion_roles") && (
+                      <PrivateRoute exact path="/admin/roles" component={Roles} />
+                    )}
+                    {auth && hasPageAccessTo(auth, "admin/page_message_maintenance") && (
+                      <PrivateRoute exact path="/admin/maintenance" component={Maintenance} />
+                    )}
+                  </ForceCompleteProfile>
+
+                  {/* Fallback */}
+                  <Route component={NotFoundPage} />
+                </Switch>
+              </ForceAcceptCGU>
             </AccountWrapper>
           </Suspense>
         </Router>

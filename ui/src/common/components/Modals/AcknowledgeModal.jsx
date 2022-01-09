@@ -4,34 +4,38 @@ import { ArrowRightLine, Close } from "../../../theme/components/icons";
 
 export default ({
   isOpen,
-  onClose,
+  onClose = () => {},
   title,
   children,
   size = "4xl",
   acknowledgeText = "J'ai compris",
+  canBeClosed = true,
   onAcknowledgement = () => {},
+  bgOverlay = "rgba(0, 0, 0, 0.48)",
 }) => {
   return (
     <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} size={size}>
-      <ModalOverlay />
+      <ModalOverlay bg={bgOverlay} />
       <ModalContent bg="white" color="primaryText" borderRadius="none">
-        <Button
-          display={"flex"}
-          alignSelf={"flex-end"}
-          color="bluefrance"
-          fontSize={"epsilon"}
-          onClick={() => {
-            onClose();
-          }}
-          variant="unstyled"
-          p={10}
-          fontWeight={400}
-        >
-          Fermer{" "}
-          <Text as={"span"} ml={2}>
-            <Close boxSize={4} />
-          </Text>
-        </Button>
+        {canBeClosed && (
+          <Button
+            display={"flex"}
+            alignSelf={"flex-end"}
+            color="bluefrance"
+            fontSize={"epsilon"}
+            onClick={() => {
+              onClose();
+            }}
+            variant="unstyled"
+            p={10}
+            fontWeight={400}
+          >
+            Fermer{" "}
+            <Text as={"span"} ml={2}>
+              <Close boxSize={4} />
+            </Text>
+          </Button>
+        )}
         <ModalHeader>
           <ArrowRightLine mt="-0.5rem" />
           <Text as="span" ml="1rem" textStyle={"h4"}>

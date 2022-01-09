@@ -133,6 +133,11 @@ const usersSchema = {
     default: true,
     description: "true si le tour guide est actif",
   },
+  beta_test: {
+    type: Boolean,
+    default: null,
+    description: "true l'utilisateur souhaite activer les fonctionnalités en Beta",
+  },
   confirmed: {
     type: Boolean,
     default: false,

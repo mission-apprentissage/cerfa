@@ -35,5 +35,27 @@ module.exports = ({ users }) => {
     })
   );
 
+  router.put(
+    "/acceptCgu",
+    tryCatch(async ({ body, user }, res) => {
+      const { cguVersion } = await Joi.object({
+        cguVersion: Joi.string().required(),
+      }).validateAsync(body, { abortEarly: false });
+
+      const userDb = await users.getUser(user.email);
+      if (!userDb) {
+        throw Boom.badRequest("Something went wrong");
+      }
+
+      const updatedUser = await users.updateUser(userDb._id, {
+        has_accept_cgu: cguVersion || null,
+      });
+
+      const payload = await users.structureUser(updatedUser);
+
+      return res.json(payload);
+    })
+  );
+
   return router;
 };
