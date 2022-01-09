@@ -75,9 +75,7 @@ const ForceCompleteProfile = ({ children }) => {
 const ForceAcceptCGU = ({ children }) => {
   let [auth, setAuth] = useAuth();
 
-  console.log(auth);
-
-  const onAcceptCguClicked = async (dossier) => {
+  const onAcceptCguClicked = async () => {
     try {
       let user = await _put(`/api/v1/profile/acceptCgu`, {
         cguVersion: cguVersion(),
@@ -99,9 +97,21 @@ const ForceAcceptCGU = ({ children }) => {
           canBeClosed={false}
           bgOverlay="rgba(0, 0, 0, 0.28)"
         >
-          <Text fontSize="1.3rem" fontWeight="bold">
-            Nouvelle version => {cguVersion()}
-          </Text>
+          <Box mb={3}>
+            {!auth.cgu && (
+              <Text fontSize="1.1rem" fontWeight="bold">
+                Merci de lire attentivement les conditions générale d'utilisation avant de les accepter.
+              </Text>
+            )}
+            {auth.cgu && (
+              <Text fontSize="1.1rem" fontWeight="bold">
+                Nos conditions générale d'utilisation ont changées depuis votre dernières visite. ({auth.cgu} ->{" "}
+                {cguVersion()}) <br />
+                <br />
+                Merci de lire attentivement les conditions générale d'utilisation avant de les accepter.
+              </Text>
+            )}
+          </Box>
           <Box borderColor={"dgalt"} borderWidth={1} overflowY="scroll" px={8} py={4} h="30vh">
             <MentionsLegales />
           </Box>

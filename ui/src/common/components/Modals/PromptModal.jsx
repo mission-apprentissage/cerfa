@@ -39,7 +39,9 @@ export default ({
               onClose();
             }}
             variant="unstyled"
-            p={10}
+            pt={10}
+            pb={6}
+            pr={10}
             fontWeight={400}
           >
             Fermer{" "}
