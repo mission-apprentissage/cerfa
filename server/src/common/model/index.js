@@ -53,6 +53,11 @@ module.exports = {
       schema.index({ dossierId: 1, email: 1 });
     },
   }),
+  CategoriesJuridique: createModel("categoriesJuridique", schema.categoriesJuridiqueSchema, {
+    createMongoDBIndexes: (schema) => {
+      schema.index({ CATEGJURID: 1 });
+    },
+  }),
 
   // TODO
   Commentaire: createModel("commentaire", schema.commentaireSchema),

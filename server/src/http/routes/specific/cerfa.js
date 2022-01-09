@@ -27,7 +27,7 @@ module.exports = (components) => {
 
       function customizer(objValue, srcValue) {
         if (objValue !== undefined) {
-          return { ...objValue, value: srcValue || "" };
+          return { ...objValue, value: srcValue || srcValue === false ? srcValue : "" };
         }
       }
 
