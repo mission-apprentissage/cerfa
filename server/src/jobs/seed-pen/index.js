@@ -85,8 +85,8 @@ runScript(async ({ users, workspaces, dossiers }) => {
   await Cerfa.create({
     draft: true,
     employeur: {
-      denomination: "ENERGIE 3000",
-      siret: "98765432400019",
+      denomination: "SERVICE MEDICAL 83 SITE FREJUS",
+      siret: "18003502403698",
       naf: "1031Z",
       nombreDeSalaries: 123,
       codeIdcc: "0043",
@@ -95,12 +95,12 @@ runScript(async ({ users, workspaces, dossiers }) => {
       telephone: "0908070605",
       courriel: "energie3000.pro@gmail.com",
       adresse: {
-        numero: 13,
-        voie: "Boulevard de la liberté",
-        complement: "Etage 6 - Appartement 654",
-        label: "13 Boulevard de la liberté",
-        codePostal: "75000",
-        commune: "PARIS",
+        numero: 435,
+        voie: "AV MAL DE LATTRE DE TASSIGNY",
+        complement: "IMMEUBLE LE SAGITTAIRE",
+        label: "435 AV MAL DE LATTRE DE TASSIGNY",
+        codePostal: "83600",
+        commune: "Fréjus",
       },
       nom: "LEFEVBRE",
       prenom: "MARTINE",
@@ -109,6 +109,7 @@ runScript(async ({ users, workspaces, dossiers }) => {
       regimeSpecifique: false,
       attestationEligibilite: false,
       attestationPieces: false,
+      privePublic: true,
     },
     apprenti: {
       nom: "MARTIN",

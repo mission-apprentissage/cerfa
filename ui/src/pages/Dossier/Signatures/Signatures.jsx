@@ -17,7 +17,7 @@ export default ({ dossierId }) => {
   useEffect(() => {
     const run = async () => {
       try {
-        if (dossierId && cerfa.id) {
+        if (dossierId && cerfa?.id) {
           const { pdfBase64 } = await _post(`/api/v1/cerfa/pdf/${cerfa.id}`, {
             workspaceId: auth.workspaceId,
             dossierId,
@@ -49,7 +49,7 @@ export default ({ dossierId }) => {
       <Heading as="h3" fontSize="1.4rem">
         Votre contrat généré:
       </Heading>
-      <Center>
+      <Center mt={5}>
         <PdfViewer
           url={`/api/v1/cerfa/pdf/${cerfa.id}/?workspaceId=${auth.workspaceId}&dossierId=${dossierId}`}
           pdfBase64={pdfBase64}
@@ -58,7 +58,7 @@ export default ({ dossierId }) => {
           }}
         />
       </Center>
-      {!pdfIsLoading && (
+      {!pdfIsLoading && auth.beta !== "non" && (
         <Box mt={8} mb={12}>
           <Center>
             <Button

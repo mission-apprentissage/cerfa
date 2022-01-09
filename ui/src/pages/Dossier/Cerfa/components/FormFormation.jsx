@@ -46,7 +46,7 @@ const FormFormation = React.memo((props) => {
         field={siret}
         type="text"
         mb="10"
-        hasComments
+        // hasComments
         onSubmittedField={onSubmittedOrganismeFormationSiret}
       />
 

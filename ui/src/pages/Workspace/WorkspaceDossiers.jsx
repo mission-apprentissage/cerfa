@@ -1,14 +1,20 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { Flex, Box, Heading, Button, useDisclosure } from "@chakra-ui/react";
+import {
+  Flex,
+  Box,
+  Heading,
+  Button,
+  // useDisclosure
+} from "@chakra-ui/react";
 import { _get, _delete } from "../../common/httpClient";
 import { useQuery } from "react-query";
 import { useRecoilValue } from "recoil";
 import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 import { workspacePathsAtom, workspaceTitlesAtom, workspaceAtom } from "../../common/hooks/workspaceAtoms";
 import TableDossiers from "./components/TableDossiers";
-import { Settings4Fill } from "../../theme/components/icons";
-import ParameterModal from "./components/ParameterModal";
+// import { Settings4Fill } from "../../theme/components/icons";
+// import ParameterModal from "./components/ParameterModal";
 
 function useWorkspaceDossiers() {
   const workspace = useRecoilValue(workspaceAtom);
@@ -30,7 +36,7 @@ export const Header = () => {
   const titles = useRecoilValue(workspaceTitlesAtom);
   const workspace = useRecoilValue(workspaceAtom);
   const { isLoading, workspaceDossiers } = useWorkspaceDossiers();
-  const parameterModal = useDisclosure();
+  // const parameterModal = useDisclosure();
 
   if (isLoading) return null;
 
@@ -41,7 +47,7 @@ export const Header = () => {
           <Heading as="h1" flexGrow="1" fontSize={{ base: "sm", md: "1.5rem" }}>
             {titles.dossiers} ({workspaceDossiers.length}){" "}
           </Heading>
-          <Box
+          {/* <Box
             _hover={{ cursor: "pointer" }}
             w="20px"
             h="20px"
@@ -53,9 +59,9 @@ export const Header = () => {
             p={3}
           >
             <Settings4Fill mt="-1.8rem" ml="-0.5rem" />
-          </Box>
+          </Box> */}
         </Flex>
-        <ParameterModal isOpen={parameterModal.isOpen} onClose={parameterModal.onClose} />
+        {/* <ParameterModal isOpen={parameterModal.isOpen} onClose={parameterModal.onClose} /> */}
       </Box>
       {hasContextAccessTo(workspace, "wks/page_espace/page_dossiers/ajouter_nouveau_dossier") && (
         <Button

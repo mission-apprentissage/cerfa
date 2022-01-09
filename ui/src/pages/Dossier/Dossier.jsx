@@ -25,7 +25,7 @@ import { betaVersion, BetaFeatures } from "../../common/components/BetaFeatures"
 import Cerfa from "./Cerfa/Cerfa";
 import PiecesJustificatives from "./PiecesJustificatives/PiecesJustificatives";
 import Signatures from "./Signatures/Signatures";
-import Statuts from "./Statuts/Statuts";
+// import Statuts from "./Statuts/Statuts";
 import { InviteModal } from "./components/InviteModal";
 import LivePeopleAvatar from "./components/LivePeopleAvatar";
 
@@ -34,10 +34,10 @@ import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
 import { AvatarPlus } from "../../theme/components/icons";
 
 const steps = [
-  { label: "Cerfa", description: "Information contenu dans le Cerfa" },
-  { label: "Piéces justificatives", description: "À ajouter au dossier" },
-  { label: "Signatures", description: "Signatures électronique" },
-  { label: "État", description: "Statut de votre dossier" },
+  { label: "Cerfa", description: "Renseignez les informations" },
+  { label: "Piéces justificatives", description: "Ajoutez les pièces justificatives" },
+  { label: "Signatures et envoi", description: "Signatures" },
+  // { label: "État", description: "Statut de votre dossier" },
 ];
 
 const stepByPath = ["cerfa", "documents", "signatures", "etat"];
@@ -177,11 +177,11 @@ export default () => {
                 {index === 0 && <Cerfa />}
                 {index === 1 && <PiecesJustificatives />}
                 {index === 2 && <Signatures dossierId={dossier._id} />}
-                {index === 3 && <Statuts />}
+                {/* {index === 3 && <Statuts />} */}
               </Step>
             ))}
           </Steps>
-          {activeStep === 4 ? (
+          {activeStep === 3 ? (
             <Center p={4} flexDir="column">
               <Heading fontSize="xl">Ce dossier est terminé.</Heading>
               <Button mt={6} size="sm" onClick={reset}>
@@ -189,12 +189,12 @@ export default () => {
               </Button>
             </Center>
           ) : (
-            <Flex width="100%" justify="flex-end" mt={8} mb={10}>
-              <Button mr={4} size="md" variant="primary" onClick={prevStep} isDisabled={activeStep === 0}>
-                Retourner à l'étape précédente
+            <Flex width="100%" justify="flex-start" mt={8} mb={10}>
+              <Button mr={4} size="md" variant="secondary" onClick={prevStep} isDisabled={activeStep === 0}>
+                Revenir
               </Button>
               <Button size="md" onClick={onClickNextStep} variant="primary">
-                {activeStep === steps.length - 1 ? "Soumettre" : "Passer à l'étape suivante"}
+                {activeStep === steps.length - 1 ? "Télécharger le dossier finalisé" : "Passer à l'étape suivante"}
               </Button>
             </Flex>
           )}

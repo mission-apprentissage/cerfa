@@ -191,22 +191,22 @@ export const CerfaFormationController = async (dossier) => {
             message: null,
           };
         },
-        history: [
-          {
-            to: "98765432400070",
-            how: "manuel",
-            when: Date.now(),
-            who: "Antoine Bigard",
-            role: "CFA",
-          },
-          {
-            to: "98765432400019",
-            how: "manuel",
-            when: Date.now(),
-            who: "Paul Pierre",
-            role: "Employeur",
-          },
-        ],
+        // history: [
+        //   {
+        //     to: "98765432400070",
+        //     how: "manuel",
+        //     when: Date.now(),
+        //     who: "Antoine Bigard",
+        //     role: "CFA",
+        //   },
+        //   {
+        //     to: "98765432400019",
+        //     how: "manuel",
+        //     when: Date.now(),
+        //     who: "Paul Pierre",
+        //     role: "Employeur",
+        //   },
+        // ],
       },
     },
   };
