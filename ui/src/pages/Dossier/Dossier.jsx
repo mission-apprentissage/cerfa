@@ -11,16 +11,18 @@ import {
   Text,
   Spinner,
   useDisclosure,
+  Link,
 } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilValueLoadable } from "recoil";
 import { prettyPrintDate } from "../../common/utils/dateUtils";
 import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 import { _put } from "../../common/httpClient";
 import useAuth from "../../common/hooks/useAuth";
 import PromptModal from "../../common/components/Modals/PromptModal";
 import { betaVersion, BetaFeatures } from "../../common/components/BetaFeatures";
+import AcknowledgeModal from "../../common/components/Modals/AcknowledgeModal";
 
 import Cerfa from "./Cerfa/Cerfa";
 import PiecesJustificatives from "./PiecesJustificatives/PiecesJustificatives";
@@ -32,6 +34,8 @@ import LivePeopleAvatar from "./components/LivePeopleAvatar";
 import { useDossier } from "../../common/hooks/useDossier/useDossier";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
 import { AvatarPlus } from "../../theme/components/icons";
+
+import { cerfaEmployeurPrivePublicAtom } from "../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 
 const steps = [
   { label: "Cerfa", description: "Renseignez les informations" },
@@ -87,13 +91,16 @@ const AskBetaTest = () => {
 export default () => {
   let match = useRouteMatch();
   const inviteModal = useDisclosure();
-  const { nextStep, prevStep, reset, activeStep, setStep } = useSteps({
+  const { nextStep, prevStep, activeStep, setStep } = useSteps({
     initialStep: stepByPath.indexOf(match.params.step),
   });
   const [stepState, setStepState] = useState();
   const { isloaded, dossier } = useDossier(match.params.id);
   const history = useHistory();
   const setWorkspaceTitle = useSetRecoilState(workspaceTitleAtom);
+  const employeurPrivePublic = useRecoilValueLoadable(cerfaEmployeurPrivePublicAtom);
+  const [hasSeenPrivateSectorModal, setHasSeenPrivateSectorModal] = useState(false);
+  const isPrivateSectorAckModal = useDisclosure({ defaultIsOpen: true });
 
   useEffect(() => {
     const run = async () => {
@@ -126,9 +133,38 @@ export default () => {
 
   // TODO not Authorize handler
 
+  console.log(employeurPrivePublic);
+
   return (
     <Box w="100%" px={[1, 1, 6, 6]}>
       <AskBetaTest />
+      <AcknowledgeModal
+        title="Vous êtes employeur privé"
+        isOpen={
+          employeurPrivePublic?.contents?.value === "Employeur privé" &&
+          !hasSeenPrivateSectorModal &&
+          isPrivateSectorAckModal.isOpen
+        }
+        onClose={() => {
+          setHasSeenPrivateSectorModal(true);
+          isPrivateSectorAckModal.onClose();
+        }}
+        onAcknowledgement={() => {
+          setHasSeenPrivateSectorModal(true);
+          isPrivateSectorAckModal.onClose();
+        }}
+      >
+        <Text>
+          Ce service de dépôt en ligne est reservé aux employeurs publics pour le moment. <br />
+          Vous ne pourrez pas continuer ce dossier. <br />
+          <br />
+          Veuillez consulter{" "}
+          <Link href={"/"} color={"bluefrance"} textDecoration={"underline"} isExternal>
+            la fiche pratique
+          </Link>{" "}
+          pour établir un contrat d'apprentissage en tant qu'employeur privé.
+        </Text>
+      </AcknowledgeModal>
       <Container maxW="xl">
         <HStack mt={6}>
           <Heading as="h1" flexGrow="1">
@@ -181,23 +217,25 @@ export default () => {
               </Step>
             ))}
           </Steps>
-          {activeStep === 3 ? (
-            <Center p={4} flexDir="column">
-              <Heading fontSize="xl">Ce dossier est terminé.</Heading>
-              <Button mt={6} size="sm" onClick={reset}>
-                (Test) Remise à zero
-              </Button>
-            </Center>
-          ) : (
-            <Flex width="100%" justify="flex-start" mt={8} mb={10}>
-              <Button mr={4} size="md" variant="secondary" onClick={prevStep} isDisabled={activeStep === 0}>
-                Revenir
-              </Button>
+          <Flex width="100%" justify="flex-start" mt={8} mb={10}>
+            <Button mr={4} size="md" variant="secondary" onClick={prevStep} isDisabled={activeStep === 0}>
+              Revenir
+            </Button>
+
+            <Button
+              size="md"
+              onClick={onClickNextStep}
+              variant="primary"
+              isDisabled={employeurPrivePublic?.contents?.value !== "Employeur public"}
+            >
+              Passer à l'étape suivante
+            </Button>
+            {activeStep === steps.length - 1 && (
               <Button size="md" onClick={onClickNextStep} variant="primary">
-                {activeStep === steps.length - 1 ? "Télécharger le dossier finalisé" : "Passer à l'étape suivante"}
+                Télécharger le dossier finalisé
               </Button>
-            </Flex>
-          )}
+            )}
+          </Flex>
         </Flex>
       </Container>
     </Box>

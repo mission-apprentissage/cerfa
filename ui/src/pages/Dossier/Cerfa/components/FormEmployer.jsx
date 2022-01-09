@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { Box, FormLabel, Flex, useDisclosure, Text, Link } from "@chakra-ui/react";
-
-import AcknowledgeModal from "../../../../common/components/Modals/AcknowledgeModal";
+import React from "react";
+import { Box, FormLabel, Flex } from "@chakra-ui/react";
 
 import { useCerfaEmployeur } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeur";
 import InputCerfa from "./Input";
@@ -31,31 +29,8 @@ const FormEmployer = ({ onFetched }) => {
     },
   } = useCerfaEmployeur();
 
-  const [hasSeenPrivateSectorModal, setHasSeenPrivateSectorModal] = useState(false);
-  const isPrivateSectorAckModal = useDisclosure();
-
   return (
     <Box>
-      <AcknowledgeModal
-        title="Vous êtes employeur privé"
-        isOpen={privePublic.value === "Employeur privé" && !hasSeenPrivateSectorModal}
-        onClose={isPrivateSectorAckModal.onClose}
-        onAcknowledgement={() => {
-          setHasSeenPrivateSectorModal(true);
-          isPrivateSectorAckModal.onClose();
-        }}
-      >
-        <Text>
-          Ce service de dépôt en ligne est reservé aux employeurs publics pour le moment. <br />
-          Vous ne pourrez pas continuer ce dossier. <br />
-          <br />
-          Veuillez consulter{" "}
-          <Link href={"/"} color={"bluefrance"} textDecoration={"underline"} isExternal>
-            la fiche pratique
-          </Link>{" "}
-          pour établir un contrat d'apprentissage en tant qu'employeur privé.
-        </Text>
-      </AcknowledgeModal>
       <InputCerfa
         path="employeur.siret"
         field={siret}

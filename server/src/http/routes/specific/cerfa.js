@@ -324,7 +324,7 @@ module.exports = (components) => {
 
       const pdfBuffer = Buffer.from(pdfBytes.buffer, "binary");
       res.header("Content-Type", "application/pdf");
-      res.header("Content-Disposition", `attachment; filename=contrat_${params.id}.pdf`);
+      // res.header("Content-Disposition", `attachment; filename=contrat_${params.id}.pdf`);
       res.header("Content-Length", pdfBuffer.length);
       res.status(200);
       res.type("pdf");
