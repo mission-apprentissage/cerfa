@@ -17,7 +17,7 @@ module.exports = (components) => {
   const buildCerfaResult = (cerfa) => {
     function customizer(objValue, srcValue) {
       if (objValue !== undefined) {
-        return { ...objValue, value: srcValue || srcValue === false ? srcValue : "" };
+        return { ...objValue, value: srcValue || srcValue === false || srcValue === 0 ? srcValue : "" };
       }
     }
 
@@ -146,8 +146,8 @@ module.exports = (components) => {
           siret: Joi.string(),
           naf: Joi.string(),
           nombreDeSalaries: Joi.number(),
-          codeIdcc: Joi.string(),
-          libelleIdcc: Joi.string(),
+          codeIdcc: Joi.string().allow(""),
+          libelleIdcc: Joi.string().allow(""),
           telephone: Joi.string(),
           courriel: Joi.string(),
           adresse: Joi.object({
@@ -161,6 +161,7 @@ module.exports = (components) => {
           nom: Joi.string(),
           prenom: Joi.string(),
           typeEmployeur: Joi.number(),
+          employeurSpecifique: Joi.number(),
           caisseComplementaire: Joi.string(),
           regimeSpecifique: Joi.boolean(),
           attestationEligibilite: Joi.boolean(),

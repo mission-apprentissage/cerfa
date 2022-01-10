@@ -15,6 +15,7 @@ import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
 import { AddFill, SubtractLine, StepWip, StepComplete } from "../../../theme/components/icons";
 
 import { cerfaPartFormationCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
+import { cerfaPartEmployeurCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 
 import FormEmployer from "./components/FormEmployer";
 import FormLearner from "./components/FormLearner";
@@ -25,6 +26,7 @@ import FormFormation from "./components/FormFormation";
 export default () => {
   const { isLoading } = useCerfa();
   const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
+  const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
 
   if (isLoading)
     return (
@@ -39,7 +41,7 @@ export default () => {
         {
           title: "Employeur",
           Component: FormEmployer,
-          completion: 0,
+          completion: employeurCompletionAtom?.contents,
         },
         {
           title: "Apprenti(e)",
@@ -76,7 +78,7 @@ export default () => {
                   <Box flex="1" textAlign="left">
                     <HStack>
                       <Text fontWeight="bold">{title}</Text>
-                      <Text> - {completion}%</Text>
+                      <Text> - {Math.round(completion)}%</Text>
                     </HStack>
                   </Box>
                   {isExpanded ? (

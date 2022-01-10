@@ -25,7 +25,17 @@ const FormEmployer = ({ onFetched }) => {
       },
     },
     onSubmit: {
-      employeur: { siret: onSubmittedEmployeurSiret },
+      employeur: {
+        siret: onSubmittedEmployeurSiret,
+        typeEmployeur: onSubmittedEmployeurTypeEmployeur,
+        employeurSpecifique: onSubmittedEmployeurEmployeurSpecifique,
+        nombreDeSalaries: onSubmittedEmployeurNombreDeSalaries,
+        libelleIdcc: onSubmittedEmployeurLibelleIdcc,
+        caisseComplementaire: onSubmittedEmployeurCaisseComplementaire,
+        telephone: onSubmittedEmployeurTelephone,
+        courriel: onSubmittedEmployeurCourriel,
+        regimeSpecifique: onSubmittedEmployeurRegimeSpecifique,
+      },
     },
   } = useCerfaEmployeur();
 
@@ -52,18 +62,66 @@ const FormEmployer = ({ onFetched }) => {
           <InputCerfa path="employeur.adresse.codePostal" field={codePostal} type="text" mt="2" />
           <InputCerfa path="employeur.adresse.commune" field={commune} type="text" mt="2" />
 
-          <InputCerfa path="employeur.telephone" field={telephone} type="text" mt="2" />
-          <InputCerfa path="employeur.courriel" field={courriel} type="text" mt="2" />
+          <InputCerfa
+            path="employeur.telephone"
+            field={telephone}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurTelephone}
+          />
+          <InputCerfa
+            path="employeur.courriel"
+            field={courriel}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurCourriel}
+          />
         </Box>
         <Box w="45%" ml="5w">
-          <InputCerfa path="employeur.typeEmployeur" field={typeEmployeur} type="select" mt="2" />
-          <InputCerfa path="employeur.employeurSpecifique" field={employeurSpecifique} type="select" mt="2" />
+          <InputCerfa
+            path="employeur.typeEmployeur"
+            field={typeEmployeur}
+            type="select"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurTypeEmployeur}
+          />
+          <InputCerfa
+            path="employeur.employeurSpecifique"
+            field={employeurSpecifique}
+            type="select"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurEmployeurSpecifique}
+          />
           <InputCerfa path="employeur.naf" field={naf} type="text" mt="2" />
-          <InputCerfa path="employeur.nombreDeSalaries" field={nombreDeSalaries} type="text" mt="2" />
+          <InputCerfa
+            path="employeur.nombreDeSalaries"
+            field={nombreDeSalaries}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurNombreDeSalaries}
+          />
           <InputCerfa path="employeur.codeIdcc" field={codeIdcc} type="text" mt="2" />
-          <InputCerfa path="employeur.libelleIdcc" field={libelleIdcc} type="text" mt="2" />
-          <InputCerfa path="employeur.caisseComplementaire" field={caisseComplementaire} type="text" mt="2" />
-          <InputCerfa path="employeur.regimeSpecifique" field={regimeSpecifique} type="radio" mt="2" />
+          <InputCerfa
+            path="employeur.libelleIdcc"
+            field={libelleIdcc}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurLibelleIdcc}
+          />
+          <InputCerfa
+            path="employeur.caisseComplementaire"
+            field={caisseComplementaire}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurCaisseComplementaire}
+          />
+          <InputCerfa
+            path="employeur.regimeSpecifique"
+            field={regimeSpecifique}
+            type="radio"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurRegimeSpecifique}
+          />
           {/* <InputCerfa path="employeur.attestationEligibilite" field={attestationEligibilite} type="text" mt="2" /> */}
           {/* attestationPieces */}
         </Box>

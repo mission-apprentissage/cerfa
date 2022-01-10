@@ -67,7 +67,7 @@ const employeurCerfaSchema = {
     required: function () {
       return !this.draft;
     },
-    default: 0,
+    default: null,
     description: "Effectif salarié de l'entreprise",
     label: "Effectif salarié de l'entreprise :",
     example: 123,
@@ -165,36 +165,36 @@ const employeurCerfaSchema = {
       "**Type d'mployeur** :\r\n<br /> *Privé*\r\n<br /> 11 : Entreprise inscrite au répertoire des métiers ou au registre des entreprises pour l’Alsace-Moselle\r\n<br /> 12 : Entreprise inscrite uniquement au registre du commerce et des sociétés\r\n<br /> 13 : Entreprises dont les salariés relèvent de la mutualité sociale agricole\r\n<br /> 14 : Profession libérale\r\n<br /> 15 : Association\r\n<br /> 16 : Autre employeur privé\r\n<br /> *Public*\r\n<br /> 21 : Service de l’Etat (administrations centrales et leurs services déconcentrés de la fonction publique d’Etat)\r\n<br /> 22 : Commune\r\n<br /> 23 : Département\r\n<br /> 24 : Région\r\n<br /> 25 : Etablissement public hospitalier\r\n<br /> 26 : Etablissement public local d’enseignement\r\n<br /> 27 : Etablissement public administratif de l’Etat\r\n<br /> 28 : Etablissement public administratif local(y compris établissement public de coopération intercommunale EPCI)\r\n<br /> 29 : Autre employeur public",
 
     options: [
-      {
-        name: "Privé",
-        options: [
-          {
-            label:
-              "11 Entreprise inscrite au répertoire des métiers ou au registre des entreprises pour l'Alsace-Moselle",
-            value: 11,
-          },
-          {
-            label: "12 Entreprise inscrite uniquement au registre du commerce et des sociétés",
-            value: 12,
-          },
-          {
-            label: "13 Entreprises dont les salariés relèvent de la mutualité sociale agricole",
-            value: 13,
-          },
-          {
-            label: "14 Profession libérale",
-            value: 14,
-          },
-          {
-            label: "15 Association",
-            value: 15,
-          },
-          {
-            label: "16 Autre employeur privé",
-            value: 16,
-          },
-        ],
-      },
+      // {
+      //   name: "Privé",
+      //   options: [
+      //     {
+      //       label:
+      //         "11 Entreprise inscrite au répertoire des métiers ou au registre des entreprises pour l'Alsace-Moselle",
+      //       value: 11,
+      //     },
+      //     {
+      //       label: "12 Entreprise inscrite uniquement au registre du commerce et des sociétés",
+      //       value: 12,
+      //     },
+      //     {
+      //       label: "13 Entreprises dont les salariés relèvent de la mutualité sociale agricole",
+      //       value: 13,
+      //     },
+      //     {
+      //       label: "14 Profession libérale",
+      //       value: 14,
+      //     },
+      //     {
+      //       label: "15 Association",
+      //       value: 15,
+      //     },
+      //     {
+      //       label: "16 Autre employeur privé",
+      //       value: 16,
+      //     },
+      //   ],
+      // },
       {
         name: "Public",
         options: [
@@ -287,7 +287,7 @@ const employeurCerfaSchema = {
     type: Boolean,
     description: "Adhère au régime spécifique d'assurance-chômage",
     label: "Adhésion de l'apprenti au régime spécifique d'assurance chômage : ",
-    default: false,
+    default: null,
     nullable: true,
     example: "Non",
     options: [
@@ -328,7 +328,7 @@ const employeurCerfaSchema = {
   },
   privePublic: {
     type: Boolean,
-    default: null,
+    default: true,
     required: function () {
       return !this.draft;
     },
@@ -343,6 +343,7 @@ const employeurCerfaSchema = {
       {
         label: "Employeur privé",
         value: false,
+        locked: true,
       },
     ],
   },

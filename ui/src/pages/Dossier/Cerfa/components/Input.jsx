@@ -303,6 +303,7 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
                         value={option.label}
                         checked={values[name] === option.label}
                         onChange={handleChange}
+                        isDisabled={option.locked}
                       >
                         {option.label}
                       </Radio>

@@ -251,9 +251,10 @@ export function useCerfaFormation() {
   const cerfa = useRecoilValue(cerfaAtom);
   const dossier = useRecoilValue(dossierAtom);
 
-  const [partFormationCompletionAtom, setPartFormationCompletionAtom] = useRecoilState(
+  const [partFormationCompletion, setPartFormationCompletionAtom] = useRecoilState(
     formationAtoms.cerfaPartFormationCompletionAtom
   );
+
   const [organismeFormationSiret, setOrganismeFormationSiret] = useRecoilState(
     formationAtoms.cerfaOrganismeFormationSiretAtom
   );
@@ -721,7 +722,7 @@ export function useCerfaFormation() {
   };
 
   return {
-    completion: partFormationCompletionAtom,
+    completion: partFormationCompletion,
     get: {
       organismeFormation: {
         siret: organismeFormationSiret,
