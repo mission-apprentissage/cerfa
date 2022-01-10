@@ -16,7 +16,6 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
-import { DateTime } from "luxon";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -69,11 +68,6 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
           .required(field?.requiredMessage),
       });
       let fieldValue = field?.value;
-      if (type === "date") {
-        if (fieldValue) {
-          fieldValue = DateTime.fromISO(fieldValue).setLocale("fr-FR").toFormat("yyyy-MM-dd");
-        }
-      }
 
       //
       const { isValid: isValidFieldValue } = await validate(validationSchema, {
@@ -222,15 +216,15 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
               placeholder="Sélectionnez une option"
               // w="90%"
             >
-              {typeof field.options[0] === "object" && (
+              {field.options[0].options && (
                 <>
                   {field.options.map((group, k) => {
                     return (
                       <optgroup label={group.name} key={k}>
                         {group.options.map((option, j) => {
                           return (
-                            <option key={j} value={option}>
-                              {option}
+                            <option key={j} value={option.label}>
+                              {option.label}
                             </option>
                           );
                         })}
@@ -239,12 +233,12 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
                   })}
                 </>
               )}
-              {typeof field.options[0] === "string" && (
+              {field.options[0].label && (
                 <>
                   {field.options.map((option, j) => {
                     return (
-                      <option key={j} value={option}>
-                        {option}
+                      <option key={j} value={option.label}>
+                        {option.label}
                       </option>
                     );
                   })}

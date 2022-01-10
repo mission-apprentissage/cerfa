@@ -156,18 +156,56 @@ const apprentiSchema = {
     },
     label: "Situation avant ce contrat :",
     options: [
-      "1 Scolaire",
-      "2 Prépa apprentissage",
-      "3 Etudiant",
-      "4 Contrat d'apprentissage",
-      "5 Contrat de professionnalisation",
-      "6 Contrat aidé",
-      "7 En formation au CFA sous statut de stagiaire de la formation professionnelle, avant signature d'un contrat d'apprentissage (L6222-12-1 du code du travail)",
-      "8 En formation, au CFA sans contrat sous statut de stagiaire de la formation professionnelle, suite à rupture (5° de L6231-2 du code du travail)",
-      "9 Autres situations sous statut de stagiaire de la formation professionnelle",
-      "10 Salarié",
-      "11 Personne à la recherche d'un emploi (inscrite ou non à Pôle Emploi)",
-      "12 Inactif",
+      {
+        label: "1 Scolaire",
+        value: 1,
+      },
+      {
+        label: "2 Prépa apprentissage",
+        value: 2,
+      },
+      {
+        label: "3 Etudiant",
+        value: 3,
+      },
+      {
+        label: "4 Contrat d'apprentissage",
+        value: 4,
+      },
+      {
+        label: "5 Contrat de professionnalisation",
+        value: 5,
+      },
+      {
+        label: "6 Contrat aidé",
+        value: 6,
+      },
+      {
+        label:
+          "7 En formation au CFA sous statut de stagiaire de la formation professionnelle, avant signature d'un contrat d'apprentissage (L6222-12-1 du code du travail)",
+        value: 7,
+      },
+      {
+        label:
+          "8 En formation, au CFA sans contrat sous statut de stagiaire de la formation professionnelle, suite à rupture (5° de L6231-2 du code du travail)",
+        value: 8,
+      },
+      {
+        label: "9 Autres situations sous statut de stagiaire de la formation professionnelle",
+        value: 9,
+      },
+      {
+        label: "10 Salarié",
+        value: 10,
+      },
+      {
+        label: "11 Personne à la recherche d'un emploi (inscrite ou non à Pôle Emploi)",
+        value: 11,
+      },
+      {
+        label: "12 Inactif",
+        value: 12,
+      },
     ],
     description:
       "**Situation de l'apprenti avant le contrat**\r\n<br />1 : Scolaire\r\n<br />2 : Prépa apprentissage\r\n<br />3 : Etudiant\r\n<br />4 : Contrat d’apprentissage\r\n<br />5 : Contrat de professionnalisation\r\n<br />6 : Contrat aidé\r\n<br />7 : En formation au CFA avant signature d’un contrat d’apprentissage (L6222-12-1 du code du travail)\r\n<br />8 : En formation, au CFA, sans contrat, suite à rupture (5° de L6231-2 du code du travail)\r\n<br />9 : Stagiaire de la formation professionnelle\r\n<br />10 : Salarié\r\n<br />11 : Personne à la recherche d’un emploi (inscrite ou non au Pôle Emploi)\r\n<br />12 : Inactif",
@@ -191,16 +229,52 @@ const apprentiSchema = {
     description:
       "**Dernière année ou classe suivie par l'apprenti** :\r\n<br /> 1 : l'apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre\r\n<br /> 11 : l’apprenti a suivi la 1ère année du cycle et l’a validée (examens réussis mais année non diplômante)\r\n<br /> 12 : l’apprenti a suivi la 1ère année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 21 : l’apprenti a suivi la 2è année du cycle et l’a validée (examens réussis mais année non diplômante)\r\n<br /> 22 : l’apprenti a suivi la 2è année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 31 : l’apprenti a suivi la 3è année du cycle et l’a validée (examens réussis mais année non diplômante, cycle adapté)\r\n<br /> 32 : l’apprenti a suivi la 3è année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 40 : l’apprenti a achevé le 1er cycle de l’enseignement secondaire (collège)\r\n<br /> 41 : l’apprenti a interrompu ses études en classe de 3è\r\n<br /> 42 : l’apprenti a interrompu ses études en classe de 4è",
     options: [
-      "01: l'apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre",
-      "11: l'apprenti a suivi la 1ère année du cycle et l'a validée (examens réussis mais année non diplômante)",
-      "12: l'apprenti a suivi la 1ère année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
-      "21: l'apprenti a suivi la 2è année du cycle et l'a validée (examens réussis mais année non diplômante)",
-      "22: l'apprenti a suivi la 2è année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
-      "31: l'apprenti a suivi la 3è année du cycle et l'a validée (examens réussis mais année non diplômante, cycle adaptés)",
-      "32: l'apprenti a suivi la 3è année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
-      "40: l'apprenti a achevé le 1er cycle de l'enseignement secondaire (collège)",
-      "41: l'apprenti a interrompu ses études en classe de 3è",
-      "42: l'apprenti a interrompu ses études en classe de 4è",
+      {
+        label: "01: l'apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre",
+        value: 1,
+      },
+      {
+        label:
+          "11: l'apprenti a suivi la 1ère année du cycle et l'a validée (examens réussis mais année non diplômante)",
+        value: 11,
+      },
+      {
+        label:
+          "12: l'apprenti a suivi la 1ère année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
+        value: 12,
+      },
+      {
+        label: "21: l'apprenti a suivi la 2è année du cycle et l'a validée (examens réussis mais année non diplômante)",
+        value: 21,
+      },
+      {
+        label:
+          "22: l'apprenti a suivi la 2è année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
+        value: 22,
+      },
+      {
+        label:
+          "31: l'apprenti a suivi la 3è année du cycle et l'a validée (examens réussis mais année non diplômante, cycle adaptés)",
+        value: 31,
+      },
+      {
+        label:
+          "32: l'apprenti a suivi la 3è année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
+        value: 32,
+      },
+
+      {
+        label: "40: l'apprenti a achevé le 1er cycle de l'enseignement secondaire (collège)",
+        value: 40,
+      },
+      {
+        label: "41: l'apprenti a interrompu ses études en classe de 3è",
+        value: 41,
+      },
+      {
+        label: "42: l'apprenti a interrompu ses études en classe de 4è",
+        value: 42,
+      },
     ],
   },
   diplomePrepare: {

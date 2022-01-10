@@ -2,6 +2,7 @@ const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
 const { cloneDeep, mergeWith } = require("lodash");
+const merge = require("deepmerge");
 const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
@@ -260,12 +261,12 @@ module.exports = (components) => {
           denomination: Joi.string(),
           formationInterne: Joi.boolean(),
           siret: Joi.string(),
-          uaiCfa: Joi.string(),
+          uaiCfa: Joi.string().allow(""),
           visaCfa: Joi.boolean(),
           adresse: Joi.object({
             numero: Joi.number(),
             voie: Joi.string(),
-            complement: Joi.string(),
+            complement: Joi.string().allow(""),
             label: Joi.string(),
             codePostal: Joi.string(),
             commune: Joi.string(),
@@ -274,7 +275,11 @@ module.exports = (components) => {
         dossierId: Joi.string().required(),
       }).validateAsync(body, { abortEarly: false });
 
-      const cerfaUpdated = await Cerfa.findOneAndUpdate({ _id: params.id }, data, {
+      let cerfaDb = await Cerfa.findOne({ _id: params.id }, { _id: 0, __v: 0 }).lean();
+
+      const mergedData = merge(cerfaDb, data);
+
+      const cerfaUpdated = await Cerfa.findOneAndUpdate({ _id: params.id }, mergedData, {
         new: true,
       }).lean();
 

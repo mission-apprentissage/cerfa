@@ -25,7 +25,11 @@ const FormFormation = React.memo((props) => {
       },
     },
     onSubmit: {
-      organismeFormation: { siret: onSubmittedOrganismeFormationSiret, uaiCfa: onSubmittedOrganismeFormationUaiCfa },
+      organismeFormation: {
+        formationInterne: onSubmittedOrganismeFormationFormationInterne,
+        siret: onSubmittedOrganismeFormationSiret,
+        uaiCfa: onSubmittedOrganismeFormationUaiCfa,
+      },
       formation: {
         rncp: onSubmittedRncp,
         codeDiplome: onSubmittedFormationCodeDiplome,
@@ -40,7 +44,14 @@ const FormFormation = React.memo((props) => {
 
   return (
     <Box>
-      <InputCerfa path="organismeFormation.formationInterne" field={formationInterne} type="radio" mt="2" mb={6} />
+      <InputCerfa
+        path="organismeFormation.formationInterne"
+        field={formationInterne}
+        type="radio"
+        mt="2"
+        mb={6}
+        onSubmittedField={onSubmittedOrganismeFormationFormationInterne}
+      />
       <InputCerfa
         path="organismeFormation.siret"
         field={siret}
