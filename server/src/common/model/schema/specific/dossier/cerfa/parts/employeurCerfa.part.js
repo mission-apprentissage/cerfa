@@ -304,7 +304,7 @@ const employeurCerfaSchema = {
   attestationEligibilite: {
     type: Boolean,
     description: "Atteste de l'éligibilité du tuteur / maître d'apprentissage",
-    default: false,
+    default: null,
     required: function () {
       return !this.draft;
     },

@@ -16,6 +16,7 @@ import { AddFill, SubtractLine, StepWip, StepComplete } from "../../../theme/com
 
 import { cerfaPartFormationCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
 import { cerfaPartEmployeurCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+import { cerfaPartMaitresCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
 
 import FormEmployer from "./components/FormEmployer";
 import FormLearner from "./components/FormLearner";
@@ -27,6 +28,7 @@ export default () => {
   const { isLoading } = useCerfa();
   const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
   const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
+  const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
 
   if (isLoading)
     return (
@@ -51,7 +53,7 @@ export default () => {
         {
           title: "Maître d'apprentissage",
           Component: FormLearningMaster,
-          completion: 0,
+          completion: maitresCompletionAtom?.contents,
         },
         {
           title: "Contrat",
