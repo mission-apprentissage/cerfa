@@ -13,6 +13,89 @@ module.exports = (components) => {
 
   const { cerfas } = components;
 
+  const buildCerfaResult = (cerfa) => {
+    function customizer(objValue, srcValue) {
+      if (objValue !== undefined) {
+        return { ...objValue, value: srcValue || srcValue === false ? srcValue : "" };
+      }
+    }
+
+    function customizerLock(objValue, srcValue) {
+      if (objValue !== undefined) {
+        return { ...objValue, locked: srcValue };
+      }
+    }
+
+    return {
+      employeur: {
+        ...mergeWith(cloneDeep(cerfaSchema.employeur), cerfa.employeur, customizer),
+        adresse: {
+          ...mergeWith(cloneDeep(cerfaSchema.employeur.adresse), cerfa.employeur.adresse, customizer),
+        },
+      },
+      apprenti: {
+        ...mergeWith(cloneDeep(cerfaSchema.apprenti), cerfa.apprenti, customizer),
+        adresse: {
+          ...mergeWith(cloneDeep(cerfaSchema.apprenti.adresse), cerfa.apprenti.adresse, customizer),
+        },
+        responsableLegal: {
+          ...mergeWith(
+            cloneDeep(cerfaSchema.apprenti.responsableLegal.type),
+            cerfa.apprenti.responsableLegal,
+            customizer
+          ),
+          adresse: {
+            ...mergeWith(
+              cloneDeep(cerfaSchema.apprenti.responsableLegal.type.adresse),
+              cerfa.apprenti.responsableLegal.adresse,
+              customizer
+            ),
+          },
+        },
+      },
+      maitre1: {
+        ...mergeWith(cloneDeep(cerfaSchema.maitre1), cerfa.maitre1, customizer),
+      },
+      maitre2: {
+        ...mergeWith(cloneDeep(cerfaSchema.maitre2), cerfa.maitre2, customizer),
+      },
+      formation: {
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.formation), cerfa.formation, customizer),
+          cerfa.isLockedField.formation,
+          customizerLock
+        ),
+      },
+      contrat: {
+        ...mergeWith(cloneDeep(cerfaSchema.contrat), cerfa.contrat, customizer),
+        remunerationsAnnuelles: [
+          ...cerfa.contrat.remunerationsAnnuelles.map((remunerationAnnuelle) => {
+            return mergeWith(
+              cloneDeep(cerfaSchema.contrat.remunerationsAnnuelles.type[0]),
+              remunerationAnnuelle,
+              customizer
+            );
+          }),
+        ],
+      },
+      organismeFormation: {
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.organismeFormation), cerfa.organismeFormation, customizer),
+          cerfa.isLockedField.organismeFormation,
+          customizerLock
+        ),
+        adresse: {
+          ...mergeWith(
+            mergeWith(cloneDeep(cerfaSchema.organismeFormation.adresse), cerfa.organismeFormation.adresse, customizer),
+            cerfa.isLockedField.organismeFormation.adresse,
+            customizerLock
+          ),
+        },
+      },
+      id: cerfa._id.toString(),
+    };
+  };
+
   router.get(
     "/",
     permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
@@ -25,92 +108,7 @@ module.exports = (components) => {
 
       const cerfa = await Cerfa.findOne({ dossierId }).lean();
 
-      function customizer(objValue, srcValue) {
-        if (objValue !== undefined) {
-          return { ...objValue, value: srcValue || srcValue === false ? srcValue : "" };
-        }
-      }
-
-      function customizerLock(objValue, srcValue) {
-        if (objValue !== undefined) {
-          return { ...objValue, locked: srcValue };
-        }
-      }
-
-      let result = {
-        employeur: {
-          ...mergeWith(cloneDeep(cerfaSchema.employeur), cerfa.employeur, customizer),
-          adresse: {
-            ...mergeWith(cloneDeep(cerfaSchema.employeur.adresse), cerfa.employeur.adresse, customizer),
-          },
-        },
-        apprenti: {
-          ...mergeWith(cloneDeep(cerfaSchema.apprenti), cerfa.apprenti, customizer),
-          adresse: {
-            ...mergeWith(cloneDeep(cerfaSchema.apprenti.adresse), cerfa.apprenti.adresse, customizer),
-          },
-          responsableLegal: {
-            ...mergeWith(
-              cloneDeep(cerfaSchema.apprenti.responsableLegal.type),
-              cerfa.apprenti.responsableLegal,
-              customizer
-            ),
-            adresse: {
-              ...mergeWith(
-                cloneDeep(cerfaSchema.apprenti.responsableLegal.type.adresse),
-                cerfa.apprenti.responsableLegal.adresse,
-                customizer
-              ),
-            },
-          },
-        },
-        maitre1: {
-          ...mergeWith(cloneDeep(cerfaSchema.maitre1), cerfa.maitre1, customizer),
-        },
-        maitre2: {
-          ...mergeWith(cloneDeep(cerfaSchema.maitre2), cerfa.maitre2, customizer),
-        },
-        formation: {
-          ...mergeWith(
-            mergeWith(cloneDeep(cerfaSchema.formation), cerfa.formation, customizer),
-            cerfa.isLockedField.formation,
-            customizerLock
-          ),
-        },
-        contrat: {
-          ...mergeWith(cloneDeep(cerfaSchema.contrat), cerfa.contrat, customizer),
-          remunerationsAnnuelles: [
-            ...cerfa.contrat.remunerationsAnnuelles.map((remunerationAnnuelle) => {
-              return mergeWith(
-                cloneDeep(cerfaSchema.contrat.remunerationsAnnuelles.type[0]),
-                remunerationAnnuelle,
-                customizer
-              );
-            }),
-          ],
-        },
-        organismeFormation: {
-          ...mergeWith(
-            mergeWith(cloneDeep(cerfaSchema.organismeFormation), cerfa.organismeFormation, customizer),
-            cerfa.isLockedField.organismeFormation,
-            customizerLock
-          ),
-          adresse: {
-            ...mergeWith(
-              mergeWith(
-                cloneDeep(cerfaSchema.organismeFormation.adresse),
-                cerfa.organismeFormation.adresse,
-                customizer
-              ),
-              cerfa.isLockedField.organismeFormation.adresse,
-              customizerLock
-            ),
-          },
-        },
-        id: cerfa._id.toString(),
-      };
-
-      return res.json(result);
+      return res.json(buildCerfaResult(cerfa));
     })
   );
 
@@ -273,13 +271,14 @@ module.exports = (components) => {
             commune: Joi.string(),
           }),
         }),
+        dossierId: Joi.string().required(),
       }).validateAsync(body, { abortEarly: false });
 
-      const result = await Cerfa.findOneAndUpdate({ _id: params.id }, data, {
+      const cerfaUpdated = await Cerfa.findOneAndUpdate({ _id: params.id }, data, {
         new: true,
-      });
+      }).lean();
 
-      return res.json(result);
+      return res.json(buildCerfaResult(cerfaUpdated));
     })
   );
 

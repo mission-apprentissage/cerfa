@@ -13,6 +13,7 @@ const colors = {
   dgalt: "#E5E5E5",
   disablegrey: "#929292",
   labelgrey: "#161616",
+  flatwarm: "#B34000",
   grey: {
     800: "#1e1e1e",
     750: "#2a2a2a",

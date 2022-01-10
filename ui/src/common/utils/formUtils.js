@@ -11,3 +11,16 @@ export const convertValueToOption = (field) => {
     value: valueOpt,
   };
 };
+
+export const fieldCompletionPercentage = (fields, nbFields) => {
+  const keys = Object.keys(fields);
+  let countFilledField = 0;
+  for (let index = 0; index < keys.length; index++) {
+    const field = fields[keys[index]];
+    if (field?.value !== "") {
+      countFilledField++;
+    }
+  }
+  const percent = (countFilledField * 100) / nbFields;
+  return percent;
+};

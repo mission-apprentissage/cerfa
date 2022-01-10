@@ -1,5 +1,10 @@
 import { atom } from "recoil";
 
+export const cerfaPartFormationCompletionAtom = atom({
+  key: "cerfa/part/formation/completion",
+  default: 0,
+});
+
 export const cerfaOrganismeFormationSiretAtom = atom({
   key: "cerfa/organismeFormation/siret",
   default: null,

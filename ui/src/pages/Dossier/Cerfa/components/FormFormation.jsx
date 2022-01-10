@@ -40,7 +40,7 @@ const FormFormation = React.memo((props) => {
 
   return (
     <Box>
-      <InputCerfa path="organismeFormation.formationInterne" field={formationInterne} type="radio" mt="2" />
+      <InputCerfa path="organismeFormation.formationInterne" field={formationInterne} type="radio" mt="2" mb={6} />
       <InputCerfa
         path="organismeFormation.siret"
         field={siret}

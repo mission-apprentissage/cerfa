@@ -41,3 +41,5 @@ export * from "./IoArrowForward";
 export * from "./IoArrowBackward";
 export * from "./Settings4Fill";
 export * from "./AvatarPlus";
+export * from "./StepWip";
+export * from "./StepComplete";

@@ -133,8 +133,6 @@ export default () => {
 
   // TODO not Authorize handler
 
-  console.log(employeurPrivePublic);
-
   return (
     <Box w="100%" px={[1, 1, 6, 6]}>
       <AskBetaTest />
@@ -222,14 +220,16 @@ export default () => {
               Revenir
             </Button>
 
-            <Button
-              size="md"
-              onClick={onClickNextStep}
-              variant="primary"
-              isDisabled={employeurPrivePublic?.contents?.value !== "Employeur public"}
-            >
-              Passer à l'étape suivante
-            </Button>
+            {activeStep < steps.length - 1 && (
+              <Button
+                size="md"
+                onClick={onClickNextStep}
+                variant="primary"
+                isDisabled={employeurPrivePublic?.contents?.value === "Employeur privé"}
+              >
+                Passer à l'étape suivante
+              </Button>
+            )}
             {activeStep === steps.length - 1 && (
               <Button size="md" onClick={onClickNextStep} variant="primary">
                 Télécharger le dossier finalisé
