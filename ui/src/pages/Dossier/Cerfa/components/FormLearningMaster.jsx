@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, FormLabel, Text, Flex } from "@chakra-ui/react";
+import { Box, FormLabel, Flex } from "@chakra-ui/react";
 
 import { useCerfaMaitres } from "../../../../common/hooks/useCerfa/parts/useCerfaMaitres";
 import InputCerfa from "./Input";
@@ -9,6 +9,7 @@ const FormLearningMaster = () => {
     get: {
       maitre1: { nom: maitre1Nom, prenom: maitre1Prenom, dateNaissance: maitre1DateNaissance },
       maitre2: { nom: maitre2Nom, prenom: maitre2Prenom, dateNaissance: maitre2DateNaissance },
+      employeur: { attestationEligibilite },
     },
   } = useCerfaMaitres();
 
@@ -28,10 +29,7 @@ const FormLearningMaster = () => {
           <InputCerfa path="maitre2.dateNaissance" field={maitre2DateNaissance} type="date" mt="2" />
         </Box>
       </Flex>
-      <Text fontStyle="italic" fontWeight={700} textStyle="sm" mt={4}>
-        L'employeur atteste sur l'honneur que le maître d'apprentissage répond à l'ensemble des critères d'éligibilité à
-        cette fonction.
-      </Text>
+      <InputCerfa path="employeur.attestationEligibilite" field={attestationEligibilite} type="consent" mt="2" />
     </Box>
   );
 };

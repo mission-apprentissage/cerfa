@@ -19,6 +19,19 @@ const organismeFormationSchema = {
     required: function () {
       return !this.draft;
     },
+    label: "Le centre de formation est-il un CFA d'entreprise ?",
+    requiredMessage: "Merci de préciser s'il sagit d'un CFA d'entreprise",
+    example: "Oui",
+    options: [
+      {
+        label: "Oui",
+        value: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
   },
   // raison_sociale: {
   //   type: String,

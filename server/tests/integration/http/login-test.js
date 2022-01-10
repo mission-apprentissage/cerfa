@@ -38,6 +38,8 @@ describe("[Routes] Login", () => {
       confirmed: false,
       siret: null,
       telephone: null,
+      cgu: null,
+      beta: null,
       permissions: {
         isAdmin: false,
       },

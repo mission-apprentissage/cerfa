@@ -24,6 +24,10 @@ export function useCerfaMaitres() {
   const [maitre2Prenom, setMaitre2Prenom] = useRecoilState(maitresAtoms.cerfaMaitre2PrenomAtom);
   const [maitre2DateNaissance, setMaitre2DateNaissance] = useRecoilState(maitresAtoms.cerfaMaitre2DateNaissanceAtom);
 
+  const [employeurAttestationEligibilite, setEmployeurAttestationEligibilite] = useRecoilState(
+    maitresAtoms.cerfaEmployeurAttestationEligibiliteAtom
+  );
+
   const setAll = async (res) => {
     setMaitre1Nom(res.maitre1.nom);
     setMaitre1Prenom(res.maitre1.prenom);
@@ -32,6 +36,8 @@ export function useCerfaMaitres() {
     setMaitre2Nom(res.maitre2.nom);
     setMaitre2Prenom(res.maitre2.prenom);
     setMaitre2DateNaissance(res.maitre2.dateNaissance);
+
+    setEmployeurAttestationEligibilite(res.employeur.attestationEligibilite);
   };
 
   return {
@@ -46,11 +52,15 @@ export function useCerfaMaitres() {
         prenom: maitre2Prenom,
         dateNaissance: maitre2DateNaissance,
       },
+      employeur: {
+        attestationEligibilite: employeurAttestationEligibilite,
+      },
     },
     setAll,
     onSubmit: {
       maitre1: {},
       maitre2: {},
+      employeur: {},
     },
   };
 }

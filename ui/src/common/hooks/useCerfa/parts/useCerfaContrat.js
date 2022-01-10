@@ -2,7 +2,7 @@
  * Multiple states on purpose to avoid full re-rendering at each modification
  */
 
-// import { useCallback } from "react";
+import { useCallback } from "react";
 // import { DateTime } from "luxon";
 // import { _post } from "../../../httpClient";
 import { useRecoilState } from "recoil";
@@ -47,6 +47,10 @@ export function useCerfaContrat() {
   const [contratSalaireEmbauche, setContratSalaireEmbauche] = useRecoilState(
     contratAtoms.cerfaContratSalaireEmbaucheAtom
   );
+  const [contratCaisseRetraiteComplementaire, setContratCaisseRetraiteComplementaire] = useRecoilState(
+    contratAtoms.cerfaContratCaisseRetraiteComplementaireAtom
+  );
+  const [contratAvantageNature, setContratAvantageNature] = useRecoilState(contratAtoms.cerfaContratAvantageNatureAtom);
   const [contratAvantageNourriture, setContratAvantageNourriture] = useRecoilState(
     contratAtoms.cerfaContratAvantageNourritureAtom
   );
@@ -154,6 +158,29 @@ export function useCerfaContrat() {
     contratAtoms.cerfaContratRemunerationsAnnuelles42TypeSalaireAtom
   );
 
+  const onSubmittedContratAvantageNature = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "contrat.avantageNature") {
+          const newV = {
+            contrat: {
+              avantageNature: {
+                ...contratAvantageNature,
+                value: data,
+              },
+            },
+          };
+          if (contratAvantageNature.value !== newV.contrat.avantageNature.value) {
+            setContratAvantageNature(newV.contrat.avantageNature);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [contratAvantageNature, setContratAvantageNature]
+  );
+
   const setAll = async (res) => {
     setContratModeContractuel(res.contrat.modeContractuel);
     setContratTypeContratApp(res.contrat.typeContratApp);
@@ -171,6 +198,8 @@ export function useCerfaContrat() {
     setContratDureeTravailHebdoMinutes(res.contrat.dureeTravailHebdoMinutes);
     setContratTravailRisque(res.contrat.travailRisque);
     setContratSalaireEmbauche(res.contrat.salaireEmbauche);
+    setContratCaisseRetraiteComplementaire(res.contrat.caisseRetraiteComplementaire);
+    setContratAvantageNature(res.contrat.avantageNature);
     setContratAvantageNourriture(res.contrat.avantageNourriture);
     setContratAvantageLogement(res.contrat.avantageLogement);
     setContratAutreAvantageEnNature(res.contrat.autreAvantageEnNature);
@@ -255,6 +284,8 @@ export function useCerfaContrat() {
         dureeTravailHebdoMinutes: contratDureeTravailHebdoMinutes,
         travailRisque: contratTravailRisque,
         salaireEmbauche: contratSalaireEmbauche,
+        caisseRetraiteComplementaire: contratCaisseRetraiteComplementaire,
+        avantageNature: contratAvantageNature,
         avantageNourriture: contratAvantageNourriture,
         avantageLogement: contratAvantageLogement,
         autreAvantageEnNature: contratAutreAvantageEnNature,
@@ -312,7 +343,9 @@ export function useCerfaContrat() {
     },
     setAll,
     onSubmit: {
-      contrat: {},
+      contrat: {
+        avantageNature: onSubmittedContratAvantageNature,
+      },
     },
   };
 }

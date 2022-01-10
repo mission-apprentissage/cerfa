@@ -1,7 +1,8 @@
-import { _get } from "../../httpClient";
-import { useRecoilValue } from "recoil";
-import { dossierAtom } from "../useDossier/dossierAtom";
+import { _get, _put } from "../../httpClient";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useQuery } from "react-query";
+import { dossierAtom } from "../useDossier/dossierAtom";
+import { cerfaAtom } from "./cerfaAtom";
 import { CerfaFormationController, useCerfaFormation } from "./parts/useCerfaFormation";
 import { CerfaEmployeurController, useCerfaEmployeur } from "./parts/useCerfaEmployeur";
 import { CerfaApprentiController, useCerfaApprenti } from "./parts/useCerfaApprenti";
@@ -11,7 +12,6 @@ import { CerfaContratController, useCerfaContrat } from "./parts/useCerfaContrat
 const hydrate = async (dossier) => {
   try {
     const cerfa = await _get(`/api/v1/cerfa?dossierId=${dossier._id}`);
-    console.log(cerfa);
 
     const cerfaFormationController = await CerfaFormationController(dossier);
     const cerfaEmployeurController = await CerfaEmployeurController(dossier);
@@ -77,22 +77,33 @@ const hydrate = async (dossier) => {
   }
 };
 
+export const saveCerfa = async (dossierId, cerfaId, data) => {
+  try {
+    const result = await _put(`/api/v1/cerfa/${cerfaId}`, {
+      ...data,
+      dossierId,
+    });
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export function useCerfa() {
   const dossier = useRecoilValue(dossierAtom);
+  const [cerfa, setCerfa] = useRecoilState(cerfaAtom);
   const { setAll: setCerfaFormation } = useCerfaFormation();
   const { setAll: setCerfaEmployeur } = useCerfaEmployeur();
   const { setAll: setCerfaApprenti } = useCerfaApprenti();
   const { setAll: setCerfaMaitres } = useCerfaMaitres();
   const { setAll: setCerfaContrat } = useCerfaContrat();
 
-  const {
-    data: cerfa,
-    isLoading,
-    isFetching,
-  } = useQuery(
+  // eslint-disable-next-line no-unused-vars
+  const { data, isLoading, isFetching } = useQuery(
     "cerfa",
     async () => {
       const res = await hydrate(dossier);
+      setCerfa(res);
       setCerfaFormation(res);
       setCerfaEmployeur(res);
       setCerfaApprenti(res);

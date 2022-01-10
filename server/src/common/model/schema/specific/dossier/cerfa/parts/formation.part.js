@@ -45,7 +45,7 @@ const formationSchema = {
   },
   typeDiplome: {
     ...diplomeSchema,
-    label: "Diplôme ou titre visé par l’apprenti :",
+    label: "Diplôme ou titre visé par l'apprenti :",
     example: 74,
     requiredMessage: "Le diplôme ou titre visé est obligatoire",
     validateMessage: ` n'est pas un diplôme ou titre valide`,

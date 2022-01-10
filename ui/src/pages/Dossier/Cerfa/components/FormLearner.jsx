@@ -17,7 +17,7 @@ const FormLearner = () => {
         communeNaissance,
         nir,
         regimeSocial,
-        // handicap,
+        handicap,
         situationAvantContrat,
         diplome,
         derniereClasse,
@@ -37,7 +37,7 @@ const FormLearner = () => {
             commune: responsableLegalAdresseCommune,
           },
         },
-        // inscriptionSportifDeHautNiveau,
+        inscriptionSportifDeHautNiveau,
       },
     },
   } = useCerfaApprenti();
@@ -100,89 +100,23 @@ const FormLearner = () => {
         </Box>
         <Box w="45%" ml="5w">
           <InputCerfa path="apprenti.dateNaissance" field={dateNaissance} type="date" mt="2" />
-          <InputCerfa path="apprenti.sexe" field={sexe} type="text" mt="2" />
-          {/* 
-          <FormControl isRequired mt={2} isInvalid={errors.gender}>
-            <FormLabel>Sexe :</FormLabel>
-            <HStack w="40%">
-              <Flex alignItems="center">
-                <input type="radio" name="gender" value="M" checked={values.gender === "M"} onChange={handleChange} />
-                <FormLabel ml="1w">M</FormLabel>
-              </Flex>
-              <Flex alignItems="center">
-                <input type="radio" name="gender" value="F" checked={values.gender === "F"} onChange={handleChange} />
-                <FormLabel ml="1w">F</FormLabel>
-              </Flex>
-            </HStack>
-            {errors.gender && touched.gender && <FormErrorMessage>{errors.gender}</FormErrorMessage>}
-          </FormControl>
-          */}
+          <InputCerfa path="apprenti.sexe" field={sexe} type="select" mt="2" />
           <InputCerfa path="apprenti.departementNaissance" field={departementNaissance} type="text" mt="2" />
           <InputCerfa path="apprenti.communeNaissance" field={communeNaissance} type="text" mt="2" />
-          <InputCerfa path="apprenti.nationalite" field={nationalite} type="text" mt="2" />
-          <InputCerfa path="apprenti.regimeSocial" field={regimeSocial} type="text" mt="2" />
-          {/* 
-         
-          <FormControl isRequired mt={2} isInvalid={errors.sportList}>
-            <FormLabel>
-              Déclare être inscrit sur la liste des sportifs, entraîneurs, arbitres et juges sportifs de haut niveau :
-            </FormLabel>
-            <HStack w="40%">
-              <Flex alignItems="center">
-                <input
-                  type="radio"
-                  name="sportList"
-                  value="oui"
-                  checked={values.sportList === "oui"}
-                  onChange={handleChange}
-                />
-                <FormLabel ml="1w">oui</FormLabel>
-              </Flex>
-              <Flex alignItems="center">
-                <input
-                  type="radio"
-                  name="sportList"
-                  value="non"
-                  checked={values.sportList === "non"}
-                  onChange={handleChange}
-                />
-                <FormLabel ml="1w">non</FormLabel>
-              </Flex>
-            </HStack>
-            {errors.sportList && touched.sportList && <FormErrorMessage>{errors.sportList}</FormErrorMessage>}
-          </FormControl>
-          <FormControl isRequired mt={2} isInvalid={errors.handicapped}>
-            <FormLabel>Déclare bénéficier de la reconnaissance travailleur handicapé :</FormLabel>
-            <HStack w="40%">
-              <Flex alignItems="center">
-                <input
-                  type="radio"
-                  name="handicapped"
-                  value="oui"
-                  checked={values.handicapped === "oui"}
-                  onChange={handleChange}
-                />
-                <FormLabel ml="1w">oui</FormLabel>
-              </Flex>
-              <Flex alignItems="center">
-                <input
-                  type="radio"
-                  name="handicapped"
-                  value="non"
-                  checked={values.handicapped === "non"}
-                  onChange={handleChange}
-                />
-                <FormLabel ml="1w">non</FormLabel>
-              </Flex>
-            </HStack>
-            {errors.handicapped && touched.handicapped && <FormErrorMessage>{errors.handicapped}</FormErrorMessage>}
-          </FormControl>
-*/}
-          <InputCerfa path="apprenti.situationAvantContrat" field={situationAvantContrat} type="text" mt="2" />
-          <InputCerfa path="apprenti.diplomePrepare" field={diplomePrepare} type="text" mt="2" />
-          <InputCerfa path="apprenti.derniereClasse" field={derniereClasse} type="text" mt="2" />
+          <InputCerfa path="apprenti.nationalite" field={nationalite} type="select" mt="2" />
+          <InputCerfa path="apprenti.regimeSocial" field={regimeSocial} type="select" mt="2" />
+          <InputCerfa
+            path="apprenti.inscriptionSportifDeHautNiveau"
+            field={inscriptionSportifDeHautNiveau}
+            type="radio"
+            mt="2"
+          />
+          <InputCerfa path="apprenti.handicap" field={handicap} type="radio" mt="2" />
+          <InputCerfa path="apprenti.situationAvantContrat" field={situationAvantContrat} type="select" mt="2" />
+          <InputCerfa path="apprenti.diplomePrepare" field={diplomePrepare} type="select" mt="2" />
+          <InputCerfa path="apprenti.derniereClasse" field={derniereClasse} type="select" mt="2" />
           <InputCerfa path="apprenti.intituleDiplomePrepare" field={intituleDiplomePrepare} type="text" mt="2" />
-          <InputCerfa path="apprenti.diplome" field={diplome} type="text" mt="2" />
+          <InputCerfa path="apprenti.diplome" field={diplome} type="select" mt="2" />
         </Box>
       </Flex>
     </Box>

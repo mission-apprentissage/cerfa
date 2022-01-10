@@ -177,6 +177,8 @@ module.exports = async () => {
         confirmed: user.confirmed || false,
         orign_register: user.orign_register,
         telephone: user.telephone,
+        cgu: user.has_accept_cgu,
+        beta: user.beta_test,
       };
       return structure;
     },

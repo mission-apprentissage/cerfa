@@ -5,7 +5,12 @@
 import { useCallback } from "react";
 import { DateTime } from "luxon";
 import { _post } from "../../../httpClient";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+
+import { fieldCompletionPercentage } from "../../../utils/formUtils";
+import { saveCerfa } from "../useCerfa";
+import { cerfaAtom } from "../cerfaAtom";
+import { dossierAtom } from "../../useDossier/dossierAtom";
 import * as formationAtoms from "./useCerfaFormationAtoms";
 
 export const CerfaFormationController = async (dossier) => {
@@ -191,33 +196,64 @@ export const CerfaFormationController = async (dossier) => {
             message: null,
           };
         },
-        history: [
-          {
-            to: "98765432400070",
-            how: "manuel",
-            when: Date.now(),
-            who: "Antoine Bigard",
-            role: "CFA",
-          },
-          {
-            to: "98765432400019",
-            how: "manuel",
-            when: Date.now(),
-            who: "Paul Pierre",
-            role: "Employeur",
-          },
-        ],
+        // history: [
+        //   {
+        //     to: "98765432400070",
+        //     how: "manuel",
+        //     when: Date.now(),
+        //     who: "Antoine Bigard",
+        //     role: "CFA",
+        //   },
+        //   {
+        //     to: "98765432400019",
+        //     how: "manuel",
+        //     when: Date.now(),
+        //     who: "Paul Pierre",
+        //     role: "Employeur",
+        //   },
+        // ],
       },
     },
   };
 };
 
+const cerfaFormationCompletion = (res) => {
+  let fieldsToKeep = {
+    organismeFormationSiret: res.organismeFormation.siret,
+    organismeFormationDenomination: res.organismeFormation.denomination,
+    organismeFormationFormationInterne: res.organismeFormation.formationInterne,
+    organismeFormationUaiCfa: res.organismeFormation.uaiCfa,
+    organismeFormationAdresseNumero: res.organismeFormation.adresse.numero,
+    organismeFormationAdresseVoie: res.organismeFormation.adresse.voie,
+    organismeFormationAdresseComplement: res.organismeFormation.adresse.complement,
+    organismeFormationAdresseCodePostal: res.organismeFormation.adresse.codePostal,
+    organismeFormationAdresseCommune: res.organismeFormation.adresse.commune,
+    formationRncp: res.formation.rncp,
+    formationCodeDiplome: res.formation.codeDiplome,
+    formationDateDebutFormation: res.formation.dateDebutFormation,
+    formationDateFinFormation: res.formation.dateFinFormation,
+    formationDureeFormation: res.formation.dureeFormation,
+    formationIntituleQualification: res.formation.intituleQualification,
+    formationTypeDiplome: res.formation.typeDiplome,
+  };
+  return fieldCompletionPercentage(fieldsToKeep, 16);
+};
+
 export function useCerfaFormation() {
+  const cerfa = useRecoilValue(cerfaAtom);
+  const dossier = useRecoilValue(dossierAtom);
+
+  const [partFormationCompletionAtom, setPartFormationCompletionAtom] = useRecoilState(
+    formationAtoms.cerfaPartFormationCompletionAtom
+  );
   const [organismeFormationSiret, setOrganismeFormationSiret] = useRecoilState(
     formationAtoms.cerfaOrganismeFormationSiretAtom
   );
   const [organismeFormationDenomination, setOrganismeFormationDenomination] = useRecoilState(
     formationAtoms.cerfaOrganismeFormationDenominationAtom
+  );
+  const [organismeFormationFormationInterne, setOrganismeFormationFormationInterne] = useRecoilState(
+    formationAtoms.cerfaOrganismeFormationFormationInterneAtom
   );
   const [organismeFormationUaiCfa, setOrganismeFormationUaiCfa] = useRecoilState(
     formationAtoms.cerfaOrganismeFormationUaiCfaAtom
@@ -288,13 +324,29 @@ export function useCerfaFormation() {
           };
           if (organismeFormationSiret.value !== newV.organismeFormation.siret.value) {
             setOrganismeFormationSiret(newV.organismeFormation.siret);
-            setOrganismeFormationAdresseComplement(newV.organismeFormation.adresse.complement);
-            setOrganismeFormationUaiCfa(newV.organismeFormation.uaiCfa);
             setOrganismeFormationDenomination(newV.organismeFormation.denomination);
+            setOrganismeFormationUaiCfa(newV.organismeFormation.uaiCfa);
             setOrganismeFormationAdresseNumero(newV.organismeFormation.adresse.numero);
             setOrganismeFormationAdresseVoie(newV.organismeFormation.adresse.voie);
+            setOrganismeFormationAdresseComplement(newV.organismeFormation.adresse.complement);
             setOrganismeFormationAdresseCodePostal(newV.organismeFormation.adresse.codePostal);
             setOrganismeFormationAdresseCommune(newV.organismeFormation.adresse.commune);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              organismeFormation: {
+                siret: newV.organismeFormation.siret.value,
+                denomination: newV.organismeFormation.denomination.value,
+                uaiCfa: newV.organismeFormation.uaiCfa.value,
+                adresse: {
+                  numero: newV.organismeFormation.adresse.numero.value,
+                  voie: newV.organismeFormation.adresse.voie.value,
+                  complement: newV.organismeFormation.adresse.complement.value,
+                  codePostal: newV.organismeFormation.adresse.codePostal.value,
+                  commune: newV.organismeFormation.adresse.commune.value,
+                },
+              },
+            });
+            setPartFormationCompletionAtom(cerfaFormationCompletion(res));
           }
         }
       } catch (e) {
@@ -311,13 +363,16 @@ export function useCerfaFormation() {
       organismeFormationAdresseCodePostal,
       organismeFormationAdresseCommune,
       setOrganismeFormationSiret,
-      setOrganismeFormationAdresseComplement,
-      setOrganismeFormationUaiCfa,
       setOrganismeFormationDenomination,
+      setOrganismeFormationUaiCfa,
       setOrganismeFormationAdresseNumero,
       setOrganismeFormationAdresseVoie,
+      setOrganismeFormationAdresseComplement,
       setOrganismeFormationAdresseCodePostal,
       setOrganismeFormationAdresseCommune,
+      dossier?._id,
+      cerfa?.id,
+      setPartFormationCompletionAtom,
     ]
   );
 
@@ -543,6 +598,7 @@ export function useCerfaFormation() {
   const setAll = async (res) => {
     setOrganismeFormationSiret(res.organismeFormation.siret);
     setOrganismeFormationDenomination(res.organismeFormation.denomination);
+    setOrganismeFormationFormationInterne(res.organismeFormation.formationInterne);
     setOrganismeFormationUaiCfa(res.organismeFormation.uaiCfa);
     setOrganismeFormationAdresseNumero(res.organismeFormation.adresse.numero);
     setOrganismeFormationAdresseVoie(res.organismeFormation.adresse.voie);
@@ -557,13 +613,17 @@ export function useCerfaFormation() {
     setFormationDureeFormation(res.formation.dureeFormation);
     setFormationIntituleQualification(res.formation.intituleQualification);
     setFormationTypeDiplome(res.formation.typeDiplome);
+
+    setPartFormationCompletionAtom(cerfaFormationCompletion(res));
   };
 
   return {
+    completion: partFormationCompletionAtom,
     get: {
       organismeFormation: {
         siret: organismeFormationSiret,
         denomination: organismeFormationDenomination,
+        formationInterne: organismeFormationFormationInterne,
         uaiCfa: organismeFormationUaiCfa,
         adresse: {
           numero: organismeFormationAdresseNumero,

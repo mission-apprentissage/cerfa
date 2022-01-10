@@ -2,6 +2,8 @@ const apiEntreprise = require("../../common/apis/ApiEntreprise");
 const apiCfaDock = require("../../common/apis/ApiCfaDock");
 const geoController = require("./geo/geoController");
 
+const { CategoriesJuridique } = require("../../common/model/index");
+
 class EntrepriseApiData {
   constructor() {}
 
@@ -94,8 +96,11 @@ class EntrepriseApiData {
     const { nom_dept, nom_region, code_region, nom_academie, num_academie } =
       geoController.findDataByDepartementNum(code_dept);
 
+    const isPublicSector = await this.isPublic(entrepriseApiInfo.forme_juridique_code);
+
     return {
       result: {
+        public: isPublicSector,
         siege_social: etablissementApiInfo.siege_social,
         etablissement_siege_siret: entrepriseApiInfo.siret_siege_social,
         siret: etablissementApiInfo.siret,
@@ -173,6 +178,14 @@ class EntrepriseApiData {
     const l6 = adresse.l6 && adresse.l6 !== "" ? `${adresse.l6}\r\n` : "";
     const l7 = adresse.l7 && adresse.l7 !== "" ? `${adresse.l7}` : "";
     return `${l1}${l2}${l3}${l4}${l5}${l6}${l7}`;
+  }
+
+  async isPublic(code) {
+    const match = await CategoriesJuridique.findOne({ CATEGJURID: code }).lean();
+    if (!match) {
+      return false;
+    }
+    return true;
   }
 }
 

@@ -1,5 +1,6 @@
 const {
   User,
+  JwtSession,
   MaintenanceMessage,
   Role,
   Workspace,
@@ -8,6 +9,8 @@ const {
   History,
   Commentaire,
   Permission,
+  ConnectionDossier,
+  CategoriesJuridique,
 } = require("../../common/model/index");
 
 module.exports = async () => {
@@ -20,4 +23,7 @@ module.exports = async () => {
   await Workspace.deleteMany({});
   await Dossier.deleteMany({});
   await Cerfa.deleteMany({});
+  await JwtSession.deleteMany({});
+  await ConnectionDossier.deleteMany({});
+  await CategoriesJuridique.deleteMany({});
 };

@@ -10,73 +10,6 @@ module.exports = (components) => {
   const router = express.Router();
   const { dossiers, users, roles, permissions, mailer } = components;
 
-  const buildOwnerResult = async (userId, workspaceId, dossierId) => {
-    const userSelectFields = { email: 1, nom: 1, prenom: 1, _id: 0, roles: 1 };
-    const permSelectFields = { addedAt: 1, role: 1, acl: 1 };
-    const roleSelectFields = { name: 1, description: 1, title: 1, _id: 1 };
-
-    const currentUser = await users.getUserById(userId, userSelectFields);
-    if (!currentUser) {
-      throw Boom.badRequest("Something went wrong");
-    }
-
-    const currentUserPerm = await permissions.hasPermission(
-      { workspaceId, dossierId, userEmail: currentUser.email },
-      permSelectFields
-    );
-    if (!currentUserPerm) {
-      throw Boom.badRequest("Something went wrong");
-    }
-    const currentUserRole = await roles.findRolePermissionById(currentUserPerm.role, roleSelectFields);
-    if (!currentUserRole) {
-      throw Boom.badRequest("Something went wrong");
-    }
-    const type = await roles.findRoleById(currentUser.roles[0]);
-    return {
-      user: { ...currentUser, type: type?.name || null },
-      permission: {
-        permId: currentUserPerm._id,
-        addedAt: currentUserPerm.addedAt,
-        customAcl: currentUserPerm.acl,
-        ...currentUserRole,
-      },
-    };
-  };
-
-  const buildContributorsResult = async (contributeurEmail, workspaceId, dossierId) => {
-    const userSelectFields = { email: 1, nom: 1, prenom: 1, _id: 0, roles: 1 };
-    const permSelectFields = { addedAt: 1, role: 1, acl: 1 };
-    const roleSelectFields = { name: 1, description: 1, title: 1, _id: 1 };
-
-    const currentUser = (await users.getUser(contributeurEmail, userSelectFields)) || {
-      email: contributeurEmail,
-      nom: "",
-      prenom: "",
-    };
-
-    const currentUserPerm = await permissions.hasPermission(
-      { workspaceId, dossierId, userEmail: contributeurEmail },
-      permSelectFields
-    );
-    if (!currentUserPerm) {
-      throw Boom.badRequest("Something went wrong");
-    }
-    const currentUserRole = await roles.findRolePermissionById(currentUserPerm.role, roleSelectFields);
-    if (!currentUserRole) {
-      throw Boom.badRequest("Something went wrong");
-    }
-    const type = currentUser && currentUser.roles ? await roles.findRoleById(currentUser?.roles[0]) : null;
-    return {
-      user: { ...currentUser, type: type?.name || null },
-      permission: {
-        permId: currentUserPerm._id,
-        addedAt: currentUserPerm.addedAt,
-        customAcl: currentUserPerm.acl,
-        ...currentUserRole,
-      },
-    };
-  };
-
   router.get(
     "/entity/:id",
     permissionsDossierMiddleware(components, ["dossier"]),
@@ -208,20 +141,9 @@ module.exports = (components) => {
     "/contributors",
     permissionsDossierMiddleware(components, ["dossier/page_parametres", "dossier/page_parametres/gestion_acces"]),
     tryCatch(async ({ query: { dossierId } }, res) => {
-      const dossier = await dossiers.findDossierById(dossierId, { contributeurs: 1, owner: 1, workspaceId: 1 });
-      if (!dossier) {
-        throw Boom.notFound("Doesn't exist");
-      }
+      const contributors = await dossiers.getContributeurs(dossierId, components);
 
-      const owner = await buildOwnerResult(dossier.owner, dossier.workspaceId, dossierId);
-      const contributeurs = [];
-      for (let index = 0; index < dossier.contributeurs.length; index++) {
-        const contributeurEmail = dossier.contributeurs[index];
-        const contributeur = await buildContributorsResult(contributeurEmail, dossier.workspaceId, dossierId);
-        contributeurs.push(contributeur);
-      }
-
-      return res.json([{ ...owner, owner: true }, ...contributeurs]);
+      return res.json(contributors);
     })
   );
 
@@ -246,13 +168,13 @@ module.exports = (components) => {
         throw Boom.notFound("Doesn't exist");
       }
 
-      const owner = await buildOwnerResult(dossier.owner, dossier.workspaceId, dossierId);
+      const owner = await users.getUserById(dossier.owner, { email: 1 });
 
       if (owner.email === userEmail) {
         throw Boom.badRequest("Something went wrong");
       }
 
-      const wksContributeurs = await dossiers.addContributeur(dossier._id, userEmail, newUserRole.name);
+      await dossiers.addContributeur(dossier._id, userEmail, newUserRole.name);
 
       await mailer.sendEmail(
         userEmail,
@@ -267,14 +189,9 @@ module.exports = (components) => {
         }
       );
 
-      const contributeurs = [];
-      for (let index = 0; index < wksContributeurs.length; index++) {
-        const contributeurEmail = wksContributeurs[index];
-        const contributeur = await buildContributorsResult(contributeurEmail, dossier.workspaceId, dossierId);
-        contributeurs.push(contributeur);
-      }
+      const contributors = await dossiers.getContributeurs(dossier._id, components);
 
-      return res.json([{ ...owner, owner: true }, ...contributeurs]);
+      return res.json(contributors);
     })
   );
 
@@ -299,7 +216,7 @@ module.exports = (components) => {
         throw Boom.notFound("Doesn't exist");
       }
 
-      const owner = await buildOwnerResult(dossier.owner, dossier.workspaceId, dossierId);
+      const owner = await users.getUserById(dossier.owner, { email: 1 });
 
       if (owner.email === userEmail) {
         throw Boom.badRequest("Something went wrong");
@@ -313,14 +230,8 @@ module.exports = (components) => {
         //acl,
       });
 
-      const contributeurs = [];
-      for (let index = 0; index < dossier.contributeurs.length; index++) {
-        const contributeurEmail = dossier.contributeurs[index];
-        const contributeur = await buildContributorsResult(contributeurEmail, dossier.workspaceId, dossierId);
-        contributeurs.push(contributeur);
-      }
-
-      return res.json([{ ...owner, owner: true }, ...contributeurs]);
+      const contributors = await dossiers.getContributeurs(dossier._id, components);
+      return res.json(contributors);
     })
   );
 
@@ -339,22 +250,16 @@ module.exports = (components) => {
         throw Boom.notFound("Doesn't exist");
       }
 
-      const owner = await buildOwnerResult(dossier.owner, dossier.workspaceId, dossierId);
+      const owner = await users.getUserById(dossier.owner, { email: 1 });
 
       if (owner.email === userEmail) {
         throw Boom.badRequest("Something went wrong");
       }
 
-      const wksContributeurs = await dossiers.removeContributeur(dossierId, userEmail, permId);
+      await dossiers.removeContributeur(dossierId, userEmail, permId);
 
-      const contributeurs = [];
-      for (let index = 0; index < wksContributeurs.length; index++) {
-        const contributeurEmail = wksContributeurs[index];
-        const contributeur = await buildContributorsResult(contributeurEmail, dossier.workspaceId, dossierId);
-        contributeurs.push(contributeur);
-      }
-
-      return res.json([{ ...owner, owner: true }, ...contributeurs]);
+      const contributors = await dossiers.getContributeurs(dossier._id, components);
+      return res.json(contributors);
     })
   );
 

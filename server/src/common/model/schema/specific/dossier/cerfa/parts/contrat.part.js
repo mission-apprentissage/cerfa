@@ -23,6 +23,7 @@ const contratSchema = {
     type: String,
     description: "N° du contrat précédent (suite de contrat)",
     nullable: true,
+    default: null,
     example: "11111111111",
     label: "Numéro du contrat précédent ou du contrat sur lequel porte l'avenant :",
   },
@@ -53,6 +54,7 @@ const contratSchema = {
     description: "Date d'effet d'avenant",
     label: "Si avenant, date d'effet :",
     nullable: true,
+    default: null,
     example: "2021-03-01T00:00:00+0000",
   },
   dateConclusion: {
@@ -117,11 +119,22 @@ const contratSchema = {
   travailRisque: {
     type: Boolean,
     description: "Travaille sur machines dangereuses ou exposition à des risques particuliers",
-    example: true,
     default: null,
     required: function () {
       return !this.draft;
     },
+    label: "Travail sur machines dangereuses ou exposition à des risques particuliers: ",
+    example: "Oui",
+    options: [
+      {
+        label: "Oui",
+        value: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
   },
   salaireEmbauche: {
     type: Number,
@@ -133,26 +146,68 @@ const contratSchema = {
       return !this.draft;
     },
   },
+  caisseRetraiteComplementaire: {
+    type: String,
+    description: "Caisse de retraite complémentaire",
+    label: "Caisse de retraite complémentaire :",
+    example: "",
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
+  },
+  avantageNature: {
+    type: Boolean,
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
+    description: "L'apprenti(e) bénéficie d'avantages en nature",
+    label: "L'apprenti(e) bénéficie d'avantages en nature",
+    example: "Oui",
+    options: [
+      {
+        label: "Oui",
+        value: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
+  },
   avantageNourriture: {
     type: Number,
     description: "Nourriture €/repas",
     label: "Nourriture:",
     nullable: true,
+    default: null,
     example: 3,
+    required: function () {
+      return this.avantageNature;
+    },
   },
   avantageLogement: {
     type: Number,
     description: "Logement €/mois",
     label: "Logement:",
     nullable: true,
+    default: null,
     example: 456,
+    required: function () {
+      return this.avantageNature;
+    },
   },
   autreAvantageEnNature: {
     type: Boolean,
     description: "Autre avantage en nature",
     label: "Autres avantages: ",
     nullable: true,
+    default: null,
     example: true,
+    required: function () {
+      return this.avantageNature;
+    },
   },
   remunerationsAnnuelles: {
     type: [

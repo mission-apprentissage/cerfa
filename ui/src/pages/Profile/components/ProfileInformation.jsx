@@ -1,9 +1,24 @@
 import React from "react";
-import { Box, Heading, FormControl, FormLabel, Input, FormErrorMessage, Button, Flex } from "@chakra-ui/react";
-import useAuth from "../../../common/hooks/useAuth";
-import { _put } from "../../../common/httpClient";
+import {
+  Box,
+  Heading,
+  FormControl,
+  FormLabel,
+  Input,
+  FormErrorMessage,
+  Button,
+  Flex,
+  HStack,
+  RadioGroup,
+  Radio,
+  Text,
+  Divider,
+} from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import useAuth from "../../../common/hooks/useAuth";
+import { _put } from "../../../common/httpClient";
+import { betaVersion, BetaFeatures } from "../../../common/components/BetaFeatures";
 
 const ProfileInformation = () => {
   let [auth] = useAuth();
@@ -17,6 +32,7 @@ const ProfileInformation = () => {
       username: auth.username || "",
       telephone: auth.telephone || "",
       email: auth.email || "",
+      beta: auth.beta || "",
     },
     validationSchema: Yup.object().shape({
       prenom: Yup.string(),
@@ -25,7 +41,7 @@ const ProfileInformation = () => {
       phone: Yup.string().matches(phoneRegExp, "Phone number is not valid"),
       email: Yup.string().email("Email invalide"),
     }),
-    onSubmit: ({ nom, prenom, telephone, email }, { setSubmitting }) => {
+    onSubmit: ({ nom, prenom, telephone, email, beta }, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
         try {
           await _put(`/api/v1/profile/user`, {
@@ -33,6 +49,7 @@ const ProfileInformation = () => {
             prenom: prenom || null,
             telephone: telephone || null,
             email,
+            beta: beta || null,
           });
           window.location.reload();
         } catch (e) {
@@ -80,6 +97,33 @@ const ProfileInformation = () => {
             {errors.email && touched.email && <FormErrorMessage>{errors.email}</FormErrorMessage>}
           </FormControl>
         </Flex>
+        <Divider mt={10} mb={4} borderWidth="2px" />
+        <Box>
+          <HStack>
+            <FormLabel fontWeight="bold">Activer les fonctionnalité expérimentales de la plateforme ?</FormLabel>
+            <RadioGroup value={values.beta}>
+              <HStack>
+                <Radio
+                  type="radio"
+                  name="beta"
+                  value={betaVersion()}
+                  checked={values.beta !== "non"}
+                  onChange={handleChange}
+                >
+                  Oui
+                </Radio>
+                <Radio type="radio" name="beta" value="non" checked={values.beta === "non"} onChange={handleChange}>
+                  Non
+                </Radio>
+              </HStack>
+            </RadioGroup>
+          </HStack>
+          <Box pl={4}>
+            <Text>Cette activation vous donnera accès à :</Text>
+            <BetaFeatures borderColor={"dgalt"} borderWidth={1} px={4} py={3} maxH="30vh" my={3} />
+          </Box>
+        </Box>
+        <Divider mt={10} mb={4} borderWidth="2px" />
       </Box>
       <Box mt="2rem">
         <Button variant="primary" onClick={handleSubmit} type="submit">

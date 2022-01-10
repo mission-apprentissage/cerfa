@@ -12,6 +12,11 @@ const createModel = (modelName, descriptor, options = {}) => {
 
 module.exports = {
   User: createModel("user", schema.userSchema),
+  JwtSession: createModel("jwtSession", schema.jwtSessionSchema, {
+    createMongoDBIndexes: (schema) => {
+      schema.index({ jwt: 1 }, { unique: true });
+    },
+  }),
   Role: createModel("role", schema.roleSchema),
   Log: createModel("log", schema.logSchema),
   MaintenanceMessage: createModel("maintenanceMessage", schema.maintenanceMessageSchema),
@@ -46,6 +51,11 @@ module.exports = {
     },
     createMongoDBIndexes: (schema) => {
       schema.index({ dossierId: 1, email: 1 });
+    },
+  }),
+  CategoriesJuridique: createModel("categoriesJuridique", schema.categoriesJuridiqueSchema, {
+    createMongoDBIndexes: (schema) => {
+      schema.index({ CATEGJURID: 1 });
     },
   }),
 

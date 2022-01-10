@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, FormControl, FormLabel, Input, Text, Flex, HStack } from "@chakra-ui/react";
+import { Box, FormLabel, Text, Flex, HStack, Collapse } from "@chakra-ui/react";
 
 import { useCerfaContrat } from "../../../../common/hooks/useCerfa/parts/useCerfaContrat";
 import InputCerfa from "./Input";
@@ -17,12 +17,18 @@ const FormContract = () => {
         dateFinContrat,
         dureeTravailHebdoHeures,
         dureeTravailHebdoMinutes,
+        travailRisque,
         salaireEmbauche,
+        caisseRetraiteComplementaire,
+        avantageNature,
         avantageNourriture,
         avantageLogement,
         autreAvantageEnNature,
         remunerationsAnnuelles,
       },
+    },
+    onSubmit: {
+      contrat: { avantageNature: onSubmittedContratAvantageNature },
     },
   } = useCerfaContrat();
 
@@ -30,8 +36,8 @@ const FormContract = () => {
     <Box>
       <Flex>
         <Box w="55%" flex="1">
-          <InputCerfa path="contrat.typeContratApp" field={typeContratApp} type="text" mt="2" />
-          <InputCerfa path="contrat.typeDerogation" field={typeDerogation} type="text" mt="2" />
+          <InputCerfa path="contrat.typeContratApp" field={typeContratApp} type="select" mt="2" />
+          <InputCerfa path="contrat.typeDerogation" field={typeDerogation} type="select" mt="2" />
           <Text textStyle="sm" fontStyle="italic">
             à renseigner si une dérogation existe pour ce contrat
           </Text>
@@ -53,33 +59,7 @@ const FormContract = () => {
         </Box>
       </Flex>
       <Box pt={4}>
-        <FormControl>
-          <Flex>
-            <FormLabel>Travail sur machines dangereuses ou exposition à des risques particuliers :</FormLabel>
-            <HStack w="40%">
-              <Flex alignItems="center">
-                <input
-                  type="radio"
-                  name="workDangerous"
-                  value="oui"
-                  // checked={values.workDangerous === "oui"}
-                  onChange={() => {}}
-                />
-                <Text ml="1w">oui</Text>
-              </Flex>
-              <Flex alignItems="center">
-                <input
-                  type="radio"
-                  name="workDangerous"
-                  value="non"
-                  // checked={values.workDangerous === "non"}
-                  onChange={() => {}}
-                />
-                <Text ml="1w">non »</Text>
-              </Flex>
-            </HStack>
-          </Flex>
-        </FormControl>
+        <InputCerfa path="employeur.travailRisque" field={travailRisque} type="radio" mt="2" />
         <FormLabel fontWeight={700}>Rémunération</FormLabel>
 
         {remunerationsAnnuelles.map((ra, i) => {
@@ -166,26 +146,37 @@ const FormContract = () => {
             <InputCerfa path="contrat.salaireEmbauche" field={salaireEmbauche} type="text" mt="2" />
           </Box>
           <Box w="55%" ml={5}>
-            <FormControl isRequired mt={2}>
-              <FormLabel fontWeight={700}>Caisse de retraite complémentaire :</FormLabel>
-              <Input type="text" name="pensionFund" onChange={() => {}} value="" required />
-            </FormControl>
+            <InputCerfa
+              path="contrat.caisseRetraiteComplementaire"
+              field={caisseRetraiteComplementaire}
+              type="text"
+              mt="2"
+            />
           </Box>
         </Flex>
         <FormLabel my={4} fontWeight={700}>
           Avantages en nature, le cas échéant :
         </FormLabel>
-        <Flex>
-          <Box flex="1">
-            <InputCerfa path="contrat.avantageNourriture" field={avantageNourriture} type="text" mt="2" />€ / repas
+        <InputCerfa
+          path="contrat.avantageNature"
+          field={avantageNature}
+          type="radio"
+          mt="2"
+          onSubmittedField={onSubmittedContratAvantageNature}
+        />
+        <Collapse in={avantageNature.value === "Oui"} animateOpacity>
+          <Flex>
+            <Box flex="1">
+              <InputCerfa path="contrat.avantageNourriture" field={avantageNourriture} type="text" mt="2" />€ / repas
+            </Box>
+            <Box ml={5}>
+              <InputCerfa path="contrat.avantageLogement" field={avantageLogement} type="text" mt="2" />€ / mois
+            </Box>
+          </Flex>
+          <Box>
+            <InputCerfa path="contrat.autreAvantageEnNature" field={autreAvantageEnNature} type="text" mt="2" />
           </Box>
-          <Box ml={5}>
-            <InputCerfa path="contrat.avantageLogement" field={avantageLogement} type="text" mt="2" />€ / mois
-          </Box>
-        </Flex>
-        <Box>
-          <InputCerfa path="contrat.autreAvantageEnNature" field={autreAvantageEnNature} type="text" mt="2" />
-        </Box>
+        </Collapse>
       </Box>
     </Box>
   );

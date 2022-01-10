@@ -25,3 +25,8 @@ export const cerfaMaitre2DateNaissanceAtom = atom({
   key: "cerfa/maitre2/dateNaissance",
   default: null,
 });
+
+export const cerfaEmployeurAttestationEligibiliteAtom = atom({
+  key: "cerfa/employeur/attestationEligibilite",
+  default: null,
+});

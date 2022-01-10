@@ -8,6 +8,8 @@ import { _post } from "../../../httpClient";
 import { useRecoilState } from "recoil";
 import * as employeurAtoms from "./useCerfaEmployeurAtoms";
 
+import { convertValueToOption } from "../../../utils/formUtils";
+
 export const CerfaEmployeurController = async (dossier) => {
   return {
     employeur: {
@@ -48,22 +50,22 @@ export const CerfaEmployeurController = async (dossier) => {
             message: null,
           };
         },
-        history: [
-          {
-            to: "98765432400070",
-            how: "manuel",
-            when: Date.now(),
-            who: "Antoine Bigard",
-            role: "CFA",
-          },
-          {
-            to: "98765432400019",
-            how: "manuel",
-            when: Date.now(),
-            who: "Paul Pierre",
-            role: "Employeur",
-          },
-        ],
+        // history: [
+        //   {
+        //     to: "98765432400070",
+        //     how: "manuel",
+        //     when: Date.now(),
+        //     who: "Antoine Bigard",
+        //     role: "CFA",
+        //   },
+        //   {
+        //     to: "98765432400019",
+        //     how: "manuel",
+        //     when: Date.now(),
+        //     who: "Paul Pierre",
+        //     role: "Employeur",
+        //   },
+        // ],
       },
     },
   };
@@ -112,12 +114,10 @@ export function useCerfaEmployeur() {
   const [employeurRegimeSpecifique, setEmployeurRegimeSpecifique] = useRecoilState(
     employeurAtoms.cerfaEmployeurRegimeSpecifiqueAtom
   );
-  const [employeurAttestationEligibilite, setEmployeurAttestationEligibilite] = useRecoilState(
-    employeurAtoms.cerfaEmployeurAttestationEligibiliteAtom
-  );
   const [employeurAttestationPieces, setEmployeurAttestationPieces] = useRecoilState(
     employeurAtoms.cerfaEmployeurAttestationPiecesAtom
   );
+  const [employeurPrivePublic, setEmployeurPrivePublic] = useRecoilState(employeurAtoms.cerfaEmployeurPrivePublicAtom);
 
   const onSubmittedEmployeurSiret = useCallback(
     async (path, data) => {
@@ -143,6 +143,10 @@ export function useCerfaEmployeur() {
                 codePostal: { ...employeurAdresseCodePostal, value: data.code_postal },
                 commune: { ...employeurAdresseCommune, value: data.commune_implantation_nom },
               },
+              privePublic: {
+                ...employeurPrivePublic,
+                value: data.public,
+              },
             },
           };
           if (employeurSiret.value !== newV.employeur.siret.value) {
@@ -153,6 +157,8 @@ export function useCerfaEmployeur() {
             setEmployeurAdresseComplement(newV.employeur.adresse.complement);
             setEmployeurAdresseCodePostal(newV.employeur.adresse.codePostal);
             setEmployeurAdresseCommune(newV.employeur.adresse.commune);
+
+            setEmployeurPrivePublic(convertValueToOption(newV.employeur.privePublic));
           }
         }
       } catch (e) {
@@ -166,6 +172,7 @@ export function useCerfaEmployeur() {
       employeurAdresseNumero,
       employeurAdresseVoie,
       employeurDenomination,
+      employeurPrivePublic,
       employeurSiret,
       setEmployeurAdresseCodePostal,
       setEmployeurAdresseCommune,
@@ -173,6 +180,7 @@ export function useCerfaEmployeur() {
       setEmployeurAdresseNumero,
       setEmployeurAdresseVoie,
       setEmployeurDenomination,
+      setEmployeurPrivePublic,
       setEmployeurSiret,
     ]
   );
@@ -198,8 +206,9 @@ export function useCerfaEmployeur() {
     setEmployeurEmployeurSpecifique(res.employeur.employeurSpecifique);
     setEmployeurCaisseComplementaire(res.employeur.caisseComplementaire);
     setEmployeurRegimeSpecifique(res.employeur.regimeSpecifique);
-    setEmployeurAttestationEligibilite(res.employeur.attestationEligibilite);
     setEmployeurAttestationPieces(res.employeur.attestationPieces);
+
+    setEmployeurPrivePublic(convertValueToOption(res.employeur.privePublic));
   };
 
   return {
@@ -227,8 +236,8 @@ export function useCerfaEmployeur() {
         employeurSpecifique: employeurEmployeurSpecifique,
         caisseComplementaire: employeurCaisseComplementaire,
         regimeSpecifique: employeurRegimeSpecifique,
-        attestationEligibilite: employeurAttestationEligibilite,
         attestationPieces: employeurAttestationPieces,
+        privePublic: employeurPrivePublic,
       },
     },
     setAll,

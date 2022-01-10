@@ -64,6 +64,14 @@ export const cerfaContratSalaireEmbaucheAtom = atom({
   key: "cerfa/contrat/salaireEmbauche",
   default: null,
 });
+export const cerfaContratCaisseRetraiteComplementaireAtom = atom({
+  key: "cerfa/contrat/caisseRetraiteComplementaire",
+  default: null,
+});
+export const cerfaContratAvantageNatureAtom = atom({
+  key: "cerfa/contrat/avantageNature",
+  default: null,
+});
 export const cerfaContratAvantageNourritureAtom = atom({
   key: "cerfa/contrat/avantageNourriture",
   default: null,

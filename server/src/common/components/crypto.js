@@ -11,7 +11,7 @@ module.exports = (key) => {
   }
 
   function decipher(iv) {
-    return crypto.createDecipheriv("aes-256-cbc", key, iv);
+    return crypto.createDecipheriv("aes-256-cbc", key, iv.slice(0, 16));
   }
 
   function available() {

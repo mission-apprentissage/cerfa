@@ -7,6 +7,7 @@ exception="(package.json|custom-environment-variables.json"
 exception="$exception|manifest.json"
 exception="$exception|sample.json"
 exception="$exception|dataDepartements.json"
+exception="$exception|CATEG-JURID-v1.csv"
 exception="$exception)$"
 
 files=$(git diff --cached --name-only | grep -v -E "$exception" | grep -E "$sensible_files_pattern")

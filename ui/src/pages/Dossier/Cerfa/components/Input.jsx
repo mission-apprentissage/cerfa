@@ -3,15 +3,20 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Select,
+  Radio,
+  Checkbox,
   FormErrorMessage,
   InputGroup,
   HStack,
   Box,
+  RadioGroup,
   Spinner,
   Center,
   InputRightElement,
 } from "@chakra-ui/react";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import { DateTime } from "luxon";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -63,52 +68,40 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
           .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
           .required(field?.requiredMessage),
       });
+      let fieldValue = field?.value;
+      if (type === "date") {
+        if (fieldValue) {
+          fieldValue = DateTime.fromISO(fieldValue).setLocale("fr-FR").toFormat("yyyy-MM-dd");
+        }
+      }
 
-      // if (
-      //   path === "formation.rncp" ||
-      //   path === "formation.codeDiplome" ||
-      //   path === "formation.intituleQualification" ||
-      //   //
-      //   path === "formation.dateDebutFormation" ||
-      //   path === "formation.dateFinFormation" ||
-      //   path === "formation.dureeFormation" ||
-      //   path === "formation.typeDiplome" ||
-      //   path === "organismeFormation.adresse.commune" ||
-      //   path === "organismeFormation.adresse.codePostal" ||
-      //   path === "organismeFormation.adresse.voie" ||
-      //   path === "organismeFormation.adresse.numero" ||
-      //   path === "organismeFormation.adresse.complement" ||
-      //   path === "organismeFormation.uaiCfa" ||
-      //   path === "organismeFormation.denomination" ||
-      //   path === "organismeFormation.siret"
-      // ) {
+      //
       const { isValid: isValidFieldValue } = await validate(validationSchema, {
-        [name]: field?.value,
+        [name]: fieldValue,
       });
-
-      // console.log(path, ">>>>", initRef.current, values[name], field?.value, isValidFieldValue);
+      // console.log(path, ">>>>", initRef.current, values[name], fieldValue, isValidFieldValue);
       if (initRef.current === 0) {
         if (field) {
           // console.log("Init");
           setShouldBeDisabled(field.locked);
           if (values[name] === "") {
-            if (field?.value !== "") {
+            if (fieldValue !== "") {
               if (isValidFieldValue) {
-                setFieldValue(name, field?.value);
+                setFieldValue(name, fieldValue);
                 setIsErrored(false);
                 setValidated(true);
               } else {
                 setShouldBeDisabled(false);
-                setFieldValue(name, field?.value);
+                setFieldValue(name, fieldValue);
               }
             }
           }
           initRef.current = 1;
         }
       } else {
-        if (prevFieldValueRef.current !== field?.value || field?.forceUpdate) {
-          // console.log("Outside Update", prevFieldValueRef, field?.value, field?.forceUpdate);
-          setFieldValue(name, field?.value);
+        if (prevFieldValueRef.current !== fieldValue || field?.forceUpdate) {
+          // console.log("Outside Update", prevFieldValueRef, fieldValue, field?.forceUpdate);
+          setFieldValue(name, fieldValue);
           setShouldBeDisabled(field?.locked);
           if (isValidFieldValue) {
             setIsErrored(false);
@@ -119,9 +112,9 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
             setIsErrored(true);
             setValidated(false);
           }
-          prevFieldValueRef.current = field?.value;
+          prevFieldValueRef.current = fieldValue;
           if (field?.forceUpdate) {
-            await onSubmittedField(path, field?.value);
+            await onSubmittedField(path, fieldValue);
           }
         } else {
           if (fromInternal) {
@@ -138,9 +131,9 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
           }
         }
       }
-      // }
+      //
     })();
-  }, [onAsyncData, field, path, name, setFieldValue, values, setErrors, onSubmittedField, fromInternal]);
+  }, [onAsyncData, field, path, name, setFieldValue, values, setErrors, onSubmittedField, fromInternal, type]);
 
   const prevOnAsyncData = prevOnAsyncDataRef.current;
 
@@ -210,49 +203,137 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
 
   return (
     <FormControl isRequired mt={2} isInvalid={errors[name]} {...props}>
-      <FormLabel>{field?.label}</FormLabel>
+      {(type === "text" || type === "number" || type === "date" || type === "select") && (
+        <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>{field?.label}</FormLabel>
+      )}
       <HStack>
         <InputGroup>
-          <Input
-            type={type}
-            name={name}
-            onChange={handleChange}
-            value={values[name]}
-            required
-            pattern={field?.pattern}
-            placeholder={field?.description}
-            variant={validated ? "valid" : "outline"}
-            isInvalid={isErrored}
-            maxLength={field?.maxLength}
-            isDisabled={shouldBeDisabled}
-            _focus={{
-              borderBottomColor: borderBottomColor,
-              boxShadow: "none",
-              outlineColor: "none",
-            }}
-            _focusVisible={{
-              borderBottomColor: borderBottomColor,
-              boxShadow: "none",
-              outline: "2px solid",
-              outlineColor: validated ? "green.500" : isErrored ? "error" : "#2A7FFE",
-              outlineOffset: "2px",
-            }}
-            _invalid={{
-              borderBottomColor: borderBottomColor,
-              boxShadow: "none",
-              outline: "2px solid",
-              outlineColor: "error",
-              outlineOffset: "2px",
-            }}
-            _hover={{
-              borderBottomColor: borderBottomColor,
-            }}
-            _disabled={{
-              fontStyle: "italic",
-              cursor: "not-allowed",
-              opacity: 1,
-            }}
-          />
+          {type === "select" && (
+            <Select
+              name={name}
+              isDisabled={shouldBeDisabled}
+              variant={validated ? "valid" : "outline"}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              onChange={handleChange}
+              iconColor={"gray.800"}
+              data-testid={`select-${name}`}
+              placeholder="Sélectionnez une option"
+              // w="90%"
+            >
+              {typeof field.options[0] === "object" && (
+                <>
+                  {field.options.map((group, k) => {
+                    return (
+                      <optgroup label={group.name} key={k}>
+                        {group.options.map((option, j) => {
+                          return (
+                            <option key={j} value={option}>
+                              {option}
+                            </option>
+                          );
+                        })}
+                      </optgroup>
+                    );
+                  })}
+                </>
+              )}
+              {typeof field.options[0] === "string" && (
+                <>
+                  {field.options.map((option, j) => {
+                    return (
+                      <option key={j} value={option}>
+                        {option}
+                      </option>
+                    );
+                  })}
+                </>
+              )}
+            </Select>
+          )}
+          {(type === "text" || type === "number" || type === "date") && (
+            <Input
+              type={type}
+              name={name}
+              onChange={handleChange}
+              value={values[name]}
+              required
+              pattern={field?.pattern}
+              placeholder={field?.description}
+              variant={validated ? "valid" : "outline"}
+              isInvalid={isErrored}
+              maxLength={field?.maxLength}
+              isDisabled={shouldBeDisabled}
+              _focus={{
+                borderBottomColor: borderBottomColor,
+                boxShadow: "none",
+                outlineColor: "none",
+              }}
+              _focusVisible={{
+                borderBottomColor: borderBottomColor,
+                boxShadow: "none",
+                outline: "2px solid",
+                outlineColor: validated ? "green.500" : isErrored ? "error" : "#2A7FFE",
+                outlineOffset: "2px",
+              }}
+              _invalid={{
+                borderBottomColor: borderBottomColor,
+                boxShadow: "none",
+                outline: "2px solid",
+                outlineColor: "error",
+                outlineOffset: "2px",
+              }}
+              _hover={{
+                borderBottomColor: borderBottomColor,
+              }}
+              _disabled={{
+                fontStyle: "italic",
+                cursor: "not-allowed",
+                opacity: 1,
+                borderBottomColor: "#E5E5E5",
+              }}
+            />
+          )}
+          {type === "radio" && (
+            <HStack>
+              <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>{field?.label}</FormLabel>
+              <RadioGroup value={values[name]}>
+                <HStack>
+                  {field.options.map((option, k) => {
+                    return (
+                      <Radio
+                        key={k}
+                        type={type}
+                        name={name}
+                        value={option.label}
+                        checked={values[name] === option.label}
+                        onChange={handleChange}
+                      >
+                        {option.label}
+                      </Radio>
+                    );
+                  })}
+                </HStack>
+              </RadioGroup>
+            </HStack>
+          )}
+          {type === "consent" && (
+            <>
+              {field.options.map((option, k) => (
+                <Checkbox
+                  name={name}
+                  onChange={handleChange}
+                  value={option.label}
+                  // isChecked={values[name] === option.label}
+                  isDisabled={shouldBeDisabled}
+                  key={k}
+                >
+                  {option.label}
+                </Checkbox>
+              ))}
+            </>
+          )}
           {(shouldBeDisabled || isLoading || validated || isErrored) && (
             <InputRightElement
               children={
@@ -268,9 +349,9 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
                       : "-40px !important"
                   }
                   borderBottom="2px solid"
-                  borderBottomColor={borderBottomColor}
+                  borderBottomColor={shouldBeDisabled ? "#E5E5E5" : borderBottomColor}
                 >
-                  {shouldBeDisabled && <LockFill color={"grey.600"} w="20px" h="20px" />}
+                  {shouldBeDisabled && <LockFill color={"disablegrey"} boxSize="4" />}
                   {isLoading && <Spinner />}
                   {validated && !shouldBeDisabled && <CheckIcon color="green.500" />}
                   {isErrored && (
