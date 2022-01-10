@@ -1,3 +1,25 @@
+# [1.13.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0...v1.13.0-beta.1) (2022-01-10)
+
+
+### Bug Fixes
+
+* **server:** suppression des cookie de session coté serveur après déconnexion  ([#69](https://github.com/mission-apprentissage/cerfa/issues/69)) ([35d0eb7](https://github.com/mission-apprentissage/cerfa/commit/35d0eb792e439ed2611214a5c6319846966d9be8))
+
+
+### Features
+
+* ajout champ type consentement ([5671168](https://github.com/mission-apprentissage/cerfa/commit/56711682fced9f1c60a597b45f3adedd5bac5160))
+* ajout de la demande d'acceptation de cgu ([add7c9e](https://github.com/mission-apprentissage/cerfa/commit/add7c9efa2abae78b006255f2048947781fb3765))
+* ajout demande de fonctionnalités expérimentales ([ec9b688](https://github.com/mission-apprentissage/cerfa/commit/ec9b6885a45ba77b7e9c1a873e174d9f7d3430e5))
+* ajout des champs de sélection ([bfa690b](https://github.com/mission-apprentissage/cerfa/commit/bfa690b204c136fb74635e65d0796cd331a99285))
+* ajout des champs de selection unique (radio) ([2659935](https://github.com/mission-apprentissage/cerfa/commit/265993547351b312610ecb51755a5810cfd8c0d8))
+* amélioration fonctionnalité de téléversement de fichier ([#68](https://github.com/mission-apprentissage/cerfa/issues/68)) ([878482b](https://github.com/mission-apprentissage/cerfa/commit/878482b7bbdf4217c8356f8c406939ed3eaaf9f4))
+* few cosmetics ([63fa049](https://github.com/mission-apprentissage/cerfa/commit/63fa04917d30b1ee28e70cfccb4d833ff1f5f9bd))
+* gestion des employeurs public / privé ([49cc9d6](https://github.com/mission-apprentissage/cerfa/commit/49cc9d6a271a602545db30790e3a5fec3aea8f2a))
+* première implémention mécanisme de sauvegarde ([baacdd1](https://github.com/mission-apprentissage/cerfa/commit/baacdd1bf44992e0f9897a24b9af3dd7fe82c0ac))
+* reduction du scope pour semaine de pre-lancement ([dbf4356](https://github.com/mission-apprentissage/cerfa/commit/dbf4356521fb13a0edef82aeaadaa7b7702733b4))
+* **ui:** ajout design tooltip + lecteur pdf + Badges ([#60](https://github.com/mission-apprentissage/cerfa/issues/60)) ([5046e69](https://github.com/mission-apprentissage/cerfa/commit/5046e69900f8083018450a3d36a48a15d3bc08bc))
+
 # [1.12.0](https://github.com/mission-apprentissage/cerfa/compare/v1.11.1...v1.12.0) (2022-01-07)
 
 
