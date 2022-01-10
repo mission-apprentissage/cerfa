@@ -86,6 +86,7 @@ const contratSchema = {
   lieuSignatureContrat: {
     type: String,
     description: "Lieu de signature du contrat",
+    label: "Lieu de signature du contrat:",
     example: "PARIS",
     default: null,
     required: function () {

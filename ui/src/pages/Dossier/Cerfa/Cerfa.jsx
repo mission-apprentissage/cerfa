@@ -18,6 +18,7 @@ import { cerfaPartFormationCompletionAtom } from "../../../common/hooks/useCerfa
 import { cerfaPartEmployeurCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import { cerfaPartMaitresCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
 import { cerfaPartApprentiCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
+import { cerfaPartContratCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 
 import FormEmployer from "./components/FormEmployer";
 import FormLearner from "./components/FormLearner";
@@ -31,6 +32,7 @@ export default () => {
   const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
   const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
   const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
+  const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
 
   if (isLoading)
     return (
@@ -60,7 +62,7 @@ export default () => {
         {
           title: "Contrat",
           Component: FormContract,
-          completion: 0,
+          completion: contratCompletionAtom?.contents,
         },
         {
           title: "Formation",

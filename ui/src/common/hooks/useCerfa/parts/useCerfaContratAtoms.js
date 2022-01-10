@@ -1,5 +1,10 @@
 import { atom } from "recoil";
 
+export const cerfaPartContratCompletionAtom = atom({
+  key: "cerfa/part/contrat/completion",
+  default: 0,
+});
+
 export const cerfaContratModeContractuelAtom = atom({
   key: "cerfa/contrat/modeContractuel",
   default: null,

@@ -15,6 +15,7 @@ const FormContract = () => {
         dateDebutContrat,
         dateEffetAvenant,
         dateFinContrat,
+        lieuSignatureContrat,
         dureeTravailHebdoHeures,
         dureeTravailHebdoMinutes,
         travailRisque,
@@ -28,7 +29,22 @@ const FormContract = () => {
       },
     },
     onSubmit: {
-      contrat: { avantageNature: onSubmittedContratAvantageNature },
+      contrat: {
+        typeContratApp: onSubmittedContratTypeContratApp,
+        numeroContratPrecedent: onSubmittedContratNumeroContratPrecedent,
+        avantageNature: onSubmittedContratAvantageNature,
+        dateDebutContrat: onSubmittedContratDateDebutContrat,
+        dateEffetAvenant: onSubmittedContratDateEffetAvenant,
+        dateConclusion: onSubmittedContratDateConclusion,
+        dateFinContrat: onSubmittedContratDateFinContrat,
+        lieuSignatureContrat: onSubmittedContratLieuSignatureContrat,
+        typeDerogation: onSubmittedContratTypeDerogation,
+        dureeTravailHebdoHeures: onSubmittedContratDureeTravailHebdoHeures,
+        contratDureeTravailHebdoMinutes: onSubmittedContratDureeTravailHebdoMinutes,
+        travailRisque: onSubmittedContratTravailRisque,
+        salaireEmbauche: onSubmittedContratSalaireEmbauche,
+        caisseRetraiteComplementaire: onSubmittedContratCaisseRetraiteComplementaire,
+      },
     },
   } = useCerfaContrat();
 
@@ -36,30 +52,97 @@ const FormContract = () => {
     <Box>
       <Flex>
         <Box w="55%" flex="1">
-          <InputCerfa path="contrat.typeContratApp" field={typeContratApp} type="select" mt="2" />
-          <InputCerfa path="contrat.typeDerogation" field={typeDerogation} type="select" mt="2" />
+          <InputCerfa
+            path="contrat.typeContratApp"
+            field={typeContratApp}
+            type="select"
+            mt="2"
+            onSubmittedField={onSubmittedContratTypeContratApp}
+          />
+          <InputCerfa
+            path="contrat.typeDerogation"
+            field={typeDerogation}
+            type="select"
+            mt="2"
+            onSubmittedField={onSubmittedContratTypeDerogation}
+          />
           <Text textStyle="sm" fontStyle="italic">
             à renseigner si une dérogation existe pour ce contrat
           </Text>
-          <InputCerfa path="contrat.numeroContratPrecedent" field={numeroContratPrecedent} type="text" mt="2" />
-          <InputCerfa path="contrat.dateConclusion" field={dateConclusion} type="date" mt="2" />
+          <InputCerfa
+            path="contrat.numeroContratPrecedent"
+            field={numeroContratPrecedent}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedContratNumeroContratPrecedent}
+          />
+          <InputCerfa
+            path="contrat.dateConclusion"
+            field={dateConclusion}
+            type="date"
+            mt="2"
+            onSubmittedField={onSubmittedContratDateConclusion}
+          />
           <Text textStyle="sm">(Date de signature du présent contrat)</Text>
         </Box>
         <Box w="55%" ml="5w">
-          <InputCerfa path="contrat.dateDebutContrat" field={dateDebutContrat} type="date" mt="2" />
-          <InputCerfa path="contrat.dateEffetAvenant" field={dateEffetAvenant} type="date" mt="2" />
-          <InputCerfa path="contrat.dateFinContrat" field={dateFinContrat} type="date" mt="2" />
+          <InputCerfa
+            path="contrat.dateDebutContrat"
+            field={dateDebutContrat}
+            type="date"
+            mt="2"
+            onSubmittedField={onSubmittedContratDateDebutContrat}
+          />
+          <InputCerfa
+            path="contrat.dateEffetAvenant"
+            field={dateEffetAvenant}
+            type="date"
+            mt="2"
+            onSubmittedField={onSubmittedContratDateEffetAvenant}
+          />
+          <InputCerfa
+            path="contrat.dateFinContrat"
+            field={dateFinContrat}
+            type="date"
+            mt="2"
+            onSubmittedField={onSubmittedContratDateFinContrat}
+          />
+          <InputCerfa
+            path="contrat.lieuSignatureContrat"
+            field={lieuSignatureContrat}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedContratLieuSignatureContrat}
+          />
           <FormLabel my={3} fontWeight={700}>
             Durée hebdomadaire du travail :
           </FormLabel>
           <Flex>
-            <InputCerfa path="contrat.dureeTravailHebdoHeures" field={dureeTravailHebdoHeures} type="text" mt="2" />
-            <InputCerfa path="contrat.dureeTravailHebdoMinutes" field={dureeTravailHebdoMinutes} type="text" mt="2" />
+            <InputCerfa
+              path="contrat.dureeTravailHebdoHeures"
+              field={dureeTravailHebdoHeures}
+              type="number"
+              mt="2"
+              onSubmittedField={onSubmittedContratDureeTravailHebdoHeures}
+            />
+            <InputCerfa
+              path="contrat.dureeTravailHebdoMinutes"
+              field={dureeTravailHebdoMinutes}
+              type="number"
+              mt="2"
+              onSubmittedField={onSubmittedContratDureeTravailHebdoMinutes}
+            />
           </Flex>
         </Box>
       </Flex>
       <Box pt={4}>
-        <InputCerfa path="employeur.travailRisque" field={travailRisque} type="radio" mt="2" />
+        <InputCerfa
+          path="contrat.travailRisque"
+          field={travailRisque}
+          type="radio"
+          mt="2"
+          onSubmittedField={onSubmittedContratTravailRisque}
+        />
         <FormLabel fontWeight={700}>Rémunération</FormLabel>
 
         {remunerationsAnnuelles.map((ra, i) => {
@@ -143,7 +226,13 @@ const FormContract = () => {
 
         <Flex mt={5}>
           <Box w="55%" flex="1">
-            <InputCerfa path="contrat.salaireEmbauche" field={salaireEmbauche} type="text" mt="2" />
+            <InputCerfa
+              path="contrat.salaireEmbauche"
+              field={salaireEmbauche}
+              type="number"
+              mt="2"
+              onSubmittedField={onSubmittedContratSalaireEmbauche}
+            />
           </Box>
           <Box w="55%" ml={5}>
             <InputCerfa
@@ -151,6 +240,7 @@ const FormContract = () => {
               field={caisseRetraiteComplementaire}
               type="text"
               mt="2"
+              onSubmittedField={onSubmittedContratCaisseRetraiteComplementaire}
             />
           </Box>
         </Flex>
