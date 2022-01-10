@@ -1,5 +1,10 @@
 import { atom } from "recoil";
 
+export const cerfaPartApprentiCompletionAtom = atom({
+  key: "cerfa/part/apprenti/completion",
+  default: 0,
+});
+
 export const cerfaApprentiNomAtom = atom({
   key: "cerfa/apprenti/nom",
   default: null,

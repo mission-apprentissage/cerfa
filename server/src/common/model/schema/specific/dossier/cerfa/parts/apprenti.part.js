@@ -40,7 +40,16 @@ const apprentiSchema = {
     type: String,
     label: "Sexe :",
     description: "**Sexe de l'apprenti**\r\n<br />M : Homme\r\n<br />F : Femme",
-    options: ["M : Homme", "F : Femme"],
+    options: [
+      {
+        label: "M : Homme",
+        value: "M",
+      },
+      {
+        label: "F : Femme",
+        value: "F",
+      },
+    ],
   },
   nationalite: {
     enum: [1, 2, 3],
@@ -52,7 +61,20 @@ const apprentiSchema = {
     label: "Nationalité :",
     description:
       "**Nationalité** :\r\n<br />1 : Française\r\n<br />2 : Union Européenne\r\n<br />3 : Etranger hors Union Européenne",
-    options: ["1: Française", "2: Union Européenne", "3: Etranger hors Union Européenne"],
+    options: [
+      {
+        label: "1: Française",
+        value: 1,
+      },
+      {
+        label: "2: Union Européenne",
+        value: 2,
+      },
+      {
+        label: "3: Etranger hors Union Européenne",
+        value: 3,
+      },
+    ],
   },
   dateNaissance: {
     type: Date,
@@ -125,7 +147,16 @@ const apprentiSchema = {
     },
     description: "**Régime social** :\r\n<br />1 : MSA\r\n<br />2 : URSSAF",
     label: "Régime social :",
-    options: ["1 MSA", "2 URSSAF"],
+    options: [
+      {
+        label: "1 MSA",
+        value: 1,
+      },
+      {
+        label: "2 URSSAF",
+        value: 2,
+      },
+    ],
   },
   handicap: {
     type: Boolean,
@@ -382,7 +413,7 @@ const apprentiSchema = {
       nom: null,
       prenom: null,
       adresse: {
-        numero: 0,
+        numero: null,
         voie: null,
         complement: null,
         codePostal: null,
