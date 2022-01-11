@@ -1,10 +1,17 @@
 import React from "react";
 import { Box, FormLabel, Text, Flex, Collapse } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
 
 import { useCerfaApprenti } from "../../../../common/hooks/useCerfa/parts/useCerfaApprenti";
+import {
+  cerfaContratDateDebutContratAtom,
+  cerfaContratRemunerationMajorationAtom,
+} from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 import InputCerfa from "./Input";
 
 const FormLearner = () => {
+  const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
+  const remunerationMajoration = useRecoilValue(cerfaContratRemunerationMajorationAtom);
   const {
     get: {
       apprenti: {
@@ -236,6 +243,11 @@ const FormLearner = () => {
             type="date"
             mt="2"
             onSubmittedField={onSubmittedApprentiDateNaissance}
+            onAsyncData={{
+              dateDebutContrat: dateDebutContrat?.value,
+              remunerationMajoration: remunerationMajoration?.valueDb,
+              // remunerationMajoration: remunerationMajoration,
+            }}
           />
           <InputCerfa
             path="apprenti.sexe"

@@ -137,16 +137,6 @@ const contratSchema = {
       },
     ],
   },
-  salaireEmbauche: {
-    type: Number,
-    description: "Salaire brut à l'embauche",
-    label: "Salaire brut mensuel à l'embauche:",
-    example: 1530,
-    default: null,
-    required: function () {
-      return !this.draft;
-    },
-  },
   caisseRetraiteComplementaire: {
     type: String,
     description: "Caisse de retraite complémentaire",
@@ -215,6 +205,16 @@ const contratSchema = {
         value: true,
       },
     ],
+  },
+  salaireEmbauche: {
+    type: Number,
+    description: "Salaire brut à l'embauche",
+    label: "Salaire brut mensuel à l'embauche:",
+    example: 1530,
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
   },
   remunerationMajoration: {
     enum: [0, 10, 20],

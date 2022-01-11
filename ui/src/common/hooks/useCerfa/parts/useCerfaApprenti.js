@@ -18,6 +18,8 @@ import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
 import * as apprentiAtoms from "./useCerfaApprentiAtoms";
+import { buildRemunerations } from "../parts/useCerfaContrat";
+import { useCerfaContrat } from "../parts/useCerfaContrat";
 
 const cerfaApprentiCompletion = (res) => {
   let fieldsToKeep = {
@@ -85,7 +87,7 @@ export const CerfaApprentiController = async (dossier) => {
   return {
     apprenti: {
       dateNaissance: {
-        doAsyncActions: async (value) => {
+        doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
           const dateNaissance = DateTime.fromISO(value).setLocale("fr-FR");
           const today = DateTime.now().setLocale("fr-FR");
@@ -98,11 +100,22 @@ export const CerfaApprentiController = async (dossier) => {
               message: "L'apprenti(e) doit avoir au moins 13 ans",
             };
           }
+
+          const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
+            apprentiDateNaissance: value,
+            apprentiAge: age,
+            dateDebutContrat: data.dateDebutContrat,
+            remunerationMajoration: data.remunerationMajoration,
+          });
+
           return {
             successed: true,
             data: {
               dateNaissance: value,
               age,
+              remunerationsAnnuelles,
+              remunerationsAnnuellesDbValue,
+              salaireEmbauche,
             },
             message: null,
           };
@@ -115,6 +128,7 @@ export const CerfaApprentiController = async (dossier) => {
 export function useCerfaApprenti() {
   const cerfa = useRecoilValue(cerfaAtom);
   const dossier = useRecoilValue(dossierAtom);
+  const { setRemunerations } = useCerfaContrat();
 
   const [partApprentiCompletion, setPartApprentiCompletion] = useRecoilState(
     apprentiAtoms.cerfaPartApprentiCompletionAtom
@@ -279,10 +293,16 @@ export function useCerfaApprenti() {
             setApprentiDateNaissance(newV.apprenti.dateNaissance);
             setApprentiAge(newV.apprenti.age);
 
+            setRemunerations(data);
+
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               apprenti: {
                 dateNaissance: convertDateToValue(newV.apprenti.dateNaissance),
                 age: newV.apprenti.age.value,
+              },
+              contrat: {
+                remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
+                salaireEmbauche: data.salaireEmbauche.toFixed(2),
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
@@ -297,6 +317,7 @@ export function useCerfaApprenti() {
       apprentiAge,
       setApprentiDateNaissance,
       setApprentiAge,
+      setRemunerations,
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,

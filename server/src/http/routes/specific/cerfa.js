@@ -262,6 +262,7 @@ module.exports = (components) => {
             dateDebut: Joi.date(),
             dateFin: Joi.date(),
             taux: Joi.number(),
+            salaireBrut: Joi.number(),
             typeSalaire: Joi.string(),
             ordre: Joi.string(),
           }),
@@ -286,7 +287,21 @@ module.exports = (components) => {
 
       let cerfaDb = await Cerfa.findOne({ _id: params.id }, { _id: 0, __v: 0 }).lean();
 
-      const mergedData = merge(cerfaDb, data);
+      let remunerationsAnnuelles = [...(data.contrat?.remunerationsAnnuelles || [])];
+      for (let i = 0; i < cerfaDb.contrat.remunerationsAnnuelles.length; i++) {
+        const remunerationsAnnuelleDb = cerfaDb.contrat.remunerationsAnnuelles[i];
+        for (let j = 0; j < remunerationsAnnuelles.length; j++) {
+          let remAnnuelle = remunerationsAnnuelles[j];
+          if (remunerationsAnnuelleDb.ordre === remunerationsAnnuelleDb.ordre) {
+            remAnnuelle = {
+              ...remunerationsAnnuelleDb,
+              ...remAnnuelle,
+            };
+          }
+        }
+      }
+      let mergedData = merge(cerfaDb, data);
+      mergedData.contrat.remunerationsAnnuelles = remunerationsAnnuelles;
 
       const cerfaUpdated = await Cerfa.findOneAndUpdate({ _id: params.id }, mergedData, {
         new: true,

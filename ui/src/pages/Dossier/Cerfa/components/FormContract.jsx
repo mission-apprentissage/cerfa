@@ -180,8 +180,14 @@ const FormContract = () => {
             type="select"
             mt="2"
             onSubmittedField={onSubmittedContratRemunerationMajoration}
+            onAsyncData={{
+              remunerationMajoration: remunerationMajoration,
+              apprentiDateNaissance: apprentiDateNaissance?.value,
+              dateDebutContrat: dateDebutContrat?.value,
+              apprentiAge: apprentiAge?.value,
+            }}
           />
-          <Box mt={6}>
+          <Box mt={6} borderColor={"dgalt"} borderWidth={1} px={4} py={3}>
             {remunerationsAnnuelles.map((ra, i) => {
               if (i === 1 || i === 3 || i === 5 || i === 7) return null;
 
@@ -243,7 +249,7 @@ const FormContract = () => {
                         return null;
                       }
                       return (
-                        <HStack spacing={2} key={j}>
+                        <HStack spacing={2} key={j} alignItems="flex-end">
                           <InputCerfa
                             path={`contrat.remunerationsAnnuelles.${path}.dateDebut`}
                             field={remunerationsAnnuelle.dateDebut}
@@ -262,11 +268,16 @@ const FormContract = () => {
                           <InputCerfa
                             path={`contrat.remunerationsAnnuelles.${path}.taux`}
                             field={remunerationsAnnuelle.taux}
-                            type="number"
+                            type="numberPrefixed"
                             mt="2"
                             hasInfo={false}
+                            format={(val) => val + ` %`}
+                            parse={(val) => val.replace(/^ %/, "")}
                           />
-                          <Box mt="1.7rem !important">%</Box>
+                          <Box w="100%" position="relative" fontStyle="italic" color="disablegrey" py={2}>
+                            soit {remunerationsAnnuelle.salaireBrut.value} € / mois
+                          </Box>
+                          {/* <Box mt="1.7rem !important">%</Box>
                           <Box mt="1.7rem !important">du</Box>
                           <InputCerfa
                             path={`contrat.remunerationsAnnuelles.${path}.typeSalaire`}
@@ -275,7 +286,7 @@ const FormContract = () => {
                             mt="2"
                             hasInfo={false}
                           />
-                          <Box mt="1.7rem !important">;</Box>
+                          <Box mt="1.7rem !important">;</Box> */}
                         </HStack>
                       );
                     })}
@@ -283,29 +294,28 @@ const FormContract = () => {
                 </Box>
               );
             })}
+            <Flex mt={5}>
+              <Box w="55%" flex="1">
+                <InputCerfa
+                  path="contrat.salaireEmbauche"
+                  field={salaireEmbauche}
+                  type="number"
+                  mt="2"
+                  onSubmittedField={onSubmittedContratSalaireEmbauche}
+                />
+              </Box>
+            </Flex>
           </Box>
         </Collapse>
-        <Flex mt={5}>
-          <Box w="55%" flex="1">
-            <InputCerfa
-              path="contrat.salaireEmbauche"
-              field={salaireEmbauche}
-              type="number"
-              mt="2"
-              onSubmittedField={onSubmittedContratSalaireEmbauche}
-            />
-          </Box>
-        </Flex>
+
         <Flex mt={3}>
-          <Box w="55%">
-            <InputCerfa
-              path="contrat.caisseRetraiteComplementaire"
-              field={caisseRetraiteComplementaire}
-              type="text"
-              mt="2"
-              onSubmittedField={onSubmittedContratCaisseRetraiteComplementaire}
-            />
-          </Box>
+          <InputCerfa
+            path="contrat.caisseRetraiteComplementaire"
+            field={caisseRetraiteComplementaire}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedContratCaisseRetraiteComplementaire}
+          />
         </Flex>
         <Box mt={6}>
           <InputCerfa

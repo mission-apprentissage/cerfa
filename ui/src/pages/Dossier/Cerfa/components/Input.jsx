@@ -14,6 +14,8 @@ import {
   Spinner,
   Center,
   InputRightElement,
+  NumberInput,
+  NumberInputField,
 } from "@chakra-ui/react";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import { useFormik } from "formik";
@@ -36,7 +38,19 @@ const validate = async (validationSchema, obj) => {
 };
 
 export default React.memo(
-  ({ path, field, onAsyncData, onSubmittedField, hasComments, hasInfo = true, noHistory, type, ...props }) => {
+  ({
+    path,
+    field,
+    onAsyncData,
+    onSubmittedField,
+    hasComments,
+    hasInfo = true,
+    noHistory,
+    type,
+    format = (val) => val,
+    parse = (val) => val,
+    ...props
+  }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [validated, setValidated] = useState(false);
     const [isErrored, setIsErrored] = useState(false);
@@ -128,14 +142,15 @@ export default React.memo(
         }
         //
       })();
-    }, [onAsyncData, field, path, name, setFieldValue, values, setErrors, onSubmittedField, fromInternal, type]);
+      return () => {};
+    }, [onAsyncData, field, path, name, setFieldValue, values, setErrors, onSubmittedField, fromInternal]);
 
     const prevOnAsyncData = prevOnAsyncDataRef.current;
 
     let handleChange = useCallback(
       async (e) => {
-        e.persist();
-        const val = e.target.value;
+        // e.persist();
+        const val = type === "numberPrefixed" ? parse(e.target.value) : e.target.value;
         setValidated(false);
         setIsErrored(false);
 
@@ -179,7 +194,7 @@ export default React.memo(
           setIsErrored(true);
         }
       },
-      [name, field, setFieldValue, onAsyncData, setErrors, onSubmittedField, path]
+      [type, parse, name, field, setFieldValue, onAsyncData, setErrors, onSubmittedField, path]
     );
 
     if (
@@ -198,7 +213,11 @@ export default React.memo(
 
     return (
       <FormControl isRequired mt={2} isInvalid={errors[name]} {...props}>
-        {(type === "text" || type === "number" || type === "date" || type === "select") && (
+        {(type === "text" ||
+          type === "number" ||
+          type === "numberPrefixed" ||
+          type === "date" ||
+          type === "select") && (
           <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>{field?.label}</FormLabel>
         )}
         <HStack>
@@ -290,6 +309,50 @@ export default React.memo(
                 }}
               />
             )}
+            {type === "numberPrefixed" && (
+              <NumberInput
+                name={name}
+                onChange={handleChange}
+                value={format(values[name])}
+                required
+                pattern={field?.pattern}
+                placeholder={field?.description}
+                variant={validated ? "valid" : "outline"}
+                isInvalid={isErrored}
+                maxLength={field?.maxLength}
+                isDisabled={shouldBeDisabled}
+                _focus={{
+                  borderBottomColor: borderBottomColor,
+                  boxShadow: "none",
+                  outlineColor: "none",
+                }}
+                _focusVisible={{
+                  borderBottomColor: borderBottomColor,
+                  boxShadow: "none",
+                  outline: "2px solid",
+                  outlineColor: validated ? "green.500" : isErrored ? "error" : "#2A7FFE",
+                  outlineOffset: "2px",
+                }}
+                _invalid={{
+                  borderBottomColor: borderBottomColor,
+                  boxShadow: "none",
+                  outline: "2px solid",
+                  outlineColor: "error",
+                  outlineOffset: "2px",
+                }}
+                _hover={{
+                  borderBottomColor: borderBottomColor,
+                }}
+                _disabled={{
+                  fontStyle: "italic",
+                  cursor: "not-allowed",
+                  opacity: 1,
+                  borderBottomColor: "#E5E5E5",
+                }}
+              >
+                <NumberInputField />
+              </NumberInput>
+            )}
             {type === "radio" && (
               <HStack>
                 <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>{field?.label}</FormLabel>
@@ -332,6 +395,7 @@ export default React.memo(
             )}
             {(shouldBeDisabled || isLoading || validated || isErrored) && (
               <InputRightElement
+                position={!hasInfo ? "inherit" : "absolute"}
                 children={
                   <Center
                     bg="grey.200"
