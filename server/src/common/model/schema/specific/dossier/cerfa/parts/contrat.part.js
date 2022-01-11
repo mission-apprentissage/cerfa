@@ -216,6 +216,30 @@ const contratSchema = {
       },
     ],
   },
+  remunerationMajoration: {
+    enum: [0, 10, 20],
+    type: Number,
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
+    description: "**Majoration de la rémunération** :\r\n<br />Aucune\r\n<br />10%\r\n<br />20%",
+    label: "L'employeur souhaite appliquer un majoration à la rémunération :",
+    options: [
+      {
+        label: "Aucune",
+        value: 0,
+      },
+      {
+        label: "10%",
+        value: 10,
+      },
+      {
+        label: "20%",
+        value: 20,
+      },
+    ],
+  },
   remunerationsAnnuelles: {
     type: [
       {

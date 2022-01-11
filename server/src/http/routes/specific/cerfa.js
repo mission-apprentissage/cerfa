@@ -68,7 +68,11 @@ module.exports = (components) => {
         ),
       },
       contrat: {
-        ...mergeWith(cloneDeep(cerfaSchema.contrat), cerfa.contrat, customizer),
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.contrat), cerfa.contrat, customizer),
+          cerfa.isLockedField.contrat,
+          customizerLock
+        ),
         remunerationsAnnuelles: [
           ...cerfa.contrat.remunerationsAnnuelles.map((remunerationAnnuelle) => {
             return mergeWith(
@@ -253,6 +257,7 @@ module.exports = (components) => {
           avantageNourriture: Joi.number(),
           avantageLogement: Joi.number(),
           autreAvantageEnNature: Joi.boolean(),
+          remunerationMajoration: Joi.number(),
           remunerationsAnnuelles: Joi.array().items({
             dateDebut: Joi.date(),
             dateFin: Joi.date(),

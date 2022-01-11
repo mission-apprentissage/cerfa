@@ -3,6 +3,7 @@
  */
 
 import { useCallback } from "react";
+import { DateTime } from "luxon";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import {
@@ -21,34 +22,290 @@ import * as contratAtoms from "./useCerfaContratAtoms";
 
 const cerfaContratCompletion = (res) => {
   let fieldsToKeep = {
-    // contratModeContractuel: res.contrat.modeContractuel,
     contratTypeContratApp: res.contrat.typeContratApp,
-    contratNumeroContratPrecedent: res.contrat.numeroContratPrecedent,
-    // contratNoContrat: res.contrat.noContrat,
-    // contratNoAvenant: res.contrat.noAvenant,
     contratDateDebutContrat: res.contrat.dateDebutContrat,
-    contratDateEffetAvenant: res.contrat.dateEffetAvenant,
-    contratDateConclusion: res.contrat.dateConclusion,
+    // contratDateConclusion: res.contrat.dateConclusion,
     contratDateFinContrat: res.contrat.dateFinContrat,
-    // contratDateRupture: res.contrat.dateRupture,
-    contratLieuSignatureContrat: res.contrat.lieuSignatureContrat,
+    // contratLieuSignatureContrat: res.contrat.lieuSignatureContrat,
     contratTypeDerogation: res.contrat.typeDerogation,
     contratDureeTravailHebdoHeures: res.contrat.dureeTravailHebdoHeures,
     contratDureeTravailHebdoMinutes: res.contrat.dureeTravailHebdoMinutes,
     contratTravailRisque: res.contrat.travailRisque,
-    contratSalaireEmbauche: res.contrat.salaireEmbauche,
+    // contratSalaireEmbauche: res.contrat.salaireEmbauche,
     contratCaisseRetraiteComplementaire: res.contrat.caisseRetraiteComplementaire,
     contratAvantageNature: res.contrat.avantageNature,
-    contratAvantageNourriture: res.contrat.avantageNourriture,
-    contratAvantageLogement: res.contrat.avantageLogement,
-    contratAutreAvantageEnNature: res.contrat.autreAvantageEnNature,
+    contratRemunerationMajoration: res.contrat.remunerationMajoration,
   };
-  return fieldCompletionPercentage(fieldsToKeep, res.contrat.avantageNature.value ? 17 : 14);
+  let countFields = 10;
+  const avantageNature = res.contrat.avantageNature.value;
+  const contratInitial = res.contrat.typeContratApp.value === 11;
+  const avenant =
+    res.contrat.typeContratApp.value === 31 ||
+    res.contrat.typeContratApp.value === 32 ||
+    res.contrat.typeContratApp.value === 33 ||
+    res.contrat.typeContratApp.value === 34 ||
+    res.contrat.typeContratApp.value === 35 ||
+    res.contrat.typeContratApp.value === 36 ||
+    res.contrat.typeContratApp.value === 37;
+
+  if (!contratInitial) {
+    fieldsToKeep = {
+      ...fieldsToKeep,
+      contratNumeroContratPrecedent: res.contrat.numeroContratPrecedent,
+    };
+    countFields = countFields + 1;
+
+    if (avenant) {
+      fieldsToKeep = {
+        ...fieldsToKeep,
+        contratDateEffetAvenant: res.contrat.dateEffetAvenant,
+      };
+      countFields = countFields + 1;
+    }
+  }
+
+  if (avantageNature) {
+    fieldsToKeep = {
+      ...fieldsToKeep,
+      contratAvantageNourriture: res.contrat.avantageNourriture,
+      contratAvantageLogement: res.contrat.avantageLogement,
+      contratAutreAvantageEnNature: res.contrat.autreAvantageEnNature,
+    };
+    countFields = countFields + 3;
+  }
+
+  return fieldCompletionPercentage(fieldsToKeep, countFields);
 };
 
 export const CerfaContratController = async (dossier) => {
   return {
-    contrat: {},
+    contrat: {
+      dateDebutContrat: {
+        doAsyncActions: async (value, data) => {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+          const dateDebutContrat = DateTime.fromISO(value).setLocale("fr-FR");
+          const apprentiDateNaissance = DateTime.fromISO(data.apprentiDateNaissance).setLocale("fr-FR");
+
+          const dateFinA1 = dateDebutContrat.plus({ years: 1 }).minus({ days: 1 });
+          const dateDebutA2 = dateDebutContrat.plus({ years: 1 });
+          const dateFinA2 = dateDebutA2.plus({ years: 1 }).minus({ days: 1 });
+          const dateDebutA3 = dateDebutA2.plus({ years: 1 });
+          const dateFinA3 = dateDebutA3.plus({ years: 1 }).minus({ days: 1 });
+          const dateDebutA4 = dateDebutA3.plus({ years: 1 });
+          const dateFinA4 = dateDebutA4.plus({ years: 1 }).minus({ days: 1 });
+
+          const ageA1 = Math.floor(data.apprentiAge);
+          const anniversaireA1 = apprentiDateNaissance.plus({ years: Math.round(data.apprentiAge) });
+          const ageA2 = ageA1 + 1;
+          const anniversaireA2 = anniversaireA1.plus({ years: 1 });
+          const ageA3 = ageA2 + 1;
+          const anniversaireA3 = anniversaireA2.plus({ years: 1 });
+          const ageA4 = ageA3 + 1;
+          const anniversaireA4 = anniversaireA3.plus({ years: 1 });
+          const ageA5 = ageA4 + 1;
+
+          const SMIC = 1603.12; // 10.57/h    (mayotte:  7.98/h)   Pour 35h
+          const seuils = [17, 18, 21, 26];
+          const getSeuils = (age) => {
+            if (age <= seuils[0]) return 0;
+            if (age >= seuils[1] && age < seuils[2]) return 1;
+            if (age >= seuils[2] && age < seuils[3]) return 2;
+            if (age >= seuils[3]) return 3;
+          };
+
+          const taux = {
+            a1: {
+              0: 27,
+              1: 43,
+              2: 53,
+              3: 100,
+            },
+            a2: {
+              0: 39,
+              1: 51,
+              2: 61,
+              3: 100,
+            },
+            a3: {
+              0: 55,
+              1: 67,
+              2: 78,
+              3: 100,
+            },
+            a4: {
+              0: 55,
+              1: 67,
+              2: 78,
+              3: 100,
+            },
+          };
+
+          const isChangingTaux = (currentAge, nextAge) => {
+            return getSeuils(nextAge) > getSeuils(currentAge);
+          };
+
+          let result1 = {};
+          if (isChangingTaux(ageA1, ageA2)) {
+            const dateFin11 = anniversaireA1.minus({ days: anniversaireA1.toObject().day }).plus({ months: 1 });
+            const dateDebut12 = dateFin11.plus({ days: 1 });
+            result1 = {
+              11: {
+                dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
+                dateFin: dateFin11.toFormat("yyyy-MM-dd"),
+                taux: taux.a1[getSeuils(ageA1)],
+                typeSalaire: "SMIC",
+                salaireBrut: (SMIC * (taux.a1[getSeuils(ageA1)] + data.remunerationMajoration)) / 100,
+              },
+              12: {
+                dateDebut: dateDebut12.toFormat("yyyy-MM-dd"),
+                dateFin: dateFinA1.toFormat("yyyy-MM-dd"),
+                taux: taux.a1[getSeuils(ageA2)],
+                typeSalaire: "SMIC",
+                salaireBrut: (SMIC * (taux.a1[getSeuils(ageA2)] + data.remunerationMajoration)) / 100,
+              },
+            };
+          } else {
+            result1 = {
+              11: {
+                dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
+                dateFin: dateFinA1.toFormat("yyyy-MM-dd"),
+                taux: taux.a1[getSeuils(ageA1)],
+                typeSalaire: "SMIC",
+                salaireBrut: (SMIC * (taux.a1[getSeuils(ageA1)] + data.remunerationMajoration)) / 100,
+              },
+              12: {
+                dateDebut: "",
+                dateFin: "",
+                taux: 0,
+                typeSalaire: "SMIC",
+              },
+            };
+          }
+
+          let result2 = {};
+          if (isChangingTaux(ageA2, ageA3)) {
+            const dateFin21 = anniversaireA2.minus({ days: anniversaireA2.toObject().day }).plus({ months: 1 });
+            const dateDebut22 = dateFin21.plus({ days: 1 });
+            result2 = {
+              21: {
+                dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
+                dateFin: dateFin21.toFormat("yyyy-MM-dd"),
+                taux: taux.a2[getSeuils(ageA2)],
+                typeSalaire: "SMIC",
+              },
+              22: {
+                dateDebut: dateDebut22.toFormat("yyyy-MM-dd"),
+                dateFin: dateFinA2.toFormat("yyyy-MM-dd"),
+                taux: taux.a2[getSeuils(ageA3)],
+                typeSalaire: "SMIC",
+              },
+            };
+          } else {
+            result2 = {
+              21: {
+                dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
+                dateFin: dateFinA2.toFormat("yyyy-MM-dd"),
+                taux: taux.a2[getSeuils(ageA2)],
+                typeSalaire: "SMIC",
+              },
+              22: {
+                dateDebut: "",
+                dateFin: "",
+                taux: 0,
+                typeSalaire: "SMIC",
+              },
+            };
+          }
+
+          let result3 = {};
+          if (isChangingTaux(ageA3, ageA4)) {
+            const dateFin31 = anniversaireA3.minus({ days: anniversaireA3.toObject().day }).plus({ months: 1 });
+            const dateDebut32 = dateFin31.plus({ days: 1 });
+            result3 = {
+              31: {
+                dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
+                dateFin: dateFin31.toFormat("yyyy-MM-dd"),
+                taux: taux.a3[getSeuils(ageA3)],
+                typeSalaire: "SMIC",
+              },
+              32: {
+                dateDebut: dateDebut32.toFormat("yyyy-MM-dd"),
+                dateFin: dateFinA3.toFormat("yyyy-MM-dd"),
+                taux: taux.a3[getSeuils(ageA4)],
+                typeSalaire: "SMIC",
+              },
+            };
+          } else {
+            result3 = {
+              31: {
+                dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
+                dateFin: dateFinA3.toFormat("yyyy-MM-dd"),
+                taux: taux.a3[getSeuils(ageA3)],
+                typeSalaire: "SMIC",
+              },
+              32: {
+                dateDebut: "",
+                dateFin: "",
+                taux: 0,
+                typeSalaire: "SMIC",
+              },
+            };
+          }
+
+          let result4 = {};
+          if (isChangingTaux(ageA4, ageA5)) {
+            const dateFin41 = anniversaireA4.minus({ days: anniversaireA4.toObject().day }).plus({ months: 1 });
+            const dateDebut42 = dateFin41.plus({ days: 1 });
+            result4 = {
+              41: {
+                dateDebut: dateDebutA4.toFormat("yyyy-MM-dd"),
+                dateFin: dateFin41.toFormat("yyyy-MM-dd"),
+                taux: taux.a4[getSeuils(ageA4)],
+                typeSalaire: "SMIC",
+              },
+              42: {
+                dateDebut: dateDebut42.toFormat("yyyy-MM-dd"),
+                dateFin: dateFinA4.toFormat("yyyy-MM-dd"),
+                taux: taux.a4[getSeuils(ageA5)],
+                typeSalaire: "SMIC",
+              },
+            };
+          } else {
+            result4 = {
+              41: {
+                dateDebut: dateDebutA4.toFormat("yyyy-MM-dd"),
+                dateFin: dateFinA4.toFormat("yyyy-MM-dd"),
+                taux: taux.a4[getSeuils(ageA4)],
+                typeSalaire: "SMIC",
+              },
+              42: {
+                dateDebut: "",
+                dateFin: "",
+                taux: 0,
+                typeSalaire: "SMIC",
+              },
+            };
+          }
+
+          const remunerationsAnnuelles = {
+            ...result1,
+            ...result2,
+            ...result3,
+            ...result4,
+          };
+
+          return {
+            successed: true,
+            data: {
+              dateDebutContrat: value,
+              remunerationsAnnuelles,
+              salaireEmbauche: remunerationsAnnuelles["11"].salaireBrut,
+            },
+            message: null,
+          };
+        },
+      },
+    },
   };
 };
 
@@ -104,6 +361,9 @@ export function useCerfaContrat() {
     contratAtoms.cerfaContratAutreAvantageEnNatureAtom
   );
 
+  const [contratRemunerationMajoration, setContratRemunerationMajoration] = useRecoilState(
+    contratAtoms.cerfaContratRemunerationMajorationAtom
+  );
   const [contratRemunerationsAnnuelles11DateDebut, setContratRemunerationsAnnuelles11DateDebut] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles11DateDebutAtom
   );
@@ -209,14 +469,156 @@ export function useCerfaContrat() {
             contrat: {
               dateDebutContrat: {
                 ...contratDateDebutContrat,
-                value: data,
+                value: data.dateDebutContrat,
                 // forceUpdate: false, // IF data = "" true
               },
             },
           };
           if (contratDateDebutContrat.value !== newV.contrat.dateDebutContrat.value) {
             setContratDateDebutContrat(newV.contrat.dateDebutContrat);
+            //
+            setContratSalaireEmbauche({
+              ...contratSalaireEmbauche,
+              value: data.salaireEmbauche.toFixed(4),
+            });
 
+            setContratRemunerationsAnnuelles11DateDebut({
+              ...contratRemunerationsAnnuelles11DateDebut,
+              value: data.remunerationsAnnuelles["11"].dateDebut,
+            });
+            setContratRemunerationsAnnuelles11DateFin({
+              ...contratRemunerationsAnnuelles11DateFin,
+              value: data.remunerationsAnnuelles["11"].dateFin,
+            });
+            setContratRemunerationsAnnuelles11Taux({
+              ...contratRemunerationsAnnuelles11Taux,
+              value: data.remunerationsAnnuelles["11"].taux,
+            });
+            setContratRemunerationsAnnuelles11TypeSalaire({
+              ...contratRemunerationsAnnuelles11TypeSalaire,
+              value: data.remunerationsAnnuelles["11"].typeSalaire,
+            });
+
+            setContratRemunerationsAnnuelles12DateDebut({
+              ...contratRemunerationsAnnuelles12DateDebut,
+              value: data.remunerationsAnnuelles["12"].dateDebut,
+            });
+            setContratRemunerationsAnnuelles12DateFin({
+              ...contratRemunerationsAnnuelles12DateFin,
+              value: data.remunerationsAnnuelles["12"].dateFin,
+            });
+            setContratRemunerationsAnnuelles12Taux({
+              ...contratRemunerationsAnnuelles12Taux,
+              value: data.remunerationsAnnuelles["12"].taux,
+            });
+            setContratRemunerationsAnnuelles12TypeSalaire({
+              ...contratRemunerationsAnnuelles12TypeSalaire,
+              value: data.remunerationsAnnuelles["12"].typeSalaire,
+            });
+
+            setContratRemunerationsAnnuelles21DateDebut({
+              ...contratRemunerationsAnnuelles21DateDebut,
+              value: data.remunerationsAnnuelles["21"].dateDebut,
+            });
+            setContratRemunerationsAnnuelles21DateFin({
+              ...contratRemunerationsAnnuelles21DateFin,
+              value: data.remunerationsAnnuelles["21"].dateFin,
+            });
+            setContratRemunerationsAnnuelles21Taux({
+              ...contratRemunerationsAnnuelles21Taux,
+              value: data.remunerationsAnnuelles["21"].taux,
+            });
+            setContratRemunerationsAnnuelles21TypeSalaire({
+              ...contratRemunerationsAnnuelles21TypeSalaire,
+              value: data.remunerationsAnnuelles["21"].typeSalaire,
+            });
+
+            setContratRemunerationsAnnuelles22DateDebut({
+              ...contratRemunerationsAnnuelles22DateDebut,
+              value: data.remunerationsAnnuelles["22"].dateDebut,
+            });
+            setContratRemunerationsAnnuelles22DateFin({
+              ...contratRemunerationsAnnuelles22DateFin,
+              value: data.remunerationsAnnuelles["22"].dateFin,
+            });
+            setContratRemunerationsAnnuelles22Taux({
+              ...contratRemunerationsAnnuelles22Taux,
+              value: data.remunerationsAnnuelles["22"].taux,
+            });
+            setContratRemunerationsAnnuelles22TypeSalaire({
+              ...contratRemunerationsAnnuelles22TypeSalaire,
+              value: data.remunerationsAnnuelles["22"].typeSalaire,
+            });
+
+            setContratRemunerationsAnnuelles31DateDebut({
+              ...contratRemunerationsAnnuelles31DateDebut,
+              value: data.remunerationsAnnuelles["31"].dateDebut,
+            });
+            setContratRemunerationsAnnuelles31DateFin({
+              ...contratRemunerationsAnnuelles31DateFin,
+              value: data.remunerationsAnnuelles["31"].dateFin,
+            });
+            setContratRemunerationsAnnuelles31Taux({
+              ...contratRemunerationsAnnuelles31Taux,
+              value: data.remunerationsAnnuelles["31"].taux,
+            });
+            setContratRemunerationsAnnuelles31TypeSalaire({
+              ...contratRemunerationsAnnuelles31TypeSalaire,
+              value: data.remunerationsAnnuelles["31"].typeSalaire,
+            });
+
+            setContratRemunerationsAnnuelles32DateDebut({
+              ...contratRemunerationsAnnuelles32DateDebut,
+              value: data.remunerationsAnnuelles["32"].dateDebut,
+            });
+            setContratRemunerationsAnnuelles32DateFin({
+              ...contratRemunerationsAnnuelles32DateFin,
+              value: data.remunerationsAnnuelles["32"].dateFin,
+            });
+            setContratRemunerationsAnnuelles32Taux({
+              ...contratRemunerationsAnnuelles32Taux,
+              value: data.remunerationsAnnuelles["32"].taux,
+            });
+            setContratRemunerationsAnnuelles32TypeSalaire({
+              ...contratRemunerationsAnnuelles32TypeSalaire,
+              value: data.remunerationsAnnuelles["32"].typeSalaire,
+            });
+
+            setContratRemunerationsAnnuelles41DateDebut({
+              ...contratRemunerationsAnnuelles41DateDebut,
+              value: data.remunerationsAnnuelles["41"].dateDebut,
+            });
+            setContratRemunerationsAnnuelles41DateFin({
+              ...contratRemunerationsAnnuelles41DateFin,
+              value: data.remunerationsAnnuelles["41"].dateFin,
+            });
+            setContratRemunerationsAnnuelles41Taux({
+              ...contratRemunerationsAnnuelles41Taux,
+              value: data.remunerationsAnnuelles["41"].taux,
+            });
+            setContratRemunerationsAnnuelles41TypeSalaire({
+              ...contratRemunerationsAnnuelles41TypeSalaire,
+              value: data.remunerationsAnnuelles["41"].typeSalaire,
+            });
+
+            setContratRemunerationsAnnuelles42DateDebut({
+              ...contratRemunerationsAnnuelles42DateDebut,
+              value: data.remunerationsAnnuelles["42"].dateDebut,
+            });
+            setContratRemunerationsAnnuelles42DateFin({
+              ...contratRemunerationsAnnuelles42DateFin,
+              value: data.remunerationsAnnuelles["42"].dateFin,
+            });
+            setContratRemunerationsAnnuelles42Taux({
+              ...contratRemunerationsAnnuelles42Taux,
+              value: data.remunerationsAnnuelles["42"].taux,
+            });
+            setContratRemunerationsAnnuelles42TypeSalaire({
+              ...contratRemunerationsAnnuelles42TypeSalaire,
+              value: data.remunerationsAnnuelles["42"].typeSalaire,
+            });
+
+            //
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               contrat: {
                 dateDebutContrat: convertDateToValue(newV.contrat.dateDebutContrat),
@@ -229,7 +631,79 @@ export function useCerfaContrat() {
         console.error(e);
       }
     },
-    [contratDateDebutContrat, setContratDateDebutContrat, dossier?._id, cerfa?.id, setPartContratCompletion]
+    [
+      contratDateDebutContrat,
+      setContratDateDebutContrat,
+      setContratSalaireEmbauche,
+      contratSalaireEmbauche,
+      setContratRemunerationsAnnuelles11DateDebut,
+      contratRemunerationsAnnuelles11DateDebut,
+      setContratRemunerationsAnnuelles11DateFin,
+      contratRemunerationsAnnuelles11DateFin,
+      setContratRemunerationsAnnuelles11Taux,
+      contratRemunerationsAnnuelles11Taux,
+      setContratRemunerationsAnnuelles11TypeSalaire,
+      contratRemunerationsAnnuelles11TypeSalaire,
+      setContratRemunerationsAnnuelles12DateDebut,
+      contratRemunerationsAnnuelles12DateDebut,
+      setContratRemunerationsAnnuelles12DateFin,
+      contratRemunerationsAnnuelles12DateFin,
+      setContratRemunerationsAnnuelles12Taux,
+      contratRemunerationsAnnuelles12Taux,
+      setContratRemunerationsAnnuelles12TypeSalaire,
+      contratRemunerationsAnnuelles12TypeSalaire,
+      setContratRemunerationsAnnuelles21DateDebut,
+      contratRemunerationsAnnuelles21DateDebut,
+      setContratRemunerationsAnnuelles21DateFin,
+      contratRemunerationsAnnuelles21DateFin,
+      setContratRemunerationsAnnuelles21Taux,
+      contratRemunerationsAnnuelles21Taux,
+      setContratRemunerationsAnnuelles21TypeSalaire,
+      contratRemunerationsAnnuelles21TypeSalaire,
+      setContratRemunerationsAnnuelles22DateDebut,
+      contratRemunerationsAnnuelles22DateDebut,
+      setContratRemunerationsAnnuelles22DateFin,
+      contratRemunerationsAnnuelles22DateFin,
+      setContratRemunerationsAnnuelles22Taux,
+      contratRemunerationsAnnuelles22Taux,
+      setContratRemunerationsAnnuelles22TypeSalaire,
+      contratRemunerationsAnnuelles22TypeSalaire,
+      setContratRemunerationsAnnuelles31DateDebut,
+      contratRemunerationsAnnuelles31DateDebut,
+      setContratRemunerationsAnnuelles31DateFin,
+      contratRemunerationsAnnuelles31DateFin,
+      setContratRemunerationsAnnuelles31Taux,
+      contratRemunerationsAnnuelles31Taux,
+      setContratRemunerationsAnnuelles31TypeSalaire,
+      contratRemunerationsAnnuelles31TypeSalaire,
+      setContratRemunerationsAnnuelles32DateDebut,
+      contratRemunerationsAnnuelles32DateDebut,
+      setContratRemunerationsAnnuelles32DateFin,
+      contratRemunerationsAnnuelles32DateFin,
+      setContratRemunerationsAnnuelles32Taux,
+      contratRemunerationsAnnuelles32Taux,
+      setContratRemunerationsAnnuelles32TypeSalaire,
+      contratRemunerationsAnnuelles32TypeSalaire,
+      setContratRemunerationsAnnuelles41DateDebut,
+      contratRemunerationsAnnuelles41DateDebut,
+      setContratRemunerationsAnnuelles41DateFin,
+      contratRemunerationsAnnuelles41DateFin,
+      setContratRemunerationsAnnuelles41Taux,
+      contratRemunerationsAnnuelles41Taux,
+      setContratRemunerationsAnnuelles41TypeSalaire,
+      contratRemunerationsAnnuelles41TypeSalaire,
+      setContratRemunerationsAnnuelles42DateDebut,
+      contratRemunerationsAnnuelles42DateDebut,
+      setContratRemunerationsAnnuelles42DateFin,
+      contratRemunerationsAnnuelles42DateFin,
+      setContratRemunerationsAnnuelles42Taux,
+      contratRemunerationsAnnuelles42Taux,
+      setContratRemunerationsAnnuelles42TypeSalaire,
+      contratRemunerationsAnnuelles42TypeSalaire,
+      dossier?._id,
+      cerfa?.id,
+      setPartContratCompletion,
+    ]
   );
 
   const onSubmittedContratDateEffetAvenant = useCallback(
@@ -532,6 +1006,7 @@ export function useCerfaContrat() {
               typeContratApp: {
                 ...contratTypeContratApp,
                 value: data,
+                valueDb: convertMultipleSelectOptionToValue({ ...contratTypeContratApp, value: data }),
                 // forceUpdate: false, // IF data = "" true
               },
             },
@@ -804,6 +1279,37 @@ export function useCerfaContrat() {
     [cerfa?.id, contratAutreAvantageEnNature, dossier?._id, setContratAutreAvantageEnNature, setPartContratCompletion]
   );
 
+  const onSubmittedContratRemunerationMajoration = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "contrat.remunerationMajoration") {
+          const newV = {
+            contrat: {
+              remunerationMajoration: {
+                ...contratRemunerationMajoration,
+                value: data,
+                valueDb: convertOptionToValue({ ...contratRemunerationMajoration, value: data }),
+              },
+            },
+          };
+          if (contratRemunerationMajoration.value !== newV.contrat.remunerationMajoration.value) {
+            setContratRemunerationMajoration(newV.contrat.remunerationMajoration);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              contrat: {
+                remunerationMajoration: convertOptionToValue(newV.contrat.remunerationMajoration),
+              },
+            });
+            setPartContratCompletion(cerfaContratCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [cerfa?.id, contratRemunerationMajoration, dossier?._id, setContratRemunerationMajoration, setPartContratCompletion]
+  );
+
   const setAll = async (res) => {
     setContratModeContractuel(convertValueToOption(res.contrat.modeContractuel));
     setContratTypeContratApp(convertValueToMultipleSelectOption(res.contrat.typeContratApp));
@@ -827,14 +1333,16 @@ export function useCerfaContrat() {
     setContratAvantageLogement(res.contrat.avantageLogement);
     setContratAutreAvantageEnNature(convertValueToOption(res.contrat.autreAvantageEnNature));
 
+    setContratRemunerationMajoration(convertValueToOption(res.contrat.remunerationMajoration));
+
     for (let index = 0; index < res.contrat.remunerationsAnnuelles.length; index++) {
       const remunerationsAnnuelles = res.contrat.remunerationsAnnuelles[index];
       switch (remunerationsAnnuelles.ordre.value) {
         case "1.1":
-          setContratRemunerationsAnnuelles11DateDebut(remunerationsAnnuelles.dateDebut);
-          setContratRemunerationsAnnuelles11DateFin(remunerationsAnnuelles.dateFin);
+          setContratRemunerationsAnnuelles11DateDebut(convertValueToDate(remunerationsAnnuelles.dateDebut));
+          setContratRemunerationsAnnuelles11DateFin(convertValueToDate(remunerationsAnnuelles.dateFin));
           setContratRemunerationsAnnuelles11Taux(remunerationsAnnuelles.taux);
-          setContratRemunerationsAnnuelles11TypeSalaire(remunerationsAnnuelles.typeSalaire);
+          setContratRemunerationsAnnuelles11TypeSalaire(convertValueToOption(remunerationsAnnuelles.typeSalaire));
           break;
         case "1.2":
           setContratRemunerationsAnnuelles12DateDebut(remunerationsAnnuelles.dateDebut);
@@ -915,6 +1423,7 @@ export function useCerfaContrat() {
         avantageNourriture: contratAvantageNourriture,
         avantageLogement: contratAvantageLogement,
         autreAvantageEnNature: contratAutreAvantageEnNature,
+        remunerationMajoration: contratRemunerationMajoration,
         remunerationsAnnuelles: [
           {
             dateDebut: contratRemunerationsAnnuelles11DateDebut,
@@ -989,6 +1498,7 @@ export function useCerfaContrat() {
         avantageNourriture: onSubmittedContratAvantageNourriture,
         avantageLogement: onSubmittedContratAvantageLogement,
         autreAvantageEnNature: onSubmittedContratAutreAvantageEnNature,
+        remunerationMajoration: onSubmittedContratRemunerationMajoration,
       },
     },
   };

@@ -56,7 +56,7 @@ const typeContratSchema = {
           value: 36,
         },
         {
-          label: "37 Modification du lieu d'exécution du contrat ",
+          label: "37 Modification du lieu d'exécution du contrat",
           value: 37,
         },
       ],

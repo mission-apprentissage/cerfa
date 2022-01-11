@@ -1351,12 +1351,14 @@ export function useCerfaApprenti() {
     setApprentiDepartementNaissance(res.apprenti.departementNaissance);
     setApprentiCommuneNaissance(res.apprenti.communeNaissance);
     setApprentiNir(res.apprenti.nir);
-    setApprentiRegimeSocial(convertValueToDate(res.apprenti.regimeSocial));
+    setApprentiRegimeSocial(convertValueToOption(res.apprenti.regimeSocial));
     setApprentiHandicap(convertValueToOption(res.apprenti.handicap));
     setApprentiSituationAvantContrat(convertValueToOption(res.apprenti.situationAvantContrat));
+
     setApprentiDiplome(convertValueToMultipleSelectOption(res.apprenti.diplome));
-    setApprentiDerniereClasse(convertValueToDate(res.apprenti.derniereClasse));
-    setApprentiDiplomePrepare(res.apprenti.diplomePrepare);
+    setApprentiDerniereClasse(convertValueToOption(res.apprenti.derniereClasse));
+    setApprentiDiplomePrepare(convertValueToMultipleSelectOption(res.apprenti.diplomePrepare));
+
     setApprentiIntituleDiplomePrepare(res.apprenti.intituleDiplomePrepare);
     setApprentiTelephone(res.apprenti.telephone);
     setApprentiCourriel(res.apprenti.courriel);

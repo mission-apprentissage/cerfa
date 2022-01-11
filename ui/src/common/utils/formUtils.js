@@ -2,6 +2,7 @@ import { DateTime } from "luxon";
 
 export const convertValueToOption = (field) => {
   let valueOpt = "";
+  let valueDb = field.value;
   for (let i = 0; i < field.options.length; i++) {
     const options = field.options[i];
     if (options.value === field.value) {
@@ -11,11 +12,13 @@ export const convertValueToOption = (field) => {
   return {
     ...field,
     value: valueOpt,
+    valueDb,
   };
 };
 
 export const convertValueToMultipleSelectOption = (field) => {
   let valueOpt = "";
+  let valueDb = field.value;
   for (let i = 0; i < field.options.length; i++) {
     const options = field.options[i];
     for (let j = 0; j < options.options.length; j++) {
@@ -28,6 +31,7 @@ export const convertValueToMultipleSelectOption = (field) => {
   return {
     ...field,
     value: valueOpt,
+    valueDb,
   };
 };
 

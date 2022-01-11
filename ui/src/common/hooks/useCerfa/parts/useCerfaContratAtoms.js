@@ -91,6 +91,10 @@ export const cerfaContratAutreAvantageEnNatureAtom = atom({
 });
 
 // Remuneration
+export const cerfaContratRemunerationMajorationAtom = atom({
+  key: "cerfa/contrat/remunerationMajoration",
+  default: null,
+});
 export const cerfaContratRemunerationsAnnuellesAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles",
   default: [],
@@ -108,6 +112,7 @@ export const cerfaContratRemunerationsAnnuelles11DateDebutAtom = atom({
     label: "Date de début",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles11DateFinAtom = atom({
@@ -119,6 +124,7 @@ export const cerfaContratRemunerationsAnnuelles11DateFinAtom = atom({
     label: "Date de fin",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles11TauxAtom = atom({
@@ -129,7 +135,8 @@ export const cerfaContratRemunerationsAnnuelles11TauxAtom = atom({
     example: 75,
     label: "% de rémunération",
     default: "",
-    value: "",
+    value: 0,
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles11TypeSalaireAtom = atom({
@@ -140,7 +147,19 @@ export const cerfaContratRemunerationsAnnuelles11TypeSalaireAtom = atom({
     label: "SMIC ou SMC",
     description:
       "**Type de salaire** :\r\n<br />SMIC = salaire minimum de croissance\r\n<br />SMC = salaire minimum conventionnel",
-    value: "",
+    options: [
+      {
+        label: "SMIC",
+        value: "SMIC",
+      },
+      {
+        label: "SMC",
+        value: "SMC",
+        locked: true,
+      },
+    ],
+    value: "SMIC",
+    locked: true,
   },
 });
 //1.2
@@ -153,6 +172,7 @@ export const cerfaContratRemunerationsAnnuelles12DateDebutAtom = atom({
     label: "Date de début",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles12DateFinAtom = atom({
@@ -164,6 +184,7 @@ export const cerfaContratRemunerationsAnnuelles12DateFinAtom = atom({
     label: "Date de fin",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles12TauxAtom = atom({
@@ -174,7 +195,8 @@ export const cerfaContratRemunerationsAnnuelles12TauxAtom = atom({
     example: 75,
     label: "% de rémunération",
     default: null,
-    value: "",
+    value: 0,
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles12TypeSalaireAtom = atom({
@@ -185,7 +207,19 @@ export const cerfaContratRemunerationsAnnuelles12TypeSalaireAtom = atom({
     label: "SMIC ou SMC",
     description:
       "**Type de salaire** :\r\n<br />SMIC = salaire minimum de croissance\r\n<br />SMC = salaire minimum conventionnel",
-    value: "",
+    options: [
+      {
+        label: "SMIC",
+        value: "SMIC",
+      },
+      {
+        label: "SMC",
+        value: "SMC",
+        locked: true,
+      },
+    ],
+    value: "SMIC",
+    locked: true,
   },
 });
 
@@ -199,6 +233,7 @@ export const cerfaContratRemunerationsAnnuelles21DateDebutAtom = atom({
     label: "Date de début",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles21DateFinAtom = atom({
@@ -210,6 +245,7 @@ export const cerfaContratRemunerationsAnnuelles21DateFinAtom = atom({
     label: "Date de fin",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles21TauxAtom = atom({
@@ -220,7 +256,8 @@ export const cerfaContratRemunerationsAnnuelles21TauxAtom = atom({
     example: 75,
     label: "% de rémunération",
     default: null,
-    value: "",
+    value: 0,
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles21TypeSalaireAtom = atom({
@@ -231,7 +268,19 @@ export const cerfaContratRemunerationsAnnuelles21TypeSalaireAtom = atom({
     label: "SMIC ou SMC",
     description:
       "**Type de salaire** :\r\n<br />SMIC = salaire minimum de croissance\r\n<br />SMC = salaire minimum conventionnel",
-    value: "",
+    options: [
+      {
+        label: "SMIC",
+        value: "SMIC",
+      },
+      {
+        label: "SMC",
+        value: "SMC",
+        locked: true,
+      },
+    ],
+    value: "SMIC",
+    locked: true,
   },
 });
 //2.2
@@ -244,6 +293,7 @@ export const cerfaContratRemunerationsAnnuelles22DateDebutAtom = atom({
     label: "Date de début",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles22DateFinAtom = atom({
@@ -255,6 +305,7 @@ export const cerfaContratRemunerationsAnnuelles22DateFinAtom = atom({
     label: "Date de fin",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles22TauxAtom = atom({
@@ -265,7 +316,8 @@ export const cerfaContratRemunerationsAnnuelles22TauxAtom = atom({
     example: 75,
     label: "% de rémunération",
     default: null,
-    value: "",
+    value: 0,
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles22TypeSalaireAtom = atom({
@@ -276,7 +328,19 @@ export const cerfaContratRemunerationsAnnuelles22TypeSalaireAtom = atom({
     label: "SMIC ou SMC",
     description:
       "**Type de salaire** :\r\n<br />SMIC = salaire minimum de croissance\r\n<br />SMC = salaire minimum conventionnel",
-    value: "",
+    options: [
+      {
+        label: "SMIC",
+        value: "SMIC",
+      },
+      {
+        label: "SMC",
+        value: "SMC",
+        locked: true,
+      },
+    ],
+    value: "SMIC",
+    locked: true,
   },
 });
 
@@ -290,6 +354,7 @@ export const cerfaContratRemunerationsAnnuelles31DateDebutAtom = atom({
     label: "Date de début",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles31DateFinAtom = atom({
@@ -301,6 +366,7 @@ export const cerfaContratRemunerationsAnnuelles31DateFinAtom = atom({
     label: "Date de fin",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles31TauxAtom = atom({
@@ -311,7 +377,8 @@ export const cerfaContratRemunerationsAnnuelles31TauxAtom = atom({
     example: 75,
     label: "% de rémunération",
     default: null,
-    value: "",
+    value: 0,
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles31TypeSalaireAtom = atom({
@@ -322,7 +389,19 @@ export const cerfaContratRemunerationsAnnuelles31TypeSalaireAtom = atom({
     label: "SMIC ou SMC",
     description:
       "**Type de salaire** :\r\n<br />SMIC = salaire minimum de croissance\r\n<br />SMC = salaire minimum conventionnel",
-    value: "",
+    options: [
+      {
+        label: "SMIC",
+        value: "SMIC",
+      },
+      {
+        label: "SMC",
+        value: "SMC",
+        locked: true,
+      },
+    ],
+    value: "SMIC",
+    locked: true,
   },
 });
 //3.2
@@ -335,6 +414,7 @@ export const cerfaContratRemunerationsAnnuelles32DateDebutAtom = atom({
     label: "Date de début",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles32DateFinAtom = atom({
@@ -346,6 +426,7 @@ export const cerfaContratRemunerationsAnnuelles32DateFinAtom = atom({
     label: "Date de fin",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles32TauxAtom = atom({
@@ -356,7 +437,8 @@ export const cerfaContratRemunerationsAnnuelles32TauxAtom = atom({
     example: 75,
     label: "% de rémunération",
     default: null,
-    value: "",
+    value: 0,
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles32TypeSalaireAtom = atom({
@@ -367,7 +449,19 @@ export const cerfaContratRemunerationsAnnuelles32TypeSalaireAtom = atom({
     label: "SMIC ou SMC",
     description:
       "**Type de salaire** :\r\n<br />SMIC = salaire minimum de croissance\r\n<br />SMC = salaire minimum conventionnel",
-    value: "",
+    options: [
+      {
+        label: "SMIC",
+        value: "SMIC",
+      },
+      {
+        label: "SMC",
+        value: "SMC",
+        locked: true,
+      },
+    ],
+    value: "SMIC",
+    locked: true,
   },
 });
 
@@ -381,6 +475,7 @@ export const cerfaContratRemunerationsAnnuelles41DateDebutAtom = atom({
     label: "Date de début",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles41DateFinAtom = atom({
@@ -392,6 +487,7 @@ export const cerfaContratRemunerationsAnnuelles41DateFinAtom = atom({
     label: "Date de fin",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles41TauxAtom = atom({
@@ -402,7 +498,8 @@ export const cerfaContratRemunerationsAnnuelles41TauxAtom = atom({
     example: 75,
     label: "% de rémunération",
     default: null,
-    value: "",
+    value: 0,
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles41TypeSalaireAtom = atom({
@@ -413,7 +510,19 @@ export const cerfaContratRemunerationsAnnuelles41TypeSalaireAtom = atom({
     label: "SMIC ou SMC",
     description:
       "**Type de salaire** :\r\n<br />SMIC = salaire minimum de croissance\r\n<br />SMC = salaire minimum conventionnel",
-    value: "",
+    options: [
+      {
+        label: "SMIC",
+        value: "SMIC",
+      },
+      {
+        label: "SMC",
+        value: "SMC",
+        locked: true,
+      },
+    ],
+    value: "SMIC",
+    locked: true,
   },
 });
 //4.2
@@ -426,6 +535,7 @@ export const cerfaContratRemunerationsAnnuelles42DateDebutAtom = atom({
     label: "Date de début",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles42DateFinAtom = atom({
@@ -437,6 +547,7 @@ export const cerfaContratRemunerationsAnnuelles42DateFinAtom = atom({
     label: "Date de fin",
     default: null,
     value: "",
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles42TauxAtom = atom({
@@ -447,7 +558,8 @@ export const cerfaContratRemunerationsAnnuelles42TauxAtom = atom({
     example: 75,
     label: "% de rémunération",
     default: null,
-    value: "",
+    value: 0,
+    locked: true,
   },
 });
 export const cerfaContratRemunerationsAnnuelles42TypeSalaireAtom = atom({
@@ -458,6 +570,18 @@ export const cerfaContratRemunerationsAnnuelles42TypeSalaireAtom = atom({
     label: "SMIC ou SMC",
     description:
       "**Type de salaire** :\r\n<br />SMIC = salaire minimum de croissance\r\n<br />SMC = salaire minimum conventionnel",
-    value: "",
+    options: [
+      {
+        label: "SMIC",
+        value: "SMIC",
+      },
+      {
+        label: "SMC",
+        value: "SMC",
+        locked: true,
+      },
+    ],
+    value: "SMIC",
+    locked: true,
   },
 });
