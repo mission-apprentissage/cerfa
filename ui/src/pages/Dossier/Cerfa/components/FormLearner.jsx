@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, FormLabel, Text, Flex } from "@chakra-ui/react";
+import { Box, FormLabel, Text, Flex, Collapse } from "@chakra-ui/react";
 
 import { useCerfaApprenti } from "../../../../common/hooks/useCerfa/parts/useCerfaApprenti";
 import InputCerfa from "./Input";
@@ -13,6 +13,7 @@ const FormLearner = () => {
         sexe,
         nationalite,
         dateNaissance,
+        majeur,
         departementNaissance,
         communeNaissance,
         // nir,
@@ -26,9 +27,11 @@ const FormLearner = () => {
         telephone,
         courriel,
         adresse: { numero, voie, complement, codePostal, commune },
+        apprentiMineurNonEmancipe: apprentiApprentiMineurNonEmancipe,
         responsableLegal: {
           nom: responsableLegalNom,
           prenom: responsableLegalPrenom,
+          memeAdresse: responsableLegalMemeAdresse,
           adresse: {
             numero: responsableLegalAdresseNumero,
             voie: responsableLegalAdresseVoie,
@@ -64,6 +67,19 @@ const FormLearner = () => {
           complement: onSubmittedApprentiAdresseComplement,
           codePostal: onSubmittedApprentiAdresseCodePostal,
           commune: onSubmittedApprentiAdresseCommune,
+        },
+        apprentiMineurNonEmancipe: onSubmittedApprentiApprentiMineurNonEmancipe,
+        responsableLegal: {
+          nom: onSubmittedApprentiResponsableLegalNom,
+          prenom: onSubmittedApprentiResponsableLegalPrenom,
+          memeAdresse: onSubmittedApprentiResponsableLegalMemeAdresse,
+          adresse: {
+            numero: onSubmittedApprentiResponsableLegalAdresseNumero,
+            voie: onSubmittedApprentiResponsableLegalAdresseVoie,
+            complement: onSubmittedApprentiResponsableLegalAdresseComplement,
+            codePostal: onSubmittedApprentiResponsableLegalAdresseCodePostal,
+            commune: onSubmittedApprentiResponsableLegalAdresseCommune,
+          },
         },
         inscriptionSportifDeHautNiveau: onSubmittedApprentiInscriptionSportifDeHautNiveau,
       },
@@ -135,44 +151,83 @@ const FormLearner = () => {
             onSubmittedField={onSubmittedApprentiCourriel}
           />
 
-          <Text fontWeight="bold" my={3}>
-            Représentant légal <Text as="span">(à renseigner si l'apprenti est mineur non émancipé)</Text>
-          </Text>
-          <InputCerfa path="apprenti.responsableLegal.nom" field={responsableLegalNom} type="text" mt="2" />
-          <InputCerfa path="apprenti.responsableLegal.prenom" field={responsableLegalPrenom} type="text" mt="2" />
-          <Text fontWeight="bold" my={3}>
-            Adresse du représentant légal :
-          </Text>
-          <InputCerfa
-            path="apprenti.responsableLegal.adresse.numero"
-            field={responsableLegalAdresseNumero}
-            type="text"
-            mt="2"
-          />
-          <InputCerfa
-            path="apprenti.responsableLegal.adresse.voie"
-            field={responsableLegalAdresseVoie}
-            type="text"
-            mt="2"
-          />
-          <InputCerfa
-            path="apprenti.responsableLegal.adresse.complement"
-            field={responsableLegalAdresseComplement}
-            type="text"
-            mt="2"
-          />
-          <InputCerfa
-            path="apprenti.responsableLegal.adresse.codePostal"
-            field={responsableLegalAdresseCodePostal}
-            type="text"
-            mt="2"
-          />
-          <InputCerfa
-            path="apprenti.responsableLegal.adresse.commune"
-            field={responsableLegalAdresseCommune}
-            type="text"
-            mt="2"
-          />
+          {!majeur && (
+            <>
+              <InputCerfa
+                path="apprenti.apprentiMineurNonEmancipe"
+                field={apprentiApprentiMineurNonEmancipe}
+                type="radio"
+                mt="2"
+                onSubmittedField={onSubmittedApprentiApprentiMineurNonEmancipe}
+              />
+              <Collapse in={apprentiApprentiMineurNonEmancipe.value === "Oui"} animateOpacity>
+                <Text fontWeight="bold" my={3}>
+                  Représentant légal
+                </Text>
+                <InputCerfa
+                  path="apprenti.responsableLegal.nom"
+                  field={responsableLegalNom}
+                  type="text"
+                  mt="2"
+                  onSubmittedField={onSubmittedApprentiResponsableLegalNom}
+                />
+                <InputCerfa
+                  path="apprenti.responsableLegal.prenom"
+                  field={responsableLegalPrenom}
+                  type="text"
+                  mt="2"
+                  onSubmittedField={onSubmittedApprentiResponsableLegalPrenom}
+                />
+                <Text fontWeight="bold" my={3}>
+                  Adresse du représentant légal :
+                </Text>
+                <InputCerfa
+                  path="apprenti.responsableLegal.memeAdresse"
+                  field={responsableLegalMemeAdresse}
+                  type="radio"
+                  mt="2"
+                  onSubmittedField={onSubmittedApprentiResponsableLegalMemeAdresse}
+                />
+                <Collapse in={responsableLegalMemeAdresse.value === "Non"} animateOpacity>
+                  <InputCerfa
+                    path="apprenti.responsableLegal.adresse.numero"
+                    field={responsableLegalAdresseNumero}
+                    type="text"
+                    mt="2"
+                    onSubmittedField={onSubmittedApprentiResponsableLegalAdresseNumero}
+                  />
+                  <InputCerfa
+                    path="apprenti.responsableLegal.adresse.voie"
+                    field={responsableLegalAdresseVoie}
+                    type="text"
+                    mt="2"
+                    onSubmittedField={onSubmittedApprentiResponsableLegalAdresseVoie}
+                  />
+                  <InputCerfa
+                    path="apprenti.responsableLegal.adresse.complement"
+                    field={responsableLegalAdresseComplement}
+                    type="text"
+                    mt="2"
+                    onSubmittedField={onSubmittedApprentiResponsableLegalAdresseComplement}
+                  />
+                  <InputCerfa
+                    path="apprenti.responsableLegal.adresse.codePostal"
+                    field={responsableLegalAdresseCodePostal}
+                    type="text"
+                    mt="2"
+                    onSubmittedField={onSubmittedApprentiResponsableLegalAdresseCodePostal}
+                  />
+                  <InputCerfa
+                    path="apprenti.responsableLegal.adresse.commune"
+                    field={responsableLegalAdresseCommune}
+                    type="text"
+                    mt="2"
+                    onSubmittedField={onSubmittedApprentiResponsableLegalAdresseCommune}
+                  />
+                </Collapse>
+              </Collapse>
+            </>
+          )}
         </Box>
         <Box w="45%" ml="5w">
           <InputCerfa

@@ -174,6 +174,7 @@ module.exports = (components) => {
           sexe: Joi.string(),
           nationalite: Joi.number(),
           dateNaissance: Joi.date(),
+          age: Joi.number(),
           departementNaissance: Joi.string(),
           communeNaissance: Joi.string(),
           nir: Joi.string(),
@@ -194,9 +195,11 @@ module.exports = (components) => {
             codePostal: Joi.string(),
             commune: Joi.string(),
           }),
+          apprentiMineurNonEmancipe: Joi.boolean(),
           responsableLegal: Joi.object({
             nom: Joi.string(),
             prenom: Joi.string(),
+            memeAdresse: Joi.boolean(),
             adresse: Joi.object({
               numero: Joi.number(),
               voie: Joi.string(),

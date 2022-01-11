@@ -86,6 +86,13 @@ const apprentiSchema = {
       return !this.draft;
     },
   },
+  age: {
+    type: Number,
+    description: "Âge de l'apprenti(e) [donnée calculée]",
+    nullable: true,
+    default: null,
+    example: 17,
+  },
   departementNaissance: {
     maxLength: 3,
     minLength: 1,
@@ -375,6 +382,17 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
+    label: "l'apprenti(e) est mineur non emancipé",
+    options: [
+      {
+        label: "Oui",
+        value: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
   },
   responsableLegal: {
     required: function () {
@@ -404,6 +422,26 @@ const apprentiSchema = {
         description: "Prénom du représentant légal",
         label: "Prénom du représentant légal:",
         example: "Robert",
+      },
+      memeAdresse: {
+        type: Boolean,
+        description: "l'apprenti(e) vit à la même adresse que son responsable légal",
+        example: false,
+        default: null,
+        required: function () {
+          return !this.draft;
+        },
+        label: "l'apprenti(e) vit à la même adresse que son responsable légal",
+        options: [
+          {
+            label: "Oui",
+            value: true,
+          },
+          {
+            label: "Non",
+            value: false,
+          },
+        ],
       },
       adresse: {
         ...adresseSchema,

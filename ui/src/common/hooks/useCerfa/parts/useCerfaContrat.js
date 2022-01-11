@@ -43,7 +43,6 @@ const cerfaContratCompletion = (res) => {
     contratAvantageLogement: res.contrat.avantageLogement,
     contratAutreAvantageEnNature: res.contrat.autreAvantageEnNature,
   };
-  console.log(fieldsToKeep);
   return fieldCompletionPercentage(fieldsToKeep, res.contrat.avantageNature.value ? 17 : 14);
 };
 
