@@ -714,6 +714,96 @@ export function useCerfaContrat() {
     [cerfa?.id, contratAvantageNature, dossier?._id, setContratAvantageNature, setPartContratCompletion]
   );
 
+  const onSubmittedContratAvantageNourriture = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "contrat.avantageNourriture") {
+          const newV = {
+            contrat: {
+              avantageNourriture: {
+                ...contratAvantageNourriture,
+                value: data,
+              },
+            },
+          };
+          if (contratAvantageNourriture.value !== newV.contrat.avantageNourriture.value) {
+            setContratAvantageNourriture(newV.contrat.avantageNourriture);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              contrat: {
+                avantageNourriture: newV.contrat.avantageNourriture.value,
+              },
+            });
+            setPartContratCompletion(cerfaContratCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [cerfa?.id, contratAvantageNourriture, dossier?._id, setContratAvantageNourriture, setPartContratCompletion]
+  );
+
+  const onSubmittedContratAvantageLogement = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "contrat.avantageLogement") {
+          const newV = {
+            contrat: {
+              avantageLogement: {
+                ...contratAvantageLogement,
+                value: data,
+              },
+            },
+          };
+          if (contratAvantageLogement.value !== newV.contrat.avantageLogement.value) {
+            setContratAvantageLogement(newV.contrat.avantageLogement);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              contrat: {
+                avantageLogement: newV.contrat.avantageLogement.value,
+              },
+            });
+            setPartContratCompletion(cerfaContratCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [cerfa?.id, contratAvantageLogement, dossier?._id, setContratAvantageLogement, setPartContratCompletion]
+  );
+
+  const onSubmittedContratAutreAvantageEnNature = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "contrat.autreAvantageEnNature") {
+          const newV = {
+            contrat: {
+              autreAvantageEnNature: {
+                ...contratAutreAvantageEnNature,
+                value: data,
+              },
+            },
+          };
+          if (contratAutreAvantageEnNature.value !== newV.contrat.autreAvantageEnNature.value) {
+            setContratAutreAvantageEnNature(newV.contrat.autreAvantageEnNature);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              contrat: {
+                autreAvantageEnNature: convertOptionToValue(newV.contrat.autreAvantageEnNature),
+              },
+            });
+            setPartContratCompletion(cerfaContratCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [cerfa?.id, contratAutreAvantageEnNature, dossier?._id, setContratAutreAvantageEnNature, setPartContratCompletion]
+  );
+
   const setAll = async (res) => {
     setContratModeContractuel(convertValueToOption(res.contrat.modeContractuel));
     setContratTypeContratApp(convertValueToMultipleSelectOption(res.contrat.typeContratApp));
@@ -735,7 +825,7 @@ export function useCerfaContrat() {
     setContratAvantageNature(convertValueToOption(res.contrat.avantageNature));
     setContratAvantageNourriture(res.contrat.avantageNourriture);
     setContratAvantageLogement(res.contrat.avantageLogement);
-    setContratAutreAvantageEnNature(res.contrat.autreAvantageEnNature);
+    setContratAutreAvantageEnNature(convertValueToOption(res.contrat.autreAvantageEnNature));
 
     for (let index = 0; index < res.contrat.remunerationsAnnuelles.length; index++) {
       const remunerationsAnnuelles = res.contrat.remunerationsAnnuelles[index];
@@ -883,7 +973,6 @@ export function useCerfaContrat() {
         modeContractuel: onSubmittedContratModeContractuel,
         typeContratApp: onSubmittedContratTypeContratApp,
         numeroContratPrecedent: onSubmittedContratNumeroContratPrecedent,
-        avantageNature: onSubmittedContratAvantageNature,
         dateDebutContrat: onSubmittedContratDateDebutContrat,
         dateEffetAvenant: onSubmittedContratDateEffetAvenant,
         dateConclusion: onSubmittedContratDateConclusion,
@@ -896,6 +985,10 @@ export function useCerfaContrat() {
         travailRisque: onSubmittedContratTravailRisque,
         salaireEmbauche: onSubmittedContratSalaireEmbauche,
         caisseRetraiteComplementaire: onSubmittedContratCaisseRetraiteComplementaire,
+        avantageNature: onSubmittedContratAvantageNature,
+        avantageNourriture: onSubmittedContratAvantageNourriture,
+        avantageLogement: onSubmittedContratAvantageLogement,
+        autreAvantageEnNature: onSubmittedContratAutreAvantageEnNature,
       },
     },
   };

@@ -214,7 +214,7 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
               iconColor={"gray.800"}
               data-testid={`select-${name}`}
               placeholder="Sélectionnez une option"
-              // w="90%"
+              value={values[name]}
             >
               {field.options[0].options && (
                 <>
@@ -320,7 +320,7 @@ export default React.memo(({ path, field, onAsyncData, onSubmittedField, hasComm
                   name={name}
                   onChange={handleChange}
                   value={option.label}
-                  // isChecked={values[name] === option.label}
+                  isChecked={values[name] === option.label}
                   isDisabled={shouldBeDisabled}
                   key={k}
                 >

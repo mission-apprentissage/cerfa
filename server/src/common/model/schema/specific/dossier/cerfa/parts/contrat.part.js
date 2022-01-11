@@ -209,6 +209,12 @@ const contratSchema = {
     required: function () {
       return this.avantageNature;
     },
+    options: [
+      {
+        label: "Autres avantages",
+        value: true,
+      },
+    ],
   },
   remunerationsAnnuelles: {
     type: [

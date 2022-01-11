@@ -32,7 +32,6 @@ const FormContract = () => {
       contrat: {
         typeContratApp: onSubmittedContratTypeContratApp,
         numeroContratPrecedent: onSubmittedContratNumeroContratPrecedent,
-        avantageNature: onSubmittedContratAvantageNature,
         dateDebutContrat: onSubmittedContratDateDebutContrat,
         dateEffetAvenant: onSubmittedContratDateEffetAvenant,
         dateConclusion: onSubmittedContratDateConclusion,
@@ -44,6 +43,10 @@ const FormContract = () => {
         travailRisque: onSubmittedContratTravailRisque,
         salaireEmbauche: onSubmittedContratSalaireEmbauche,
         caisseRetraiteComplementaire: onSubmittedContratCaisseRetraiteComplementaire,
+        avantageNature: onSubmittedContratAvantageNature,
+        avantageNourriture: onSubmittedContratAvantageNourriture,
+        avantageLogement: onSubmittedContratAvantageLogement,
+        autreAvantageEnNature: onSubmittedContratAutreAvantageEnNature,
       },
     },
   } = useCerfaContrat();
@@ -257,14 +260,34 @@ const FormContract = () => {
         <Collapse in={avantageNature.value === "Oui"} animateOpacity>
           <Flex>
             <Box flex="1">
-              <InputCerfa path="contrat.avantageNourriture" field={avantageNourriture} type="text" mt="2" />€ / repas
+              <InputCerfa
+                path="contrat.avantageNourriture"
+                field={avantageNourriture}
+                type="text"
+                mt="2"
+                onSubmittedField={onSubmittedContratAvantageNourriture}
+              />
+              € / repas
             </Box>
             <Box ml={5}>
-              <InputCerfa path="contrat.avantageLogement" field={avantageLogement} type="text" mt="2" />€ / mois
+              <InputCerfa
+                path="contrat.avantageLogement"
+                field={avantageLogement}
+                type="text"
+                mt="2"
+                onSubmittedField={onSubmittedContratAvantageLogement}
+              />
+              € / mois
             </Box>
           </Flex>
           <Box>
-            <InputCerfa path="contrat.autreAvantageEnNature" field={autreAvantageEnNature} type="text" mt="2" />
+            <InputCerfa
+              path="contrat.autreAvantageEnNature"
+              field={autreAvantageEnNature}
+              type="consent"
+              mt="2"
+              onSubmittedField={onSubmittedContratAutreAvantageEnNature}
+            />
           </Box>
         </Collapse>
       </Box>
