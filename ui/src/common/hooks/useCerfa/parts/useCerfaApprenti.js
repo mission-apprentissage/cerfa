@@ -93,11 +93,12 @@ export const CerfaApprentiController = async (dossier) => {
           const today = DateTime.now().setLocale("fr-FR");
           const diffInYears = today.diff(dateNaissance, "years");
           const { years: age } = diffInYears.toObject();
-          if (age < 13) {
+          if (age < 14) {
+            // TODO + date de debut de contrat
             return {
               successed: false,
               data: null,
-              message: "L'apprenti(e) doit avoir au moins 13 ans",
+              message: "L'apprenti(e) doit avoir au moins 14 ans",
             };
           }
 

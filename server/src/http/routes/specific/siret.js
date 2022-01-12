@@ -4,6 +4,19 @@ const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 const authMiddleware = require("../../middlewares/authMiddleware");
 const { getDataFromSiret } = require("../../../logic/handlers/siretHandler");
+const apiReferentiel = require("../../../common/apis/ApiReferentiel");
+
+const lookupUaiCatalogue = (uai_potentiels) => {
+  let uai = null;
+  for (let i = 0; i < uai_potentiels.length; i++) {
+    const uai_potentiel = uai_potentiels[i];
+    if (uai_potentiel.sources.includes("catalogue-etablissements")) {
+      uai = uai_potentiel.uai;
+      break;
+    }
+  }
+  return uai;
+};
 
 module.exports = (components) => {
   const router = express.Router();
@@ -13,21 +26,47 @@ module.exports = (components) => {
     authMiddleware(components),
     permissionsDossierMiddleware(components, ["dossier/page_formulaire"]),
     tryCatch(async ({ body }, res) => {
-      const { siret } = await Joi.object({
+      const { siret, organismeFormation } = await Joi.object({
         siret: Joi.string().required(),
+        organismeFormation: Joi.boolean(),
       })
         .unknown()
         .validateAsync(body, { abortEarly: false });
 
       const data = await getDataFromSiret(siret);
 
-      let uai = ""; // TODO  FOR TEST
-      if (siret === "30291412200015") {
-        uai = "0561910X";
+      let referentielData = {};
+
+      if (organismeFormation) {
+        const refResult = await apiReferentiel.getOrganisme(siret);
+
+        if (refResult) {
+          if (!data.result.enseigne && refResult.enseigne) {
+            data.result.enseigne = refResult.enseigne;
+          }
+          if (!data.result.entreprise_raison_sociale && refResult.raison_sociale) {
+            data.result.entreprise_raison_sociale = refResult.raison_sociale;
+          }
+          if (!data.result.entreprise_forme_juridique_code && refResult.forme_juridique) {
+            data.result.entreprise_forme_juridique_code = refResult.forme_juridique.code;
+          }
+          if (!data.result.entreprise_forme_juridique && refResult.forme_juridique) {
+            data.result.entreprise_forme_juridique = refResult.forme_juridique.label;
+          }
+          if (refResult.label) {
+            data.result.label = refResult.label;
+          }
+          if (refResult.uai) {
+            referentielData.uai = refResult.uai;
+          } else if (refResult.uai_potentiels.length > 0) {
+            referentielData.uai = lookupUaiCatalogue(refResult.uai_potentiels);
+          }
+        }
       }
+
       let dataResult = data.result;
       if (Object.keys(dataResult).length > 0) {
-        dataResult = { ...data.result, uai };
+        dataResult = { ...data.result, ...referentielData };
       }
       return res.json({ ...data, result: dataResult });
     })
@@ -42,11 +81,6 @@ module.exports = (components) => {
 
       const data = await getDataFromSiret(siret);
 
-      let uai = ""; // TODO  FOR TEST
-      if (siret === "30291412200015") {
-        uai = "0561910X";
-      }
-
       let dataResult = data.result;
       if (Object.keys(dataResult).length > 0) {
         dataResult = {
@@ -59,7 +93,6 @@ module.exports = (components) => {
           localite: data.result.localite,
           ferme: data.result.ferme,
           secretSiret: data.result.secretSiret || false,
-          uai,
         };
       }
       return res.json({ ...data, result: dataResult });
