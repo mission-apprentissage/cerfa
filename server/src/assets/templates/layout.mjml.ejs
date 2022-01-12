@@ -1,9 +1,10 @@
 <mjml>
     <mj-head>
-        <mj-title>Contrat publique Apprentissage - Bienvenue</mj-title>
+        <mj-title>Contrat d'apprentissage dématérialisé pour la fonction publique</mj-title>
         <mj-font name="Public Sans" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,600;0,900;1,400"/>
         <mj-style inline="inline">
-            a:link,a:visited, a:hover, a:active {color: #ffffff;}
+            a, a:link,a:visited, a:hover, a:active {color: #000091;}
+            .tagline div { display: table-cell!important; vertical-align: middle!important; }
             .link-nostyle { color: inherit;}
             .table th, .table td { border: 1px solid white; }
             .bluefrance { color:#000091; }
@@ -13,31 +14,31 @@
             .button { -webkit-appearance: button; -moz-appearance: button; appearance: button; text-decoration: none; color: initial; background-color : #000091; color : #fff; padding: 8px 16px; border-radius: 1px; }
         </mj-style>
         <mj-attributes>
-            <mj-text color="#ffffff" font-family="Public Sans,sans-serif" font-size="16px" line-height="23px" />
+            <mj-text color="#000000" font-family="Public Sans,sans-serif" font-size="16px" line-height="23px" />
         </mj-attributes>
     </mj-head>
+    <mj-body background-color="#f5f5fe">
+      <mj-section background-color="#f5f5fe">
+      </mj-section>
+      <mj-section padding="8px 0" background-color="#f5f5fe">
+        <mj-column>
+          <mj-image align="left" css-class="logo" padding="8px 0px" src="https://www.inserm.fr/wp-content/uploads/2021/01/rep.svg" width="80px" height="auto" />
+        </mj-column>
+        <mj-column>
+          <mj-text css-class="tagline" padding="8px 0px" font-weight="700" font-size="16px" height="69px" line-height="28px" color="#000000">Contrat d'apprentissage dématérialisé pour la fonction publique
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      
+      <%- data.content %>
 
-    <mj-body background-color="#ffffff" width="100%">
-
-        <mj-section background-color="#ffffff" padding-bottom="10px" padding-top="10px">
-            <mj-column padding-right="0" width="15%" vertical-align="middle">
-                <mj-image alt="Logo de la République Française"
-                 src="https://upload.wikimedia.org/wikipedia/fr/thumb/3/38/Logo_de_la_R%C3%A9publique_fran%C3%A7aise_%281999%29.svg/800px-Logo_de_la_R%C3%A9publique_fran%C3%A7aise_%281999%29.svg.png"/>
-            </mj-column>
-            <mj-column padding-right="0" width="85%" vertical-align="middle">
-                <mj-text padding="10px 0 25px 25px" font-size="22px" line-height="26px" color="#19414C">
-                    <%= data.title %>
-                </mj-text>
-            </mj-column>
-        </mj-section>
-
-        <mj-section background-color="#000091" height="1px" padding="0px">
-            <mj-text height="1px" line-height="1px" padding="0px">
-                &nbsp;
-            </mj-text>
-        </mj-section>
-
-        <%- data.content %>
-
+      <mj-section background-color="#f5f5fe">
+        <mj-column>
+          <mj-text align="center" color="#929292" font-size="12px" line-height="18px">
+            Vous avez reçu cet email car une demande de réinitialisation de mot de passe a été faite sur  <a data-cke-saved-href="<%= data.publicUrl %>" href="<%= data.publicUrl %>" class="link-nostyle"><%= data.publicUrl %></a>.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    
     </mj-body>
 </mjml>
