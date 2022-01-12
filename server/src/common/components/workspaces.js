@@ -139,6 +139,8 @@ module.exports = async () => {
         throw new Error("wks doesn't exist");
       }
 
+      // TODO Remove dossier where use is Owner
+
       const { findPermissions, removePermission } = await permissions();
       const perms = await findPermissions({ workspaceId: wksDb._id });
       for (let index = 0; index < perms.length; index++) {

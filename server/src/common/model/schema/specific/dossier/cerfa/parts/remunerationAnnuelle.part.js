@@ -26,7 +26,7 @@ const remunerationAnnuelleSchema = {
     description:
       "Taux du SMIC ou SMC applicable pour définir la rémunération de l'apprenti, en fonction de l'âge de l'apprent et de l'année d'exécution du contrat, voir notice (grille de rémunération minimale)",
     example: 75,
-    label: "% de rémunération",
+    label: "% de rémunération du SMIC",
     default: null,
     required: function () {
       return !this.draft;
@@ -39,9 +39,29 @@ const remunerationAnnuelleSchema = {
     required: function () {
       return !this.draft;
     },
-    label: "SMIC ou SMC",
     description:
       "**Type de salaire** :\r\n<br />SMIC = salaire minimum de croissance\r\n<br />SMC = salaire minimum conventionnel",
+    label: "SMIC ou SMC",
+    options: [
+      {
+        label: "SMIC",
+        value: "SMIC",
+      },
+      {
+        label: "SMC",
+        value: "SMC",
+        locked: true,
+      },
+    ],
+  },
+  salaireBrut: {
+    type: Number,
+    description: "Salaire brut [Calculé]",
+    example: 75,
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
   },
   ordre: {
     type: String,

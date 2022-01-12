@@ -1,5 +1,10 @@
 import { atom } from "recoil";
 
+export const cerfaPartApprentiCompletionAtom = atom({
+  key: "cerfa/part/apprenti/completion",
+  default: 0,
+});
+
 export const cerfaApprentiNomAtom = atom({
   key: "cerfa/apprenti/nom",
   default: null,
@@ -18,6 +23,10 @@ export const cerfaApprentiNationaliteAtom = atom({
 });
 export const cerfaApprentiDateNaissanceAtom = atom({
   key: "cerfa/apprenti/dateNaissance",
+  default: null,
+});
+export const cerfaApprentiAgeAtom = atom({
+  key: "cerfa/apprenti/age",
   default: null,
 });
 export const cerfaApprentiDepartementNaissanceAtom = atom({
@@ -90,12 +99,20 @@ export const cerfaApprentiAdresseCommuneAtom = atom({
   default: null,
 });
 
+export const cerfaApprentiApprentiMineurNonEmancipeAtom = atom({
+  key: "cerfa/apprenti/apprentiMineurNonEmancipe",
+  default: null,
+});
 export const cerfaApprentiResponsableLegalNomAtom = atom({
   key: "cerfa/apprenti/responsableLegal/nom",
   default: null,
 });
 export const cerfaApprentiResponsableLegalPrenomAtom = atom({
   key: "cerfa/apprenti/responsableLegal/prenom",
+  default: null,
+});
+export const cerfaApprentiResponsableLegalMemeAdresseAtom = atom({
+  key: "cerfa/apprenti/responsableLegal/memeAdresse",
   default: null,
 });
 export const cerfaApprentiResponsableLegalAdresseNumeroAtom = atom({

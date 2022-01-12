@@ -255,6 +255,13 @@ module.exports = async () => {
         throw Boom.notFound("Doesn't exist");
       }
 
+      const { findPermissions, removePermission } = await permissions();
+      const perms = await findPermissions({ workspaceId: found.workspaceId, dossierId: found._id });
+      for (let index = 0; index < perms.length; index++) {
+        const perm = perms[index];
+        await removePermission(perm._id);
+      }
+
       await Cerfa.deleteOne({ dossierId: found._id });
 
       return await Dossier.deleteOne({ _id });

@@ -86,6 +86,7 @@ const contratSchema = {
   lieuSignatureContrat: {
     type: String,
     description: "Lieu de signature du contrat",
+    label: "Lieu de signature du contrat:",
     example: "PARIS",
     default: null,
     required: function () {
@@ -135,16 +136,6 @@ const contratSchema = {
         value: false,
       },
     ],
-  },
-  salaireEmbauche: {
-    type: Number,
-    description: "Salaire brut à l'embauche",
-    label: "Salaire brut mensuel à l'embauche:",
-    example: 1530,
-    default: null,
-    required: function () {
-      return !this.draft;
-    },
   },
   caisseRetraiteComplementaire: {
     type: String,
@@ -208,6 +199,46 @@ const contratSchema = {
     required: function () {
       return this.avantageNature;
     },
+    options: [
+      {
+        label: "Autres avantages",
+        value: true,
+      },
+    ],
+  },
+  salaireEmbauche: {
+    type: Number,
+    description: "Salaire brut à l'embauche",
+    label: "Salaire brut mensuel à l'embauche:",
+    example: 1530,
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
+  },
+  remunerationMajoration: {
+    enum: [0, 10, 20],
+    type: Number,
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
+    description: "**Majoration de la rémunération** :\r\n<br />Aucune\r\n<br />10%\r\n<br />20%",
+    label: "L'employeur souhaite appliquer un majoration à la rémunération :",
+    options: [
+      {
+        label: "Aucune",
+        value: 0,
+      },
+      {
+        label: "10%",
+        value: 10,
+      },
+      {
+        label: "20%",
+        value: 20,
+      },
+    ],
   },
   remunerationsAnnuelles: {
     type: [

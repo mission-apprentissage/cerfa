@@ -8,7 +8,7 @@ const adresseSchema = {
     },
     nullable: true,
     example: 13,
-    default: 0,
+    default: null,
   },
   voie: {
     type: String,

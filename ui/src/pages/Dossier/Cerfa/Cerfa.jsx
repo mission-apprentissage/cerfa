@@ -15,6 +15,10 @@ import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
 import { AddFill, SubtractLine, StepWip, StepComplete } from "../../../theme/components/icons";
 
 import { cerfaPartFormationCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
+import { cerfaPartEmployeurCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+import { cerfaPartMaitresCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
+import { cerfaPartApprentiCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
+import { cerfaPartContratCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 
 import FormEmployer from "./components/FormEmployer";
 import FormLearner from "./components/FormLearner";
@@ -25,6 +29,10 @@ import FormFormation from "./components/FormFormation";
 export default () => {
   const { isLoading } = useCerfa();
   const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
+  const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
+  const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
+  const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
+  const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
 
   if (isLoading)
     return (
@@ -39,22 +47,22 @@ export default () => {
         {
           title: "Employeur",
           Component: FormEmployer,
-          completion: 0,
+          completion: employeurCompletionAtom?.contents,
         },
         {
           title: "Apprenti(e)",
           Component: FormLearner,
-          completion: 0,
+          completion: apprentiCompletionAtom?.contents,
         },
         {
           title: "Maître d'apprentissage",
           Component: FormLearningMaster,
-          completion: 0,
+          completion: maitresCompletionAtom?.contents,
         },
         {
           title: "Contrat",
           Component: FormContract,
-          completion: 0,
+          completion: contratCompletionAtom?.contents,
         },
         {
           title: "Formation",
@@ -76,7 +84,7 @@ export default () => {
                   <Box flex="1" textAlign="left">
                     <HStack>
                       <Text fontWeight="bold">{title}</Text>
-                      <Text> - {completion}%</Text>
+                      <Text> - {Math.round(completion)}%</Text>
                     </HStack>
                   </Box>
                   {isExpanded ? (

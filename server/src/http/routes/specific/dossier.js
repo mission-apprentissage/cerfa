@@ -119,6 +119,9 @@ module.exports = (components) => {
           _id: 1,
           workspaceId: 1,
         });
+        if (!dossier) {
+          throw Boom.badRequest("Something went wrong");
+        }
         const owner = await users.getUserById(dossier.owner, { email: 1, nom: 1, prenom: 1, _id: 0 });
         if (!owner) {
           throw Boom.badRequest("Something went wrong");

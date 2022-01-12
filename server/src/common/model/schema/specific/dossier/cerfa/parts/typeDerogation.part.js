@@ -5,12 +5,30 @@ const typeDerogationSchema = {
   description:
     "**Type de dérogation** :\r\n<br />11 : Age de l'apprenti inférieur à 16 ans\r\n<br />12 : Age supérieur à 29 ans : cas spécifiques prévus dans le code du travail\r\n<br />21 : Réduction de la durée du contrat ou de la période d’apprentissage\r\n<br />22 : Allongement de la durée du contrat ou de la période d’apprentissage\r\n<br />50 : Cumul de dérogations\r\n<br />60 : Autre dérogation",
   options: [
-    "11 Age de l'apprenti inférieur à 16 ans",
-    "12 Age supérieur à 29 ans : cas spécifiques prévus dans le code du travail",
-    "21 Réduction de la durée du contrat ou de la période d'apprentissage",
-    "22 Allongement de la durée du contrat ou de la période d'apprentissage",
-    "50 Cumul de dérogations",
-    "60 Autre dérogation",
+    {
+      label: "11 Age de l'apprenti inférieur à 16 ans",
+      value: 11,
+    },
+    {
+      label: "12 Age supérieur à 29 ans : cas spécifiques prévus dans le code du travail",
+      value: 12,
+    },
+    {
+      label: "21 Réduction de la durée du contrat ou de la période d'apprentissage",
+      value: 21,
+    },
+    {
+      label: "22 Allongement de la durée du contrat ou de la période d'apprentissage",
+      value: 22,
+    },
+    {
+      label: "50 Cumul de dérogations",
+      value: 50,
+    },
+    {
+      label: "60 Autre dérogation",
+      value: 60,
+    },
   ],
 };
 

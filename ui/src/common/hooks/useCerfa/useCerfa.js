@@ -31,6 +31,10 @@ const hydrate = async (dossier) => {
       apprenti: {
         ...cerfa.apprenti,
         ...cerfaApprentiController.apprenti,
+        dateNaissance: {
+          ...cerfa.apprenti.dateNaissance,
+          ...cerfaApprentiController.apprenti.dateNaissance,
+        },
       },
       maitre1: {
         ...cerfa.maitre1,
@@ -43,6 +47,14 @@ const hydrate = async (dossier) => {
       contrat: {
         ...cerfa.contrat,
         ...cerfaContratController.contrat,
+        dateDebutContrat: {
+          ...cerfa.contrat.dateDebutContrat,
+          ...cerfaContratController.contrat.dateDebutContrat,
+        },
+        remunerationMajoration: {
+          ...cerfa.contrat.remunerationMajoration,
+          ...cerfaContratController.contrat.remunerationMajoration,
+        },
       },
       formation: {
         ...cerfa.formation,

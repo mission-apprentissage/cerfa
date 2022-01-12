@@ -2,6 +2,7 @@ const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
 const { cloneDeep, mergeWith } = require("lodash");
+const merge = require("deepmerge");
 const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
@@ -16,7 +17,7 @@ module.exports = (components) => {
   const buildCerfaResult = (cerfa) => {
     function customizer(objValue, srcValue) {
       if (objValue !== undefined) {
-        return { ...objValue, value: srcValue || srcValue === false ? srcValue : "" };
+        return { ...objValue, value: srcValue || srcValue === false || srcValue === 0 ? srcValue : "" };
       }
     }
 
@@ -67,7 +68,11 @@ module.exports = (components) => {
         ),
       },
       contrat: {
-        ...mergeWith(cloneDeep(cerfaSchema.contrat), cerfa.contrat, customizer),
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.contrat), cerfa.contrat, customizer),
+          cerfa.isLockedField.contrat,
+          customizerLock
+        ),
         remunerationsAnnuelles: [
           ...cerfa.contrat.remunerationsAnnuelles.map((remunerationAnnuelle) => {
             return mergeWith(
@@ -141,25 +146,26 @@ module.exports = (components) => {
     tryCatch(async ({ body, params }, res) => {
       const data = await Joi.object({
         employeur: Joi.object({
-          denomination: Joi.string(),
+          denomination: Joi.string().allow(""),
           siret: Joi.string(),
-          naf: Joi.string(),
+          naf: Joi.string().allow(""),
           nombreDeSalaries: Joi.number(),
-          codeIdcc: Joi.string(),
-          libelleIdcc: Joi.string(),
+          codeIdcc: Joi.string().allow(""),
+          libelleIdcc: Joi.string().allow(""),
           telephone: Joi.string(),
           courriel: Joi.string(),
           adresse: Joi.object({
-            numero: Joi.number(),
-            voie: Joi.string(),
-            complement: Joi.string(),
-            label: Joi.string(),
-            codePostal: Joi.string(),
-            commune: Joi.string(),
+            numero: Joi.number().allow(null),
+            voie: Joi.string().allow(""),
+            complement: Joi.string().allow(""),
+            label: Joi.string().allow(""),
+            codePostal: Joi.string().allow(""),
+            commune: Joi.string().allow(""),
           }),
           nom: Joi.string(),
           prenom: Joi.string(),
           typeEmployeur: Joi.number(),
+          employeurSpecifique: Joi.number(),
           caisseComplementaire: Joi.string(),
           regimeSpecifique: Joi.boolean(),
           attestationEligibilite: Joi.boolean(),
@@ -172,6 +178,7 @@ module.exports = (components) => {
           sexe: Joi.string(),
           nationalite: Joi.number(),
           dateNaissance: Joi.date(),
+          age: Joi.number(),
           departementNaissance: Joi.string(),
           communeNaissance: Joi.string(),
           nir: Joi.string(),
@@ -192,9 +199,11 @@ module.exports = (components) => {
             codePostal: Joi.string(),
             commune: Joi.string(),
           }),
+          apprentiMineurNonEmancipe: Joi.boolean(),
           responsableLegal: Joi.object({
             nom: Joi.string(),
             prenom: Joi.string(),
+            memeAdresse: Joi.boolean(),
             adresse: Joi.object({
               numero: Joi.number(),
               voie: Joi.string(),
@@ -248,10 +257,12 @@ module.exports = (components) => {
           avantageNourriture: Joi.number(),
           avantageLogement: Joi.number(),
           autreAvantageEnNature: Joi.boolean(),
+          remunerationMajoration: Joi.number(),
           remunerationsAnnuelles: Joi.array().items({
             dateDebut: Joi.date(),
             dateFin: Joi.date(),
             taux: Joi.number(),
+            salaireBrut: Joi.number(),
             typeSalaire: Joi.string(),
             ordre: Joi.string(),
           }),
@@ -260,12 +271,12 @@ module.exports = (components) => {
           denomination: Joi.string(),
           formationInterne: Joi.boolean(),
           siret: Joi.string(),
-          uaiCfa: Joi.string(),
+          uaiCfa: Joi.string().allow(""),
           visaCfa: Joi.boolean(),
           adresse: Joi.object({
             numero: Joi.number(),
             voie: Joi.string(),
-            complement: Joi.string(),
+            complement: Joi.string().allow(""),
             label: Joi.string(),
             codePostal: Joi.string(),
             commune: Joi.string(),
@@ -274,7 +285,25 @@ module.exports = (components) => {
         dossierId: Joi.string().required(),
       }).validateAsync(body, { abortEarly: false });
 
-      const cerfaUpdated = await Cerfa.findOneAndUpdate({ _id: params.id }, data, {
+      let cerfaDb = await Cerfa.findOne({ _id: params.id }, { _id: 0, __v: 0 }).lean();
+
+      let remunerationsAnnuelles = [...(data.contrat?.remunerationsAnnuelles || [])];
+      for (let i = 0; i < cerfaDb.contrat.remunerationsAnnuelles.length; i++) {
+        const remunerationsAnnuelleDb = cerfaDb.contrat.remunerationsAnnuelles[i];
+        for (let j = 0; j < remunerationsAnnuelles.length; j++) {
+          let remAnnuelle = remunerationsAnnuelles[j];
+          if (remunerationsAnnuelleDb.ordre === remunerationsAnnuelleDb.ordre) {
+            remAnnuelle = {
+              ...remunerationsAnnuelleDb,
+              ...remAnnuelle,
+            };
+          }
+        }
+      }
+      let mergedData = merge(cerfaDb, data);
+      mergedData.contrat.remunerationsAnnuelles = remunerationsAnnuelles;
+
+      const cerfaUpdated = await Cerfa.findOneAndUpdate({ _id: params.id }, mergedData, {
         new: true,
       }).lean();
 

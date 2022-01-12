@@ -18,7 +18,7 @@ const fieldsPositions = {
       voie: {
         x: 155,
         y: 649,
-        maxLength: 25,
+        maxLength: 23,
         title: (value) => {
           const voieWordToReplace = [
             ["Boulevard", "blvd"],
@@ -64,7 +64,7 @@ const fieldsPositions = {
     courriel: {
       x: 27,
       y: 544,
-      maxLength: 47,
+      maxLength: 50,
       title: async (value, options) => {
         let [user, domain] = value.split("@");
         const helveticaFont = await options.pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -171,7 +171,7 @@ const fieldsPositions = {
       voie: {
         x: 110,
         y: 395,
-        maxLength: 25,
+        maxLength: 37,
         title: (value) => {
           const voieWordToReplace = [
             ["Boulevard", "blvd"],
@@ -203,7 +203,7 @@ const fieldsPositions = {
       commune: {
         x: 88,
         y: 341,
-        maxLength: 30,
+        maxLength: 39,
       },
     },
     telephone: {
@@ -217,7 +217,7 @@ const fieldsPositions = {
     courriel: {
       x: 27,
       y: 295,
-      maxLength: 100,
+      maxLength: 50,
       title: async (value, options) => {
         let [user, domain] = value.split("@");
         const helveticaFont = await options.pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -491,7 +491,7 @@ const fieldsPositions = {
         taux: {
           x: 236,
           y: 632,
-          maxLength: 10,
+          maxLength: 3,
           defaultSize: 9,
         },
         typeSalaire: {

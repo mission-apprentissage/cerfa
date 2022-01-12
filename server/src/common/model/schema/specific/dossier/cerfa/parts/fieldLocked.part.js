@@ -314,7 +314,7 @@ const fieldLockedSchema = {
     },
     salaireEmbauche: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     caisseRetraiteComplementaire: {
       type: Boolean,
