@@ -108,11 +108,13 @@ describe("Cerfa", () => {
         avantageLogement: 456.78,
         autreAvantageEnNature: true,
         caisseRetraiteComplementaire: "null",
+        remunerationMajoration: 0,
         remunerationsAnnuelles: [
           {
             dateDebut: "2021-02-01T00:00:00+00:00",
             dateFin: "2021-02-28T00:00:00+00:00",
             taux: 75.5,
+            salaireBrut: 1200,
             typeSalaire: "SMIC",
             ordre: "1.1",
           },
