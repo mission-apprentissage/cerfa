@@ -13,9 +13,13 @@ services:
       - ./ui:/app #Allows source folders to be watched
       - /app/node_modules/
     build:
-      context: ui
-      dockerfile: Dockerfile.dev
-    env_file: ./ui/.env
+      args:
+        - REACT_APP_ENV=dev
+        - REACT_APP_BASE_URL=http://localhost
+        - REACT_APP_BASE_HOST=localhost
+        - REACT_APP_METABASE_URL=https://contrat.apprentissage.beta.gouv.fr/
+        - REACT_APP_METABASE_SECRET_KEY=
+        - SKIP_PREFLIGHT_CHECK=true
     environment:
       - FAST_REFRESH=false
 
