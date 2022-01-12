@@ -92,6 +92,7 @@ const employeurCerfaSchema = {
     type: String,
     description: "Libellé de la convention collective appliquée",
     label: "Libellé de la convention collective appliquée:",
+    requiredMessage: "Le libellé de la convention collective est obligatoire",
     nullable: true,
     example:
       "Convention collective nationale des entreprises de commission, de courtage et de commerce intracommunautaire et d'importation-exportation de France métropolitaine",

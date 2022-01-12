@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Box,
   Flex,
@@ -27,21 +27,30 @@ import AcknowledgeModal from "../../common/components/Modals/AcknowledgeModal";
 import Cerfa from "./Cerfa/Cerfa";
 import PiecesJustificatives from "./PiecesJustificatives/PiecesJustificatives";
 import Signatures from "./Signatures/Signatures";
-// import Statuts from "./Statuts/Statuts";
 import { InviteModal } from "./components/InviteModal";
 import LivePeopleAvatar from "./components/LivePeopleAvatar";
 
 import { useDossier } from "../../common/hooks/useDossier/useDossier";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
-import { AvatarPlus } from "../../theme/components/icons";
+import {
+  AvatarPlus,
+  // StepWip,
+  // TickBubble
+} from "../../theme/components/icons";
 
-import { cerfaEmployeurPrivePublicAtom } from "../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+import { cerfaPartFormationCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
+import {
+  cerfaPartEmployeurCompletionAtom,
+  cerfaEmployeurPrivePublicAtom,
+} from "../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+import { cerfaPartMaitresCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
+import { cerfaPartApprentiCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
+import { cerfaPartContratCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 
 const steps = [
   { label: "Cerfa", description: "Renseignez les informations" },
   { label: "Pièces justificatives", description: "Ajoutez les pièces justificatives" },
   { label: "Signatures et envoi", description: "Signatures" },
-  // { label: "État", description: "Statut de votre dossier" },
 ];
 
 const stepByPath = ["cerfa", "documents", "signatures", "etat"];
@@ -93,16 +102,30 @@ const stepByPath = ["cerfa", "documents", "signatures", "etat"];
 export default () => {
   let match = useRouteMatch();
   const inviteModal = useDisclosure();
-  const { nextStep, prevStep, activeStep, setStep } = useSteps({
+  const { nextStep, prevStep, activeStep } = useSteps({
     initialStep: stepByPath.indexOf(match.params.step),
   });
   const [stepState, setStepState] = useState();
+
   const { isloaded, dossier } = useDossier(match.params.id);
   const history = useHistory();
   const setWorkspaceTitle = useSetRecoilState(workspaceTitleAtom);
   const employeurPrivePublic = useRecoilValueLoadable(cerfaEmployeurPrivePublicAtom);
   const [hasSeenPrivateSectorModal, setHasSeenPrivateSectorModal] = useState(false);
   const isPrivateSectorAckModal = useDisclosure({ defaultIsOpen: true });
+
+  const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
+  const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
+  const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
+  const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
+  const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
+
+  const cerfaComplete =
+    employeurCompletionAtom?.contents === 100 &&
+    apprentiCompletionAtom?.contents === 100 &&
+    maitresCompletionAtom?.contents === 100 &&
+    contratCompletionAtom?.contents === 100 &&
+    formationCompletion?.contents === 100;
 
   useEffect(() => {
     const run = async () => {
@@ -113,14 +136,17 @@ export default () => {
     run();
   }, [dossier, history, isloaded, setWorkspaceTitle]);
 
-  const onClickNextStep = async () => {
-    setStepState("loading"); // type StateValue = "loading" | "error" | undefined
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setStepState("error");
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+  let onClickNextStep = useCallback(async () => {
+    setStepState("loading");
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    if (!cerfaComplete) {
+      setStepState("error");
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
     setStepState();
+
     nextStep();
-  };
+  }, [cerfaComplete, nextStep]);
 
   if (!isloaded)
     return (
@@ -202,20 +228,41 @@ export default () => {
         <Flex flexDir="column" width="100%" mt={9}>
           <Steps
             onClickStep={(step) => {
-              // if (step === 0 || step === 1) return setStep(step);
-              return setStep(step);
+              return { cerfaComplete };
             }}
             activeStep={activeStep}
+            // checkIcon={(e, i, a) => {
+            //   console.log(e, i, a);
+            //   // if (!cerfaComplete) return <StepWip color={"white"} boxSize="4" />;
+            //   return <TickBubble color={"white"} boxSize="4" />;
+            // }}
             state={stepState}
           >
-            {steps.map(({ label, description }, index) => (
-              <Step label={label} key={label} description={description}>
-                {index === 0 && <Cerfa />}
-                {index === 1 && <PiecesJustificatives />}
-                {index === 2 && <Signatures dossierId={dossier._id} />}
-                {/* {index === 3 && <Statuts />} */}
-              </Step>
-            ))}
+            {steps.map(({ label, description }, index) => {
+              //console.log("render");
+              return (
+                <Step
+                  label={
+                    <Box color="labelgrey" fontWeight={activeStep === index ? "bold" : "normal"} mb={1}>
+                      {label}
+                    </Box>
+                  }
+                  key={label}
+                  description={description}
+                  icon={() => {
+                    return (
+                      <Box color={activeStep === index ? "white" : "black"} fontWeight="bold">
+                        {index + 1}
+                      </Box>
+                    );
+                  }}
+                >
+                  {index === 0 && <Cerfa />}
+                  {index === 1 && <PiecesJustificatives />}
+                  {index === 2 && <Signatures dossierId={dossier._id} />}
+                </Step>
+              );
+            })}
           </Steps>
           <Flex width="100%" justify="flex-start" mt={8} mb={10}>
             <Button mr={4} size="md" variant="secondary" onClick={prevStep} isDisabled={activeStep === 0}>
@@ -233,7 +280,12 @@ export default () => {
               </Button>
             )}
             {activeStep === steps.length - 1 && (
-              <Button size="md" onClick={onClickNextStep} variant="primary">
+              <Button
+                size="md"
+                onClick={() => {}}
+                variant="primary"
+                isDisabled={!cerfaComplete || employeurPrivePublic?.contents?.value === "Employeur privé"}
+              >
                 Télécharger le dossier finalisé
               </Button>
             )}

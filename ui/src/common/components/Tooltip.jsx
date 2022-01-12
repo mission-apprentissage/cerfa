@@ -18,17 +18,17 @@ const TooltipIconAlert = (props) => (
     />
   </Icon>
 );
-const Tooltip = ({ variant, children }) => {
+const Tooltip = ({ variant, children, ...rest }) => {
   return (
-    <Box>
-      <Flex border={variant === "alert" ? "1px solid ##B34000" : "1px solid #0063CB"} w="15%">
-        <Box bg={variant === "alert" ? "#B34000" : "#0063CB"} p={2}>
+    <Box {...rest}>
+      <Flex borderColor={variant === "alert" ? "flatwarm" : "plaininfo"} borderWidth={"1px"} borderStyle={"solid"}>
+        <Flex bg={variant === "alert" ? "flatwarm" : "plaininfo"} p={2} alignItems="flex-start">
           {variant === "alert" ? (
             <TooltipIconAlert mx="auto" mt={3} w="30px" h="30px" color="white" />
           ) : (
             <TooltipIconInfo mx="auto" mt={3} w="30px" h="30px" color="white" />
           )}
-        </Box>
+        </Flex>
         <Box mx="1rem" py={5}>
           {children}
         </Box>
