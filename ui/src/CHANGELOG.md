@@ -1,3 +1,10 @@
+# [1.13.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.2...v1.13.0-beta.3) (2022-01-12)
+
+
+### Bug Fixes
+
+* regroup Dockerfile and prevent layer rebuilding ([4690975](https://github.com/mission-apprentissage/cerfa/commit/4690975a581bd533efa042bb137f5368d79ad1d0))
+
 # [1.13.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.1...v1.13.0-beta.2) (2022-01-12)
 
 
