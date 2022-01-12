@@ -18,10 +18,10 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import { useSetRecoilState, useRecoilValueLoadable } from "recoil";
 import { prettyPrintDate } from "../../common/utils/dateUtils";
 import { hasContextAccessTo } from "../../common/utils/rolesUtils";
-import { _put } from "../../common/httpClient";
-import useAuth from "../../common/hooks/useAuth";
-import PromptModal from "../../common/components/Modals/PromptModal";
-import { betaVersion, BetaFeatures } from "../../common/components/BetaFeatures";
+// import { _put } from "../../common/httpClient";
+// import useAuth from "../../common/hooks/useAuth";
+// import PromptModal from "../../common/components/Modals/PromptModal";
+// import { betaVersion, BetaFeatures } from "../../common/components/BetaFeatures";
 import AcknowledgeModal from "../../common/components/Modals/AcknowledgeModal";
 
 import Cerfa from "./Cerfa/Cerfa";
@@ -39,54 +39,56 @@ import { cerfaEmployeurPrivePublicAtom } from "../../common/hooks/useCerfa/parts
 
 const steps = [
   { label: "Cerfa", description: "Renseignez les informations" },
-  { label: "Piéces justificatives", description: "Ajoutez les pièces justificatives" },
+  { label: "Pièces justificatives", description: "Ajoutez les pièces justificatives" },
   { label: "Signatures et envoi", description: "Signatures" },
   // { label: "État", description: "Statut de votre dossier" },
 ];
 
 const stepByPath = ["cerfa", "documents", "signatures", "etat"];
 
-const AskBetaTest = () => {
-  let [auth, setAuth] = useAuth();
-  const betaModal = useDisclosure({ defaultIsOpen: auth.beta === null });
+// const AskBetaTest = () => {
+//   let [auth, setAuth] = useAuth();
+//   const betaModal = useDisclosure({ defaultIsOpen: auth.beta === null });
 
-  const onReplyClicked = async (answer) => {
-    try {
-      let user = await _put(`/api/v1/profile/becomeBeta`, {
-        beta: answer,
-      });
-      setAuth(user);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+//   const onReplyClicked = async (answer) => {
+//     try {
+//       let user = await _put(`/api/v1/profile/becomeBeta`, {
+//         beta: answer,
+//       });
+//       setAuth(user);
+//     } catch (e) {
+//       console.error(e);
+//     }
+//   };
 
-  return (
-    <>
-      {auth.sub !== "anonymous" && auth.confirmed && auth.account_status === "CONFIRMED" && (
-        <PromptModal
-          title="Fonctionnalités avancées  - expérimentales"
-          isOpen={betaModal.isOpen}
-          onClose={betaModal.onClose}
-          onOk={() => {
-            onReplyClicked(betaVersion());
-            betaModal.onClose();
-          }}
-          onKo={() => {
-            onReplyClicked("non");
-            betaModal.onClose();
-          }}
-          bgOverlay="rgba(0, 0, 0, 0.28)"
-        >
-          <Text mb={1}>Souhaitez-vous activer les fonctionnalité expérimentales de la plateforme ?</Text>
-          <Text>Cette activation vous donnera accès à :</Text>
-          <BetaFeatures borderColor={"dgalt"} borderWidth={1} px={4} py={3} maxH="30vh" my={3} />
-          <Text>Vous pouvez à tout moment (dés)activer les fonctionnalités expérimentales dans votre profile.</Text>
-        </PromptModal>
-      )}
-    </>
-  );
-};
+//   return (
+//     <>
+//       {auth.sub !== "anonymous" && auth.confirmed && auth.account_status === "CONFIRMED" && (
+//         <PromptModal
+//           title="Fonctionnalités avancées  - expérimentales"
+//           isOpen={betaModal.isOpen}
+//           onClose={betaModal.onClose}
+//           onOk={() => {
+//             onReplyClicked(betaVersion());
+//             betaModal.onClose();
+//           }}
+//           onKo={() => {
+//             onReplyClicked("non");
+//             betaModal.onClose();
+//           }}
+//           bgOverlay="rgba(0, 0, 0, 0.28)"
+//         >
+//           <Text mb={1}>
+//             Souhaitez-vous participer à l'amélioration du service, en testant de nouvelles fonctionnalités ?
+//           </Text>
+//           <Text>Cette activation vous donnera accès à :</Text>
+//           <BetaFeatures borderColor={"dgalt"} borderWidth={1} px={4} py={3} maxH="30vh" my={3} />
+//           <Text>Vous pouvez à tout moment (dés)activer depuis votre profil les fonctionnalités en test</Text>
+//         </PromptModal>
+//       )}
+//     </>
+//   );
+// };
 
 export default () => {
   let match = useRouteMatch();
@@ -135,7 +137,7 @@ export default () => {
 
   return (
     <Box w="100%" px={[1, 1, 6, 6]}>
-      <AskBetaTest />
+      {/* <AskBetaTest /> */}
       <AcknowledgeModal
         title="Vous êtes employeur privé"
         isOpen={

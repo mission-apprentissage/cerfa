@@ -33,19 +33,27 @@ export default () => {
 
         <Flex flexDir="column" width="100%" mt={9}>
           <Text>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard dummy text ever since the 1500s, when an unknow.
+            Un Dossier est constitué du formulaire de contrat d'apprentissage (ex cerfa) et des pièces jointes associées
+            (la convention de formation et la convention d'aménagement de durée, le cas échéant)
             <br />
             <br />
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-            scrambled it to make a type specimen book. Qui velit provident est Quis aperiam sit placeat culpa. Sed
-            fugiat quae aut officia eius est neque animi? Et esse delectus est perspiciatis Quis eum enim voluptate aut
-            totam voluptatibus. Aut voluptates soluta sit delectus ipsa eum dolores officia.
+            En cliquant sur "Créer un dossier", vous accédez au formulaire de saisie du générateur de contrat
+            d'apprentissage pour les employeurs publics. Celui-ci reprend les champs présents dans le "cerfa papier". La
+            complétude est facilitée car le service reprend les tables présentes dans la notice du cerfa pour les
+            proposer dans des menus déroulants. Le formulaire utilise également la base Insee pour effectuer un contrôle
+            réglementaire et s'assurer via son Siret que l'établissement est actif au moment de la conclusion du
+            contrat. D'autres contrôles réglementaires permettent de s'assurer que la formation est éligible à
+            l'apprentissage, que l'employeur est public, que l'âge de l'apprenti permet bien de réaliser un contrat
+            d'apprentissage, ou encore que la rémunération est conforme aux dispositions légales. De la même manière, le
+            formulaire propose de pré-compléter les données formation, à partir de la saisie de la donnée Siret ou UAI
+            du CFA, en exploitant pour cela le catalogue de formation collecté par chacun des Carifs, quand la donnée
+            existe. Enfin, la saisie du formulaire est simplifiée par des contrôles de cohérence sur les données saisies
+            (par exemple, la période de rémunération en fonction de la date de début du contrat et de la date de
+            naissance de l'apprenti saisie) et des alertes à la saisie.
             <br />
             <br />
-            Sed consequuntur rerum sed minima consequuntur non quia voluptates aut cumque repellendus a cumque
-            reprehenderit aut aspernatur commodi.
+            Pour préparer la complétude du dossier, munissez-vous des éléments suivants qui vous seront demandés Pour le
+            volet employeur : le n° de Siret, le téléphone et l'adresse mail de contact,
           </Text>
           <Flex width="100%" justifyContent="flex-end" mt={9}>
             <Button

@@ -18,23 +18,20 @@ export default () => {
       <Box w="100%" py={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
         <Container maxW="xl">
           <Heading as="h1" fontSize="lg">
-            Plateforme de gestion des Contrats en apprentissage du secteur publique.
+            Cette plateforme permet la saisie en ligne des contrats d'apprentissage pour les employeurs publics.
           </Heading>
           <Box pt={4} pb={16}>
             <Text>
-              Cette plateforme permet est une aide à la complétion de contrats en Apprentissage pour la fonction
-              publique.
+              En tant qu'employeur public, relevant donc de la fonction publique d'Etat, de la fonction publique
+              territoriale ou de la fonction publique hospitalière, vous pouvez générer le cerfa du contrat
+              d'apprentissage. L'outil propose pour cela le pré-remplissage d'un maximum des éléments attendus et
+              contrôle de cohérence et réglementaire de la donnée saisie.
               <br />
               <br />
             </Text>
             <Text>
-              Vous y trouverez un générateur de contrat d'apprentissage permettant le pré-remplissage et contrôle de la
-              donnée saisie.
-              <br />
-              <br />
-              Ce générateur donne un accès collaboratif à chacun des acteurs (Organisme de formation, Employeur et
-              Apprenti(e)). Il permet de notifier les acteurs lors d'un changement d'état (Cycle de vie de complétion du
-              CERFA).
+              Depuis cette plateforme, vous pourrez inviter des contributeurs (employeurs ou Centre de Formations des
+              Apprentis ) à collaborer à la complétude du document.
             </Text>
           </Box>
         </Container>

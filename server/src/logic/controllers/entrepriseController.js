@@ -23,6 +23,27 @@ class EntrepriseApiData {
     try {
       etablissementApiInfo = await apiEntreprise.getEtablissement(siret);
     } catch (e) {
+      console.log({ e });
+      if (e.reason === 451) {
+        return {
+          result: {
+            siret: siret,
+            siren: siret.substring(0, 9),
+            enseigne: "",
+            entreprise_raison_sociale: "",
+            numero_voie: "",
+            type_voie: "",
+            nom_voie: "",
+            code_postal: "",
+            localite: "",
+            naf_code: "",
+            conventionCollective: { idcc: "", titre: "" },
+          },
+          messages: {
+            api_entreprise: `Le Siret ${siret} existe`,
+          },
+        };
+      }
       return {
         result: {},
         messages: {

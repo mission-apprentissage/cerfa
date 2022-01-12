@@ -186,22 +186,25 @@ export function useCerfaEmployeur() {
                   ...employeurAdresseNumero,
                   value: data.numero_voie, //parseInt(data.numero_voie),
                 },
-                voie: { ...employeurAdresseVoie, value: `${data.type_voie} ${data.nom_voie}` },
+                voie: {
+                  ...employeurAdresseVoie,
+                  value: data.type_voie || data.nom_voie ? `${data.type_voie} ${data.nom_voie}` : "",
+                },
                 complement: { ...employeurAdresseComplement, value: data.complement_adresse || "" },
                 codePostal: { ...employeurAdresseCodePostal, value: data.code_postal },
                 commune: { ...employeurAdresseCommune, value: data.commune_implantation_nom },
               },
               privePublic: {
                 ...employeurPrivePublic,
-                value: data.public,
+                value: data.public || true,
               },
               codeIdcc: {
                 ...employeurCodeIdcc,
-                value: `${data.conventionCollective.idcc}`,
+                value: `${data.conventionCollective?.idcc}` || "",
               },
               libelleIdcc: {
                 ...employeurLibelleIdcc,
-                value: data.conventionCollective.titre || "",
+                value: data.conventionCollective?.titre || "",
               },
             },
           };
@@ -229,7 +232,7 @@ export function useCerfaEmployeur() {
                 libelleIdcc: newV.employeur.libelleIdcc.value,
                 // privePublic: convertOptionToValue(newV.employeur.privePublic),
                 adresse: {
-                  numero: newV.employeur.adresse.numero.value,
+                  numero: newV.employeur.adresse.numero.value || null,
                   voie: newV.employeur.adresse.voie.value,
                   complement: newV.employeur.adresse.complement.value,
                   codePostal: newV.employeur.adresse.codePostal.value,

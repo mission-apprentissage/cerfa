@@ -8,7 +8,7 @@ const getDataFromSiret = async (providedSiret, { withGeoloc = true } = {}) => {
     result: {},
     messages: {},
   };
-  if (withGeoloc && Object.keys(siretData.result).length > 0) {
+  if (withGeoloc && Object.keys(siretData.result).length > 0 && siretData.result.numero_voie !== "") {
     const { numero_voie, type_voie, nom_voie, code_postal, localite, code_insee_localite } = siretData.result;
     geoData = await getCoordinatesFromAddressData({
       numero_voie,
