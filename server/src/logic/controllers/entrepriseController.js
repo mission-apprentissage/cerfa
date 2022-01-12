@@ -36,8 +36,10 @@ class EntrepriseApiData {
             nom_voie: "",
             code_postal: "",
             localite: "",
+            commune_implantation_nom: "",
             naf_code: "",
             conventionCollective: { idcc: "", titre: "" },
+            secretSiret: true,
           },
           messages: {
             api_entreprise: `Le Siret ${siret} existe`,

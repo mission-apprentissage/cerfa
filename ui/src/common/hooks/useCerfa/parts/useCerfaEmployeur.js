@@ -192,7 +192,7 @@ export function useCerfaEmployeur() {
                 },
                 complement: { ...employeurAdresseComplement, value: data.complement_adresse || "" },
                 codePostal: { ...employeurAdresseCodePostal, value: data.code_postal },
-                commune: { ...employeurAdresseCommune, value: data.commune_implantation_nom },
+                commune: { ...employeurAdresseCommune, value: data.commune_implantation_nom || "" },
               },
               privePublic: {
                 ...employeurPrivePublic,
@@ -211,15 +211,34 @@ export function useCerfaEmployeur() {
 
           if (employeurSiret.value !== newV.employeur.siret.value) {
             setEmployeurSiret(newV.employeur.siret);
-            setEmployeurDenomination(newV.employeur.denomination);
-            setEmployeurNaf(newV.employeur.naf);
-            setEmployeurCodeIdcc(newV.employeur.codeIdcc);
-            setEmployeurLibelleIdcc(newV.employeur.libelleIdcc);
-            setEmployeurAdresseNumero(newV.employeur.adresse.numero);
-            setEmployeurAdresseVoie(newV.employeur.adresse.voie);
-            setEmployeurAdresseComplement(newV.employeur.adresse.complement);
-            setEmployeurAdresseCodePostal(newV.employeur.adresse.codePostal);
-            setEmployeurAdresseCommune(newV.employeur.adresse.commune);
+
+            if (!(employeurDenomination.value === "" && newV.employeur.denomination.value === "")) {
+              setEmployeurDenomination(newV.employeur.denomination);
+            }
+            if (!(employeurNaf.value === "" && newV.employeur.naf.value === "")) {
+              setEmployeurNaf(newV.employeur.naf);
+            }
+            if (!(employeurCodeIdcc.value === "" && newV.employeur.codeIdcc.value === "")) {
+              setEmployeurCodeIdcc(newV.employeur.codeIdcc);
+            }
+            if (!(employeurLibelleIdcc.value === "" && newV.employeur.libelleIdcc.value === "")) {
+              setEmployeurLibelleIdcc(newV.employeur.libelleIdcc);
+            }
+            if (!(employeurAdresseNumero.value === "" && newV.employeur.adresse.numero.value === "")) {
+              setEmployeurAdresseNumero(newV.employeur.adresse.numero);
+            }
+            if (!(employeurAdresseVoie.value === "" && newV.employeur.adresse.voie.value === "")) {
+              setEmployeurAdresseVoie(newV.employeur.adresse.voie);
+            }
+            if (!(employeurAdresseComplement.value === "" && newV.employeur.adresse.complement.value === "")) {
+              setEmployeurAdresseComplement(newV.employeur.adresse.complement);
+            }
+            if (!(employeurAdresseCodePostal.value === "" && newV.employeur.adresse.codePostal.value === "")) {
+              setEmployeurAdresseCodePostal(newV.employeur.adresse.codePostal);
+            }
+            if (!(employeurAdresseCommune.value === "" && newV.employeur.adresse.commune.value === "")) {
+              setEmployeurAdresseCommune(newV.employeur.adresse.commune);
+            }
 
             setEmployeurPrivePublic(convertValueToOption(newV.employeur.privePublic));
 
@@ -233,7 +252,7 @@ export function useCerfaEmployeur() {
                 // privePublic: convertOptionToValue(newV.employeur.privePublic),
                 adresse: {
                   numero: newV.employeur.adresse.numero.value || null,
-                  voie: newV.employeur.adresse.voie.value,
+                  voie: newV.employeur.adresse.voie.value || null,
                   complement: newV.employeur.adresse.complement.value,
                   codePostal: newV.employeur.adresse.codePostal.value,
                   commune: newV.employeur.adresse.commune.value,

@@ -6,6 +6,7 @@ const employeurCerfaSchema = {
     type: String,
     description: "Dénomination de l'employeur",
     label: "Nom et prénom ou dénomination :",
+    requiredMessage: "La dénomination de l'employeur est obligatoire",
     example: "ENERGIE 3000",
     default: null,
     required: function () {
@@ -60,6 +61,7 @@ const employeurCerfaSchema = {
     },
     description: "Code NAF de l'employeur",
     label: "Code NAF de l'employeur :",
+    requiredMessage: "le code NAF est obligatoire",
     example: "1031Z",
   },
   nombreDeSalaries: {
@@ -81,6 +83,7 @@ const employeurCerfaSchema = {
     },
     description: "Code IDCC de la convention collective appliquée",
     label: "Code IDCC de la convention collective appliquée : ",
+    requiredMessage: "le code idcc est obligatoire",
     example: "0043",
   },
   libelleIdcc: {
@@ -89,6 +92,7 @@ const employeurCerfaSchema = {
     type: String,
     description: "Libellé de la convention collective appliquée",
     label: "Libellé de la convention collective appliquée:",
+    requiredMessage: "Le libellé de la convention collective est obligatoire",
     nullable: true,
     example:
       "Convention collective nationale des entreprises de commission, de courtage et de commerce intracommunautaire et d'importation-exportation de France métropolitaine",

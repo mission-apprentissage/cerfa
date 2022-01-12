@@ -159,7 +159,7 @@ const fieldsPositions = {
       y: 445,
       maxLength: 15,
       title: (value) => {
-        return value.match(/\d{1}/g).join(" ");
+        return value?.match(/\d{1}/g).join(" ") || "";
       },
     },
     adresse: {
@@ -236,8 +236,8 @@ const fieldsPositions = {
         title: async (value, options) => {
           const helveticaFont = await options.pdfDoc.embedFont(StandardFonts.Helvetica);
           return [
-            { text: value },
-            { text: options.prenom, options: { x: 35 + helveticaFont.widthOfTextAtSize(value, 11) } },
+            { text: value || "" },
+            { text: options.prenom, options: { x: 35 + helveticaFont.widthOfTextAtSize(value || "", 11) } },
           ];
         },
       },
@@ -259,11 +259,11 @@ const fieldsPositions = {
             ];
             for (let index = 0; index < voieWordToReplace.length; index++) {
               const [wordToReplace, replaceWith] = voieWordToReplace[index];
-              if (value.includes(wordToReplace)) {
+              if (value?.includes(wordToReplace)) {
                 return value.replace(wordToReplace, replaceWith);
               }
             }
-            return value;
+            return value || "";
           },
         },
         complement: {
@@ -276,7 +276,7 @@ const fieldsPositions = {
           y: 179,
           maxLength: 30,
           title: (value) => {
-            return value.match(/\d{1}/g).join(" ");
+            return value?.match(/\d{1}/g).join(" ") || "";
           },
         },
         commune: {
@@ -413,7 +413,7 @@ const fieldsPositions = {
       y: 775,
       maxLength: 25,
       title: (value) => {
-        return value.match(/\d{1}/g).join(" ");
+        return value?.match(/\d{1}/g).join(" ");
       },
     },
     dateConclusion: {
@@ -714,7 +714,7 @@ const fieldsPositions = {
       y: 463,
       maxLength: 8,
       title: (value) => {
-        return value.match(/\d{1}/g).join(" ");
+        return value.match(/\d{1}/g).join(" ") || "";
       },
     },
     codeDiplome: {
@@ -722,7 +722,7 @@ const fieldsPositions = {
       y: 463,
       maxLength: 8,
       title: (value) => {
-        return value.match(/\d{1}/g).join(" ");
+        return value.match(/\d{1}/g).join(" ") || "";
       },
     },
     siret: {
@@ -730,7 +730,7 @@ const fieldsPositions = {
       y: 448,
       maxLength: 14,
       title: (value) => {
-        return value.match(/\d{1}/g).join(" ");
+        return value.match(/\d{1}/g).join(" ") || "";
       },
     },
     rncp: {
@@ -738,7 +738,7 @@ const fieldsPositions = {
       y: 449,
       maxLength: 9,
       title: (value) => {
-        return value.match(/\d{1}/g).join(" ");
+        return value.match(/\d{1}/g).join(" ") || "";
       },
     },
     adresse: {
@@ -763,7 +763,7 @@ const fieldsPositions = {
               return value.replace(wordToReplace, replaceWith);
             }
           }
-          return value;
+          return value || "";
         },
       },
       complement: {
@@ -776,7 +776,7 @@ const fieldsPositions = {
         y: 380,
         maxLength: 5,
         title: (value) => {
-          return value.match(/\d{1}/g).join(" ");
+          return value.match(/\d{1}/g).join(" ") || "";
         },
       },
       commune: {
@@ -802,10 +802,10 @@ const fieldsPositions = {
     },
   },
 };
-const capitalizeFirstLetter = (value) => value.charAt(0).toUpperCase() + value.slice(1);
+const capitalizeFirstLetter = (value) => value?.charAt(0).toUpperCase() + value?.slice(1);
 
 const buildFieldDraw = async (value, fieldDefinition, options = {}) => {
-  const isDate = moment.isDate(value) ? moment(value).utc().format("MM/DD/YYYY") : `${value}`;
+  const isDate = !value ? "" : moment.isDate(value) ? moment(value).utc().format("MM/DD/YYYY") : `${value}`;
   const title = typeof value === "boolean" ? (value ? "X" : " ") : isDate;
   const result = {
     title:
@@ -981,8 +981,8 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
     const page = pages[index];
     for (let jndex = 0; jndex < pdfPageContent.length; jndex++) {
       const { title, x, y, defaultColor, defaultSize } = pdfPageContent[jndex];
-      let pablo = Array.isArray(title) ? title : [title];
-      pablo.forEach((t) => {
+      let arrTitles = Array.isArray(title) ? title : [title];
+      arrTitles.forEach((t) => {
         let text = isObject(t) ? t.text : t;
         const titles = capitalizeFirstLetter(text);
         for (let kndex = 0; kndex < titles.length; kndex++) {

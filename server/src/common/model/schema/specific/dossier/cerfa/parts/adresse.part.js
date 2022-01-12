@@ -3,6 +3,7 @@ const adresseSchema = {
     type: Number,
     description: "N° de la voie",
     label: "N° :",
+    requiredMessage: "le N° de la voie est obligatoire",
     required: function () {
       return !this.draft;
     },
@@ -14,6 +15,7 @@ const adresseSchema = {
     type: String,
     description: "Nom de voie",
     label: "Voie :",
+    requiredMessage: "le nom de voie est obligatoire",
     nullable: true,
     example: "Boulevard de la liberté",
     default: null,
@@ -25,6 +27,7 @@ const adresseSchema = {
     type: String,
     description: "Complément d'adresse",
     label: "Complément :",
+    requiredMessage: "le complement d'adress est obligatoire",
     nullable: true,
     default: null,
     required: function () {
@@ -70,6 +73,7 @@ const adresseSchema = {
     type: String,
     description: "Commune",
     label: "Commune: ",
+    requiredMessage: "la commune est obligatoire",
     example: "PARIS",
     default: null,
     required: function () {

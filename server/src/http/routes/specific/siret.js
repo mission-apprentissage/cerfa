@@ -58,6 +58,7 @@ module.exports = (components) => {
           code_postal: data.result.code_postal,
           localite: data.result.localite,
           ferme: data.result.ferme,
+          secretSiret: data.result.secretSiret || false,
           uai,
         };
       }

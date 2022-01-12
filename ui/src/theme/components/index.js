@@ -1,4 +1,3 @@
-import { StepsStyleConfig as Steps } from "chakra-ui-steps";
 import { Tabs } from "./tabs";
 import { Badge } from "./badge";
 import { Button } from "./button";
@@ -11,6 +10,7 @@ import { Accordion } from "./accordion";
 import { Select } from "./select";
 import { Radio } from "./radio";
 import { Switch } from "./switch";
+import { Steps } from "./steps";
 
 const components = {
   Tabs,
