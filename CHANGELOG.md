@@ -1,3 +1,25 @@
+# [1.13.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.1...v1.13.0-beta.2) (2022-01-12)
+
+
+### Bug Fixes
+
+* few bugs fix before opening recette ([1525167](https://github.com/mission-apprentissage/cerfa/commit/1525167786ea1c9e8660a32a5634a549179faf0c))
+* modifications des données de test pour un dossier non brouillon ([4c70ead](https://github.com/mission-apprentissage/cerfa/commit/4c70ead89714cde5580ec033241127f79c79b3be))
+
+
+### Features
+
+* autre avantages ([022e23d](https://github.com/mission-apprentissage/cerfa/commit/022e23dcd3ff4c25fd76b33d8d34424ce9987169))
+* base algorithme rémunération fonction publique ([72b02c2](https://github.com/mission-apprentissage/cerfa/commit/72b02c23f8235cf7ecc9ed03d13adc1ffe608be1))
+* base sauvegarde partie apprenti ([af28f23](https://github.com/mission-apprentissage/cerfa/commit/af28f2330724faf6eda5e7bd32afe296c1edf9f5))
+* base sauvegarde partie contrat ([e11836b](https://github.com/mission-apprentissage/cerfa/commit/e11836b7c44d16953947811cd2229bb61a65a373))
+* gestion age de l'apprenti et adresse - partie apprenti ([a2681f1](https://github.com/mission-apprentissage/cerfa/commit/a2681f13204937f2f8258622e98448e3ed79dfc3))
+* **pdf:** update max lengthb ([9b0731b](https://github.com/mission-apprentissage/cerfa/commit/9b0731bc365195dc0ac78a063ca0211e98a0c330))
+* sauvegarde 100% partie employeur ([d7b7aaa](https://github.com/mission-apprentissage/cerfa/commit/d7b7aaa9fd29e35b3385ec533b2d7db0116d299e))
+* sauvegarde 100% partie formation ([d69def3](https://github.com/mission-apprentissage/cerfa/commit/d69def35097eac13d39dcdd63adf12beb6987095))
+* sauvegarde 100% partie maitres apprentissage ([96bab21](https://github.com/mission-apprentissage/cerfa/commit/96bab21c70c9f53180ccb18e000dc8e5df6e81e1))
+* sauvegarde rémunerations ([06f8425](https://github.com/mission-apprentissage/cerfa/commit/06f8425897ffc6ec012180bb628b46d2b600936b))
+
 # [1.13.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0...v1.13.0-beta.1) (2022-01-10)
 
 
