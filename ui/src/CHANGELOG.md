@@ -1,3 +1,18 @@
+# [1.13.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.4...v1.13.0-beta.5) (2022-01-12)
+
+
+### Bug Fixes
+
+* generation pdf ([6cb4e05](https://github.com/mission-apprentissage/cerfa/commit/6cb4e055630d495bfc41b8b2ba328ddeffdd67fe))
+
+
+### Features
+
+* ajout des favicon ([9d8354d](https://github.com/mission-apprentissage/cerfa/commit/9d8354dc02a19a5723e6512a107202d17ed4f858))
+* cosmetics ([666dc5a](https://github.com/mission-apprentissage/cerfa/commit/666dc5ae75decaa532dcf940433b2c9349eaca94))
+* cosmetiques ([e92d872](https://github.com/mission-apprentissage/cerfa/commit/e92d872e200af1eee5486f21bd5dd09de25dee0e))
+* refresh template email ([52ff808](https://github.com/mission-apprentissage/cerfa/commit/52ff808cfb66da189bda58f78efaaeb469539c2b))
+
 # [1.13.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.3...v1.13.0-beta.4) (2022-01-12)
 
 
