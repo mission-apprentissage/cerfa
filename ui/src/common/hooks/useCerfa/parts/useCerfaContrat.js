@@ -18,6 +18,8 @@ import {
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
+// import { cerfaApprentiDateNaissanceAtom } from "./useCerfaApprentiAtoms";
+import { isInValidDateDebutContratAge } from "./useCerfaApprenti";
 import * as contratAtoms from "./useCerfaContratAtoms";
 
 const cerfaContratCompletion = (res) => {
@@ -344,18 +346,38 @@ export const CerfaContratController = async (dossier) => {
       dateDebutContrat: {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
-          const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-            ...data,
-            dateDebutContrat: value,
-          });
+
+          if (data.dateNaissance !== "") {
+            const isInvalidDDCA = isInValidDateDebutContratAge(
+              DateTime.fromISO(data.apprentiDateNaissance).setLocale("fr-FR"),
+              data.apprentiAge,
+              value
+            );
+            if (isInvalidDDCA) return isInvalidDDCA;
+          }
+
+          if (data.apprentiDateNaissance !== "") {
+            const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
+              ...data,
+              dateDebutContrat: value,
+            });
+
+            return {
+              successed: true,
+              data: {
+                dateDebutContrat: value,
+                remunerationsAnnuelles,
+                remunerationsAnnuellesDbValue,
+                salaireEmbauche,
+              },
+              message: null,
+            };
+          }
 
           return {
             successed: true,
             data: {
               dateDebutContrat: value,
-              remunerationsAnnuelles,
-              remunerationsAnnuellesDbValue,
-              salaireEmbauche,
             },
             message: null,
           };
@@ -389,7 +411,9 @@ export const CerfaContratController = async (dossier) => {
 export function useCerfaContrat() {
   const cerfa = useRecoilValue(cerfaAtom);
   const dossier = useRecoilValue(dossierAtom);
+  // const [apprentiDateNaissance, setApprentiDateNaissance] = useRecoilState(cerfaApprentiDateNaissanceAtom);
 
+  //Internal
   const [partContratCompletion, setPartContratCompletion] = useRecoilState(contratAtoms.cerfaPartContratCompletionAtom);
 
   const [contratModeContractuel, setContratModeContractuel] = useRecoilState(
@@ -833,23 +857,34 @@ export function useCerfaContrat() {
               dateDebutContrat: {
                 ...contratDateDebutContrat,
                 value: data.dateDebutContrat,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
           if (contratDateDebutContrat.value !== newV.contrat.dateDebutContrat.value) {
+            // setApprentiDateNaissance({ ...apprentiDateNaissance, value: "" });
+
             setContratDateDebutContrat(newV.contrat.dateDebutContrat);
 
-            setRemunerations(data);
-
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+            let dataToSave = {
               contrat: {
                 dateDebutContrat: convertDateToValue(newV.contrat.dateDebutContrat),
-                remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
-                salaireEmbauche: data.salaireEmbauche.toFixed(2),
               },
-            });
+            };
+            if (data.remunerationsAnnuelles && data.remunerationsAnnuellesDbValue && data.salaireEmbauche) {
+              setRemunerations(data);
+              dataToSave = {
+                contrat: {
+                  ...dataToSave.contrat,
+                  remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
+                  salaireEmbauche: data.salaireEmbauche.toFixed(2),
+                },
+              };
+            }
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartContratCompletion(cerfaContratCompletion(res));
+
+            // setApprentiDateNaissance({ ...apprentiDateNaissance, triggerValidation: true });
           }
         }
       } catch (e) {
@@ -859,10 +894,10 @@ export function useCerfaContrat() {
     [
       contratDateDebutContrat,
       setContratDateDebutContrat,
-      setRemunerations,
       dossier?._id,
       cerfa?.id,
       setPartContratCompletion,
+      setRemunerations,
     ]
   );
 

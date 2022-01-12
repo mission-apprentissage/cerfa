@@ -83,6 +83,21 @@ const cerfaApprentiCompletion = (res) => {
   return fieldCompletionPercentage(fieldsToKeep, countFields);
 };
 
+export const isInValidDateDebutContratAge = (dateNaissance, age, pdateDebutContrat) => {
+  if (age === 14 && pdateDebutContrat !== "") {
+    const dateDebutContrat = DateTime.fromISO(pdateDebutContrat).setLocale("fr-FR");
+    const anniversaireA1 = dateNaissance.plus({ years: age + 1 });
+    if (dateDebutContrat < anniversaireA1) {
+      return {
+        successed: false,
+        data: null,
+        message: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
+      };
+    }
+  }
+  return false;
+};
+
 export const CerfaApprentiController = async (dossier) => {
   return {
     apprenti: {
@@ -92,31 +107,46 @@ export const CerfaApprentiController = async (dossier) => {
           const dateNaissance = DateTime.fromISO(value).setLocale("fr-FR");
           const today = DateTime.now().setLocale("fr-FR");
           const diffInYears = today.diff(dateNaissance, "years");
-          const { years: age } = diffInYears.toObject();
+          const { years: apprentiAge } = diffInYears.toObject();
+          const age = Math.floor(apprentiAge);
+
           if (age < 14) {
-            // TODO + date de debut de contrat
             return {
               successed: false,
               data: null,
-              message: "L'apprenti(e) doit avoir au moins 14 ans",
+              message: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
             };
           }
 
-          const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-            apprentiDateNaissance: value,
-            apprentiAge: age,
-            dateDebutContrat: data.dateDebutContrat,
-            remunerationMajoration: data.remunerationMajoration,
-          });
+          const isInvalidDDCA = isInValidDateDebutContratAge(dateNaissance, age, data.dateDebutContrat);
+          if (isInvalidDDCA) return isInvalidDDCA;
+
+          if (data.dateDebutContrat !== "") {
+            const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
+              apprentiDateNaissance: value,
+              apprentiAge: age,
+              dateDebutContrat: data.dateDebutContrat,
+              remunerationMajoration: data.remunerationMajoration,
+            });
+
+            return {
+              successed: true,
+              data: {
+                dateNaissance: value,
+                age,
+                remunerationsAnnuelles,
+                remunerationsAnnuellesDbValue,
+                salaireEmbauche,
+              },
+              message: null,
+            };
+          }
 
           return {
             successed: true,
             data: {
               dateNaissance: value,
               age,
-              remunerationsAnnuelles,
-              remunerationsAnnuellesDbValue,
-              salaireEmbauche,
             },
             message: null,
           };
@@ -294,18 +324,24 @@ export function useCerfaApprenti() {
             setApprentiDateNaissance(newV.apprenti.dateNaissance);
             setApprentiAge(newV.apprenti.age);
 
-            setRemunerations(data);
-
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+            let dataToSave = {
               apprenti: {
                 dateNaissance: convertDateToValue(newV.apprenti.dateNaissance),
                 age: newV.apprenti.age.value,
               },
-              contrat: {
-                remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
-                salaireEmbauche: data.salaireEmbauche.toFixed(2),
-              },
-            });
+            };
+            if (data.remunerationsAnnuelles && data.remunerationsAnnuellesDbValue && data.salaireEmbauche) {
+              setRemunerations(data);
+              dataToSave = {
+                ...dataToSave,
+                contrat: {
+                  remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
+                  salaireEmbauche: data.salaireEmbauche.toFixed(2),
+                },
+              };
+            }
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
           }
         }

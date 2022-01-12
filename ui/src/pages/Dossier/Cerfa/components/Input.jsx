@@ -73,80 +73,6 @@ export default React.memo(
       },
     });
 
-    useEffect(() => {
-      (async () => {
-        prevOnAsyncDataRef.current = onAsyncData;
-
-        const validationSchema = Yup.object().shape({
-          [name]: Yup.string()
-            .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
-            .required(field?.requiredMessage),
-        });
-        let fieldValue = field?.value;
-
-        //
-        const { isValid: isValidFieldValue } = await validate(validationSchema, {
-          [name]: fieldValue,
-        });
-        // console.log(path, ">>>>", initRef.current, values[name], fieldValue, isValidFieldValue);
-        if (initRef.current === 0) {
-          if (field) {
-            // console.log("Init");
-            setShouldBeDisabled(field.locked);
-            if (values[name] === "") {
-              if (fieldValue !== "") {
-                if (isValidFieldValue) {
-                  setFieldValue(name, fieldValue);
-                  setIsErrored(false);
-                  setValidated(true);
-                } else {
-                  setShouldBeDisabled(false);
-                  setFieldValue(name, fieldValue);
-                }
-              }
-            }
-            initRef.current = 1;
-          }
-        } else {
-          if (prevFieldValueRef.current !== fieldValue || field?.forceUpdate) {
-            // console.log("Outside Update", prevFieldValueRef, fieldValue, field?.forceUpdate);
-            setFieldValue(name, fieldValue);
-            setShouldBeDisabled(field?.locked);
-            if (isValidFieldValue) {
-              setIsErrored(false);
-              setValidated(true);
-            } else {
-              setShouldBeDisabled(false);
-              setFromInternal(true);
-              setIsErrored(true);
-              setValidated(false);
-            }
-            prevFieldValueRef.current = fieldValue;
-            if (field?.forceUpdate) {
-              await onSubmittedField(path, fieldValue);
-            }
-          } else {
-            if (fromInternal) {
-              const { isValid: isValidInternalValue, error: errorInternalValue } = await validate(validationSchema, {
-                [name]: values[name],
-              });
-              console.log(isValidInternalValue, errorInternalValue);
-              if (!isValidInternalValue) {
-                setErrors({ [name]: errorInternalValue.message });
-                setIsErrored(true);
-                setValidated(false);
-              }
-              setFromInternal(false);
-            }
-          }
-        }
-        //
-      })();
-      return () => {};
-    }, [onAsyncData, field, path, name, setFieldValue, values, setErrors, onSubmittedField, fromInternal]);
-
-    const prevOnAsyncData = prevOnAsyncDataRef.current;
-
     let handleChange = useCallback(
       async (e) => {
         // e.persist();
@@ -196,6 +122,94 @@ export default React.memo(
       },
       [type, parse, name, field, setFieldValue, onAsyncData, setErrors, onSubmittedField, path]
     );
+
+    useEffect(() => {
+      (async () => {
+        prevOnAsyncDataRef.current = onAsyncData;
+
+        const validationSchema = Yup.object().shape({
+          [name]: Yup.string()
+            .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
+            .required(field?.requiredMessage),
+        });
+        let fieldValue = field?.value;
+
+        //
+        const { isValid: isValidFieldValue } = await validate(validationSchema, {
+          [name]: fieldValue,
+        });
+        // console.log(path, ">>>>", initRef.current, values[name], fieldValue, isValidFieldValue);
+        if (initRef.current === 0) {
+          if (field) {
+            // console.log("Init");
+            setShouldBeDisabled(field.locked);
+            if (values[name] === "") {
+              if (fieldValue !== "") {
+                if (isValidFieldValue) {
+                  setFieldValue(name, fieldValue);
+                  setIsErrored(false);
+                  setValidated(true);
+                } else {
+                  setShouldBeDisabled(false);
+                  setFieldValue(name, fieldValue);
+                }
+              }
+            }
+            initRef.current = 1;
+          }
+        } else {
+          if (prevFieldValueRef.current !== fieldValue || field?.forceUpdate) {
+            // console.log("Outside Update", prevFieldValueRef, fieldValue, field?.forceUpdate, path);
+            setFieldValue(name, fieldValue);
+            setShouldBeDisabled(field?.locked);
+            if (isValidFieldValue) {
+              setIsErrored(false);
+              setValidated(true);
+            } else {
+              setShouldBeDisabled(false);
+              setFromInternal(true);
+              setIsErrored(true);
+              setValidated(false);
+            }
+            prevFieldValueRef.current = fieldValue;
+            if (field?.forceUpdate) {
+              await onSubmittedField(path, fieldValue);
+            }
+            if (field?.triggerValidation) {
+              await handleChange({ persist: () => {}, target: { value: fieldValue } });
+            }
+          } else {
+            if (fromInternal) {
+              const { isValid: isValidInternalValue, error: errorInternalValue } = await validate(validationSchema, {
+                [name]: values[name],
+              });
+              // console.log(isValidInternalValue, errorInternalValue);
+              if (!isValidInternalValue) {
+                setErrors({ [name]: errorInternalValue.message });
+                setIsErrored(true);
+                setValidated(false);
+              }
+              setFromInternal(false);
+            }
+          }
+        }
+        //
+      })();
+      return () => {};
+    }, [
+      onAsyncData,
+      field,
+      path,
+      name,
+      setFieldValue,
+      values,
+      setErrors,
+      onSubmittedField,
+      fromInternal,
+      handleChange,
+    ]);
+
+    const prevOnAsyncData = prevOnAsyncDataRef.current;
 
     if (
       prevOnAsyncData &&
