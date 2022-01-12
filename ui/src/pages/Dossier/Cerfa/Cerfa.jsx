@@ -75,7 +75,7 @@ export default () => {
         // },
       ].map(({ title, Component, completion }, key) => {
         return (
-          <AccordionItem border="none" key={key}>
+          <AccordionItem border="none" key={key} id={`accordion_${key}`}>
             {({ isExpanded }) => (
               <>
                 <AccordionButton bg="#F9F8F6">
