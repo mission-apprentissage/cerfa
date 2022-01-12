@@ -192,14 +192,29 @@ const Register = () => {
                   <>
                     {entrepriseData.data && (
                       <>
-                        <Box>{entrepriseData.data.enseigne || entrepriseData.data.entreprise_raison_sociale}</Box>
-                        <Box>
-                          {entrepriseData.data.numero_voie} {entrepriseData.data.nom_voie}
-                        </Box>
-                        {entrepriseData.data.complement_adresse && <Box>{entrepriseData.data.complement_adresse}</Box>}
-                        <Box>
-                          {entrepriseData.data.code_postal} {entrepriseData.data.localite}
-                        </Box>
+                        {!entrepriseData.data.secretSiret && (
+                          <>
+                            <Box>{entrepriseData.data.enseigne || entrepriseData.data.entreprise_raison_sociale}</Box>
+                            <Box>
+                              {entrepriseData.data.numero_voie} {entrepriseData.data.nom_voie}
+                            </Box>
+                            {entrepriseData.data.complement_adresse && (
+                              <Box>{entrepriseData.data.complement_adresse}</Box>
+                            )}
+                            <Box>
+                              {entrepriseData.data.code_postal} {entrepriseData.data.localite}
+                            </Box>
+                          </>
+                        )}
+                        {entrepriseData.data.secretSiret && (
+                          <>
+                            <Box>Votre siret est valide.</Box>
+                            <Box>
+                              En revanche, en raison de sa nature, nous ne pourrons pas récupérer les informations
+                              reliées. (telles que l'adresse et autres données)
+                            </Box>
+                          </>
+                        )}
                       </>
                     )}
                     {entrepriseData.message && (

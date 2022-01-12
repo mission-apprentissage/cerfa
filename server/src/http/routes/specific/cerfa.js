@@ -156,7 +156,7 @@ module.exports = (components) => {
           courriel: Joi.string(),
           adresse: Joi.object({
             numero: Joi.number().allow(null),
-            voie: Joi.string().allow(""),
+            voie: Joi.string().allow(null),
             complement: Joi.string().allow(""),
             label: Joi.string().allow(""),
             codePostal: Joi.string().allow(""),
