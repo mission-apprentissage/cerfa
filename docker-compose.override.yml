@@ -15,10 +15,11 @@ services:
     build:
       args:
         - REACT_APP_ENV=dev
-        - REACT_APP_BASE_URL=
-        - REACT_APP_BASE_HOST=
-        - REACT_APP_METABASE_URL=
+        - REACT_APP_BASE_URL=http://localhost
+        - REACT_APP_BASE_HOST=localhost
+        - REACT_APP_METABASE_URL=https://contrat.apprentissage.beta.gouv.fr/
         - REACT_APP_METABASE_SECRET_KEY=
+        - SKIP_PREFLIGHT_CHECK=true
     environment:
       - FAST_REFRESH=false
 
