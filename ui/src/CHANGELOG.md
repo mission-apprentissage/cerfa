@@ -1,3 +1,10 @@
+# [1.13.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.3...v1.13.0-beta.4) (2022-01-12)
+
+
+### Bug Fixes
+
+* accordion uniq ids ([8b4fc7c](https://github.com/mission-apprentissage/cerfa/commit/8b4fc7c553e8ea9fbc470429462ce62d0410686b))
+
 # [1.13.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.2...v1.13.0-beta.3) (2022-01-12)
 
 
