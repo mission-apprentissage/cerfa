@@ -295,6 +295,181 @@ export function useCerfaEmployeur() {
     ]
   );
 
+  const onSubmittedEmployeurAdresseNumero = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "employeur.adresse.numero") {
+          const newV = {
+            employeur: {
+              adresse: {
+                numero: {
+                  ...employeurAdresseNumero,
+                  value: data,
+                  // forceUpdate: false, // IF data = "" true
+                },
+              },
+            },
+          };
+          if (employeurAdresseNumero.value !== newV.employeur.adresse.numero.value) {
+            setEmployeurAdresseNumero(newV.employeur.adresse.numero);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              employeur: {
+                adresse: {
+                  numero: newV.employeur.adresse.numero.value,
+                },
+              },
+            });
+            setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [employeurAdresseNumero, setEmployeurAdresseNumero, dossier?._id, cerfa?.id, setPartEmployeurCompletionAtom]
+  );
+
+  const onSubmittedEmployeurAdresseVoie = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "employeur.adresse.voie") {
+          const newV = {
+            employeur: {
+              adresse: {
+                voie: {
+                  ...employeurAdresseVoie,
+                  value: data,
+                  // forceUpdate: false, // IF data = "" true
+                },
+              },
+            },
+          };
+          if (employeurAdresseVoie.value !== newV.employeur.adresse.voie.value) {
+            setEmployeurAdresseVoie(newV.employeur.adresse.voie);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              employeur: {
+                adresse: {
+                  voie: newV.employeur.adresse.voie.value,
+                },
+              },
+            });
+            setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [employeurAdresseVoie, setEmployeurAdresseVoie, dossier?._id, cerfa?.id, setPartEmployeurCompletionAtom]
+  );
+
+  const onSubmittedEmployeurAdresseComplement = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "employeur.adresse.complement") {
+          const newV = {
+            employeur: {
+              adresse: {
+                complement: {
+                  ...employeurAdresseComplement,
+                  value: data,
+                  // forceUpdate: false, // IF data = "" true
+                },
+              },
+            },
+          };
+          if (employeurAdresseComplement.value !== newV.employeur.adresse.complement.value) {
+            setEmployeurAdresseComplement(newV.employeur.adresse.complement);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              employeur: {
+                adresse: {
+                  complement: newV.employeur.adresse.complement.value,
+                },
+              },
+            });
+            setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [employeurAdresseComplement, setEmployeurAdresseComplement, dossier?._id, cerfa?.id, setPartEmployeurCompletionAtom]
+  );
+
+  const onSubmittedEmployeurAdresseCodePostal = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "employeur.adresse.codePostal") {
+          const newV = {
+            employeur: {
+              adresse: {
+                codePostal: {
+                  ...employeurAdresseCodePostal,
+                  value: data,
+                  // forceUpdate: false, // IF data = "" true
+                },
+              },
+            },
+          };
+          if (employeurAdresseCodePostal.value !== newV.employeur.adresse.codePostal.value) {
+            setEmployeurAdresseCodePostal(newV.employeur.adresse.codePostal);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              employeur: {
+                adresse: {
+                  codePostal: newV.employeur.adresse.codePostal.value,
+                },
+              },
+            });
+            setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [employeurAdresseCodePostal, setEmployeurAdresseCodePostal, dossier?._id, cerfa?.id, setPartEmployeurCompletionAtom]
+  );
+
+  const onSubmittedEmployeurAdresseCommune = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "employeur.adresse.commune") {
+          const newV = {
+            employeur: {
+              adresse: {
+                commune: {
+                  ...employeurAdresseCommune,
+                  value: data,
+                  // forceUpdate: false, // IF data = "" true
+                },
+              },
+            },
+          };
+          if (employeurAdresseCommune.value !== newV.employeur.adresse.commune.value) {
+            setEmployeurAdresseCommune(newV.employeur.adresse.commune);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              employeur: {
+                adresse: {
+                  commune: newV.employeur.adresse.commune.value,
+                },
+              },
+            });
+            setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [employeurAdresseCommune, setEmployeurAdresseCommune, dossier?._id, cerfa?.id, setPartEmployeurCompletionAtom]
+  );
+
   const onSubmittedEmployeurTypeEmployeur = useCallback(
     async (path, data) => {
       try {
@@ -627,6 +802,13 @@ export function useCerfaEmployeur() {
         telephone: onSubmittedEmployeurTelephone,
         courriel: onSubmittedEmployeurCourriel,
         regimeSpecifique: onSubmittedEmployeurRegimeSpecifique,
+        adresse: {
+          numero: onSubmittedEmployeurAdresseNumero,
+          voie: onSubmittedEmployeurAdresseVoie,
+          complement: onSubmittedEmployeurAdresseComplement,
+          codePostal: onSubmittedEmployeurAdresseCodePostal,
+          commune: onSubmittedEmployeurAdresseCommune,
+        },
       },
     },
   };
