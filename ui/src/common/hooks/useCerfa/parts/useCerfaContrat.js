@@ -93,7 +93,7 @@ export const buildRemunerations = (data) => {
   const dateFinA4 = dateDebutA4.plus({ years: 1 }).minus({ days: 1 });
 
   const ageA1 = Math.floor(data.apprentiAge);
-  const anniversaireA1 = apprentiDateNaissance.plus({ years: Math.round(data.apprentiAge) });
+  const anniversaireA1 = apprentiDateNaissance.plus({ years: ageA1 + 1 });
   const ageA2 = ageA1 + 1;
   const anniversaireA2 = anniversaireA1.plus({ years: 1 });
   const ageA3 = ageA2 + 1;
@@ -101,6 +101,13 @@ export const buildRemunerations = (data) => {
   const ageA4 = ageA3 + 1;
   const anniversaireA4 = anniversaireA3.plus({ years: 1 });
   const ageA5 = ageA4 + 1;
+
+  // console.table([
+  //   { date: apprentiDateNaissance.toFormat("yyyy-MM-dd"), age: ageA1 },
+  //   { date: anniversaireA1.toFormat("yyyy-MM-dd"), age: ageA2 },
+  //   { date: anniversaireA2.toFormat("yyyy-MM-dd"), age: ageA3 },
+  //   { date: anniversaireA3.toFormat("yyyy-MM-dd"), age: ageA4 },
+  // ]);
 
   const SMIC = 1603.12; // 10.57/h    (mayotte:  7.98/h)   Pour 35h  => Mayotte 1210.30
   const seuils = [17, 18, 21, 26];
@@ -348,6 +355,13 @@ export const CerfaContratController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
           const dateDebutContrat = DateTime.fromISO(value).setLocale("fr-FR");
+          let dureeContrat = 0;
+
+          if (data.dateFinContrat) {
+            const dateFinContrat = DateTime.fromISO(data.dateFinContrat).setLocale("fr-FR");
+            const diffInMonths = dateFinContrat.diff(dateDebutContrat, "months");
+            dureeContrat = diffInMonths.months;
+          }
 
           const today = DateTime.now().setLocale("fr-FR");
           if (dateDebutContrat <= today) {
@@ -356,6 +370,28 @@ export const CerfaContratController = async (dossier) => {
               data: null,
               message: "Date de début de contrat ne peut pas être antérieure à aujourd'hui",
             };
+          }
+
+          if (data.dateEffetAvenant) {
+            const dateEffetAvenant = DateTime.fromISO(data.dateEffetAvenant).setLocale("fr-FR");
+            if (dateDebutContrat >= dateEffetAvenant) {
+              return {
+                successed: false,
+                data: null,
+                message: "Date de début de contrat ne peut pas être après la date d'effet de l'avenant",
+              };
+            }
+          }
+
+          if (data.formationDateDebutFormation) {
+            const formationDateDebutFormation = DateTime.fromISO(data.formationDateDebutFormation).setLocale("fr-FR");
+            if (dateDebutContrat < formationDateDebutFormation.minus({ months: 3 })) {
+              return {
+                successed: false,
+                data: null,
+                message: "Le contrat peut commencer au maximum 3 mois avant le début de la formation",
+              };
+            }
           }
 
           if (data.dateFinContrat) {
@@ -369,13 +405,22 @@ export const CerfaContratController = async (dossier) => {
             }
           }
 
-          if (data.dateEffetAvenant) {
-            const dateEffetAvenant = DateTime.fromISO(data.dateEffetAvenant).setLocale("fr-FR");
-            if (dateDebutContrat >= dateEffetAvenant) {
+          if (data.dateFinContrat) {
+            if (dureeContrat < 6) {
               return {
                 successed: false,
                 data: null,
-                message: "Date de début de contrat ne peut pas être après la date d'effet de l'avenant",
+                message: "La durée du contrat de peut pas être inférieure à 6 mois",
+              };
+            }
+          }
+
+          if (data.dateFinContrat) {
+            if (dureeContrat > 54) {
+              return {
+                successed: false,
+                data: null,
+                message: "La durée du contrat de peut pas être suprérieure à 4 ans et 6 mois",
               };
             }
           }
@@ -450,6 +495,14 @@ export const CerfaContratController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
           const dateFinContrat = DateTime.fromISO(value).setLocale("fr-FR");
+          let dureeContrat = 0;
+
+          if (data.dateDebutContrat) {
+            const dateDebutContrat = DateTime.fromISO(data.dateDebutContrat).setLocale("fr-FR");
+            const diffInMonths = dateFinContrat.diff(dateDebutContrat, "months");
+            dureeContrat = diffInMonths.months;
+          }
+
           if (data.dateDebutContrat) {
             const dateDebutContrat = DateTime.fromISO(data.dateDebutContrat).setLocale("fr-FR");
             if (dateDebutContrat >= dateFinContrat) {
@@ -467,6 +520,37 @@ export const CerfaContratController = async (dossier) => {
                 successed: false,
                 data: null,
                 message: "Date de fin de contrat ne peut pas être avant la date d'effet de l'avenant",
+              };
+            }
+          }
+
+          if (data.dateDebutContrat) {
+            if (dureeContrat < 6) {
+              return {
+                successed: false,
+                data: null,
+                message: "La durée du contrat de peut pas être inférieure à 6 mois",
+              };
+            }
+          }
+
+          if (data.dateDebutContrat) {
+            if (dureeContrat > 54) {
+              return {
+                successed: false,
+                data: null,
+                message: "La durée du contrat de peut pas être suprérieure à 4 ans et 6 mois",
+              };
+            }
+          }
+
+          if (data.formationDateFinFormation) {
+            const formationDateFinFormation = DateTime.fromISO(data.formationDateFinFormation).setLocale("fr-FR");
+            if (dateFinContrat > formationDateFinFormation.plus({ months: 3 })) {
+              return {
+                successed: false,
+                data: null,
+                message: "Le contrat peut se terminer au maximum 3 mois après la fin de la formation",
               };
             }
           }
@@ -565,6 +649,7 @@ export function useCerfaContrat() {
   const [contratDateDebutContrat, setContratDateDebutContrat] = useRecoilState(
     contratAtoms.cerfaContratDateDebutContratAtom
   );
+  const [contratDureeContrat, seCcontratDureeContrat] = useRecoilState(contratAtoms.cerfaContratDureeContratAtom);
   const [contratDateEffetAvenant, setContratDateEffetAvenant] = useRecoilState(
     contratAtoms.cerfaContratDateEffetAvenantAtom
   );
@@ -1668,6 +1753,7 @@ export function useCerfaContrat() {
     setContratNoContrat(res.contrat.noContrat);
     setContratNoAvenant(res.contrat.noAvenant);
     setContratDateDebutContrat(convertValueToDate(res.contrat.dateDebutContrat));
+    seCcontratDureeContrat(res.contrat.dureeContrat);
     setContratDateEffetAvenant(convertValueToDate(res.contrat.dateEffetAvenant));
     setContratDateConclusion(convertValueToDate(res.contrat.dateConclusion));
     setContratDateFinContrat(convertValueToDate(res.contrat.dateFinContrat));
@@ -1840,6 +1926,7 @@ export function useCerfaContrat() {
         noContrat: contratNoContrat,
         noAvenant: contratNoAvenant,
         dateDebutContrat: contratDateDebutContrat,
+        dureeContrat: contratDureeContrat,
         dateEffetAvenant: contratDateEffetAvenant,
         dateConclusion: contratDateConclusion,
         dateFinContrat: contratDateFinContrat,

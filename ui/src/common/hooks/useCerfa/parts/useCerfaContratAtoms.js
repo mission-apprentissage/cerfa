@@ -29,6 +29,10 @@ export const cerfaContratDateDebutContratAtom = atom({
   key: "cerfa/contrat/dateDebutContrat",
   default: null,
 });
+export const cerfaContratDureeContratAtom = atom({
+  key: "cerfa/contrat/dureeContrat",
+  default: null,
+});
 export const cerfaContratDateEffetAvenantAtom = atom({
   key: "cerfa/contrat/dateEffetAvenant",
   default: null,

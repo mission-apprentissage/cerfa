@@ -11,13 +11,20 @@ import {
   cerfaMaitre1DateNaissanceAtom,
   cerfaMaitre2DateNaissanceAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
+import {
+  cerfaFormationDateDebutFormationAtom,
+  cerfaFormationDateFinFormationAtom,
+} from "../../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
 import InputCerfa from "./Input";
 
 const FormContract = () => {
   const apprentiDateNaissance = useRecoilValue(cerfaApprentiDateNaissanceAtom);
   const maitre1DateNaissance = useRecoilValue(cerfaMaitre1DateNaissanceAtom);
   const maitre2DateNaissance = useRecoilValue(cerfaMaitre2DateNaissanceAtom);
+  const formationDateDebutFormation = useRecoilValue(cerfaFormationDateDebutFormationAtom);
+  const formationDateFinFormation = useRecoilValue(cerfaFormationDateFinFormationAtom);
   const apprentiAge = useRecoilValue(cerfaApprentiAgeAtom);
+
   const {
     get: {
       contrat: {
@@ -121,6 +128,8 @@ const FormContract = () => {
 
               dateFinContrat: dateFinContrat?.value,
               dateEffetAvenant: dateEffetAvenant?.value,
+
+              formationDateDebutFormation: formationDateDebutFormation?.value,
             }}
           />
           {(typeContratApp.valueDb === 31 ||
@@ -145,7 +154,11 @@ const FormContract = () => {
             type="date"
             mt="2"
             onSubmittedField={onSubmittedContratDateFinContrat}
-            onAsyncData={{ dateDebutContrat: dateDebutContrat?.value, dateEffetAvenant: dateEffetAvenant?.value }}
+            onAsyncData={{
+              dateDebutContrat: dateDebutContrat?.value,
+              dateEffetAvenant: dateEffetAvenant?.value,
+              formationDateFinFormation: formationDateFinFormation?.value,
+            }}
           />
           {/* <InputCerfa
             path="contrat.lieuSignatureContrat"
