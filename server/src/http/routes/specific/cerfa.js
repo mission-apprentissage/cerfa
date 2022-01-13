@@ -301,7 +301,10 @@ module.exports = (components) => {
         }
       }
       let mergedData = merge(cerfaDb, data);
-      mergedData.contrat.remunerationsAnnuelles = remunerationsAnnuelles;
+      mergedData.contrat.remunerationsAnnuelles =
+        cerfaDb.contrat.remunerationsAnnuelles.length > 0 && remunerationsAnnuelles.length === 0
+          ? cerfaDb.contrat.remunerationsAnnuelles
+          : remunerationsAnnuelles;
 
       const cerfaUpdated = await Cerfa.findOneAndUpdate({ _id: params.id }, mergedData, {
         new: true,
