@@ -172,6 +172,7 @@ export const CerfaFormationController = async (dossier) => {
           const response = await _post(`/api/v1/siret`, {
             siret: value,
             dossierId: dossier._id,
+            organismeFormation: true,
           });
 
           // await _put("/api/v1/history", {
@@ -229,7 +230,7 @@ const cerfaFormationCompletion = (res) => {
   let fieldsToKeep = {
     organismeFormationSiret: res.organismeFormation.siret,
     organismeFormationDenomination: res.organismeFormation.denomination,
-    organismeFormationFormationInterne: res.organismeFormation.formationInterne,
+    // organismeFormationFormationInterne: res.organismeFormation.formationInterne,
     organismeFormationUaiCfa: res.organismeFormation.uaiCfa,
     organismeFormationAdresseNumero: res.organismeFormation.adresse.numero,
     organismeFormationAdresseVoie: res.organismeFormation.adresse.voie,
@@ -244,7 +245,7 @@ const cerfaFormationCompletion = (res) => {
     formationIntituleQualification: res.formation.intituleQualification,
     formationTypeDiplome: res.formation.typeDiplome,
   };
-  return fieldCompletionPercentage(fieldsToKeep, 16);
+  return fieldCompletionPercentage(fieldsToKeep, 15);
 };
 
 export function useCerfaFormation() {
@@ -315,7 +316,7 @@ export function useCerfaFormation() {
               },
               uaiCfa: {
                 ...organismeFormationUaiCfa,
-                value: data.uai, // If organismeFormationUaiCfa.value !=== "" && data.uai === "" => do not change it
+                value: data.uai || "", // If organismeFormationUaiCfa.value !=== "" && data.uai === "" => do not change it
                 forceUpdate: organismeFormationUaiCfa.value === data.uai,
                 locked: data.uai !== "",
               },
@@ -345,7 +346,7 @@ export function useCerfaFormation() {
               organismeFormation: {
                 siret: newV.organismeFormation.siret.value,
                 denomination: newV.organismeFormation.denomination.value,
-                uaiCfa: newV.organismeFormation.uaiCfa.value,
+                uaiCfa: newV.organismeFormation.uaiCfa.value || null,
                 adresse: {
                   numero: newV.organismeFormation.adresse.numero.value,
                   voie: newV.organismeFormation.adresse.voie.value,

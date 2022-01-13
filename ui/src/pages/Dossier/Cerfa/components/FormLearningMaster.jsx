@@ -1,10 +1,13 @@
 import React from "react";
 import { Box, FormLabel, Flex } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
 
 import { useCerfaMaitres } from "../../../../common/hooks/useCerfa/parts/useCerfaMaitres";
+import { cerfaContratDateDebutContratAtom } from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 import InputCerfa from "./Input";
 
 const FormLearningMaster = () => {
+  const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
   const {
     get: {
       maitre1: { nom: maitre1Nom, prenom: maitre1Prenom, dateNaissance: maitre1DateNaissance },
@@ -51,6 +54,9 @@ const FormLearningMaster = () => {
             type="date"
             mt="2"
             onSubmittedField={onSubmittedMaitre1DateNaissance}
+            onAsyncData={{
+              dateDebutContrat: dateDebutContrat?.value,
+            }}
           />
         </Box>
         <Box w="55%" flex="1" ml={5}>
@@ -75,6 +81,9 @@ const FormLearningMaster = () => {
             type="date"
             mt="2"
             onSubmittedField={onSubmittedMaitre2DateNaissance}
+            onAsyncData={{
+              dateDebutContrat: dateDebutContrat?.value,
+            }}
           />
         </Box>
       </Flex>

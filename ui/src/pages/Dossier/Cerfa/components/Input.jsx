@@ -73,6 +73,56 @@ export default React.memo(
       },
     });
 
+    let handleChange = useCallback(
+      async (e) => {
+        // e.persist();
+        const val = type === "numberPrefixed" ? parse(e.target.value) : e.target.value;
+        setValidated(false);
+        setIsErrored(false);
+
+        console.log("handleChange");
+
+        const validationSchema = Yup.object().shape({
+          [name]: Yup.string()
+            .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
+            .required(field?.requiredMessage),
+        });
+
+        const { isValid } = await validate(validationSchema, { [name]: val });
+
+        if (!isValid) {
+          setFromInternal(true);
+          return setFieldValue(name, val);
+        }
+
+        if (!field?.doAsyncActions) {
+          if (!onSubmittedField) {
+            return setFieldValue(name, val);
+          }
+          return await onSubmittedField(path, val);
+        }
+
+        setFieldValue(name, val);
+        setIsLoading(true);
+        const { successed, data, message } = await field?.doAsyncActions(val, onAsyncData);
+        setIsLoading(false);
+
+        // console.log({ successed, data, message });
+        setErrors({ [name]: message });
+        if (data) {
+          return await onSubmittedField(path, data);
+        }
+        if (successed) {
+          setIsErrored(false);
+          setValidated(true);
+        } else {
+          setValidated(false);
+          setIsErrored(true);
+        }
+      },
+      [type, parse, name, field, setFieldValue, onAsyncData, setErrors, onSubmittedField, path]
+    );
+
     useEffect(() => {
       (async () => {
         prevOnAsyncDataRef.current = onAsyncData;
@@ -109,7 +159,7 @@ export default React.memo(
           }
         } else {
           if (prevFieldValueRef.current !== fieldValue || field?.forceUpdate) {
-            // console.log("Outside Update", prevFieldValueRef, fieldValue, field?.forceUpdate);
+            // console.log("Outside Update", prevFieldValueRef, fieldValue, field?.forceUpdate, path);
             setFieldValue(name, fieldValue);
             setShouldBeDisabled(field?.locked);
             if (isValidFieldValue) {
@@ -125,12 +175,15 @@ export default React.memo(
             if (field?.forceUpdate) {
               await onSubmittedField(path, fieldValue);
             }
+            if (field?.triggerValidation) {
+              await handleChange({ persist: () => {}, target: { value: fieldValue } });
+            }
           } else {
             if (fromInternal) {
               const { isValid: isValidInternalValue, error: errorInternalValue } = await validate(validationSchema, {
                 [name]: values[name],
               });
-              console.log(isValidInternalValue, errorInternalValue);
+              // console.log(isValidInternalValue, errorInternalValue);
               if (!isValidInternalValue) {
                 setErrors({ [name]: errorInternalValue.message });
                 setIsErrored(true);
@@ -143,59 +196,20 @@ export default React.memo(
         //
       })();
       return () => {};
-    }, [onAsyncData, field, path, name, setFieldValue, values, setErrors, onSubmittedField, fromInternal]);
+    }, [
+      onAsyncData,
+      field,
+      path,
+      name,
+      setFieldValue,
+      values,
+      setErrors,
+      onSubmittedField,
+      fromInternal,
+      handleChange,
+    ]);
 
     const prevOnAsyncData = prevOnAsyncDataRef.current;
-
-    let handleChange = useCallback(
-      async (e) => {
-        // e.persist();
-        const val = type === "numberPrefixed" ? parse(e.target.value) : e.target.value;
-        setValidated(false);
-        setIsErrored(false);
-
-        console.log("handleChange");
-
-        const validationSchema = Yup.object().shape({
-          [name]: Yup.string()
-            .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
-            .required(field?.requiredMessage),
-        });
-
-        const { isValid } = await validate(validationSchema, { [name]: val });
-
-        if (!isValid) {
-          setFromInternal(true);
-          return setFieldValue(name, val);
-        }
-
-        if (!field?.doAsyncActions) {
-          if (!onSubmittedField) {
-            return setFieldValue(name, val);
-          }
-          return await onSubmittedField(path, val);
-        }
-
-        setFieldValue(name, val);
-        setIsLoading(true);
-        const { successed, data, message } = await field?.doAsyncActions(val, onAsyncData);
-        setIsLoading(false);
-
-        console.log({ successed, data, message });
-        setErrors({ [name]: message });
-        if (data) {
-          return await onSubmittedField(path, data);
-        }
-        if (successed) {
-          setIsErrored(false);
-          setValidated(true);
-        } else {
-          setValidated(false);
-          setIsErrored(true);
-        }
-      },
-      [type, parse, name, field, setFieldValue, onAsyncData, setErrors, onSubmittedField, path]
-    );
 
     if (
       prevOnAsyncData &&

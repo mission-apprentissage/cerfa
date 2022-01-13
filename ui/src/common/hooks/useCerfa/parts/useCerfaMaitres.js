@@ -11,6 +11,8 @@ import {
   convertDateToValue,
   convertOptionToValue,
   convertValueToOption,
+  isAgeInValidAtDate,
+  caclAgeFromStringDate,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
@@ -33,8 +35,55 @@ const cerfaMaitresCompletion = (res) => {
 
 export const CerfaMaitresController = async (dossier) => {
   return {
-    maitre1: {},
-    maitre2: {},
+    maitre1: {
+      dateNaissance: {
+        doAsyncActions: async (value, data) => {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+          const { age, dateNaissance } = caclAgeFromStringDate(value);
+          const isAgeMaitreInvalidAtStart = isAgeInValidAtDate({
+            dateNaissance,
+            age,
+            dateString: data.dateDebutContrat,
+            limitAge: 18,
+            label: "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+          });
+          if (isAgeMaitreInvalidAtStart) return isAgeMaitreInvalidAtStart;
+
+          return {
+            successed: true,
+            data: {
+              dateNaissance: value,
+            },
+            message: null,
+          };
+        },
+      },
+    },
+    maitre2: {
+      dateNaissance: {
+        doAsyncActions: async (value, data) => {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          const { age, dateNaissance } = caclAgeFromStringDate(value);
+          const isAgeMaitreInvalidAtStart = isAgeInValidAtDate({
+            dateNaissance,
+            age,
+            dateString: data.dateDebutContrat,
+            limitAge: 18,
+            label: "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+          });
+          if (isAgeMaitreInvalidAtStart) return isAgeMaitreInvalidAtStart;
+
+          return {
+            successed: true,
+            data: {
+              dateNaissance: value,
+            },
+            message: null,
+          };
+        },
+      },
+    },
   };
 };
 
@@ -126,8 +175,7 @@ export function useCerfaMaitres() {
             maitre1: {
               dateNaissance: {
                 ...maitre1DateNaissance,
-                value: data,
-                // forceUpdate: false, // IF data = "" true
+                value: data.dateNaissance,
               },
             },
           };
@@ -219,8 +267,7 @@ export function useCerfaMaitres() {
             maitre2: {
               dateNaissance: {
                 ...maitre2DateNaissance,
-                value: data,
-                // forceUpdate: false, // IF data = "" true
+                value: data.dateNaissance,
               },
             },
           };
