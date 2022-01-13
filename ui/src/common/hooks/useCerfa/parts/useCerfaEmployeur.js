@@ -41,10 +41,10 @@ const cerfaEmployeurCompletion = (res) => {
     employeurEmployeurSpecifique: res.employeur.employeurSpecifique,
     employeurCaisseComplementaire: res.employeur.caisseComplementaire,
     employeurRegimeSpecifique: res.employeur.regimeSpecifique,
-    employeurPrivePublic: res.employeur.privePublic,
+    // employeurPrivePublic: res.employeur.privePublic,
   };
 
-  return fieldCompletionPercentage(fieldsToKeep, 18);
+  return fieldCompletionPercentage(fieldsToKeep, 17);
 };
 
 export const CerfaEmployeurController = async (dossier) => {

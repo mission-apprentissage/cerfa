@@ -118,6 +118,9 @@ const FormContract = () => {
               remunerationMajoration: remunerationMajoration?.valueDb,
               maitre1DateNaissance: maitre1DateNaissance?.value,
               maitre2DateNaissance: maitre2DateNaissance?.value,
+
+              dateFinContrat: dateFinContrat?.value,
+              dateEffetAvenant: dateEffetAvenant?.value,
             }}
           />
           {(typeContratApp.valueDb === 31 ||
@@ -133,6 +136,7 @@ const FormContract = () => {
               type="date"
               mt="2"
               onSubmittedField={onSubmittedContratDateEffetAvenant}
+              onAsyncData={{ dateDebutContrat: dateDebutContrat?.value, dateFinContrat: dateFinContrat?.value }}
             />
           )}
           <InputCerfa
@@ -141,6 +145,7 @@ const FormContract = () => {
             type="date"
             mt="2"
             onSubmittedField={onSubmittedContratDateFinContrat}
+            onAsyncData={{ dateDebutContrat: dateDebutContrat?.value, dateEffetAvenant: dateEffetAvenant?.value }}
           />
           {/* <InputCerfa
             path="contrat.lieuSignatureContrat"

@@ -230,7 +230,7 @@ const cerfaFormationCompletion = (res) => {
   let fieldsToKeep = {
     organismeFormationSiret: res.organismeFormation.siret,
     organismeFormationDenomination: res.organismeFormation.denomination,
-    organismeFormationFormationInterne: res.organismeFormation.formationInterne,
+    // organismeFormationFormationInterne: res.organismeFormation.formationInterne,
     organismeFormationUaiCfa: res.organismeFormation.uaiCfa,
     organismeFormationAdresseNumero: res.organismeFormation.adresse.numero,
     organismeFormationAdresseVoie: res.organismeFormation.adresse.voie,
@@ -245,7 +245,7 @@ const cerfaFormationCompletion = (res) => {
     formationIntituleQualification: res.formation.intituleQualification,
     formationTypeDiplome: res.formation.typeDiplome,
   };
-  return fieldCompletionPercentage(fieldsToKeep, 16);
+  return fieldCompletionPercentage(fieldsToKeep, 15);
 };
 
 export function useCerfaFormation() {
