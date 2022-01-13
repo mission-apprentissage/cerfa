@@ -811,7 +811,7 @@ const capitalizeFirstLetter = (value) => value?.charAt(0).toUpperCase() + value?
 
 const buildFieldDraw = async (value, fieldDefinition, options = {}) => {
   moment.locale("fr");
-  const isDate = moment.isDate(value) ? moment(value).format("L") : `${value}`;
+  const isDate = !value ? "" : moment.isDate(value) ? moment(value).format("L") : `${value}`;
   const title = typeof value === "boolean" ? (value ? "X" : " ") : isDate;
   const result = {
     title:
