@@ -58,6 +58,10 @@ export const cerfaFormationDateFinFormationAtom = atom({
   key: "cerfa/formation/dateFinFormation",
   default: null,
 });
+export const cerfaFormationDureeFormationCalcAtom = atom({
+  key: "cerfa/formation/dureeFormationCalc",
+  default: null,
+});
 export const cerfaFormationDureeFormationAtom = atom({
   key: "cerfa/formation/dureeFormation",
   default: null,

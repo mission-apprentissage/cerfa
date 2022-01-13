@@ -49,6 +49,24 @@ const contratSchema = {
       return !this.draft;
     },
   },
+  dateFinContrat: {
+    type: Date,
+    description: "Date de fin du contrat prévue",
+    label: "Date de fin du contrat ou de la période d'apprentissage :",
+    example: "2021-02-28T00:00:00+0000",
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
+  },
+  dureeContrat: {
+    type: Number,
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
+    description: "Durée du contrat en mois [calculé]",
+  },
   dateEffetAvenant: {
     type: Date,
     description: "Date d'effet d'avenant",
@@ -62,16 +80,6 @@ const contratSchema = {
     description: "Date de conclusion du contrat",
     label: "Date de conclusion du contrat :",
     example: "2021-01-15T00:00:00+0000",
-    default: null,
-    required: function () {
-      return !this.draft;
-    },
-  },
-  dateFinContrat: {
-    type: Date,
-    description: "Date de fin du contrat prévue",
-    label: "Date de fin du contrat ou de la période d'apprentissage :",
-    example: "2021-02-28T00:00:00+0000",
     default: null,
     required: function () {
       return !this.draft;
@@ -219,7 +227,7 @@ const contratSchema = {
   remunerationMajoration: {
     enum: [0, 10, 20],
     type: Number,
-    default: null,
+    default: 0,
     required: function () {
       return !this.draft;
     },

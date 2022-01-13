@@ -91,6 +91,14 @@ const formationSchema = {
       return !this.draft;
     },
   },
+  dureeFormationCalc: {
+    type: Number,
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
+    description: "Durée de formation en mois [calculé]",
+  },
   dureeFormation: {
     type: Number,
     description: "Durée de formation (heures)",

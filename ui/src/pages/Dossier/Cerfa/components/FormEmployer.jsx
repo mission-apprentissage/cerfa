@@ -35,6 +35,13 @@ const FormEmployer = ({ onFetched }) => {
         telephone: onSubmittedEmployeurTelephone,
         courriel: onSubmittedEmployeurCourriel,
         regimeSpecifique: onSubmittedEmployeurRegimeSpecifique,
+        adresse: {
+          numero: onSubmittedEmployeurAdresseNumero,
+          voie: onSubmittedEmployeurAdresseVoie,
+          complement: onSubmittedEmployeurAdresseComplement,
+          codePostal: onSubmittedEmployeurAdresseCodePostal,
+          commune: onSubmittedEmployeurAdresseCommune,
+        },
       },
     },
   } = useCerfaEmployeur();
@@ -56,11 +63,41 @@ const FormEmployer = ({ onFetched }) => {
           <FormLabel fontWeight={700} my={3}>
             Adresse de l'établissement d'exécution du contrat :
           </FormLabel>
-          <InputCerfa path="employeur.adresse.numero" field={numero} type="text" mt="2" />
-          <InputCerfa path="employeur.adresse.voie" field={voie} type="text" mt="2" />
-          <InputCerfa path="employeur.adresse.complement" field={complement} type="text" mt="2" />
-          <InputCerfa path="employeur.adresse.codePostal" field={codePostal} type="text" mt="2" />
-          <InputCerfa path="employeur.adresse.commune" field={commune} type="text" mt="2" />
+          <InputCerfa
+            path="employeur.adresse.numero"
+            field={numero}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurAdresseNumero}
+          />
+          <InputCerfa
+            path="employeur.adresse.voie"
+            field={voie}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurAdresseVoie}
+          />
+          <InputCerfa
+            path="employeur.adresse.complement"
+            field={complement}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurAdresseComplement}
+          />
+          <InputCerfa
+            path="employeur.adresse.codePostal"
+            field={codePostal}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurAdresseCodePostal}
+          />
+          <InputCerfa
+            path="employeur.adresse.commune"
+            field={commune}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurAdresseCommune}
+          />
 
           <InputCerfa
             path="employeur.telephone"

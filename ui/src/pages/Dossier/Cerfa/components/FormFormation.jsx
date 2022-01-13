@@ -1,10 +1,17 @@
 import React from "react";
 import { Box, FormLabel, Flex } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
 
 import { useCerfaFormation } from "../../../../common/hooks/useCerfa/parts/useCerfaFormation";
+import {
+  cerfaContratDateDebutContratAtom,
+  cerfaContratDateFinContratAtom,
+} from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 import InputCerfa from "./Input";
 
 const FormFormation = React.memo((props) => {
+  const contratDateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
+  const contratDateFinContrat = useRecoilValue(cerfaContratDateFinContratAtom);
   const {
     get: {
       organismeFormation: {
@@ -120,7 +127,10 @@ const FormFormation = React.memo((props) => {
             type="date"
             mt="2"
             onSubmittedField={onSubmittedFormationDateDebutFormation}
-            onAsyncData={{ value: dateFinFormation?.value }}
+            onAsyncData={{
+              dateFinFormation: dateFinFormation?.value,
+              contratDateDebutContrat: contratDateDebutContrat?.value,
+            }}
           />
           <InputCerfa
             path="formation.dateFinFormation"
@@ -128,7 +138,10 @@ const FormFormation = React.memo((props) => {
             type="date"
             mt="2"
             onSubmittedField={onSubmittedFormationDateFinFormation}
-            onAsyncData={{ value: dateDebutFormation?.value }}
+            onAsyncData={{
+              dateDebutFormation: dateDebutFormation?.value,
+              contratDateFinContrat: contratDateFinContrat?.value,
+            }}
           />
           <Flex mt={4}>
             <InputCerfa

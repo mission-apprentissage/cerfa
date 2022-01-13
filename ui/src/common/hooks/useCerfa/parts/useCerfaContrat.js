@@ -82,6 +82,7 @@ const cerfaContratCompletion = (res) => {
 
 export const buildRemunerations = (data) => {
   const dateDebutContrat = DateTime.fromISO(data.dateDebutContrat).setLocale("fr-FR");
+  const dateFinContrat = DateTime.fromISO(data.dateFinContrat).setLocale("fr-FR");
   const apprentiDateNaissance = DateTime.fromISO(data.apprentiDateNaissance).setLocale("fr-FR");
 
   const dateFinA1 = dateDebutContrat.plus({ years: 1 }).minus({ days: 1 });
@@ -90,10 +91,10 @@ export const buildRemunerations = (data) => {
   const dateDebutA3 = dateDebutA2.plus({ years: 1 });
   const dateFinA3 = dateDebutA3.plus({ years: 1 }).minus({ days: 1 });
   const dateDebutA4 = dateDebutA3.plus({ years: 1 });
-  const dateFinA4 = dateDebutA4.plus({ years: 1 }).minus({ days: 1 });
+  // const dateFinA4 = dateDebutA4.plus({ years: 1 }).minus({ days: 1 });
 
   const ageA1 = Math.floor(data.apprentiAge);
-  const anniversaireA1 = apprentiDateNaissance.plus({ years: Math.round(data.apprentiAge) });
+  const anniversaireA1 = apprentiDateNaissance.plus({ years: ageA1 + 1 });
   const ageA2 = ageA1 + 1;
   const anniversaireA2 = anniversaireA1.plus({ years: 1 });
   const ageA3 = ageA2 + 1;
@@ -101,6 +102,13 @@ export const buildRemunerations = (data) => {
   const ageA4 = ageA3 + 1;
   const anniversaireA4 = anniversaireA3.plus({ years: 1 });
   const ageA5 = ageA4 + 1;
+
+  // console.table([
+  //   { date: apprentiDateNaissance.toFormat("yyyy-MM-dd"), age: ageA1 },
+  //   { date: anniversaireA1.toFormat("yyyy-MM-dd"), age: ageA2 },
+  //   { date: anniversaireA2.toFormat("yyyy-MM-dd"), age: ageA3 },
+  //   { date: anniversaireA3.toFormat("yyyy-MM-dd"), age: ageA4 },
+  // ]);
 
   const SMIC = 1603.12; // 10.57/h    (mayotte:  7.98/h)   Pour 35h  => Mayotte 1210.30
   const seuils = [17, 18, 21, 26];
@@ -142,160 +150,422 @@ export const buildRemunerations = (data) => {
     return getSeuils(nextAge) > getSeuils(currentAge);
   };
 
-  let result1 = {};
+  let finRemuneration = false;
+
+  let result1 = {
+    11: {
+      dateDebut: "",
+      dateFin: "",
+      taux: 0,
+      typeSalaire: "SMIC",
+      salaireBrut: 0,
+    },
+    12: {
+      dateDebut: "",
+      dateFin: "",
+      taux: 0,
+      typeSalaire: "SMIC",
+      salaireBrut: 0,
+    },
+  };
   if (isChangingTaux(ageA1, ageA2)) {
     const dateFin11 = anniversaireA1.minus({ days: anniversaireA1.toObject().day }).plus({ months: 1 });
     const dateDebut12 = dateFin11.plus({ days: 1 });
     const taux11 = taux.a1[getSeuils(ageA1)] + data.remunerationMajoration;
     const taux12 = taux.a1[getSeuils(ageA2)] + data.remunerationMajoration;
-    result1 = {
-      11: {
-        dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
-        dateFin: dateFin11.toFormat("yyyy-MM-dd"),
-        taux: taux11,
-        typeSalaire: "SMIC",
-        salaireBrut: (SMIC * taux11) / 100,
-      },
-      12: {
-        dateDebut: dateDebut12.toFormat("yyyy-MM-dd"),
-        dateFin: dateFinA1.toFormat("yyyy-MM-dd"),
-        taux: taux12,
-        typeSalaire: "SMIC",
-        salaireBrut: (SMIC * taux12) / 100,
-      },
-    };
+
+    if (dateFin11 >= dateFinContrat) {
+      finRemuneration = true;
+      result1 = {
+        11: {
+          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
+          taux: taux11,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux11) / 100,
+        },
+        12: {
+          dateDebut: "",
+          dateFin: "",
+          taux: 0,
+          typeSalaire: "SMIC",
+          salaireBrut: 0,
+        },
+      };
+    } else if (dateFinA1 >= dateFinContrat) {
+      finRemuneration = true;
+      result1 = {
+        11: {
+          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
+          dateFin: dateFin11.toFormat("yyyy-MM-dd"),
+          taux: taux11,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux11) / 100,
+        },
+        12: {
+          dateDebut: dateDebut12.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
+          taux: taux12,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux12) / 100,
+        },
+      };
+    } else {
+      result1 = {
+        11: {
+          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
+          dateFin: dateFin11.toFormat("yyyy-MM-dd"),
+          taux: taux11,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux11) / 100,
+        },
+        12: {
+          dateDebut: dateDebut12.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinA1.toFormat("yyyy-MM-dd"),
+          taux: taux12,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux12) / 100,
+        },
+      };
+    }
   } else {
     const taux11 = taux.a1[getSeuils(ageA1)] + data.remunerationMajoration;
-    result1 = {
-      11: {
-        dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
-        dateFin: dateFinA1.toFormat("yyyy-MM-dd"),
-        taux: taux11,
-        typeSalaire: "SMIC",
-        salaireBrut: (SMIC * taux11) / 100,
-      },
-      12: {
-        dateDebut: "",
-        dateFin: "",
-        taux: 0,
-        typeSalaire: "SMIC",
-        salaireBrut: 0,
-      },
-    };
+    if (dateFinA1 >= dateFinContrat) {
+      finRemuneration = true;
+      result1 = {
+        11: {
+          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
+          taux: taux11,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux11) / 100,
+        },
+        12: {
+          dateDebut: "",
+          dateFin: "",
+          taux: 0,
+          typeSalaire: "SMIC",
+          salaireBrut: 0,
+        },
+      };
+    } else {
+      result1 = {
+        11: {
+          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinA1.toFormat("yyyy-MM-dd"),
+          taux: taux11,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux11) / 100,
+        },
+        12: {
+          dateDebut: "",
+          dateFin: "",
+          taux: 0,
+          typeSalaire: "SMIC",
+          salaireBrut: 0,
+        },
+      };
+    }
   }
 
-  let result2 = {};
-  if (isChangingTaux(ageA2, ageA3)) {
+  let result2 = {
+    21: {
+      dateDebut: "",
+      dateFin: "",
+      taux: 0,
+      typeSalaire: "SMIC",
+      salaireBrut: 0,
+    },
+    22: {
+      dateDebut: "",
+      dateFin: "",
+      taux: 0,
+      typeSalaire: "SMIC",
+      salaireBrut: 0,
+    },
+  };
+  if (isChangingTaux(ageA2, ageA3) && !finRemuneration) {
     const dateFin21 = anniversaireA2.minus({ days: anniversaireA2.toObject().day }).plus({ months: 1 });
     const dateDebut22 = dateFin21.plus({ days: 1 });
     const taux21 = taux.a2[getSeuils(ageA2)] + data.remunerationMajoration;
     const taux22 = taux.a2[getSeuils(ageA3)] + data.remunerationMajoration;
-    result2 = {
-      21: {
-        dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
-        dateFin: dateFin21.toFormat("yyyy-MM-dd"),
-        taux: taux21,
-        typeSalaire: "SMIC",
-        salaireBrut: (SMIC * taux21) / 100,
-      },
-      22: {
-        dateDebut: dateDebut22.toFormat("yyyy-MM-dd"),
-        dateFin: dateFinA2.toFormat("yyyy-MM-dd"),
-        taux: taux22,
-        typeSalaire: "SMIC",
-        salaireBrut: (SMIC * taux22) / 100,
-      },
-    };
-  } else {
+
+    if (dateFin21 >= dateFinContrat) {
+      finRemuneration = true;
+      result2 = {
+        21: {
+          dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
+          taux: taux21,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux21) / 100,
+        },
+        22: {
+          dateDebut: "",
+          dateFin: "",
+          taux: 0,
+          typeSalaire: "SMIC",
+          salaireBrut: 0,
+        },
+      };
+    } else if (dateFinA2 >= dateFinContrat) {
+      finRemuneration = true;
+      result2 = {
+        21: {
+          dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
+          dateFin: dateFin21.toFormat("yyyy-MM-dd"),
+          taux: taux21,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux21) / 100,
+        },
+        22: {
+          dateDebut: dateDebut22.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
+          taux: taux22,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux22) / 100,
+        },
+      };
+    } else {
+      result2 = {
+        21: {
+          dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
+          dateFin: dateFin21.toFormat("yyyy-MM-dd"),
+          taux: taux21,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux21) / 100,
+        },
+        22: {
+          dateDebut: dateDebut22.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinA2.toFormat("yyyy-MM-dd"),
+          taux: taux22,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux22) / 100,
+        },
+      };
+    }
+  } else if (!finRemuneration) {
     const taux21 = taux.a2[getSeuils(ageA2)] + data.remunerationMajoration;
-    result2 = {
-      21: {
-        dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
-        dateFin: dateFinA2.toFormat("yyyy-MM-dd"),
-        taux: taux21,
-        typeSalaire: "SMIC",
-        salaireBrut: (SMIC * taux21) / 100,
-      },
-      22: {
-        dateDebut: "",
-        dateFin: "",
-        taux: 0,
-        typeSalaire: "SMIC",
-        salaireBrut: 0,
-      },
-    };
+
+    if (dateFinA2 >= dateFinContrat) {
+      finRemuneration = true;
+      result2 = {
+        21: {
+          dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
+          taux: taux21,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux21) / 100,
+        },
+        22: {
+          dateDebut: "",
+          dateFin: "",
+          taux: 0,
+          typeSalaire: "SMIC",
+          salaireBrut: 0,
+        },
+      };
+    } else {
+      result2 = {
+        21: {
+          dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinA2.toFormat("yyyy-MM-dd"),
+          taux: taux21,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux21) / 100,
+        },
+        22: {
+          dateDebut: "",
+          dateFin: "",
+          taux: 0,
+          typeSalaire: "SMIC",
+          salaireBrut: 0,
+        },
+      };
+    }
   }
 
-  let result3 = {};
-  if (isChangingTaux(ageA3, ageA4)) {
+  let result3 = {
+    31: {
+      dateDebut: "",
+      dateFin: "",
+      taux: 0,
+      typeSalaire: "SMIC",
+      salaireBrut: 0,
+    },
+    32: {
+      dateDebut: "",
+      dateFin: "",
+      taux: 0,
+      typeSalaire: "SMIC",
+      salaireBrut: 0,
+    },
+  };
+  if (isChangingTaux(ageA3, ageA4) && !finRemuneration) {
     const dateFin31 = anniversaireA3.minus({ days: anniversaireA3.toObject().day }).plus({ months: 1 });
     const dateDebut32 = dateFin31.plus({ days: 1 });
     const taux31 = taux.a3[getSeuils(ageA3)] + data.remunerationMajoration;
     const taux32 = taux.a3[getSeuils(ageA4)] + data.remunerationMajoration;
-    result3 = {
-      31: {
-        dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
-        dateFin: dateFin31.toFormat("yyyy-MM-dd"),
-        taux: taux31,
-        typeSalaire: "SMIC",
-        salaireBrut: (SMIC * taux31) / 100,
-      },
-      32: {
-        dateDebut: dateDebut32.toFormat("yyyy-MM-dd"),
-        dateFin: dateFinA3.toFormat("yyyy-MM-dd"),
-        taux: taux32,
-        typeSalaire: "SMIC",
-        salaireBrut: (SMIC * taux32) / 100,
-      },
-    };
-  } else {
+
+    if (dateFin31 >= dateFinContrat) {
+      finRemuneration = true;
+      result3 = {
+        31: {
+          dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
+          taux: taux31,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux31) / 100,
+        },
+        32: {
+          dateDebut: "",
+          dateFin: "",
+          taux: 0,
+          typeSalaire: "SMIC",
+          salaireBrut: 0,
+        },
+      };
+    } else if (dateFinA3 >= dateFinContrat) {
+      finRemuneration = true;
+      result3 = {
+        31: {
+          dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
+          dateFin: dateFin31.toFormat("yyyy-MM-dd"),
+          taux: taux31,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux31) / 100,
+        },
+        32: {
+          dateDebut: dateDebut32.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
+          taux: taux32,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux32) / 100,
+        },
+      };
+    } else {
+      result3 = {
+        31: {
+          dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
+          dateFin: dateFin31.toFormat("yyyy-MM-dd"),
+          taux: taux31,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux31) / 100,
+        },
+        32: {
+          dateDebut: dateDebut32.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinA3.toFormat("yyyy-MM-dd"),
+          taux: taux32,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux32) / 100,
+        },
+      };
+    }
+  } else if (!finRemuneration) {
     const taux31 = taux.a3[getSeuils(ageA3)] + data.remunerationMajoration;
-    result3 = {
-      31: {
-        dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
-        dateFin: dateFinA3.toFormat("yyyy-MM-dd"),
-        taux: taux31,
-        typeSalaire: "SMIC",
-        salaireBrut: (SMIC * taux31) / 100,
-      },
-      32: {
-        dateDebut: "",
-        dateFin: "",
-        taux: 0,
-        typeSalaire: "SMIC",
-        salaireBrut: 0,
-      },
-    };
+
+    if (dateFinA3 >= dateFinContrat) {
+      finRemuneration = true;
+      result3 = {
+        31: {
+          dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
+          taux: taux31,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux31) / 100,
+        },
+        32: {
+          dateDebut: "",
+          dateFin: "",
+          taux: 0,
+          typeSalaire: "SMIC",
+          salaireBrut: 0,
+        },
+      };
+    } else {
+      result3 = {
+        31: {
+          dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinA3.toFormat("yyyy-MM-dd"),
+          taux: taux31,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux31) / 100,
+        },
+        32: {
+          dateDebut: "",
+          dateFin: "",
+          taux: 0,
+          typeSalaire: "SMIC",
+          salaireBrut: 0,
+        },
+      };
+    }
   }
 
-  let result4 = {};
-  if (isChangingTaux(ageA4, ageA5)) {
+  let result4 = {
+    41: {
+      dateDebut: "",
+      dateFin: "",
+      taux: 0,
+      typeSalaire: "SMIC",
+      salaireBrut: 0,
+    },
+    42: {
+      dateDebut: "",
+      dateFin: "",
+      taux: 0,
+      typeSalaire: "SMIC",
+      salaireBrut: 0,
+    },
+  };
+  if (isChangingTaux(ageA4, ageA5) && !finRemuneration) {
     const dateFin41 = anniversaireA4.minus({ days: anniversaireA4.toObject().day }).plus({ months: 1 });
     const dateDebut42 = dateFin41.plus({ days: 1 });
     const taux41 = taux.a4[getSeuils(ageA4)] + data.remunerationMajoration;
     const taux42 = taux.a4[getSeuils(ageA5)] + data.remunerationMajoration;
-    result4 = {
-      41: {
-        dateDebut: dateDebutA4.toFormat("yyyy-MM-dd"),
-        dateFin: dateFin41.toFormat("yyyy-MM-dd"),
-        taux: taux41,
-        typeSalaire: "SMIC",
-        salaireBrut: (SMIC * taux41) / 100,
-      },
-      42: {
-        dateDebut: dateDebut42.toFormat("yyyy-MM-dd"),
-        dateFin: dateFinA4.toFormat("yyyy-MM-dd"),
-        taux: taux42,
-        typeSalaire: "SMIC",
-        salaireBrut: (SMIC * taux42) / 100,
-      },
-    };
-  } else {
+
+    if (dateFin41 >= dateFinContrat) {
+      finRemuneration = true;
+      result4 = {
+        41: {
+          dateDebut: dateDebutA4.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
+          taux: taux41,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux41) / 100,
+        },
+        42: {
+          dateDebut: "",
+          dateFin: "",
+          taux: 0,
+          typeSalaire: "SMIC",
+          salaireBrut: 0,
+        },
+      };
+    } else {
+      result4 = {
+        41: {
+          dateDebut: dateDebutA4.toFormat("yyyy-MM-dd"),
+          dateFin: dateFin41.toFormat("yyyy-MM-dd"),
+          taux: taux41,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux41) / 100,
+        },
+        42: {
+          dateDebut: dateDebut42.toFormat("yyyy-MM-dd"),
+          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
+          taux: taux42,
+          typeSalaire: "SMIC",
+          salaireBrut: (SMIC * taux42) / 100,
+        },
+      };
+    }
+  } else if (!finRemuneration) {
     const taux41 = taux.a4[getSeuils(ageA4)] + data.remunerationMajoration;
     result4 = {
       41: {
         dateDebut: dateDebutA4.toFormat("yyyy-MM-dd"),
-        dateFin: dateFinA4.toFormat("yyyy-MM-dd"),
+        dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
         taux: taux41,
         typeSalaire: "SMIC",
         salaireBrut: (SMIC * taux41) / 100,
@@ -348,6 +618,13 @@ export const CerfaContratController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
           const dateDebutContrat = DateTime.fromISO(value).setLocale("fr-FR");
+          let dureeContrat = 0;
+
+          if (data.dateFinContrat) {
+            const dateFinContrat = DateTime.fromISO(data.dateFinContrat).setLocale("fr-FR");
+            const diffInMonths = dateFinContrat.diff(dateDebutContrat, "months");
+            dureeContrat = diffInMonths.months;
+          }
 
           const today = DateTime.now().setLocale("fr-FR");
           if (dateDebutContrat <= today) {
@@ -356,6 +633,28 @@ export const CerfaContratController = async (dossier) => {
               data: null,
               message: "Date de début de contrat ne peut pas être antérieure à aujourd'hui",
             };
+          }
+
+          if (data.dateEffetAvenant) {
+            const dateEffetAvenant = DateTime.fromISO(data.dateEffetAvenant).setLocale("fr-FR");
+            if (dateDebutContrat >= dateEffetAvenant) {
+              return {
+                successed: false,
+                data: null,
+                message: "Date de début de contrat ne peut pas être après la date d'effet de l'avenant",
+              };
+            }
+          }
+
+          if (data.formationDateDebutFormation) {
+            const formationDateDebutFormation = DateTime.fromISO(data.formationDateDebutFormation).setLocale("fr-FR");
+            if (dateDebutContrat < formationDateDebutFormation.minus({ months: 3 })) {
+              return {
+                successed: false,
+                data: null,
+                message: "Le contrat peut commencer au maximum 3 mois avant le début de la formation",
+              };
+            }
           }
 
           if (data.dateFinContrat) {
@@ -369,13 +668,22 @@ export const CerfaContratController = async (dossier) => {
             }
           }
 
-          if (data.dateEffetAvenant) {
-            const dateEffetAvenant = DateTime.fromISO(data.dateEffetAvenant).setLocale("fr-FR");
-            if (dateDebutContrat >= dateEffetAvenant) {
+          if (data.dateFinContrat) {
+            if (dureeContrat < 6) {
               return {
                 successed: false,
                 data: null,
-                message: "Date de début de contrat ne peut pas être après la date d'effet de l'avenant",
+                message: "La durée du contrat de peut pas être inférieure à 6 mois",
+              };
+            }
+          }
+
+          if (data.dateFinContrat) {
+            if (dureeContrat > 54) {
+              return {
+                successed: false,
+                data: null,
+                message: "La durée du contrat de peut pas être suprérieure à 4 ans et 6 mois",
               };
             }
           }
@@ -419,7 +727,7 @@ export const CerfaContratController = async (dossier) => {
             if (isAgeMaitre2InvalidAtStart) return isAgeMaitre2InvalidAtStart;
           }
 
-          if (data.apprentiDateNaissance !== "") {
+          if (data.apprentiDateNaissance !== "" && data.dateFinContrat !== "") {
             const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
               ...data,
               dateDebutContrat: value,
@@ -432,6 +740,7 @@ export const CerfaContratController = async (dossier) => {
                 remunerationsAnnuelles,
                 remunerationsAnnuellesDbValue,
                 salaireEmbauche,
+                dureeContrat,
               },
               message: null,
             };
@@ -441,6 +750,7 @@ export const CerfaContratController = async (dossier) => {
             successed: true,
             data: {
               dateDebutContrat: value,
+              dureeContrat,
             },
             message: null,
           };
@@ -450,6 +760,14 @@ export const CerfaContratController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
           const dateFinContrat = DateTime.fromISO(value).setLocale("fr-FR");
+          let dureeContrat = 0;
+
+          if (data.dateDebutContrat) {
+            const dateDebutContrat = DateTime.fromISO(data.dateDebutContrat).setLocale("fr-FR");
+            const diffInMonths = dateFinContrat.diff(dateDebutContrat, "months");
+            dureeContrat = diffInMonths.months;
+          }
+
           if (data.dateDebutContrat) {
             const dateDebutContrat = DateTime.fromISO(data.dateDebutContrat).setLocale("fr-FR");
             if (dateDebutContrat >= dateFinContrat) {
@@ -471,12 +789,65 @@ export const CerfaContratController = async (dossier) => {
             }
           }
 
+          if (data.dateDebutContrat) {
+            if (dureeContrat < 6) {
+              return {
+                successed: false,
+                data: null,
+                message: "La durée du contrat de peut pas être inférieure à 6 mois",
+              };
+            }
+          }
+
+          if (data.dateDebutContrat) {
+            if (dureeContrat > 54) {
+              return {
+                successed: false,
+                data: null,
+                message: "La durée du contrat de peut pas être suprérieure à 4 ans et 6 mois",
+              };
+            }
+          }
+
+          if (data.formationDateFinFormation) {
+            const formationDateFinFormation = DateTime.fromISO(data.formationDateFinFormation).setLocale("fr-FR");
+            if (dateFinContrat > formationDateFinFormation.plus({ months: 3 })) {
+              return {
+                successed: false,
+                data: null,
+                message: "Le contrat peut se terminer au maximum 3 mois après la fin de la formation",
+              };
+            }
+          }
+
+          if (data.apprentiDateNaissance !== "" && data.dateDebutContrat !== "") {
+            const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
+              ...data,
+              dateFinContrat: value,
+            });
+
+            return {
+              successed: true,
+              data: {
+                dateFinContrat: value,
+                dateDebutContrat: data.dateDebutContrat,
+                dateEffetAvenant: data.dateEffetAvenant,
+                dureeContrat,
+                remunerationsAnnuelles,
+                remunerationsAnnuellesDbValue,
+                salaireEmbauche,
+              },
+              message: null,
+            };
+          }
+
           return {
             successed: true,
             data: {
               dateFinContrat: value,
               dateDebutContrat: data.dateDebutContrat,
               dateEffetAvenant: data.dateEffetAvenant,
+              dureeContrat,
             },
             message: null,
           };
@@ -523,19 +894,28 @@ export const CerfaContratController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
-          // TODO DATA ?
-          const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-            ...data,
-            remunerationMajoration: convertOptionToValue({ ...data.remunerationMajoration, value: value }),
-          });
+          if (data.apprentiDateNaissance !== "" && data.dateFinContrat !== "") {
+            const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
+              ...data,
+              remunerationMajoration: convertOptionToValue({ ...data.remunerationMajoration, value: value }),
+            });
+
+            return {
+              successed: true,
+              data: {
+                remunerationMajoration: value,
+                remunerationsAnnuelles,
+                remunerationsAnnuellesDbValue,
+                salaireEmbauche,
+              },
+              message: null,
+            };
+          }
 
           return {
             successed: true,
             data: {
               remunerationMajoration: value,
-              remunerationsAnnuelles,
-              remunerationsAnnuellesDbValue,
-              salaireEmbauche,
             },
             message: null,
           };
@@ -565,6 +945,7 @@ export function useCerfaContrat() {
   const [contratDateDebutContrat, setContratDateDebutContrat] = useRecoilState(
     contratAtoms.cerfaContratDateDebutContratAtom
   );
+  const [contratDureeContrat, seContratDureeContrat] = useRecoilState(contratAtoms.cerfaContratDureeContratAtom);
   const [contratDateEffetAvenant, setContratDateEffetAvenant] = useRecoilState(
     contratAtoms.cerfaContratDateEffetAvenantAtom
   );
@@ -995,6 +1376,10 @@ export function useCerfaContrat() {
                 ...contratDateDebutContrat,
                 value: data.dateDebutContrat,
               },
+              dureeContrat: {
+                ...contratDureeContrat,
+                value: data.dureeContrat,
+              },
             },
           };
           if (contratDateDebutContrat.value !== newV.contrat.dateDebutContrat.value) {
@@ -1002,9 +1387,12 @@ export function useCerfaContrat() {
 
             setContratDateDebutContrat(newV.contrat.dateDebutContrat);
 
+            seContratDureeContrat(newV.contrat.dureeContrat);
+
             let dataToSave = {
               contrat: {
                 dateDebutContrat: convertDateToValue(newV.contrat.dateDebutContrat),
+                dureeContrat: data.dureeContrat,
               },
             };
             if (data.remunerationsAnnuelles && data.remunerationsAnnuellesDbValue && data.salaireEmbauche) {
@@ -1033,7 +1421,9 @@ export function useCerfaContrat() {
     },
     [
       contratDateDebutContrat,
+      contratDureeContrat,
       setContratDateDebutContrat,
+      seContratDureeContrat,
       dossier?._id,
       cerfa?.id,
       setPartContratCompletion,
@@ -1112,18 +1502,36 @@ export function useCerfaContrat() {
                 ...contratDateFinContrat,
                 value: data.dateFinContrat,
               },
+              dureeContrat: {
+                ...contratDureeContrat,
+                value: data.dureeContrat,
+              },
             },
           };
           if (contratDateFinContrat.value !== newV.contrat.dateFinContrat.value) {
             // setContratDateDebutContrat({ ...contratDateDebutContrat, value: "" });
 
             setContratDateFinContrat(newV.contrat.dateFinContrat);
+            seContratDureeContrat(newV.contrat.dureeContrat);
 
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+            let dataToSave = {
               contrat: {
                 dateFinContrat: convertDateToValue(newV.contrat.dateFinContrat),
+                dureeContrat: data.dureeContrat,
               },
-            });
+            };
+            if (data.remunerationsAnnuelles && data.remunerationsAnnuellesDbValue && data.salaireEmbauche) {
+              setRemunerations(data);
+              dataToSave = {
+                contrat: {
+                  ...dataToSave.contrat,
+                  remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
+                  salaireEmbauche: data.salaireEmbauche.toFixed(2),
+                },
+              };
+            }
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartContratCompletion(cerfaContratCompletion(res));
 
             // if (res.contrat.dateDebutContrat === "") {
@@ -1136,7 +1544,16 @@ export function useCerfaContrat() {
         console.error(e);
       }
     },
-    [contratDateFinContrat, setContratDateFinContrat, dossier?._id, cerfa?.id, setPartContratCompletion]
+    [
+      contratDateFinContrat,
+      contratDureeContrat,
+      setContratDateFinContrat,
+      seContratDureeContrat,
+      dossier?._id,
+      cerfa?.id,
+      setPartContratCompletion,
+      setRemunerations,
+    ]
   );
 
   const onSubmittedContratDateRupture = useCallback(
@@ -1635,15 +2052,23 @@ export function useCerfaContrat() {
           if (contratRemunerationMajoration.value !== newV.contrat.remunerationMajoration.value) {
             setContratRemunerationMajoration(newV.contrat.remunerationMajoration);
 
-            setRemunerations(data);
-
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+            let dataToSave = {
               contrat: {
                 remunerationMajoration: convertOptionToValue(newV.contrat.remunerationMajoration),
-                remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
-                salaireEmbauche: data.salaireEmbauche.toFixed(2),
               },
-            });
+            };
+            if (data.remunerationsAnnuelles && data.remunerationsAnnuellesDbValue && data.salaireEmbauche) {
+              setRemunerations(data);
+              dataToSave = {
+                contrat: {
+                  ...dataToSave.contrat,
+                  remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
+                  salaireEmbauche: data.salaireEmbauche.toFixed(2),
+                },
+              };
+            }
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartContratCompletion(cerfaContratCompletion(res));
           }
         }
@@ -1668,6 +2093,7 @@ export function useCerfaContrat() {
     setContratNoContrat(res.contrat.noContrat);
     setContratNoAvenant(res.contrat.noAvenant);
     setContratDateDebutContrat(convertValueToDate(res.contrat.dateDebutContrat));
+    seContratDureeContrat(res.contrat.dureeContrat);
     setContratDateEffetAvenant(convertValueToDate(res.contrat.dateEffetAvenant));
     setContratDateConclusion(convertValueToDate(res.contrat.dateConclusion));
     setContratDateFinContrat(convertValueToDate(res.contrat.dateFinContrat));
@@ -1840,6 +2266,7 @@ export function useCerfaContrat() {
         noContrat: contratNoContrat,
         noAvenant: contratNoAvenant,
         dateDebutContrat: contratDateDebutContrat,
+        dureeContrat: contratDureeContrat,
         dateEffetAvenant: contratDateEffetAvenant,
         dateConclusion: contratDateConclusion,
         dateFinContrat: contratDateFinContrat,

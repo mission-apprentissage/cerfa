@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, FormLabel, Text, Flex, HStack, Collapse } from "@chakra-ui/react";
+import { Box, FormLabel, Text, Flex, HStack, Collapse, VStack, UnorderedList, ListItem } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
 import { useCerfaContrat } from "../../../../common/hooks/useCerfa/parts/useCerfaContrat";
@@ -11,13 +11,20 @@ import {
   cerfaMaitre1DateNaissanceAtom,
   cerfaMaitre2DateNaissanceAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
+import {
+  cerfaFormationDateDebutFormationAtom,
+  cerfaFormationDateFinFormationAtom,
+} from "../../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
 import InputCerfa from "./Input";
 
 const FormContract = () => {
   const apprentiDateNaissance = useRecoilValue(cerfaApprentiDateNaissanceAtom);
   const maitre1DateNaissance = useRecoilValue(cerfaMaitre1DateNaissanceAtom);
   const maitre2DateNaissance = useRecoilValue(cerfaMaitre2DateNaissanceAtom);
+  const formationDateDebutFormation = useRecoilValue(cerfaFormationDateDebutFormationAtom);
+  const formationDateFinFormation = useRecoilValue(cerfaFormationDateFinFormationAtom);
   const apprentiAge = useRecoilValue(cerfaApprentiAgeAtom);
+
   const {
     get: {
       contrat: {
@@ -55,7 +62,7 @@ const FormContract = () => {
         dureeTravailHebdoHeures: onSubmittedContratDureeTravailHebdoHeures,
         contratDureeTravailHebdoMinutes: onSubmittedContratDureeTravailHebdoMinutes,
         travailRisque: onSubmittedContratTravailRisque,
-        salaireEmbauche: onSubmittedContratSalaireEmbauche,
+        // salaireEmbauche: onSubmittedContratSalaireEmbauche,
         caisseRetraiteComplementaire: onSubmittedContratCaisseRetraiteComplementaire,
         avantageNature: onSubmittedContratAvantageNature,
         avantageNourriture: onSubmittedContratAvantageNourriture,
@@ -121,6 +128,8 @@ const FormContract = () => {
 
               dateFinContrat: dateFinContrat?.value,
               dateEffetAvenant: dateEffetAvenant?.value,
+
+              formationDateDebutFormation: formationDateDebutFormation?.value,
             }}
           />
           {(typeContratApp.valueDb === 31 ||
@@ -145,7 +154,15 @@ const FormContract = () => {
             type="date"
             mt="2"
             onSubmittedField={onSubmittedContratDateFinContrat}
-            onAsyncData={{ dateDebutContrat: dateDebutContrat?.value, dateEffetAvenant: dateEffetAvenant?.value }}
+            onAsyncData={{
+              dateDebutContrat: dateDebutContrat?.value,
+              dateEffetAvenant: dateEffetAvenant?.value,
+              formationDateFinFormation: formationDateFinFormation?.value,
+
+              remunerationMajoration: remunerationMajoration?.valueDb,
+              apprentiDateNaissance: apprentiDateNaissance?.value,
+              apprentiAge: apprentiAge?.value,
+            }}
           />
           {/* <InputCerfa
             path="contrat.lieuSignatureContrat"
@@ -183,51 +200,73 @@ const FormContract = () => {
           onSubmittedField={onSubmittedContratTravailRisque}
         />
 
-        <Collapse in={dateDebutContrat.value !== ""} animateOpacity>
-          <FormLabel fontWeight={700} fontSize="1.3rem">
-            Rémunération
-          </FormLabel>
-          <InputCerfa
-            path="contrat.remunerationMajoration"
-            field={remunerationMajoration}
-            type="select"
-            mt="2"
-            onSubmittedField={onSubmittedContratRemunerationMajoration}
-            onAsyncData={{
-              remunerationMajoration: remunerationMajoration,
-              apprentiDateNaissance: apprentiDateNaissance?.value,
-              dateDebutContrat: dateDebutContrat?.value,
-              apprentiAge: apprentiAge?.value,
-            }}
-          />
-          <Box mt={6} borderColor={"dgalt"} borderWidth={1} px={4} py={3}>
+        <FormLabel fontWeight={700} fontSize="1.3rem">
+          Rémunération
+        </FormLabel>
+        <InputCerfa
+          path="contrat.remunerationMajoration"
+          field={remunerationMajoration}
+          type="select"
+          mt="2"
+          onSubmittedField={onSubmittedContratRemunerationMajoration}
+          onAsyncData={{
+            remunerationMajoration: remunerationMajoration,
+            apprentiDateNaissance: apprentiDateNaissance?.value,
+            dateDebutContrat: dateDebutContrat?.value,
+            apprentiAge: apprentiAge?.value,
+            dateFinContrat: dateFinContrat?.value,
+          }}
+        />
+        <Box mt={6} borderColor={"dgalt"} borderWidth={2} px={4} py={3} borderStyle="dashed" rounded="md">
+          {(dateDebutContrat.value === "" || dateFinContrat.value === "" || apprentiDateNaissance.value === "") && (
+            <VStack alignItems="flex-start" color="mgalt">
+              <Text>Le calcul de la rémunération est automatique.</Text>
+              <Text>Vous devez, pour cela, renseigner les éléments suivants : </Text>
+              <UnorderedList ml="30px !important">
+                <ListItem fontWeight="400" fontStyle="italic">
+                  La date de naissance de l'apprenti
+                </ListItem>
+                <ListItem fontWeight="400" fontStyle="italic">
+                  La date de début d'exécution du contrat
+                </ListItem>
+                <ListItem fontWeight="400" fontStyle="italic">
+                  La date de fin du contrat
+                </ListItem>
+              </UnorderedList>
+            </VStack>
+          )}
+          <Collapse
+            in={dateDebutContrat.value !== "" && dateFinContrat.value !== "" && apprentiDateNaissance.value !== ""}
+            animateOpacity
+          >
             {remunerationsAnnuelles.map((ra, i) => {
               if (i === 1 || i === 3 || i === 5 || i === 7) return null;
-
+              const [remPart1, remPart2] = [remunerationsAnnuelles[i], remunerationsAnnuelles[i + 1]];
+              const emptyLine = remPart1.taux.value === 0 && remPart2.taux.value === 0;
               return (
                 <Box key={i}>
-                  {i === 0 && (
+                  {i === 0 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold">
                       1 re année, du
                     </Box>
                   )}
-                  {i === 2 && (
+                  {i === 2 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold" mt={2}>
                       2 eme année, du
                     </Box>
                   )}
-                  {i === 4 && (
+                  {i === 4 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold" mt={2}>
                       3 eme année, du
                     </Box>
                   )}
-                  {i === 6 && (
+                  {i === 6 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold" mt={2}>
                       4 eme année, du
                     </Box>
                   )}
                   <Box>
-                    {[remunerationsAnnuelles[i], remunerationsAnnuelles[i + 1]].map((remunerationsAnnuelle, j) => {
+                    {[remPart1, remPart2].map((remunerationsAnnuelle, j) => {
                       let path = "";
                       switch (i + j) {
                         case 0:
@@ -314,12 +353,12 @@ const FormContract = () => {
                   field={salaireEmbauche}
                   type="number"
                   mt="2"
-                  onSubmittedField={onSubmittedContratSalaireEmbauche}
+                  // onSubmittedField={onSubmittedContratSalaireEmbauche}
                 />
               </Box>
             </Flex>
-          </Box>
-        </Collapse>
+          </Collapse>
+        </Box>
 
         <Flex mt={3}>
           <InputCerfa

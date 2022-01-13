@@ -127,8 +127,16 @@ export const CerfaFormationController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
           const dateDebutFormation = DateTime.fromISO(value).setLocale("fr-FR");
-          if (data.value) {
-            const dateFinFormation = DateTime.fromISO(data.value).setLocale("fr-FR");
+          let dureeFormationCalc = 0;
+
+          if (data.dateFinFormation) {
+            const dateFinFormation = DateTime.fromISO(data.dateFinFormation).setLocale("fr-FR");
+            const diffInMonths = dateFinFormation.diff(dateDebutFormation, "months");
+            dureeFormationCalc = diffInMonths.months;
+          }
+
+          if (data.dateFinFormation) {
+            const dateFinFormation = DateTime.fromISO(data.dateFinFormation).setLocale("fr-FR");
             if (dateDebutFormation >= dateFinFormation) {
               return {
                 successed: false,
@@ -137,6 +145,39 @@ export const CerfaFormationController = async (dossier) => {
               };
             }
           }
+
+          if (data.dateFinFormation) {
+            if (dureeFormationCalc < 6) {
+              return {
+                successed: false,
+                data: null,
+                message: "La durée de la formation de peut pas être inférieure à 6 mois",
+              };
+            }
+          }
+
+          if (data.dateFinFormation) {
+            if (dureeFormationCalc > 48) {
+              return {
+                successed: false,
+                data: null,
+                message: "La durée de la formation de peut pas être supérieure à 4 ans",
+              };
+            }
+          }
+
+          if (data.contratDateDebutContrat) {
+            const dateDebutContrat = DateTime.fromISO(data.contratDateDebutContrat).setLocale("fr-FR");
+            if (dateDebutContrat < dateDebutFormation.minus({ months: 3 })) {
+              return {
+                successed: false,
+                data: null,
+                message:
+                  "Le contrat peut commencer au maximum 3 mois avant le début de la formation (merci de vous vérifier la date de début de contrat)",
+              };
+            }
+          }
+
           return {
             successed: true,
             data: value,
@@ -148,8 +189,16 @@ export const CerfaFormationController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
           const dateFinFormation = DateTime.fromISO(value).setLocale("fr-FR");
-          if (data.value) {
-            const dateDebutFormation = DateTime.fromISO(data.value).setLocale("fr-FR");
+          let dureeFormationCalc = 0;
+
+          if (data.dateDebutFormation) {
+            const dateDebutFormation = DateTime.fromISO(data.dateDebutFormation).setLocale("fr-FR");
+            const diffInMonths = dateFinFormation.diff(dateDebutFormation, "months");
+            dureeFormationCalc = diffInMonths.months;
+          }
+
+          if (data.dateDebutFormation) {
+            const dateDebutFormation = DateTime.fromISO(data.dateDebutFormation).setLocale("fr-FR");
             if (dateDebutFormation >= dateFinFormation) {
               return {
                 successed: false,
@@ -158,6 +207,39 @@ export const CerfaFormationController = async (dossier) => {
               };
             }
           }
+
+          if (data.dateDebutFormation) {
+            if (dureeFormationCalc < 6) {
+              return {
+                successed: false,
+                data: null,
+                message: "La durée de la formation de peut pas être inférieure à 6 mois",
+              };
+            }
+          }
+
+          if (data.dateDebutFormation) {
+            if (dureeFormationCalc > 48) {
+              return {
+                successed: false,
+                data: null,
+                message: "La durée de la formation de peut pas être supérieure à 4 ans",
+              };
+            }
+          }
+
+          if (data.contratDateFinContrat) {
+            const dateFinContrat = DateTime.fromISO(data.contratDateFinContrat).setLocale("fr-FR");
+            if (dateFinContrat > dateFinFormation.plus({ months: 3 })) {
+              return {
+                successed: false,
+                data: null,
+                message:
+                  "Le contrat peut se terminer au maximum 3 mois après la fin de la formation (merci de vous vérifier la date de fin de contrat)",
+              };
+            }
+          }
+
           return {
             successed: true,
             data: value,
@@ -292,6 +374,9 @@ export function useCerfaFormation() {
   const [formationDateFinFormation, setFormationDateFinFormation] = useRecoilState(
     formationAtoms.cerfaFormationDateFinFormationAtom
   );
+  const [formationDureeFormationCalc, setFormationDureeFormationCalc] = useRecoilState(
+    formationAtoms.cerfaFormationDureeFormationCalcAtom
+  );
   const [formationDureeFormation, setFormationDureeFormation] = useRecoilState(
     formationAtoms.cerfaFormationDureeFormationAtom
   );
@@ -424,7 +509,7 @@ export function useCerfaFormation() {
           };
           if (formationDateFinFormation.value !== newV.formation.dateFinFormation.value) {
             setFormationDateFinFormation(newV.formation.dateFinFormation);
-            setFormationDateDebutFormation(formationDateDebutFormation);
+            // setFormationDateDebutFormation(formationDateDebutFormation);
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               formation: {
@@ -438,15 +523,7 @@ export function useCerfaFormation() {
         console.error(e);
       }
     },
-    [
-      formationDateFinFormation,
-      setFormationDateFinFormation,
-      setFormationDateDebutFormation,
-      formationDateDebutFormation,
-      dossier?._id,
-      cerfa?.id,
-      setPartFormationCompletionAtom,
-    ]
+    [formationDateFinFormation, setFormationDateFinFormation, dossier?._id, cerfa?.id, setPartFormationCompletionAtom]
   );
 
   const onSubmittedFormationDateDebutFormation = useCallback(
@@ -464,7 +541,7 @@ export function useCerfaFormation() {
           };
           if (formationDateDebutFormation.value !== newV.formation.dateDebutFormation.value) {
             setFormationDateDebutFormation(newV.formation.dateDebutFormation);
-            setFormationDateFinFormation(formationDateFinFormation);
+            // setFormationDateFinFormation(formationDateFinFormation);
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               formation: {
@@ -482,9 +559,7 @@ export function useCerfaFormation() {
       cerfa?.id,
       dossier?._id,
       formationDateDebutFormation,
-      formationDateFinFormation,
       setFormationDateDebutFormation,
-      setFormationDateFinFormation,
       setPartFormationCompletionAtom,
     ]
   );
@@ -715,6 +790,7 @@ export function useCerfaFormation() {
     setFormationCodeDiplome(res.formation.codeDiplome);
     setFormationDateDebutFormation(convertValueToDate(res.formation.dateDebutFormation));
     setFormationDateFinFormation(convertValueToDate(res.formation.dateFinFormation));
+    setFormationDureeFormationCalc(res.formation.dureeFormationCalc);
     setFormationDureeFormation(res.formation.dureeFormation);
     setFormationIntituleQualification(res.formation.intituleQualification);
     setFormationTypeDiplome(convertValueToMultipleSelectOption(res.formation.typeDiplome));
@@ -743,6 +819,7 @@ export function useCerfaFormation() {
         codeDiplome: formationCodeDiplome,
         dateDebutFormation: formationDateDebutFormation,
         dateFinFormation: formationDateFinFormation,
+        dureeFormationCalc: formationDureeFormationCalc,
         dureeFormation: formationDureeFormation,
         intituleQualification: formationIntituleQualification,
         typeDiplome: formationTypeDiplome,
