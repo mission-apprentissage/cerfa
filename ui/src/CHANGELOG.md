@@ -1,3 +1,10 @@
+# [1.13.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.7...v1.13.0-beta.8) (2022-01-13)
+
+
+### Bug Fixes
+
+* **pdf:** date en français ([#77](https://github.com/mission-apprentissage/cerfa/issues/77)) ([4473424](https://github.com/mission-apprentissage/cerfa/commit/4473424384743fb27672bb49470b0978e30d3447))
+
 # [1.13.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.6...v1.13.0-beta.7) (2022-01-13)
 
 
