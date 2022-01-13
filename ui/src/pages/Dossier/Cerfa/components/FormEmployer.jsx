@@ -27,9 +27,12 @@ const FormEmployer = ({ onFetched }) => {
     onSubmit: {
       employeur: {
         siret: onSubmittedEmployeurSiret,
+        denomination: onSubmittedEmployeurDenomination,
         typeEmployeur: onSubmittedEmployeurTypeEmployeur,
         employeurSpecifique: onSubmittedEmployeurEmployeurSpecifique,
         nombreDeSalaries: onSubmittedEmployeurNombreDeSalaries,
+        naf: onSubmittedEmployeurNaf,
+        codeIdcc: onSubmittedEmployeurCodeIdcc,
         libelleIdcc: onSubmittedEmployeurLibelleIdcc,
         caisseComplementaire: onSubmittedEmployeurCaisseComplementaire,
         telephone: onSubmittedEmployeurTelephone,
@@ -59,7 +62,13 @@ const FormEmployer = ({ onFetched }) => {
       <Flex>
         <Box w="55%" flex="1">
           <InputCerfa path="employeur.privePublic" field={privePublic} type="radio" mt="2" />
-          <InputCerfa path="employeur.denomination" field={denomination} type="text" mt="2" />
+          <InputCerfa
+            path="employeur.denomination"
+            field={denomination}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurDenomination}
+          />
           <FormLabel fontWeight={700} my={3}>
             Adresse de l'établissement d'exécution du contrat :
           </FormLabel>
@@ -129,7 +138,7 @@ const FormEmployer = ({ onFetched }) => {
             mt="2"
             onSubmittedField={onSubmittedEmployeurEmployeurSpecifique}
           />
-          <InputCerfa path="employeur.naf" field={naf} type="text" mt="2" />
+          <InputCerfa path="employeur.naf" field={naf} type="text" mt="2" onSubmittedField={onSubmittedEmployeurNaf} />
           <InputCerfa
             path="employeur.nombreDeSalaries"
             field={nombreDeSalaries}
@@ -137,7 +146,13 @@ const FormEmployer = ({ onFetched }) => {
             mt="2"
             onSubmittedField={onSubmittedEmployeurNombreDeSalaries}
           />
-          <InputCerfa path="employeur.codeIdcc" field={codeIdcc} type="text" mt="2" />
+          <InputCerfa
+            path="employeur.codeIdcc"
+            field={codeIdcc}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurCodeIdcc}
+          />
           <InputCerfa
             path="employeur.libelleIdcc"
             field={libelleIdcc}

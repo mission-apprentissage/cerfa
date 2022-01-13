@@ -471,6 +471,248 @@ export function useCerfaFormation() {
     ]
   );
 
+  const onSubmittedOrganismeFormationDenomination = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "organismeFormation.denomination") {
+          const newV = {
+            organismeFormation: {
+              denomination: {
+                ...organismeFormationDenomination,
+                value: data,
+                // forceUpdate: false, // IF data = "" true
+              },
+            },
+          };
+          if (organismeFormationDenomination.value !== newV.organismeFormation.denomination.value) {
+            setOrganismeFormationDenomination(newV.organismeFormation.denomination);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              organismeFormation: {
+                denomination: newV.organismeFormation.denomination.value,
+              },
+            });
+            setPartFormationCompletionAtom(cerfaFormationCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [
+      cerfa?.id,
+      dossier?._id,
+      organismeFormationDenomination,
+      setOrganismeFormationDenomination,
+      setPartFormationCompletionAtom,
+    ]
+  );
+
+  const onSubmittedOrganismeFormationAdresseNumero = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "organismeFormation.adresse.numero") {
+          const newV = {
+            organismeFormation: {
+              adresse: {
+                numero: {
+                  ...organismeFormationAdresseNumero,
+                  value: data,
+                  // forceUpdate: false, // IF data = "" true
+                },
+              },
+            },
+          };
+          if (organismeFormationAdresseNumero.value !== newV.organismeFormation.adresse.numero.value) {
+            setOrganismeFormationAdresseNumero(newV.organismeFormation.adresse.numero);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              organismeFormation: {
+                adresse: {
+                  numero: newV.organismeFormation.adresse.numero.value,
+                },
+              },
+            });
+            setPartFormationCompletionAtom(cerfaFormationCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [
+      organismeFormationAdresseNumero,
+      setOrganismeFormationAdresseNumero,
+      dossier?._id,
+      cerfa?.id,
+      setPartFormationCompletionAtom,
+    ]
+  );
+
+  const onSubmittedOrganismeFormationAdresseVoie = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "organismeFormation.adresse.voie") {
+          const newV = {
+            organismeFormation: {
+              adresse: {
+                voie: {
+                  ...organismeFormationAdresseVoie,
+                  value: data,
+                  // forceUpdate: false, // IF data = "" true
+                },
+              },
+            },
+          };
+          if (organismeFormationAdresseVoie.value !== newV.organismeFormation.adresse.voie.value) {
+            setOrganismeFormationAdresseVoie(newV.organismeFormation.adresse.voie);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              organismeFormation: {
+                adresse: {
+                  voie: newV.organismeFormation.adresse.voie.value,
+                },
+              },
+            });
+            setPartFormationCompletionAtom(cerfaFormationCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [
+      organismeFormationAdresseVoie,
+      setOrganismeFormationAdresseVoie,
+      dossier?._id,
+      cerfa?.id,
+      setPartFormationCompletionAtom,
+    ]
+  );
+
+  const onSubmittedOrganismeFormationAdresseComplement = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "organismeFormation.adresse.complement") {
+          const newV = {
+            organismeFormation: {
+              adresse: {
+                complement: {
+                  ...organismeFormationAdresseComplement,
+                  value: data,
+                  // forceUpdate: false, // IF data = "" true
+                },
+              },
+            },
+          };
+          if (organismeFormationAdresseComplement.value !== newV.organismeFormation.adresse.complement.value) {
+            setOrganismeFormationAdresseComplement(newV.organismeFormation.adresse.complement);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              organismeFormation: {
+                adresse: {
+                  complement: newV.organismeFormation.adresse.complement.value,
+                },
+              },
+            });
+            setPartFormationCompletionAtom(cerfaFormationCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [
+      organismeFormationAdresseComplement,
+      setOrganismeFormationAdresseComplement,
+      dossier?._id,
+      cerfa?.id,
+      setPartFormationCompletionAtom,
+    ]
+  );
+
+  const onSubmittedOrganismeFormationAdresseCodePostal = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "organismeFormation.adresse.codePostal") {
+          const newV = {
+            organismeFormation: {
+              adresse: {
+                codePostal: {
+                  ...organismeFormationAdresseCodePostal,
+                  value: data,
+                  // forceUpdate: false, // IF data = "" true
+                },
+              },
+            },
+          };
+          if (organismeFormationAdresseCodePostal.value !== newV.organismeFormation.adresse.codePostal.value) {
+            setOrganismeFormationAdresseCodePostal(newV.organismeFormation.adresse.codePostal);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              organismeFormation: {
+                adresse: {
+                  codePostal: newV.organismeFormation.adresse.codePostal.value,
+                },
+              },
+            });
+            setPartFormationCompletionAtom(cerfaFormationCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [
+      organismeFormationAdresseCodePostal,
+      setOrganismeFormationAdresseCodePostal,
+      dossier?._id,
+      cerfa?.id,
+      setPartFormationCompletionAtom,
+    ]
+  );
+
+  const onSubmittedOrganismeFormationAdresseCommune = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "organismeFormation.adresse.commune") {
+          const newV = {
+            organismeFormation: {
+              adresse: {
+                commune: {
+                  ...organismeFormationAdresseCommune,
+                  value: data,
+                  // forceUpdate: false, // IF data = "" true
+                },
+              },
+            },
+          };
+          if (organismeFormationAdresseCommune.value !== newV.organismeFormation.adresse.commune.value) {
+            setOrganismeFormationAdresseCommune(newV.organismeFormation.adresse.commune);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              organismeFormation: {
+                adresse: {
+                  commune: newV.organismeFormation.adresse.commune.value,
+                },
+              },
+            });
+            setPartFormationCompletionAtom(cerfaFormationCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [
+      organismeFormationAdresseCommune,
+      setOrganismeFormationAdresseCommune,
+      dossier?._id,
+      cerfa?.id,
+      setPartFormationCompletionAtom,
+    ]
+  );
+
   const onSubmittedOrganismeFormationUaiCfa = useCallback(
     async (path, data) => {
       try {
@@ -593,6 +835,43 @@ export function useCerfaFormation() {
       }
     },
     [cerfa?.id, dossier?._id, formationDureeFormation, setFormationDureeFormation, setPartFormationCompletionAtom]
+  );
+
+  const onSubmittedFormationIntituleQualification = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "formation.intituleQualification") {
+          const newV = {
+            formation: {
+              intituleQualification: {
+                ...formationIntituleQualification,
+                value: data,
+                // forceUpdate: false, // IF data = "" true
+              },
+            },
+          };
+          if (formationIntituleQualification.value !== newV.formation.intituleQualification.value) {
+            setFormationIntituleQualification(newV.formation.intituleQualification);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              formation: {
+                intituleQualification: newV.formation.intituleQualification.value,
+              },
+            });
+            setPartFormationCompletionAtom(cerfaFormationCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [
+      cerfa?.id,
+      dossier?._id,
+      formationIntituleQualification,
+      setFormationIntituleQualification,
+      setPartFormationCompletionAtom,
+    ]
   );
 
   const onSubmittedFormationTypeDiplome = useCallback(
@@ -830,7 +1109,15 @@ export function useCerfaFormation() {
       organismeFormation: {
         formationInterne: onSubmittedOrganismeFormationFormationInterne,
         siret: onSubmittedOrganismeFormationSiret,
+        denomination: onSubmittedOrganismeFormationDenomination,
         uaiCfa: onSubmittedOrganismeFormationUaiCfa,
+        adresse: {
+          numero: onSubmittedOrganismeFormationAdresseNumero,
+          voie: onSubmittedOrganismeFormationAdresseVoie,
+          complement: onSubmittedOrganismeFormationAdresseComplement,
+          codePostal: onSubmittedOrganismeFormationAdresseCodePostal,
+          commune: onSubmittedOrganismeFormationAdresseCommune,
+        },
       },
       formation: {
         rncp: onSubmittedRncp,
@@ -838,6 +1125,7 @@ export function useCerfaFormation() {
         dateDebutFormation: onSubmittedFormationDateDebutFormation,
         dateFinFormation: onSubmittedFormationDateFinFormation,
         dureeFormation: onSubmittedFormationDureeFormation,
+        intituleQualification: onSubmittedFormationIntituleQualification,
         typeDiplome: onSubmittedFormationTypeDiplome,
       },
     },

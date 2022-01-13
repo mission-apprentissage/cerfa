@@ -35,7 +35,15 @@ const FormFormation = React.memo((props) => {
       organismeFormation: {
         formationInterne: onSubmittedOrganismeFormationFormationInterne,
         siret: onSubmittedOrganismeFormationSiret,
+        denomination: onSubmittedOrganismeFormationDenomination,
         uaiCfa: onSubmittedOrganismeFormationUaiCfa,
+        adresse: {
+          numero: onSubmittedOrganismeFormationAdresseNumero,
+          voie: onSubmittedOrganismeFormationAdresseVoie,
+          complement: onSubmittedOrganismeFormationAdresseComplement,
+          codePostal: onSubmittedOrganismeFormationAdresseCodePostal,
+          commune: onSubmittedOrganismeFormationAdresseCommune,
+        },
       },
       formation: {
         rncp: onSubmittedRncp,
@@ -44,7 +52,7 @@ const FormFormation = React.memo((props) => {
         dateFinFormation: onSubmittedFormationDateFinFormation,
         dureeFormation: onSubmittedFormationDureeFormation,
         typeDiplome: onSubmittedFormationTypeDiplome,
-        // onSubmittedFormationIntituleQualification,
+        intituleQualification: onSubmittedFormationIntituleQualification,
       },
     },
   } = useCerfaFormation();
@@ -70,7 +78,13 @@ const FormFormation = React.memo((props) => {
 
       <Flex>
         <Box w="55%" flex="1">
-          <InputCerfa path="organismeFormation.denomination" field={denomination} type="text" mt="2" />
+          <InputCerfa
+            path="organismeFormation.denomination"
+            field={denomination}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedOrganismeFormationDenomination}
+          />
           <InputCerfa
             path="organismeFormation.uaiCfa"
             field={uaiCfa}
@@ -81,11 +95,41 @@ const FormFormation = React.memo((props) => {
           <FormLabel fontWeight={700} my={3}>
             Adresse du CFA responsable :{" "}
           </FormLabel>
-          <InputCerfa path="organismeFormation.adresse.numero" field={numero} type="text" mt="2" />
-          <InputCerfa path="organismeFormation.adresse.voie" field={voie} type="text" mt="2" />
-          <InputCerfa path="organismeFormation.adresse.complement" field={complement} type="text" mt="2" />
-          <InputCerfa path="organismeFormation.adresse.codePostal" field={codePostal} type="text" mt="2" />
-          <InputCerfa path="organismeFormation.adresse.commune" field={commune} type="text" mt="2" />
+          <InputCerfa
+            path="organismeFormation.adresse.numero"
+            field={numero}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedOrganismeFormationAdresseNumero}
+          />
+          <InputCerfa
+            path="organismeFormation.adresse.voie"
+            field={voie}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedOrganismeFormationAdresseVoie}
+          />
+          <InputCerfa
+            path="organismeFormation.adresse.complement"
+            field={complement}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedOrganismeFormationAdresseComplement}
+          />
+          <InputCerfa
+            path="organismeFormation.adresse.codePostal"
+            field={codePostal}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedOrganismeFormationAdresseCodePostal}
+          />
+          <InputCerfa
+            path="organismeFormation.adresse.commune"
+            field={commune}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedOrganismeFormationAdresseCommune}
+          />
         </Box>
         <Box w="45%" flex="1" ml="5w">
           <InputCerfa
@@ -100,7 +144,7 @@ const FormFormation = React.memo((props) => {
             field={intituleQualification}
             type="text"
             mt="2"
-            // onSubmittedField={onSubmittedFormationIntituleQualification}
+            onSubmittedField={onSubmittedFormationIntituleQualification}
           />
           <InputCerfa
             path="formation.codeDiplome"

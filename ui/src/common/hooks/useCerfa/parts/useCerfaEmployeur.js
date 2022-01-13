@@ -295,6 +295,99 @@ export function useCerfaEmployeur() {
     ]
   );
 
+  const onSubmittedEmployeurDenomination = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "employeur.denomination") {
+          const newV = {
+            employeur: {
+              denomination: {
+                ...employeurDenomination,
+                value: data,
+                // forceUpdate: false, // IF data = "" true
+              },
+            },
+          };
+          if (employeurDenomination.value !== newV.employeur.denomination.value) {
+            setEmployeurDenomination(newV.employeur.denomination);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              employeur: {
+                denomination: newV.employeur.denomination.value,
+              },
+            });
+            setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [cerfa?.id, dossier?._id, employeurDenomination, setEmployeurDenomination, setPartEmployeurCompletionAtom]
+  );
+
+  const onSubmittedEmployeurNaf = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "employeur.naf") {
+          const newV = {
+            employeur: {
+              naf: {
+                ...employeurNaf,
+                value: data,
+                // forceUpdate: false, // IF data = "" true
+              },
+            },
+          };
+          if (employeurNaf.value !== newV.employeur.naf.value) {
+            setEmployeurNaf(newV.employeur.naf);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              employeur: {
+                naf: newV.employeur.naf.value,
+              },
+            });
+            setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [cerfa?.id, dossier?._id, employeurNaf, setEmployeurNaf, setPartEmployeurCompletionAtom]
+  );
+
+  const onSubmittedEmployeurCodeIdcc = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "employeur.codeIdcc") {
+          const newV = {
+            employeur: {
+              codeIdcc: {
+                ...employeurCodeIdcc,
+                value: data,
+                // forceUpdate: false, // IF data = "" true
+              },
+            },
+          };
+          if (employeurCodeIdcc.value !== newV.employeur.codeIdcc.value) {
+            setEmployeurCodeIdcc(newV.employeur.codeIdcc);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              employeur: {
+                codeIdcc: newV.employeur.codeIdcc.value,
+              },
+            });
+            setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [cerfa?.id, dossier?._id, employeurCodeIdcc, setEmployeurCodeIdcc, setPartEmployeurCompletionAtom]
+  );
+
   const onSubmittedEmployeurAdresseNumero = useCallback(
     async (path, data) => {
       try {
@@ -780,8 +873,8 @@ export function useCerfaEmployeur() {
           codePostal: employeurAdresseCodePostal,
           commune: employeurAdresseCommune,
         },
-        nom: employeurNom,
-        prenom: employeurPrenom,
+        nom: employeurNom, //
+        prenom: employeurPrenom, //
         typeEmployeur: employeurTypeEmployeur,
         employeurSpecifique: employeurEmployeurSpecifique,
         caisseComplementaire: employeurCaisseComplementaire,
@@ -794,9 +887,12 @@ export function useCerfaEmployeur() {
     onSubmit: {
       employeur: {
         siret: onSubmittedEmployeurSiret,
+        denomination: onSubmittedEmployeurDenomination,
+        naf: onSubmittedEmployeurNaf,
         typeEmployeur: onSubmittedEmployeurTypeEmployeur,
         employeurSpecifique: onSubmittedEmployeurEmployeurSpecifique,
         nombreDeSalaries: onSubmittedEmployeurNombreDeSalaries,
+        codeIdcc: onSubmittedEmployeurCodeIdcc,
         libelleIdcc: onSubmittedEmployeurLibelleIdcc,
         caisseComplementaire: onSubmittedEmployeurCaisseComplementaire,
         telephone: onSubmittedEmployeurTelephone,
