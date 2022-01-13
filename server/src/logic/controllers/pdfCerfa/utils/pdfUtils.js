@@ -459,6 +459,11 @@ const fieldsPositions = {
       y: 559,
       maxLength: 10,
     },
+    caisseRetraiteComplementaire: {
+      x: 310,
+      y: 559,
+      maxLength: 40,
+    },
     avantageNourriture: {
       x: 252,
       y: 538,
@@ -950,6 +955,10 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
       await buildFieldDraw(cerfa.contrat.travailRisque, fieldsPositions.contrat.travailRisque),
       ...(await buildRemunerations(cerfa.contrat.remunerationsAnnuelles)),
       await buildFieldDraw(cerfa.contrat.salaireEmbauche, fieldsPositions.contrat.salaireEmbauche),
+      await buildFieldDraw(
+        cerfa.contrat.caisseRetraiteComplementaire,
+        fieldsPositions.contrat.caisseRetraiteComplementaire
+      ),
       await buildFieldDraw(cerfa.contrat.avantageNourriture, fieldsPositions.contrat.avantageNourriture),
       await buildFieldDraw(cerfa.contrat.avantageLogement, fieldsPositions.contrat.avantageLogement),
       await buildFieldDraw(cerfa.contrat.autreAvantageEnNature, fieldsPositions.contrat.autreAvantageEnNature),
