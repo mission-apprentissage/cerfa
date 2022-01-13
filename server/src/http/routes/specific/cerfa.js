@@ -29,9 +29,17 @@ module.exports = (components) => {
 
     return {
       employeur: {
-        ...mergeWith(cloneDeep(cerfaSchema.employeur), cerfa.employeur, customizer),
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.employeur), cerfa.employeur, customizer),
+          cerfa.isLockedField.employeur,
+          customizerLock
+        ),
         adresse: {
-          ...mergeWith(cloneDeep(cerfaSchema.employeur.adresse), cerfa.employeur.adresse, customizer),
+          ...mergeWith(
+            mergeWith(cloneDeep(cerfaSchema.employeur.adresse), cerfa.employeur.adresse, customizer),
+            cerfa.isLockedField.employeur.adresse,
+            customizerLock
+          ),
         },
       },
       apprenti: {
@@ -155,8 +163,8 @@ module.exports = (components) => {
           telephone: Joi.string(),
           courriel: Joi.string(),
           adresse: Joi.object({
-            numero: Joi.number().allow(null),
-            voie: Joi.string().allow(null),
+            numero: Joi.number().allow(""),
+            voie: Joi.string().allow(""),
             complement: Joi.string().allow(""),
             label: Joi.string().allow(""),
             codePostal: Joi.string().allow(""),
@@ -166,7 +174,7 @@ module.exports = (components) => {
           prenom: Joi.string(),
           typeEmployeur: Joi.number(),
           employeurSpecifique: Joi.number(),
-          caisseComplementaire: Joi.string(),
+          caisseComplementaire: Joi.string().allow(""),
           regimeSpecifique: Joi.boolean(),
           attestationEligibilite: Joi.boolean(),
           attestationPieces: Joi.boolean(),
@@ -192,9 +200,9 @@ module.exports = (components) => {
           telephone: Joi.string(),
           courriel: Joi.string(),
           adresse: Joi.object({
-            numero: Joi.number(),
+            numero: Joi.number().allow(""),
             voie: Joi.string(),
-            complement: Joi.string(),
+            complement: Joi.string().allow(""),
             label: Joi.string(),
             codePostal: Joi.string(),
             commune: Joi.string(),
@@ -205,9 +213,9 @@ module.exports = (components) => {
             prenom: Joi.string(),
             memeAdresse: Joi.boolean(),
             adresse: Joi.object({
-              numero: Joi.number(),
+              numero: Joi.number().allow(""),
               voie: Joi.string(),
-              complement: Joi.string(),
+              complement: Joi.string().allow(""),
               label: Joi.string(),
               codePostal: Joi.string(),
               commune: Joi.string(),
@@ -276,7 +284,7 @@ module.exports = (components) => {
           uaiCfa: Joi.string().allow(null),
           visaCfa: Joi.boolean(),
           adresse: Joi.object({
-            numero: Joi.number(),
+            numero: Joi.number().allow(""),
             voie: Joi.string(),
             complement: Joi.string().allow(""),
             label: Joi.string(),
@@ -284,6 +292,7 @@ module.exports = (components) => {
             commune: Joi.string(),
           }),
         }),
+        isLockedField: Joi.object({}).unknown(),
         dossierId: Joi.string().required(),
       }).validateAsync(body, { abortEarly: false });
 

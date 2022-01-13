@@ -82,11 +82,18 @@ export default React.memo(
 
         console.log("handleChange");
 
-        const validationSchema = Yup.object().shape({
-          [name]: Yup.string()
-            .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
-            .required(field?.requiredMessage),
-        });
+        const validationSchema = !field?.isNotRequiredForm
+          ? Yup.object().shape({
+              [name]: Yup.string()
+                .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
+                .required(field?.requiredMessage),
+            })
+          : Yup.object().shape({
+              [name]: Yup.string().matches(new RegExp(field?.pattern), {
+                message: `${field?.validateMessage}`,
+                excludeEmptyString: true,
+              }),
+            });
 
         const { isValid } = await validate(validationSchema, { [name]: val });
 
@@ -127,11 +134,18 @@ export default React.memo(
       (async () => {
         prevOnAsyncDataRef.current = onAsyncData;
 
-        const validationSchema = Yup.object().shape({
-          [name]: Yup.string()
-            .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
-            .required(field?.requiredMessage),
-        });
+        const validationSchema = !field?.isNotRequiredForm
+          ? Yup.object().shape({
+              [name]: Yup.string()
+                .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
+                .required(field?.requiredMessage),
+            })
+          : Yup.object().shape({
+              [name]: Yup.string().matches(new RegExp(field?.pattern), {
+                message: `${field?.validateMessage}`,
+                excludeEmptyString: true,
+              }),
+            });
         let fieldValue = field?.value;
 
         //
@@ -226,7 +240,7 @@ export default React.memo(
     if (!field) return null;
 
     return (
-      <FormControl isRequired mt={2} isInvalid={errors[name]} {...props}>
+      <FormControl isRequired={!field?.isNotRequiredForm} mt={2} isInvalid={errors[name]} {...props}>
         {(type === "text" ||
           type === "number" ||
           type === "numberPrefixed" ||
@@ -286,7 +300,7 @@ export default React.memo(
                 name={name}
                 onChange={handleChange}
                 value={values[name]}
-                required
+                required={!field?.isNotRequiredForm}
                 pattern={field?.pattern}
                 placeholder={field?.description}
                 variant={validated ? "valid" : "outline"}
@@ -328,7 +342,7 @@ export default React.memo(
                 name={name}
                 onChange={handleChange}
                 value={format(values[name])}
-                required
+                required={!field?.isNotRequiredForm}
                 pattern={field?.pattern}
                 placeholder={field?.description}
                 variant={validated ? "valid" : "outline"}

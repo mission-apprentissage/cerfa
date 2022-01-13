@@ -70,7 +70,7 @@ const contratSchema = {
   dateEffetAvenant: {
     type: Date,
     description: "Date d'effet d'avenant",
-    label: "Si avenant, date d'effet :",
+    label: "Date d'effet d'avenant :",
     nullable: true,
     default: null,
     example: "2021-03-01T00:00:00+0000",
@@ -104,6 +104,7 @@ const contratSchema = {
   typeDerogation: {
     ...typeDerogationSchema,
     label: "Type de dérogation (optionnel)",
+    isNotRequiredForm: true,
   },
   dureeTravailHebdoHeures: {
     type: Number,
@@ -151,9 +152,7 @@ const contratSchema = {
     label: "Caisse de retraite complémentaire :",
     example: "",
     default: null,
-    required: function () {
-      return !this.draft;
-    },
+    isNotRequiredForm: true,
   },
   avantageNature: {
     type: Boolean,
@@ -228,9 +227,7 @@ const contratSchema = {
     enum: [0, 10, 20],
     type: Number,
     default: 0,
-    required: function () {
-      return !this.draft;
-    },
+    isNotRequiredForm: true,
     description: "**Majoration de la rémunération** :\r\n<br />Aucune\r\n<br />10%\r\n<br />20%",
     label: "L'employeur souhaite appliquer un majoration à la rémunération :",
     options: [

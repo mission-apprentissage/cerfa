@@ -70,8 +70,10 @@ const employeurCerfaSchema = {
       return !this.draft;
     },
     default: null,
-    description: "Effectif salarié de l'entreprise",
+    description:
+      "L'effectif renseigné est celui de l'entreprise dans sa globalité, au sens de l'article L. 130-1.-I du code de la sécurité sociale et non seulement l'effectif de l'établissement d'exécution du contrat.",
     label: "Effectif salarié de l'entreprise :",
+    requiredMessage: "Effectif salarié de l'entreprise est obligatoire",
     example: 123,
   },
   codeIdcc: {
@@ -280,9 +282,7 @@ const employeurCerfaSchema = {
     maxLength: 80,
     type: String,
     default: null,
-    required: function () {
-      return !this.draft;
-    },
+    isNotRequiredForm: true,
     description: "Caisse de retraite complémentaire Alternant",
     label: "Caisse de retraite complémentaire Alternant :",
     example: "AGIRC-ARRCO",

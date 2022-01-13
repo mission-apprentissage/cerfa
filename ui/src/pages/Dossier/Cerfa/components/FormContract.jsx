@@ -94,7 +94,16 @@ const FormContract = () => {
           <Text textStyle="sm" fontStyle="italic">
             à renseigner si une dérogation existe pour ce contrat
           </Text>
-          {typeContratApp.valueDb !== 11 && (
+          {(typeContratApp.valueDb === 21 ||
+            typeContratApp.valueDb === 22 ||
+            typeContratApp.valueDb === 23 ||
+            typeContratApp.valueDb === 31 ||
+            typeContratApp.valueDb === 32 ||
+            typeContratApp.valueDb === 33 ||
+            typeContratApp.valueDb === 34 ||
+            typeContratApp.valueDb === 35 ||
+            typeContratApp.valueDb === 36 ||
+            typeContratApp.valueDb === 37) && (
             <InputCerfa
               path="contrat.numeroContratPrecedent"
               field={numeroContratPrecedent}

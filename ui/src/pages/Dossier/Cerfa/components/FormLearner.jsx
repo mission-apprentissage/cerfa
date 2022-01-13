@@ -116,6 +116,7 @@ const FormLearner = () => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedApprentiAdresseNumero}
+            hasInfo={false}
           />
           <InputCerfa
             path="apprenti.adresse.voie"
@@ -123,6 +124,7 @@ const FormLearner = () => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedApprentiAdresseVoie}
+            hasInfo={false}
           />
           <InputCerfa
             path="apprenti.adresse.complement"
@@ -130,6 +132,7 @@ const FormLearner = () => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedApprentiAdresseComplement}
+            hasInfo={false}
           />
           <InputCerfa
             path="apprenti.adresse.codePostal"
@@ -137,6 +140,7 @@ const FormLearner = () => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedApprentiAdresseCodePostal}
+            hasInfo={false}
           />
           <InputCerfa
             path="apprenti.adresse.commune"
@@ -144,6 +148,7 @@ const FormLearner = () => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedApprentiAdresseCommune}
+            hasInfo={false}
           />
           <InputCerfa
             path="apprenti.telephone"
@@ -204,6 +209,7 @@ const FormLearner = () => {
                     type="text"
                     mt="2"
                     onSubmittedField={onSubmittedApprentiResponsableLegalAdresseNumero}
+                    hasInfo={false}
                   />
                   <InputCerfa
                     path="apprenti.responsableLegal.adresse.voie"
@@ -211,6 +217,7 @@ const FormLearner = () => {
                     type="text"
                     mt="2"
                     onSubmittedField={onSubmittedApprentiResponsableLegalAdresseVoie}
+                    hasInfo={false}
                   />
                   <InputCerfa
                     path="apprenti.responsableLegal.adresse.complement"
@@ -218,6 +225,7 @@ const FormLearner = () => {
                     type="text"
                     mt="2"
                     onSubmittedField={onSubmittedApprentiResponsableLegalAdresseComplement}
+                    hasInfo={false}
                   />
                   <InputCerfa
                     path="apprenti.responsableLegal.adresse.codePostal"
@@ -225,6 +233,7 @@ const FormLearner = () => {
                     type="text"
                     mt="2"
                     onSubmittedField={onSubmittedApprentiResponsableLegalAdresseCodePostal}
+                    hasInfo={false}
                   />
                   <InputCerfa
                     path="apprenti.responsableLegal.adresse.commune"
@@ -232,6 +241,7 @@ const FormLearner = () => {
                     type="text"
                     mt="2"
                     onSubmittedField={onSubmittedApprentiResponsableLegalAdresseCommune}
+                    hasInfo={false}
                   />
                 </Collapse>
               </Collapse>
