@@ -1,3 +1,10 @@
+# [1.13.0-beta.10](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.9...v1.13.0-beta.10) (2022-01-13)
+
+
+### Features
+
+* sauvegarde de tous les champs ([b1b65c5](https://github.com/mission-apprentissage/cerfa/commit/b1b65c5c068a2f0704bd7a122752185b9a0d8ca9))
+
 # [1.13.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.8...v1.13.0-beta.9) (2022-01-13)
 
 
