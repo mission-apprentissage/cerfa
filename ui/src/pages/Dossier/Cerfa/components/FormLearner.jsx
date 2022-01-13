@@ -5,12 +5,14 @@ import { useRecoilValue } from "recoil";
 import { useCerfaApprenti } from "../../../../common/hooks/useCerfa/parts/useCerfaApprenti";
 import {
   cerfaContratDateDebutContratAtom,
+  cerfaContratDateFinContratAtom,
   cerfaContratRemunerationMajorationAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 import InputCerfa from "./Input";
 
 const FormLearner = () => {
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
+  const dateFinContrat = useRecoilValue(cerfaContratDateFinContratAtom);
   const remunerationMajoration = useRecoilValue(cerfaContratRemunerationMajorationAtom);
   const {
     get: {
@@ -246,7 +248,7 @@ const FormLearner = () => {
             onAsyncData={{
               dateDebutContrat: dateDebutContrat?.value,
               remunerationMajoration: remunerationMajoration?.valueDb,
-              // remunerationMajoration: remunerationMajoration,
+              dateFinContrat: dateFinContrat?.value,
             }}
           />
           <InputCerfa

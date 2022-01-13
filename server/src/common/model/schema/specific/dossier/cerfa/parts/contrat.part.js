@@ -227,7 +227,7 @@ const contratSchema = {
   remunerationMajoration: {
     enum: [0, 10, 20],
     type: Number,
-    default: null,
+    default: 0,
     required: function () {
       return !this.draft;
     },

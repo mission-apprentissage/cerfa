@@ -109,11 +109,12 @@ export const CerfaApprentiController = async (dossier) => {
           });
           if (isAgeApprentiInvalidAtStart) return isAgeApprentiInvalidAtStart;
 
-          if (data.dateDebutContrat !== "") {
+          if (data.dateDebutContrat !== "" && data.dateFinContrat !== "") {
             const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
               apprentiDateNaissance: value,
               apprentiAge: age,
               dateDebutContrat: data.dateDebutContrat,
+              dateFinContrat: data.dateFinContrat,
               remunerationMajoration: data.remunerationMajoration,
             });
 
