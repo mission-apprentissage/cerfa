@@ -1,3 +1,14 @@
+# [1.13.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.5...v1.13.0-beta.6) (2022-01-13)
+
+
+### Features
+
+* ajout des contrôles con_10, con_11, con06, con_08 ([0c326be](https://github.com/mission-apprentissage/cerfa/commit/0c326be0b1735c055c186faf774deeb1d6b6bf08))
+* ajout des contrôles frm_det_con_21 ([2dd72fa](https://github.com/mission-apprentissage/cerfa/commit/2dd72fad2ccd4995d8e8f2d23a76ee0427bc398a))
+* ajout des contrôles frm_det_mai_02 ([9b03613](https://github.com/mission-apprentissage/cerfa/commit/9b036130861f834b1195f66c4769050c77cb37a9))
+* ajout du referentiel apprentissage pour recherche d'UAI ([87556ec](https://github.com/mission-apprentissage/cerfa/commit/87556ecbf824439260ed97c4578e5140f28dbf15))
+* **pdf:** add field caisseCompletaire ([#75](https://github.com/mission-apprentissage/cerfa/issues/75)) ([729536a](https://github.com/mission-apprentissage/cerfa/commit/729536aedd1a580a942e9c9bec2a9473b64f0922))
+
 # [1.13.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.4...v1.13.0-beta.5) (2022-01-12)
 
 
