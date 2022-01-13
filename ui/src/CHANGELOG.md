@@ -1,3 +1,10 @@
+# [1.13.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.6...v1.13.0-beta.7) (2022-01-13)
+
+
+### Bug Fixes
+
+* écrasement des données de rémunérations après une actualisation ([a4d54d4](https://github.com/mission-apprentissage/cerfa/commit/a4d54d4a4642a182bda796bfac13f9fb8248edf2))
+
 # [1.13.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.5...v1.13.0-beta.6) (2022-01-13)
 
 
