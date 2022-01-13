@@ -271,7 +271,7 @@ module.exports = (components) => {
           denomination: Joi.string(),
           formationInterne: Joi.boolean(),
           siret: Joi.string(),
-          uaiCfa: Joi.string().allow(""),
+          uaiCfa: Joi.string().allow(null),
           visaCfa: Joi.boolean(),
           adresse: Joi.object({
             numero: Joi.number(),

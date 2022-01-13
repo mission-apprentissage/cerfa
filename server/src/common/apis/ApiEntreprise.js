@@ -36,7 +36,13 @@ class ApiEntreprise {
         }
         return response.data.entreprise;
       } catch (e) {
-        throw new ApiError("Api Entreprise", e.message, e.code || e.response.status);
+        if (e.message === "timeout of 5000ms exceeded") {
+          return null;
+        }
+        if (e.response.status === 404) {
+          return null;
+        }
+        throw new ApiError("Api Entreprise getEntreprise", e.message, e.code || e.response.status);
       }
     });
   }
@@ -53,7 +59,7 @@ class ApiEntreprise {
         }
         return response.data.etablissement;
       } catch (e) {
-        throw new ApiError("Api Entreprise", e.message, e.code || e.response.status);
+        throw new ApiError("Api Entreprise getEtablissement", e.message, e.code || e.response.status);
       }
     });
   }
@@ -69,7 +75,11 @@ class ApiEntreprise {
         }
         return response.data.conventions[0];
       } catch (e) {
-        throw new ApiError("Api Entreprise", e.message, e.code || e.response.status);
+        if (e.response.status === 404) {
+          return { active: null, date_publication: null, etat: null, titre_court: null, titre: null, url: null };
+        } else {
+          throw new ApiError("Api Entreprise ConventionCollective", e.message, e.code || e.response.status);
+        }
       }
     });
   }
