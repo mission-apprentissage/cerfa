@@ -810,7 +810,8 @@ const fieldsPositions = {
 const capitalizeFirstLetter = (value) => value?.charAt(0).toUpperCase() + value?.slice(1);
 
 const buildFieldDraw = async (value, fieldDefinition, options = {}) => {
-  const isDate = !value ? "" : moment.isDate(value) ? moment(value).utc().format("MM/DD/YYYY") : `${value}`;
+  moment.locale("fr");
+  const isDate = !value ? "" : moment.isDate(value) ? moment(value).format("L") : `${value}`;
   const title = typeof value === "boolean" ? (value ? "X" : " ") : isDate;
   const result = {
     title:
