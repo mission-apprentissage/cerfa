@@ -87,3 +87,39 @@ export const fieldCompletionPercentage = (fields, nbFields) => {
   const percent = (countFilledField * 100) / nbFields;
   return percent;
 };
+
+//
+
+export const isAgeInValidAtDate = ({ dateNaissance, age, dateString, limitAge = 15, label = "" }) => {
+  // console.log(age === limitAge - 1 && dateString !== "", limitAge - 1, dateString, age);
+  if (age === limitAge - 1 && dateString !== "") {
+    const dateObj = DateTime.fromISO(dateString).setLocale("fr-FR");
+    const anniversaireA1 = dateNaissance.plus({ years: age + 1 });
+    // console.log(
+    //   dateObj < anniversaireA1,
+    //   dateObj.toFormat("yyyy-MM-dd"),
+    //   dateNaissance.toFormat("yyyy-MM-dd"),
+    //   anniversaireA1.toFormat("yyyy-MM-dd")
+    // );
+    if (dateObj < anniversaireA1) {
+      return {
+        successed: false,
+        data: null,
+        message: label,
+      };
+    }
+  }
+  return false;
+};
+
+export const caclAgeFromStringDate = (dateNaissanceString) => {
+  const dateNaissance = DateTime.fromISO(dateNaissanceString).setLocale("fr-FR");
+  const today = DateTime.now().setLocale("fr-FR");
+  const diffInYears = today.diff(dateNaissance, "years");
+  const { years: apprentiAge } = diffInYears.toObject();
+  const age = Math.floor(apprentiAge);
+  return {
+    age,
+    dateNaissance,
+  };
+};

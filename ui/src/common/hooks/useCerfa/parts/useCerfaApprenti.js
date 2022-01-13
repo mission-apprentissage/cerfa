@@ -3,7 +3,6 @@
  */
 
 import { useCallback } from "react";
-import { DateTime } from "luxon";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   fieldCompletionPercentage,
@@ -13,6 +12,8 @@ import {
   convertMultipleSelectOptionToValue,
   convertOptionToValue,
   convertValueToOption,
+  isAgeInValidAtDate,
+  caclAgeFromStringDate,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
@@ -83,32 +84,13 @@ const cerfaApprentiCompletion = (res) => {
   return fieldCompletionPercentage(fieldsToKeep, countFields);
 };
 
-export const isInValidDateDebutContratAge = (dateNaissance, age, pdateDebutContrat) => {
-  if (age === 14 && pdateDebutContrat !== "") {
-    const dateDebutContrat = DateTime.fromISO(pdateDebutContrat).setLocale("fr-FR");
-    const anniversaireA1 = dateNaissance.plus({ years: age + 1 });
-    if (dateDebutContrat < anniversaireA1) {
-      return {
-        successed: false,
-        data: null,
-        message: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
-      };
-    }
-  }
-  return false;
-};
-
 export const CerfaApprentiController = async (dossier) => {
   return {
     apprenti: {
       dateNaissance: {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
-          const dateNaissance = DateTime.fromISO(value).setLocale("fr-FR");
-          const today = DateTime.now().setLocale("fr-FR");
-          const diffInYears = today.diff(dateNaissance, "years");
-          const { years: apprentiAge } = diffInYears.toObject();
-          const age = Math.floor(apprentiAge);
+          const { age, dateNaissance } = caclAgeFromStringDate(value);
 
           if (age < 14) {
             return {
@@ -118,8 +100,14 @@ export const CerfaApprentiController = async (dossier) => {
             };
           }
 
-          const isInvalidDDCA = isInValidDateDebutContratAge(dateNaissance, age, data.dateDebutContrat);
-          if (isInvalidDDCA) return isInvalidDDCA;
+          const isAgeApprentiInvalidAtStart = isAgeInValidAtDate({
+            dateNaissance,
+            age,
+            dateString: data.dateDebutContrat,
+            limitAge: 15,
+            label: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
+          });
+          if (isAgeApprentiInvalidAtStart) return isAgeApprentiInvalidAtStart;
 
           if (data.dateDebutContrat !== "") {
             const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({

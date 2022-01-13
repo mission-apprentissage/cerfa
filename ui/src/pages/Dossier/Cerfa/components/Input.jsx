@@ -107,7 +107,7 @@ export default React.memo(
         const { successed, data, message } = await field?.doAsyncActions(val, onAsyncData);
         setIsLoading(false);
 
-        console.log({ successed, data, message });
+        // console.log({ successed, data, message });
         setErrors({ [name]: message });
         if (data) {
           return await onSubmittedField(path, data);

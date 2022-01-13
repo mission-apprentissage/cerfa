@@ -14,12 +14,13 @@ import {
   convertValueToOption,
   convertValueToMultipleSelectOption,
   convertMultipleSelectOptionToValue,
+  isAgeInValidAtDate,
+  caclAgeFromStringDate,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
 // import { cerfaApprentiDateNaissanceAtom } from "./useCerfaApprentiAtoms";
-import { isInValidDateDebutContratAge } from "./useCerfaApprenti";
 import * as contratAtoms from "./useCerfaContratAtoms";
 
 const cerfaContratCompletion = (res) => {
@@ -347,13 +348,43 @@ export const CerfaContratController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
-          if (data.dateNaissance !== "") {
-            const isInvalidDDCA = isInValidDateDebutContratAge(
-              DateTime.fromISO(data.apprentiDateNaissance).setLocale("fr-FR"),
-              data.apprentiAge,
-              value
+          if (data.apprentiDateNaissance !== "") {
+            const isAgeApprentiInvalidAtStart = isAgeInValidAtDate({
+              dateNaissance: DateTime.fromISO(data.apprentiDateNaissance).setLocale("fr-FR"),
+              age: data.apprentiAge,
+              dateString: value,
+              limitAge: 15,
+              label: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
+            });
+            if (isAgeApprentiInvalidAtStart) return isAgeApprentiInvalidAtStart;
+          }
+
+          if (data.maitre1DateNaissance !== "") {
+            const { age: ageMaitre1, dateNaissance: dateNaissanceMaitre1 } = caclAgeFromStringDate(
+              data.maitre1DateNaissance
             );
-            if (isInvalidDDCA) return isInvalidDDCA;
+            const isAgeMaitre1InvalidAtStart = isAgeInValidAtDate({
+              dateNaissance: dateNaissanceMaitre1,
+              age: ageMaitre1,
+              dateString: value,
+              limitAge: 18,
+              label: "Le maître d'apprentissage 1 doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+            });
+            if (isAgeMaitre1InvalidAtStart) return isAgeMaitre1InvalidAtStart;
+          }
+
+          if (data.maitre2DateNaissance !== "") {
+            const { age: ageMaitre2, dateNaissance: dateNaissanceMaitre2 } = caclAgeFromStringDate(
+              data.maitre2DateNaissance
+            );
+            const isAgeMaitre2InvalidAtStart = isAgeInValidAtDate({
+              dateNaissance: dateNaissanceMaitre2,
+              age: ageMaitre2,
+              dateString: value,
+              limitAge: 18,
+              label: "Le maître d'apprentissage 2 doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+            });
+            if (isAgeMaitre2InvalidAtStart) return isAgeMaitre2InvalidAtStart;
           }
 
           if (data.apprentiDateNaissance !== "") {
@@ -387,6 +418,7 @@ export const CerfaContratController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
+          // TODO DATA ?
           const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
             ...data,
             remunerationMajoration: convertOptionToValue({ ...data.remunerationMajoration, value: value }),

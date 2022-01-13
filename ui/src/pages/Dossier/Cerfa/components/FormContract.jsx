@@ -7,10 +7,16 @@ import {
   cerfaApprentiDateNaissanceAtom,
   cerfaApprentiAgeAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
+import {
+  cerfaMaitre1DateNaissanceAtom,
+  cerfaMaitre2DateNaissanceAtom,
+} from "../../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
 import InputCerfa from "./Input";
 
 const FormContract = () => {
   const apprentiDateNaissance = useRecoilValue(cerfaApprentiDateNaissanceAtom);
+  const maitre1DateNaissance = useRecoilValue(cerfaMaitre1DateNaissanceAtom);
+  const maitre2DateNaissance = useRecoilValue(cerfaMaitre2DateNaissanceAtom);
   const apprentiAge = useRecoilValue(cerfaApprentiAgeAtom);
   const {
     get: {
@@ -110,6 +116,8 @@ const FormContract = () => {
               apprentiDateNaissance: apprentiDateNaissance?.value,
               apprentiAge: apprentiAge?.value,
               remunerationMajoration: remunerationMajoration?.valueDb,
+              maitre1DateNaissance: maitre1DateNaissance?.value,
+              maitre2DateNaissance: maitre2DateNaissance?.value,
             }}
           />
           {(typeContratApp.valueDb === 31 ||

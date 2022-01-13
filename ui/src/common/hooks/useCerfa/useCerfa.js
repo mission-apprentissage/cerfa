@@ -39,10 +39,18 @@ const hydrate = async (dossier) => {
       maitre1: {
         ...cerfa.maitre1,
         ...cerfaMaitresController.maitre1,
+        dateNaissance: {
+          ...cerfa.maitre1.dateNaissance,
+          ...cerfaMaitresController.maitre1.dateNaissance,
+        },
       },
       maitre2: {
         ...cerfa.maitre2,
         ...cerfaMaitresController.maitre2,
+        dateNaissance: {
+          ...cerfa.maitre2.dateNaissance,
+          ...cerfaMaitresController.maitre2.dateNaissance,
+        },
       },
       contrat: {
         ...cerfa.contrat,
