@@ -1,3 +1,12 @@
+# [1.13.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.8...v1.13.0-beta.9) (2022-01-13)
+
+
+### Features
+
+* ajout des contrôles frm_det_con_12 ([0bfb5bd](https://github.com/mission-apprentissage/cerfa/commit/0bfb5bd7cc2530cab6db2afee9f7bc32f168ee36))
+* ajout des contrôles sur les dates formations et contrats ([774a19b](https://github.com/mission-apprentissage/cerfa/commit/774a19b9d900a7135846095ad32ed033125b1cd6))
+* sauvegarde adresse employeur ([3c2558a](https://github.com/mission-apprentissage/cerfa/commit/3c2558a3ec8f47d7543a516c5343d8f8b0bdb867))
+
 # [1.13.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.7...v1.13.0-beta.8) (2022-01-13)
 
 
