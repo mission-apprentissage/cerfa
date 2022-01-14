@@ -198,6 +198,7 @@ const FormFormation = React.memo((props) => {
               field={dureeFormation}
               type="number"
               mt="2"
+              precision={0}
               onSubmittedField={onSubmittedFormationDureeFormation}
             />
           </Flex>
