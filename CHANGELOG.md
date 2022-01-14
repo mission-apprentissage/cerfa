@@ -1,3 +1,12 @@
+# [1.13.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.10...v1.13.0-beta.11) (2022-01-14)
+
+
+### Features
+
+* ajout de quelques bases cosmétiques sur le formulaire ([#79](https://github.com/mission-apprentissage/cerfa/issues/79)) ([6c8aefd](https://github.com/mission-apprentissage/cerfa/commit/6c8aefd879319d0dd48c05f9a1fcf44cb1d61ad5))
+* amélioration champs de type nombre ([aedd631](https://github.com/mission-apprentissage/cerfa/commit/aedd631f069ba3bcfbfa0e7bc232e1fba764eab7))
+* revue des champs requis et verrouillés ([42f8f09](https://github.com/mission-apprentissage/cerfa/commit/42f8f09c6eaffecf7e0a7af618579b755ddf202b))
+
 # [1.13.0-beta.10](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.9...v1.13.0-beta.10) (2022-01-13)
 
 
