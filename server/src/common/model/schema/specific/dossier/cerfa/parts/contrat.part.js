@@ -122,9 +122,7 @@ const contratSchema = {
     label: "Minutes:",
     example: 30,
     default: null,
-    required: function () {
-      return !this.draft;
-    },
+    isNotRequiredForm: true,
   },
   travailRisque: {
     type: Boolean,

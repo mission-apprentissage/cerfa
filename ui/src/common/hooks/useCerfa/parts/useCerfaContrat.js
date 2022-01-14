@@ -32,14 +32,14 @@ const cerfaContratCompletion = (res) => {
     // contratLieuSignatureContrat: res.contrat.lieuSignatureContrat,
     // contratTypeDerogation: res.contrat.typeDerogation,
     contratDureeTravailHebdoHeures: res.contrat.dureeTravailHebdoHeures,
-    contratDureeTravailHebdoMinutes: res.contrat.dureeTravailHebdoMinutes,
+    // contratDureeTravailHebdoMinutes: res.contrat.dureeTravailHebdoMinutes,
     contratTravailRisque: res.contrat.travailRisque,
     // contratSalaireEmbauche: res.contrat.salaireEmbauche,
     // contratCaisseRetraiteComplementaire: res.contrat.caisseRetraiteComplementaire,
     contratAvantageNature: res.contrat.avantageNature,
     // contratRemunerationMajoration: res.contrat.remunerationMajoration,
   };
-  let countFields = 7;
+  let countFields = 6;
   const avantageNature = res.contrat.avantageNature.value;
   const contratInitial = res.contrat.typeContratApp.value === 11;
   const avenant =

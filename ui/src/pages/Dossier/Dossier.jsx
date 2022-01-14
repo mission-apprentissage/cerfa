@@ -102,7 +102,7 @@ const stepByPath = ["cerfa", "documents", "signatures", "etat"];
 export default () => {
   let match = useRouteMatch();
   const inviteModal = useDisclosure();
-  const { nextStep, prevStep, activeStep } = useSteps({
+  const { nextStep, prevStep, activeStep, setStep } = useSteps({
     initialStep: stepByPath.indexOf(match.params.step),
   });
   const [stepState, setStepState] = useState();
@@ -228,7 +228,8 @@ export default () => {
         <Flex flexDir="column" width="100%" mt={9}>
           <Steps
             onClickStep={(step) => {
-              return { cerfaComplete };
+              // return { cerfaComplete };
+              return setStep(step);
             }}
             activeStep={activeStep}
             // checkIcon={(e, i, a) => {

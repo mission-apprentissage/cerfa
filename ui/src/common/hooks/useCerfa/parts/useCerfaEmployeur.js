@@ -325,7 +325,7 @@ export function useCerfaEmployeur() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
-                denomination: newV.employeur.denomination.value,
+                denomination: newV.employeur.denomination.value.trim(),
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
@@ -356,7 +356,7 @@ export function useCerfaEmployeur() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
-                naf: newV.employeur.naf.value,
+                naf: newV.employeur.naf.value.trim(),
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
@@ -387,7 +387,7 @@ export function useCerfaEmployeur() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
-                codeIdcc: newV.employeur.codeIdcc.value,
+                codeIdcc: newV.employeur.codeIdcc.value.trim(),
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
@@ -456,7 +456,7 @@ export function useCerfaEmployeur() {
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
                 adresse: {
-                  voie: newV.employeur.adresse.voie.value,
+                  voie: newV.employeur.adresse.voie.value.trim(),
                 },
               },
             });
@@ -491,7 +491,7 @@ export function useCerfaEmployeur() {
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
                 adresse: {
-                  complement: newV.employeur.adresse.complement.value,
+                  complement: newV.employeur.adresse.complement.value.trim(),
                 },
               },
             });
@@ -526,7 +526,7 @@ export function useCerfaEmployeur() {
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
                 adresse: {
-                  codePostal: newV.employeur.adresse.codePostal.value,
+                  codePostal: newV.employeur.adresse.codePostal.value.trim(),
                 },
               },
             });
@@ -561,7 +561,7 @@ export function useCerfaEmployeur() {
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
                 adresse: {
-                  commune: newV.employeur.adresse.commune.value,
+                  commune: newV.employeur.adresse.commune.value.trim(),
                 },
               },
             });
@@ -694,7 +694,7 @@ export function useCerfaEmployeur() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
-                libelleIdcc: newV.employeur.libelleIdcc.value,
+                libelleIdcc: newV.employeur.libelleIdcc.value.trim(),
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
@@ -725,7 +725,7 @@ export function useCerfaEmployeur() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
-                caisseComplementaire: newV.employeur.caisseComplementaire.value,
+                caisseComplementaire: newV.employeur.caisseComplementaire.value.trim(),
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
@@ -793,7 +793,7 @@ export function useCerfaEmployeur() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
-                courriel: newV.employeur.courriel.value,
+                courriel: newV.employeur.courriel.value.trim(),
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));

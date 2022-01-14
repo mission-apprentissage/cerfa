@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Box, Flex, Heading, Container, Button, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Container, Button, Text, Link, UnorderedList, ListItem } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { workspacePathsAtom, workspaceAtom } from "../../common/hooks/workspaceAtoms";
 import { useDossier } from "../../common/hooks/useDossier/useDossier";
 import { hasContextAccessTo } from "../../common/utils/rolesUtils";
+import { ExternalLinkLine } from "../../theme/components/icons";
 
 export default () => {
   const { isloaded, createDossier, saveDossier } = useDossier();
@@ -37,24 +38,62 @@ export default () => {
             (la convention de formation et la convention d'aménagement de durée, le cas échéant)
             <br />
             <br />
-            En cliquant sur "Créer un dossier", vous accédez au formulaire de saisie du générateur de contrat
-            d'apprentissage pour les employeurs publics. Celui-ci reprend les champs présents dans le "cerfa papier". La
-            complétude est facilitée car le service reprend les tables présentes dans la notice du cerfa pour les
-            proposer dans des menus déroulants. Le formulaire utilise également la base Insee pour effectuer un contrôle
-            réglementaire et s'assurer via son Siret que l'établissement est actif au moment de la conclusion du
-            contrat. D'autres contrôles réglementaires permettent de s'assurer que la formation est éligible à
-            l'apprentissage, que l'employeur est public, que l'âge de l'apprenti permet bien de réaliser un contrat
-            d'apprentissage, ou encore que la rémunération est conforme aux dispositions légales. De la même manière, le
-            formulaire propose de pré-compléter les données formation, à partir de la saisie de la donnée Siret ou UAI
-            du CFA, en exploitant pour cela le catalogue de formation collecté par chacun des Carifs, quand la donnée
-            existe. Enfin, la saisie du formulaire est simplifiée par des contrôles de cohérence sur les données saisies
-            (par exemple, la période de rémunération en fonction de la date de début du contrat et de la date de
-            naissance de l'apprenti saisie) et des alertes à la saisie.
+            En cliquant sur <strong>Créer un dossier</strong>, vous accédez au formulaire de saisie du générateur de
+            contrat d'apprentissage pour les employeurs publics. Celui-ci reprend les champs présents dans le{" "}
+            <Link
+              href={"https://www.formulaires.service-public.fr/gf/cerfa_10103.do"}
+              textDecoration={"underline"}
+              isExternal
+            >
+              "cerfa papier"
+              <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} ml={"0.125rem"} />
+            </Link>
+            .
+            <br />
+            La complétude est facilitée car le service reprend les tables présentes dans{" "}
+            <Link
+              href={"https://www.formulaires.service-public.fr/gf/getNotice.do?cerfaNotice=51649&cerfaFormulaire=10103"}
+              textDecoration={"underline"}
+              isExternal
+            >
+              "la notice du cerfa"
+              <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} ml={"0.125rem"} />
+            </Link>{" "}
+            pour les proposer dans des menus déroulants.
             <br />
             <br />
-            Pour préparer la complétude du dossier, munissez-vous des éléments suivants qui vous seront demandés Pour le
-            volet employeur : le n° de Siret, le téléphone et l'adresse mail de contact,
+            Le formulaire utilise également la base Insee pour effectuer un contrôle réglementaire et s'assurer via son
+            Siret que l'établissement est actif au moment de la conclusion du contrat.
+            <br />
+            D'autres contrôles réglementaires permettent de s'assurer que la formation est éligible à l'apprentissage,
+            que l'employeur est public, que l'âge de l'apprenti permet bien de réaliser un contrat d'apprentissage, ou
+            encore que la rémunération est conforme aux dispositions légales.
+            <br />
+            De la même manière, le formulaire propose de pré-compléter les données formation, à partir de la saisie de
+            la donnée Siret ou UAI du CFA, en exploitant pour cela le catalogue de formation collecté par chacun des
+            Carifs, quand la donnée existe.
+            <br />
+            <br />
+            Pour préparer la complétude du dossier, munissez-vous des éléments suivants qui vous seront demandés :
           </Text>
+          <UnorderedList ml="40px !important">
+            <ListItem fontStyle="italic" my={2}>
+              <strong>Pour le volet employeur :</strong> le n° de Siret, le téléphone et l'adresse mail de contact,
+            </ListItem>
+            <ListItem fontStyle="italic" my={2}>
+              <strong>Pour le volet maitre d'apprentissage :</strong> les nom , prénom et date de naissance
+            </ListItem>
+            <ListItem fontStyle="italic" my={2}>
+              <strong>Pour le volet apprenti :</strong> la date de naissance, l'adresse et le parcours scolaire
+            </ListItem>
+            <ListItem fontStyle="italic" my={2}>
+              <strong>Pour le volet formation :</strong> les n°de iret/uai du CFA, du code RNCP/diplôme, les dates de
+              formation
+            </ListItem>
+            <ListItem fontStyle="italic" my={2}>
+              <strong>Pour le contrat :</strong> les dates de début et de fin, le n° du contrat initial si avenant
+            </ListItem>
+          </UnorderedList>
           <Flex width="100%" justifyContent="flex-end" mt={9}>
             <Button
               size="lg"
