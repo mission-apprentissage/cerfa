@@ -16,6 +16,9 @@ import {
   InputRightElement,
   NumberInput,
   NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from "@chakra-ui/react";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import { useFormik } from "formik";
@@ -49,6 +52,8 @@ export default React.memo(
     type,
     format = (val) => val,
     parse = (val) => val,
+    precision = 2,
+    numberStepper = false,
     ...props
   }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -75,17 +80,21 @@ export default React.memo(
 
     let handleChange = useCallback(
       async (e) => {
-        // e.persist();
+        e.persist();
         const val = type === "numberPrefixed" ? parse(e.target.value) : e.target.value;
         setValidated(false);
         setIsErrored(false);
 
         console.log("handleChange");
 
-        const validationSchema = !field?.isNotRequiredForm
+        let validationSchema = null;
+        validationSchema = !field?.isNotRequiredForm
           ? Yup.object().shape({
               [name]: Yup.string()
-                .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
+                .matches(new RegExp(field?.pattern), {
+                  message: `${field?.validateMessage}`,
+                  excludeEmptyString: true,
+                })
                 .required(field?.requiredMessage),
             })
           : Yup.object().shape({
@@ -133,11 +142,16 @@ export default React.memo(
     useEffect(() => {
       (async () => {
         prevOnAsyncDataRef.current = onAsyncData;
+        let fieldValue = field?.value;
 
-        const validationSchema = !field?.isNotRequiredForm
+        let validationSchema = null;
+        validationSchema = !field?.isNotRequiredForm
           ? Yup.object().shape({
               [name]: Yup.string()
-                .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
+                .matches(new RegExp(field?.pattern), {
+                  message: `${field?.validateMessage}`,
+                  excludeEmptyString: true,
+                })
                 .required(field?.requiredMessage),
             })
           : Yup.object().shape({
@@ -146,7 +160,6 @@ export default React.memo(
                 excludeEmptyString: true,
               }),
             });
-        let fieldValue = field?.value;
 
         //
         const { isValid: isValidFieldValue } = await validate(validationSchema, {
@@ -294,7 +307,7 @@ export default React.memo(
                 )}
               </Select>
             )}
-            {(type === "text" || type === "number" || type === "date") && (
+            {(type === "text" || type === "date") && (
               <Input
                 type={type}
                 name={name}
@@ -337,10 +350,62 @@ export default React.memo(
                 }}
               />
             )}
+            {type === "number" && (
+              <NumberInput
+                name={name}
+                onChange={(val) => handleChange({ persist: () => {}, target: { value: val } })}
+                value={values[name]}
+                precision={precision}
+                min={0}
+                required={!field?.isNotRequiredForm}
+                pattern={field?.pattern}
+                placeholder={field?.description}
+                variant={validated ? "valid" : "outline"}
+                isInvalid={isErrored}
+                maxLength={field?.maxLength}
+                isDisabled={shouldBeDisabled}
+                _focus={{
+                  borderBottomColor: borderBottomColor,
+                  boxShadow: "none",
+                  outlineColor: "none",
+                }}
+                _focusVisible={{
+                  borderBottomColor: borderBottomColor,
+                  boxShadow: "none",
+                  outline: "2px solid",
+                  outlineColor: validated ? "green.500" : isErrored ? "error" : "#2A7FFE",
+                  outlineOffset: "2px",
+                }}
+                _invalid={{
+                  borderBottomColor: borderBottomColor,
+                  boxShadow: "none",
+                  outline: "2px solid",
+                  outlineColor: "error",
+                  outlineOffset: "2px",
+                }}
+                _hover={{
+                  borderBottomColor: borderBottomColor,
+                }}
+                _disabled={{
+                  fontStyle: "italic",
+                  cursor: "not-allowed",
+                  opacity: 1,
+                  borderBottomColor: "#E5E5E5",
+                }}
+              >
+                <NumberInputField />
+                {numberStepper && (
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                )}
+              </NumberInput>
+            )}
             {type === "numberPrefixed" && (
               <NumberInput
                 name={name}
-                onChange={handleChange}
+                onChange={(val) => handleChange({ persist: () => {}, target: { value: val } })}
                 value={format(values[name])}
                 required={!field?.isNotRequiredForm}
                 pattern={field?.pattern}

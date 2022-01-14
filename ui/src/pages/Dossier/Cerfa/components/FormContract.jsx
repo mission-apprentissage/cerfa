@@ -191,12 +191,14 @@ const FormContract = () => {
               field={dureeTravailHebdoHeures}
               type="number"
               onSubmittedField={onSubmittedContratDureeTravailHebdoHeures}
+              precision={0}
             />
             <InputCerfa
               path="contrat.dureeTravailHebdoMinutes"
               field={dureeTravailHebdoMinutes}
               type="number"
               onSubmittedField={onSubmittedContratDureeTravailHebdoMinutes}
+              precision={0}
             />
           </Flex>
         </Box>
@@ -329,9 +331,9 @@ const FormContract = () => {
                           <InputCerfa
                             path={`contrat.remunerationsAnnuelles.${path}.taux`}
                             field={remunerationsAnnuelle.taux}
-                            type="numberPrefixed"
                             mt="2"
                             hasInfo={false}
+                            type="numberPrefixed"
                             format={(val) => val + ` %`}
                             parse={(val) => val.replace(/^ %/, "")}
                           />
@@ -395,7 +397,9 @@ const FormContract = () => {
                 <InputCerfa
                   path="contrat.avantageNourriture"
                   field={avantageNourriture}
-                  type="text"
+                  type="number"
+                  // format={(val) => val + ` €`}
+                  // parse={(val) => val.replace(/^ €/, "")}
                   mt="2"
                   onSubmittedField={onSubmittedContratAvantageNourriture}
                 />
@@ -405,7 +409,7 @@ const FormContract = () => {
                 <InputCerfa
                   path="contrat.avantageLogement"
                   field={avantageLogement}
-                  type="text"
+                  type="number"
                   mt="2"
                   onSubmittedField={onSubmittedContratAvantageLogement}
                 />

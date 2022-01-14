@@ -842,7 +842,6 @@ export function useCerfaFormation() {
               dureeFormation: {
                 ...formationDureeFormation,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -851,7 +850,7 @@ export function useCerfaFormation() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               formation: {
-                dureeFormation: newV.formation.dureeFormation.value,
+                dureeFormation: data && parseInt(data) !== 0 ? data : null,
               },
             });
             setPartFormationCompletionAtom(cerfaFormationCompletion(res));

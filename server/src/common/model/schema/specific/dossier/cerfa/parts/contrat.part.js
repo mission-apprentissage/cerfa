@@ -182,8 +182,9 @@ const contratSchema = {
     default: null,
     example: 3,
     required: function () {
-      return this.avantageNature;
+      return this.contrat.avantageNature;
     },
+    isNotRequiredForm: true,
   },
   avantageLogement: {
     type: Number,
@@ -193,8 +194,9 @@ const contratSchema = {
     default: null,
     example: 456,
     required: function () {
-      return this.avantageNature;
+      return this.contrat.avantageNature;
     },
+    isNotRequiredForm: true,
   },
   autreAvantageEnNature: {
     type: Boolean,
@@ -204,7 +206,7 @@ const contratSchema = {
     default: null,
     example: true,
     required: function () {
-      return this.avantageNature;
+      return this.contrat.avantageNature;
     },
     options: [
       {
@@ -212,6 +214,7 @@ const contratSchema = {
         value: true,
       },
     ],
+    isNotRequiredForm: true,
   },
   salaireEmbauche: {
     type: Number,

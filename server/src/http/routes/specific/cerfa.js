@@ -1,13 +1,33 @@
 const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
-const { cloneDeep, mergeWith } = require("lodash");
+const {
+  cloneDeep,
+  mergeWith,
+  // set
+} = require("lodash");
 const merge = require("deepmerge");
 const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 const cerfaSchema = require("../../../common/model/schema/specific/dossier/cerfa/Cerfa");
 const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfaController");
+
+// const checkRequiredField = (cerfa) => {
+//   let result = {};
+//   const validationObj = new Cerfa(cerfa);
+//   const validatedModel = validationObj.validateSync();
+//   if (validatedModel) {
+//     const keys = Object.keys(validatedModel.errors);
+//     for (let i = 0; i < keys.length; i++) {
+//       const err = validatedModel.errors[keys[i]];
+//       if (err.kind === "required") {
+//         set(result, `${err.path}.isNotRequiredForm`, false);
+//       }
+//     }
+//   }
+//   return result;
+// };
 
 module.exports = (components) => {
   const router = express.Router();
@@ -247,13 +267,13 @@ module.exports = (components) => {
         contrat: Joi.object({
           modeContractuel: Joi.number(),
           typeContratApp: Joi.number(),
-          numeroContratPrecedent: Joi.string(),
+          numeroContratPrecedent: Joi.string().allow(null),
           noContrat: Joi.string(),
           noAvenant: Joi.string(),
           dateDebutContrat: Joi.date(),
           dateFinContrat: Joi.date(),
           dureeContrat: Joi.number(),
-          dateEffetAvenant: Joi.date(),
+          dateEffetAvenant: Joi.date().allow(null),
           dateConclusion: Joi.date(),
           dateRupture: Joi.date(),
           lieuSignatureContrat: Joi.string(),
@@ -262,11 +282,11 @@ module.exports = (components) => {
           dureeTravailHebdoMinutes: Joi.number(),
           travailRisque: Joi.boolean(),
           salaireEmbauche: Joi.number(),
-          caisseRetraiteComplementaire: Joi.string(),
+          caisseRetraiteComplementaire: Joi.string().allow(""),
           avantageNature: Joi.boolean(),
-          avantageNourriture: Joi.number(),
-          avantageLogement: Joi.number(),
-          autreAvantageEnNature: Joi.boolean(),
+          avantageNourriture: Joi.number().allow(null),
+          avantageLogement: Joi.number().allow(null),
+          autreAvantageEnNature: Joi.boolean().allow(null),
           remunerationMajoration: Joi.number(),
           remunerationsAnnuelles: Joi.array().items({
             dateDebut: Joi.date(),
