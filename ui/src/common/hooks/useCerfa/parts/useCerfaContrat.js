@@ -30,16 +30,16 @@ const cerfaContratCompletion = (res) => {
     // contratDateConclusion: res.contrat.dateConclusion,
     contratDateFinContrat: res.contrat.dateFinContrat,
     // contratLieuSignatureContrat: res.contrat.lieuSignatureContrat,
-    contratTypeDerogation: res.contrat.typeDerogation,
+    // contratTypeDerogation: res.contrat.typeDerogation,
     contratDureeTravailHebdoHeures: res.contrat.dureeTravailHebdoHeures,
     contratDureeTravailHebdoMinutes: res.contrat.dureeTravailHebdoMinutes,
     contratTravailRisque: res.contrat.travailRisque,
     // contratSalaireEmbauche: res.contrat.salaireEmbauche,
-    contratCaisseRetraiteComplementaire: res.contrat.caisseRetraiteComplementaire,
+    // contratCaisseRetraiteComplementaire: res.contrat.caisseRetraiteComplementaire,
     contratAvantageNature: res.contrat.avantageNature,
-    contratRemunerationMajoration: res.contrat.remunerationMajoration,
+    // contratRemunerationMajoration: res.contrat.remunerationMajoration,
   };
-  let countFields = 10;
+  let countFields = 7;
   const avantageNature = res.contrat.avantageNature.value;
   const contratInitial = res.contrat.typeContratApp.value === 11;
   const avenant =
@@ -1596,7 +1596,6 @@ export function useCerfaContrat() {
               dureeTravailHebdoHeures: {
                 ...contratDureeTravailHebdoHeures,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -1605,7 +1604,7 @@ export function useCerfaContrat() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               contrat: {
-                dureeTravailHebdoHeures: newV.contrat.dureeTravailHebdoHeures.value,
+                dureeTravailHebdoHeures: data && parseInt(data) !== 0 ? data : null,
               },
             });
             setPartContratCompletion(cerfaContratCompletion(res));
@@ -1633,7 +1632,6 @@ export function useCerfaContrat() {
               dureeTravailHebdoMinutes: {
                 ...contratDureeTravailHebdoMinutes,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -1642,7 +1640,7 @@ export function useCerfaContrat() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               contrat: {
-                dureeTravailHebdoMinutes: newV.contrat.dureeTravailHebdoMinutes.value,
+                dureeTravailHebdoMinutes: data && parseInt(data) !== 0 ? data : null,
               },
             });
             setPartContratCompletion(cerfaContratCompletion(res));
@@ -1764,18 +1762,30 @@ export function useCerfaContrat() {
                 ...contratTypeContratApp,
                 value: data,
                 valueDb: convertMultipleSelectOptionToValue({ ...contratTypeContratApp, value: data }),
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
           if (contratTypeContratApp.value !== newV.contrat.typeContratApp.value) {
             setContratTypeContratApp(newV.contrat.typeContratApp);
 
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+            let dataToSave = {
               contrat: {
                 typeContratApp: convertMultipleSelectOptionToValue(newV.contrat.typeContratApp),
               },
-            });
+            };
+            if (newV.contrat.typeContratApp.valueDb === 11) {
+              setContratNumeroContratPrecedent({ ...contratNumeroContratPrecedent, value: "" });
+              setContratDateEffetAvenant({ ...contratDateEffetAvenant, value: "" });
+              dataToSave = {
+                contrat: {
+                  ...dataToSave.contrat,
+                  numeroContratPrecedent: null,
+                  dateEffetAvenant: null,
+                },
+              };
+            }
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartContratCompletion(cerfaContratCompletion(res));
           }
         }
@@ -1783,7 +1793,17 @@ export function useCerfaContrat() {
         console.error(e);
       }
     },
-    [contratTypeContratApp, setContratTypeContratApp, dossier?._id, cerfa?.id, setPartContratCompletion]
+    [
+      contratTypeContratApp,
+      setContratTypeContratApp,
+      dossier?._id,
+      cerfa?.id,
+      setPartContratCompletion,
+      setContratNumeroContratPrecedent,
+      contratNumeroContratPrecedent,
+      setContratDateEffetAvenant,
+      contratDateEffetAvenant,
+    ]
   );
 
   const onSubmittedContratTypeDerogation = useCallback(
@@ -1931,11 +1951,23 @@ export function useCerfaContrat() {
           if (contratAvantageNature.value !== newV.contrat.avantageNature.value) {
             setContratAvantageNature(newV.contrat.avantageNature);
 
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+            const dbValue = convertOptionToValue(newV.contrat.avantageNature);
+            let dataToSave = {
               contrat: {
-                avantageNature: convertOptionToValue(newV.contrat.avantageNature),
+                avantageNature: dbValue,
               },
-            });
+            };
+            if (!dbValue) {
+              dataToSave = {
+                contrat: {
+                  ...dataToSave.contrat,
+                  avantageNourriture: null,
+                  avantageLogement: null,
+                  autreAvantageEnNature: null,
+                },
+              };
+            }
+            const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartContratCompletion(cerfaContratCompletion(res));
           }
         }
@@ -1963,7 +1995,7 @@ export function useCerfaContrat() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               contrat: {
-                avantageNourriture: newV.contrat.avantageNourriture.value,
+                avantageNourriture: data && parseInt(data) !== 0 ? data : null,
               },
             });
             setPartContratCompletion(cerfaContratCompletion(res));
@@ -1993,7 +2025,7 @@ export function useCerfaContrat() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               contrat: {
-                avantageLogement: newV.contrat.avantageLogement.value,
+                avantageLogement: data && parseInt(data) !== 0 ? data : null,
               },
             });
             setPartContratCompletion(cerfaContratCompletion(res));
@@ -2014,7 +2046,7 @@ export function useCerfaContrat() {
             contrat: {
               autreAvantageEnNature: {
                 ...contratAutreAvantageEnNature,
-                value: data,
+                value: contratAutreAvantageEnNature.value === "true" ? "" : "true",
               },
             },
           };
@@ -2023,7 +2055,7 @@ export function useCerfaContrat() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               contrat: {
-                autreAvantageEnNature: convertOptionToValue(newV.contrat.autreAvantageEnNature),
+                autreAvantageEnNature: newV.contrat.autreAvantageEnNature.value === "true" ? true : null,
               },
             });
             setPartContratCompletion(cerfaContratCompletion(res));

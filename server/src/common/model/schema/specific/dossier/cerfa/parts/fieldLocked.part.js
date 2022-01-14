@@ -6,7 +6,7 @@ const fieldLockedSchema = {
     },
     denomination: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     raison_sociale: {
       type: Boolean,
@@ -14,19 +14,19 @@ const fieldLockedSchema = {
     },
     naf: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     nombreDeSalaries: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     codeIdcc: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     libelleIdcc: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     telephone: {
       type: Boolean,

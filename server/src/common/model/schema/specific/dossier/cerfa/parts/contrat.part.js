@@ -70,7 +70,7 @@ const contratSchema = {
   dateEffetAvenant: {
     type: Date,
     description: "Date d'effet d'avenant",
-    label: "Si avenant, date d'effet :",
+    label: "Date d'effet d'avenant :",
     nullable: true,
     default: null,
     example: "2021-03-01T00:00:00+0000",
@@ -104,6 +104,7 @@ const contratSchema = {
   typeDerogation: {
     ...typeDerogationSchema,
     label: "Type de dérogation (optionnel)",
+    isNotRequiredForm: true,
   },
   dureeTravailHebdoHeures: {
     type: Number,
@@ -151,9 +152,7 @@ const contratSchema = {
     label: "Caisse de retraite complémentaire :",
     example: "",
     default: null,
-    required: function () {
-      return !this.draft;
-    },
+    isNotRequiredForm: true,
   },
   avantageNature: {
     type: Boolean,
@@ -183,8 +182,9 @@ const contratSchema = {
     default: null,
     example: 3,
     required: function () {
-      return this.avantageNature;
+      return this.contrat.avantageNature;
     },
+    isNotRequiredForm: true,
   },
   avantageLogement: {
     type: Number,
@@ -194,25 +194,27 @@ const contratSchema = {
     default: null,
     example: 456,
     required: function () {
-      return this.avantageNature;
+      return this.contrat.avantageNature;
     },
+    isNotRequiredForm: true,
   },
   autreAvantageEnNature: {
     type: Boolean,
     description: "Autre avantage en nature",
-    label: "Autres avantages: ",
+    label: "Autres avantages",
     nullable: true,
     default: null,
     example: true,
     required: function () {
-      return this.avantageNature;
+      return this.contrat.avantageNature;
     },
     options: [
       {
-        label: "Autres avantages",
+        label: "true",
         value: true,
       },
     ],
+    isNotRequiredForm: true,
   },
   salaireEmbauche: {
     type: Number,
@@ -228,9 +230,7 @@ const contratSchema = {
     enum: [0, 10, 20],
     type: Number,
     default: 0,
-    required: function () {
-      return !this.draft;
-    },
+    isNotRequiredForm: true,
     description: "**Majoration de la rémunération** :\r\n<br />Aucune\r\n<br />10%\r\n<br />20%",
     label: "L'employeur souhaite appliquer un majoration à la rémunération :",
     options: [

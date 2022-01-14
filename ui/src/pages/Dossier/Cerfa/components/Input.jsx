@@ -16,6 +16,9 @@ import {
   InputRightElement,
   NumberInput,
   NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from "@chakra-ui/react";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import { useFormik } from "formik";
@@ -24,6 +27,7 @@ import * as Yup from "yup";
 import { LockFill } from "../../../../theme/components/icons/LockFill";
 import InfoTooltip from "../../../../common/components/InfoTooltip";
 import Comment from "../../../../common/components/Comments/Comment";
+import { Check } from "../../../../theme/components/icons";
 
 const validate = async (validationSchema, obj) => {
   let isValid = false;
@@ -49,6 +53,8 @@ export default React.memo(
     type,
     format = (val) => val,
     parse = (val) => val,
+    precision = 2,
+    numberStepper = false,
     ...props
   }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -75,18 +81,29 @@ export default React.memo(
 
     let handleChange = useCallback(
       async (e) => {
-        // e.persist();
+        e.persist();
         const val = type === "numberPrefixed" ? parse(e.target.value) : e.target.value;
         setValidated(false);
         setIsErrored(false);
 
         console.log("handleChange");
 
-        const validationSchema = Yup.object().shape({
-          [name]: Yup.string()
-            .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
-            .required(field?.requiredMessage),
-        });
+        let validationSchema = null;
+        validationSchema = !field?.isNotRequiredForm
+          ? Yup.object().shape({
+              [name]: Yup.string()
+                .matches(new RegExp(field?.pattern), {
+                  message: `${field?.validateMessage}`,
+                  excludeEmptyString: true,
+                })
+                .required(field?.requiredMessage),
+            })
+          : Yup.object().shape({
+              [name]: Yup.string().matches(new RegExp(field?.pattern), {
+                message: `${field?.validateMessage}`,
+                excludeEmptyString: true,
+              }),
+            });
 
         const { isValid } = await validate(validationSchema, { [name]: val });
 
@@ -126,13 +143,24 @@ export default React.memo(
     useEffect(() => {
       (async () => {
         prevOnAsyncDataRef.current = onAsyncData;
-
-        const validationSchema = Yup.object().shape({
-          [name]: Yup.string()
-            .matches(new RegExp(field?.pattern), { message: `${field?.validateMessage}`, excludeEmptyString: true })
-            .required(field?.requiredMessage),
-        });
         let fieldValue = field?.value;
+
+        let validationSchema = null;
+        validationSchema = !field?.isNotRequiredForm
+          ? Yup.object().shape({
+              [name]: Yup.string()
+                .matches(new RegExp(field?.pattern), {
+                  message: `${field?.validateMessage}`,
+                  excludeEmptyString: true,
+                })
+                .required(field?.requiredMessage),
+            })
+          : Yup.object().shape({
+              [name]: Yup.string().matches(new RegExp(field?.pattern), {
+                message: `${field?.validateMessage}`,
+                excludeEmptyString: true,
+              }),
+            });
 
         //
         const { isValid: isValidFieldValue } = await validate(validationSchema, {
@@ -226,7 +254,7 @@ export default React.memo(
     if (!field) return null;
 
     return (
-      <FormControl isRequired mt={2} isInvalid={errors[name]} {...props}>
+      <FormControl isRequired={!field?.isNotRequiredForm} mt={2} isInvalid={errors[name]} {...props}>
         {(type === "text" ||
           type === "number" ||
           type === "numberPrefixed" ||
@@ -280,13 +308,13 @@ export default React.memo(
                 )}
               </Select>
             )}
-            {(type === "text" || type === "number" || type === "date") && (
+            {(type === "text" || type === "date") && (
               <Input
                 type={type}
                 name={name}
                 onChange={handleChange}
                 value={values[name]}
-                required
+                required={!field?.isNotRequiredForm}
                 pattern={field?.pattern}
                 placeholder={field?.description}
                 variant={validated ? "valid" : "outline"}
@@ -323,12 +351,64 @@ export default React.memo(
                 }}
               />
             )}
+            {type === "number" && (
+              <NumberInput
+                name={name}
+                onChange={(val) => handleChange({ persist: () => {}, target: { value: val } })}
+                value={values[name]}
+                precision={precision}
+                min={0}
+                required={!field?.isNotRequiredForm}
+                pattern={field?.pattern}
+                placeholder={field?.description}
+                variant={validated ? "valid" : "outline"}
+                isInvalid={isErrored}
+                maxLength={field?.maxLength}
+                isDisabled={shouldBeDisabled}
+                _focus={{
+                  borderBottomColor: borderBottomColor,
+                  boxShadow: "none",
+                  outlineColor: "none",
+                }}
+                _focusVisible={{
+                  borderBottomColor: borderBottomColor,
+                  boxShadow: "none",
+                  outline: "2px solid",
+                  outlineColor: validated ? "green.500" : isErrored ? "error" : "#2A7FFE",
+                  outlineOffset: "2px",
+                }}
+                _invalid={{
+                  borderBottomColor: borderBottomColor,
+                  boxShadow: "none",
+                  outline: "2px solid",
+                  outlineColor: "error",
+                  outlineOffset: "2px",
+                }}
+                _hover={{
+                  borderBottomColor: borderBottomColor,
+                }}
+                _disabled={{
+                  fontStyle: "italic",
+                  cursor: "not-allowed",
+                  opacity: 1,
+                  borderBottomColor: "#E5E5E5",
+                }}
+              >
+                <NumberInputField />
+                {numberStepper && (
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                )}
+              </NumberInput>
+            )}
             {type === "numberPrefixed" && (
               <NumberInput
                 name={name}
-                onChange={handleChange}
+                onChange={(val) => handleChange({ persist: () => {}, target: { value: val } })}
                 value={format(values[name])}
-                required
+                required={!field?.isNotRequiredForm}
                 pattern={field?.pattern}
                 placeholder={field?.description}
                 variant={validated ? "valid" : "outline"}
@@ -393,21 +473,19 @@ export default React.memo(
             )}
             {type === "consent" && (
               <>
-                {field.options.map((option, k) => (
-                  <Checkbox
-                    name={name}
-                    onChange={handleChange}
-                    value={option.label}
-                    isChecked={values[name] === option.label}
-                    isDisabled={shouldBeDisabled}
-                    key={k}
-                  >
-                    {option.label}
-                  </Checkbox>
-                ))}
+                <Checkbox
+                  name={name}
+                  onChange={handleChange}
+                  value="true"
+                  isChecked={values[name] === "true"}
+                  isDisabled={shouldBeDisabled}
+                  icon={<Check />}
+                >
+                  {field?.label}
+                </Checkbox>
               </>
             )}
-            {(shouldBeDisabled || isLoading || validated || isErrored) && (
+            {(shouldBeDisabled || isLoading || validated || isErrored) && type !== "radio" && (
               <InputRightElement
                 position={!hasInfo ? "inherit" : "absolute"}
                 children={

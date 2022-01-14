@@ -1,13 +1,33 @@
 const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
-const { cloneDeep, mergeWith } = require("lodash");
+const {
+  cloneDeep,
+  mergeWith,
+  // set
+} = require("lodash");
 const merge = require("deepmerge");
 const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 const cerfaSchema = require("../../../common/model/schema/specific/dossier/cerfa/Cerfa");
 const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfaController");
+
+// const checkRequiredField = (cerfa) => {
+//   let result = {};
+//   const validationObj = new Cerfa(cerfa);
+//   const validatedModel = validationObj.validateSync();
+//   if (validatedModel) {
+//     const keys = Object.keys(validatedModel.errors);
+//     for (let i = 0; i < keys.length; i++) {
+//       const err = validatedModel.errors[keys[i]];
+//       if (err.kind === "required") {
+//         set(result, `${err.path}.isNotRequiredForm`, false);
+//       }
+//     }
+//   }
+//   return result;
+// };
 
 module.exports = (components) => {
   const router = express.Router();
@@ -29,9 +49,17 @@ module.exports = (components) => {
 
     return {
       employeur: {
-        ...mergeWith(cloneDeep(cerfaSchema.employeur), cerfa.employeur, customizer),
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.employeur), cerfa.employeur, customizer),
+          cerfa.isLockedField.employeur,
+          customizerLock
+        ),
         adresse: {
-          ...mergeWith(cloneDeep(cerfaSchema.employeur.adresse), cerfa.employeur.adresse, customizer),
+          ...mergeWith(
+            mergeWith(cloneDeep(cerfaSchema.employeur.adresse), cerfa.employeur.adresse, customizer),
+            cerfa.isLockedField.employeur.adresse,
+            customizerLock
+          ),
         },
       },
       apprenti: {
@@ -155,8 +183,8 @@ module.exports = (components) => {
           telephone: Joi.string(),
           courriel: Joi.string(),
           adresse: Joi.object({
-            numero: Joi.number().allow(null),
-            voie: Joi.string().allow(null),
+            numero: Joi.number().allow(""),
+            voie: Joi.string().allow(""),
             complement: Joi.string().allow(""),
             label: Joi.string().allow(""),
             codePostal: Joi.string().allow(""),
@@ -166,9 +194,9 @@ module.exports = (components) => {
           prenom: Joi.string(),
           typeEmployeur: Joi.number(),
           employeurSpecifique: Joi.number(),
-          caisseComplementaire: Joi.string(),
+          caisseComplementaire: Joi.string().allow(""),
           regimeSpecifique: Joi.boolean(),
-          attestationEligibilite: Joi.boolean(),
+          attestationEligibilite: Joi.boolean().allow(null),
           attestationPieces: Joi.boolean(),
           privePublic: Joi.boolean(),
         }),
@@ -192,9 +220,9 @@ module.exports = (components) => {
           telephone: Joi.string(),
           courriel: Joi.string(),
           adresse: Joi.object({
-            numero: Joi.number(),
+            numero: Joi.number().allow(""),
             voie: Joi.string(),
-            complement: Joi.string(),
+            complement: Joi.string().allow(""),
             label: Joi.string(),
             codePostal: Joi.string(),
             commune: Joi.string(),
@@ -205,12 +233,12 @@ module.exports = (components) => {
             prenom: Joi.string(),
             memeAdresse: Joi.boolean(),
             adresse: Joi.object({
-              numero: Joi.number(),
-              voie: Joi.string(),
-              complement: Joi.string(),
-              label: Joi.string(),
-              codePostal: Joi.string(),
-              commune: Joi.string(),
+              numero: Joi.number().allow(""),
+              voie: Joi.string().allow(null),
+              complement: Joi.string().allow(""),
+              label: Joi.string().allow(null),
+              codePostal: Joi.string().allow(null),
+              commune: Joi.string().allow(null),
             }),
           }),
           inscriptionSportifDeHautNiveau: Joi.boolean(),
@@ -239,13 +267,13 @@ module.exports = (components) => {
         contrat: Joi.object({
           modeContractuel: Joi.number(),
           typeContratApp: Joi.number(),
-          numeroContratPrecedent: Joi.string(),
+          numeroContratPrecedent: Joi.string().allow(null),
           noContrat: Joi.string(),
           noAvenant: Joi.string(),
           dateDebutContrat: Joi.date(),
           dateFinContrat: Joi.date(),
           dureeContrat: Joi.number(),
-          dateEffetAvenant: Joi.date(),
+          dateEffetAvenant: Joi.date().allow(null),
           dateConclusion: Joi.date(),
           dateRupture: Joi.date(),
           lieuSignatureContrat: Joi.string(),
@@ -254,11 +282,11 @@ module.exports = (components) => {
           dureeTravailHebdoMinutes: Joi.number(),
           travailRisque: Joi.boolean(),
           salaireEmbauche: Joi.number(),
-          caisseRetraiteComplementaire: Joi.string(),
+          caisseRetraiteComplementaire: Joi.string().allow(""),
           avantageNature: Joi.boolean(),
-          avantageNourriture: Joi.number(),
-          avantageLogement: Joi.number(),
-          autreAvantageEnNature: Joi.boolean(),
+          avantageNourriture: Joi.number().allow(null),
+          avantageLogement: Joi.number().allow(null),
+          autreAvantageEnNature: Joi.boolean().allow(null),
           remunerationMajoration: Joi.number(),
           remunerationsAnnuelles: Joi.array().items({
             dateDebut: Joi.date(),
@@ -276,7 +304,7 @@ module.exports = (components) => {
           uaiCfa: Joi.string().allow(null),
           visaCfa: Joi.boolean(),
           adresse: Joi.object({
-            numero: Joi.number(),
+            numero: Joi.number().allow(""),
             voie: Joi.string(),
             complement: Joi.string().allow(""),
             label: Joi.string(),
@@ -284,6 +312,7 @@ module.exports = (components) => {
             commune: Joi.string(),
           }),
         }),
+        isLockedField: Joi.object({}).unknown(),
         dossierId: Joi.string().required(),
       }).validateAsync(body, { abortEarly: false });
 

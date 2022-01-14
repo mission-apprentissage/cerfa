@@ -70,8 +70,10 @@ const employeurCerfaSchema = {
       return !this.draft;
     },
     default: null,
-    description: "Effectif salarié de l'entreprise",
+    description:
+      "L'effectif renseigné est celui de l'entreprise dans sa globalité, au sens de l'article L. 130-1.-I du code de la sécurité sociale et non seulement l'effectif de l'établissement d'exécution du contrat.",
     label: "Effectif salarié de l'entreprise :",
+    requiredMessage: "Effectif salarié de l'entreprise est obligatoire",
     example: 123,
   },
   codeIdcc: {
@@ -280,9 +282,7 @@ const employeurCerfaSchema = {
     maxLength: 80,
     type: String,
     default: null,
-    required: function () {
-      return !this.draft;
-    },
+    isNotRequiredForm: true,
     description: "Caisse de retraite complémentaire Alternant",
     label: "Caisse de retraite complémentaire Alternant :",
     example: "AGIRC-ARRCO",
@@ -308,14 +308,17 @@ const employeurCerfaSchema = {
   attestationEligibilite: {
     type: Boolean,
     description: "Atteste de l'éligibilité du tuteur / maître d'apprentissage",
+    label:
+      "L'employeur atteste sur l'honneur que le(s) maître(s) d'apprentissage répond à l'ensemble des critères d'éligibilité à cette fonction.",
+    requiredMessage:
+      "Il est obligatoire d'attester que le(s) maître(s) d'apprentissage répond à l'ensemble des critères d'éligibilité à cette fonction ",
     default: null,
     required: function () {
       return !this.draft;
     },
     options: [
       {
-        label:
-          "L'employeur atteste sur l'honneur que le maître d'apprentissage répond à l'ensemble des critères d'éligibilité à cette fonction.",
+        label: "true",
         value: true,
       },
     ],

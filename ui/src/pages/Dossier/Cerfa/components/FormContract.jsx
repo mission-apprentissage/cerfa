@@ -94,7 +94,16 @@ const FormContract = () => {
           <Text textStyle="sm" fontStyle="italic">
             à renseigner si une dérogation existe pour ce contrat
           </Text>
-          {typeContratApp.valueDb !== 11 && (
+          {(typeContratApp.valueDb === 21 ||
+            typeContratApp.valueDb === 22 ||
+            typeContratApp.valueDb === 23 ||
+            typeContratApp.valueDb === 31 ||
+            typeContratApp.valueDb === 32 ||
+            typeContratApp.valueDb === 33 ||
+            typeContratApp.valueDb === 34 ||
+            typeContratApp.valueDb === 35 ||
+            typeContratApp.valueDb === 36 ||
+            typeContratApp.valueDb === 37) && (
             <InputCerfa
               path="contrat.numeroContratPrecedent"
               field={numeroContratPrecedent}
@@ -182,12 +191,14 @@ const FormContract = () => {
               field={dureeTravailHebdoHeures}
               type="number"
               onSubmittedField={onSubmittedContratDureeTravailHebdoHeures}
+              precision={0}
             />
             <InputCerfa
               path="contrat.dureeTravailHebdoMinutes"
               field={dureeTravailHebdoMinutes}
               type="number"
               onSubmittedField={onSubmittedContratDureeTravailHebdoMinutes}
+              precision={0}
             />
           </Flex>
         </Box>
@@ -223,13 +234,25 @@ const FormContract = () => {
               <Text>Le calcul de la rémunération est automatique.</Text>
               <Text>Vous devez, pour cela, renseigner les éléments suivants : </Text>
               <UnorderedList ml="30px !important">
-                <ListItem fontWeight="400" fontStyle="italic">
+                <ListItem
+                  fontWeight="400"
+                  fontStyle="italic"
+                  color={apprentiDateNaissance.value === "" ? "error" : "green.500"}
+                >
                   La date de naissance de l'apprenti
                 </ListItem>
-                <ListItem fontWeight="400" fontStyle="italic">
+                <ListItem
+                  fontWeight="400"
+                  fontStyle="italic"
+                  color={dateDebutContrat.value === "" ? "error" : "green.500"}
+                >
                   La date de début d'exécution du contrat
                 </ListItem>
-                <ListItem fontWeight="400" fontStyle="italic">
+                <ListItem
+                  fontWeight="400"
+                  fontStyle="italic"
+                  color={dateFinContrat.value === "" ? "error" : "green.500"}
+                >
                   La date de fin du contrat
                 </ListItem>
               </UnorderedList>
@@ -320,9 +343,9 @@ const FormContract = () => {
                           <InputCerfa
                             path={`contrat.remunerationsAnnuelles.${path}.taux`}
                             field={remunerationsAnnuelle.taux}
-                            type="numberPrefixed"
                             mt="2"
                             hasInfo={false}
+                            type="numberPrefixed"
                             format={(val) => val + ` %`}
                             parse={(val) => val.replace(/^ %/, "")}
                           />
@@ -386,7 +409,9 @@ const FormContract = () => {
                 <InputCerfa
                   path="contrat.avantageNourriture"
                   field={avantageNourriture}
-                  type="text"
+                  type="number"
+                  // format={(val) => val + ` €`}
+                  // parse={(val) => val.replace(/^ €/, "")}
                   mt="2"
                   onSubmittedField={onSubmittedContratAvantageNourriture}
                 />
@@ -396,7 +421,7 @@ const FormContract = () => {
                 <InputCerfa
                   path="contrat.avantageLogement"
                   field={avantageLogement}
-                  type="text"
+                  type="number"
                   mt="2"
                   onSubmittedField={onSubmittedContratAvantageLogement}
                 />

@@ -398,22 +398,36 @@ export function useCerfaFormation() {
               denomination: {
                 ...organismeFormationDenomination,
                 value: data.enseigne || data.entreprise_raison_sociale,
+                locked: false,
               },
               uaiCfa: {
                 ...organismeFormationUaiCfa,
                 value: data.uai || "", // If organismeFormationUaiCfa.value !=== "" && data.uai === "" => do not change it
                 forceUpdate: organismeFormationUaiCfa.value === data.uai,
-                locked: data.uai !== "",
+                locked: false,
               },
               adresse: {
                 numero: {
                   ...organismeFormationAdresseNumero,
-                  value: data.numero_voie, //parseInt(data.numero_voie),
+                  value: data.numero_voie || "", //parseInt(data.numero_voie),
+                  locked: false,
                 },
-                voie: { ...organismeFormationAdresseVoie, value: `${data.type_voie} ${data.nom_voie}` },
-                complement: { ...organismeFormationAdresseComplement, value: data.complement_adresse || "" },
-                codePostal: { ...organismeFormationAdresseCodePostal, value: data.code_postal },
-                commune: { ...organismeFormationAdresseCommune, value: data.commune_implantation_nom },
+                voie: {
+                  ...organismeFormationAdresseVoie,
+                  value: data.type_voie || data.nom_voie ? `${data.type_voie} ${data.nom_voie}` : "",
+                  locked: false,
+                },
+                complement: {
+                  ...organismeFormationAdresseComplement,
+                  value: data.complement_adresse || "",
+                  locked: false,
+                },
+                codePostal: { ...organismeFormationAdresseCodePostal, value: data.code_postal || "", locked: false },
+                commune: {
+                  ...organismeFormationAdresseCommune,
+                  value: data.commune_implantation_nom || "",
+                  locked: false,
+                },
               },
             },
           };
@@ -438,6 +452,19 @@ export function useCerfaFormation() {
                   complement: newV.organismeFormation.adresse.complement.value,
                   codePostal: newV.organismeFormation.adresse.codePostal.value,
                   commune: newV.organismeFormation.adresse.commune.value,
+                },
+              },
+              isLockedField: {
+                organismeFormation: {
+                  denomination: false,
+                  uaiCfa: false,
+                  adresse: {
+                    numero: false,
+                    voie: false,
+                    complement: false,
+                    codePostal: false,
+                    commune: false,
+                  },
                 },
               },
             });
@@ -815,7 +842,6 @@ export function useCerfaFormation() {
               dureeFormation: {
                 ...formationDureeFormation,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -824,7 +850,7 @@ export function useCerfaFormation() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               formation: {
-                dureeFormation: newV.formation.dureeFormation.value,
+                dureeFormation: data && parseInt(data) !== 0 ? data : null,
               },
             });
             setPartFormationCompletionAtom(cerfaFormationCompletion(res));
@@ -927,6 +953,7 @@ export function useCerfaFormation() {
               intituleQualification: {
                 ...formationIntituleQualification,
                 value: data.intitule_diplome,
+                locked: false,
               },
             },
           };
@@ -940,6 +967,11 @@ export function useCerfaFormation() {
                 codeDiplome: newV.formation.codeDiplome.value,
                 rncp: newV.formation.rncp.value,
                 intituleQualification: newV.formation.intituleQualification.value,
+              },
+              isLockedField: {
+                formation: {
+                  intituleQualification: false,
+                },
               },
             });
             setPartFormationCompletionAtom(cerfaFormationCompletion(res));
@@ -972,16 +1004,16 @@ export function useCerfaFormation() {
                 ...formationCodeDiplome,
                 value: data.cfd || "",
                 forceUpdate: formationCodeDiplome.value === data.cfd,
-                locked: data.cfd !== "",
+                // locked: data.cfd !== "",
               },
               rncp: {
                 ...formationRncp,
                 value: data.rncp,
-                // forceUpdate: false, // IF data = "" true
               },
               intituleQualification: {
                 ...formationIntituleQualification,
                 value: data.intitule_diplome,
+                locked: false,
               },
             },
           };
@@ -995,6 +1027,11 @@ export function useCerfaFormation() {
                 codeDiplome: newV.formation.codeDiplome.value,
                 rncp: newV.formation.rncp.value,
                 intituleQualification: newV.formation.intituleQualification.value,
+              },
+              isLockedField: {
+                formation: {
+                  intituleQualification: false,
+                },
               },
             });
             setPartFormationCompletionAtom(cerfaFormationCompletion(res));

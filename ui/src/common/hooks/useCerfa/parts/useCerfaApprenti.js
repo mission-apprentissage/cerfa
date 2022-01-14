@@ -1119,11 +1119,11 @@ export function useCerfaApprenti() {
                   responsableLegal: {
                     memeAdresse,
                     adresse: {
-                      numero: apprentiAdresseNumero.value,
-                      voie: apprentiAdresseVoie.value,
-                      complement: apprentiAdresseComplement.value,
-                      codePostal: apprentiAdresseCodePostal.value,
-                      commune: apprentiAdresseCommune.value,
+                      numero: apprentiAdresseNumero.value || "",
+                      voie: apprentiAdresseVoie.value || null,
+                      complement: apprentiAdresseComplement.value || "",
+                      codePostal: apprentiAdresseCodePostal.value || null,
+                      commune: apprentiAdresseCommune.value || null,
                     },
                   },
                 },

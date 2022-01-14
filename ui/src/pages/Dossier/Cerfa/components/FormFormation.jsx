@@ -101,6 +101,7 @@ const FormFormation = React.memo((props) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedOrganismeFormationAdresseNumero}
+            hasInfo={false}
           />
           <InputCerfa
             path="organismeFormation.adresse.voie"
@@ -108,6 +109,7 @@ const FormFormation = React.memo((props) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedOrganismeFormationAdresseVoie}
+            hasInfo={false}
           />
           <InputCerfa
             path="organismeFormation.adresse.complement"
@@ -115,6 +117,7 @@ const FormFormation = React.memo((props) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedOrganismeFormationAdresseComplement}
+            hasInfo={false}
           />
           <InputCerfa
             path="organismeFormation.adresse.codePostal"
@@ -122,6 +125,7 @@ const FormFormation = React.memo((props) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedOrganismeFormationAdresseCodePostal}
+            hasInfo={false}
           />
           <InputCerfa
             path="organismeFormation.adresse.commune"
@@ -129,6 +133,7 @@ const FormFormation = React.memo((props) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedOrganismeFormationAdresseCommune}
+            hasInfo={false}
           />
         </Box>
         <Box w="45%" flex="1" ml="5w">

@@ -78,6 +78,7 @@ const FormEmployer = ({ onFetched }) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedEmployeurAdresseNumero}
+            hasInfo={false}
           />
           <InputCerfa
             path="employeur.adresse.voie"
@@ -85,6 +86,7 @@ const FormEmployer = ({ onFetched }) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedEmployeurAdresseVoie}
+            hasInfo={false}
           />
           <InputCerfa
             path="employeur.adresse.complement"
@@ -92,6 +94,7 @@ const FormEmployer = ({ onFetched }) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedEmployeurAdresseComplement}
+            hasInfo={false}
           />
           <InputCerfa
             path="employeur.adresse.codePostal"
@@ -99,6 +102,7 @@ const FormEmployer = ({ onFetched }) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedEmployeurAdresseCodePostal}
+            hasInfo={false}
           />
           <InputCerfa
             path="employeur.adresse.commune"
@@ -106,6 +110,7 @@ const FormEmployer = ({ onFetched }) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedEmployeurAdresseCommune}
+            hasInfo={false}
           />
 
           <InputCerfa
@@ -142,7 +147,7 @@ const FormEmployer = ({ onFetched }) => {
           <InputCerfa
             path="employeur.nombreDeSalaries"
             field={nombreDeSalaries}
-            type="text"
+            type="number"
             mt="2"
             onSubmittedField={onSubmittedEmployeurNombreDeSalaries}
           />
