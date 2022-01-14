@@ -16,6 +16,7 @@ import {
   convertMultipleSelectOptionToValue,
   isAgeInValidAtDate,
   caclAgeFromStringDate,
+  normalizeInputNumberForDb,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
@@ -1604,7 +1605,7 @@ export function useCerfaContrat() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               contrat: {
-                dureeTravailHebdoHeures: data && parseInt(data) !== 0 ? data : null,
+                dureeTravailHebdoHeures: normalizeInputNumberForDb(data),
               },
             });
             setPartContratCompletion(cerfaContratCompletion(res));
@@ -1640,7 +1641,7 @@ export function useCerfaContrat() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               contrat: {
-                dureeTravailHebdoMinutes: data && parseInt(data) !== 0 ? data : null,
+                dureeTravailHebdoMinutes: normalizeInputNumberForDb(data),
               },
             });
             setPartContratCompletion(cerfaContratCompletion(res));
@@ -1995,7 +1996,7 @@ export function useCerfaContrat() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               contrat: {
-                avantageNourriture: data && parseInt(data) !== 0 ? data : null,
+                avantageNourriture: normalizeInputNumberForDb(data),
               },
             });
             setPartContratCompletion(cerfaContratCompletion(res));
@@ -2025,7 +2026,7 @@ export function useCerfaContrat() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               contrat: {
-                avantageLogement: data && parseInt(data) !== 0 ? data : null,
+                avantageLogement: normalizeInputNumberForDb(data),
               },
             });
             setPartContratCompletion(cerfaContratCompletion(res));

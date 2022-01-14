@@ -123,3 +123,5 @@ export const caclAgeFromStringDate = (dateNaissanceString) => {
     dateNaissance,
   };
 };
+
+export const normalizeInputNumberForDb = (data) => (data && !isNaN(data) && parseInt(data) !== 0 ? data : null);

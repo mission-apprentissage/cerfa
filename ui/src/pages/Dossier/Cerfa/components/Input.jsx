@@ -42,6 +42,25 @@ const validate = async (validationSchema, obj) => {
   return { isValid, error };
 };
 
+const buildValidationSchema = (field, name, type) => {
+  const stringPattern = Yup.string().matches(new RegExp(field?.pattern), {
+    message: `${field?.validateMessage}`,
+    excludeEmptyString: true,
+  });
+
+  let validatorField = stringPattern;
+
+  if (type === "email") {
+    validatorField = validatorField.email("Le courriel doit être au format correct");
+  }
+
+  const finalValidator = !field?.isNotRequiredForm ? validatorField.required(field?.requiredMessage) : validatorField;
+
+  return Yup.object().shape({
+    [name]: finalValidator,
+  });
+};
+
 export default React.memo(
   ({
     path,
@@ -90,24 +109,7 @@ export default React.memo(
 
         console.log("handleChange");
 
-        let validationSchema = null;
-        validationSchema = !field?.isNotRequiredForm
-          ? Yup.object().shape({
-              [name]: Yup.string()
-                .matches(new RegExp(field?.pattern), {
-                  message: `${field?.validateMessage}`,
-                  excludeEmptyString: true,
-                })
-                .required(field?.requiredMessage),
-            })
-          : Yup.object().shape({
-              [name]: Yup.string().matches(new RegExp(field?.pattern), {
-                message: `${field?.validateMessage}`,
-                excludeEmptyString: true,
-              }),
-            });
-
-        const { isValid } = await validate(validationSchema, { [name]: val });
+        const { isValid } = await validate(buildValidationSchema(field, name, type), { [name]: val });
 
         if (!isValid) {
           setFromInternal(true);
@@ -147,22 +149,7 @@ export default React.memo(
         prevOnAsyncDataRef.current = onAsyncData;
         let fieldValue = field?.value;
 
-        let validationSchema = null;
-        validationSchema = !field?.isNotRequiredForm
-          ? Yup.object().shape({
-              [name]: Yup.string()
-                .matches(new RegExp(field?.pattern), {
-                  message: `${field?.validateMessage}`,
-                  excludeEmptyString: true,
-                })
-                .required(field?.requiredMessage),
-            })
-          : Yup.object().shape({
-              [name]: Yup.string().matches(new RegExp(field?.pattern), {
-                message: `${field?.validateMessage}`,
-                excludeEmptyString: true,
-              }),
-            });
+        let validationSchema = buildValidationSchema(field, name, type);
 
         //
         const { isValid: isValidFieldValue } = await validate(validationSchema, {
@@ -254,6 +241,7 @@ export default React.memo(
       onSubmittedField,
       fromInternal,
       handleChange,
+      type,
     ]);
 
     const prevOnAsyncData = prevOnAsyncDataRef.current;
@@ -275,6 +263,7 @@ export default React.memo(
     return (
       <FormControl isRequired={!field?.isNotRequiredForm} mt={2} isInvalid={errors[name]} {...props}>
         {(type === "text" ||
+          type === "email" ||
           type === "number" ||
           type === "phone" ||
           type === "numberPrefixed" ||
@@ -328,7 +317,7 @@ export default React.memo(
                 )}
               </Select>
             )}
-            {(type === "text" || type === "date") && (
+            {(type === "text" || type === "email" || type === "date") && (
               <Input
                 type={type}
                 name={name}

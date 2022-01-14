@@ -15,6 +15,7 @@ import {
   convertValueToMultipleSelectOption,
   convertValueToDate,
   convertDateToValue,
+  normalizeInputNumberForDb,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
@@ -314,9 +315,9 @@ const cerfaFormationCompletion = (res) => {
     organismeFormationDenomination: res.organismeFormation.denomination,
     // organismeFormationFormationInterne: res.organismeFormation.formationInterne,
     organismeFormationUaiCfa: res.organismeFormation.uaiCfa,
-    organismeFormationAdresseNumero: res.organismeFormation.adresse.numero,
+    // organismeFormationAdresseNumero: res.organismeFormation.adresse.numero,
     organismeFormationAdresseVoie: res.organismeFormation.adresse.voie,
-    organismeFormationAdresseComplement: res.organismeFormation.adresse.complement,
+    // organismeFormationAdresseComplement: res.organismeFormation.adresse.complement,
     organismeFormationAdresseCodePostal: res.organismeFormation.adresse.codePostal,
     organismeFormationAdresseCommune: res.organismeFormation.adresse.commune,
     formationRncp: res.formation.rncp,
@@ -327,7 +328,7 @@ const cerfaFormationCompletion = (res) => {
     formationIntituleQualification: res.formation.intituleQualification,
     formationTypeDiplome: res.formation.typeDiplome,
   };
-  return fieldCompletionPercentage(fieldsToKeep, 15);
+  return fieldCompletionPercentage(fieldsToKeep, 13);
 };
 
 export function useCerfaFormation() {
@@ -546,7 +547,6 @@ export function useCerfaFormation() {
                 numero: {
                   ...organismeFormationAdresseNumero,
                   value: data,
-                  // forceUpdate: false, // IF data = "" true
                 },
               },
             },
@@ -557,7 +557,7 @@ export function useCerfaFormation() {
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               organismeFormation: {
                 adresse: {
-                  numero: newV.organismeFormation.adresse.numero.value,
+                  numero: normalizeInputNumberForDb(data),
                 },
               },
             });
@@ -773,7 +773,6 @@ export function useCerfaFormation() {
               dateFinFormation: {
                 ...formationDateFinFormation,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -815,7 +814,6 @@ export function useCerfaFormation() {
               dateDebutFormation: {
                 ...formationDateDebutFormation,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -865,7 +863,7 @@ export function useCerfaFormation() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               formation: {
-                dureeFormation: data && parseInt(data) !== 0 ? data : null,
+                dureeFormation: normalizeInputNumberForDb(data),
               },
             });
             setPartFormationCompletionAtom(cerfaFormationCompletion(res));

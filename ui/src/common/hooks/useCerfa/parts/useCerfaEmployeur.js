@@ -13,6 +13,7 @@ import {
   fieldCompletionPercentage,
   convertValueToMultipleSelectOption,
   convertMultipleSelectOptionToValue,
+  normalizeInputNumberForDb,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
@@ -38,13 +39,13 @@ const cerfaEmployeurCompletion = (res) => {
     // employeurNom: res.employeur.nom,
     // employeurPrenom: res.employeur.prenom,
     employeurTypeEmployeur: res.employeur.typeEmployeur,
-    employeurEmployeurSpecifique: res.employeur.employeurSpecifique,
+    // employeurEmployeurSpecifique: res.employeur.employeurSpecifique,
     // employeurCaisseComplementaire: res.employeur.caisseComplementaire,
     employeurRegimeSpecifique: res.employeur.regimeSpecifique,
     // employeurPrivePublic: res.employeur.privePublic,
   };
 
-  return fieldCompletionPercentage(fieldsToKeep, 14);
+  return fieldCompletionPercentage(fieldsToKeep, 13);
 };
 
 export const CerfaEmployeurController = async (dossier) => {
@@ -243,6 +244,7 @@ export function useCerfaEmployeur() {
                 naf: newV.employeur.naf.value,
                 codeIdcc: newV.employeur.codeIdcc.value,
                 libelleIdcc: newV.employeur.libelleIdcc.value,
+                nombreDeSalaries: normalizeInputNumberForDb(newV.employeur.nombreDeSalaries.value),
                 // privePublic: convertOptionToValue(newV.employeur.privePublic),
                 adresse: {
                   numero: newV.employeur.adresse.numero.value,
@@ -410,7 +412,6 @@ export function useCerfaEmployeur() {
                 numero: {
                   ...employeurAdresseNumero,
                   value: data,
-                  // forceUpdate: false, // IF data = "" true
                 },
               },
             },
@@ -421,7 +422,7 @@ export function useCerfaEmployeur() {
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
                 adresse: {
-                  numero: newV.employeur.adresse.numero.value,
+                  numero: normalizeInputNumberForDb(data),
                 },
               },
             });
@@ -663,7 +664,7 @@ export function useCerfaEmployeur() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
-                nombreDeSalaries: newV.employeur.nombreDeSalaries.value,
+                nombreDeSalaries: normalizeInputNumberForDb(data),
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));

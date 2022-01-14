@@ -40,7 +40,7 @@ const FormContract = () => {
         dureeTravailHebdoMinutes,
         travailRisque,
         salaireEmbauche,
-        caisseRetraiteComplementaire,
+        // caisseRetraiteComplementaire,
         avantageNature,
         avantageNourriture,
         avantageLogement,
@@ -63,7 +63,7 @@ const FormContract = () => {
         contratDureeTravailHebdoMinutes: onSubmittedContratDureeTravailHebdoMinutes,
         travailRisque: onSubmittedContratTravailRisque,
         // salaireEmbauche: onSubmittedContratSalaireEmbauche,
-        caisseRetraiteComplementaire: onSubmittedContratCaisseRetraiteComplementaire,
+        // caisseRetraiteComplementaire: onSubmittedContratCaisseRetraiteComplementaire,
         avantageNature: onSubmittedContratAvantageNature,
         avantageNourriture: onSubmittedContratAvantageNourriture,
         avantageLogement: onSubmittedContratAvantageLogement,
@@ -383,7 +383,7 @@ const FormContract = () => {
           </Collapse>
         </Box>
 
-        <Flex mt={3}>
+        {/* <Flex mt={3}>
           <InputCerfa
             path="contrat.caisseRetraiteComplementaire"
             field={caisseRetraiteComplementaire}
@@ -391,7 +391,7 @@ const FormContract = () => {
             mt="2"
             onSubmittedField={onSubmittedContratCaisseRetraiteComplementaire}
           />
-        </Flex>
+        </Flex> */}
         <Box mt={6}>
           <InputCerfa
             path="contrat.avantageNature"

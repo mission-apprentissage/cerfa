@@ -177,13 +177,13 @@ module.exports = (components) => {
           denomination: Joi.string().allow(""),
           siret: Joi.string(),
           naf: Joi.string().allow(""),
-          nombreDeSalaries: Joi.number(),
+          nombreDeSalaries: Joi.number().allow(null),
           codeIdcc: Joi.string().allow(""),
           libelleIdcc: Joi.string().allow(""),
           telephone: Joi.string().allow(null),
           courriel: Joi.string(),
           adresse: Joi.object({
-            numero: Joi.number().allow(""),
+            numero: Joi.number().allow(null),
             voie: Joi.string().allow(""),
             complement: Joi.string().allow(""),
             label: Joi.string().allow(""),
@@ -220,7 +220,7 @@ module.exports = (components) => {
           telephone: Joi.string().allow(null),
           courriel: Joi.string(),
           adresse: Joi.object({
-            numero: Joi.number().allow(""),
+            numero: Joi.number().allow(null),
             voie: Joi.string(),
             complement: Joi.string().allow(""),
             label: Joi.string(),
@@ -233,7 +233,7 @@ module.exports = (components) => {
             prenom: Joi.string(),
             memeAdresse: Joi.boolean(),
             adresse: Joi.object({
-              numero: Joi.number().allow(""),
+              numero: Joi.number().allow(null),
               voie: Joi.string().allow(null),
               complement: Joi.string().allow(""),
               label: Joi.string().allow(null),
@@ -249,9 +249,9 @@ module.exports = (components) => {
           dateNaissance: Joi.date(),
         }),
         maitre2: Joi.object({
-          nom: Joi.string(),
-          prenom: Joi.string(),
-          dateNaissance: Joi.date(),
+          nom: Joi.string().allow(null),
+          prenom: Joi.string().allow(null),
+          dateNaissance: Joi.date().allow(null),
         }),
         formation: Joi.object({
           rncp: Joi.string(),
@@ -304,7 +304,7 @@ module.exports = (components) => {
           uaiCfa: Joi.string().allow(null),
           visaCfa: Joi.boolean(),
           adresse: Joi.object({
-            numero: Joi.number().allow(""),
+            numero: Joi.number().allow(null),
             voie: Joi.string(),
             complement: Joi.string().allow(""),
             label: Joi.string(),

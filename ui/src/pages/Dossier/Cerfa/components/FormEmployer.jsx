@@ -19,7 +19,7 @@ const FormEmployer = ({ onFetched }) => {
         adresse: { numero, voie, complement, codePostal, commune },
         typeEmployeur,
         employeurSpecifique,
-        caisseComplementaire,
+        // caisseComplementaire,
         regimeSpecifique,
         privePublic,
       },
@@ -34,7 +34,7 @@ const FormEmployer = ({ onFetched }) => {
         naf: onSubmittedEmployeurNaf,
         codeIdcc: onSubmittedEmployeurCodeIdcc,
         libelleIdcc: onSubmittedEmployeurLibelleIdcc,
-        caisseComplementaire: onSubmittedEmployeurCaisseComplementaire,
+        // caisseComplementaire: onSubmittedEmployeurCaisseComplementaire,
         telephone: onSubmittedEmployeurTelephone,
         courriel: onSubmittedEmployeurCourriel,
         regimeSpecifique: onSubmittedEmployeurRegimeSpecifique,
@@ -75,7 +75,8 @@ const FormEmployer = ({ onFetched }) => {
           <InputCerfa
             path="employeur.adresse.numero"
             field={numero}
-            type="text"
+            type="number"
+            precision={0}
             mt="2"
             onSubmittedField={onSubmittedEmployeurAdresseNumero}
             hasInfo={false}
@@ -123,7 +124,7 @@ const FormEmployer = ({ onFetched }) => {
           <InputCerfa
             path="employeur.courriel"
             field={courriel}
-            type="text"
+            type="email"
             mt="2"
             onSubmittedField={onSubmittedEmployeurCourriel}
           />
@@ -149,6 +150,7 @@ const FormEmployer = ({ onFetched }) => {
             field={nombreDeSalaries}
             type="number"
             mt="2"
+            precision={0}
             onSubmittedField={onSubmittedEmployeurNombreDeSalaries}
           />
           <InputCerfa
@@ -165,13 +167,13 @@ const FormEmployer = ({ onFetched }) => {
             mt="2"
             onSubmittedField={onSubmittedEmployeurLibelleIdcc}
           />
-          <InputCerfa
+          {/* <InputCerfa
             path="employeur.caisseComplementaire"
             field={caisseComplementaire}
             type="text"
             mt="2"
             onSubmittedField={onSubmittedEmployeurCaisseComplementaire}
-          />
+          /> */}
           <InputCerfa
             path="employeur.regimeSpecifique"
             field={regimeSpecifique}

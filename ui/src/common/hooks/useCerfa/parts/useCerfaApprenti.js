@@ -14,6 +14,7 @@ import {
   convertValueToOption,
   isAgeInValidAtDate,
   caclAgeFromStringDate,
+  normalizeInputNumberForDb,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
@@ -41,14 +42,14 @@ const cerfaApprentiCompletion = (res) => {
     apprentiIntituleDiplomePrepare: res.apprenti.intituleDiplomePrepare,
     apprentiTelephone: res.apprenti.telephone,
     apprentiCourriel: res.apprenti.courriel,
-    apprentiAdresseNumero: res.apprenti.adresse.numero,
+    // apprentiAdresseNumero: res.apprenti.adresse.numero,
     apprentiAdresseVoie: res.apprenti.adresse.voie,
-    apprentiAdresseComplement: res.apprenti.adresse.complement,
+    // apprentiAdresseComplement: res.apprenti.adresse.complement,
     apprentiAdresseCodePostal: res.apprenti.adresse.codePostal,
     apprentiAdresseCommune: res.apprenti.adresse.commune,
     apprentiInscriptionSportifDeHautNiveau: res.apprenti.inscriptionSportifDeHautNiveau,
   };
-  let countFields = 22;
+  let countFields = 20;
   const majeur = res.apprenti.age.value >= 18;
   const nonEmancipe = res.apprenti.apprentiMineurNonEmancipe.value;
   const apprentiResponsableLegalMemeAdresse = res.apprenti.responsableLegal.memeAdresse.value;
@@ -58,7 +59,7 @@ const cerfaApprentiCompletion = (res) => {
       ...fieldsToKeep,
       apprentiApprentiMineurNonEmancipe: res.apprenti.apprentiMineurNonEmancipe,
     };
-    countFields = 23;
+    countFields = countFields + 1;
     if (nonEmancipe) {
       fieldsToKeep = {
         ...fieldsToKeep,
@@ -66,17 +67,17 @@ const cerfaApprentiCompletion = (res) => {
         apprentiResponsableLegalPrenom: res.apprenti.responsableLegal.prenom,
         apprentiResponsableLegalMemeAdresse: res.apprenti.responsableLegal.memeAdresse,
       };
-      countFields = 26;
+      countFields = countFields + 3;
       if (!apprentiResponsableLegalMemeAdresse) {
         fieldsToKeep = {
           ...fieldsToKeep,
-          apprentiResponsableLegalAdresseNumero: res.apprenti.responsableLegal.adresse.numero,
+          // apprentiResponsableLegalAdresseNumero: res.apprenti.responsableLegal.adresse.numero,
           apprentiResponsableLegalAdresseVoie: res.apprenti.responsableLegal.adresse.voie,
-          apprentiResponsableLegalAdresseComplement: res.apprenti.responsableLegal.adresse.complement,
+          // apprentiResponsableLegalAdresseComplement: res.apprenti.responsableLegal.adresse.complement,
           apprentiResponsableLegalAdresseCodePostal: res.apprenti.responsableLegal.adresse.codePostal,
           apprentiResponsableLegalAdresseCommune: res.apprenti.responsableLegal.adresse.commune,
         };
-        countFields = 31;
+        countFields = countFields + 3;
       }
     }
   }
@@ -360,7 +361,6 @@ export function useCerfaApprenti() {
                 numero: {
                   ...apprentiAdresseNumero,
                   value: data,
-                  // forceUpdate: false, // IF data = "" true
                 },
               },
             },
@@ -371,7 +371,7 @@ export function useCerfaApprenti() {
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               apprenti: {
                 adresse: {
-                  numero: newV.apprenti.adresse.numero.value,
+                  numero: normalizeInputNumberForDb(data),
                 },
               },
             });
@@ -1118,7 +1118,7 @@ export function useCerfaApprenti() {
                   responsableLegal: {
                     memeAdresse,
                     adresse: {
-                      numero: apprentiAdresseNumero.value || "",
+                      numero: normalizeInputNumberForDb(apprentiAdresseNumero.value),
                       voie: apprentiAdresseVoie.value || null,
                       complement: apprentiAdresseComplement.value || "",
                       codePostal: apprentiAdresseCodePostal.value || null,
@@ -1186,7 +1186,7 @@ export function useCerfaApprenti() {
               apprenti: {
                 responsableLegal: {
                   adresse: {
-                    numero: newV.apprenti.responsableLegal.adresse.numero.value,
+                    numero: normalizeInputNumberForDb(data),
                   },
                 },
               },

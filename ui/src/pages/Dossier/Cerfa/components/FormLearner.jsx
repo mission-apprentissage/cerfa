@@ -113,7 +113,8 @@ const FormLearner = () => {
           <InputCerfa
             path="apprenti.adresse.numero"
             field={numero}
-            type="text"
+            type="number"
+            precision={0}
             mt="2"
             onSubmittedField={onSubmittedApprentiAdresseNumero}
             hasInfo={false}
@@ -160,13 +161,14 @@ const FormLearner = () => {
           <InputCerfa
             path="apprenti.courriel"
             field={courriel}
-            type="text"
+            type="email"
             mt="2"
             onSubmittedField={onSubmittedApprentiCourriel}
           />
 
           {!majeur && (
-            <>
+            <Box mt={5}>
+              <Text>L'apprenti(e) n'est pas majeur, merci de compléter les informations suivantes</Text>
               <InputCerfa
                 path="apprenti.apprentiMineurNonEmancipe"
                 field={apprentiApprentiMineurNonEmancipe}
@@ -206,7 +208,8 @@ const FormLearner = () => {
                   <InputCerfa
                     path="apprenti.responsableLegal.adresse.numero"
                     field={responsableLegalAdresseNumero}
-                    type="text"
+                    type="number"
+                    precision={0}
                     mt="2"
                     onSubmittedField={onSubmittedApprentiResponsableLegalAdresseNumero}
                     hasInfo={false}
@@ -245,7 +248,7 @@ const FormLearner = () => {
                   />
                 </Collapse>
               </Collapse>
-            </>
+            </Box>
           )}
         </Box>
         <Box w="45%" ml="5w">
