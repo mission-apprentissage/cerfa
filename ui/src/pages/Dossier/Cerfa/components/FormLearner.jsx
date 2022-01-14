@@ -153,7 +153,7 @@ const FormLearner = () => {
           <InputCerfa
             path="apprenti.telephone"
             field={telephone}
-            type="text"
+            type="phone"
             mt="2"
             onSubmittedField={onSubmittedApprentiTelephone}
           />

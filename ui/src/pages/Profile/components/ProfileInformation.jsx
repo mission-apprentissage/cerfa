@@ -24,14 +24,12 @@ import { betaVersion, BetaFeatures } from "../../../common/components/BetaFeatur
 const ProfileInformation = () => {
   let [auth] = useAuth();
 
-  const phoneRegExp =
-    /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
   const { values, handleChange, handleSubmit, errors, touched, setFieldValue } = useFormik({
     initialValues: {
       prenom: auth.prenom || "",
       nom: auth.nom || "",
       username: auth.username || "",
-      telephone: auth.telephone || "",
+      telephone: auth.telephone ? auth.telephone.replace("+", "") : "",
       email: auth.email || "",
       beta: auth.beta || "",
     },
@@ -39,7 +37,7 @@ const ProfileInformation = () => {
       prenom: Yup.string(),
       name: Yup.string(),
       username: Yup.string(),
-      phone: Yup.string().matches(phoneRegExp, "Phone number is not valid"),
+      phone: Yup.string(),
       email: Yup.string().email("Email invalide"),
     }),
     onSubmit: ({ nom, prenom, telephone, email, beta }, { setSubmitting }) => {
@@ -48,7 +46,7 @@ const ProfileInformation = () => {
           await _put(`/api/v1/profile/user`, {
             nom: nom || null,
             prenom: prenom || null,
-            telephone: telephone || null,
+            telephone: telephone ? `+${telephone}` : null,
             email,
             beta: beta || null,
           });
@@ -62,10 +60,6 @@ const ProfileInformation = () => {
       });
     },
   });
-
-  const onValueChange = (value) => {
-    setFieldValue("telephone", value);
-  };
 
   return (
     <Box w="100%" color="#1E1E1E">
@@ -93,14 +87,14 @@ const ProfileInformation = () => {
         <Flex mt={5}>
           <FormControl isInvalid={errors.telephone}>
             <FormLabel>Téléphone</FormLabel>
-            {/* <Input type="tel" name="telephone" value={values.telephone} onChange={handleChange} /> */}
             <PhoneInput
               country={"fr"}
               value={values.telephone}
               masks={{
-                fr: ".. .. .. ..",
+                fr: ". .. .. .. ..",
               }}
-              onChange={onValueChange}
+              countryCodeEditable={false}
+              onChange={(value) => setFieldValue("telephone", value)}
               name="telephone"
             />
             {errors.telephone && touched.telephone && <FormErrorMessage>{errors.telephone}</FormErrorMessage>}

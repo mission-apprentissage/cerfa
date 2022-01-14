@@ -21,6 +21,7 @@ import {
   NumberDecrementStepper,
 } from "@chakra-ui/react";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import PhoneInput from "react-phone-input-2";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -275,6 +276,7 @@ export default React.memo(
       <FormControl isRequired={!field?.isNotRequiredForm} mt={2} isInvalid={errors[name]} {...props}>
         {(type === "text" ||
           type === "number" ||
+          type === "phone" ||
           type === "numberPrefixed" ||
           type === "date" ||
           type === "select") && (
@@ -502,6 +504,21 @@ export default React.memo(
                   {field?.label}
                 </Checkbox>
               </>
+            )}
+            {type === "phone" && (
+              <PhoneInput
+                name={name}
+                value={values[name]}
+                country={"fr"}
+                masks={{
+                  fr: ". .. .. .. ..",
+                }}
+                countryCodeEditable={false}
+                onChange={(val) => handleChange({ persist: () => {}, target: { value: val } })}
+                disabled={shouldBeDisabled}
+                inputClass="phone-form-input"
+                buttonClass="phone-form-button"
+              />
             )}
             {(shouldBeDisabled || isLoading || validated || isErrored) && type !== "radio" && (
               <InputRightElement
