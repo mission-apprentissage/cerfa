@@ -1,3 +1,10 @@
+# [1.13.0-beta.13](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.12...v1.13.0-beta.13) (2022-01-14)
+
+
+### Features
+
+* ajout des champs de type téléphone  ([#82](https://github.com/mission-apprentissage/cerfa/issues/82)) ([9b9566a](https://github.com/mission-apprentissage/cerfa/commit/9b9566aa935dd46c59d6603393ee6beb8c982212))
+
 # [1.13.0-beta.12](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.11...v1.13.0-beta.12) (2022-01-14)
 
 
