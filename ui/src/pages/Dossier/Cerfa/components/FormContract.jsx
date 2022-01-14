@@ -234,13 +234,25 @@ const FormContract = () => {
               <Text>Le calcul de la rémunération est automatique.</Text>
               <Text>Vous devez, pour cela, renseigner les éléments suivants : </Text>
               <UnorderedList ml="30px !important">
-                <ListItem fontWeight="400" fontStyle="italic">
+                <ListItem
+                  fontWeight="400"
+                  fontStyle="italic"
+                  color={apprentiDateNaissance.value === "" ? "error" : "green.500"}
+                >
                   La date de naissance de l'apprenti
                 </ListItem>
-                <ListItem fontWeight="400" fontStyle="italic">
+                <ListItem
+                  fontWeight="400"
+                  fontStyle="italic"
+                  color={dateDebutContrat.value === "" ? "error" : "green.500"}
+                >
                   La date de début d'exécution du contrat
                 </ListItem>
-                <ListItem fontWeight="400" fontStyle="italic">
+                <ListItem
+                  fontWeight="400"
+                  fontStyle="italic"
+                  color={dateFinContrat.value === "" ? "error" : "green.500"}
+                >
                   La date de fin du contrat
                 </ListItem>
               </UnorderedList>

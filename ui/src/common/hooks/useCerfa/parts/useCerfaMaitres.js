@@ -9,7 +9,6 @@ import {
   fieldCompletionPercentage,
   convertValueToDate,
   convertDateToValue,
-  convertOptionToValue,
   convertValueToOption,
   isAgeInValidAtDate,
   caclAgeFromStringDate,
@@ -24,13 +23,13 @@ const cerfaMaitresCompletion = (res) => {
     maitre1Nom: res.maitre1.nom,
     maitre1Prenom: res.maitre1.prenom,
     maitre1DateNaissance: res.maitre1.dateNaissance,
-    maitre2Nom: res.maitre2.nom,
-    maitre2Prenom: res.maitre2.prenom,
-    maitre2DateNaissance: res.maitre2.dateNaissance,
+    // maitre2Nom: res.maitre2.nom,
+    // maitre2Prenom: res.maitre2.prenom,
+    // maitre2DateNaissance: res.maitre2.dateNaissance,
     employeurAttestationEligibilite: res.employeur.attestationEligibilite,
   };
 
-  return fieldCompletionPercentage(fieldsToKeep, 7);
+  return fieldCompletionPercentage(fieldsToKeep, 4);
 };
 
 export const CerfaMaitresController = async (dossier) => {
@@ -297,8 +296,7 @@ export function useCerfaMaitres() {
             employeur: {
               attestationEligibilite: {
                 ...employeurAttestationEligibilite,
-                value: data,
-                // forceUpdate: false, // IF data = "" true
+                value: employeurAttestationEligibilite.value === "true" ? "" : "true",
               },
             },
           };
@@ -307,7 +305,7 @@ export function useCerfaMaitres() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
-                attestationEligibilite: convertOptionToValue(newV.employeur.attestationEligibilite),
+                attestationEligibilite: newV.employeur.attestationEligibilite.value === "true" ? true : null,
               },
             });
             setPartMaitresCompletion(cerfaMaitresCompletion(res));

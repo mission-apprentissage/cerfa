@@ -201,7 +201,7 @@ const contratSchema = {
   autreAvantageEnNature: {
     type: Boolean,
     description: "Autre avantage en nature",
-    label: "Autres avantages: ",
+    label: "Autres avantages",
     nullable: true,
     default: null,
     example: true,
@@ -210,7 +210,7 @@ const contratSchema = {
     },
     options: [
       {
-        label: "Autres avantages",
+        label: "true",
         value: true,
       },
     ],

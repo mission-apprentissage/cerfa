@@ -2046,7 +2046,7 @@ export function useCerfaContrat() {
             contrat: {
               autreAvantageEnNature: {
                 ...contratAutreAvantageEnNature,
-                value: data,
+                value: contratAutreAvantageEnNature.value === "true" ? "" : "true",
               },
             },
           };
@@ -2055,7 +2055,7 @@ export function useCerfaContrat() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               contrat: {
-                autreAvantageEnNature: convertOptionToValue(newV.contrat.autreAvantageEnNature),
+                autreAvantageEnNature: newV.contrat.autreAvantageEnNature.value === "true" ? true : null,
               },
             });
             setPartContratCompletion(cerfaContratCompletion(res));
