@@ -533,8 +533,7 @@ export function useCerfaApprenti() {
             apprenti: {
               telephone: {
                 ...apprentiTelephone,
-                value: data,
-                // forceUpdate: false, // IF data = "" true
+                value: data || "",
               },
             },
           };
@@ -543,7 +542,7 @@ export function useCerfaApprenti() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               apprenti: {
-                telephone: newV.apprenti.telephone.value,
+                telephone: newV.apprenti.telephone.value !== "" ? `+${newV.apprenti.telephone.value}` : null,
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
@@ -1407,7 +1406,7 @@ export function useCerfaApprenti() {
     setApprentiDiplomePrepare(convertValueToMultipleSelectOption(res.apprenti.diplomePrepare));
 
     setApprentiIntituleDiplomePrepare(res.apprenti.intituleDiplomePrepare);
-    setApprentiTelephone(res.apprenti.telephone);
+    setApprentiTelephone({ ...res.apprenti.telephone, value: res.apprenti.telephone.value.replace("+", "") });
     setApprentiCourriel(res.apprenti.courriel);
     setApprentiAdresseNumero(res.apprenti.adresse.numero);
     setApprentiAdresseVoie(res.apprenti.adresse.voie);

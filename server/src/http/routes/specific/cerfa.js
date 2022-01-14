@@ -180,7 +180,7 @@ module.exports = (components) => {
           nombreDeSalaries: Joi.number(),
           codeIdcc: Joi.string().allow(""),
           libelleIdcc: Joi.string().allow(""),
-          telephone: Joi.string(),
+          telephone: Joi.string().allow(null),
           courriel: Joi.string(),
           adresse: Joi.object({
             numero: Joi.number().allow(""),
@@ -217,7 +217,7 @@ module.exports = (components) => {
           derniereClasse: Joi.number(),
           diplomePrepare: Joi.number(),
           intituleDiplomePrepare: Joi.string(),
-          telephone: Joi.string(),
+          telephone: Joi.string().allow(null),
           courriel: Joi.string(),
           adresse: Joi.object({
             numero: Joi.number().allow(""),

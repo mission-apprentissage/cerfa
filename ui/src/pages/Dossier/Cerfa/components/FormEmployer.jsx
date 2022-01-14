@@ -116,7 +116,7 @@ const FormEmployer = ({ onFetched }) => {
           <InputCerfa
             path="employeur.telephone"
             field={telephone}
-            type="text"
+            type="phone"
             mt="2"
             onSubmittedField={onSubmittedEmployeurTelephone}
           />

@@ -752,8 +752,7 @@ export function useCerfaEmployeur() {
             employeur: {
               telephone: {
                 ...employeurTelephone,
-                value: data,
-                // forceUpdate: false, // IF data = "" true
+                value: data || "",
               },
             },
           };
@@ -762,7 +761,7 @@ export function useCerfaEmployeur() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
-                telephone: newV.employeur.telephone.value,
+                telephone: newV.employeur.telephone.value !== "" ? `+${newV.employeur.telephone.value}` : null,
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
@@ -845,7 +844,7 @@ export function useCerfaEmployeur() {
     setEmployeurNombreDeSalaries(res.employeur.nombreDeSalaries);
     setEmployeurCodeIdcc(res.employeur.codeIdcc);
     setEmployeurLibelleIdcc(res.employeur.libelleIdcc);
-    setEmployeurTelephone(res.employeur.telephone);
+    setEmployeurTelephone({ ...res.employeur.telephone, value: res.employeur.telephone.value.replace("+", "") });
     setEmployeurCourriel(res.employeur.courriel);
     setEmployeurAdresseNumero(res.employeur.adresse.numero);
     setEmployeurAdresseVoie(res.employeur.adresse.voie);
