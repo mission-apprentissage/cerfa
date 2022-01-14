@@ -14,6 +14,7 @@ import {
   Text,
   Divider,
 } from "@chakra-ui/react";
+import PhoneInput from "react-phone-input-2";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import useAuth from "../../../common/hooks/useAuth";
@@ -25,7 +26,7 @@ const ProfileInformation = () => {
 
   const phoneRegExp =
     /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
-  const { values, handleChange, handleSubmit, errors, touched } = useFormik({
+  const { values, handleChange, handleSubmit, errors, touched, setFieldValue } = useFormik({
     initialValues: {
       prenom: auth.prenom || "",
       nom: auth.nom || "",
@@ -62,6 +63,10 @@ const ProfileInformation = () => {
     },
   });
 
+  const onValueChange = (value) => {
+    setFieldValue("telephone", value);
+  };
+
   return (
     <Box w="100%" color="#1E1E1E">
       <Box mr="15rem">
@@ -88,7 +93,16 @@ const ProfileInformation = () => {
         <Flex mt={5}>
           <FormControl isInvalid={errors.telephone}>
             <FormLabel>Téléphone</FormLabel>
-            <Input type="tel" name="telephone" value={values.telephone} onChange={handleChange} />
+            {/* <Input type="tel" name="telephone" value={values.telephone} onChange={handleChange} /> */}
+            <PhoneInput
+              country={"fr"}
+              value={values.telephone}
+              masks={{
+                fr: ".. .. .. ..",
+              }}
+              onChange={onValueChange}
+              name="telephone"
+            />
             {errors.telephone && touched.telephone && <FormErrorMessage>{errors.telephone}</FormErrorMessage>}
           </FormControl>
           <FormControl isRequired isInvalid={errors.email} ml={10}>
