@@ -18,7 +18,18 @@ const cerfaSchema = {
     ...maitreApprentissageSchema,
   },
   maitre2: {
-    ...maitreApprentissageSchema,
+    nom: {
+      ...maitreApprentissageSchema.nom,
+      isNotRequiredForm: true,
+    },
+    prenom: {
+      ...maitreApprentissageSchema.prenom,
+      isNotRequiredForm: true,
+    },
+    dateNaissance: {
+      ...maitreApprentissageSchema.dateNaissance,
+      isNotRequiredForm: true,
+    },
   },
   formation: {
     ...formationSchema,

@@ -27,6 +27,7 @@ import * as Yup from "yup";
 import { LockFill } from "../../../../theme/components/icons/LockFill";
 import InfoTooltip from "../../../../common/components/InfoTooltip";
 import Comment from "../../../../common/components/Comments/Comment";
+import { Check } from "../../../../theme/components/icons";
 
 const validate = async (validationSchema, obj) => {
   let isValid = false;
@@ -472,21 +473,19 @@ export default React.memo(
             )}
             {type === "consent" && (
               <>
-                {field.options.map((option, k) => (
-                  <Checkbox
-                    name={name}
-                    onChange={handleChange}
-                    value={option.label}
-                    isChecked={values[name] === option.label}
-                    isDisabled={shouldBeDisabled}
-                    key={k}
-                  >
-                    {option.label}
-                  </Checkbox>
-                ))}
+                <Checkbox
+                  name={name}
+                  onChange={handleChange}
+                  value="true"
+                  isChecked={values[name] === "true"}
+                  isDisabled={shouldBeDisabled}
+                  icon={<Check />}
+                >
+                  {field?.label}
+                </Checkbox>
               </>
             )}
-            {(shouldBeDisabled || isLoading || validated || isErrored) && (
+            {(shouldBeDisabled || isLoading || validated || isErrored) && type !== "radio" && (
               <InputRightElement
                 position={!hasInfo ? "inherit" : "absolute"}
                 children={

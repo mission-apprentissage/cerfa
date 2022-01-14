@@ -11,6 +11,7 @@ import { Select } from "./select";
 import { Radio } from "./radio";
 import { Switch } from "./switch";
 import { Steps } from "./steps";
+import { Checkbox } from "./checkbox";
 
 const components = {
   Tabs,
@@ -26,6 +27,7 @@ const components = {
   Radio,
   Switch,
   Steps,
+  Checkbox,
 };
 
 export { components };

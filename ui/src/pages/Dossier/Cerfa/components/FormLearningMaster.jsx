@@ -60,7 +60,7 @@ const FormLearningMaster = () => {
           />
         </Box>
         <Box w="55%" flex="1" ml={5}>
-          <FormLabel fontWeight={700}>Maître d'apprentissage n°2 </FormLabel>
+          <FormLabel fontWeight={700}>Maître d'apprentissage n°2 (Optionnel)</FormLabel>
           <InputCerfa
             path="maitre2.nom"
             field={maitre2Nom}
