@@ -1,4 +1,4 @@
-import React, { useEffect, useState, lazy, Suspense } from "react";
+import React, { useEffect, useState, lazy, Suspense, useRef } from "react";
 import { BrowserRouter as Router, Switch, Route, useHistory } from "react-router-dom";
 import useAuth from "./common/hooks/useAuth";
 import { _post, _get, _put } from "./common/httpClient";
@@ -74,6 +74,7 @@ const ForceCompleteProfile = ({ children }) => {
 
 const ForceAcceptCGU = ({ children }) => {
   let [auth, setAuth] = useAuth();
+  const cguContainer = useRef(null);
 
   const onAcceptCguClicked = async () => {
     try {
@@ -90,7 +91,7 @@ const ForceAcceptCGU = ({ children }) => {
     <>
       {auth.sub !== "anonymous" && auth.confirmed && auth.account_status === "CONFIRMED" && (
         <AcknowledgeModal
-          title="Condition générale d'utilisation"
+          title="Conditions générales d'utilisation"
           acknowledgeText="Accepter"
           isOpen={auth.cgu !== cguVersion()}
           onAcknowledgement={onAcceptCguClicked}
@@ -112,8 +113,13 @@ const ForceAcceptCGU = ({ children }) => {
               </Text>
             )}
           </Box>
-          <Box borderColor={"dgalt"} borderWidth={1} overflowY="scroll" px={8} py={4} h="30vh">
-            <MentionsLegales />
+          <Box borderColor={"dgalt"} borderWidth={1} overflowY="scroll" px={8} py={4} h="30vh" ref={cguContainer}>
+            <MentionsLegales
+              onLoad={async () => {
+                await new Promise((resolve) => setTimeout(resolve, 500));
+                cguContainer.current?.scrollTo(0, 0);
+              }}
+            />
           </Box>
         </AcknowledgeModal>
       )}

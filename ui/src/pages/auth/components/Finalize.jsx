@@ -167,7 +167,7 @@ const Finalize = () => {
                 <Input
                   id="siret"
                   name="siret"
-                  placeholder="Votre siret..."
+                  placeholder="Exemple 98765432400019"
                   onChange={siretLookUp}
                   value={values.siret}
                   isDisabled={isFetching}

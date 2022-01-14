@@ -3,7 +3,7 @@ import { StepsStyleConfig as StepsStyle } from "chakra-ui-steps";
 const Steps = {
   ...StepsStyle,
   baseStyle: (props) => {
-    const { cerfaComplete } = props.onClickStep();
+    // const { cerfaComplete } = props.onClickStep();
     // console.log(props);
 
     return {
@@ -20,7 +20,8 @@ const Steps = {
         color: `gray.800`,
       },
       icon: {
-        strokeWidth: !cerfaComplete && props.activeStep !== 0 ? "-1px" : "2px",
+        // strokeWidth: !cerfaComplete && props.activeStep !== 0 ? "-1px" : "2px",
+        strokeWidth: "2px",
       },
       label: {
         color: `labelgrey`,
@@ -44,8 +45,10 @@ const Steps = {
           },
         },
         _highlighted: {
-          bg: !cerfaComplete && props.activeStep !== 0 ? "flatwarm" : "greensoftc",
-          borderColor: !cerfaComplete && props.activeStep !== 0 ? "flatwarm" : "greensoftc",
+          // bg: !cerfaComplete && props.activeStep !== 0 ? "flatwarm" : "greensoftc",
+          // borderColor: !cerfaComplete && props.activeStep !== 0 ? "flatwarm" : "greensoftc",
+          bg: "greensoftc",
+          borderColor: "greensoftc",
         },
         "&[data-clickable]:hover": {
           borderColor: "bluefrance",

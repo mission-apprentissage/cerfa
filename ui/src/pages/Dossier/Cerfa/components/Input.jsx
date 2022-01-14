@@ -65,6 +65,7 @@ export default React.memo(
 
     const prevOnAsyncDataRef = useRef();
     const prevFieldValueRef = useRef("");
+    const prevFieldLockRef = useRef(false);
     const initRef = useRef(0);
 
     const borderBottomColor = useMemo(
@@ -82,7 +83,7 @@ export default React.memo(
     let handleChange = useCallback(
       async (e) => {
         e.persist();
-        const val = type === "numberPrefixed" ? parse(e.target.value) : e.target.value;
+        const val = type === "numberPrefixed" ? parse(e.target.value) : e.target.value.trimStart();
         setValidated(false);
         setIsErrored(false);
 
@@ -171,6 +172,7 @@ export default React.memo(
           if (field) {
             // console.log("Init");
             setShouldBeDisabled(field.locked);
+            prevFieldLockRef.current = field.locked;
             if (values[name] === "") {
               if (fieldValue !== "") {
                 if (isValidFieldValue) {
@@ -203,9 +205,9 @@ export default React.memo(
             if (field?.forceUpdate) {
               await onSubmittedField(path, fieldValue);
             }
-            if (field?.triggerValidation) {
-              await handleChange({ persist: () => {}, target: { value: fieldValue } });
-            }
+          } else if (prevFieldLockRef.current !== field?.locked) {
+            setShouldBeDisabled(field?.locked);
+            prevFieldLockRef.current = field?.locked;
           } else {
             if (fromInternal) {
               const { isValid: isValidInternalValue, error: errorInternalValue } = await validate(validationSchema, {
@@ -218,6 +220,22 @@ export default React.memo(
                 setValidated(false);
               }
               setFromInternal(false);
+            } else if (field?.triggerValidation) {
+              setIsLoading(true);
+              const { successed, message } = await field?.doAsyncActions(fieldValue, onAsyncData);
+              setIsLoading(false);
+
+              if (fieldValue !== "") {
+                if (successed) {
+                  setIsErrored(false);
+                  setValidated(true);
+                  setErrors({ [name]: message });
+                } else {
+                  setValidated(false);
+                  setIsErrored(true);
+                  setErrors({ [name]: message });
+                }
+              }
             }
           }
         }

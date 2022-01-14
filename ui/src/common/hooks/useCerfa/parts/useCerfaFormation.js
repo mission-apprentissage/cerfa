@@ -431,6 +431,7 @@ export function useCerfaFormation() {
               },
             },
           };
+
           if (organismeFormationSiret.value !== newV.organismeFormation.siret.value) {
             setOrganismeFormationSiret(newV.organismeFormation.siret);
             setOrganismeFormationDenomination(newV.organismeFormation.denomination);
@@ -778,7 +779,7 @@ export function useCerfaFormation() {
           };
           if (formationDateFinFormation.value !== newV.formation.dateFinFormation.value) {
             setFormationDateFinFormation(newV.formation.dateFinFormation);
-            // setFormationDateDebutFormation(formationDateDebutFormation);
+            setFormationDateDebutFormation({ ...formationDateDebutFormation, triggerValidation: true });
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               formation: {
@@ -786,13 +787,23 @@ export function useCerfaFormation() {
               },
             });
             setPartFormationCompletionAtom(cerfaFormationCompletion(res));
+
+            setFormationDateDebutFormation({ ...formationDateDebutFormation, triggerValidation: false });
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [formationDateFinFormation, setFormationDateFinFormation, dossier?._id, cerfa?.id, setPartFormationCompletionAtom]
+    [
+      formationDateFinFormation,
+      setFormationDateFinFormation,
+      setFormationDateDebutFormation,
+      formationDateDebutFormation,
+      dossier?._id,
+      cerfa?.id,
+      setPartFormationCompletionAtom,
+    ]
   );
 
   const onSubmittedFormationDateDebutFormation = useCallback(
@@ -810,7 +821,7 @@ export function useCerfaFormation() {
           };
           if (formationDateDebutFormation.value !== newV.formation.dateDebutFormation.value) {
             setFormationDateDebutFormation(newV.formation.dateDebutFormation);
-            // setFormationDateFinFormation(formationDateFinFormation);
+            setFormationDateFinFormation({ ...formationDateFinFormation, triggerValidation: true });
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               formation: {
@@ -818,6 +829,8 @@ export function useCerfaFormation() {
               },
             });
             setPartFormationCompletionAtom(cerfaFormationCompletion(res));
+
+            setFormationDateFinFormation({ ...formationDateFinFormation, triggerValidation: false });
           }
         }
       } catch (e) {
@@ -828,7 +841,9 @@ export function useCerfaFormation() {
       cerfa?.id,
       dossier?._id,
       formationDateDebutFormation,
+      formationDateFinFormation,
       setFormationDateDebutFormation,
+      setFormationDateFinFormation,
       setPartFormationCompletionAtom,
     ]
   );

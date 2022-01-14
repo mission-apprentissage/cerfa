@@ -138,6 +138,22 @@ const FormFormation = React.memo((props) => {
         </Box>
         <Box w="45%" flex="1" ml="5w">
           <InputCerfa
+            path="formation.rncp"
+            field={rncp}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedRncp}
+            // onAsyncData={{ value: codeDiplome.value }}
+          />
+          <InputCerfa
+            path="formation.codeDiplome"
+            field={codeDiplome}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedFormationCodeDiplome}
+            // onAsyncData={{ value: rncp.value }}
+          />
+          <InputCerfa
             path="formation.typeDiplome"
             field={typeDiplome}
             type="select"
@@ -150,22 +166,6 @@ const FormFormation = React.memo((props) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedFormationIntituleQualification}
-          />
-          <InputCerfa
-            path="formation.codeDiplome"
-            field={codeDiplome}
-            type="text"
-            mt="2"
-            onSubmittedField={onSubmittedFormationCodeDiplome}
-            // onAsyncData={{ value: rncp.value }}
-          />
-          <InputCerfa
-            path="formation.rncp"
-            field={rncp}
-            type="text"
-            mt="2"
-            onSubmittedField={onSubmittedRncp}
-            // onAsyncData={{ value: codeDiplome.value }}
           />
           <FormLabel fontWeight={700} my={3}>
             Organisation de la formation en CFA :

@@ -166,12 +166,13 @@ const Register = () => {
 
           {step === 1 && (
             <>
+              <Text>Vous êtes {values.compte === "entreprise" ? "une entreprise" : "un CFA"}</Text>
               <FormControl py={2} isRequired isInvalid={errors.siret && touched.siret}>
                 <FormLabel>Votre Siret</FormLabel>
                 <Input
                   id="siret"
                   name="siret"
-                  placeholder="Votre siret..."
+                  placeholder="Exemple 98765432400019"
                   onChange={siretLookUp}
                   value={values.siret}
                   isDisabled={isFetching}

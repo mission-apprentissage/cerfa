@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Container, Heading, Text, Link } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import Layout from "../layout/Layout";
@@ -7,10 +7,13 @@ import { NavLink } from "react-router-dom";
 import { ExternalLinkLine } from "../../theme/components/icons";
 
 export const cguVersion = () => {
-  return "v1.0.0";
+  return "v0.0.1";
 };
 
-export const MentionsLegales = () => {
+export const MentionsLegales = ({ onLoad = () => {} }) => {
+  useEffect(() => {
+    onLoad();
+  }, [onLoad]);
   return (
     <Box>
       <Text>Dernière mise à jour le : 02/06/2021 - {cguVersion()} </Text>
