@@ -166,7 +166,7 @@ const FormLearner = () => {
             onSubmittedField={onSubmittedApprentiCourriel}
           />
 
-          {!majeur && (
+          {!majeur && dateNaissance.value !== "" && (
             <Box mt={5}>
               <Text>L'apprenti(e) n'est pas majeur, merci de compléter les informations suivantes</Text>
               <InputCerfa

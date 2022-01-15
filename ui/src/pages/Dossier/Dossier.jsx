@@ -13,7 +13,7 @@ import {
   useDisclosure,
   Link,
 } from "@chakra-ui/react";
-import { Step, Steps, useSteps } from "chakra-ui-steps";
+import { Step, Steps, useSteps } from "chakra-ui-steps-rework-mna";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { useSetRecoilState, useRecoilValueLoadable } from "recoil";
 import { prettyPrintDate } from "../../common/utils/dateUtils";
@@ -32,11 +32,7 @@ import LivePeopleAvatar from "./components/LivePeopleAvatar";
 
 import { useDossier } from "../../common/hooks/useDossier/useDossier";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
-import {
-  AvatarPlus,
-  // StepWip,
-  // TickBubble
-} from "../../theme/components/icons";
+import { AvatarPlus, StepWip, TickBubble } from "../../theme/components/icons";
 
 import { cerfaPartFormationCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
 import {
@@ -105,7 +101,12 @@ export default () => {
   const { nextStep, prevStep, activeStep, setStep } = useSteps({
     initialStep: stepByPath.indexOf(match.params.step),
   });
-  const [stepState, setStepState] = useState();
+  const [stepState1, setStep1State] = useState();
+  const [stepState2, setStep2State] = useState();
+  const [stepState3, setStep3State] = useState();
+  const [step1Visited, setStep1Visited] = useState(false);
+  const [step2Visited, setStep2Visited] = useState(false);
+  const [step3Visited, setStep3Visited] = useState(false);
 
   const { isloaded, dossier } = useDossier(match.params.id);
   const history = useHistory();
@@ -126,6 +127,8 @@ export default () => {
     maitresCompletionAtom?.contents === 100 &&
     contratCompletionAtom?.contents === 100 &&
     formationCompletion?.contents === 100;
+  const documentsComplete = false;
+  const signaturesComplete = false;
 
   useEffect(() => {
     const run = async () => {
@@ -136,17 +139,56 @@ export default () => {
     run();
   }, [dossier, history, isloaded, setWorkspaceTitle]);
 
+  let stepStateSteps23 = useCallback(
+    async (nextActiveStep) => {
+      if (!documentsComplete && nextActiveStep !== 1) {
+        setStep2State(step2Visited ? "error" : undefined);
+      } else {
+        setStep2State(undefined);
+      }
+
+      if (!signaturesComplete && nextActiveStep !== 2) {
+        setStep3State(step3Visited ? "error" : undefined);
+      } else {
+        setStep3State(undefined);
+      }
+
+      if (nextActiveStep === 1) setStep2Visited(true);
+      if (nextActiveStep === 2) setStep3Visited(true);
+    },
+    [documentsComplete, signaturesComplete, step2Visited, step3Visited]
+  );
   let onClickNextStep = useCallback(async () => {
-    setStepState("loading");
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    if (!cerfaComplete) {
-      setStepState("error");
-      await new Promise((resolve) => setTimeout(resolve, 500));
+    const nextActiveStep = activeStep + 1;
+
+    if (!cerfaComplete && nextActiveStep !== 0) {
+      setStep1State("error");
+      setStep1Visited(true);
+    } else {
+      setStep1State(undefined);
     }
-    setStepState();
+
+    stepStateSteps23(nextActiveStep);
+
+    if (nextActiveStep === 0) setStep1Visited(true);
 
     nextStep();
-  }, [cerfaComplete, nextStep]);
+  }, [activeStep, cerfaComplete, nextStep, stepStateSteps23]);
+  let onClickPrevStep = useCallback(async () => {
+    const nextActiveStep = activeStep - 1;
+
+    if (!cerfaComplete && nextActiveStep !== 0) {
+      setStep1State(step1Visited ? "error" : undefined);
+    } else {
+      setStep1State(undefined);
+    }
+
+    stepStateSteps23(nextActiveStep);
+
+    if (nextActiveStep === 0) setStep1Visited(true);
+
+    prevStep();
+  }, [activeStep, cerfaComplete, prevStep, step1Visited, stepStateSteps23]);
 
   if (!isloaded)
     return (
@@ -228,19 +270,24 @@ export default () => {
         <Flex flexDir="column" width="100%" mt={9}>
           <Steps
             onClickStep={(step) => {
-              // return { cerfaComplete };
+              if (!cerfaComplete && step !== 0) {
+                setStep1State(step1Visited ? "error" : undefined);
+              } else {
+                setStep1State(undefined);
+              }
+              stepStateSteps23(step);
+              if (step === 0) setStep1Visited(true);
               return setStep(step);
             }}
             activeStep={activeStep}
-            // checkIcon={(e, i, a) => {
-            //   console.log(e, i, a);
-            //   // if (!cerfaComplete) return <StepWip color={"white"} boxSize="4" />;
-            //   return <TickBubble color={"white"} boxSize="4" />;
-            // }}
-            state={stepState}
+            checkIcon={() => {
+              return <TickBubble color={"white"} boxSize="4" />;
+            }}
+            errorIcon={() => {
+              return <StepWip color={"white"} boxSize="4" />;
+            }}
           >
             {steps.map(({ label, description }, index) => {
-              //console.log("render");
               return (
                 <Step
                   label={
@@ -257,6 +304,7 @@ export default () => {
                       </Box>
                     );
                   }}
+                  state={index === 0 ? stepState1 : index === 1 ? stepState2 : stepState3}
                 >
                   {index === 0 && <Cerfa />}
                   {index === 1 && <PiecesJustificatives />}
@@ -266,7 +314,7 @@ export default () => {
             })}
           </Steps>
           <Flex width="100%" justify="flex-start" mt={8} mb={10}>
-            <Button mr={4} size="md" variant="secondary" onClick={prevStep} isDisabled={activeStep === 0}>
+            <Button mr={4} size="md" variant="secondary" onClick={onClickPrevStep} isDisabled={activeStep === 0}>
               Revenir
             </Button>
 
