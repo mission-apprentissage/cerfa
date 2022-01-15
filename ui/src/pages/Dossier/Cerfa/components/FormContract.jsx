@@ -110,6 +110,11 @@ const FormContract = () => {
               type="text"
               mt="2"
               onSubmittedField={onSubmittedContratNumeroContratPrecedent}
+              label={
+                typeContratApp.valueDb === 21 || typeContratApp.valueDb === 22 || typeContratApp.valueDb === 23
+                  ? numeroContratPrecedent.labelSuccession
+                  : numeroContratPrecedent.labelAvenant
+              }
             />
           )}
           {/* <InputCerfa

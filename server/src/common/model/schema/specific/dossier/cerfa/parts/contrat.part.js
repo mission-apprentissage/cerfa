@@ -24,20 +24,43 @@ const contratSchema = {
     description: "N° du contrat précédent (suite de contrat)",
     nullable: true,
     default: null,
-    example: "11111111111",
+    example: "02B202212000000",
     label: "Numéro du contrat précédent ou du contrat sur lequel porte l'avenant :",
+    labelAvenant: "Numéro de contrat sur lequel porte l'avenant :",
+    labelSuccession: "Numéro du contrat précédent :",
+    // maxLength: 15,
+    inputmask: "999 9999 99 ** 9999",
+    inputMasks: [
+      "(0[0-9][0-9]|02[AB]|9[012345]|97[12346])",
+      "([0-9]{4})",
+      "([0-1][0-9])",
+      "(NC|[0-9]{2})",
+      "([0-9]{4})",
+    ],
+    requiredMessage: "la numéro du contrat précédent est obligatoire",
+    validate: {
+      validator: function (v) {
+        if (!v) return true;
+        return /^(0[0-9][0-9]|02[AB]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])(NC|[0-9]{2})([0-9]{4})$/.test(v);
+      },
+      message: (props) => `${props.value} n'est pas un numéro de contrat valide`,
+    },
+    pattern: "^(0[0-9][0-9]|02[AB]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])(NC|[0-9]{2})([0-9]{4})$",
+    validateMessage: `n'est pas un numéro de contrat valide`,
   },
   noContrat: {
     type: String,
     description: "Numéro DECA de contrat",
     nullable: true,
-    example: "222222222222",
+    example: "02B202212000000",
+    pattern: "^(0[0-9][0-9]|02[AB]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])(NC|[0-9]{2})([0-9]{4})$",
   },
   noAvenant: {
     type: String,
     description: "Numéro d'Avenant",
     nullable: true,
-    example: "3333333333",
+    example: "02B202212000000",
+    pattern: "^(0[0-9][0-9]|02[AB]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])(NC|[0-9]{2})([0-9]{4})$",
   },
   dateDebutContrat: {
     type: Date,

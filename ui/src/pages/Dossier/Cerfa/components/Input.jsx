@@ -82,6 +82,7 @@ export default React.memo(
     precision = 2,
     numberStepper = false,
     forceUpperCase = false,
+    label,
     ...props
   }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -101,6 +102,31 @@ export default React.memo(
       [isErrored, validated]
     );
     const name = useMemo(() => path.replaceAll(".", "_"), [path]);
+
+    // const inputMaskProps = useMemo(() => {
+    //   if (!field?.inputmask) return {};
+    //   // console.log(field?.inputMasks);
+    //   //inputRef
+    //   const result = {
+    //     as: InputMask,
+    //     maskPlaceholder: "_",
+    //     mask: field?.inputmask,
+    //     beforeMaskedStateChange: ({ nextState }) => {
+    //       let { value } = nextState;
+    //       console.log(value);
+    //       return {
+    //         ...nextState,
+    //         value,
+    //       };
+    //     },
+    //   };
+    //   // for (let i = 0; i < field?.inputMasks.length; i++) {
+    //   //   const reg = field?.inputMasks[i];
+    //   //   result.mask.push(new RegExp(reg));
+    //   //   result.mask.push(" ");
+    //   // }
+    //   return result;
+    // }, [field?.inputmask]);
 
     const { values, errors, setFieldValue, setErrors } = useFormik({
       initialValues: {
@@ -302,7 +328,7 @@ export default React.memo(
           type === "numberPrefixed" ||
           type === "date" ||
           type === "select") && (
-          <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>{field?.label}</FormLabel>
+          <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>{label || field?.label}</FormLabel>
         )}
         <HStack>
           <InputGroup>
@@ -491,7 +517,7 @@ export default React.memo(
             )}
             {type === "radio" && (
               <HStack>
-                <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>{field?.label}</FormLabel>
+                <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>{label || field?.label}</FormLabel>
                 <RadioGroup value={values[name]}>
                   <HStack>
                     {field.options.map((option, k) => {
@@ -523,7 +549,7 @@ export default React.memo(
                   isDisabled={shouldBeDisabled}
                   icon={<Check />}
                 >
-                  {field?.label}
+                  {label || field?.label}
                 </Checkbox>
               </>
             )}
