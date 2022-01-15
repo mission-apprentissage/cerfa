@@ -1,5 +1,6 @@
 const adresseSchema = require("./adresse.part");
 const diplomeSchema = require("./diplome.part");
+const departementEnum = require("./departements.part");
 
 const apprentiSchema = {
   nom: {
@@ -97,6 +98,8 @@ const apprentiSchema = {
     example: 17,
   },
   departementNaissance: {
+    enum: departementEnum,
+
     maxLength: 3,
     minLength: 1,
     validate: {

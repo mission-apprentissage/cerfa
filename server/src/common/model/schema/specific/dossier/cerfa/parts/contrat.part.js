@@ -2,6 +2,42 @@ const modeContractuelSchema = require("./modeContractuel.part");
 const typeContratSchema = require("./typeContrat.part");
 const typeDerogationSchema = require("./typeDerogation.part");
 const remunerationAnnuelleSchema = require("./remunerationAnnuelle.part");
+const departementEnum = require("./departements.part");
+
+const numContratChecks = {
+  max: 15,
+  example: "02B202212000000",
+  mask: "DEP 0000 MM NN 0000",
+  maskBlocks: [
+    {
+      name: "DEP",
+      mask: "MaskedEnum",
+      enum: departementEnum,
+    },
+    {
+      name: "MM",
+      mask: "MaskedRange",
+      from: 1,
+      to: 12,
+    },
+    {
+      name: "NN",
+      mask: "MaskedEnum",
+      enum: ["NC", ...new Array(100).fill().map((e, i) => (i < 10 ? `0${i}` : `${i}`))],
+    },
+  ],
+  forbiddenStartWith: ["1", "2", "3", "4", "5", "6", "7", "8", "99", "90", "91", "92", "93", "94", "95"],
+
+  validate: {
+    validator: function (v) {
+      if (!v) return true;
+      return /^(0[0-9][0-9]|02[AB]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])(NC|[0-9]{2})([0-9]{4})$/.test(v);
+    },
+    message: (props) => `${props.value} n'est pas un numéro valide`,
+  },
+  pattern: "^(0[0-9][0-9]|02[AB]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])(NC|[0-9]{2})([0-9]{4})$",
+  validateMessage: `n'est pas un numéro valide`,
+};
 
 const contratSchema = {
   modeContractuel: {
@@ -22,45 +58,25 @@ const contratSchema = {
   numeroContratPrecedent: {
     type: String,
     description: "N° du contrat précédent (suite de contrat)",
-    nullable: true,
-    default: null,
-    example: "02B202212000000",
     label: "Numéro du contrat précédent ou du contrat sur lequel porte l'avenant :",
     labelAvenant: "Numéro de contrat sur lequel porte l'avenant :",
     labelSuccession: "Numéro du contrat précédent :",
-    // maxLength: 15,
-    inputmask: "999 9999 99 ** 9999",
-    inputMasks: [
-      "(0[0-9][0-9]|02[AB]|9[012345]|97[12346])",
-      "([0-9]{4})",
-      "([0-1][0-9])",
-      "(NC|[0-9]{2})",
-      "([0-9]{4})",
-    ],
     requiredMessage: "la numéro du contrat précédent est obligatoire",
-    validate: {
-      validator: function (v) {
-        if (!v) return true;
-        return /^(0[0-9][0-9]|02[AB]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])(NC|[0-9]{2})([0-9]{4})$/.test(v);
-      },
-      message: (props) => `${props.value} n'est pas un numéro de contrat valide`,
-    },
-    pattern: "^(0[0-9][0-9]|02[AB]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])(NC|[0-9]{2})([0-9]{4})$",
-    validateMessage: `n'est pas un numéro de contrat valide`,
+    nullable: true,
+    default: null,
+    ...numContratChecks,
   },
   noContrat: {
     type: String,
     description: "Numéro DECA de contrat",
     nullable: true,
-    example: "02B202212000000",
-    pattern: "^(0[0-9][0-9]|02[AB]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])(NC|[0-9]{2})([0-9]{4})$",
+    ...numContratChecks,
   },
   noAvenant: {
     type: String,
     description: "Numéro d'Avenant",
     nullable: true,
-    example: "02B202212000000",
-    pattern: "^(0[0-9][0-9]|02[AB]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])(NC|[0-9]{2})([0-9]{4})$",
+    ...numContratChecks,
   },
   dateDebutContrat: {
     type: Date,

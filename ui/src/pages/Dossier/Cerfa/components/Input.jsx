@@ -2,7 +2,7 @@ import React, { useCallback, useState, useMemo, useRef, useEffect } from "react"
 import {
   FormControl,
   FormLabel,
-  Input,
+  Input as ChackraInput,
   Select,
   Radio,
   Checkbox,
@@ -22,10 +22,12 @@ import {
 } from "@chakra-ui/react";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import PhoneInput from "react-phone-input-2";
+import { IMask, IMaskInput } from "react-imask";
 import { useFormik } from "formik";
 // import debounce from "lodash.debounce";
 import throttle from "lodash.throttle";
 import * as Yup from "yup";
+import { isDate } from "date-fns";
 
 import { LockFill } from "../../../../theme/components/icons/LockFill";
 import InfoTooltip from "../../../../common/components/InfoTooltip";
@@ -44,7 +46,7 @@ const validate = async (validationSchema, obj) => {
   return { isValid, error };
 };
 
-const buildValidationSchema = (field, name, type, countryCode) => {
+const buildValidationSchema = (field, name, type, isRequiredInternal, countryCode) => {
   const stringPattern = Yup.string().matches(new RegExp(field?.pattern), {
     message: `${field?.validateMessage}`,
     excludeEmptyString: true,
@@ -56,16 +58,80 @@ const buildValidationSchema = (field, name, type, countryCode) => {
     validatorField = validatorField.email("Le courriel doit être au format correct");
   }
 
+  // if (type === "date") {
+  //   validatorField = Yup.string().matches(/^([1-2][09][0-9][0-9])-(0[1-9]|1[0-2])-(0[1-9]|[1-3][0-9])$/, {
+  //     message: `${field?.validateMessage}`,
+  //     excludeEmptyString: true,
+  //   });
+  // }
+
   if (type === "phone" && countryCode === "fr") {
     validatorField = validatorField.length(11, "Le numéro de téléphone n'est pas au bon format");
   }
 
-  const finalValidator = !field?.isNotRequiredForm ? validatorField.required(field?.requiredMessage) : validatorField;
+  const finalValidator = isRequiredInternal ? validatorField.required(field?.requiredMessage) : validatorField;
 
   return Yup.object().shape({
     [name]: finalValidator,
   });
 };
+
+const MaskedInput = React.memo(({ onChange, mask, value, maskblocks, max, forbiddenstartwith, ...props }) => {
+  const inputRef = useRef(null);
+  const [internalValue, setInternalValue] = useState(value);
+
+  useEffect(() => {
+    if (value !== "") setInternalValue(value);
+  }, [value]);
+
+  const blocks = useMemo(() => {
+    return maskblocks.reduce((acc, item) => {
+      if (item.mask === "MaskedRange")
+        acc[item.name] = {
+          mask: IMask.MaskedRange,
+          from: item.from,
+          to: item.to,
+        };
+      else if (item.mask === "MaskedEnum")
+        acc[item.name] = {
+          mask: IMask.MaskedEnum,
+          enum: item.enum,
+        };
+      else
+        acc[item.name] = {
+          mask: item.mask,
+        };
+      return acc;
+    }, {});
+  }, [maskblocks]);
+
+  return (
+    <ChackraInput
+      {...props}
+      as={IMaskInput}
+      ref={inputRef}
+      value={internalValue}
+      mask={mask}
+      blocks={blocks}
+      lazy={false}
+      placeholderChar="_"
+      unmask={true}
+      onAccept={(value, mask) => {
+        if (max === value.length || value === "") {
+          onChange({ persist: () => {}, target: { value } });
+        }
+        if (forbiddenstartwith && forbiddenstartwith.includes(value[0])) {
+          // setInternalValue(`0${value[0]}`);
+          setInternalValue(`0`);
+        }
+        if (forbiddenstartwith && forbiddenstartwith.includes(value[0] + value[1])) {
+          // setInternalValue(`0${value[0]}${value[1]}`);
+          setInternalValue(`09`);
+        }
+      }}
+    />
+  );
+});
 
 export default React.memo(
   ({
@@ -83,6 +149,7 @@ export default React.memo(
     numberStepper = false,
     forceUpperCase = false,
     label,
+    isRequired,
     ...props
   }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -103,30 +170,13 @@ export default React.memo(
     );
     const name = useMemo(() => path.replaceAll(".", "_"), [path]);
 
-    // const inputMaskProps = useMemo(() => {
-    //   if (!field?.inputmask) return {};
-    //   // console.log(field?.inputMasks);
-    //   //inputRef
-    //   const result = {
-    //     as: InputMask,
-    //     maskPlaceholder: "_",
-    //     mask: field?.inputmask,
-    //     beforeMaskedStateChange: ({ nextState }) => {
-    //       let { value } = nextState;
-    //       console.log(value);
-    //       return {
-    //         ...nextState,
-    //         value,
-    //       };
-    //     },
-    //   };
-    //   // for (let i = 0; i < field?.inputMasks.length; i++) {
-    //   //   const reg = field?.inputMasks[i];
-    //   //   result.mask.push(new RegExp(reg));
-    //   //   result.mask.push(" ");
-    //   // }
-    //   return result;
-    // }, [field?.inputmask]);
+    const Input = useMemo(() => {
+      return !field?.mask ? ChackraInput : MaskedInput;
+    }, [field?.mask]);
+
+    const isRequiredInternal = useMemo(() => {
+      return field?.isNotRequiredForm ? !field?.isNotRequiredForm : isRequired !== undefined ? isRequired : true; // TODO tired....
+    }, [field?.isNotRequiredForm, isRequired]);
 
     const { values, errors, setFieldValue, setErrors } = useFormik({
       initialValues: {
@@ -143,12 +193,15 @@ export default React.memo(
             : forceUpperCase
             ? e.target.value.toUpperCase().trimStart()
             : e.target.value.trimStart();
+
         setValidated(false);
         setIsErrored(false);
 
-        const { isValid } = await validate(buildValidationSchema(field, name, type, countryCode), { [name]: val });
+        const { isValid } = await validate(buildValidationSchema(field, name, type, isRequiredInternal, countryCode), {
+          [name]: val,
+        });
 
-        console.log("handleChange"); //, val, isValid);
+        console.log("handleChange", val, isValid, isDate(val));
 
         if (!isValid) {
           setFromInternal(true);
@@ -187,6 +240,7 @@ export default React.memo(
         forceUpperCase,
         field,
         name,
+        isRequiredInternal,
         countryCode,
         setFieldValue,
         onAsyncData,
@@ -204,7 +258,7 @@ export default React.memo(
         prevOnAsyncDataRef.current = onAsyncData;
         let fieldValue = field?.value;
 
-        let validationSchema = buildValidationSchema(field, name, type, countryCode);
+        let validationSchema = buildValidationSchema(field, name, type, isRequiredInternal, countryCode);
 
         //
         const { isValid: isValidFieldValue } = await validate(validationSchema, {
@@ -301,6 +355,7 @@ export default React.memo(
       type,
       countryCode,
       throttledEventHandler,
+      isRequiredInternal,
     ]);
 
     const prevOnAsyncData = prevOnAsyncDataRef.current;
@@ -320,7 +375,7 @@ export default React.memo(
     if (!field) return null;
 
     return (
-      <FormControl isRequired={!field?.isNotRequiredForm} mt={2} isInvalid={errors[name]} {...props}>
+      <FormControl isRequired={isRequiredInternal} mt={2} isInvalid={errors[name]} {...props}>
         {(type === "text" ||
           type === "email" ||
           type === "number" ||
@@ -380,9 +435,9 @@ export default React.memo(
               <Input
                 type={type}
                 name={name}
-                onChange={throttledEventHandler}
+                onChange={!field?.inputmask ? throttledEventHandler : handleChange}
                 value={values[name]}
-                required={!field?.isNotRequiredForm}
+                required={isRequiredInternal}
                 pattern={field?.pattern}
                 placeholder={field?.description}
                 variant={validated ? "valid" : "outline"}
@@ -417,6 +472,10 @@ export default React.memo(
                   opacity: 1,
                   borderBottomColor: "#E5E5E5",
                 }}
+                mask={field?.mask}
+                maskblocks={field?.maskBlocks}
+                max={field?.max}
+                forbiddenstartwith={field?.forbiddenStartWith}
               />
             )}
             {type === "number" && (
@@ -426,7 +485,7 @@ export default React.memo(
                 value={values[name]}
                 precision={precision}
                 min={0}
-                required={!field?.isNotRequiredForm}
+                required={isRequiredInternal}
                 pattern={field?.pattern}
                 placeholder={field?.description}
                 variant={validated ? "valid" : "outline"}
@@ -476,7 +535,7 @@ export default React.memo(
                 name={name}
                 onChange={(val) => handleChange({ persist: () => {}, target: { value: val } })}
                 value={format(values[name])}
-                required={!field?.isNotRequiredForm}
+                required={isRequiredInternal}
                 pattern={field?.pattern}
                 placeholder={field?.description}
                 variant={validated ? "valid" : "outline"}

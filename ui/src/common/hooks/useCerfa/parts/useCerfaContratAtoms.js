@@ -17,6 +17,23 @@ export const cerfaContratNumeroContratPrecedentAtom = atom({
   key: "cerfa/contrat/numeroContratPrecedent",
   default: null,
 });
+export const cerfaContratNumeroContratPrecedentDepartementAtom = atom({
+  key: "cerfa/contrat/numeroContratPrecedent/departement",
+  default: null,
+});
+export const cerfaContratNumeroContratPrecedentAnneeAtom = atom({
+  key: "cerfa/contrat/numeroContratPrecedent/annee",
+  default: null,
+});
+export const cerfaContratNumeroContratPrecedentMoisAtom = atom({
+  key: "cerfa/contrat/numeroContratPrecedent/mois",
+  default: null,
+});
+export const cerfaContratNumeroContratPrecedentNcAtom = atom({
+  key: "cerfa/contrat/numeroContratPrecedent/nc",
+  default: null,
+});
+
 export const cerfaContratNoContratAtom = atom({
   key: "cerfa/contrat/noContrat",
   default: null,

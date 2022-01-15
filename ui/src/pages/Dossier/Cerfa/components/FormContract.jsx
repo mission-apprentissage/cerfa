@@ -2,6 +2,7 @@ import React from "react";
 import { Box, FormLabel, Text, Flex, HStack, Collapse, VStack, UnorderedList, ListItem } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
+import { departements } from "../../../../common/constants/departements";
 import { useCerfaContrat } from "../../../../common/hooks/useCerfa/parts/useCerfaContrat";
 import {
   cerfaApprentiDateNaissanceAtom,
@@ -31,6 +32,10 @@ const FormContract = () => {
         typeContratApp,
         typeDerogation,
         numeroContratPrecedent,
+        numeroContratPrecedentDepartement,
+        numeroContratPrecedentAnnee,
+        numeroContratPrecedentMois,
+        numeroContratPrecedentNc,
         // dateConclusion,
         dateDebutContrat,
         dateEffetAvenant,
@@ -115,7 +120,21 @@ const FormContract = () => {
                   ? numeroContratPrecedent.labelSuccession
                   : numeroContratPrecedent.labelAvenant
               }
+              isRequired={
+                !(typeContratApp.valueDb === 21 || typeContratApp.valueDb === 22 || typeContratApp.valueDb === 23)
+              }
             />
+          )}
+          {numeroContratPrecedent.value !== "" && (
+            <Box>
+              <Text fontWeight="400" fontStyle="italic">
+                Information sur le précedent contrat:
+                <br /> {numeroContratPrecedentMois}/{numeroContratPrecedentAnnee}
+                {", "}
+                {departements[numeroContratPrecedentDepartement]?.name} ({numeroContratPrecedentDepartement})
+                {numeroContratPrecedentNc === "NC" && ", non conforme."}
+              </Text>
+            </Box>
           )}
           {/* <InputCerfa
             path="contrat.dateConclusion"

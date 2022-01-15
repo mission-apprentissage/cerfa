@@ -53,18 +53,13 @@ const cerfaContratCompletion = (res) => {
     res.contrat.typeContratApp.value === 37;
 
   if (!contratInitial) {
-    fieldsToKeep = {
-      ...fieldsToKeep,
-      contratNumeroContratPrecedent: res.contrat.numeroContratPrecedent,
-    };
-    countFields = countFields + 1;
-
     if (avenant) {
       fieldsToKeep = {
         ...fieldsToKeep,
         contratDateEffetAvenant: res.contrat.dateEffetAvenant,
+        contratNumeroContratPrecedent: res.contrat.numeroContratPrecedent,
       };
-      countFields = countFields + 1;
+      countFields = countFields + 2;
     }
   }
 
@@ -943,6 +938,19 @@ export function useCerfaContrat() {
   const [contratNumeroContratPrecedent, setContratNumeroContratPrecedent] = useRecoilState(
     contratAtoms.cerfaContratNumeroContratPrecedentAtom
   );
+  const [contratNumeroContratPrecedentDepartement, setContratNumeroContratPrecedentDepartement] = useRecoilState(
+    contratAtoms.cerfaContratNumeroContratPrecedentDepartementAtom
+  );
+  const [contratNumeroContratPrecedentAnnee, setContratNumeroContratPrecedentAnnee] = useRecoilState(
+    contratAtoms.cerfaContratNumeroContratPrecedentAnneeAtom
+  );
+  const [contratNumeroContratPrecedentMois, setContratNumeroContratPrecedentMois] = useRecoilState(
+    contratAtoms.cerfaContratNumeroContratPrecedentMoisAtom
+  );
+  const [contratNumeroContratPrecedentNc, setContratNumeroContratPrecedentNc] = useRecoilState(
+    contratAtoms.cerfaContratNumeroContratPrecedentNcAtom
+  );
+
   const [contratNoContrat, setContratNoContrat] = useRecoilState(contratAtoms.cerfaContratNoContratAtom);
   const [contratNoAvenant, setContratNoAvenant] = useRecoilState(contratAtoms.cerfaContratNoAvenantAtom);
   const [contratDateDebutContrat, setContratDateDebutContrat] = useRecoilState(
@@ -1776,14 +1784,35 @@ export function useCerfaContrat() {
                 typeContratApp: convertMultipleSelectOptionToValue(newV.contrat.typeContratApp),
               },
             };
-            if (newV.contrat.typeContratApp.valueDb === 11) {
-              setContratNumeroContratPrecedent({ ...contratNumeroContratPrecedent, value: "" });
-              setContratDateEffetAvenant({ ...contratDateEffetAvenant, value: "" });
+
+            const contratInitial = newV.contrat.typeContratApp.valueDb === 11;
+            const succession =
+              newV.contrat.typeContratApp.valueDb === 21 ||
+              newV.contrat.typeContratApp.valueDb === 22 ||
+              newV.contrat.typeContratApp.valueDb === 23;
+
+            if (contratInitial) {
               dataToSave = {
                 contrat: {
                   ...dataToSave.contrat,
                   numeroContratPrecedent: null,
                   dateEffetAvenant: null,
+                },
+              };
+            } else if (succession) {
+              dataToSave = {
+                contrat: {
+                  ...dataToSave.contrat,
+                  dateEffetAvenant: null,
+                  numeroContratPrecedent: contratNumeroContratPrecedent?.value || null,
+                },
+              };
+            } else {
+              dataToSave = {
+                contrat: {
+                  ...dataToSave.contrat,
+                  dateEffetAvenant: convertDateToValue(contratDateEffetAvenant),
+                  numeroContratPrecedent: contratNumeroContratPrecedent?.value || null,
                 },
               };
             }
@@ -1802,9 +1831,7 @@ export function useCerfaContrat() {
       dossier?._id,
       cerfa?.id,
       setPartContratCompletion,
-      setContratNumeroContratPrecedent,
-      contratNumeroContratPrecedent,
-      setContratDateEffetAvenant,
+      contratNumeroContratPrecedent?.value,
       contratDateEffetAvenant,
     ]
   );
@@ -1840,6 +1867,23 @@ export function useCerfaContrat() {
     [contratTypeDerogation, setContratTypeDerogation, dossier?._id, cerfa?.id, setPartContratCompletion]
   );
 
+  const setNumeroContratPrecedentDetails = useCallback(
+    async (data) => {
+      if (data !== "") {
+        setContratNumeroContratPrecedentDepartement(data.substr(0, 3));
+        setContratNumeroContratPrecedentAnnee(data.substr(3, 4));
+        setContratNumeroContratPrecedentMois(data.substr(7, 2));
+        setContratNumeroContratPrecedentNc(data.substr(9, 2));
+      }
+    },
+    [
+      setContratNumeroContratPrecedentDepartement,
+      setContratNumeroContratPrecedentAnnee,
+      setContratNumeroContratPrecedentMois,
+      setContratNumeroContratPrecedentNc,
+    ]
+  );
+
   const onSubmittedContratNumeroContratPrecedent = useCallback(
     async (path, data) => {
       try {
@@ -1849,16 +1893,17 @@ export function useCerfaContrat() {
               numeroContratPrecedent: {
                 ...contratNumeroContratPrecedent,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
           if (contratNumeroContratPrecedent.value !== newV.contrat.numeroContratPrecedent.value) {
             setContratNumeroContratPrecedent(newV.contrat.numeroContratPrecedent);
 
+            setNumeroContratPrecedentDetails(data);
+
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               contrat: {
-                numeroContratPrecedent: newV.contrat.numeroContratPrecedent.value,
+                numeroContratPrecedent: newV.contrat.numeroContratPrecedent.value || null,
               },
             });
             setPartContratCompletion(cerfaContratCompletion(res));
@@ -1868,7 +1913,14 @@ export function useCerfaContrat() {
         console.error(e);
       }
     },
-    [contratNumeroContratPrecedent, setContratNumeroContratPrecedent, dossier?._id, cerfa?.id, setPartContratCompletion]
+    [
+      contratNumeroContratPrecedent,
+      setContratNumeroContratPrecedent,
+      setNumeroContratPrecedentDetails,
+      dossier?._id,
+      cerfa?.id,
+      setPartContratCompletion,
+    ]
   );
 
   const onSubmittedContratSalaireEmbauche = useCallback(
@@ -2143,6 +2195,8 @@ export function useCerfaContrat() {
     setContratModeContractuel(convertValueToOption(res.contrat.modeContractuel));
     setContratTypeContratApp(convertValueToMultipleSelectOption(res.contrat.typeContratApp));
     setContratNumeroContratPrecedent(res.contrat.numeroContratPrecedent);
+    setNumeroContratPrecedentDetails(res.contrat.numeroContratPrecedent.value);
+
     setContratNoContrat(res.contrat.noContrat);
     setContratNoAvenant(res.contrat.noAvenant);
     setContratDateDebutContrat(convertValueToDate(res.contrat.dateDebutContrat));
@@ -2316,6 +2370,10 @@ export function useCerfaContrat() {
         modeContractuel: contratModeContractuel,
         typeContratApp: contratTypeContratApp,
         numeroContratPrecedent: contratNumeroContratPrecedent,
+        numeroContratPrecedentDepartement: contratNumeroContratPrecedentDepartement,
+        numeroContratPrecedentAnnee: contratNumeroContratPrecedentAnnee,
+        numeroContratPrecedentMois: contratNumeroContratPrecedentMois,
+        numeroContratPrecedentNc: contratNumeroContratPrecedentNc,
         noContrat: contratNoContrat,
         noAvenant: contratNoAvenant,
         dateDebutContrat: contratDateDebutContrat,
