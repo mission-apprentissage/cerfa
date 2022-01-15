@@ -7,6 +7,7 @@ const apprentiSchema = {
     type: String,
     description: "Nom (Nom de naissance/ patronymique) de l'apprenti",
     label: "Nom de naissance de l'apprenti(e) :",
+    requiredMessage: "Le nom de l'apprenti(e) est obligatoire",
     example: "MARTIN",
     default: null,
     required: function () {
@@ -25,6 +26,7 @@ const apprentiSchema = {
     type: String,
     description: "Prénom de l'apprenti",
     label: "Prénom de l'apprenti(e) :",
+    requiredMessage: "Le prénom de l'apprenti(e) est obligatoire",
     example: "Jean-François",
     default: null,
     required: function () {
@@ -78,8 +80,9 @@ const apprentiSchema = {
   },
   dateNaissance: {
     type: Date,
-    description: "Date de naissance  de l'apprenti",
+    description: "Date de naissance de l'apprenti",
     label: "Date de naissance :",
+    requiredMessage: "La date de naissance de l'apprenti(e) est obligatoire",
     example: "2001-01-01T00:00:00+0000",
     default: null,
     required: function () {
@@ -99,7 +102,7 @@ const apprentiSchema = {
     validate: {
       validator: function (v) {
         if (!v) return true;
-        return /^[0-9]{1,3}$/.test(v);
+        return /^([1-9]|[2][1-9]|2[AB]|[13456789][0-9]|9[012345]|97[12346])$/.test(v);
       },
       message: (props) => `${props.value} n'est pas un departement valide`,
     },
@@ -107,6 +110,9 @@ const apprentiSchema = {
     description: "Département de naissance de l'apprenti",
     label: "Département de naissance :",
     example: "01",
+    pattern: "^([1-9]|[2][1-9]|2[AB]|[13456789][0-9]|9[012345]|97[12346])$",
+    requiredMessage: "le département de naissance est obligatoire",
+    validateMessage: ` n'est pas un département valide`,
     default: null,
     required: function () {
       return !this.draft;
@@ -117,6 +123,7 @@ const apprentiSchema = {
     type: String,
     description: "Commune de naissance de l'apprenti",
     label: "Commune de naissance :",
+    requiredMessage: "la commune de naissance est obligatoire",
     example: "Bourg-en-Bresse",
     default: null,
     required: function () {
@@ -326,9 +333,10 @@ const apprentiSchema = {
   intituleDiplomePrepare: {
     maxLength: 255,
     type: String,
-    description: "Intitulé précis du dernier diplôme ou titre préparé par l'apprenti",
+    description: "Intitulé précis du dernier diplôme ou titre préparé par l'apprenti(e)",
     example: "Master en sciences de l'éducation",
     label: "Intitulé précis du dernier diplôme ou titre préparé :",
+    requiredMessage: "l'intitulé du dernier diplôme ou titre préparé par l'apprenti(e) est obligatoire",
     default: null,
     required: function () {
       return !this.draft;

@@ -43,6 +43,7 @@ const contratSchema = {
     type: Date,
     description: "Date de début d'éxécution du contrat",
     label: "Date de début d'exécution du contrat :",
+    requiredMessage: "la date de début d'exécution de contrat est obligatoire",
     example: "2021-02-01T00:00:00+0000",
     default: null,
     required: function () {
@@ -53,6 +54,7 @@ const contratSchema = {
     type: Date,
     description: "Date de fin du contrat prévue",
     label: "Date de fin du contrat ou de la période d'apprentissage :",
+    requiredMessage: "la date de fin de contrat est obligatoire",
     example: "2021-02-28T00:00:00+0000",
     default: null,
     required: function () {
@@ -109,6 +111,7 @@ const contratSchema = {
   dureeTravailHebdoHeures: {
     type: Number,
     description: "Durée hebdomadaire du travail (heures)",
+    requiredMessage: "la durée hebdomadaire de travail est obligatoire",
     label: "Heures:",
     example: 37,
     default: null,

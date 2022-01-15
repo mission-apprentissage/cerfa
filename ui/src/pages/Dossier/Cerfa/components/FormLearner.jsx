@@ -168,7 +168,7 @@ const FormLearner = () => {
 
           {!majeur && dateNaissance.value !== "" && (
             <Box mt={5}>
-              <Text>L'apprenti(e) n'est pas majeur, merci de compléter les informations suivantes</Text>
+              <Text>L'apprenti(e) est mineur, merci de compléter les informations suivantes</Text>
               <InputCerfa
                 path="apprenti.apprentiMineurNonEmancipe"
                 field={apprentiApprentiMineurNonEmancipe}
@@ -276,6 +276,7 @@ const FormLearner = () => {
             field={departementNaissance}
             type="text"
             mt="2"
+            forceUpperCase={true}
             onSubmittedField={onSubmittedApprentiDepartementNaissance}
           />
           <InputCerfa

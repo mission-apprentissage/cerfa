@@ -270,8 +270,9 @@ export default () => {
         <Flex flexDir="column" width="100%" mt={9}>
           <Steps
             onClickStep={(step) => {
+              if (employeurPrivePublic?.contents?.value === "Employeur privé") return false;
               if (!cerfaComplete && step !== 0) {
-                setStep1State(step1Visited ? "error" : undefined);
+                setStep1State(step1Visited ? "error" : "error");
               } else {
                 setStep1State(undefined);
               }

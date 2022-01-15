@@ -45,6 +45,7 @@ export const convertValueToDate = (field) => {
 //
 
 export const convertOptionToValue = (field) => {
+  if (!field) return null;
   let value = null;
   for (let i = 0; i < field.options.length; i++) {
     const options = field.options[i];

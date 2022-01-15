@@ -69,13 +69,15 @@ const cerfaContratCompletion = (res) => {
   }
 
   if (avantageNature) {
-    fieldsToKeep = {
-      ...fieldsToKeep,
-      contratAvantageNourriture: res.contrat.avantageNourriture,
-      contratAvantageLogement: res.contrat.avantageLogement,
-      contratAutreAvantageEnNature: res.contrat.autreAvantageEnNature,
-    };
-    countFields = countFields + 3;
+    if (res.contrat.avantageNourriture.value !== "")
+      fieldsToKeep = { ...fieldsToKeep, contratAvantageNourriture: res.contrat.avantageNourriture };
+    else if (res.contrat.avantageLogement.value !== "")
+      fieldsToKeep = { ...fieldsToKeep, contratAvantageLogement: res.contrat.avantageLogement };
+    else if (res.contrat.autreAvantageEnNature.value !== "") {
+      fieldsToKeep = { ...fieldsToKeep, contratAutreAvantageEnNature: res.contrat.autreAvantageEnNature };
+    }
+
+    countFields = countFields + 1;
   }
 
   return fieldCompletionPercentage(fieldsToKeep, countFields);
@@ -1967,6 +1969,15 @@ export function useCerfaContrat() {
                   autreAvantageEnNature: null,
                 },
               };
+            } else {
+              dataToSave = {
+                contrat: {
+                  ...dataToSave.contrat,
+                  avantageNourriture: normalizeInputNumberForDb(contratAvantageNourriture?.value),
+                  avantageLogement: normalizeInputNumberForDb(contratAvantageLogement?.value),
+                  autreAvantageEnNature: contratAutreAvantageEnNature?.value === "true" ? true : null,
+                },
+              };
             }
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartContratCompletion(cerfaContratCompletion(res));
@@ -1976,7 +1987,16 @@ export function useCerfaContrat() {
         console.error(e);
       }
     },
-    [cerfa?.id, contratAvantageNature, dossier?._id, setContratAvantageNature, setPartContratCompletion]
+    [
+      cerfa?.id,
+      contratAutreAvantageEnNature?.value,
+      contratAvantageLogement?.value,
+      contratAvantageNature,
+      contratAvantageNourriture?.value,
+      dossier?._id,
+      setContratAvantageNature,
+      setPartContratCompletion,
+    ]
   );
 
   const onSubmittedContratAvantageNourriture = useCallback(

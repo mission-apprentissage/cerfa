@@ -23,6 +23,8 @@ import {
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import PhoneInput from "react-phone-input-2";
 import { useFormik } from "formik";
+// import debounce from "lodash.debounce";
+import throttle from "lodash.throttle";
 import * as Yup from "yup";
 
 import { LockFill } from "../../../../theme/components/icons/LockFill";
@@ -42,7 +44,7 @@ const validate = async (validationSchema, obj) => {
   return { isValid, error };
 };
 
-const buildValidationSchema = (field, name, type) => {
+const buildValidationSchema = (field, name, type, countryCode) => {
   const stringPattern = Yup.string().matches(new RegExp(field?.pattern), {
     message: `${field?.validateMessage}`,
     excludeEmptyString: true,
@@ -52,6 +54,10 @@ const buildValidationSchema = (field, name, type) => {
 
   if (type === "email") {
     validatorField = validatorField.email("Le courriel doit être au format correct");
+  }
+
+  if (type === "phone" && countryCode === "fr") {
+    validatorField = validatorField.length(11, "Le numéro de téléphone n'est pas au bon format");
   }
 
   const finalValidator = !field?.isNotRequiredForm ? validatorField.required(field?.requiredMessage) : validatorField;
@@ -75,6 +81,7 @@ export default React.memo(
     parse = (val) => val,
     precision = 2,
     numberStepper = false,
+    forceUpperCase = false,
     ...props
   }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -82,6 +89,7 @@ export default React.memo(
     const [isErrored, setIsErrored] = useState(false);
     const [shouldBeDisabled, setShouldBeDisabled] = useState(false);
     const [fromInternal, setFromInternal] = useState(false);
+    const [countryCode, setCountryCode] = useState("fr");
 
     const prevOnAsyncDataRef = useRef();
     const prevFieldValueRef = useRef("");
@@ -103,27 +111,33 @@ export default React.memo(
     let handleChange = useCallback(
       async (e) => {
         e.persist();
-        const val = type === "numberPrefixed" ? parse(e.target.value) : e.target.value.trimStart();
+        const val =
+          type === "numberPrefixed"
+            ? parse(e.target.value)
+            : forceUpperCase
+            ? e.target.value.toUpperCase().trimStart()
+            : e.target.value.trimStart();
         setValidated(false);
         setIsErrored(false);
 
-        console.log("handleChange");
+        const { isValid } = await validate(buildValidationSchema(field, name, type, countryCode), { [name]: val });
 
-        const { isValid } = await validate(buildValidationSchema(field, name, type), { [name]: val });
+        console.log("handleChange"); //, val, isValid);
 
         if (!isValid) {
           setFromInternal(true);
           return setFieldValue(name, val);
         }
 
+        setFieldValue(name, val);
+
         if (!field?.doAsyncActions) {
           if (!onSubmittedField) {
-            return setFieldValue(name, val);
+            return false;
           }
           return await onSubmittedField(path, val);
         }
 
-        setFieldValue(name, val);
         setIsLoading(true);
         const { successed, data, message } = await field?.doAsyncActions(val, onAsyncData);
         setIsLoading(false);
@@ -141,15 +155,30 @@ export default React.memo(
           setIsErrored(true);
         }
       },
-      [type, parse, name, field, setFieldValue, onAsyncData, setErrors, onSubmittedField, path]
+      [
+        type,
+        parse,
+        forceUpperCase,
+        field,
+        name,
+        countryCode,
+        setFieldValue,
+        onAsyncData,
+        setErrors,
+        onSubmittedField,
+        path,
+      ]
     );
+
+    // const debouncedEventHandler = useMemo(() => debounce(handleChange, 300), []);
+    const throttledEventHandler = useMemo(() => throttle(handleChange, 100), [handleChange]);
 
     useEffect(() => {
       (async () => {
         prevOnAsyncDataRef.current = onAsyncData;
         let fieldValue = field?.value;
 
-        let validationSchema = buildValidationSchema(field, name, type);
+        let validationSchema = buildValidationSchema(field, name, type, countryCode);
 
         //
         const { isValid: isValidFieldValue } = await validate(validationSchema, {
@@ -229,7 +258,9 @@ export default React.memo(
         }
         //
       })();
-      return () => {};
+      return () => {
+        throttledEventHandler.cancel();
+      };
     }, [
       onAsyncData,
       field,
@@ -242,6 +273,8 @@ export default React.memo(
       fromInternal,
       handleChange,
       type,
+      countryCode,
+      throttledEventHandler,
     ]);
 
     const prevOnAsyncData = prevOnAsyncDataRef.current;
@@ -321,7 +354,7 @@ export default React.memo(
               <Input
                 type={type}
                 name={name}
-                onChange={handleChange}
+                onChange={throttledEventHandler}
                 value={values[name]}
                 required={!field?.isNotRequiredForm}
                 pattern={field?.pattern}
@@ -503,10 +536,13 @@ export default React.memo(
                   fr: ". .. .. .. ..",
                 }}
                 countryCodeEditable={false}
-                onChange={(val) => handleChange({ persist: () => {}, target: { value: val } })}
+                onChange={async (val, country) => {
+                  setCountryCode(country.countryCode);
+                  await handleChange({ persist: () => {}, target: { value: val } });
+                }}
                 disabled={shouldBeDisabled}
-                inputClass="phone-form-input"
-                buttonClass="phone-form-button"
+                inputClass={`phone-form-input ${validated && "valid"} ${isErrored && "error"}`}
+                buttonClass={`phone-form-button ${validated && "valid"} ${isErrored && "error"}`}
               />
             )}
             {(shouldBeDisabled || isLoading || validated || isErrored) && type !== "radio" && (

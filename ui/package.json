@@ -17,6 +17,8 @@
     "framer-motion": "4.1.17",
     "generate-password-browser": "1.1.0",
     "jsonwebtoken": "8.5.1",
+    "lodash.debounce": "4.0.8",
+    "lodash.throttle": "4.1.1",
     "luxon": "2.2.0",
     "query-string": "7.0.1",
     "react": "17.0.2",
