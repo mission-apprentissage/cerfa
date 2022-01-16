@@ -98,7 +98,7 @@ const apprentiSchema = {
     example: 17,
   },
   departementNaissance: {
-    enum: departementEnum,
+    enum: [null, ...departementEnum.map((d) => d.replace(/^(0){1,2}/, ""))],
 
     maxLength: 3,
     minLength: 1,
@@ -117,6 +117,7 @@ const apprentiSchema = {
     requiredMessage: "le département de naissance est obligatoire",
     validateMessage: ` n'est pas un département valide`,
     default: null,
+    nullable: true,
     required: function () {
       return !this.draft;
     },

@@ -93,6 +93,14 @@ export const CerfaApprentiController = async (dossier) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
           const { age, dateNaissance } = caclAgeFromStringDate(value);
 
+          if (age === 0) {
+            return {
+              successed: false,
+              data: null,
+              message: "La date de naissance de peut pas être dans le futur",
+            };
+          }
+
           if (age < 14) {
             return {
               successed: false,

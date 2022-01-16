@@ -47,6 +47,15 @@ export const CerfaMaitresController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
           const { age, dateNaissance } = caclAgeFromStringDate(value);
+
+          if (age === 0) {
+            return {
+              successed: false,
+              data: null,
+              message: "La date de naissance de peut pas être dans le futur",
+            };
+          }
+
           const isAgeMaitreInvalidAtStart = isAgeInValidAtDate({
             dateNaissance,
             age,
@@ -72,6 +81,15 @@ export const CerfaMaitresController = async (dossier) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
           const { age, dateNaissance } = caclAgeFromStringDate(value);
+
+          if (age === 0) {
+            return {
+              successed: false,
+              data: null,
+              message: "La date de naissance de peut pas être dans le futur",
+            };
+          }
+
           const isAgeMaitreInvalidAtStart = isAgeInValidAtDate({
             dateNaissance,
             age,

@@ -117,11 +117,11 @@ export const caclAgeFromStringDate = (dateNaissanceString) => {
   const dateNaissance = DateTime.fromISO(dateNaissanceString).setLocale("fr-FR");
   const today = DateTime.now().setLocale("fr-FR");
   const diffInYears = today.diff(dateNaissance, "years");
-  const { years: apprentiAge } = diffInYears.toObject();
-  const age = Math.floor(apprentiAge);
+  const { years } = diffInYears.toObject();
+  const age = years ? Math.floor(years) : 0;
   return {
     age,
-    dateNaissance,
+    dateNaissance: age > 0 ? dateNaissance : null,
   };
 };
 

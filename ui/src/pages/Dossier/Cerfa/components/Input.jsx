@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo, useRef, useEffect } from "react";
+import React, { useCallback, useState, useMemo, useRef, useEffect, forwardRef } from "react";
 import {
   FormControl,
   FormLabel,
@@ -22,17 +22,22 @@ import {
 } from "@chakra-ui/react";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import PhoneInput from "react-phone-input-2";
-import { IMask, IMaskInput } from "react-imask";
+import { IMask, IMaskInput, IMaskMixin } from "react-imask";
 import { useFormik } from "formik";
 // import debounce from "lodash.debounce";
+import DatePicker from "react-datepicker";
+import { registerLocale } from "react-datepicker";
 import throttle from "lodash.throttle";
 import * as Yup from "yup";
-import { isDate } from "date-fns";
 
 import { LockFill } from "../../../../theme/components/icons/LockFill";
 import InfoTooltip from "../../../../common/components/InfoTooltip";
 import Comment from "../../../../common/components/Comments/Comment";
 import { Check } from "../../../../theme/components/icons";
+
+import { DateTime } from "luxon";
+import fr from "date-fns/locale/fr";
+registerLocale("fr", fr);
 
 const validate = async (validationSchema, obj) => {
   let isValid = false;
@@ -57,13 +62,6 @@ const buildValidationSchema = (field, name, type, isRequiredInternal, countryCod
   if (type === "email") {
     validatorField = validatorField.email("Le courriel doit être au format correct");
   }
-
-  // if (type === "date") {
-  //   validatorField = Yup.string().matches(/^([1-2][09][0-9][0-9])-(0[1-9]|1[0-2])-(0[1-9]|[1-3][0-9])$/, {
-  //     message: `${field?.validateMessage}`,
-  //     excludeEmptyString: true,
-  //   });
-  // }
 
   if (type === "phone" && countryCode === "fr") {
     validatorField = validatorField.length(11, "Le numéro de téléphone n'est pas au bon format");
@@ -133,6 +131,68 @@ const MaskedInput = React.memo(({ onChange, mask, value, maskblocks, max, forbid
   );
 });
 
+const DateMInput = IMaskMixin(({ inputRef, ...props }) => <ChackraInput {...props} ref={inputRef} />);
+
+const DateInput = ({ onChange, value, type, ...props }) => {
+  const dateValue = useMemo(() => {
+    return value !== "" ? DateTime.fromISO(value).setLocale("fr-FR").toJSDate() : "";
+  }, [value]);
+
+  const CustomDateInput = forwardRef(({ value, onChange, onFocus, onClick, ...props }, ref) => {
+    const [internalValue, setInternalValue] = useState(value);
+
+    useEffect(() => {
+      if (value !== "") setInternalValue(value);
+    }, [value]);
+
+    let onComplete = useCallback(
+      async (completValue) => {
+        if (completValue !== value) {
+          onChange({ persist: () => {}, target: { value: completValue } });
+        }
+      },
+      [onChange, value]
+    );
+
+    return (
+      <DateMInput
+        {...props}
+        mask="d/m/Y"
+        unmask={true}
+        lazy={false}
+        placeholderChar="_"
+        overwrite={true}
+        autofix={true}
+        blocks={{
+          d: { mask: IMask.MaskedRange, placeholderChar: "j", from: 1, to: 31, maxLength: 2 },
+          m: { mask: IMask.MaskedRange, placeholderChar: "m", from: 1, to: 12, maxLength: 2 },
+          Y: { mask: IMask.MaskedRange, placeholderChar: "a", from: 1900, to: 2999, maxLength: 4 },
+        }}
+        onAccept={(currentValue, mask) => {
+          setInternalValue(currentValue);
+        }}
+        onComplete={onComplete}
+        ref={ref}
+        value={internalValue}
+        onFocus={onFocus}
+        onClick={onClick}
+      />
+    );
+  });
+
+  return (
+    <DatePicker
+      dateFormat="ddMMyyyy"
+      locale="fr"
+      selected={dateValue}
+      customInput={<CustomDateInput {...props} />}
+      onChange={(date) => {
+        onChange({ persist: () => {}, target: { value: date } });
+      }}
+    />
+  );
+};
+
 export default React.memo(
   ({
     path,
@@ -187,12 +247,11 @@ export default React.memo(
     let handleChange = useCallback(
       async (e) => {
         e.persist();
-        const val =
-          type === "numberPrefixed"
-            ? parse(e.target.value)
-            : forceUpperCase
-            ? e.target.value.toUpperCase().trimStart()
-            : e.target.value.trimStart();
+        let val = e.target.value;
+        if (type === "numberPrefixed") val = parse(val);
+        else if (forceUpperCase && type === "text") val = val.toUpperCase().trimStart();
+        else if (type === "text") val = val.trimStart();
+        else if (type === "date") val = DateTime.fromJSDate(val).setLocale("fr-FR").toFormat("yyyy-MM-dd");
 
         setValidated(false);
         setIsErrored(false);
@@ -201,7 +260,7 @@ export default React.memo(
           [name]: val,
         });
 
-        console.log("handleChange", val, isValid, isDate(val));
+        console.log("handleChange", val, isValid);
 
         if (!isValid) {
           setFromInternal(true);
@@ -431,7 +490,50 @@ export default React.memo(
                 )}
               </Select>
             )}
-            {(type === "text" || type === "email" || type === "date") && (
+            {type === "date" && (
+              <DateInput
+                type={type}
+                name={name}
+                onChange={handleChange}
+                value={values[name]}
+                pattern={field?.pattern}
+                placeholder={field?.description}
+                maxLength={field?.maxLength}
+                required={isRequiredInternal}
+                variant={validated ? "valid" : "outline"}
+                isInvalid={isErrored}
+                isDisabled={shouldBeDisabled}
+                _focus={{
+                  borderBottomColor: borderBottomColor,
+                  boxShadow: "none",
+                  outlineColor: "none",
+                }}
+                _focusVisible={{
+                  borderBottomColor: borderBottomColor,
+                  boxShadow: "none",
+                  outline: "2px solid",
+                  outlineColor: validated ? "green.500" : isErrored ? "error" : "#2A7FFE",
+                  outlineOffset: "2px",
+                }}
+                _invalid={{
+                  borderBottomColor: borderBottomColor,
+                  boxShadow: "none",
+                  outline: "2px solid",
+                  outlineColor: "error",
+                  outlineOffset: "2px",
+                }}
+                _hover={{
+                  borderBottomColor: borderBottomColor,
+                }}
+                _disabled={{
+                  fontStyle: "italic",
+                  cursor: "not-allowed",
+                  opacity: 1,
+                  borderBottomColor: "#E5E5E5",
+                }}
+              />
+            )}
+            {(type === "text" || type === "email") && (
               <Input
                 type={type}
                 name={name}
