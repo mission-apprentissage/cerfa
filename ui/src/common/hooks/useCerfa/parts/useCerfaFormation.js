@@ -779,7 +779,8 @@ export function useCerfaFormation() {
           let shouldSaveInDb = false;
           if (!forcedTriggered) {
             if (formationDateFinFormation.value !== newV.formation.dateFinFormation.value) {
-              setFormationDateDebutFormation({ ...formationDateDebutFormation, triggerValidation: true });
+              if (formationDateDebutFormation.value !== "")
+                setFormationDateDebutFormation({ ...formationDateDebutFormation, triggerValidation: true });
 
               setFormationDateFinFormation(newV.formation.dateFinFormation);
 
@@ -828,7 +829,8 @@ export function useCerfaFormation() {
           let shouldSaveInDb = false;
           if (!forcedTriggered) {
             if (formationDateDebutFormation.value !== newV.formation.dateDebutFormation.value) {
-              setFormationDateFinFormation({ ...formationDateFinFormation, triggerValidation: true });
+              if (formationDateFinFormation.value !== "")
+                setFormationDateFinFormation({ ...formationDateFinFormation, triggerValidation: true });
 
               setFormationDateDebutFormation(newV.formation.dateDebutFormation);
 

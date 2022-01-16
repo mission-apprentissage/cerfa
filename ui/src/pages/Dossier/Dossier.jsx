@@ -16,7 +16,6 @@ import {
 import { Step, Steps, useSteps } from "chakra-ui-steps-rework-mna";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { useSetRecoilState, useRecoilValueLoadable } from "recoil";
-import { prettyPrintDate } from "../../common/utils/dateUtils";
 import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 // import { _put } from "../../common/httpClient";
 // import useAuth from "../../common/hooks/useAuth";
@@ -242,7 +241,8 @@ export default () => {
             </Badge>
             <Badge variant="solid" bg="grey.100" color="grey.500" textStyle="sm" px="15px" ml="10px">
               <Text as="i">
-                {!dossier.saved ? "Non sauvegardé" : `Dernière sauvegarde ${prettyPrintDate(dossier.lastModified)}`}
+                {/* {!dossier.saved ? "Non sauvegardé" : `Dernière sauvegarde ${prettyPrintDate(dossier.lastModified)}`} */}
+                {!dossier.saved ? "Non sauvegardé" : `Sauvegarde automatique activée`}
               </Text>
             </Badge>
           </Heading>

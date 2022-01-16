@@ -21,7 +21,7 @@ const FormEmployer = ({ onFetched }) => {
         employeurSpecifique,
         // caisseComplementaire,
         regimeSpecifique,
-        privePublic,
+        // privePublic,
       },
     },
     onSubmit: {
@@ -61,7 +61,7 @@ const FormEmployer = ({ onFetched }) => {
       />
       <Flex>
         <Box w="55%" flex="1">
-          <InputCerfa path="employeur.privePublic" field={privePublic} type="radio" mt="2" />
+          {/* <InputCerfa path="employeur.privePublic" field={privePublic} type="radio" mt="2" /> */}
           <InputCerfa
             path="employeur.denomination"
             field={denomination}

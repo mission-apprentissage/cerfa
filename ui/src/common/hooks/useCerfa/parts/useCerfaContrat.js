@@ -14,7 +14,9 @@ import {
   convertValueToOption,
   convertValueToMultipleSelectOption,
   convertMultipleSelectOptionToValue,
-  isAgeInValidAtDate,
+  isAgeInValidLowerAtDate,
+  isAgeGreaterOrEqualAtDate,
+  isAgeLowerAtDate,
   caclAgeFromStringDate,
   normalizeInputNumberForDb,
 } from "../../../utils/formUtils";
@@ -26,6 +28,7 @@ import * as contratAtoms from "./useCerfaContratAtoms";
 
 const cerfaContratCompletion = (res) => {
   let fieldsToKeep = {
+    contratModeContractuel: res.contrat.modeContractuel,
     contratTypeContratApp: res.contrat.typeContratApp,
     contratDateDebutContrat: res.contrat.dateDebutContrat,
     // contratDateConclusion: res.contrat.dateConclusion,
@@ -40,7 +43,7 @@ const cerfaContratCompletion = (res) => {
     contratAvantageNature: res.contrat.avantageNature,
     // contratRemunerationMajoration: res.contrat.remunerationMajoration,
   };
-  let countFields = 6;
+  let countFields = 7;
   const avantageNature = res.contrat.avantageNature.value;
   const contratInitial = res.contrat.typeContratApp.value === 11;
   const avenant =
@@ -635,7 +638,7 @@ export const CerfaContratController = async (dossier) => {
 
           if (data.dateEffetAvenant) {
             const dateEffetAvenant = DateTime.fromISO(data.dateEffetAvenant).setLocale("fr-FR");
-            if (dateDebutContrat >= dateEffetAvenant) {
+            if (dateDebutContrat > dateEffetAvenant) {
               return {
                 successed: false,
                 data: null,
@@ -687,7 +690,7 @@ export const CerfaContratController = async (dossier) => {
           }
 
           if (data.apprentiDateNaissance !== "") {
-            const isAgeApprentiInvalidAtStart = isAgeInValidAtDate({
+            const isAgeApprentiInvalidAtStart = isAgeInValidLowerAtDate({
               dateNaissance: DateTime.fromISO(data.apprentiDateNaissance).setLocale("fr-FR"),
               age: data.apprentiAge,
               dateString: value,
@@ -701,7 +704,7 @@ export const CerfaContratController = async (dossier) => {
             const { age: ageMaitre1, dateNaissance: dateNaissanceMaitre1 } = caclAgeFromStringDate(
               data.maitre1DateNaissance
             );
-            const isAgeMaitre1InvalidAtStart = isAgeInValidAtDate({
+            const isAgeMaitre1InvalidAtStart = isAgeInValidLowerAtDate({
               dateNaissance: dateNaissanceMaitre1,
               age: ageMaitre1,
               dateString: value,
@@ -715,7 +718,7 @@ export const CerfaContratController = async (dossier) => {
             const { age: ageMaitre2, dateNaissance: dateNaissanceMaitre2 } = caclAgeFromStringDate(
               data.maitre2DateNaissance
             );
-            const isAgeMaitre2InvalidAtStart = isAgeInValidAtDate({
+            const isAgeMaitre2InvalidAtStart = isAgeInValidLowerAtDate({
               dateNaissance: dateNaissanceMaitre2,
               age: ageMaitre2,
               dateString: value,
@@ -735,10 +738,13 @@ export const CerfaContratController = async (dossier) => {
               successed: true,
               data: {
                 dateDebutContrat: value,
+                dateFinContrat: data.dateFinContrat,
                 remunerationsAnnuelles,
                 remunerationsAnnuellesDbValue,
                 salaireEmbauche,
                 dureeContrat,
+                apprentiDateNaissance: data.apprentiDateNaissance,
+                apprentiAge: data.apprentiAge,
               },
               message: null,
             };
@@ -748,7 +754,10 @@ export const CerfaContratController = async (dossier) => {
             successed: true,
             data: {
               dateDebutContrat: value,
+              dateFinContrat: data.dateFinContrat,
               dureeContrat,
+              apprentiDateNaissance: data.apprentiDateNaissance,
+              apprentiAge: data.apprentiAge,
             },
             message: null,
           };
@@ -1377,6 +1386,74 @@ export function useCerfaContrat() {
     ]
   );
 
+  let setTypeDerogation = useCallback(
+    async (dateNaissance, age, initValue) => {
+      const typeDerogation = contratTypeDerogation || initValue;
+      const opts = {
+        dateNaissance: DateTime.fromISO(dateNaissance).setLocale("fr-FR"),
+        age,
+        limitDateString: contratDateDebutContrat?.value,
+      };
+      const isApprentiGEQ16 = isAgeGreaterOrEqualAtDate({ ...opts, limitAge: 16 });
+      const isApprentiLOW16 = isAgeLowerAtDate({ ...opts, limitAge: 16 });
+      const isApprentiGEQ30 = isAgeGreaterOrEqualAtDate({ ...opts, limitAge: 30 });
+      const isApprentiLOW30 = isAgeGreaterOrEqualAtDate({ ...opts, limitAge: 30 });
+
+      // 11 not allowed if age >= 16 à la date d'execution
+      // if age  à la date d'execution < 16   type 11 ||  50
+      // 12 not allowed age < 30  à la date d'execution
+      // if age  à la date d'execution >= 30  type 12 ||  50
+      const options = [];
+      let valueForbidden = false;
+      for (let i = 0; i < typeDerogation.options.length; i++) {
+        let option = { ...typeDerogation.options[i] };
+        if (isApprentiGEQ16) {
+          if (option.value === 11) {
+            option.locked = true;
+          } else {
+            option.locked = false;
+          }
+        } else if (isApprentiLOW16) {
+          if (option.value === 11 || option.value === 50) {
+            option.locked = false;
+          } else {
+            option.locked = true;
+          }
+        } else if (isApprentiGEQ30) {
+          if (option.value === 12 || option.value === 50) {
+            option.locked = false;
+          } else {
+            option.locked = true;
+          }
+        } else if (isApprentiLOW30) {
+          if (option.value === 12) {
+            option.locked = true;
+          } else {
+            option.locked = false;
+          }
+        }
+
+        if (typeDerogation.valueDb === option.value && option.locked) {
+          valueForbidden = true;
+        }
+        options.push(option);
+      }
+
+      if (!valueForbidden) {
+        setContratTypeDerogation({ ...typeDerogation, options });
+      } else {
+        setContratTypeDerogation({ ...typeDerogation, options, value: "" });
+        // TODO init cerfaid undefined
+        await saveCerfa(dossier?._id, cerfa?.id, {
+          contrat: {
+            typeDerogation: null,
+          },
+        });
+      }
+    },
+    [cerfa?.id, contratDateDebutContrat?.value, contratTypeDerogation, dossier?._id, setContratTypeDerogation]
+  );
+
   const onSubmittedContratDateDebutContrat = useCallback(
     async (path, data, forcedTriggered) => {
       try {
@@ -1396,9 +1473,13 @@ export function useCerfaContrat() {
           let shouldSaveInDb = false;
           if (!forcedTriggered) {
             if (contratDateDebutContrat.value !== newV.contrat.dateDebutContrat.value) {
-              setContratDateFinContrat({ ...contratDateFinContrat, triggerValidation: true });
+              if (contratDateFinContrat.value !== "")
+                setContratDateFinContrat({ ...contratDateFinContrat, triggerValidation: true });
+
               setContratDateDebutContrat(newV.contrat.dateDebutContrat);
               seContratDureeContrat(newV.contrat.dureeContrat);
+              setTypeDerogation(data.apprentiDateNaissance, data.apprentiAge);
+
               shouldSaveInDb = true;
             }
           } else {
@@ -1435,10 +1516,11 @@ export function useCerfaContrat() {
     [
       contratDateDebutContrat,
       contratDureeContrat,
-      setContratDateFinContrat,
       contratDateFinContrat,
+      setContratDateFinContrat,
       setContratDateDebutContrat,
       seContratDureeContrat,
+      setTypeDerogation,
       dossier?._id,
       cerfa?.id,
       setPartContratCompletion,
@@ -1526,7 +1608,8 @@ export function useCerfaContrat() {
           let shouldSaveInDb = false;
           if (!forcedTriggered) {
             if (contratDateFinContrat.value !== newV.contrat.dateFinContrat.value) {
-              setContratDateDebutContrat({ ...contratDateDebutContrat, triggerValidation: true });
+              if (contratDateDebutContrat.value !== "")
+                setContratDateDebutContrat({ ...contratDateDebutContrat, triggerValidation: true });
 
               setContratDateFinContrat(newV.contrat.dateFinContrat);
               seContratDureeContrat(newV.contrat.dureeContrat);
@@ -2217,7 +2300,13 @@ export function useCerfaContrat() {
     setContratDateFinContrat(convertValueToDate(res.contrat.dateFinContrat));
     setContratDateRupture(convertValueToDate(res.contrat.dateRupture));
     setContratLieuSignatureContrat(res.contrat.lieuSignatureContrat);
-    setContratTypeDerogation(convertValueToOption(res.contrat.typeDerogation));
+
+    setTypeDerogation(
+      convertValueToDate(res.apprenti.dateNaissance).value,
+      res.apprenti.age.value,
+      convertValueToOption(res.contrat.typeDerogation)
+    );
+
     setContratDureeTravailHebdoHeures(res.contrat.dureeTravailHebdoHeures);
     setContratDureeTravailHebdoMinutes(res.contrat.dureeTravailHebdoMinutes);
     setContratTravailRisque(convertValueToOption(res.contrat.travailRisque));
@@ -2467,6 +2556,7 @@ export function useCerfaContrat() {
     },
     setAll,
     setRemunerations,
+    setTypeDerogation,
     onSubmit: {
       contrat: {
         modeContractuel: onSubmittedContratModeContractuel,

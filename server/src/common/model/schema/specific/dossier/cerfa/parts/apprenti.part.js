@@ -1,6 +1,8 @@
 const adresseSchema = require("./adresse.part");
 const diplomeSchema = require("./diplome.part");
 const departementEnum = require("./departements.part");
+const paysEnum = require("./pays.part");
+const { capitalize } = require("lodash");
 
 const apprentiSchema = {
   nom: {
@@ -385,6 +387,21 @@ const apprentiSchema = {
   },
   adresse: {
     ...adresseSchema,
+    pays: {
+      enum: [null, ...paysEnum.map(({ value }) => value)],
+      default: "FRANCE",
+      type: String,
+      description: "Pays",
+      label: "Pays :",
+      requiredMessage: "le pays est obligatoire",
+      required: function () {
+        return !this.draft;
+      },
+      options: paysEnum.map(({ label, value }) => ({
+        label: capitalize(label),
+        value,
+      })),
+    },
   },
   apprentiMineurNonEmancipe: {
     type: Boolean,
@@ -457,6 +474,21 @@ const apprentiSchema = {
       },
       adresse: {
         ...adresseSchema,
+        pays: {
+          enum: [null, ...paysEnum.map(({ value }) => value)],
+          default: null,
+          type: String,
+          description: "Pays",
+          label: "Pays :",
+          requiredMessage: "le pays est obligatoire",
+          required: function () {
+            return !this.draft;
+          },
+          options: paysEnum.map(({ label, value }) => ({
+            label: capitalize(label),
+            value,
+          })),
+        },
       },
     },
     default: {

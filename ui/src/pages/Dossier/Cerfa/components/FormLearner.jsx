@@ -35,7 +35,7 @@ const FormLearner = () => {
         intituleDiplomePrepare,
         telephone,
         courriel,
-        adresse: { numero, voie, complement, codePostal, commune },
+        adresse: { numero, voie, complement, codePostal, commune, pays },
         apprentiMineurNonEmancipe: apprentiApprentiMineurNonEmancipe,
         responsableLegal: {
           nom: responsableLegalNom,
@@ -47,6 +47,7 @@ const FormLearner = () => {
             complement: responsableLegalAdresseComplement,
             codePostal: responsableLegalAdresseCodePostal,
             commune: responsableLegalAdresseCommune,
+            pays: responsableLegalAdressePays,
           },
         },
         inscriptionSportifDeHautNiveau,
@@ -76,6 +77,7 @@ const FormLearner = () => {
           complement: onSubmittedApprentiAdresseComplement,
           codePostal: onSubmittedApprentiAdresseCodePostal,
           commune: onSubmittedApprentiAdresseCommune,
+          pays: onSubmittedApprentiAdressePays,
         },
         apprentiMineurNonEmancipe: onSubmittedApprentiApprentiMineurNonEmancipe,
         responsableLegal: {
@@ -88,6 +90,7 @@ const FormLearner = () => {
             complement: onSubmittedApprentiResponsableLegalAdresseComplement,
             codePostal: onSubmittedApprentiResponsableLegalAdresseCodePostal,
             commune: onSubmittedApprentiResponsableLegalAdresseCommune,
+            pays: onSubmittedApprentiResponsableLegalAdressePays,
           },
         },
         inscriptionSportifDeHautNiveau: onSubmittedApprentiInscriptionSportifDeHautNiveau,
@@ -150,6 +153,13 @@ const FormLearner = () => {
             mt="2"
             onSubmittedField={onSubmittedApprentiAdresseCommune}
             hasInfo={false}
+          />
+          <InputCerfa
+            path="apprenti.adresse.pays"
+            field={pays}
+            type="select"
+            mt="2"
+            onSubmittedField={onSubmittedApprentiAdressePays}
           />
           <InputCerfa
             path="apprenti.telephone"
@@ -245,6 +255,13 @@ const FormLearner = () => {
                     mt="2"
                     onSubmittedField={onSubmittedApprentiResponsableLegalAdresseCommune}
                     hasInfo={false}
+                  />
+                  <InputCerfa
+                    path="apprenti.responsableLegal.adresse.pays"
+                    field={responsableLegalAdressePays}
+                    type="select"
+                    mt="2"
+                    onSubmittedField={onSubmittedApprentiResponsableLegalAdressePays}
                   />
                 </Collapse>
               </Collapse>

@@ -58,6 +58,7 @@ describe("Cerfa", () => {
           label: "20 Boulevard de la liberté",
           codePostal: "75000",
           commune: "PARIS",
+          pays: "FRANCE",
         },
         apprentiMineurNonEmancipe: true,
         responsableLegal: {
@@ -70,6 +71,7 @@ describe("Cerfa", () => {
             label: "20 Boulevard de la liberté",
             codePostal: "75000",
             commune: "PARIS",
+            pays: "FRANCE",
           },
         },
         inscriptionSportifDeHautNiveau: false,

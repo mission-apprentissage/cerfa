@@ -92,23 +92,36 @@ export const fieldCompletionPercentage = (fields, nbFields) => {
 
 //
 
-export const isAgeInValidAtDate = ({ dateNaissance, age, dateString, limitAge = 15, label = "" }) => {
-  // console.log(age === limitAge - 1 && dateString !== "", limitAge - 1, dateString, age);
+export const isAgeInValidLowerAtDate = ({ dateNaissance, age, dateString, limitAge = 15, label = "" }) => {
   if (age === limitAge - 1 && dateString !== "") {
     const dateObj = DateTime.fromISO(dateString).setLocale("fr-FR");
     const anniversaireA1 = dateNaissance.plus({ years: age + 1 });
-    // console.log(
-    //   dateObj < anniversaireA1,
-    //   dateObj.toFormat("yyyy-MM-dd"),
-    //   dateNaissance.toFormat("yyyy-MM-dd"),
-    //   anniversaireA1.toFormat("yyyy-MM-dd")
-    // );
     if (dateObj < anniversaireA1) {
       return {
         successed: false,
         data: null,
         message: label,
       };
+    }
+  }
+  return false;
+};
+export const isAgeGreaterOrEqualAtDate = ({ dateNaissance, age, limitDateString, limitAge = 15 }) => {
+  if (age === limitAge - 1 && limitDateString !== "") {
+    const limitDate = DateTime.fromISO(limitDateString).setLocale("fr-FR");
+    const anniversaireA1 = dateNaissance.plus({ years: age + 1 });
+    if (limitDate >= anniversaireA1) {
+      return true;
+    }
+  }
+  return false;
+};
+export const isAgeLowerAtDate = ({ dateNaissance, age, limitDateString, limitAge = 15 }) => {
+  if (age === limitAge - 1 && limitDateString !== "") {
+    const limitDate = DateTime.fromISO(limitDateString).setLocale("fr-FR");
+    const anniversaireA1 = dateNaissance.plus({ years: age + 1 });
+    if (limitDate < anniversaireA1) {
+      return true;
     }
   }
   return false;

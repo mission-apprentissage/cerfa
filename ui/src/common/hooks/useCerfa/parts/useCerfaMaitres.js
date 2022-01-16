@@ -10,7 +10,7 @@ import {
   convertValueToDate,
   convertDateToValue,
   convertValueToOption,
-  isAgeInValidAtDate,
+  isAgeInValidLowerAtDate,
   caclAgeFromStringDate,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
@@ -56,7 +56,7 @@ export const CerfaMaitresController = async (dossier) => {
             };
           }
 
-          const isAgeMaitreInvalidAtStart = isAgeInValidAtDate({
+          const isAgeMaitreInvalidAtStart = isAgeInValidLowerAtDate({
             dateNaissance,
             age,
             dateString: data.dateDebutContrat,
@@ -90,7 +90,7 @@ export const CerfaMaitresController = async (dossier) => {
             };
           }
 
-          const isAgeMaitreInvalidAtStart = isAgeInValidAtDate({
+          const isAgeMaitreInvalidAtStart = isAgeInValidLowerAtDate({
             dateNaissance,
             age,
             dateString: data.dateDebutContrat,

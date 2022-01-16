@@ -46,6 +46,8 @@ const contratSchema = {
     required: function () {
       return !this.draft;
     },
+    label: "Mode contratctuel",
+    requiredMessage: "le mode de contrat est obligatoire",
   },
   typeContratApp: {
     ...typeContratSchema,
@@ -112,6 +114,7 @@ const contratSchema = {
     type: Date,
     description: "Date d'effet d'avenant",
     label: "Date d'effet d'avenant :",
+    requiredMessage: "S'agissant d'un avenant sa date d'effet est obligatoire ",
     nullable: true,
     default: null,
     example: "2021-03-01T00:00:00+0000",
@@ -136,6 +139,7 @@ const contratSchema = {
     type: String,
     description: "Lieu de signature du contrat",
     label: "Lieu de signature du contrat:",
+    requiredMessage: "Le lieu de signature est obligatoire",
     example: "PARIS",
     default: null,
     required: function () {
