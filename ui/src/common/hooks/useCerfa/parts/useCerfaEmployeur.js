@@ -247,11 +247,11 @@ export function useCerfaEmployeur() {
               nombreDeSalaries: normalizeInputNumberForDb(newV.employeur.nombreDeSalaries.value),
               privePublic: newV.employeur.privePublic.value,
               adresse: {
-                numero: newV.employeur.adresse.numero.value,
-                voie: newV.employeur.adresse.voie.value,
-                complement: newV.employeur.adresse.complement.value,
-                codePostal: newV.employeur.adresse.codePostal.value,
-                commune: newV.employeur.adresse.commune.value,
+                numero: normalizeInputNumberForDb(newV.employeur.adresse.numero.value),
+                voie: newV.employeur.adresse.voie.value.trim(),
+                complement: newV.employeur.adresse.complement.value.trim(),
+                codePostal: newV.employeur.adresse.codePostal.value.trim(),
+                commune: newV.employeur.adresse.commune.value.trim(),
               },
             },
             isLockedField: {

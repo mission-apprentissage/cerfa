@@ -1378,7 +1378,7 @@ export function useCerfaContrat() {
   );
 
   const onSubmittedContratDateDebutContrat = useCallback(
-    async (path, data) => {
+    async (path, data, forcedTriggered) => {
       try {
         if (path === "contrat.dateDebutContrat") {
           const newV = {
@@ -1393,13 +1393,20 @@ export function useCerfaContrat() {
               },
             },
           };
-          if (contratDateDebutContrat.value !== newV.contrat.dateDebutContrat.value) {
-            // setContratDateFinContrat({ ...contratDateFinContrat, value: "" });
+          let shouldSaveInDb = false;
+          if (!forcedTriggered) {
+            if (contratDateDebutContrat.value !== newV.contrat.dateDebutContrat.value) {
+              setContratDateFinContrat({ ...contratDateFinContrat, triggerValidation: true });
+              setContratDateDebutContrat(newV.contrat.dateDebutContrat);
+              seContratDureeContrat(newV.contrat.dureeContrat);
+              shouldSaveInDb = true;
+            }
+          } else {
+            setContratDateDebutContrat({ ...contratDateDebutContrat, triggerValidation: false });
+            shouldSaveInDb = true;
+          }
 
-            setContratDateDebutContrat(newV.contrat.dateDebutContrat);
-
-            seContratDureeContrat(newV.contrat.dureeContrat);
-
+          if (shouldSaveInDb) {
             let dataToSave = {
               contrat: {
                 dateDebutContrat: convertDateToValue(newV.contrat.dateDebutContrat),
@@ -1419,11 +1426,6 @@ export function useCerfaContrat() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartContratCompletion(cerfaContratCompletion(res));
-
-            // if (res.contrat.dateFinContrat === "") {
-            //   // TODO if there is a value in DB AND live change has been made, the live value will be replace by db value
-            //   setContratDateFinContrat({ ...contratDateFinContrat, triggerValidation: true });
-            // }
           }
         }
       } catch (e) {
@@ -1433,6 +1435,8 @@ export function useCerfaContrat() {
     [
       contratDateDebutContrat,
       contratDureeContrat,
+      setContratDateFinContrat,
+      contratDateFinContrat,
       setContratDateDebutContrat,
       seContratDureeContrat,
       dossier?._id,
@@ -1504,7 +1508,7 @@ export function useCerfaContrat() {
   );
 
   const onSubmittedContratDateFinContrat = useCallback(
-    async (path, data) => {
+    async (path, data, forcedTriggered) => {
       try {
         if (path === "contrat.dateFinContrat") {
           const newV = {
@@ -1519,18 +1523,28 @@ export function useCerfaContrat() {
               },
             },
           };
-          if (contratDateFinContrat.value !== newV.contrat.dateFinContrat.value) {
-            // setContratDateDebutContrat({ ...contratDateDebutContrat, value: "" });
+          let shouldSaveInDb = false;
+          if (!forcedTriggered) {
+            if (contratDateFinContrat.value !== newV.contrat.dateFinContrat.value) {
+              setContratDateDebutContrat({ ...contratDateDebutContrat, triggerValidation: true });
 
-            setContratDateFinContrat(newV.contrat.dateFinContrat);
-            seContratDureeContrat(newV.contrat.dureeContrat);
+              setContratDateFinContrat(newV.contrat.dateFinContrat);
+              seContratDureeContrat(newV.contrat.dureeContrat);
 
+              shouldSaveInDb = true;
+            }
+          } else {
+            setContratDateFinContrat({ ...contratDateFinContrat, triggerValidation: false });
+            shouldSaveInDb = true;
+          }
+          if (shouldSaveInDb) {
             let dataToSave = {
               contrat: {
                 dateFinContrat: convertDateToValue(newV.contrat.dateFinContrat),
                 dureeContrat: data.dureeContrat,
               },
             };
+
             if (data.remunerationsAnnuelles && data.remunerationsAnnuellesDbValue && data.salaireEmbauche) {
               setRemunerations(data);
               dataToSave = {
@@ -1544,11 +1558,6 @@ export function useCerfaContrat() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartContratCompletion(cerfaContratCompletion(res));
-
-            // if (res.contrat.dateDebutContrat === "") {
-            //   // TODO if there is a value in DB AND live change has been made, the live value will be replace by db value
-            //   setContratDateDebutContrat({ ...contratDateDebutContrat, triggerValidation: true });
-            // }
           }
         }
       } catch (e) {
@@ -1558,6 +1567,8 @@ export function useCerfaContrat() {
     [
       contratDateFinContrat,
       contratDureeContrat,
+      setContratDateDebutContrat,
+      contratDateDebutContrat,
       setContratDateFinContrat,
       seContratDureeContrat,
       dossier?._id,

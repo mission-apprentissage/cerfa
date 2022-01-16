@@ -261,7 +261,7 @@ module.exports = (components) => {
           dateDebutFormation: Joi.date(),
           dateFinFormation: Joi.date(),
           dureeFormationCalc: Joi.number(),
-          dureeFormation: Joi.number(),
+          dureeFormation: Joi.number().allow(null),
           dateObtentionDiplome: Joi.date(),
         }),
         contrat: Joi.object({

@@ -185,6 +185,7 @@ const DateInput = ({ onChange, value, type, ...props }) => {
       dateFormat="ddMMyyyy"
       locale="fr"
       selected={dateValue}
+      closeOnScroll={true}
       customInput={<CustomDateInput {...props} />}
       onChange={(date) => {
         onChange({ persist: () => {}, target: { value: date } });
@@ -210,6 +211,7 @@ export default React.memo(
     forceUpperCase = false,
     label,
     isRequired,
+    min = 0,
     ...props
   }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -223,6 +225,7 @@ export default React.memo(
     const prevFieldValueRef = useRef("");
     const prevFieldLockRef = useRef(false);
     const initRef = useRef(0);
+    const triggerRef = useRef(0);
 
     const borderBottomColor = useMemo(
       () => (validated ? "green.500" : isErrored ? "error" : "grey.600"),
@@ -244,14 +247,22 @@ export default React.memo(
       },
     });
 
-    let handleChange = useCallback(
-      async (e) => {
-        e.persist();
-        let val = e.target.value;
+    let convertValue = useCallback(
+      (currentValue) => {
+        let val = currentValue;
         if (type === "numberPrefixed") val = parse(val);
         else if (forceUpperCase && type === "text") val = val.toUpperCase().trimStart();
         else if (type === "text") val = val.trimStart();
         else if (type === "date") val = DateTime.fromJSDate(val).setLocale("fr-FR").toFormat("yyyy-MM-dd");
+        return val;
+      },
+      [forceUpperCase, parse, type]
+    );
+
+    let handleChange = useCallback(
+      async (e) => {
+        e.persist();
+        let val = convertValue(e.target.value);
 
         setValidated(false);
         setIsErrored(false);
@@ -260,7 +271,7 @@ export default React.memo(
           [name]: val,
         });
 
-        console.log("handleChange", val, isValid);
+        // console.log("handleChange", val, isValid);
 
         if (!isValid) {
           setFromInternal(true);
@@ -294,11 +305,10 @@ export default React.memo(
         }
       },
       [
-        type,
-        parse,
-        forceUpperCase,
+        convertValue,
         field,
         name,
+        type,
         isRequiredInternal,
         countryCode,
         setFieldValue,
@@ -376,22 +386,30 @@ export default React.memo(
                 setValidated(false);
               }
               setFromInternal(false);
-            } else if (field?.triggerValidation) {
+            } else if (field?.triggerValidation && triggerRef.current === 0) {
+              triggerRef.current = 1;
+              let nextVal = values[name];
               setIsLoading(true);
-              const { successed, message } = await field?.doAsyncActions(fieldValue, onAsyncData);
+              // await new Promise((resolve) => setTimeout(resolve, 300));
+              const { successed, data, message } = await field?.doAsyncActions(nextVal, onAsyncData);
               setIsLoading(false);
+
+              setErrors({ [name]: message });
+              if (data) {
+                await onSubmittedField(path, data, true);
+              }
 
               if (fieldValue !== "") {
                 if (successed) {
                   setIsErrored(false);
                   setValidated(true);
-                  setErrors({ [name]: message });
                 } else {
                   setValidated(false);
                   setIsErrored(true);
-                  setErrors({ [name]: message });
                 }
               }
+            } else if (!field?.triggerValidation && triggerRef.current === 1) {
+              triggerRef.current = 0;
             }
           }
         }
@@ -586,7 +604,7 @@ export default React.memo(
                 onChange={(val) => handleChange({ persist: () => {}, target: { value: val } })}
                 value={values[name]}
                 precision={precision}
-                min={0}
+                min={min}
                 required={isRequiredInternal}
                 pattern={field?.pattern}
                 placeholder={field?.description}

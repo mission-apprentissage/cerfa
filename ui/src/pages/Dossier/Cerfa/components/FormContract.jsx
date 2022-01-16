@@ -216,6 +216,7 @@ const FormContract = () => {
               type="number"
               onSubmittedField={onSubmittedContratDureeTravailHebdoHeures}
               precision={0}
+              min={1}
             />
             <InputCerfa
               path="contrat.dureeTravailHebdoMinutes"

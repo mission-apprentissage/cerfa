@@ -200,6 +200,7 @@ const FormFormation = React.memo((props) => {
               type="number"
               mt="2"
               precision={0}
+              min={1}
               onSubmittedField={onSubmittedFormationDureeFormation}
             />
           </Flex>

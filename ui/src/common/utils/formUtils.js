@@ -39,6 +39,7 @@ export const convertValueToDate = (field) => {
   return {
     ...field,
     value: field.value ? DateTime.fromISO(field.value).setLocale("fr-FR").toFormat("yyyy-MM-dd") : field.value,
+    valueDb: field.value,
   };
 };
 
