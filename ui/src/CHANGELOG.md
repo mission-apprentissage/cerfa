@@ -1,3 +1,21 @@
+# [1.13.0-beta.16](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.15...v1.13.0-beta.16) (2022-01-17)
+
+
+### Bug Fixes
+
+* libellé idcc ([a61b80a](https://github.com/mission-apprentissage/cerfa/commit/a61b80a71b8528b0eec0d255f0de9dbfee0b9b7d))
+
+
+### Features
+
+* activation metabase ([257e41e](https://github.com/mission-apprentissage/cerfa/commit/257e41e650515fb86fca259f0e3f54e553dbc094))
+* ajout appel Naf ([951967f](https://github.com/mission-apprentissage/cerfa/commit/951967feb0fea7bc3dedc385453057834d8d6155))
+* ajout contrôle sur le nombre de salariés ([afdce25](https://github.com/mission-apprentissage/cerfa/commit/afdce252a10cd2f705c905b4ce8cc464a76c9431))
+* ajout information département 99 pour étranger ([44d4449](https://github.com/mission-apprentissage/cerfa/commit/44d4449b82095a906b1c6e28b3f01912833d0a3f))
+* Calcule et stocke les hash des fichier uploadés ([#84](https://github.com/mission-apprentissage/cerfa/issues/84)) ([c3a94e1](https://github.com/mission-apprentissage/cerfa/commit/c3a94e10196a7e5d2a1364d5976a1742bcf120d7))
+* cgu + pages légales + footer +  suppression règle debutcontrat ([d86dee8](https://github.com/mission-apprentissage/cerfa/commit/d86dee8856e1a17476a60813ae2216fd9eb78366))
+* code postal ([60c2732](https://github.com/mission-apprentissage/cerfa/commit/60c2732d1bc4d7129089b5fd5b6a5e7e6f8e5426))
+
 # [1.13.0-beta.15](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.14...v1.13.0-beta.15) (2022-01-17)
 
 
