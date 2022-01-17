@@ -80,6 +80,38 @@ const Badge = {
       pl: "15px",
       pr: "15px",
     },
+    waitingSignature: {
+      ...commonStatusBadgeStyle,
+      bg: "#E3E3FD",
+      color: "bluefrance",
+      pl: "15px",
+      fontWeight: "500",
+      pr: "15px",
+    },
+    sign: {
+      ...commonStatusBadgeStyle,
+      bg: "greensoft.200",
+      color: "success",
+      pl: "15px",
+      fontWeight: "500",
+      pr: "15px",
+    },
+    draft: {
+      ...commonStatusBadgeStyle,
+      bg: "#FCC0B0",
+      color: "#161616",
+      pl: "15px",
+      pr: "15px",
+      fontWeight: "500",
+    },
+    save: {
+      ...commonStatusBadgeStyle,
+      bg: "#EEEEEE",
+      color: "#161616",
+      pl: "15px",
+      pr: "15px",
+      fontWeight: "500",
+    },
   },
 };
 

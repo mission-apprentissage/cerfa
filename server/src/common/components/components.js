@@ -9,6 +9,7 @@ const createPermissions = require("./permissions");
 const createRoles = require("./roles");
 const createClamav = require("./clamav");
 const createCrypto = require("./crypto");
+const createSessions = require("./session");
 const config = require("../../config");
 
 module.exports = async (options = {}) => {
@@ -25,9 +26,11 @@ module.exports = async (options = {}) => {
   const connectionsDossiers = options.connectionsDossier || (await createConnectionsDossiers());
   const clamav = options.clamav || (await createClamav(config.clamav.uri));
   const crypto = options.crypto || createCrypto(config.ovh.storage.encryptionKey);
+  const sessions = options.session || (await createSessions());
 
   return {
     users,
+    sessions,
     db,
     mailer: options.mailer || createMailer(),
 

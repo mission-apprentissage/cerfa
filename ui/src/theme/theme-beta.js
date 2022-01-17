@@ -11,6 +11,11 @@ const colors = {
   galt: "#f9f8f6",
   mgalt: "#666666",
   dgalt: "#E5E5E5",
+  disablegrey: "#929292",
+  labelgrey: "#161616",
+  flatwarm: "#B34000",
+  plaininfo: "#0063CB",
+  greensoftc: "#22967E",
   grey: {
     800: "#1e1e1e",
     750: "#2a2a2a",

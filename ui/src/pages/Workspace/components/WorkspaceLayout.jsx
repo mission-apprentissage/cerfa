@@ -122,11 +122,11 @@ export default ({ header, content }) => {
             {titles.utilisateurs}
           </NavItem>
         )}
-        {hasContextAccessTo(workspace, "wks/page_espace/page_parametres/gestion_notifications") && (
+        {/* {hasContextAccessTo(workspace, "wks/page_espace/page_parametres/gestion_notifications") && (
           <NavItem pl="8" to={paths.parametresNotifications} isSubItem={true}>
             {titles.notifications}
           </NavItem>
-        )}
+        )} */}
       </Collapse>
     </Flex>
   ));

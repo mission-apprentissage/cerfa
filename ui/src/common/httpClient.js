@@ -12,15 +12,16 @@ class AuthError extends Error {
 }
 
 class HTTPError extends Error {
-  constructor(message, json, statusCode) {
+  constructor(message, json, statusCode, messages = null) {
     super(message);
     this.json = json;
+    this.messages = messages;
     this.statusCode = statusCode;
     this.prettyMessage = "Une erreur technique est survenue";
   }
 }
 
-const handleResponse = (path, response) => {
+const handleResponse = async (path, response) => {
   let statusCode = response.status;
   if (statusCode >= 400 && statusCode < 600) {
     emitter.emit("http:error", response);
@@ -28,7 +29,13 @@ const handleResponse = (path, response) => {
     if (statusCode === 401 || statusCode === 403) {
       throw new AuthError(response, statusCode);
     } else {
-      throw new HTTPError(`Server returned ${statusCode} when requesting resource ${path}`, response, statusCode);
+      const messages = await response.json();
+      throw new HTTPError(
+        `Server returned ${statusCode} when requesting resource ${path}`,
+        response,
+        statusCode,
+        messages
+      );
     }
   }
   return response.json();

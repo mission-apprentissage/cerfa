@@ -18,7 +18,7 @@ const fieldsPositions = {
       voie: {
         x: 155,
         y: 649,
-        maxLength: 25,
+        maxLength: 23,
         title: (value) => {
           const voieWordToReplace = [
             ["Boulevard", "blvd"],
@@ -64,7 +64,7 @@ const fieldsPositions = {
     courriel: {
       x: 27,
       y: 544,
-      maxLength: 47,
+      maxLength: 50,
       title: async (value, options) => {
         let [user, domain] = value.split("@");
         const helveticaFont = await options.pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -98,7 +98,7 @@ const fieldsPositions = {
       y: 630,
       maxLength: 6,
       title: (value) => {
-        return value.match(/\d{1}/g).join(" ");
+        return value.match(/\d{1}/g)?.join(" ");
       },
     },
     nombreDeSalaries: {
@@ -159,7 +159,7 @@ const fieldsPositions = {
       y: 445,
       maxLength: 15,
       title: (value) => {
-        return value.match(/\d{1}/g).join(" ");
+        return value?.match(/\d{1}/g).join(" ") || "";
       },
     },
     adresse: {
@@ -171,7 +171,7 @@ const fieldsPositions = {
       voie: {
         x: 110,
         y: 395,
-        maxLength: 25,
+        maxLength: 37,
         title: (value) => {
           const voieWordToReplace = [
             ["Boulevard", "blvd"],
@@ -203,7 +203,7 @@ const fieldsPositions = {
       commune: {
         x: 88,
         y: 341,
-        maxLength: 30,
+        maxLength: 39,
       },
     },
     telephone: {
@@ -217,7 +217,7 @@ const fieldsPositions = {
     courriel: {
       x: 27,
       y: 295,
-      maxLength: 100,
+      maxLength: 50,
       title: async (value, options) => {
         let [user, domain] = value.split("@");
         const helveticaFont = await options.pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -236,8 +236,8 @@ const fieldsPositions = {
         title: async (value, options) => {
           const helveticaFont = await options.pdfDoc.embedFont(StandardFonts.Helvetica);
           return [
-            { text: value },
-            { text: options.prenom, options: { x: 35 + helveticaFont.widthOfTextAtSize(value, 11) } },
+            { text: value || "" },
+            { text: options.prenom, options: { x: 35 + helveticaFont.widthOfTextAtSize(value || "", 11) } },
           ];
         },
       },
@@ -259,11 +259,11 @@ const fieldsPositions = {
             ];
             for (let index = 0; index < voieWordToReplace.length; index++) {
               const [wordToReplace, replaceWith] = voieWordToReplace[index];
-              if (value.includes(wordToReplace)) {
+              if (value?.includes(wordToReplace)) {
                 return value.replace(wordToReplace, replaceWith);
               }
             }
-            return value;
+            return value || "";
           },
         },
         complement: {
@@ -276,7 +276,7 @@ const fieldsPositions = {
           y: 179,
           maxLength: 30,
           title: (value) => {
-            return value.match(/\d{1}/g).join(" ");
+            return value?.match(/\d{1}/g).join(" ") || "";
           },
         },
         commune: {
@@ -413,7 +413,7 @@ const fieldsPositions = {
       y: 775,
       maxLength: 25,
       title: (value) => {
-        return value.match(/\d{1}/g).join(" ");
+        return value?.match(/\d{1}/g).join(" ");
       },
     },
     dateConclusion: {
@@ -459,6 +459,11 @@ const fieldsPositions = {
       y: 559,
       maxLength: 10,
     },
+    caisseRetraiteComplementaire: {
+      x: 310,
+      y: 559,
+      maxLength: 40,
+    },
     avantageNourriture: {
       x: 252,
       y: 538,
@@ -491,7 +496,7 @@ const fieldsPositions = {
         taux: {
           x: 236,
           y: 632,
-          maxLength: 10,
+          maxLength: 3,
           defaultSize: 9,
         },
         typeSalaire: {
@@ -714,7 +719,7 @@ const fieldsPositions = {
       y: 463,
       maxLength: 8,
       title: (value) => {
-        return value.match(/\d{1}/g).join(" ");
+        return value.match(/\d{1}/g).join(" ") || "";
       },
     },
     codeDiplome: {
@@ -722,7 +727,7 @@ const fieldsPositions = {
       y: 463,
       maxLength: 8,
       title: (value) => {
-        return value.match(/\d{1}/g).join(" ");
+        return value.match(/\d{1}/g).join(" ") || "";
       },
     },
     siret: {
@@ -730,7 +735,7 @@ const fieldsPositions = {
       y: 448,
       maxLength: 14,
       title: (value) => {
-        return value.match(/\d{1}/g).join(" ");
+        return value.match(/\d{1}/g).join(" ") || "";
       },
     },
     rncp: {
@@ -738,7 +743,7 @@ const fieldsPositions = {
       y: 449,
       maxLength: 9,
       title: (value) => {
-        return value.match(/\d{1}/g).join(" ");
+        return value.match(/\d{1}/g).join(" ") || "";
       },
     },
     adresse: {
@@ -763,7 +768,7 @@ const fieldsPositions = {
               return value.replace(wordToReplace, replaceWith);
             }
           }
-          return value;
+          return value || "";
         },
       },
       complement: {
@@ -776,7 +781,7 @@ const fieldsPositions = {
         y: 380,
         maxLength: 5,
         title: (value) => {
-          return value.match(/\d{1}/g).join(" ");
+          return value.match(/\d{1}/g).join(" ") || "";
         },
       },
       commune: {
@@ -802,10 +807,11 @@ const fieldsPositions = {
     },
   },
 };
-const capitalizeFirstLetter = (value) => value.charAt(0).toUpperCase() + value.slice(1);
+const capitalizeFirstLetter = (value) => value?.charAt(0).toUpperCase() + value?.slice(1);
 
 const buildFieldDraw = async (value, fieldDefinition, options = {}) => {
-  const isDate = moment.isDate(value) ? moment(value).utc().format("MM/DD/YYYY") : `${value}`;
+  moment.locale("fr");
+  const isDate = !value ? "" : moment.isDate(value) ? moment(value).format("L") : `${value}`;
   const title = typeof value === "boolean" ? (value ? "X" : " ") : isDate;
   const result = {
     title:
@@ -950,6 +956,10 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
       await buildFieldDraw(cerfa.contrat.travailRisque, fieldsPositions.contrat.travailRisque),
       ...(await buildRemunerations(cerfa.contrat.remunerationsAnnuelles)),
       await buildFieldDraw(cerfa.contrat.salaireEmbauche, fieldsPositions.contrat.salaireEmbauche),
+      await buildFieldDraw(
+        cerfa.contrat.caisseRetraiteComplementaire,
+        fieldsPositions.contrat.caisseRetraiteComplementaire
+      ),
       await buildFieldDraw(cerfa.contrat.avantageNourriture, fieldsPositions.contrat.avantageNourriture),
       await buildFieldDraw(cerfa.contrat.avantageLogement, fieldsPositions.contrat.avantageLogement),
       await buildFieldDraw(cerfa.contrat.autreAvantageEnNature, fieldsPositions.contrat.autreAvantageEnNature),
@@ -981,8 +991,8 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
     const page = pages[index];
     for (let jndex = 0; jndex < pdfPageContent.length; jndex++) {
       const { title, x, y, defaultColor, defaultSize } = pdfPageContent[jndex];
-      let pablo = Array.isArray(title) ? title : [title];
-      pablo.forEach((t) => {
+      let arrTitles = Array.isArray(title) ? title : [title];
+      arrTitles.forEach((t) => {
         let text = isObject(t) ? t.text : t;
         const titles = capitalizeFirstLetter(text);
         for (let kndex = 0; kndex < titles.length; kndex++) {

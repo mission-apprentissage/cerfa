@@ -1,5 +1,10 @@
 import { atom } from "recoil";
 
+export const cerfaPartMaitresCompletionAtom = atom({
+  key: "cerfa/part/maitres/completion",
+  default: 0,
+});
+
 export const cerfaMaitre1NomAtom = atom({
   key: "cerfa/maitre1/nom",
   default: null,
@@ -23,5 +28,10 @@ export const cerfaMaitre2PrenomAtom = atom({
 });
 export const cerfaMaitre2DateNaissanceAtom = atom({
   key: "cerfa/maitre2/dateNaissance",
+  default: null,
+});
+
+export const cerfaEmployeurAttestationEligibiliteAtom = atom({
+  key: "cerfa/employeur/attestationEligibilite",
   default: null,
 });

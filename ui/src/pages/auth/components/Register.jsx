@@ -166,12 +166,13 @@ const Register = () => {
 
           {step === 1 && (
             <>
+              <Text>Vous êtes {values.compte === "entreprise" ? "une entreprise" : "un CFA"}</Text>
               <FormControl py={2} isRequired isInvalid={errors.siret && touched.siret}>
                 <FormLabel>Votre Siret</FormLabel>
                 <Input
                   id="siret"
                   name="siret"
-                  placeholder="Votre siret..."
+                  placeholder="Exemple 98765432400019"
                   onChange={siretLookUp}
                   value={values.siret}
                   isDisabled={isFetching}
@@ -192,14 +193,29 @@ const Register = () => {
                   <>
                     {entrepriseData.data && (
                       <>
-                        <Box>{entrepriseData.data.enseigne || entrepriseData.data.entreprise_raison_sociale}</Box>
-                        <Box>
-                          {entrepriseData.data.numero_voie} {entrepriseData.data.nom_voie}
-                        </Box>
-                        {entrepriseData.data.complement_adresse && <Box>{entrepriseData.data.complement_adresse}</Box>}
-                        <Box>
-                          {entrepriseData.data.code_postal} {entrepriseData.data.localite}
-                        </Box>
+                        {!entrepriseData.data.secretSiret && (
+                          <>
+                            <Box>{entrepriseData.data.enseigne || entrepriseData.data.entreprise_raison_sociale}</Box>
+                            <Box>
+                              {entrepriseData.data.numero_voie} {entrepriseData.data.nom_voie}
+                            </Box>
+                            {entrepriseData.data.complement_adresse && (
+                              <Box>{entrepriseData.data.complement_adresse}</Box>
+                            )}
+                            <Box>
+                              {entrepriseData.data.code_postal} {entrepriseData.data.localite}
+                            </Box>
+                          </>
+                        )}
+                        {entrepriseData.data.secretSiret && (
+                          <>
+                            <Box>Votre siret est valide.</Box>
+                            <Box>
+                              En revanche, en raison de sa nature, nous ne pourrons pas récupérer les informations
+                              reliées. (telles que l'adresse et autres données)
+                            </Box>
+                          </>
+                        )}
                       </>
                     )}
                     {entrepriseData.message && (

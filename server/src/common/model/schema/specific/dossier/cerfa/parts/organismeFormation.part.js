@@ -15,10 +15,24 @@ const organismeFormationSchema = {
   formationInterne: {
     type: Boolean,
     description: "Est un service de formation en interne (CFA d'entreprise)",
-    default: null,
+    default: false,
     required: function () {
       return !this.draft;
     },
+    label: "Le centre de formation est-il un CFA d'entreprise ?",
+    requiredMessage: "Merci de préciser s'il sagit d'un CFA d'entreprise",
+    example: "Non",
+    options: [
+      {
+        label: "Oui",
+        value: true,
+        locked: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
   },
   // raison_sociale: {
   //   type: String,

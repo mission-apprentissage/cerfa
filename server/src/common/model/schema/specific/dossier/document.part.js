@@ -56,6 +56,12 @@ const documentSchema = {
     required: true,
     description: "Qui a réalisé la derniere mise à jour",
   },
+  hash: {
+    type: String,
+    default: null,
+    required: false,
+    description: "Checksum fichier",
+  },
 };
 
 module.exports = documentSchema;

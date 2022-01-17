@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Box, Heading, Center, Button } from "@chakra-ui/react";
+import { Box, Heading, Center, Button, Spinner, Text } from "@chakra-ui/react";
+import { useRecoilValueLoadable } from "recoil";
 
 import useAuth from "../../../common/hooks/useAuth";
 import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
 import { _post } from "../../../common/httpClient";
 
 import { PdfViewer } from "../../../common/components/PdfViewer";
+import Tooltip from "../../../common/components/Tooltip";
 import { ExternalLinkLine } from "../../../theme/components/icons";
 
-export default ({ dossierId }) => {
+import { cerfaPartFormationCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
+import { cerfaPartEmployeurCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+import { cerfaPartMaitresCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
+import { cerfaPartApprentiCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
+import { cerfaPartContratCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+
+const ContratPdf = ({ dossierId }) => {
   let [auth] = useAuth();
   const [pdfBase64, setPdfBase64] = useState(null);
   const [pdfIsLoading, setPdfIsLoading] = useState(true);
@@ -17,7 +25,7 @@ export default ({ dossierId }) => {
   useEffect(() => {
     const run = async () => {
       try {
-        if (dossierId && cerfa.id) {
+        if (dossierId && cerfa?.id) {
           const { pdfBase64 } = await _post(`/api/v1/cerfa/pdf/${cerfa.id}`, {
             workspaceId: auth.workspaceId,
             dossierId,
@@ -40,25 +48,24 @@ export default ({ dossierId }) => {
     console.log(reponse);
   };
 
-  if (isLoading || !pdfBase64) {
-    return null;
-  }
-
   return (
     <Box mt={8}>
       <Heading as="h3" fontSize="1.4rem">
         Votre contrat généré:
       </Heading>
-      <Center>
-        <PdfViewer
-          url={`/api/v1/cerfa/pdf/${cerfa.id}/?workspaceId=${auth.workspaceId}&dossierId=${dossierId}`}
-          pdfBase64={pdfBase64}
-          documentLoaded={() => {
-            setPdfIsLoading(false);
-          }}
-        />
+      <Center mt={5}>
+        {(isLoading || !pdfBase64) && <Spinner />}
+        {!isLoading && pdfBase64 && (
+          <PdfViewer
+            url={`/api/v1/cerfa/pdf/${cerfa.id}/?workspaceId=${auth.workspaceId}&dossierId=${dossierId}`}
+            pdfBase64={pdfBase64}
+            documentLoaded={() => {
+              setPdfIsLoading(false);
+            }}
+          />
+        )}
       </Center>
-      {!pdfIsLoading && (
+      {!pdfIsLoading && auth.beta && auth.beta !== "non" && (
         <Box mt={8} mb={12}>
           <Center>
             <Button
@@ -79,4 +86,38 @@ export default ({ dossierId }) => {
       )}
     </Box>
   );
+};
+
+export default ({ dossierId }) => {
+  const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
+  const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
+  const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
+  const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
+  const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
+
+  const cerfaComplete =
+    employeurCompletionAtom?.contents === 100 &&
+    apprentiCompletionAtom?.contents === 100 &&
+    maitresCompletionAtom?.contents === 100 &&
+    contratCompletionAtom?.contents === 100 &&
+    formationCompletion?.contents === 100;
+
+  if (!cerfaComplete) {
+    return (
+      <Box mt={8}>
+        <Heading as="h3" fontSize="1.4rem">
+          Votre contrat généré:
+        </Heading>
+        <Center mt={5}>
+          <Tooltip variant="alert">
+            <Text>
+              Le Cerfa doit être complété à 100% avant de commencer la procédure de télécharger le dossier finalisé.
+            </Text>
+          </Tooltip>
+        </Center>
+      </Box>
+    );
+  }
+
+  return <ContratPdf dossierId={dossierId} />;
 };

@@ -1,5 +1,10 @@
 import { atom } from "recoil";
 
+export const cerfaPartEmployeurCompletionAtom = atom({
+  key: "cerfa/part/employeur/completion",
+  default: 0,
+});
+
 export const cerfaEmployeurSiretAtom = atom({
   key: "cerfa/employeur/siret",
   default: null,
@@ -82,11 +87,11 @@ export const cerfaEmployeurRegimeSpecifiqueAtom = atom({
   key: "cerfa/employeur/regimeSpecifique",
   default: null,
 });
-export const cerfaEmployeurAttestationEligibiliteAtom = atom({
-  key: "cerfa/employeur/attestationEligibilite",
-  default: null,
-});
 export const cerfaEmployeurAttestationPiecesAtom = atom({
   key: "cerfa/employeur/attestationPieces",
+  default: null,
+});
+export const cerfaEmployeurPrivePublicAtom = atom({
+  key: "cerfa/employeur/privePublic",
   default: null,
 });

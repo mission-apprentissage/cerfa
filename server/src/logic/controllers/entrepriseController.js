@@ -2,6 +2,8 @@ const apiEntreprise = require("../../common/apis/ApiEntreprise");
 const apiCfaDock = require("../../common/apis/ApiCfaDock");
 const geoController = require("./geo/geoController");
 
+const { CategoriesJuridique } = require("../../common/model/index");
+
 class EntrepriseApiData {
   constructor() {}
 
@@ -21,6 +23,29 @@ class EntrepriseApiData {
     try {
       etablissementApiInfo = await apiEntreprise.getEtablissement(siret);
     } catch (e) {
+      console.log({ e });
+      if (e.reason === 451) {
+        return {
+          result: {
+            siret: siret,
+            siren: siret.substring(0, 9),
+            enseigne: "",
+            entreprise_raison_sociale: "",
+            numero_voie: "",
+            type_voie: "",
+            nom_voie: "",
+            code_postal: "",
+            localite: "",
+            commune_implantation_nom: "",
+            naf_code: "",
+            conventionCollective: { idcc: "", titre: "" },
+            secretSiret: true,
+          },
+          messages: {
+            api_entreprise: `Le Siret ${siret} existe`,
+          },
+        };
+      }
       return {
         result: {},
         messages: {
@@ -47,6 +72,7 @@ class EntrepriseApiData {
     try {
       entrepriseApiInfo = await apiEntreprise.getEntreprise(siren);
     } catch (e) {
+      console.log(e);
       return {
         result: {},
         messages: {
@@ -94,10 +120,13 @@ class EntrepriseApiData {
     const { nom_dept, nom_region, code_region, nom_academie, num_academie } =
       geoController.findDataByDepartementNum(code_dept);
 
+    const isPublicSector = await this.isPublic(entrepriseApiInfo?.forme_juridique_code);
+
     return {
       result: {
+        public: isPublicSector,
         siege_social: etablissementApiInfo.siege_social,
-        etablissement_siege_siret: entrepriseApiInfo.siret_siege_social,
+        etablissement_siege_siret: entrepriseApiInfo?.siret_siege_social,
         siret: etablissementApiInfo.siret,
         siren,
         naf_code: etablissementApiInfo.naf,
@@ -106,7 +135,7 @@ class EntrepriseApiData {
         date_creation: etablissementApiInfo.date_creation_etablissement,
         date_mise_a_jour: etablissementApiInfo.date_mise_a_jour,
         diffusable_commercialement: etablissementApiInfo.diffusable_commercialement,
-        enseigne: etablissementApiInfo.enseigne ? etablissementApiInfo.enseigne : entrepriseApiInfo.enseigne,
+        enseigne: etablissementApiInfo.enseigne ? etablissementApiInfo.enseigne : entrepriseApiInfo?.enseigne,
         adresse: this.buildAdresse(etablissementApiInfo.adresse),
         numero_voie: etablissementApiInfo.adresse.numero_voie,
         type_voie: etablissementApiInfo.adresse.type_voie,
@@ -133,27 +162,27 @@ class EntrepriseApiData {
         pays_implantation_code: etablissementApiInfo.pays_implantation.code,
         pays_implantation_nom: etablissementApiInfo.pays_implantation.value,
 
-        entreprise_siren: entrepriseApiInfo.siren,
-        entreprise_procedure_collective: entrepriseApiInfo.procedure_collective,
-        entreprise_enseigne: entrepriseApiInfo.enseigne,
-        entreprise_numero_tva_intracommunautaire: entrepriseApiInfo.numero_tva_intracommunautaire,
-        entreprise_code_effectif_entreprise: entrepriseApiInfo.code_effectif_entreprise,
-        entreprise_forme_juridique_code: entrepriseApiInfo.forme_juridique_code,
-        entreprise_forme_juridique: entrepriseApiInfo.forme_juridique,
-        entreprise_raison_sociale: entrepriseApiInfo.raison_sociale,
-        entreprise_nom_commercial: entrepriseApiInfo.nom_commercial,
-        entreprise_capital_social: entrepriseApiInfo.capital_social,
-        entreprise_date_creation: entrepriseApiInfo.date_creation,
-        entreprise_date_radiation: entrepriseApiInfo.date_radiation,
-        entreprise_naf_code: entrepriseApiInfo.naf_entreprise,
-        entreprise_naf_libelle: entrepriseApiInfo.libelle_naf_entreprise,
-        entreprise_date_fermeture: entrepriseApiInfo.etat_administratif.date_cessation,
-        entreprise_ferme: entrepriseApiInfo.etat_administratif.value === "C",
-        entreprise_siret_siege_social: entrepriseApiInfo.siret_siege_social,
-        entreprise_nom: entrepriseApiInfo.nom,
-        entreprise_prenom: entrepriseApiInfo.prenom,
-        entreprise_categorie: entrepriseApiInfo.categorie_entreprise,
-        entreprise_tranche_effectif_salarie: entrepriseApiInfo.tranche_effectif_salarie_entreprise,
+        entreprise_siren: entrepriseApiInfo?.siren,
+        entreprise_procedure_collective: entrepriseApiInfo?.procedure_collective,
+        entreprise_enseigne: entrepriseApiInfo?.enseigne,
+        entreprise_numero_tva_intracommunautaire: entrepriseApiInfo?.numero_tva_intracommunautaire,
+        entreprise_code_effectif_entreprise: entrepriseApiInfo?.code_effectif_entreprise,
+        entreprise_forme_juridique_code: entrepriseApiInfo?.forme_juridique_code,
+        entreprise_forme_juridique: entrepriseApiInfo?.forme_juridique,
+        entreprise_raison_sociale: entrepriseApiInfo?.raison_sociale,
+        entreprise_nom_commercial: entrepriseApiInfo?.nom_commercial,
+        entreprise_capital_social: entrepriseApiInfo?.capital_social,
+        entreprise_date_creation: entrepriseApiInfo?.date_creation,
+        entreprise_date_radiation: entrepriseApiInfo?.date_radiation,
+        entreprise_naf_code: entrepriseApiInfo?.naf_entreprise,
+        entreprise_naf_libelle: entrepriseApiInfo?.libelle_naf_entreprise,
+        entreprise_date_fermeture: entrepriseApiInfo?.etat_administratif.date_cessation,
+        entreprise_ferme: entrepriseApiInfo?.etat_administratif.value === "C",
+        entreprise_siret_siege_social: entrepriseApiInfo?.siret_siege_social,
+        entreprise_nom: entrepriseApiInfo?.nom,
+        entreprise_prenom: entrepriseApiInfo?.prenom,
+        entreprise_categorie: entrepriseApiInfo?.categorie_entreprise,
+        entreprise_tranche_effectif_salarie: entrepriseApiInfo?.tranche_effectif_salarie_entreprise,
 
         conventionCollective,
         api_entreprise_reference: true,
@@ -173,6 +202,14 @@ class EntrepriseApiData {
     const l6 = adresse.l6 && adresse.l6 !== "" ? `${adresse.l6}\r\n` : "";
     const l7 = adresse.l7 && adresse.l7 !== "" ? `${adresse.l7}` : "";
     return `${l1}${l2}${l3}${l4}${l5}${l6}${l7}`;
+  }
+
+  async isPublic(code) {
+    const match = await CategoriesJuridique.findOne({ CATEGJURID: code, SIASP: { $ne: "HFP" } }).lean();
+    if (!match) {
+      return false;
+    }
+    return true;
   }
 }
 

@@ -45,7 +45,7 @@ const formationSchema = {
   },
   typeDiplome: {
     ...diplomeSchema,
-    label: "Diplôme ou titre visé par l’apprenti :",
+    label: "Diplôme ou titre visé par l'apprenti :",
     example: 74,
     requiredMessage: "Le diplôme ou titre visé est obligatoire",
     validateMessage: ` n'est pas un diplôme ou titre valide`,
@@ -90,6 +90,14 @@ const formationSchema = {
     required: function () {
       return !this.draft;
     },
+  },
+  dureeFormationCalc: {
+    type: Number,
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
+    description: "Durée de formation en mois [calculé]",
   },
   dureeFormation: {
     type: Number,

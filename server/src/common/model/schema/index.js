@@ -1,5 +1,6 @@
 const logSchema = require("./log");
 const userSchema = require("./user");
+const jwtSessionSchema = require("./jwtSession");
 const roleSchema = require("./role");
 const maintenanceMessageSchema = require("./maintenanceMessage");
 const dossierSchema = require("./specific/dossier/Dossier");
@@ -9,10 +10,12 @@ const commentaireSchema = require("./specific/dossier/Commentaire");
 const historySchema = require("./specific/dossier/cerfa/History");
 const permissionSchema = require("./specific/Permission");
 const workspaceSchema = require("./specific/Workspace");
+const categoriesJuridiqueSchema = require("./specific/CategoriesJuridique");
 
 module.exports = {
   logSchema,
   userSchema,
+  jwtSessionSchema,
   roleSchema,
   maintenanceMessageSchema,
 
@@ -24,4 +27,5 @@ module.exports = {
   historySchema,
   permissionSchema,
   workspaceSchema,
+  categoriesJuridiqueSchema,
 };

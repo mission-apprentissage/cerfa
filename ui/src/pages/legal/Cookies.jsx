@@ -26,7 +26,7 @@ export default () => {
               éviter de vous reconnecter à chaque fois que vous visitez le site.
               <br />
               <br />
-              Ce site n’affiche pas de bannière de consentement aux cookies car les cookies d'authentification en sont
+              Ce site n'affiche pas de bannière de consentement aux cookies car les cookies d'authentification en sont
               exemptés, cf.{" "}
               <Link
                 href={"https://www.cnil.fr/fr/cookies-et-traceurs-que-dit-la-loi"}

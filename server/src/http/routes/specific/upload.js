@@ -2,7 +2,7 @@ const express = require("express");
 const Joi = require("joi");
 const { createWriteStream } = require("fs");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
-const { uploadToStorage, deleteFromStorage } = require("../../../common/utils/ovhUtils");
+const { getFromStorage, uploadToStorage, deleteFromStorage } = require("../../../common/utils/ovhUtils");
 const { oleoduc } = require("oleoduc");
 const multiparty = require("multiparty");
 const { EventEmitter } = require("events");
@@ -29,7 +29,15 @@ module.exports = (components) => {
     // 'close' event is fired just after the form has been read but before file is scanned and uploaded to storage.
     // So instead of using form.on('close',...) we use a custom event to end response when everything is finished
     formEvents.on("terminated", async (e) => {
-      if (e) return res.status(400).json({ error: "Le contenu du fichier est invalide" });
+      if (e) {
+        logger.error(e);
+        return res.status(400).json({
+          error:
+            e.message === "Le fichier est trop volumineux"
+              ? "Le fichier est trop volumineux"
+              : "Le contenu du fichier est invalide",
+        });
+      }
       const documents = await dossiers.getDocuments(dossierId);
       return res.json({ documents });
     });
@@ -88,18 +96,24 @@ module.exports = (components) => {
             .required(),
         }).validateAsync(req.query, { abortEarly: false });
 
-        let contratId = dossierId;
-        let path = `contrats/${contratId}/${part.filename}`;
-        let scanner = await clamav.getScanner();
+        let path = `contrats/${dossierId}/${part.filename}`;
+        let { scanStream, getScanResults } = await clamav.getScanner();
+        let { hashStream, getHash } = crypto.checksum();
 
         await oleoduc(
           part,
-          scanner.scanStream,
-          crypto.available() ? crypto.cipher(contratId) : noop(),
+          scanStream,
+          hashStream,
+          crypto.isCipherAvailable() ? crypto.cipher(dossierId) : noop(),
           test ? noop() : await uploadToStorage(path, { contentType: part.headers["content-type"] })
         );
 
-        let { isInfected, viruses } = await scanner.getScanResults();
+        if (part.byteCount > 10485760) {
+          throw new Error("Le fichier est trop volumineux");
+        }
+
+        let hash = await getHash();
+        let { isInfected, viruses } = await getScanResults();
         if (isInfected) {
           if (!test) {
             logger.error(`Uploaded file ${path} is infected by ${viruses.join(",")}. Deleting file from storage...`);
@@ -108,15 +122,38 @@ module.exports = (components) => {
           throw new Error("Le contenu du fichier est invalide");
         }
 
-        // TODO add size limitations
         await dossiers.addDocument(dossierId, {
           typeDocument,
+          hash,
           nomFichier: part.filename,
           cheminFichier: path,
           tailleFichier: test ? 0 : part.byteCount,
           userEmail: req.user.email,
         });
       });
+    })
+  );
+
+  router.get(
+    "/",
+    permissionsDossierMiddleware(components, ["dossier/page_documents"]),
+    tryCatch(async (req, res) => {
+      let { dossierId, path, name } = await Joi.object({
+        dossierId: Joi.string().required(),
+        path: Joi.string().required(),
+        name: Joi.string().required(),
+      }).validateAsync(req.query, { abortEarly: false });
+
+      const document = await dossiers.getDocument(dossierId, name, path);
+
+      const stream = await getFromStorage(document.cheminFichier);
+
+      res.header("Content-Type", "application/pdf");
+      res.header("Content-Length", document.tailleFichier);
+      res.status(200);
+      res.type("pdf");
+
+      await oleoduc(stream, crypto.isCipherAvailable() ? crypto.decipher(dossierId) : noop(), res);
     })
   );
 

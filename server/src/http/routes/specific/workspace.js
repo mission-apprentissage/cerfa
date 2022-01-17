@@ -11,70 +11,6 @@ module.exports = (components) => {
 
   const { permissions, roles, workspaces, users, dossiers, cerfas, mailer } = components;
 
-  const buildOwnerResult = async (userId, workspaceId) => {
-    const userSelectFields = { email: 1, nom: 1, prenom: 1, _id: 0 };
-    const permSelectFields = { addedAt: 1, role: 1, acl: 1 };
-    const roleSelectFields = { name: 1, description: 1, title: 1, _id: 1 };
-
-    const currentUser = await users.getUserById(userId, userSelectFields);
-    if (!currentUser) {
-      throw Boom.badRequest("Something went wrong");
-    }
-    const currentUserPerm = await permissions.hasPermission(
-      { workspaceId, dossierId: null, userEmail: currentUser.email },
-      permSelectFields
-    );
-    if (!currentUserPerm) {
-      throw Boom.badRequest("Something went wrong");
-    }
-    const currentUserRole = await roles.findRolePermissionById(currentUserPerm.role, roleSelectFields);
-    if (!currentUserRole) {
-      throw Boom.badRequest("Something went wrong");
-    }
-    return {
-      user: currentUser,
-      permission: {
-        permId: currentUserPerm._id,
-        addedAt: currentUserPerm.addedAt,
-        customAcl: currentUserPerm.acl,
-        ...currentUserRole,
-      },
-    };
-  };
-
-  const buildContributorsResult = async (contributeurEmail, workspaceId) => {
-    const userSelectFields = { email: 1, nom: 1, prenom: 1, _id: 0 };
-    const permSelectFields = { addedAt: 1, role: 1, acl: 1 };
-    const roleSelectFields = { name: 1, description: 1, title: 1, _id: 1 };
-
-    const currentUser = (await users.getUser(contributeurEmail, userSelectFields)) || {
-      email: contributeurEmail,
-      nom: "",
-      prenom: "",
-    };
-
-    const currentUserPerm = await permissions.hasPermission(
-      { workspaceId, dossierId: null, userEmail: contributeurEmail },
-      permSelectFields
-    );
-    if (!currentUserPerm) {
-      throw Boom.badRequest("Something went wrong");
-    }
-    const currentUserRole = await roles.findRolePermissionById(currentUserPerm.role, roleSelectFields);
-    if (!currentUserRole) {
-      throw Boom.badRequest("Something went wrong");
-    }
-    return {
-      user: currentUser,
-      permission: {
-        permId: currentUserPerm._id,
-        addedAt: currentUserPerm.addedAt,
-        customAcl: currentUserPerm.acl,
-        ...currentUserRole,
-      },
-    };
-  };
-
   router.get(
     "/entity/:id",
     permissionsWorkspaceMiddleware(components, ["wks/page_espace"]),
@@ -105,8 +41,16 @@ module.exports = (components) => {
     "/dossiers",
     permissionsWorkspaceMiddleware(components, ["wks/page_espace/page_dossiers/voir_liste_dossiers"]),
     tryCatch(async ({ query: { workspaceId } }, res) => {
-      const results = await dossiers.findDossiers({ workspaceId });
-
+      let results = [];
+      const dossiersWks = await dossiers.findDossiers({ workspaceId });
+      for (let index = 0; index < dossiersWks.length; index++) {
+        const dossier = dossiersWks[index];
+        const contributeurs = await dossiers.getContributeurs(dossier._id, components);
+        results.push({
+          ...dossier,
+          contributeurs,
+        });
+      }
       return res.json(results);
     })
   );
@@ -169,17 +113,8 @@ module.exports = (components) => {
       "wks/page_espace/page_parametres/gestion_acces",
     ]),
     tryCatch(async ({ query: { workspaceId } }, res) => {
-      const wks = await workspaces.findWorkspaceById(workspaceId, { contributeurs: 1, owner: 1 });
-
-      const owner = await buildOwnerResult(wks.owner, workspaceId);
-      const contributeurs = [];
-      for (let index = 0; index < wks.contributeurs.length; index++) {
-        const contributeurEmail = wks.contributeurs[index];
-        const contributeur = await buildContributorsResult(contributeurEmail, workspaceId);
-        contributeurs.push(contributeur);
-      }
-
-      return res.json([{ ...owner, owner: true }, ...contributeurs]);
+      const contributors = await workspaces.getContributeurs(workspaceId, components);
+      return res.json(contributors);
     })
   );
 
@@ -204,13 +139,13 @@ module.exports = (components) => {
 
       const wks = await workspaces.findWorkspaceById(workspaceId, { contributeurs: 1, owner: 1, nom: 1 });
 
-      const owner = await buildOwnerResult(wks.owner, workspaceId);
+      const owner = await users.getUserById(wks.owner, { email: 1 });
 
       if (owner.email === userEmail) {
         throw Boom.badRequest("Something went wrong");
       }
 
-      const wksContributeurs = await workspaces.addContributeur(wks._id, userEmail, newUserRole.name);
+      await workspaces.addContributeur(wks._id, userEmail, newUserRole.name);
 
       await mailer.sendEmail(
         userEmail,
@@ -225,14 +160,8 @@ module.exports = (components) => {
         }
       );
 
-      const contributeurs = [];
-      for (let index = 0; index < wksContributeurs.length; index++) {
-        const contributeurEmail = wksContributeurs[index];
-        const contributeur = await buildContributorsResult(contributeurEmail, workspaceId);
-        contributeurs.push(contributeur);
-      }
-
-      return res.json([{ ...owner, owner: true }, ...contributeurs]);
+      const contributors = await workspaces.getContributeurs(workspaceId, components);
+      return res.json(contributors);
     })
   );
 
@@ -257,7 +186,7 @@ module.exports = (components) => {
 
       const wks = await workspaces.findWorkspaceById(workspaceId, { contributeurs: 1, owner: 1 });
 
-      const owner = await buildOwnerResult(wks.owner, workspaceId);
+      const owner = await users.getUserById(wks.owner, { email: 1 });
 
       if (owner.email === userEmail) {
         throw Boom.badRequest("Something went wrong");
@@ -271,14 +200,8 @@ module.exports = (components) => {
         //acl,
       });
 
-      const contributeurs = [];
-      for (let index = 0; index < wks.contributeurs.length; index++) {
-        const contributeurEmail = wks.contributeurs[index];
-        const contributeur = await buildContributorsResult(contributeurEmail, workspaceId);
-        contributeurs.push(contributeur);
-      }
-
-      return res.json([{ ...owner, owner: true }, ...contributeurs]);
+      const contributors = await workspaces.getContributeurs(workspaceId, components);
+      return res.json(contributors);
     })
   );
 
@@ -298,21 +221,16 @@ module.exports = (components) => {
 
       const wks = await workspaces.findWorkspaceById(workspaceId, { contributeurs: 1, owner: 1 });
 
-      const owner = await buildOwnerResult(wks.owner, workspaceId);
+      const owner = await users.getUserById(wks.owner, { email: 1 });
 
       if (owner.email === userEmail) {
         throw Boom.badRequest("Something went wrong");
       }
 
-      const wksContributeurs = await workspaces.removeContributeur(workspaceId, userEmail, permId);
-      const contributeurs = [];
-      for (let index = 0; index < wksContributeurs.length; index++) {
-        const contributeurEmail = wksContributeurs[index];
-        const contributeur = await buildContributorsResult(contributeurEmail, workspaceId);
-        contributeurs.push(contributeur);
-      }
+      await workspaces.removeContributeur(workspaceId, userEmail, permId);
 
-      return res.json([{ ...owner, owner: true }, ...contributeurs]);
+      const contributors = await workspaces.getContributeurs(workspaceId, components);
+      return res.json(contributors);
     })
   );
 

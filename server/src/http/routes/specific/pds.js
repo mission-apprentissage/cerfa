@@ -26,7 +26,7 @@ const cookieExtractor = (req) => {
 module.exports = (components) => {
   const router = express.Router();
 
-  const { users, mailer } = components;
+  const { users, sessions, mailer } = components;
 
   const getPdsClient = async () => {
     const pdsIssuer = await Issuer.discover("https://agadir-app.rct01.kleegroup.com/identification/oidc/");
@@ -109,7 +109,7 @@ module.exports = (components) => {
         await users.loggedInUser(payload.email);
 
         const token = createUserToken({ payload });
-
+        await sessions.addJwt(token);
         return res
           .cookie(`cerfa-${config.env}-jwt`, token, {
             maxAge: 365 * 24 * 3600000,
@@ -150,7 +150,23 @@ module.exports = (components) => {
             publicUrl: config.publicUrl,
           }
         );
-        return res.redirect("/auth/finalize");
+
+        const payload = await users.structureUser(user);
+
+        await users.loggedInUser(payload.email);
+
+        const token = createUserToken({ payload });
+        await sessions.addJwt(token);
+
+        return res
+          .cookie(`cerfa-${config.env}-jwt`, token, {
+            maxAge: 365 * 24 * 3600000,
+            httpOnly: !IS_OFFLINE,
+            sameSite: "lax",
+            secure: !IS_OFFLINE,
+          })
+          .status(200)
+          .redirect("/auth/finalize");
       }
     })
   );
@@ -173,7 +189,7 @@ module.exports = (components) => {
         throw Boom.badRequest("Something went wrong");
       }
 
-      // TODO tack if siret different than the one in PDS
+      // TODO warm user if siret different than the one in PDS
 
       const updateUser = await users.finalizePdsUser(userDb._id, {
         siret,
@@ -188,6 +204,12 @@ module.exports = (components) => {
       await users.loggedInUser(payload.email);
 
       const token = createUserToken({ payload });
+
+      if (await sessions.findJwt(token)) {
+        await sessions.removeJwt(token);
+      }
+
+      await sessions.addJwt(token);
 
       return res
         .cookie(`cerfa-${config.env}-jwt`, token, {

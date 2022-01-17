@@ -1,27 +1,12 @@
 <mj-section padding-bottom="10px" padding-top="10px" background-color="#ffffff">
-    <mj-column padding-top="5px" color="#19414C" >
-        <mj-text color="#19414C" font-size="16px" font-weight="600" font-family="sans-serif">
-            Vous êtes invité par <span class="bluefrance"><%= data.username %></span>
-            à participer au dossier <span class="bluefrance"><%= data.dossiernom %></span>
-            en tant que <span class="bluefrance"><%= data.user2role %></span>
-        </mj-text>
-        <mj-text padding-top="20px" color="#19414C">
-            <a href="<%= data.publicUrl %>/<%= data.tospaceUrl %>"
-                class="button">Cliquez ici pour acceder au dossier</a>
-        </mj-text>
-    </mj-column>
-</mj-section>
-
-<mj-section background-color="#ffffff">
     <mj-column>
-        <mj-divider border-width="1px" border-color="lightgrey"/>
-    </mj-column>
-</mj-section>
-
-<mj-section background-color="#ffffff" padding-bottom="0">
-    <mj-column padding-top="0">
-        <mj-text font-size="14px" line-height="20px" color="#19414C">
-            Vous avez reçu cet email car un utilisateur vous a invité sur <a href="<%= data.publicUrl %>" class="link-nostyle"><%= data.publicUrl %></a>.
-        </mj-text>
+        <mj-text font-size="28px" font-weight="700">Vous êtes invité à contribuer à un dossier</mj-text>
+        <mj-text font-size="16px" line-height="24px" color="#000000">Bonjour,
+            <div>
+                <br> Vous êtes invité par <span class="bluefrance"><strong><%= data.username %></strong></span>
+                à participer au dossier <span class="bluefrance"><strong><%= data.dossiernom %></strong></span>. 
+            </div>
+          </mj-text>
+        <mj-button font-size="16px" background-color="#000091" border-radius="4px" href="<%= data.publicUrl %>/<%= data.tospaceUrl %>">Cliquez ici  pour acceder au dossier</mj-button>
     </mj-column>
 </mj-section>

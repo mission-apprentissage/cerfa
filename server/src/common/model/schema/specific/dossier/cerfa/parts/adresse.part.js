@@ -3,17 +3,17 @@ const adresseSchema = {
     type: Number,
     description: "N° de la voie",
     label: "N° :",
-    required: function () {
-      return !this.draft;
-    },
+    requiredMessage: "le N° de la voie est obligatoire",
+    isNotRequiredForm: true,
     nullable: true,
     example: 13,
-    default: 0,
+    default: null,
   },
   voie: {
     type: String,
     description: "Nom de voie",
     label: "Voie :",
+    requiredMessage: "le nom de voie est obligatoire",
     nullable: true,
     example: "Boulevard de la liberté",
     default: null,
@@ -24,12 +24,11 @@ const adresseSchema = {
   complement: {
     type: String,
     description: "Complément d'adresse",
-    label: "Complément :",
+    label: "Complément d'adresse (optionnel):",
+    requiredMessage: "le complement d'adress est obligatoire",
     nullable: true,
     default: null,
-    required: function () {
-      return !this.draft;
-    },
+    isNotRequiredForm: true,
     example: "Etage 6 - Appartement 654",
   },
   // label: {
@@ -70,6 +69,7 @@ const adresseSchema = {
     type: String,
     description: "Commune",
     label: "Commune: ",
+    requiredMessage: "la commune est obligatoire",
     example: "PARIS",
     default: null,
     required: function () {

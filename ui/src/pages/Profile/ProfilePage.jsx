@@ -30,7 +30,7 @@ const ProfileLayout = () => {
               Mes informations
             </Heading>
           </Box>
-          <Box
+          {/* <Box
             borderLeft="2px solid"
             _hover={{ cursor: "pointer" }}
             borderColor={!information ? "bluefrance" : "white"}
@@ -41,7 +41,7 @@ const ProfileLayout = () => {
             <Heading as="h2" fontSize="md" ml={3}>
               Mes notification
             </Heading>
-          </Box>
+          </Box> */}
         </Box>
         <Box w="100%" pt={[4, 8]}>
           {information ? <ProfileInformation /> : <ProfileNotification />}

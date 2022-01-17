@@ -6,7 +6,7 @@ const fieldLockedSchema = {
     },
     denomination: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     raison_sociale: {
       type: Boolean,
@@ -14,19 +14,19 @@ const fieldLockedSchema = {
     },
     naf: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     nombreDeSalaries: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     codeIdcc: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     libelleIdcc: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     telephone: {
       type: Boolean,
@@ -87,6 +87,10 @@ const fieldLockedSchema = {
       default: false,
     },
     attestationPieces: {
+      type: Boolean,
+      default: false,
+    },
+    privePublic: {
       type: Boolean,
       default: false,
     },
@@ -310,6 +314,14 @@ const fieldLockedSchema = {
     },
     salaireEmbauche: {
       type: Boolean,
+      default: true,
+    },
+    caisseRetraiteComplementaire: {
+      type: Boolean,
+      default: false,
+    },
+    avantageNature: {
+      type: Boolean,
       default: false,
     },
     avantageNourriture: {
@@ -366,7 +378,7 @@ const fieldLockedSchema = {
     },
     formationInterne: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     uaiCfa: {
       type: Boolean,

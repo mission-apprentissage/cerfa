@@ -1,17 +1,133 @@
 const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
-const { cloneDeep, mergeWith } = require("lodash");
+const {
+  cloneDeep,
+  mergeWith,
+  // set
+} = require("lodash");
+const merge = require("deepmerge");
 const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 const cerfaSchema = require("../../../common/model/schema/specific/dossier/cerfa/Cerfa");
 const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfaController");
 
+// const checkRequiredField = (cerfa) => {
+//   let result = {};
+//   const validationObj = new Cerfa(cerfa);
+//   const validatedModel = validationObj.validateSync();
+//   if (validatedModel) {
+//     const keys = Object.keys(validatedModel.errors);
+//     for (let i = 0; i < keys.length; i++) {
+//       const err = validatedModel.errors[keys[i]];
+//       if (err.kind === "required") {
+//         set(result, `${err.path}.isNotRequiredForm`, false);
+//       }
+//     }
+//   }
+//   return result;
+// };
+
 module.exports = (components) => {
   const router = express.Router();
 
   const { cerfas } = components;
+
+  const buildCerfaResult = (cerfa) => {
+    function customizer(objValue, srcValue) {
+      if (objValue !== undefined) {
+        return { ...objValue, value: srcValue || srcValue === false || srcValue === 0 ? srcValue : "" };
+      }
+    }
+
+    function customizerLock(objValue, srcValue) {
+      if (objValue !== undefined) {
+        return { ...objValue, locked: srcValue };
+      }
+    }
+
+    return {
+      employeur: {
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.employeur), cerfa.employeur, customizer),
+          cerfa.isLockedField.employeur,
+          customizerLock
+        ),
+        adresse: {
+          ...mergeWith(
+            mergeWith(cloneDeep(cerfaSchema.employeur.adresse), cerfa.employeur.adresse, customizer),
+            cerfa.isLockedField.employeur.adresse,
+            customizerLock
+          ),
+        },
+      },
+      apprenti: {
+        ...mergeWith(cloneDeep(cerfaSchema.apprenti), cerfa.apprenti, customizer),
+        adresse: {
+          ...mergeWith(cloneDeep(cerfaSchema.apprenti.adresse), cerfa.apprenti.adresse, customizer),
+        },
+        responsableLegal: {
+          ...mergeWith(
+            cloneDeep(cerfaSchema.apprenti.responsableLegal.type),
+            cerfa.apprenti.responsableLegal,
+            customizer
+          ),
+          adresse: {
+            ...mergeWith(
+              cloneDeep(cerfaSchema.apprenti.responsableLegal.type.adresse),
+              cerfa.apprenti.responsableLegal.adresse,
+              customizer
+            ),
+          },
+        },
+      },
+      maitre1: {
+        ...mergeWith(cloneDeep(cerfaSchema.maitre1), cerfa.maitre1, customizer),
+      },
+      maitre2: {
+        ...mergeWith(cloneDeep(cerfaSchema.maitre2), cerfa.maitre2, customizer),
+      },
+      formation: {
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.formation), cerfa.formation, customizer),
+          cerfa.isLockedField.formation,
+          customizerLock
+        ),
+      },
+      contrat: {
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.contrat), cerfa.contrat, customizer),
+          cerfa.isLockedField.contrat,
+          customizerLock
+        ),
+        remunerationsAnnuelles: [
+          ...cerfa.contrat.remunerationsAnnuelles.map((remunerationAnnuelle) => {
+            return mergeWith(
+              cloneDeep(cerfaSchema.contrat.remunerationsAnnuelles.type[0]),
+              remunerationAnnuelle,
+              customizer
+            );
+          }),
+        ],
+      },
+      organismeFormation: {
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.organismeFormation), cerfa.organismeFormation, customizer),
+          cerfa.isLockedField.organismeFormation,
+          customizerLock
+        ),
+        adresse: {
+          ...mergeWith(
+            mergeWith(cloneDeep(cerfaSchema.organismeFormation.adresse), cerfa.organismeFormation.adresse, customizer),
+            cerfa.isLockedField.organismeFormation.adresse,
+            customizerLock
+          ),
+        },
+      },
+      id: cerfa._id.toString(),
+    };
+  };
 
   router.get(
     "/",
@@ -25,92 +141,7 @@ module.exports = (components) => {
 
       const cerfa = await Cerfa.findOne({ dossierId }).lean();
 
-      function customizer(objValue, srcValue) {
-        if (objValue !== undefined) {
-          return { ...objValue, value: srcValue || "" };
-        }
-      }
-
-      function customizerLock(objValue, srcValue) {
-        if (objValue !== undefined) {
-          return { ...objValue, locked: srcValue };
-        }
-      }
-
-      let result = {
-        employeur: {
-          ...mergeWith(cloneDeep(cerfaSchema.employeur), cerfa.employeur, customizer),
-          adresse: {
-            ...mergeWith(cloneDeep(cerfaSchema.employeur.adresse), cerfa.employeur.adresse, customizer),
-          },
-        },
-        apprenti: {
-          ...mergeWith(cloneDeep(cerfaSchema.apprenti), cerfa.apprenti, customizer),
-          adresse: {
-            ...mergeWith(cloneDeep(cerfaSchema.apprenti.adresse), cerfa.apprenti.adresse, customizer),
-          },
-          responsableLegal: {
-            ...mergeWith(
-              cloneDeep(cerfaSchema.apprenti.responsableLegal.type),
-              cerfa.apprenti.responsableLegal,
-              customizer
-            ),
-            adresse: {
-              ...mergeWith(
-                cloneDeep(cerfaSchema.apprenti.responsableLegal.type.adresse),
-                cerfa.apprenti.responsableLegal.adresse,
-                customizer
-              ),
-            },
-          },
-        },
-        maitre1: {
-          ...mergeWith(cloneDeep(cerfaSchema.maitre1), cerfa.maitre1, customizer),
-        },
-        maitre2: {
-          ...mergeWith(cloneDeep(cerfaSchema.maitre2), cerfa.maitre2, customizer),
-        },
-        formation: {
-          ...mergeWith(
-            mergeWith(cloneDeep(cerfaSchema.formation), cerfa.formation, customizer),
-            cerfa.isLockedField.formation,
-            customizerLock
-          ),
-        },
-        contrat: {
-          ...mergeWith(cloneDeep(cerfaSchema.contrat), cerfa.contrat, customizer),
-          remunerationsAnnuelles: [
-            ...cerfa.contrat.remunerationsAnnuelles.map((remunerationAnnuelle) => {
-              return mergeWith(
-                cloneDeep(cerfaSchema.contrat.remunerationsAnnuelles.type[0]),
-                remunerationAnnuelle,
-                customizer
-              );
-            }),
-          ],
-        },
-        organismeFormation: {
-          ...mergeWith(
-            mergeWith(cloneDeep(cerfaSchema.organismeFormation), cerfa.organismeFormation, customizer),
-            cerfa.isLockedField.organismeFormation,
-            customizerLock
-          ),
-          adresse: {
-            ...mergeWith(
-              mergeWith(
-                cloneDeep(cerfaSchema.organismeFormation.adresse),
-                cerfa.organismeFormation.adresse,
-                customizer
-              ),
-              cerfa.isLockedField.organismeFormation.adresse,
-              customizerLock
-            ),
-          },
-        },
-        id: cerfa._id.toString(),
-      };
-
-      return res.json(result);
+      return res.json(buildCerfaResult(cerfa));
     })
   );
 
@@ -143,29 +174,31 @@ module.exports = (components) => {
     tryCatch(async ({ body, params }, res) => {
       const data = await Joi.object({
         employeur: Joi.object({
-          denomination: Joi.string(),
+          denomination: Joi.string().allow(""),
           siret: Joi.string(),
-          naf: Joi.string(),
-          nombreDeSalaries: Joi.number(),
-          codeIdcc: Joi.string(),
-          libelleIdcc: Joi.string(),
-          telephone: Joi.string(),
+          naf: Joi.string().allow(""),
+          nombreDeSalaries: Joi.number().allow(null),
+          codeIdcc: Joi.string().allow(""),
+          libelleIdcc: Joi.string().allow(""),
+          telephone: Joi.string().allow(null),
           courriel: Joi.string(),
           adresse: Joi.object({
-            numero: Joi.number(),
-            voie: Joi.string(),
-            complement: Joi.string(),
-            label: Joi.string(),
-            codePostal: Joi.string(),
-            commune: Joi.string(),
+            numero: Joi.number().allow(null),
+            voie: Joi.string().allow(""),
+            complement: Joi.string().allow(""),
+            label: Joi.string().allow(""),
+            codePostal: Joi.string().allow(""),
+            commune: Joi.string().allow(""),
           }),
           nom: Joi.string(),
           prenom: Joi.string(),
           typeEmployeur: Joi.number(),
-          caisseComplementaire: Joi.string(),
+          employeurSpecifique: Joi.number(),
+          caisseComplementaire: Joi.string().allow(""),
           regimeSpecifique: Joi.boolean(),
-          attestationEligibilite: Joi.boolean(),
+          attestationEligibilite: Joi.boolean().allow(null),
           attestationPieces: Joi.boolean(),
+          privePublic: Joi.boolean(),
         }),
         apprenti: Joi.object({
           nom: Joi.string(),
@@ -173,6 +206,7 @@ module.exports = (components) => {
           sexe: Joi.string(),
           nationalite: Joi.number(),
           dateNaissance: Joi.date(),
+          age: Joi.number(),
           departementNaissance: Joi.string(),
           communeNaissance: Joi.string(),
           nir: Joi.string(),
@@ -183,26 +217,30 @@ module.exports = (components) => {
           derniereClasse: Joi.number(),
           diplomePrepare: Joi.number(),
           intituleDiplomePrepare: Joi.string(),
-          telephone: Joi.string(),
+          telephone: Joi.string().allow(null),
           courriel: Joi.string(),
           adresse: Joi.object({
-            numero: Joi.number(),
+            numero: Joi.number().allow(null),
             voie: Joi.string(),
-            complement: Joi.string(),
+            complement: Joi.string().allow(""),
             label: Joi.string(),
             codePostal: Joi.string(),
             commune: Joi.string(),
+            pays: Joi.string(),
           }),
+          apprentiMineurNonEmancipe: Joi.boolean().allow(null),
           responsableLegal: Joi.object({
-            nom: Joi.string(),
-            prenom: Joi.string(),
+            nom: Joi.string().allow(null),
+            prenom: Joi.string().allow(null),
+            memeAdresse: Joi.boolean().allow(null),
             adresse: Joi.object({
-              numero: Joi.number(),
-              voie: Joi.string(),
-              complement: Joi.string(),
-              label: Joi.string(),
-              codePostal: Joi.string(),
-              commune: Joi.string(),
+              numero: Joi.number().allow(null),
+              voie: Joi.string().allow(null),
+              complement: Joi.string().allow(null).allow(""),
+              label: Joi.string().allow(null),
+              codePostal: Joi.string().allow(null),
+              commune: Joi.string().allow(null),
+              pays: Joi.string().allow(null),
             }),
           }),
           inscriptionSportifDeHautNiveau: Joi.boolean(),
@@ -213,44 +251,50 @@ module.exports = (components) => {
           dateNaissance: Joi.date(),
         }),
         maitre2: Joi.object({
-          nom: Joi.string(),
-          prenom: Joi.string(),
-          dateNaissance: Joi.date(),
+          nom: Joi.string().allow(null),
+          prenom: Joi.string().allow(null),
+          dateNaissance: Joi.date().allow(null),
         }),
         formation: Joi.object({
-          rncp: Joi.string(),
-          codeDiplome: Joi.string(),
+          rncp: Joi.string().allow(null),
+          codeDiplome: Joi.string().allow(null),
           typeDiplome: Joi.number(),
           intituleQualification: Joi.string(),
           dateDebutFormation: Joi.date(),
           dateFinFormation: Joi.date(),
-          dureeFormation: Joi.number(),
+          dureeFormationCalc: Joi.number(),
+          dureeFormation: Joi.number().allow(null),
           dateObtentionDiplome: Joi.date(),
         }),
         contrat: Joi.object({
           modeContractuel: Joi.number(),
           typeContratApp: Joi.number(),
-          numeroContratPrecedent: Joi.string(),
+          numeroContratPrecedent: Joi.string().allow(null),
           noContrat: Joi.string(),
           noAvenant: Joi.string(),
           dateDebutContrat: Joi.date(),
-          dateEffetAvenant: Joi.date(),
-          dateConclusion: Joi.date(),
           dateFinContrat: Joi.date(),
+          dureeContrat: Joi.number(),
+          dateEffetAvenant: Joi.date().allow(null),
+          dateConclusion: Joi.date(),
           dateRupture: Joi.date(),
           lieuSignatureContrat: Joi.string(),
-          typeDerogation: Joi.number(),
+          typeDerogation: Joi.number().allow(null),
           dureeTravailHebdoHeures: Joi.number(),
           dureeTravailHebdoMinutes: Joi.number(),
           travailRisque: Joi.boolean(),
           salaireEmbauche: Joi.number(),
-          avantageNourriture: Joi.number(),
-          avantageLogement: Joi.number(),
-          autreAvantageEnNature: Joi.boolean(),
+          caisseRetraiteComplementaire: Joi.string().allow(""),
+          avantageNature: Joi.boolean(),
+          avantageNourriture: Joi.number().allow(null),
+          avantageLogement: Joi.number().allow(null),
+          autreAvantageEnNature: Joi.boolean().allow(null),
+          remunerationMajoration: Joi.number(),
           remunerationsAnnuelles: Joi.array().items({
             dateDebut: Joi.date(),
             dateFin: Joi.date(),
             taux: Joi.number(),
+            salaireBrut: Joi.number(),
             typeSalaire: Joi.string(),
             ordre: Joi.string(),
           }),
@@ -259,24 +303,47 @@ module.exports = (components) => {
           denomination: Joi.string(),
           formationInterne: Joi.boolean(),
           siret: Joi.string(),
-          uaiCfa: Joi.string(),
+          uaiCfa: Joi.string().allow(null),
           visaCfa: Joi.boolean(),
           adresse: Joi.object({
-            numero: Joi.number(),
+            numero: Joi.number().allow(null),
             voie: Joi.string(),
-            complement: Joi.string(),
+            complement: Joi.string().allow(""),
             label: Joi.string(),
             codePostal: Joi.string(),
             commune: Joi.string(),
           }),
         }),
+        isLockedField: Joi.object({}).unknown(),
+        dossierId: Joi.string().required(),
       }).validateAsync(body, { abortEarly: false });
 
-      const result = await Cerfa.findOneAndUpdate({ _id: params.id }, data, {
-        new: true,
-      });
+      let cerfaDb = await Cerfa.findOne({ _id: params.id }, { _id: 0, __v: 0 }).lean();
 
-      return res.json(result);
+      let remunerationsAnnuelles = [...(data.contrat?.remunerationsAnnuelles || [])];
+      for (let i = 0; i < cerfaDb.contrat.remunerationsAnnuelles.length; i++) {
+        const remunerationsAnnuelleDb = cerfaDb.contrat.remunerationsAnnuelles[i];
+        for (let j = 0; j < remunerationsAnnuelles.length; j++) {
+          let remAnnuelle = remunerationsAnnuelles[j];
+          if (remunerationsAnnuelleDb.ordre === remunerationsAnnuelleDb.ordre) {
+            remAnnuelle = {
+              ...remunerationsAnnuelleDb,
+              ...remAnnuelle,
+            };
+          }
+        }
+      }
+      let mergedData = merge(cerfaDb, data);
+      mergedData.contrat.remunerationsAnnuelles =
+        cerfaDb.contrat.remunerationsAnnuelles.length > 0 && remunerationsAnnuelles.length === 0
+          ? cerfaDb.contrat.remunerationsAnnuelles
+          : remunerationsAnnuelles;
+
+      const cerfaUpdated = await Cerfa.findOneAndUpdate({ _id: params.id }, mergedData, {
+        new: true,
+      }).lean();
+
+      return res.json(buildCerfaResult(cerfaUpdated));
     })
   );
 
@@ -321,7 +388,7 @@ module.exports = (components) => {
 
       const pdfBuffer = Buffer.from(pdfBytes.buffer, "binary");
       res.header("Content-Type", "application/pdf");
-      res.header("Content-Disposition", `attachment; filename=contrat_${params.id}.pdf`);
+      // res.header("Content-Disposition", `attachment; filename=contrat_${params.id}.pdf`);
       res.header("Content-Length", pdfBuffer.length);
       res.status(200);
       res.type("pdf");

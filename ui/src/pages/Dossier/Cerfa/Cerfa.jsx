@@ -1,7 +1,24 @@
 import React from "react";
-import { Box, Center, Spinner, Accordion, AccordionItem, AccordionButton, AccordionPanel } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Spinner,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  Text,
+  HStack,
+} from "@chakra-ui/react";
+import { useRecoilValueLoadable } from "recoil";
 import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
-import { AddFill, SubtractLine } from "../../../theme/components/icons";
+import { AddFill, SubtractLine, StepWip, StepComplete } from "../../../theme/components/icons";
+
+import { cerfaPartFormationCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
+import { cerfaPartEmployeurCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+import { cerfaPartMaitresCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
+import { cerfaPartApprentiCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
+import { cerfaPartContratCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 
 import FormEmployer from "./components/FormEmployer";
 import FormLearner from "./components/FormLearner";
@@ -11,6 +28,11 @@ import FormFormation from "./components/FormFormation";
 
 export default () => {
   const { isLoading } = useCerfa();
+  const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
+  const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
+  const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
+  const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
+  const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
 
   if (isLoading)
     return (
@@ -25,35 +47,45 @@ export default () => {
         {
           title: "Employeur",
           Component: FormEmployer,
+          completion: employeurCompletionAtom?.contents,
         },
         {
           title: "Apprenti(e)",
           Component: FormLearner,
+          completion: apprentiCompletionAtom?.contents,
         },
         {
           title: "Maître d'apprentissage",
           Component: FormLearningMaster,
+          completion: maitresCompletionAtom?.contents,
         },
         {
           title: "Contrat",
           Component: FormContract,
+          completion: contratCompletionAtom?.contents,
         },
         {
           title: "Formation",
           Component: FormFormation,
+          completion: formationCompletion?.contents,
         },
         // {
         //   title: "CADRE RÉSERVÉ À L’ORGANISME EN CHARGE DU DÉPÔT DU CONTRAT",
         //   Component: FormSubmittingContract,
         // },
-      ].map(({ title, Component }, key) => {
+      ].map(({ title, Component, completion }, key) => {
         return (
-          <AccordionItem border="none" key={key}>
+          <AccordionItem border="none" key={key} id={`accordion_${key}`}>
             {({ isExpanded }) => (
               <>
                 <AccordionButton bg="#F9F8F6">
+                  {completion < 100 && <StepWip color={"flatwarm"} boxSize="4" mr={2} />}
+                  {completion >= 100 && <StepComplete color={"greensoft.500"} boxSize="4" mr={2} />}
                   <Box flex="1" textAlign="left">
-                    {title}
+                    <HStack>
+                      <Text fontWeight="bold">{title}</Text>
+                      <Text> - {Math.round(completion)}%</Text>
+                    </HStack>
                   </Box>
                   {isExpanded ? (
                     <SubtractLine fontSize="12px" color="bluefrance" />

@@ -16,41 +16,46 @@ const PdfViewer = ({ url, pdfBase64, documentLoaded }) => {
   };
 
   return (
-    <Flex flexDirection="column" bg={isLoading ? "transparent" : "grey.600"} borderRadius={5} borderWidth={2}>
-      {!isLoading && (
-        <Flex bg={"grey.300"} py={3}>
-          <Box flexGrow={1}>
-            <Pagination totalPages={numPages} activePage={pageNumber} setPage={setPageNumber} />
-          </Box>
-          <Center mr={1}>
-            <Link href={url} textDecoration={"underline"} isExternal>
-              Télécharger le pdf <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
-            </Link>
-          </Center>
-        </Flex>
-      )}
-      <Box borderColor={"grey.600"} borderWidth={2}>
-        {isLoading && (
-          <Center>
-            <Spinner size="lg" />
-          </Center>
+    <Box>
+      <Flex flexDirection="column" bg={isLoading ? "transparent" : "grey.600"} borderRadius={5} borderWidth={2}>
+        {!isLoading && (
+          <Flex bg={"#F7F7F7"} py={3}>
+            <Box flexGrow={1}>
+              <Flex justifyContent={"center"}>
+                <Pagination totalPages={numPages} activePage={pageNumber} setPage={setPageNumber} />
+              </Flex>
+            </Box>
+          </Flex>
         )}
-        <Document
-          file={`data:application/pdf;base64,${pdfBase64}`}
-          onLoadSuccess={onDocumentLoadSuccess}
-          loading="Contrat en cours de création..."
-        >
-          <Page pageNumber={pageNumber} />
-        </Document>
-      </Box>
-      {!isLoading && (
-        <Box bg={"grey.300"} py={8}>
-          <Text ml={3}>
-            Page {pageNumber} of {numPages}{" "}
-          </Text>
+        <Box>
+          {isLoading && (
+            <Center>
+              <Spinner size="lg" />
+            </Center>
+          )}
+          <Document
+            file={`data:application/pdf;base64,${pdfBase64}`}
+            onLoadSuccess={onDocumentLoadSuccess}
+            loading="Contrat en cours de création..."
+          >
+            <Page pageNumber={pageNumber} />
+          </Document>
         </Box>
-      )}
-    </Flex>
+        {!isLoading && (
+          <Box bg={"#F7F7F7"} py={8}>
+            <Text>
+              Page {pageNumber} sur {numPages}{" "}
+            </Text>
+            <Center mt={1}>
+              <Link href={url} isExternal color="bluefrance">
+                <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
+                Télécharger le pdf
+              </Link>
+            </Center>
+          </Box>
+        )}
+      </Flex>
+    </Box>
   );
 };
 
