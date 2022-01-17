@@ -113,6 +113,19 @@ const FormContract = () => {
           <Text textStyle="sm" fontStyle="italic">
             à renseigner si une dérogation existe pour ce contrat
           </Text>
+          {(dateDebutContrat.value === "" || apprentiDateNaissance.value === "") && (
+            <Text as={"span"} fontWeight="400" fontStyle="italic" textStyle="sm" opacity={0.8}>
+              Pour appliquer une dérogation, merci de renseigner les champs:{" "}
+              <Text as={"span"} textDecoration={apprentiDateNaissance.value === "" ? "underline tomato" : "none"}>
+                la date de naissance de l'apprenti
+              </Text>
+              ,{" "}
+              <Text as={"span"} textDecoration={dateDebutContrat.value === "" ? "underline tomato" : "none"}>
+                la date de début d'exécution du contrat
+              </Text>
+            </Text>
+          )}
+
           {(typeContratApp.valueDb === 21 ||
             typeContratApp.valueDb === 22 ||
             typeContratApp.valueDb === 23 ||
