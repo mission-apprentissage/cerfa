@@ -1,3 +1,24 @@
+# [1.13.0-beta.14](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.13...v1.13.0-beta.14) (2022-01-17)
+
+
+### Bug Fixes
+
+* refresh type de derogation ([a98322b](https://github.com/mission-apprentissage/cerfa/commit/a98322bd887d73465efd905f401743f280780a5b))
+
+
+### Features
+
+* ajout contrôles type derogation, référentiel pays ([a0d2880](https://github.com/mission-apprentissage/cerfa/commit/a0d2880c7ebeba4e24096532f59a9a484d0e8c2c))
+* amélioration graphique étapier ([36ce295](https://github.com/mission-apprentissage/cerfa/commit/36ce295ac00c8f8c6cda37c023f7a755d6542c4d))
+* amélioration message d'erreur et autre fix ([df0f2fc](https://github.com/mission-apprentissage/cerfa/commit/df0f2fcde09c5707965c94913cdd60e0717e6c25))
+* champ date + autre ([88eafe4](https://github.com/mission-apprentissage/cerfa/commit/88eafe40b325e946e1525ede37f5220bcae68dbc))
+* controles numero de contrat ([964434b](https://github.com/mission-apprentissage/cerfa/commit/964434bedd9514ce7d96e457f557fc46769db3e3))
+* début contrôles idcc ([c16246f](https://github.com/mission-apprentissage/cerfa/commit/c16246f4453d1912a51521fed1187f5dd60022e4))
+* déclenchement forcé de validation ([fadad7d](https://github.com/mission-apprentissage/cerfa/commit/fadad7d06389dda4c87765520eab4ce2d777d7b5))
+* patterns ([333a75b](https://github.com/mission-apprentissage/cerfa/commit/333a75b7f0c6436bb543d35101f7f412d0802259))
+* rapide header date picker ([3a14a1c](https://github.com/mission-apprentissage/cerfa/commit/3a14a1cd3a75afce415eae84777f365d9da07a63))
+* retour de recette ([aacb691](https://github.com/mission-apprentissage/cerfa/commit/aacb691d84bff6757078dbe2e78437d5af55a8a1))
+
 # [1.13.0-beta.13](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.12...v1.13.0-beta.13) (2022-01-14)
 
 
