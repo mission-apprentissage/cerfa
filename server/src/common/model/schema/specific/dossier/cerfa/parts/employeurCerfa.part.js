@@ -1,4 +1,5 @@
 const adresseSchema = require("./adresse.part");
+const idccEnum = require("./idcc.part");
 
 const employeurCerfaSchema = {
   denomination: {
@@ -77,6 +78,7 @@ const employeurCerfaSchema = {
     example: 123,
   },
   codeIdcc: {
+    enum: [null, ...idccEnum.map(({ code }) => code)],
     maxLength: 4,
     type: String,
     default: null,

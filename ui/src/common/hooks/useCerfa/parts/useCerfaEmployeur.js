@@ -843,6 +843,7 @@ export function useCerfaEmployeur() {
     setEmployeurRaisonSociale(res.employeur.raison_sociale);
     setEmployeurNaf(res.employeur.naf);
     setEmployeurNombreDeSalaries(res.employeur.nombreDeSalaries);
+    // console.log(res.employeur.codeIdcc);
     setEmployeurCodeIdcc(res.employeur.codeIdcc);
     setEmployeurLibelleIdcc(res.employeur.libelleIdcc);
     setEmployeurTelephone({ ...res.employeur.telephone, value: res.employeur.telephone.value.replace("+", "") });
