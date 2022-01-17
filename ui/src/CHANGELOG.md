@@ -1,3 +1,10 @@
+# [1.13.0-beta.15](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.14...v1.13.0-beta.15) (2022-01-17)
+
+
+### Features
+
+* ajout rapide idcc + autres ([fc69091](https://github.com/mission-apprentissage/cerfa/commit/fc69091923b35de4fdbbcde833e83df03c7b0a86))
+
 # [1.13.0-beta.14](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.13...v1.13.0-beta.14) (2022-01-17)
 
 
