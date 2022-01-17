@@ -1,3 +1,10 @@
+# [1.13.0-beta.18](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.17...v1.13.0-beta.18) (2022-01-17)
+
+
+### Bug Fixes
+
+* valeur max des champs de type nombre, cfd vide, fix percent contrat ([7cece13](https://github.com/mission-apprentissage/cerfa/commit/7cece13a98ab99c1ca9d3ab56670e84252dcff9e))
+
 # [1.13.0-beta.17](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.16...v1.13.0-beta.17) (2022-01-17)
 
 
