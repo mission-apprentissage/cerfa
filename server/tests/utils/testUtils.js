@@ -5,6 +5,8 @@ const server = require("../../src/http/server");
 const axiosist = require("axiosist");
 const fakeMailer = require("./fakeMailer");
 const models = require("../../src/common/model");
+const fs = require("fs");
+const path = require("path");
 
 async function testContext(custom = {}) {
   const db = getDatabase();
@@ -107,10 +109,15 @@ function fakeClamav(results) {
   };
 }
 
+function getBlankPDFStream() {
+  return fs.createReadStream(path.join(__dirname, "blank.pdf"));
+}
+
 module.exports = {
   startServer,
   cleanDatabase,
   getTokenFromCookie,
   initComponents,
   fakeClamav,
+  getBlankPDFStream,
 };
