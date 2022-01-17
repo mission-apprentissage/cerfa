@@ -7,7 +7,7 @@ import PrivateRoute from "./common/components/PrivateRoute";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Box, Text } from "@chakra-ui/react";
 import { hasPageAccessTo } from "./common/utils/rolesUtils";
-import { MentionsLegalesPage, MentionsLegales, cguVersion } from "./pages/legal/MentionsLegales";
+import { CguPage, Cgu, cguVersion } from "./pages/legal/CGU";
 import AcknowledgeModal from "./common/components/Modals/AcknowledgeModal";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -28,6 +28,7 @@ const Roles = lazy(() => import("./pages/admin/Roles"));
 const Maintenance = lazy(() => import("./pages/admin/Maintenance"));
 const Support = lazy(() => import("./pages/legal/Support"));
 const Cookies = lazy(() => import("./pages/legal/Cookies"));
+const MentionsLegalesPage = lazy(() => import("./pages/legal/MentionsLegales"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 
@@ -114,7 +115,7 @@ const ForceAcceptCGU = ({ children }) => {
             )}
           </Box>
           <Box borderColor={"dgalt"} borderWidth={1} overflowY="scroll" px={8} py={4} h="30vh" ref={cguContainer}>
-            <MentionsLegales
+            <Cgu
               onLoad={async () => {
                 await new Promise((resolve) => setTimeout(resolve, 500));
                 cguContainer.current?.scrollTo(0, 0);
@@ -176,6 +177,7 @@ export default () => {
                   <Route exact path="/cookies" component={Cookies} />
                   <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
                   <Route exact path="/mentions-legales" component={MentionsLegalesPage} />
+                  <Route exact path="/cgu" component={CguPage} />
                   <Route exact path="/accessibilite" component={Accessibilite} />
 
                   {/* PRIVATE PAGES */}

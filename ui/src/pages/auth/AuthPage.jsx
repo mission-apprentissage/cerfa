@@ -103,13 +103,15 @@ const AuthPage = () => {
                   {slug === "connexion" ? "Connectez-vous" : "Inscrivez-vous"} pour accéder au service de contrat
                   d'apprentissage dématérialisé.
                 </Text>
-                <Button variant="secondary" type="submit" mt={12} as={Link} href={linkToPds} isExternal>
+                <Button variant="secondary" type="submit" mt={20} as={Link} href={linkToPds} isExternal>
                   S'identifier via Portail de service{" "}
                   <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} ml={"0.25rem"} mt={"0.125rem"} />
                 </Button>
               </Flex>
-
               <Box w="50%" h="55vh">
+                <Box position="absolute" ml="-30px" mt="305px">
+                  <strong>Ou</strong>
+                </Box>
                 <FormBoxMotion isOpen={slug === "inscription"}>
                   <Heading as="h1" fontSize="1.8rem" lineHeight="1.5">
                     Inscription

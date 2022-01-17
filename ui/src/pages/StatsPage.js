@@ -25,11 +25,11 @@ export default () => {
   const dashboards = [
     {
       title: "Général",
-      iframeURL: null, //getIframeUrl({ id: 2 }),
+      iframeURL: getIframeUrl({ id: 1 }),
     },
   ];
 
-  const title = "Statistiques Cerfa";
+  const title = "Statistiques";
   setTitle(title);
 
   return (

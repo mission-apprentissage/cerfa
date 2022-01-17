@@ -114,7 +114,7 @@ const apprentiSchema = {
     type: String,
     description: "Département de naissance de l'apprenti",
     label: "Département de naissance :",
-    example: "01",
+    example: "1 Ain, 99 Étranger",
     pattern: "^([1-9]|[2][1-9]|2[AB]|[13456789][0-9]|9[012345]|97[12346])$",
     requiredMessage: "le département de naissance est obligatoire",
     validateMessage: ` n'est pas un département valide`,

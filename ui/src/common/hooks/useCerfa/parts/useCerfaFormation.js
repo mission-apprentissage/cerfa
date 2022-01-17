@@ -16,6 +16,7 @@ import {
   convertValueToDate,
   convertDateToValue,
   normalizeInputNumberForDb,
+  doAsyncCodePostalActions,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
@@ -304,6 +305,13 @@ export const CerfaFormationController = async (dossier) => {
         //     role: "Employeur",
         //   },
         // ],
+      },
+      adresse: {
+        codePostal: {
+          doAsyncActions: async (value, data) => {
+            return await doAsyncCodePostalActions(value, data, dossier._id);
+          },
+        },
       },
     },
   };
@@ -668,14 +676,18 @@ export function useCerfaFormation() {
               adresse: {
                 codePostal: {
                   ...organismeFormationAdresseCodePostal,
-                  value: data,
-                  // forceUpdate: false, // IF data = "" true
+                  value: data.codePostal,
+                },
+                commune: {
+                  ...organismeFormationAdresseCommune,
+                  value: data.commune,
                 },
               },
             },
           };
           if (organismeFormationAdresseCodePostal.value !== newV.organismeFormation.adresse.codePostal.value) {
             setOrganismeFormationAdresseCodePostal(newV.organismeFormation.adresse.codePostal);
+            setOrganismeFormationAdresseCommune(newV.organismeFormation.adresse.commune);
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               organismeFormation: {
@@ -693,7 +705,9 @@ export function useCerfaFormation() {
     },
     [
       organismeFormationAdresseCodePostal,
+      organismeFormationAdresseCommune,
       setOrganismeFormationAdresseCodePostal,
+      setOrganismeFormationAdresseCommune,
       dossier?._id,
       cerfa?.id,
       setPartFormationCompletionAtom,

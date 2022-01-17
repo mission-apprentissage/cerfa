@@ -18,22 +18,22 @@ const typeDerogationSchema = {
     {
       label: "21 Réduction de la durée du contrat ou de la période d'apprentissage",
       value: 21,
-      locked: true,
+      locked: false,
     },
     {
       label: "22 Allongement de la durée du contrat ou de la période d'apprentissage",
       value: 22,
-      locked: true,
+      locked: false,
     },
     {
       label: "50 Cumul de dérogations",
       value: 50,
-      locked: true,
+      locked: false,
     },
     {
       label: "60 Autre dérogation",
       value: 60,
-      locked: true,
+      locked: false,
     },
   ],
 };

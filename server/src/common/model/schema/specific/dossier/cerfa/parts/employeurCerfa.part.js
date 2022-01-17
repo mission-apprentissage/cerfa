@@ -48,13 +48,6 @@ const employeurCerfaSchema = {
   },
   naf: {
     maxLength: 6,
-    // validate: {
-    //   validator: function (v) {
-    //     if (!v) return true;
-    //     return /^([0-9]{2}\\.?[0-9]{2}[a-zA-Z]{1})$/.test(v);
-    //   },
-    //   message: (props) => `${props.value} n'est pas un siret valide`,
-    // },
     type: String,
     default: null,
     required: function () {

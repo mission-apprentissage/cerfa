@@ -1632,6 +1632,11 @@ chalk@^4.1.0:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
+checksum-stream@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/checksum-stream/-/checksum-stream-1.0.3.tgz#4e17e6f83c80f7a9f43e83b445a81454c38a0172"
+  integrity sha1-Thfm+DyA96n0PoO0RagUVMOKAXI=
+
 cheerio-select@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/cheerio-select/-/cheerio-select-1.5.0.tgz#faf3daeb31b17c5e1a9dabcee288aaf8aafa5823"

@@ -627,14 +627,14 @@ export const CerfaContratController = async (dossier) => {
             dureeContrat = diffInMonths.months;
           }
 
-          const today = DateTime.now().setLocale("fr-FR");
-          if (dateDebutContrat <= today) {
-            return {
-              successed: false,
-              data: null,
-              message: "Date de début de contrat ne peut pas être antérieure à aujourd'hui",
-            };
-          }
+          // const today = DateTime.now().setLocale("fr-FR");
+          // if (dateDebutContrat <= today) {
+          //   return {
+          //     successed: false,
+          //     data: null,
+          //     message: "Date de début de contrat ne peut pas être antérieure à aujourd'hui",
+          //   };
+          // }
 
           if (data.dateEffetAvenant) {
             const dateEffetAvenant = DateTime.fromISO(data.dateEffetAvenant).setLocale("fr-FR");

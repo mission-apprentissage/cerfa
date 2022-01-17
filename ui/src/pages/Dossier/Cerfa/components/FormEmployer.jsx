@@ -161,8 +161,8 @@ const FormEmployer = ({ onFetched }) => {
             onSubmittedField={onSubmittedEmployeurCodeIdcc}
             onAsyncData={{
               enumCodeIdcc: codeIdcc.enum,
-              libelleIdcc: libelleIdcc.value,
               enumLibelleIdcc: libelleIdcc.enum,
+              libelleIdcc: libelleIdcc.value,
             }}
           />
           <InputCerfa

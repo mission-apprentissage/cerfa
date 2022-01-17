@@ -60,42 +60,50 @@ const Footer = () => {
               flexWrap={"wrap"}
               display="flex"
               flex="1"
-              css={{ "li:not(:last-child):after": { content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" } }}
+              // css={{ "li:not(:last-child):after": { content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" } }}
             >
-              <ListItem>
+              <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
                 <Link href={`${process.env.PUBLIC_URL}/sitemap.xml`}>Plan du site</Link>
               </ListItem>
-              <ListItem>
+              <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
                 <Link as={NavLink} to={"/accessibilite"}>
                   Accessibilité : Non conforme
                 </Link>
               </ListItem>
-              <ListItem>
+              <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
                 <Link as={NavLink} to={"/mentions-legales"}>
                   Mentions légales
                 </Link>
               </ListItem>
-              {/*<ListItem>*/}
-              {/*  <Link as={NavLink} to={"/donnees-personnelles"}>*/}
-              {/*    Données personnelles*/}
-              {/*  </Link>*/}
-              {/*</ListItem>*/}
-              <ListItem>
+              <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
+                <Link as={NavLink} to={"/cgu"}>
+                  Conditions générales d'utilisation
+                </Link>
+              </ListItem>
+              <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
+                <Link as={NavLink} to={"/donnees-personnelles"}>
+                  Données personnelles
+                </Link>
+              </ListItem>
+              <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
                 <Link as={NavLink} to={"/cookies"}>
                   Gestion des cookies
                 </Link>
               </ListItem>
-              <ListItem>
+              <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
                 <Link as={NavLink} to={"/stats"}>
                   Statistiques
                 </Link>
               </ListItem>
-              <ListItem>
+              <ListItem _after={{ content: "''", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
                 <Link as={NavLink} to={"/support"}>
                   Support
                 </Link>
               </ListItem>
-              <ListItem>
+              <ListItem w="10px" _after={{ content: "''", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
+                &nbsp;
+              </ListItem>
+              <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
                 <Link
                   href="https://mission-apprentissage.notion.site/Documentation-32235dc713c04bbf9b44e6963e02c07e"
                   isExternal
@@ -104,13 +112,13 @@ const Footer = () => {
                   <ExternalLinkLine w={"0.55rem"} h={"0.55rem"} mb={"0.125rem"} ml={1} />
                 </Link>
               </ListItem>
-              <ListItem>
+              <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
                 <Link href="https://github.com/mission-apprentissage/cerfa/releases" isExternal>
                   Journal des versions
                   <ExternalLinkLine w={"0.55rem"} h={"0.55rem"} mb={"0.125rem"} ml={1} />
                 </Link>
               </ListItem>
-              <ListItem>
+              <ListItem _after={{ content: "''", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
                 <Link href="https://github.com/mission-apprentissage/cerfa" isExternal>
                   Code source
                   <ExternalLinkLine w={"0.55rem"} h={"0.55rem"} mb={"0.125rem"} ml={1} />

@@ -3,7 +3,6 @@
  */
 
 import { useCallback } from "react";
-// import { DateTime } from "luxon";
 import { _post } from "../../../httpClient";
 import { useRecoilState, useRecoilValue } from "recoil";
 
@@ -14,6 +13,7 @@ import {
   convertValueToMultipleSelectOption,
   convertMultipleSelectOptionToValue,
   normalizeInputNumberForDb,
+  doAsyncCodePostalActions,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
@@ -133,6 +133,71 @@ export const CerfaEmployeurController = async (dossier) => {
           };
         },
       },
+      nombreDeSalaries: {
+        doAsyncActions: async (value, data) => {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          if (parseInt(value) > 9999999) {
+            return {
+              successed: false,
+              data: null,
+              message: "Le nombre de salariés ne excéder 9999999",
+            };
+          }
+
+          return {
+            successed: true,
+            data: {
+              nombreDeSalaries: value,
+            },
+            message: null,
+          };
+        },
+      },
+      adresse: {
+        codePostal: {
+          doAsyncActions: async (value, data) => {
+            return await doAsyncCodePostalActions(value, data, dossier._id);
+          },
+        },
+      },
+      naf: {
+        doAsyncActions: async (value, data) => {
+          try {
+            const insert = (str, index, value) => {
+              return str.substr(0, index) + value + str.substr(index);
+            };
+            let formattedNaf = value.length > 2 ? insert(value, 2, ".") : value;
+
+            const response = await _post(`/api/v1/naf/`, {
+              naf: formattedNaf,
+              dossierId: dossier._id,
+            });
+
+            if (response.error) {
+              return {
+                successed: false,
+                data: null,
+                message: response.error,
+              };
+            }
+
+            return {
+              successed: true,
+              data: {
+                naf: value,
+              },
+              message: null,
+            };
+          } catch (error) {
+            return {
+              successed: false,
+              data: null,
+              message: error.prettyMessage,
+            };
+          }
+        },
+      },
     },
   };
 };
@@ -239,7 +304,7 @@ export function useCerfaEmployeur() {
               libelleIdcc: {
                 ...employeurLibelleIdcc,
                 value: data.conventionCollective?.titre || "",
-                // locked: false,
+                locked: false,
               },
               nombreDeSalaries: {
                 ...employeurNombreDeSalaries,
@@ -255,7 +320,17 @@ export function useCerfaEmployeur() {
           setEmployeurDenomination(newV.employeur.denomination);
           setEmployeurNaf(newV.employeur.naf);
           setEmployeurCodeIdcc(newV.employeur.codeIdcc);
-          setEmployeurLibelleIdcc(newV.employeur.libelleIdcc);
+
+          let libelleIdcc = newV.employeur.libelleIdcc.value;
+
+          if (libelleIdcc === "") {
+            const index = newV.employeur.codeIdcc.enum.indexOf(newV.employeur.codeIdcc.value);
+            if (index !== -1) {
+              libelleIdcc = employeurLibelleIdcc.enum[index];
+            }
+          }
+          setEmployeurLibelleIdcc({ ...newV.employeur.libelleIdcc, value: libelleIdcc });
+
           setEmployeurNombreDeSalaries(newV.employeur.nombreDeSalaries);
           setEmployeurAdresseNumero(newV.employeur.adresse.numero);
           setEmployeurAdresseVoie(newV.employeur.adresse.voie);
@@ -271,7 +346,7 @@ export function useCerfaEmployeur() {
               denomination: newV.employeur.denomination.value,
               naf: newV.employeur.naf.value,
               codeIdcc: newV.employeur.codeIdcc.value,
-              libelleIdcc: newV.employeur.libelleIdcc.value,
+              libelleIdcc: libelleIdcc,
               nombreDeSalaries: normalizeInputNumberForDb(newV.employeur.nombreDeSalaries.value),
               privePublic: newV.employeur.privePublic.value,
               adresse: {
@@ -376,8 +451,7 @@ export function useCerfaEmployeur() {
             employeur: {
               naf: {
                 ...employeurNaf,
-                value: data,
-                // forceUpdate: false, // IF data = "" true
+                value: data.naf,
               },
             },
           };
@@ -557,14 +631,18 @@ export function useCerfaEmployeur() {
               adresse: {
                 codePostal: {
                   ...employeurAdresseCodePostal,
-                  value: data,
-                  // forceUpdate: false, // IF data = "" true
+                  value: data.codePostal,
+                },
+                commune: {
+                  ...employeurAdresseCommune,
+                  value: data.commune,
                 },
               },
             },
           };
           if (employeurAdresseCodePostal.value !== newV.employeur.adresse.codePostal.value) {
             setEmployeurAdresseCodePostal(newV.employeur.adresse.codePostal);
+            setEmployeurAdresseCommune(newV.employeur.adresse.commune);
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
@@ -580,7 +658,15 @@ export function useCerfaEmployeur() {
         console.error(e);
       }
     },
-    [employeurAdresseCodePostal, setEmployeurAdresseCodePostal, dossier?._id, cerfa?.id, setPartEmployeurCompletionAtom]
+    [
+      employeurAdresseCodePostal,
+      employeurAdresseCommune,
+      setEmployeurAdresseCodePostal,
+      setEmployeurAdresseCommune,
+      dossier?._id,
+      cerfa?.id,
+      setPartEmployeurCompletionAtom,
+    ]
   );
 
   const onSubmittedEmployeurAdresseCommune = useCallback(
@@ -696,8 +782,7 @@ export function useCerfaEmployeur() {
             employeur: {
               nombreDeSalaries: {
                 ...employeurNombreDeSalaries,
-                value: data,
-                // forceUpdate: false, // IF data = "" true
+                value: data.nombreDeSalaries,
               },
             },
           };
