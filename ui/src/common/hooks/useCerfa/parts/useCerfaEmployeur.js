@@ -267,7 +267,7 @@ export function useCerfaEmployeur() {
               libelleIdcc: {
                 ...employeurLibelleIdcc,
                 value: data.conventionCollective?.titre || "",
-                // locked: false,
+                locked: false,
               },
               nombreDeSalaries: {
                 ...employeurNombreDeSalaries,
@@ -283,7 +283,17 @@ export function useCerfaEmployeur() {
           setEmployeurDenomination(newV.employeur.denomination);
           setEmployeurNaf(newV.employeur.naf);
           setEmployeurCodeIdcc(newV.employeur.codeIdcc);
-          setEmployeurLibelleIdcc(newV.employeur.libelleIdcc);
+
+          let libelleIdcc = newV.employeur.libelleIdcc.value;
+
+          if (libelleIdcc === "") {
+            const index = newV.employeur.codeIdcc.enum.indexOf(newV.employeur.codeIdcc.value);
+            if (index !== -1) {
+              libelleIdcc = employeurLibelleIdcc.enum[index];
+            }
+          }
+          setEmployeurLibelleIdcc({ ...newV.employeur.libelleIdcc, value: libelleIdcc });
+
           setEmployeurNombreDeSalaries(newV.employeur.nombreDeSalaries);
           setEmployeurAdresseNumero(newV.employeur.adresse.numero);
           setEmployeurAdresseVoie(newV.employeur.adresse.voie);
@@ -299,7 +309,7 @@ export function useCerfaEmployeur() {
               denomination: newV.employeur.denomination.value,
               naf: newV.employeur.naf.value,
               codeIdcc: newV.employeur.codeIdcc.value,
-              libelleIdcc: newV.employeur.libelleIdcc.value,
+              libelleIdcc: libelleIdcc,
               nombreDeSalaries: normalizeInputNumberForDb(newV.employeur.nombreDeSalaries.value),
               privePublic: newV.employeur.privePublic.value,
               adresse: {
