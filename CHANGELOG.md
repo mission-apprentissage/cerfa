@@ -1,3 +1,10 @@
+# [1.13.0-beta.17](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.16...v1.13.0-beta.17) (2022-01-17)
+
+
+### Bug Fixes
+
+* sauvegarde libellé idcc ([8f93a89](https://github.com/mission-apprentissage/cerfa/commit/8f93a8928263aa2271d2b914177471e3cefe567d))
+
 # [1.13.0-beta.16](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0-beta.15...v1.13.0-beta.16) (2022-01-17)
 
 
