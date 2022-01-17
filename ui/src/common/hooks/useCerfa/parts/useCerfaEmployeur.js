@@ -105,6 +105,34 @@ export const CerfaEmployeurController = async (dossier) => {
         //   },
         // ],
       },
+      codeIdcc: {
+        doAsyncActions: async (value, data) => {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          const index = data.enumCodeIdcc.indexOf(value);
+          if (index === -1 && value.length >= 4) {
+            return {
+              successed: false,
+              data: null,
+              message: "Le code idcc n'est valide",
+            };
+          }
+
+          let libelleIdcc = data.libelleIdcc;
+          if (value.length === 4) {
+            libelleIdcc = data.enumLibelleIdcc[index];
+          }
+
+          return {
+            successed: true,
+            data: {
+              codeIdcc: value,
+              libelleIdcc,
+            },
+            message: null,
+          };
+        },
+      },
     },
   };
 };
@@ -211,7 +239,7 @@ export function useCerfaEmployeur() {
               libelleIdcc: {
                 ...employeurLibelleIdcc,
                 value: data.conventionCollective?.titre || "",
-                locked: false,
+                // locked: false,
               },
               nombreDeSalaries: {
                 ...employeurNombreDeSalaries,
@@ -379,13 +407,19 @@ export function useCerfaEmployeur() {
             employeur: {
               codeIdcc: {
                 ...employeurCodeIdcc,
-                value: data,
-                // forceUpdate: false, // IF data = "" true
+                value: data.codeIdcc,
+              },
+              libelleIdcc: {
+                ...employeurLibelleIdcc,
+                value: data.libelleIdcc || "",
+                // locked: false,
               },
             },
           };
           if (employeurCodeIdcc.value !== newV.employeur.codeIdcc.value) {
             setEmployeurCodeIdcc(newV.employeur.codeIdcc);
+
+            if (newV.employeur.libelleIdcc !== "") setEmployeurLibelleIdcc(newV.employeur.libelleIdcc);
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
@@ -399,7 +433,15 @@ export function useCerfaEmployeur() {
         console.error(e);
       }
     },
-    [cerfa?.id, dossier?._id, employeurCodeIdcc, setEmployeurCodeIdcc, setPartEmployeurCompletionAtom]
+    [
+      cerfa?.id,
+      dossier?._id,
+      employeurCodeIdcc,
+      employeurLibelleIdcc,
+      setEmployeurCodeIdcc,
+      setEmployeurLibelleIdcc,
+      setPartEmployeurCompletionAtom,
+    ]
   );
 
   const onSubmittedEmployeurAdresseNumero = useCallback(
@@ -843,8 +885,9 @@ export function useCerfaEmployeur() {
     setEmployeurRaisonSociale(res.employeur.raison_sociale);
     setEmployeurNaf(res.employeur.naf);
     setEmployeurNombreDeSalaries(res.employeur.nombreDeSalaries);
-    // console.log(res.employeur.codeIdcc);
+
     setEmployeurCodeIdcc(res.employeur.codeIdcc);
+
     setEmployeurLibelleIdcc(res.employeur.libelleIdcc);
     setEmployeurTelephone({ ...res.employeur.telephone, value: res.employeur.telephone.value.replace("+", "") });
     setEmployeurCourriel(res.employeur.courriel);

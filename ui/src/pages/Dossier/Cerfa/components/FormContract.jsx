@@ -29,7 +29,7 @@ const FormContract = () => {
   const {
     get: {
       contrat: {
-        modeContractuel: contratModeContractuel,
+        // modeContractuel: contratModeContractuel,
         typeContratApp,
         typeDerogation,
         numeroContratPrecedent,
@@ -57,7 +57,7 @@ const FormContract = () => {
     },
     onSubmit: {
       contrat: {
-        modeContractuel: onSubmittedContratModeContractuel,
+        // modeContractuel: onSubmittedContratModeContractuel,
         typeContratApp: onSubmittedContratTypeContratApp,
         numeroContratPrecedent: onSubmittedContratNumeroContratPrecedent,
         dateDebutContrat: onSubmittedContratDateDebutContrat,
@@ -91,13 +91,13 @@ const FormContract = () => {
             mt="2"
             onSubmittedField={onSubmittedContratTypeContratApp}
           />
-          <InputCerfa
+          {/* <InputCerfa
             path="contrat.modeContractuel"
             field={contratModeContractuel}
             type="select"
             mt="2"
             onSubmittedField={onSubmittedContratModeContractuel}
-          />
+          /> */}
           <InputCerfa
             path="contrat.typeDerogation"
             field={typeDerogation}

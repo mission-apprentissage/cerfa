@@ -91,6 +91,7 @@ const employeurCerfaSchema = {
     example: "0043",
   },
   libelleIdcc: {
+    enum: [null, ...idccEnum.map(({ libelle }) => libelle)],
     maxLength: 500,
     default: null,
     type: String,

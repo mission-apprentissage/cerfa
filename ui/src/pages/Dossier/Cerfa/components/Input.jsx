@@ -207,7 +207,7 @@ const DateInput = ({ onChange, value, type, ...props }) => {
     prevMonthButtonDisabled,
     nextMonthButtonDisabled,
   }) => {
-    const yearValue = date.getYear() >= 1930 && date.getYear() <= 2035 ? date.getYear() : 2022;
+    const yearValue = date.getFullYear() >= 1930 && date.getFullYear() <= 2035 ? date.getFullYear() : 2022;
     return (
       <div
         style={{

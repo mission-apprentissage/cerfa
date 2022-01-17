@@ -159,6 +159,11 @@ const FormEmployer = ({ onFetched }) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedEmployeurCodeIdcc}
+            onAsyncData={{
+              enumCodeIdcc: codeIdcc.enum,
+              libelleIdcc: libelleIdcc.value,
+              enumLibelleIdcc: libelleIdcc.enum,
+            }}
           />
           <InputCerfa
             path="employeur.libelleIdcc"
