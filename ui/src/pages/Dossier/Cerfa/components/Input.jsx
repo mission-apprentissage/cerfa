@@ -19,12 +19,14 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  IconButton,
 } from "@chakra-ui/react";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import PhoneInput from "react-phone-input-2";
 import { IMask, IMaskInput, IMaskMixin } from "react-imask";
 import { useFormik } from "formik";
 // import debounce from "lodash.debounce";
+import range from "lodash.range";
 import DatePicker from "react-datepicker";
 import { registerLocale } from "react-datepicker";
 import throttle from "lodash.throttle";
@@ -33,7 +35,7 @@ import * as Yup from "yup";
 import { LockFill } from "../../../../theme/components/icons/LockFill";
 import InfoTooltip from "../../../../common/components/InfoTooltip";
 import Comment from "../../../../common/components/Comments/Comment";
-import { Check } from "../../../../theme/components/icons";
+import { Check, IoArrowBackward, IoArrowForward } from "../../../../theme/components/icons";
 
 import { DateTime } from "luxon";
 import fr from "date-fns/locale/fr";
@@ -138,6 +140,22 @@ const DateInput = ({ onChange, value, type, ...props }) => {
     return value !== "" ? DateTime.fromISO(value).setLocale("fr-FR").toJSDate() : "";
   }, [value]);
 
+  const years = range(1900, 2035);
+  const months = [
+    "Janvier",
+    "Février",
+    "Mars",
+    "Avril",
+    "Mai",
+    "Juin",
+    "Juillet",
+    "Aout",
+    "Septembre",
+    "Octobre",
+    "Novembre",
+    "Décembre",
+  ];
+
   const CustomDateInput = forwardRef(({ value, onChange, onFocus, onClick, ...props }, ref) => {
     const [internalValue, setInternalValue] = useState(value);
 
@@ -180,16 +198,77 @@ const DateInput = ({ onChange, value, type, ...props }) => {
     );
   });
 
+  const CustomHeader = ({
+    date,
+    changeYear,
+    changeMonth,
+    decreaseMonth,
+    increaseMonth,
+    prevMonthButtonDisabled,
+    nextMonthButtonDisabled,
+  }) => {
+    const yearValue = date.getYear() >= 1930 && date.getYear() <= 2035 ? date.getYear() : 2022;
+    return (
+      <div
+        style={{
+          margin: 10,
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <IconButton
+          isDisabled={prevMonthButtonDisabled}
+          variant="unstyled"
+          onClick={decreaseMonth}
+          minW={2}
+          icon={<IoArrowBackward olor={"disablegrey"} boxSize="4" />}
+          size="sm"
+          mt={-2}
+        />
+        <select value={yearValue} onChange={({ target: { value } }) => changeYear(value)}>
+          {years.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={months[date.getMonth()]}
+          onChange={({ target: { value } }) => changeMonth(months.indexOf(value))}
+        >
+          {months.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+
+        <IconButton
+          isDisabled={nextMonthButtonDisabled}
+          onClick={increaseMonth}
+          variant="unstyled"
+          minW={2}
+          icon={<IoArrowForward olor={"disablegrey"} boxSize="4" />}
+          size="sm"
+          mt={-2}
+        />
+      </div>
+    );
+  };
+
   return (
     <DatePicker
       dateFormat="ddMMyyyy"
       locale="fr"
       selected={dateValue}
       closeOnScroll={true}
+      renderCustomHeader={CustomHeader}
       customInput={<CustomDateInput {...props} />}
       onChange={(date) => {
         onChange({ persist: () => {}, target: { value: date } });
       }}
+      fixedHeight
     />
   );
 };
