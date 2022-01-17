@@ -389,23 +389,29 @@ export default React.memo(
             } else if (field?.triggerValidation && triggerRef.current === 0) {
               triggerRef.current = 1;
               let nextVal = values[name];
-              setIsLoading(true);
-              // await new Promise((resolve) => setTimeout(resolve, 300));
-              const { successed, data, message } = await field?.doAsyncActions(nextVal, onAsyncData);
-              setIsLoading(false);
 
-              setErrors({ [name]: message });
-              if (data) {
-                await onSubmittedField(path, data, true);
-              }
+              if (!field?.doAsyncActions) {
+                if (onSubmittedField) {
+                  await onSubmittedField(path, nextVal, true);
+                }
+              } else {
+                setIsLoading(true);
+                const { successed, data, message } = await field?.doAsyncActions(nextVal, onAsyncData);
+                setIsLoading(false);
 
-              if (fieldValue !== "") {
-                if (successed) {
-                  setIsErrored(false);
-                  setValidated(true);
-                } else {
-                  setValidated(false);
-                  setIsErrored(true);
+                setErrors({ [name]: message });
+                if (data) {
+                  await onSubmittedField(path, data, true);
+                }
+
+                if (fieldValue !== "") {
+                  if (successed) {
+                    setIsErrored(false);
+                    setValidated(true);
+                  } else {
+                    setValidated(false);
+                    setIsErrored(true);
+                  }
                 }
               }
             } else if (!field?.triggerValidation && triggerRef.current === 1) {

@@ -928,6 +928,19 @@ export const CerfaContratController = async (dossier) => {
           };
         },
       },
+      typeDerogation: {
+        doAsyncActions: async (value, data) => {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+          return {
+            successed: true,
+            data: {
+              ...data,
+              typeDerogation: value,
+            },
+            message: null,
+          };
+        },
+      },
     },
   };
 };
@@ -1386,73 +1399,67 @@ export function useCerfaContrat() {
     ]
   );
 
-  let setTypeDerogation = useCallback(
-    async (dateNaissance, age, initValue) => {
-      const typeDerogation = contratTypeDerogation || initValue;
-      const opts = {
-        dateNaissance: DateTime.fromISO(dateNaissance).setLocale("fr-FR"),
-        age,
-        limitDateString: contratDateDebutContrat?.value,
-      };
-      const isApprentiGEQ16 = isAgeGreaterOrEqualAtDate({ ...opts, limitAge: 16 });
-      const isApprentiLOW16 = isAgeLowerAtDate({ ...opts, limitAge: 16 });
-      const isApprentiGEQ30 = isAgeGreaterOrEqualAtDate({ ...opts, limitAge: 30 });
-      const isApprentiLOW30 = isAgeGreaterOrEqualAtDate({ ...opts, limitAge: 30 });
+  let refreshTypeDerogation = useCallback(() => {
+    setContratTypeDerogation({ ...contratTypeDerogation, triggerValidation: true });
+  }, [contratTypeDerogation, setContratTypeDerogation]);
 
-      // 11 not allowed if age >= 16 à la date d'execution
-      // if age  à la date d'execution < 16   type 11 ||  50
-      // 12 not allowed age < 30  à la date d'execution
-      // if age  à la date d'execution >= 30  type 12 ||  50
-      const options = [];
-      let valueForbidden = false;
-      for (let i = 0; i < typeDerogation.options.length; i++) {
-        let option = { ...typeDerogation.options[i] };
-        if (isApprentiGEQ16) {
-          if (option.value === 11) {
-            option.locked = true;
-          } else {
-            option.locked = false;
-          }
-        } else if (isApprentiLOW16) {
-          if (option.value === 11 || option.value === 50) {
-            option.locked = false;
-          } else {
-            option.locked = true;
-          }
-        } else if (isApprentiGEQ30) {
-          if (option.value === 12 || option.value === 50) {
-            option.locked = false;
-          } else {
-            option.locked = true;
-          }
-        } else if (isApprentiLOW30) {
-          if (option.value === 12) {
-            option.locked = true;
-          } else {
-            option.locked = false;
-          }
-        }
+  let getTypeDerogation = (typeDerogation = null, { dateNaissance, age, contratDateDebutContratString }) => {
+    const opts = {
+      dateNaissance: DateTime.fromISO(dateNaissance).setLocale("fr-FR"),
+      age,
+      limitDateString: contratDateDebutContratString,
+    };
+    const isApprentiGEQ16 = isAgeGreaterOrEqualAtDate({ ...opts, limitAge: 16 });
+    const isApprentiLOW16 = isAgeLowerAtDate({ ...opts, limitAge: 16 });
+    const isApprentiGEQ30 = isAgeGreaterOrEqualAtDate({ ...opts, limitAge: 30 });
+    const isApprentiLOW30 = isAgeGreaterOrEqualAtDate({ ...opts, limitAge: 30 });
 
-        if (typeDerogation.valueDb === option.value && option.locked) {
-          valueForbidden = true;
+    // 11 not allowed if age >= 16 à la date d'execution
+    // if age  à la date d'execution < 16   type 11 ||  50
+    // 12 not allowed age < 30  à la date d'execution
+    // if age  à la date d'execution >= 30  type 12 ||  50
+    const options = [];
+    let valueForbidden = false;
+    for (let i = 0; i < typeDerogation.options.length; i++) {
+      let option = { ...typeDerogation.options[i] };
+      if (isApprentiGEQ16) {
+        if (option.value === 11) {
+          option.locked = true;
+        } else {
+          option.locked = false;
         }
-        options.push(option);
+      } else if (isApprentiLOW16) {
+        if (option.value === 11 || option.value === 50) {
+          option.locked = false;
+        } else {
+          option.locked = true;
+        }
+      } else if (isApprentiGEQ30) {
+        if (option.value === 12 || option.value === 50) {
+          option.locked = false;
+        } else {
+          option.locked = true;
+        }
+      } else if (isApprentiLOW30) {
+        if (option.value === 12) {
+          option.locked = true;
+        } else {
+          option.locked = false;
+        }
       }
 
-      if (!valueForbidden) {
-        setContratTypeDerogation({ ...typeDerogation, options });
-      } else {
-        setContratTypeDerogation({ ...typeDerogation, options, value: "" });
-        // TODO init cerfaid undefined
-        await saveCerfa(dossier?._id, cerfa?.id, {
-          contrat: {
-            typeDerogation: null,
-          },
-        });
+      if (convertOptionToValue(typeDerogation) === option.value && option.locked) {
+        valueForbidden = true;
       }
-    },
-    [cerfa?.id, contratDateDebutContrat?.value, contratTypeDerogation, dossier?._id, setContratTypeDerogation]
-  );
+      options.push(option);
+    }
+
+    if (!valueForbidden) {
+      return { ...typeDerogation, options };
+    } else {
+      return { ...typeDerogation, options, value: "" };
+    }
+  };
 
   const onSubmittedContratDateDebutContrat = useCallback(
     async (path, data, forcedTriggered) => {
@@ -1476,9 +1483,10 @@ export function useCerfaContrat() {
               if (contratDateFinContrat.value !== "")
                 setContratDateFinContrat({ ...contratDateFinContrat, triggerValidation: true });
 
+              refreshTypeDerogation();
+
               setContratDateDebutContrat(newV.contrat.dateDebutContrat);
               seContratDureeContrat(newV.contrat.dureeContrat);
-              setTypeDerogation(data.apprentiDateNaissance, data.apprentiAge);
 
               shouldSaveInDb = true;
             }
@@ -1518,9 +1526,9 @@ export function useCerfaContrat() {
       contratDureeContrat,
       contratDateFinContrat,
       setContratDateFinContrat,
+      refreshTypeDerogation,
       setContratDateDebutContrat,
       seContratDureeContrat,
-      setTypeDerogation,
       dossier?._id,
       cerfa?.id,
       setPartContratCompletion,
@@ -1835,7 +1843,6 @@ export function useCerfaContrat() {
               modeContractuel: {
                 ...contratModeContractuel,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -1931,24 +1938,37 @@ export function useCerfaContrat() {
   );
 
   const onSubmittedContratTypeDerogation = useCallback(
-    async (path, data) => {
+    async (path, data, forcedTriggered) => {
       try {
         if (path === "contrat.typeDerogation") {
           const newV = {
             contrat: {
               typeDerogation: {
                 ...contratTypeDerogation,
-                value: data,
-                // forceUpdate: false, // IF data = "" true
+                value: data.typeDerogation,
               },
             },
           };
-          if (contratTypeDerogation.value !== newV.contrat.typeDerogation.value) {
-            setContratTypeDerogation(newV.contrat.typeDerogation);
+          let shouldSaveInDb = false;
+          const typeDerog = getTypeDerogation(newV.contrat.typeDerogation, {
+            dateNaissance: data.apprentiDateNaissance,
+            age: data.apprentiAge,
+            contratDateDebutContratString: data.dateDebutContrat,
+          });
 
+          if (!forcedTriggered) {
+            if (contratTypeDerogation.value !== typeDerog.value) {
+              setContratTypeDerogation(typeDerog);
+              shouldSaveInDb = true;
+            }
+          } else {
+            setContratTypeDerogation({ ...typeDerog, triggerValidation: false });
+            shouldSaveInDb = true;
+          }
+          if (shouldSaveInDb) {
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               contrat: {
-                typeDerogation: convertOptionToValue(newV.contrat.typeDerogation),
+                typeDerogation: convertOptionToValue(typeDerog),
               },
             });
             setPartContratCompletion(cerfaContratCompletion(res));
@@ -2301,11 +2321,12 @@ export function useCerfaContrat() {
     setContratDateRupture(convertValueToDate(res.contrat.dateRupture));
     setContratLieuSignatureContrat(res.contrat.lieuSignatureContrat);
 
-    setTypeDerogation(
-      convertValueToDate(res.apprenti.dateNaissance).value,
-      res.apprenti.age.value,
-      convertValueToOption(res.contrat.typeDerogation)
-    );
+    const typeDerog = getTypeDerogation(convertValueToOption(res.contrat.typeDerogation), {
+      dateNaissance: convertValueToDate(res.apprenti.dateNaissance).value,
+      age: res.apprenti.age.value,
+      contratDateDebutContratString: convertValueToDate(res.contrat.dateDebutContrat).value,
+    });
+    setContratTypeDerogation(typeDerog);
 
     setContratDureeTravailHebdoHeures(res.contrat.dureeTravailHebdoHeures);
     setContratDureeTravailHebdoMinutes(res.contrat.dureeTravailHebdoMinutes);
@@ -2556,7 +2577,7 @@ export function useCerfaContrat() {
     },
     setAll,
     setRemunerations,
-    setTypeDerogation,
+    refreshTypeDerogation,
     onSubmit: {
       contrat: {
         modeContractuel: onSubmittedContratModeContractuel,

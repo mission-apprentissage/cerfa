@@ -104,6 +104,11 @@ const FormContract = () => {
             type="select"
             mt="2"
             onSubmittedField={onSubmittedContratTypeDerogation}
+            onAsyncData={{
+              dateDebutContrat: dateDebutContrat?.value,
+              apprentiDateNaissance: apprentiDateNaissance?.value,
+              apprentiAge: apprentiAge?.value,
+            }}
           />
           <Text textStyle="sm" fontStyle="italic">
             à renseigner si une dérogation existe pour ce contrat

@@ -157,7 +157,7 @@ export const CerfaApprentiController = async (dossier) => {
 export function useCerfaApprenti() {
   const cerfa = useRecoilValue(cerfaAtom);
   const dossier = useRecoilValue(dossierAtom);
-  const { setRemunerations, setTypeDerogation } = useCerfaContrat();
+  const { setRemunerations, refreshTypeDerogation } = useCerfaContrat();
 
   const [partApprentiCompletion, setPartApprentiCompletion] = useRecoilState(
     apprentiAtoms.cerfaPartApprentiCompletionAtom
@@ -390,7 +390,6 @@ export function useCerfaApprenti() {
           if (apprentiDateNaissance.value !== newV.apprenti.dateNaissance.value) {
             setApprentiDateNaissance(newV.apprenti.dateNaissance);
             setApprentiAge(newV.apprenti.age);
-            setTypeDerogation(newV.apprenti.dateNaissance.value, newV.apprenti.age.value);
 
             let dataToSave = {
               apprenti: {
@@ -413,6 +412,8 @@ export function useCerfaApprenti() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+
+            refreshTypeDerogation();
           }
         }
       } catch (e) {
@@ -424,7 +425,7 @@ export function useCerfaApprenti() {
       apprentiAge,
       setApprentiDateNaissance,
       setApprentiAge,
-      setTypeDerogation,
+      refreshTypeDerogation,
       resetInDbResponsableLegalData,
       dossier?._id,
       cerfa?.id,
