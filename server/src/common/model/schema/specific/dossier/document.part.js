@@ -60,7 +60,7 @@ const documentSchema = {
     type: String,
     default: null,
     required: false,
-    description: "Qui a réalisé la derniere mise à jour",
+    description: "Checksum fichier",
   },
 };
 
