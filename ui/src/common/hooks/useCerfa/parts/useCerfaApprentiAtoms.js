@@ -98,6 +98,10 @@ export const cerfaApprentiAdresseCommuneAtom = atom({
   key: "cerfa/apprenti/adresse/commune",
   default: null,
 });
+export const cerfaApprentiAdressePaysAtom = atom({
+  key: "cerfa/apprenti/adresse/pays",
+  default: null,
+});
 
 export const cerfaApprentiApprentiMineurNonEmancipeAtom = atom({
   key: "cerfa/apprenti/apprentiMineurNonEmancipe",
@@ -133,6 +137,10 @@ export const cerfaApprentiResponsableLegalAdresseCodePostalAtom = atom({
 });
 export const cerfaApprentiResponsableLegalAdresseCommuneAtom = atom({
   key: "cerfa/apprenti/responsableLegal/adresse/commune",
+  default: null,
+});
+export const cerfaApprentiResponsableLegalAdressePaysAtom = atom({
+  key: "cerfa/apprenti/responsableLegal/adresse/pays",
   default: null,
 });
 

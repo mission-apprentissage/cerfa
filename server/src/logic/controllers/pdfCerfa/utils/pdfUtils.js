@@ -98,7 +98,7 @@ const fieldsPositions = {
       y: 630,
       maxLength: 6,
       title: (value) => {
-        return value.match(/\d{1}/g).join(" ");
+        return value.match(/\d{1}/g)?.join(" ");
       },
     },
     nombreDeSalaries: {

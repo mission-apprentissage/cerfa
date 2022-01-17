@@ -16,28 +16,16 @@ import { cerfaPartMaitresCompletionAtom } from "../../../common/hooks/useCerfa/p
 import { cerfaPartApprentiCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
 import { cerfaPartContratCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 
-export default ({ dossierId }) => {
+const ContratPdf = ({ dossierId }) => {
   let [auth] = useAuth();
   const [pdfBase64, setPdfBase64] = useState(null);
   const [pdfIsLoading, setPdfIsLoading] = useState(true);
   const { isLoading, cerfa } = useCerfa();
-  const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
-  const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
-  const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
-  const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
-  const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
-
-  const cerfaComplete =
-    employeurCompletionAtom?.contents === 100 &&
-    apprentiCompletionAtom?.contents === 100 &&
-    maitresCompletionAtom?.contents === 100 &&
-    contratCompletionAtom?.contents === 100 &&
-    formationCompletion?.contents === 100;
 
   useEffect(() => {
     const run = async () => {
       try {
-        if (dossierId && cerfa?.id && cerfaComplete) {
+        if (dossierId && cerfa?.id) {
           const { pdfBase64 } = await _post(`/api/v1/cerfa/pdf/${cerfa.id}`, {
             workspaceId: auth.workspaceId,
             dossierId,
@@ -49,7 +37,7 @@ export default ({ dossierId }) => {
       }
     };
     run();
-  }, [auth, cerfa, cerfaComplete, dossierId]);
+  }, [auth, cerfa, dossierId]);
 
   const onSignClicked = async () => {
     const reponse = await _post(`/api/v1/sign_document`, {
@@ -59,23 +47,6 @@ export default ({ dossierId }) => {
     });
     console.log(reponse);
   };
-
-  if (!cerfaComplete) {
-    return (
-      <Box mt={8}>
-        <Heading as="h3" fontSize="1.4rem">
-          Votre contrat généré:
-        </Heading>
-        <Center mt={5}>
-          <Tooltip variant="alert">
-            <Text>
-              Le Cerfa doit être complété à 100% avant de commencer la procédure de télécharger le dossier finalisé.
-            </Text>
-          </Tooltip>
-        </Center>
-      </Box>
-    );
-  }
 
   return (
     <Box mt={8}>
@@ -115,4 +86,38 @@ export default ({ dossierId }) => {
       )}
     </Box>
   );
+};
+
+export default ({ dossierId }) => {
+  const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
+  const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
+  const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
+  const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
+  const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
+
+  const cerfaComplete =
+    employeurCompletionAtom?.contents === 100 &&
+    apprentiCompletionAtom?.contents === 100 &&
+    maitresCompletionAtom?.contents === 100 &&
+    contratCompletionAtom?.contents === 100 &&
+    formationCompletion?.contents === 100;
+
+  if (!cerfaComplete) {
+    return (
+      <Box mt={8}>
+        <Heading as="h3" fontSize="1.4rem">
+          Votre contrat généré:
+        </Heading>
+        <Center mt={5}>
+          <Tooltip variant="alert">
+            <Text>
+              Le Cerfa doit être complété à 100% avant de commencer la procédure de télécharger le dossier finalisé.
+            </Text>
+          </Tooltip>
+        </Center>
+      </Box>
+    );
+  }
+
+  return <ContratPdf dossierId={dossierId} />;
 };

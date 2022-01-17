@@ -1,4 +1,5 @@
 const adresseSchema = require("./adresse.part");
+const idccEnum = require("./idcc.part");
 
 const employeurCerfaSchema = {
   denomination: {
@@ -77,6 +78,7 @@ const employeurCerfaSchema = {
     example: 123,
   },
   codeIdcc: {
+    enum: [null, ...idccEnum.map(({ code }) => code)],
     maxLength: 4,
     type: String,
     default: null,
@@ -116,6 +118,7 @@ const employeurCerfaSchema = {
     type: String,
     description: "Téléphone de l'employeur",
     label: "Téléphone de l'employeur :",
+    requiredMessage: "Le téléphone de l'employeur est obligatoire",
     example: "0908070605",
     // pattern: "^([+])?((d)[.-]?)?[s]?(?(d{3}))?[.-]?[s]?(d{3})[.-]?[s]?(d{4,})$",
   },
@@ -128,6 +131,7 @@ const employeurCerfaSchema = {
     },
     description: "Courriel de l'employeur",
     label: "Courriel de l'employeur :",
+    requiredMessage: "Le courriel de l'employeur est obligatoire",
     validate: {
       validator: function (v) {
         if (!v) return true;
@@ -251,7 +255,8 @@ const employeurCerfaSchema = {
     enum: [0, 1, 2, 3, 4],
     type: Number,
     nullable: true,
-    default: null,
+    default: 0,
+    isNotRequiredForm: true,
     label: "Est un employeur spécifique :",
     description:
       "**Employeur spécifique** : \r\n<br />1 : Entreprise de travail temporaire\r\n<br />2 : Groupement d’employeurs\r\n<br />3 : Employeur saisonnier\r\n<br />4 : Apprentissage familial : l’employeur est un ascendant de l’apprenti\r\n<br />0 : Aucun de ces cas",
@@ -296,7 +301,7 @@ const employeurCerfaSchema = {
     example: "Non",
     options: [
       {
-        label: "Oui, adhérer",
+        label: "Oui",
         value: true,
       },
       {

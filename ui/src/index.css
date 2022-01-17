@@ -102,6 +102,17 @@
   border-top-width: 0 !important;
 }
 
+.phone-form-input.valid {
+  border-bottom-color: var(--chakra-colors-green-500)  !important;
+}
+.phone-form-input.error {
+  border-bottom-color: var(--chakra-colors-error)  !important;
+  box-shadow: var(--chakra-shadows-none) !important;
+  outline: 2px solid  !important;
+  outline-color: var(--chakra-colors-error) !important;
+  outline-offset: 2px !important;
+}
+
 .phone-form-button {
   background: var(--chakra-colors-grey-200) !important;
   border: 1px solid !important;
@@ -115,4 +126,11 @@
   border-bottom: 2px solid !important;
   border-bottom-color: var(--chakra-colors-grey-600) !important;
   border-top-width: 0 !important;
+}
+
+.phone-form-button.valid {
+  border-bottom-color: var(--chakra-colors-green-500)  !important;
+}
+.phone-form-button.error {
+  border-bottom-color: var(--chakra-colors-error)  !important;
 }

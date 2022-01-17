@@ -2,6 +2,7 @@ import React from "react";
 import { Box, FormLabel, Text, Flex, HStack, Collapse, VStack, UnorderedList, ListItem } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
+import { departements } from "../../../../common/constants/departements";
 import { useCerfaContrat } from "../../../../common/hooks/useCerfa/parts/useCerfaContrat";
 import {
   cerfaApprentiDateNaissanceAtom,
@@ -28,9 +29,14 @@ const FormContract = () => {
   const {
     get: {
       contrat: {
+        modeContractuel: contratModeContractuel,
         typeContratApp,
         typeDerogation,
         numeroContratPrecedent,
+        numeroContratPrecedentDepartement,
+        numeroContratPrecedentAnnee,
+        numeroContratPrecedentMois,
+        numeroContratPrecedentNc,
         // dateConclusion,
         dateDebutContrat,
         dateEffetAvenant,
@@ -40,7 +46,7 @@ const FormContract = () => {
         dureeTravailHebdoMinutes,
         travailRisque,
         salaireEmbauche,
-        caisseRetraiteComplementaire,
+        // caisseRetraiteComplementaire,
         avantageNature,
         avantageNourriture,
         avantageLogement,
@@ -51,6 +57,7 @@ const FormContract = () => {
     },
     onSubmit: {
       contrat: {
+        modeContractuel: onSubmittedContratModeContractuel,
         typeContratApp: onSubmittedContratTypeContratApp,
         numeroContratPrecedent: onSubmittedContratNumeroContratPrecedent,
         dateDebutContrat: onSubmittedContratDateDebutContrat,
@@ -63,7 +70,7 @@ const FormContract = () => {
         contratDureeTravailHebdoMinutes: onSubmittedContratDureeTravailHebdoMinutes,
         travailRisque: onSubmittedContratTravailRisque,
         // salaireEmbauche: onSubmittedContratSalaireEmbauche,
-        caisseRetraiteComplementaire: onSubmittedContratCaisseRetraiteComplementaire,
+        // caisseRetraiteComplementaire: onSubmittedContratCaisseRetraiteComplementaire,
         avantageNature: onSubmittedContratAvantageNature,
         avantageNourriture: onSubmittedContratAvantageNourriture,
         avantageLogement: onSubmittedContratAvantageLogement,
@@ -85,11 +92,23 @@ const FormContract = () => {
             onSubmittedField={onSubmittedContratTypeContratApp}
           />
           <InputCerfa
+            path="contrat.modeContractuel"
+            field={contratModeContractuel}
+            type="select"
+            mt="2"
+            onSubmittedField={onSubmittedContratModeContractuel}
+          />
+          <InputCerfa
             path="contrat.typeDerogation"
             field={typeDerogation}
             type="select"
             mt="2"
             onSubmittedField={onSubmittedContratTypeDerogation}
+            onAsyncData={{
+              dateDebutContrat: dateDebutContrat?.value,
+              apprentiDateNaissance: apprentiDateNaissance?.value,
+              apprentiAge: apprentiAge?.value,
+            }}
           />
           <Text textStyle="sm" fontStyle="italic">
             à renseigner si une dérogation existe pour ce contrat
@@ -110,7 +129,26 @@ const FormContract = () => {
               type="text"
               mt="2"
               onSubmittedField={onSubmittedContratNumeroContratPrecedent}
+              label={
+                typeContratApp.valueDb === 21 || typeContratApp.valueDb === 22 || typeContratApp.valueDb === 23
+                  ? numeroContratPrecedent.labelSuccession
+                  : numeroContratPrecedent.labelAvenant
+              }
+              isRequired={
+                !(typeContratApp.valueDb === 21 || typeContratApp.valueDb === 22 || typeContratApp.valueDb === 23)
+              }
             />
+          )}
+          {numeroContratPrecedent.value !== "" && (
+            <Box>
+              <Text fontWeight="400" fontStyle="italic">
+                Information sur le précedent contrat:
+                <br /> {numeroContratPrecedentMois}/{numeroContratPrecedentAnnee}
+                {", "}
+                {departements[numeroContratPrecedentDepartement]?.name} ({numeroContratPrecedentDepartement})
+                {numeroContratPrecedentNc === "NC" && ", non conforme."}
+              </Text>
+            </Box>
           )}
           {/* <InputCerfa
             path="contrat.dateConclusion"
@@ -192,6 +230,7 @@ const FormContract = () => {
               type="number"
               onSubmittedField={onSubmittedContratDureeTravailHebdoHeures}
               precision={0}
+              min={1}
             />
             <InputCerfa
               path="contrat.dureeTravailHebdoMinutes"
@@ -383,7 +422,7 @@ const FormContract = () => {
           </Collapse>
         </Box>
 
-        <Flex mt={3}>
+        {/* <Flex mt={3}>
           <InputCerfa
             path="contrat.caisseRetraiteComplementaire"
             field={caisseRetraiteComplementaire}
@@ -391,7 +430,7 @@ const FormContract = () => {
             mt="2"
             onSubmittedField={onSubmittedContratCaisseRetraiteComplementaire}
           />
-        </Flex>
+        </Flex> */}
         <Box mt={6}>
           <InputCerfa
             path="contrat.avantageNature"

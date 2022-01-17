@@ -10,7 +10,7 @@ import {
   convertValueToDate,
   convertDateToValue,
   convertValueToOption,
-  isAgeInValidAtDate,
+  isAgeInValidLowerAtDate,
   caclAgeFromStringDate,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
@@ -23,13 +23,21 @@ const cerfaMaitresCompletion = (res) => {
     maitre1Nom: res.maitre1.nom,
     maitre1Prenom: res.maitre1.prenom,
     maitre1DateNaissance: res.maitre1.dateNaissance,
-    // maitre2Nom: res.maitre2.nom,
-    // maitre2Prenom: res.maitre2.prenom,
-    // maitre2DateNaissance: res.maitre2.dateNaissance,
+
     employeurAttestationEligibilite: res.employeur.attestationEligibilite,
   };
+  let countFields = 4;
+  if (res.maitre2.nom.value !== "" || res.maitre2.prenom.value !== "" || res.maitre2.dateNaissance.value !== "") {
+    fieldsToKeep = {
+      ...fieldsToKeep,
+      maitre2Nom: res.maitre2.nom,
+      maitre2Prenom: res.maitre2.prenom,
+      maitre2DateNaissance: res.maitre2.dateNaissance,
+    };
+    countFields = countFields + 3;
+  }
 
-  return fieldCompletionPercentage(fieldsToKeep, 4);
+  return fieldCompletionPercentage(fieldsToKeep, countFields);
 };
 
 export const CerfaMaitresController = async (dossier) => {
@@ -39,7 +47,16 @@ export const CerfaMaitresController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
           const { age, dateNaissance } = caclAgeFromStringDate(value);
-          const isAgeMaitreInvalidAtStart = isAgeInValidAtDate({
+
+          if (age === 0) {
+            return {
+              successed: false,
+              data: null,
+              message: "La date de naissance de peut pas être dans le futur",
+            };
+          }
+
+          const isAgeMaitreInvalidAtStart = isAgeInValidLowerAtDate({
             dateNaissance,
             age,
             dateString: data.dateDebutContrat,
@@ -64,7 +81,16 @@ export const CerfaMaitresController = async (dossier) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
           const { age, dateNaissance } = caclAgeFromStringDate(value);
-          const isAgeMaitreInvalidAtStart = isAgeInValidAtDate({
+
+          if (age === 0) {
+            return {
+              successed: false,
+              data: null,
+              message: "La date de naissance de peut pas être dans le futur",
+            };
+          }
+
+          const isAgeMaitreInvalidAtStart = isAgeInValidLowerAtDate({
             dateNaissance,
             age,
             dateString: data.dateDebutContrat,
@@ -214,7 +240,7 @@ export function useCerfaMaitres() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               maitre2: {
-                nom: newV.maitre2.nom.value,
+                nom: newV.maitre2.nom.value || null,
               },
             });
             setPartMaitresCompletion(cerfaMaitresCompletion(res));
@@ -245,7 +271,7 @@ export function useCerfaMaitres() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               maitre2: {
-                prenom: newV.maitre2.prenom.value,
+                prenom: newV.maitre2.prenom.value || null,
               },
             });
             setPartMaitresCompletion(cerfaMaitresCompletion(res));
@@ -275,7 +301,7 @@ export function useCerfaMaitres() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               maitre2: {
-                dateNaissance: convertDateToValue(newV.maitre2.dateNaissance),
+                dateNaissance: data.dateNaissance !== "" ? convertDateToValue(newV.maitre2.dateNaissance) : null,
               },
             });
             setPartMaitresCompletion(cerfaMaitresCompletion(res));

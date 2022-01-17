@@ -98,7 +98,8 @@ const FormFormation = React.memo((props) => {
           <InputCerfa
             path="organismeFormation.adresse.numero"
             field={numero}
-            type="text"
+            type="number"
+            precision={0}
             mt="2"
             onSubmittedField={onSubmittedOrganismeFormationAdresseNumero}
             hasInfo={false}
@@ -199,6 +200,7 @@ const FormFormation = React.memo((props) => {
               type="number"
               mt="2"
               precision={0}
+              min={1}
               onSubmittedField={onSubmittedFormationDureeFormation}
             />
           </Flex>

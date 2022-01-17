@@ -39,12 +39,14 @@ export const convertValueToDate = (field) => {
   return {
     ...field,
     value: field.value ? DateTime.fromISO(field.value).setLocale("fr-FR").toFormat("yyyy-MM-dd") : field.value,
+    valueDb: field.value,
   };
 };
 
 //
 
 export const convertOptionToValue = (field) => {
+  if (!field) return null;
   let value = null;
   for (let i = 0; i < field.options.length; i++) {
     const options = field.options[i];
@@ -90,17 +92,10 @@ export const fieldCompletionPercentage = (fields, nbFields) => {
 
 //
 
-export const isAgeInValidAtDate = ({ dateNaissance, age, dateString, limitAge = 15, label = "" }) => {
-  // console.log(age === limitAge - 1 && dateString !== "", limitAge - 1, dateString, age);
+export const isAgeInValidLowerAtDate = ({ dateNaissance, age, dateString, limitAge = 15, label = "" }) => {
   if (age === limitAge - 1 && dateString !== "") {
     const dateObj = DateTime.fromISO(dateString).setLocale("fr-FR");
     const anniversaireA1 = dateNaissance.plus({ years: age + 1 });
-    // console.log(
-    //   dateObj < anniversaireA1,
-    //   dateObj.toFormat("yyyy-MM-dd"),
-    //   dateNaissance.toFormat("yyyy-MM-dd"),
-    //   anniversaireA1.toFormat("yyyy-MM-dd")
-    // );
     if (dateObj < anniversaireA1) {
       return {
         successed: false,
@@ -111,15 +106,37 @@ export const isAgeInValidAtDate = ({ dateNaissance, age, dateString, limitAge = 
   }
   return false;
 };
+export const isAgeGreaterOrEqualAtDate = ({ dateNaissance, age, limitDateString, limitAge = 15 }) => {
+  if (age === limitAge - 1 && limitDateString !== "") {
+    const limitDate = DateTime.fromISO(limitDateString).setLocale("fr-FR");
+    const anniversaireA1 = dateNaissance.plus({ years: age + 1 });
+    if (limitDate >= anniversaireA1) {
+      return true;
+    }
+  }
+  return false;
+};
+export const isAgeLowerAtDate = ({ dateNaissance, age, limitDateString, limitAge = 15 }) => {
+  if (age === limitAge - 1 && limitDateString !== "") {
+    const limitDate = DateTime.fromISO(limitDateString).setLocale("fr-FR");
+    const anniversaireA1 = dateNaissance.plus({ years: age + 1 });
+    if (limitDate < anniversaireA1) {
+      return true;
+    }
+  }
+  return false;
+};
 
 export const caclAgeFromStringDate = (dateNaissanceString) => {
   const dateNaissance = DateTime.fromISO(dateNaissanceString).setLocale("fr-FR");
   const today = DateTime.now().setLocale("fr-FR");
   const diffInYears = today.diff(dateNaissance, "years");
-  const { years: apprentiAge } = diffInYears.toObject();
-  const age = Math.floor(apprentiAge);
+  const { years } = diffInYears.toObject();
+  const age = years ? Math.floor(years) : 0;
   return {
     age,
-    dateNaissance,
+    dateNaissance: age > 0 ? dateNaissance : null,
   };
 };
+
+export const normalizeInputNumberForDb = (data) => (data && !isNaN(data) && parseInt(data) !== 0 ? data : null);

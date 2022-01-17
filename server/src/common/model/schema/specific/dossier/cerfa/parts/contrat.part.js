@@ -2,6 +2,42 @@ const modeContractuelSchema = require("./modeContractuel.part");
 const typeContratSchema = require("./typeContrat.part");
 const typeDerogationSchema = require("./typeDerogation.part");
 const remunerationAnnuelleSchema = require("./remunerationAnnuelle.part");
+const departementEnum = require("./departements.part");
+
+const numContratChecks = {
+  max: 15,
+  example: "02B202212000000",
+  mask: "DEP 0000 MM NN 0000",
+  maskBlocks: [
+    {
+      name: "DEP",
+      mask: "MaskedEnum",
+      enum: departementEnum,
+    },
+    {
+      name: "MM",
+      mask: "MaskedRange",
+      from: 1,
+      to: 12,
+    },
+    {
+      name: "NN",
+      mask: "MaskedEnum",
+      enum: ["NC", ...new Array(100).fill().map((e, i) => (i < 10 ? `0${i}` : `${i}`))],
+    },
+  ],
+  forbiddenStartWith: ["1", "2", "3", "4", "5", "6", "7", "8", "99", "90", "91", "92", "93", "94", "95"],
+
+  validate: {
+    validator: function (v) {
+      if (!v) return true;
+      return /^(0[0-9][0-9]|02[AB]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])(NC|[0-9]{2})([0-9]{4})$/.test(v);
+    },
+    message: (props) => `${props.value} n'est pas un numéro valide`,
+  },
+  pattern: "^(0[0-9][0-9]|02[AB]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])(NC|[0-9]{2})([0-9]{4})$",
+  validateMessage: `n'est pas un numéro valide`,
+};
 
 const contratSchema = {
   modeContractuel: {
@@ -10,6 +46,8 @@ const contratSchema = {
     required: function () {
       return !this.draft;
     },
+    label: "Mode contratctuel",
+    requiredMessage: "le mode de contrat est obligatoire",
   },
   typeContratApp: {
     ...typeContratSchema,
@@ -22,27 +60,31 @@ const contratSchema = {
   numeroContratPrecedent: {
     type: String,
     description: "N° du contrat précédent (suite de contrat)",
+    label: "Numéro du contrat précédent ou du contrat sur lequel porte l'avenant :",
+    labelAvenant: "Numéro de contrat sur lequel porte l'avenant :",
+    labelSuccession: "Numéro du contrat précédent :",
+    requiredMessage: "la numéro du contrat précédent est obligatoire",
     nullable: true,
     default: null,
-    example: "11111111111",
-    label: "Numéro du contrat précédent ou du contrat sur lequel porte l'avenant :",
+    ...numContratChecks,
   },
   noContrat: {
     type: String,
     description: "Numéro DECA de contrat",
     nullable: true,
-    example: "222222222222",
+    ...numContratChecks,
   },
   noAvenant: {
     type: String,
     description: "Numéro d'Avenant",
     nullable: true,
-    example: "3333333333",
+    ...numContratChecks,
   },
   dateDebutContrat: {
     type: Date,
     description: "Date de début d'éxécution du contrat",
     label: "Date de début d'exécution du contrat :",
+    requiredMessage: "la date de début d'exécution de contrat est obligatoire",
     example: "2021-02-01T00:00:00+0000",
     default: null,
     required: function () {
@@ -53,6 +95,7 @@ const contratSchema = {
     type: Date,
     description: "Date de fin du contrat prévue",
     label: "Date de fin du contrat ou de la période d'apprentissage :",
+    requiredMessage: "la date de fin de contrat est obligatoire",
     example: "2021-02-28T00:00:00+0000",
     default: null,
     required: function () {
@@ -71,6 +114,7 @@ const contratSchema = {
     type: Date,
     description: "Date d'effet d'avenant",
     label: "Date d'effet d'avenant :",
+    requiredMessage: "S'agissant d'un avenant sa date d'effet est obligatoire ",
     nullable: true,
     default: null,
     example: "2021-03-01T00:00:00+0000",
@@ -95,6 +139,7 @@ const contratSchema = {
     type: String,
     description: "Lieu de signature du contrat",
     label: "Lieu de signature du contrat:",
+    requiredMessage: "Le lieu de signature est obligatoire",
     example: "PARIS",
     default: null,
     required: function () {
@@ -109,6 +154,7 @@ const contratSchema = {
   dureeTravailHebdoHeures: {
     type: Number,
     description: "Durée hebdomadaire du travail (heures)",
+    requiredMessage: "la durée hebdomadaire de travail est obligatoire",
     label: "Heures:",
     example: 37,
     default: null,

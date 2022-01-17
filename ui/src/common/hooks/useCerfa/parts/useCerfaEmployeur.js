@@ -13,6 +13,7 @@ import {
   fieldCompletionPercentage,
   convertValueToMultipleSelectOption,
   convertMultipleSelectOptionToValue,
+  normalizeInputNumberForDb,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
@@ -38,13 +39,13 @@ const cerfaEmployeurCompletion = (res) => {
     // employeurNom: res.employeur.nom,
     // employeurPrenom: res.employeur.prenom,
     employeurTypeEmployeur: res.employeur.typeEmployeur,
-    employeurEmployeurSpecifique: res.employeur.employeurSpecifique,
+    // employeurEmployeurSpecifique: res.employeur.employeurSpecifique,
     // employeurCaisseComplementaire: res.employeur.caisseComplementaire,
     employeurRegimeSpecifique: res.employeur.regimeSpecifique,
     // employeurPrivePublic: res.employeur.privePublic,
   };
 
-  return fieldCompletionPercentage(fieldsToKeep, 14);
+  return fieldCompletionPercentage(fieldsToKeep, 13);
 };
 
 export const CerfaEmployeurController = async (dossier) => {
@@ -200,7 +201,7 @@ export function useCerfaEmployeur() {
               },
               privePublic: {
                 ...employeurPrivePublic,
-                value: data.public || true,
+                value: data.public ?? true,
               },
               codeIdcc: {
                 ...employeurCodeIdcc,
@@ -220,57 +221,58 @@ export function useCerfaEmployeur() {
             },
           };
 
-          if (employeurSiret.value !== newV.employeur.siret.value) {
-            setEmployeurSiret(newV.employeur.siret);
+          // if (employeurSiret.value !== newV.employeur.siret.value) {
+          setEmployeurSiret(newV.employeur.siret);
 
-            setEmployeurDenomination(newV.employeur.denomination);
-            setEmployeurNaf(newV.employeur.naf);
-            setEmployeurCodeIdcc(newV.employeur.codeIdcc);
-            setEmployeurLibelleIdcc(newV.employeur.libelleIdcc);
-            setEmployeurNombreDeSalaries(newV.employeur.nombreDeSalaries);
-            setEmployeurAdresseNumero(newV.employeur.adresse.numero);
-            setEmployeurAdresseVoie(newV.employeur.adresse.voie);
-            setEmployeurAdresseComplement(newV.employeur.adresse.complement);
-            setEmployeurAdresseCodePostal(newV.employeur.adresse.codePostal);
-            setEmployeurAdresseCommune(newV.employeur.adresse.commune);
+          setEmployeurDenomination(newV.employeur.denomination);
+          setEmployeurNaf(newV.employeur.naf);
+          setEmployeurCodeIdcc(newV.employeur.codeIdcc);
+          setEmployeurLibelleIdcc(newV.employeur.libelleIdcc);
+          setEmployeurNombreDeSalaries(newV.employeur.nombreDeSalaries);
+          setEmployeurAdresseNumero(newV.employeur.adresse.numero);
+          setEmployeurAdresseVoie(newV.employeur.adresse.voie);
+          setEmployeurAdresseComplement(newV.employeur.adresse.complement);
+          setEmployeurAdresseCodePostal(newV.employeur.adresse.codePostal);
+          setEmployeurAdresseCommune(newV.employeur.adresse.commune);
 
-            setEmployeurPrivePublic(convertValueToOption(newV.employeur.privePublic));
+          setEmployeurPrivePublic(convertValueToOption(newV.employeur.privePublic));
 
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+          const res = await saveCerfa(dossier?._id, cerfa?.id, {
+            employeur: {
+              siret: newV.employeur.siret.value,
+              denomination: newV.employeur.denomination.value,
+              naf: newV.employeur.naf.value,
+              codeIdcc: newV.employeur.codeIdcc.value,
+              libelleIdcc: newV.employeur.libelleIdcc.value,
+              nombreDeSalaries: normalizeInputNumberForDb(newV.employeur.nombreDeSalaries.value),
+              privePublic: newV.employeur.privePublic.value,
+              adresse: {
+                numero: normalizeInputNumberForDb(newV.employeur.adresse.numero.value),
+                voie: newV.employeur.adresse.voie.value.trim(),
+                complement: newV.employeur.adresse.complement.value.trim(),
+                codePostal: newV.employeur.adresse.codePostal.value.trim(),
+                commune: newV.employeur.adresse.commune.value.trim(),
+              },
+            },
+            isLockedField: {
               employeur: {
-                siret: newV.employeur.siret.value,
-                denomination: newV.employeur.denomination.value,
-                naf: newV.employeur.naf.value,
-                codeIdcc: newV.employeur.codeIdcc.value,
-                libelleIdcc: newV.employeur.libelleIdcc.value,
-                // privePublic: convertOptionToValue(newV.employeur.privePublic),
+                denomination: false,
+                naf: false,
+                codeIdcc: false,
+                libelleIdcc: false,
+                nombreDeSalaries: false,
                 adresse: {
-                  numero: newV.employeur.adresse.numero.value,
-                  voie: newV.employeur.adresse.voie.value,
-                  complement: newV.employeur.adresse.complement.value,
-                  codePostal: newV.employeur.adresse.codePostal.value,
-                  commune: newV.employeur.adresse.commune.value,
+                  numero: false,
+                  voie: false,
+                  complement: false,
+                  codePostal: false,
+                  commune: false,
                 },
               },
-              isLockedField: {
-                employeur: {
-                  denomination: false,
-                  naf: false,
-                  codeIdcc: false,
-                  libelleIdcc: false,
-                  nombreDeSalaries: false,
-                  adresse: {
-                    numero: false,
-                    voie: false,
-                    complement: false,
-                    codePostal: false,
-                    commune: false,
-                  },
-                },
-              },
-            });
-            setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
-          }
+            },
+          });
+          setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+          // }
         }
       } catch (e) {
         console.error(e);
@@ -410,7 +412,6 @@ export function useCerfaEmployeur() {
                 numero: {
                   ...employeurAdresseNumero,
                   value: data,
-                  // forceUpdate: false, // IF data = "" true
                 },
               },
             },
@@ -421,7 +422,7 @@ export function useCerfaEmployeur() {
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
                 adresse: {
-                  numero: newV.employeur.adresse.numero.value,
+                  numero: normalizeInputNumberForDb(data),
                 },
               },
             });
@@ -663,7 +664,7 @@ export function useCerfaEmployeur() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
-                nombreDeSalaries: newV.employeur.nombreDeSalaries.value,
+                nombreDeSalaries: normalizeInputNumberForDb(data),
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
@@ -842,6 +843,7 @@ export function useCerfaEmployeur() {
     setEmployeurRaisonSociale(res.employeur.raison_sociale);
     setEmployeurNaf(res.employeur.naf);
     setEmployeurNombreDeSalaries(res.employeur.nombreDeSalaries);
+    // console.log(res.employeur.codeIdcc);
     setEmployeurCodeIdcc(res.employeur.codeIdcc);
     setEmployeurLibelleIdcc(res.employeur.libelleIdcc);
     setEmployeurTelephone({ ...res.employeur.telephone, value: res.employeur.telephone.value.replace("+", "") });
