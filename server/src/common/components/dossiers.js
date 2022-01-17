@@ -135,7 +135,7 @@ module.exports = async () => {
         throw Boom.notFound("Doesn't exist");
       }
 
-      let { typeDocument, nomFichier, cheminFichier, tailleFichier, userEmail } = await Joi.object({
+      let { typeDocument, nomFichier, cheminFichier, tailleFichier, userEmail, hash } = await Joi.object({
         typeDocument: Joi.string()
           .valid(
             "CONVENTION_FORMATION",
@@ -150,6 +150,7 @@ module.exports = async () => {
         cheminFichier: Joi.string().required(),
         tailleFichier: Joi.number().required(),
         userEmail: Joi.string().required(),
+        hash: Joi.string().required(),
       }).validateAsync(data, { abortEarly: false });
 
       const newDocument = {
@@ -161,6 +162,7 @@ module.exports = async () => {
         dateAjout: Date.now(),
         dateMiseAJour: Date.now(),
         quiMiseAJour: userEmail,
+        hash,
       };
 
       let newDocuments = [...found._doc.documents];

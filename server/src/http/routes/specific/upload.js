@@ -29,13 +29,15 @@ module.exports = (components) => {
     // 'close' event is fired just after the form has been read but before file is scanned and uploaded to storage.
     // So instead of using form.on('close',...) we use a custom event to end response when everything is finished
     formEvents.on("terminated", async (e) => {
-      if (e)
+      if (e) {
+        logger.error(e);
         return res.status(400).json({
           error:
             e.message === "Le fichier est trop volumineux"
               ? "Le fichier est trop volumineux"
               : "Le contenu du fichier est invalide",
         });
+      }
       const documents = await dossiers.getDocuments(dossierId);
       return res.json({ documents });
     });
@@ -94,14 +96,15 @@ module.exports = (components) => {
             .required(),
         }).validateAsync(req.query, { abortEarly: false });
 
-        let contratId = dossierId;
-        let path = `contrats/${contratId}/${part.filename}`;
-        let scanner = await clamav.getScanner();
+        let path = `contrats/${dossierId}/${part.filename}`;
+        let { scanStream, getScanResults } = await clamav.getScanner();
+        let { hashStream, getHash } = crypto.checksum();
 
         await oleoduc(
           part,
-          scanner.scanStream,
-          crypto.available() ? crypto.cipher(contratId) : noop(),
+          scanStream,
+          hashStream,
+          crypto.isCipherAvailable() ? crypto.cipher(dossierId) : noop(),
           test ? noop() : await uploadToStorage(path, { contentType: part.headers["content-type"] })
         );
 
@@ -109,7 +112,8 @@ module.exports = (components) => {
           throw new Error("Le fichier est trop volumineux");
         }
 
-        let { isInfected, viruses } = await scanner.getScanResults();
+        let hash = await getHash();
+        let { isInfected, viruses } = await getScanResults();
         if (isInfected) {
           if (!test) {
             logger.error(`Uploaded file ${path} is infected by ${viruses.join(",")}. Deleting file from storage...`);
@@ -120,6 +124,7 @@ module.exports = (components) => {
 
         await dossiers.addDocument(dossierId, {
           typeDocument,
+          hash,
           nomFichier: part.filename,
           cheminFichier: path,
           tailleFichier: test ? 0 : part.byteCount,
@@ -148,7 +153,7 @@ module.exports = (components) => {
       res.status(200);
       res.type("pdf");
 
-      await oleoduc(stream, crypto.available() ? crypto.decipher(dossierId) : noop(), res);
+      await oleoduc(stream, crypto.isCipherAvailable() ? crypto.decipher(dossierId) : noop(), res);
     })
   );
 

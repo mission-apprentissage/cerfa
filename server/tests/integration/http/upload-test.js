@@ -1,7 +1,7 @@
 const assert = require("assert");
 const fs = require("fs");
 const FormData = require("form-data");
-const { startServer, fakeClamav } = require("../../utils/testUtils");
+const { startServer, fakeClamav, getBlankPDFStream } = require("../../utils/testUtils");
 
 describe("[Routes] Upload", () => {
   function startServerWithClamav(res) {
@@ -18,15 +18,16 @@ describe("[Routes] Upload", () => {
       permissions: { isAdmin: true },
       account_status: "CONFIRMED",
     });
+    let dossierId = testDossier._id.toString();
 
     var form = new FormData();
-    form.append("file", fs.createReadStream(__filename), {
+    form.append("file", getBlankPDFStream(), {
       filename: "testFile.pdf",
       contentType: "application/pdf",
     });
 
     const response = await httpClient.post(
-      `/api/v1/upload?test=true&dossierId=${testDossier._id.toString()}&typeDocument=CONVENTION_FORMATION`,
+      `/api/v1/upload?test=true&dossierId=${dossierId}&typeDocument=CONVENTION_FORMATION`,
       form,
       {
         headers: {
@@ -40,12 +41,13 @@ describe("[Routes] Upload", () => {
     // eslint-disable-next-line no-unused-vars
     const { dateAjout, dateMiseAJour, ...restData } = response.data.documents[0];
     assert.deepStrictEqual(restData, {
-      cheminFichier: `contrats/${testDossier._id.toString()}/testFile.pdf`,
+      cheminFichier: `contrats/${dossierId}/testFile.pdf`,
       nomFichier: "testFile.pdf",
       quiMiseAJour: "user1@apprentissage.beta.gouv.fr",
       tailleFichier: 0,
       typeDocument: "CONVENTION_FORMATION",
       typeFichier: "pdf",
+      hash: "1c32d785398e3a7eaab0e9b876903cc6",
     });
   });
 
