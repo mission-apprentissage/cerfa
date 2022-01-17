@@ -35,6 +35,14 @@ const hydrate = async (dossier) => {
           ...cerfa.employeur.nombreDeSalaries,
           ...cerfaEmployeurController.employeur.nombreDeSalaries,
         },
+        adresse: {
+          ...cerfa.employeur.adresse,
+          ...cerfaEmployeurController.employeur.adresse,
+          codePostal: {
+            ...cerfa.employeur.adresse.codePostal,
+            ...cerfaEmployeurController.employeur.adresse.codePostal,
+          },
+        },
       },
       apprenti: {
         ...cerfa.apprenti,
@@ -42,6 +50,26 @@ const hydrate = async (dossier) => {
         dateNaissance: {
           ...cerfa.apprenti.dateNaissance,
           ...cerfaApprentiController.apprenti.dateNaissance,
+        },
+        adresse: {
+          ...cerfa.apprenti.adresse,
+          ...cerfaApprentiController.apprenti.adresse,
+          codePostal: {
+            ...cerfa.apprenti.adresse.codePostal,
+            ...cerfaApprentiController.apprenti.adresse.codePostal,
+          },
+        },
+        responsableLegal: {
+          ...cerfa.apprenti.responsableLegal,
+          ...cerfaApprentiController.apprenti.responsableLegal,
+          adresse: {
+            ...cerfa.apprenti.responsableLegal.adresse,
+            ...cerfaApprentiController.apprenti.responsableLegal.adresse,
+            codePostal: {
+              ...cerfa.apprenti.responsableLegal.adresse.codePostal,
+              ...cerfaApprentiController.apprenti.responsableLegal.adresse.codePostal,
+            },
+          },
         },
       },
       maitre1: {
@@ -108,6 +136,14 @@ const hydrate = async (dossier) => {
         siret: {
           ...cerfa.organismeFormation.siret,
           ...cerfaFormationController.organismeFormation.siret,
+        },
+        adresse: {
+          ...cerfa.organismeFormation.adresse,
+          ...cerfaFormationController.organismeFormation.adresse,
+          codePostal: {
+            ...cerfa.organismeFormation.adresse.codePostal,
+            ...cerfaFormationController.organismeFormation.adresse.codePostal,
+          },
         },
       },
     };

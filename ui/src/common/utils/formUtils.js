@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import { _post } from "../httpClient";
 
 export const convertValueToOption = (field) => {
   let valueOpt = "";
@@ -140,3 +141,35 @@ export const caclAgeFromStringDate = (dateNaissanceString) => {
 };
 
 export const normalizeInputNumberForDb = (data) => (data && !isNaN(data) && parseInt(data) !== 0 ? data : null);
+
+export const doAsyncCodePostalActions = async (value, data, dossierId) => {
+  try {
+    const response = await _post(`/api/v1/geo/cp`, {
+      codePostal: value,
+      dossierId,
+    });
+
+    if (response.messages.cp === "Ok") {
+      return {
+        successed: true,
+        data: {
+          codePostal: value,
+          commune: response.result.commune,
+        },
+        message: null,
+      };
+    }
+
+    return {
+      successed: false,
+      data: null,
+      message: response.messages.error,
+    };
+  } catch (error) {
+    return {
+      successed: false,
+      data: null,
+      message: error.prettyMessage,
+    };
+  }
+};

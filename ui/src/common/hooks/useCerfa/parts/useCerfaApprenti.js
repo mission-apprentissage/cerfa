@@ -15,6 +15,7 @@ import {
   isAgeInValidLowerAtDate,
   caclAgeFromStringDate,
   normalizeInputNumberForDb,
+  doAsyncCodePostalActions,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
@@ -148,6 +149,22 @@ export const CerfaApprentiController = async (dossier) => {
             },
             message: null,
           };
+        },
+      },
+      adresse: {
+        codePostal: {
+          doAsyncActions: async (value, data) => {
+            return await doAsyncCodePostalActions(value, data, dossier._id);
+          },
+        },
+      },
+      responsableLegal: {
+        adresse: {
+          codePostal: {
+            doAsyncActions: async (value, data) => {
+              return await doAsyncCodePostalActions(value, data, dossier._id);
+            },
+          },
         },
       },
     },
@@ -547,19 +564,24 @@ export function useCerfaApprenti() {
               adresse: {
                 codePostal: {
                   ...apprentiAdresseCodePostal,
-                  value: data,
-                  // forceUpdate: false, // IF data = "" true
+                  value: data.codePostal,
+                },
+                commune: {
+                  ...apprentiAdresseCommune,
+                  value: data.commune,
                 },
               },
             },
           };
           if (apprentiAdresseCodePostal.value !== newV.apprenti.adresse.codePostal.value) {
             setApprentiAdresseCodePostal(newV.apprenti.adresse.codePostal);
+            setApprentiAdresseCommune(newV.apprenti.adresse.commune);
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               apprenti: {
                 adresse: {
                   codePostal: newV.apprenti.adresse.codePostal.value,
+                  commune: newV.apprenti.adresse.commune.value,
                 },
               },
             });
@@ -570,7 +592,15 @@ export function useCerfaApprenti() {
         console.error(e);
       }
     },
-    [apprentiAdresseCodePostal, setApprentiAdresseCodePostal, dossier?._id, cerfa?.id, setPartApprentiCompletion]
+    [
+      apprentiAdresseCodePostal,
+      apprentiAdresseCommune,
+      setApprentiAdresseCodePostal,
+      setApprentiAdresseCommune,
+      dossier?._id,
+      cerfa?.id,
+      setPartApprentiCompletion,
+    ]
   );
 
   const onSubmittedApprentiAdresseCommune = useCallback(
@@ -583,7 +613,6 @@ export function useCerfaApprenti() {
                 commune: {
                   ...apprentiAdresseCommune,
                   value: data,
-                  // forceUpdate: false, // IF data = "" true
                 },
               },
             },
@@ -1448,7 +1477,11 @@ export function useCerfaApprenti() {
                 adresse: {
                   codePostal: {
                     ...apprentiResponsableLegalAdresseCodePostal,
-                    value: data,
+                    value: data.codePostal,
+                  },
+                  commune: {
+                    ...apprentiResponsableLegalAdresseCommune,
+                    value: data.commune,
                   },
                 },
               },
@@ -1458,6 +1491,7 @@ export function useCerfaApprenti() {
             apprentiResponsableLegalAdresseCodePostal.value !== newV.apprenti.responsableLegal.adresse.codePostal.value
           ) {
             setApprentiResponsableLegalAdresseCodePostal(newV.apprenti.responsableLegal.adresse.codePostal);
+            setApprentiResponsableLegalAdresseCommune(newV.apprenti.responsableLegal.adresse.commune);
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               apprenti: {
@@ -1477,7 +1511,9 @@ export function useCerfaApprenti() {
     },
     [
       apprentiResponsableLegalAdresseCodePostal,
+      apprentiResponsableLegalAdresseCommune,
       setApprentiResponsableLegalAdresseCodePostal,
+      setApprentiResponsableLegalAdresseCommune,
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,

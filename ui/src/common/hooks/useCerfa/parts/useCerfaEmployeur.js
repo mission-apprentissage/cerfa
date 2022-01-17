@@ -3,7 +3,6 @@
  */
 
 import { useCallback } from "react";
-// import { DateTime } from "luxon";
 import { _post } from "../../../httpClient";
 import { useRecoilState, useRecoilValue } from "recoil";
 
@@ -14,6 +13,7 @@ import {
   convertValueToMultipleSelectOption,
   convertMultipleSelectOptionToValue,
   normalizeInputNumberForDb,
+  doAsyncCodePostalActions,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
@@ -152,6 +152,13 @@ export const CerfaEmployeurController = async (dossier) => {
             },
             message: null,
           };
+        },
+      },
+      adresse: {
+        codePostal: {
+          doAsyncActions: async (value, data) => {
+            return await doAsyncCodePostalActions(value, data, dossier._id);
+          },
         },
       },
     },
@@ -578,14 +585,18 @@ export function useCerfaEmployeur() {
               adresse: {
                 codePostal: {
                   ...employeurAdresseCodePostal,
-                  value: data,
-                  // forceUpdate: false, // IF data = "" true
+                  value: data.codePostal,
+                },
+                commune: {
+                  ...employeurAdresseCommune,
+                  value: data.commune,
                 },
               },
             },
           };
           if (employeurAdresseCodePostal.value !== newV.employeur.adresse.codePostal.value) {
             setEmployeurAdresseCodePostal(newV.employeur.adresse.codePostal);
+            setEmployeurAdresseCommune(newV.employeur.adresse.commune);
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
@@ -601,7 +612,15 @@ export function useCerfaEmployeur() {
         console.error(e);
       }
     },
-    [employeurAdresseCodePostal, setEmployeurAdresseCodePostal, dossier?._id, cerfa?.id, setPartEmployeurCompletionAtom]
+    [
+      employeurAdresseCodePostal,
+      employeurAdresseCommune,
+      setEmployeurAdresseCodePostal,
+      setEmployeurAdresseCommune,
+      dossier?._id,
+      cerfa?.id,
+      setPartEmployeurCompletionAtom,
+    ]
   );
 
   const onSubmittedEmployeurAdresseCommune = useCallback(

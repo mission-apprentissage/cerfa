@@ -24,6 +24,7 @@ const dossier = require("./routes/specific/dossier");
 const cerfa = require("./routes/specific/cerfa");
 const history = require("./routes/specific/history");
 const siret = require("./routes/specific/siret");
+const geo = require("./routes/specific/geo");
 const cfdrncp = require("./routes/specific/cfdrncp");
 const signDocument = require("./routes/specific/signDocument");
 
@@ -74,6 +75,7 @@ module.exports = async (components) => {
   app.use("/api/v1/upload", checkJwtToken, upload(components));
   app.use("/api/v1/history", checkJwtToken, history(components));
   app.use("/api/v1/siret", siret(components));
+  app.use("/api/v1/geo", checkJwtToken, geo(components));
   app.use("/api/v1/cfdrncp", checkJwtToken, cfdrncp(components));
   app.use("/api/v1/sign_document", checkJwtToken, signDocument(components));
 
