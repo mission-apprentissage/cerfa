@@ -161,6 +161,43 @@ export const CerfaEmployeurController = async (dossier) => {
           },
         },
       },
+      naf: {
+        doAsyncActions: async (value, data) => {
+          try {
+            const insert = (str, index, value) => {
+              return str.substr(0, index) + value + str.substr(index);
+            };
+            let formattedNaf = value.length > 2 ? insert(value, 2, ".") : value;
+
+            const response = await _post(`/api/v1/naf/`, {
+              naf: formattedNaf,
+              dossierId: dossier._id,
+            });
+
+            if (response.error) {
+              return {
+                successed: false,
+                data: null,
+                message: response.error,
+              };
+            }
+
+            return {
+              successed: true,
+              data: {
+                naf: value,
+              },
+              message: null,
+            };
+          } catch (error) {
+            return {
+              successed: false,
+              data: null,
+              message: error.prettyMessage,
+            };
+          }
+        },
+      },
     },
   };
 };
@@ -414,8 +451,7 @@ export function useCerfaEmployeur() {
             employeur: {
               naf: {
                 ...employeurNaf,
-                value: data,
-                // forceUpdate: false, // IF data = "" true
+                value: data.naf,
               },
             },
           };

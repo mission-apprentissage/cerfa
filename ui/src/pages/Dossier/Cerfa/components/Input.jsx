@@ -133,7 +133,49 @@ const MaskedInput = React.memo(({ onChange, mask, value, maskblocks, max, forbid
   );
 });
 
-const DateMInput = IMaskMixin(({ inputRef, ...props }) => <ChackraInput {...props} ref={inputRef} />);
+const MInput = IMaskMixin(({ inputRef, ...props }) => <ChackraInput {...props} ref={inputRef} />);
+
+// TODO DIRTY to merge with other mask input
+// const NafInput = ({ value, onChange, ...props }) => {
+//   const [internalValue, setInternalValue] = useState(value);
+//   const inputRef = useRef(null);
+
+//   useEffect(() => {
+//     if (value !== "") setInternalValue(value);
+//   }, [value]);
+
+//   let onComplete = useCallback(
+//     async (completValue) => {
+//       if (completValue !== value) {
+//         onChange({ persist: () => {}, target: { value: completValue } });
+//       }
+//     },
+//     [onChange, value]
+//   );
+
+//   return (
+//     <MInput
+//       {...props}
+//       mask="d/m/Y"
+//       unmask={true}
+//       lazy={false}
+//       placeholderChar="_"
+//       overwrite={true}
+//       autofix={true}
+//       blocks={{
+//         d: { mask: IMask.MaskedRange, placeholderChar: "j", from: 1, to: 31, maxLength: 2 },
+//         m: { mask: IMask.MaskedRange, placeholderChar: "m", from: 1, to: 12, maxLength: 2 },
+//         Y: { mask: IMask.MaskedRange, placeholderChar: "a", from: 1900, to: 2999, maxLength: 4 },
+//       }}
+//       onAccept={(currentValue, mask) => {
+//         setInternalValue(currentValue);
+//       }}
+//       onComplete={onComplete}
+//       ref={inputRef}
+//       value={internalValue}
+//     />
+//   );
+// };
 
 const DateInput = ({ onChange, value, type, ...props }) => {
   const dateValue = useMemo(() => {
@@ -173,7 +215,7 @@ const DateInput = ({ onChange, value, type, ...props }) => {
     );
 
     return (
-      <DateMInput
+      <MInput
         {...props}
         mask="d/m/Y"
         unmask={true}
