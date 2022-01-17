@@ -21,13 +21,7 @@ module.exports = (components) => {
 
       const result = await getDataFromCP(codePostal);
 
-      // const { data } = await apiTco.findCfd(cfd);
-      // if (data.messages.error) {
-      //   throw Boom.notFound(data.messages.error);
-      // }
       return res.json(result);
-
-      // return res.status(404).json({ message: "Something went wrong" });
     })
   );
 
