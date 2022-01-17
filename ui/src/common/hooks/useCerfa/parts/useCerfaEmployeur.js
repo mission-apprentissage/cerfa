@@ -133,6 +133,27 @@ export const CerfaEmployeurController = async (dossier) => {
           };
         },
       },
+      nombreDeSalaries: {
+        doAsyncActions: async (value, data) => {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          if (parseInt(value) > 9999999) {
+            return {
+              successed: false,
+              data: null,
+              message: "Le nombre de salariés ne excéder 9999999",
+            };
+          }
+
+          return {
+            successed: true,
+            data: {
+              nombreDeSalaries: value,
+            },
+            message: null,
+          };
+        },
+      },
     },
   };
 };
@@ -696,8 +717,7 @@ export function useCerfaEmployeur() {
             employeur: {
               nombreDeSalaries: {
                 ...employeurNombreDeSalaries,
-                value: data,
-                // forceUpdate: false, // IF data = "" true
+                value: data.nombreDeSalaries,
               },
             },
           };
