@@ -198,7 +198,7 @@ const DateInput = ({ onChange, value, type, ...props }) => {
     "Décembre",
   ];
 
-  const CustomDateInput = forwardRef(({ value, onChange, onFocus, onClick, ...props }, ref) => {
+  const CustomDateInput = forwardRef(({ value, onChange, onFocus, isDisabled, onClick, ...props }, ref) => {
     const [internalValue, setInternalValue] = useState(value);
 
     useEffect(() => {
@@ -213,10 +213,17 @@ const DateInput = ({ onChange, value, type, ...props }) => {
       },
       [onChange, value]
     );
-
+    const actions = !isDisabled
+      ? { onClick: onClick, onFocus: onFocus }
+      : {
+          onKeyDown: (e) => {
+            e.preventDefault();
+          },
+        };
     return (
       <MInput
         {...props}
+        isDisabled={isDisabled}
         mask="d/m/Y"
         unmask={true}
         lazy={false}
@@ -229,13 +236,12 @@ const DateInput = ({ onChange, value, type, ...props }) => {
           Y: { mask: IMask.MaskedRange, placeholderChar: "a", from: 1900, to: 2999, maxLength: 4 },
         }}
         onAccept={(currentValue, mask) => {
-          setInternalValue(currentValue);
+          if (!isDisabled) setInternalValue(currentValue);
         }}
         onComplete={onComplete}
         ref={ref}
         value={internalValue}
-        onFocus={onFocus}
-        onClick={onClick}
+        {...actions}
       />
     );
   });
