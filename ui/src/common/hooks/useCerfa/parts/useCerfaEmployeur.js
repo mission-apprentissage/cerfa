@@ -486,7 +486,6 @@ export function useCerfaEmployeur() {
               libelleIdcc: {
                 ...employeurLibelleIdcc,
                 value: data.libelleIdcc || "",
-                // locked: false,
               },
             },
           };
@@ -498,6 +497,7 @@ export function useCerfaEmployeur() {
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
                 codeIdcc: newV.employeur.codeIdcc.value.trim(),
+                libelleIdcc: newV.employeur.libelleIdcc.value.trim(),
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
@@ -813,7 +813,6 @@ export function useCerfaEmployeur() {
               libelleIdcc: {
                 ...employeurLibelleIdcc,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
