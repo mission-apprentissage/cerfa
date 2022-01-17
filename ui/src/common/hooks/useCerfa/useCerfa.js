@@ -115,6 +115,14 @@ const hydrate = async (dossier) => {
           ...cerfa.contrat.typeDerogation,
           ...cerfaContratController.contrat.typeDerogation,
         },
+        dureeTravailHebdoHeures: {
+          ...cerfa.contrat.dureeTravailHebdoHeures,
+          ...cerfaContratController.contrat.dureeTravailHebdoHeures,
+        },
+        dureeTravailHebdoMinutes: {
+          ...cerfa.contrat.dureeTravailHebdoMinutes,
+          ...cerfaContratController.contrat.dureeTravailHebdoMinutes,
+        },
       },
       formation: {
         ...cerfa.formation,
@@ -133,6 +141,10 @@ const hydrate = async (dossier) => {
         dateFinFormation: {
           ...cerfa.formation.dateFinFormation,
           ...cerfaFormationController.formation.dateFinFormation,
+        },
+        dureeFormation: {
+          ...cerfa.formation.dureeFormation,
+          ...cerfaFormationController.formation.dureeFormation,
         },
       },
       organismeFormation: {

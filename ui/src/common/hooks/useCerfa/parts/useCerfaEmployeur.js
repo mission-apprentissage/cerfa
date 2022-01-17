@@ -141,7 +141,7 @@ export const CerfaEmployeurController = async (dossier) => {
             return {
               successed: false,
               data: null,
-              message: "Le nombre de salariés ne excéder 9999999",
+              message: "Le nombre de salariés ne peut excéder 9999999",
             };
           }
 
@@ -791,7 +791,7 @@ export function useCerfaEmployeur() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
-                nombreDeSalaries: normalizeInputNumberForDb(data),
+                nombreDeSalaries: normalizeInputNumberForDb(newV.employeur.nombreDeSalaries.value),
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));

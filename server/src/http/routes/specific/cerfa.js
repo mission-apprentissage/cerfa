@@ -256,8 +256,8 @@ module.exports = (components) => {
           dateNaissance: Joi.date().allow(null),
         }),
         formation: Joi.object({
-          rncp: Joi.string(),
-          codeDiplome: Joi.string(),
+          rncp: Joi.string().allow(null),
+          codeDiplome: Joi.string().allow(null),
           typeDiplome: Joi.number(),
           intituleQualification: Joi.string(),
           dateDebutFormation: Joi.date(),

@@ -28,7 +28,7 @@ import * as contratAtoms from "./useCerfaContratAtoms";
 
 const cerfaContratCompletion = (res) => {
   let fieldsToKeep = {
-    contratModeContractuel: res.contrat.modeContractuel,
+    // contratModeContractuel: res.contrat.modeContractuel,
     contratTypeContratApp: res.contrat.typeContratApp,
     contratDateDebutContrat: res.contrat.dateDebutContrat,
     // contratDateConclusion: res.contrat.dateConclusion,
@@ -43,7 +43,7 @@ const cerfaContratCompletion = (res) => {
     contratAvantageNature: res.contrat.avantageNature,
     // contratRemunerationMajoration: res.contrat.remunerationMajoration,
   };
-  let countFields = 7;
+  let countFields = 6;
   const avantageNature = res.contrat.avantageNature.value;
   const contratInitial = res.contrat.typeContratApp.value === 11;
   const avenant =
@@ -941,6 +941,48 @@ export const CerfaContratController = async (dossier) => {
           };
         },
       },
+      dureeTravailHebdoHeures: {
+        doAsyncActions: async (value, data) => {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          if (parseInt(value) > 99) {
+            return {
+              successed: false,
+              data: null,
+              message: "la durée de travail hebdomadaire en heures ne peut excéder 99",
+            };
+          }
+
+          return {
+            successed: true,
+            data: {
+              dureeTravailHebdoHeures: value,
+            },
+            message: null,
+          };
+        },
+      },
+      dureeTravailHebdoMinutes: {
+        doAsyncActions: async (value, data) => {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          if (parseInt(value) > 60) {
+            return {
+              successed: false,
+              data: null,
+              message: "la durée de travail hebdomadaire en minutes ne peut excéder 60",
+            };
+          }
+
+          return {
+            successed: true,
+            data: {
+              dureeTravailHebdoMinutes: value,
+            },
+            message: null,
+          };
+        },
+      },
     },
   };
 };
@@ -1708,7 +1750,7 @@ export function useCerfaContrat() {
             contrat: {
               dureeTravailHebdoHeures: {
                 ...contratDureeTravailHebdoHeures,
-                value: data,
+                value: data.dureeTravailHebdoHeures,
               },
             },
           };
@@ -1717,7 +1759,7 @@ export function useCerfaContrat() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               contrat: {
-                dureeTravailHebdoHeures: normalizeInputNumberForDb(data),
+                dureeTravailHebdoHeures: normalizeInputNumberForDb(newV.contrat.dureeTravailHebdoHeures.value),
               },
             });
             setPartContratCompletion(cerfaContratCompletion(res));
@@ -1744,7 +1786,7 @@ export function useCerfaContrat() {
             contrat: {
               dureeTravailHebdoMinutes: {
                 ...contratDureeTravailHebdoMinutes,
-                value: data,
+                value: data.dureeTravailHebdoMinutes,
               },
             },
           };
@@ -1753,7 +1795,7 @@ export function useCerfaContrat() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               contrat: {
-                dureeTravailHebdoMinutes: normalizeInputNumberForDb(data),
+                dureeTravailHebdoMinutes: normalizeInputNumberForDb(newV.contrat.dureeTravailHebdoMinutes.value),
               },
             });
             setPartContratCompletion(cerfaContratCompletion(res));

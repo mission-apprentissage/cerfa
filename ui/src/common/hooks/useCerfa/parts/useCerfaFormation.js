@@ -33,6 +33,7 @@ export const CerfaFormationController = async (dossier) => {
               rncp: value,
               dossierId: dossier._id,
             });
+
             // TODO All cases
             if (response.messages.code_rncp === "Ok") {
               if (!response.result.cfds) {
@@ -245,6 +246,27 @@ export const CerfaFormationController = async (dossier) => {
           return {
             successed: true,
             data: value,
+            message: null,
+          };
+        },
+      },
+      dureeFormation: {
+        doAsyncActions: async (value, data) => {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          if (parseInt(value) > 9999) {
+            return {
+              successed: false,
+              data: null,
+              message: "la durée de la formation ne peut excéder 9999",
+            };
+          }
+
+          return {
+            successed: true,
+            data: {
+              dureeFormation: value,
+            },
             message: null,
           };
         },
@@ -886,7 +908,7 @@ export function useCerfaFormation() {
             formation: {
               dureeFormation: {
                 ...formationDureeFormation,
-                value: data,
+                value: data.dureeFormation,
               },
             },
           };
@@ -895,7 +917,7 @@ export function useCerfaFormation() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               formation: {
-                dureeFormation: normalizeInputNumberForDb(data),
+                dureeFormation: normalizeInputNumberForDb(newV.formation.dureeFormation.value),
               },
             });
             setPartFormationCompletionAtom(cerfaFormationCompletion(res));
@@ -1009,8 +1031,8 @@ export function useCerfaFormation() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               formation: {
-                codeDiplome: newV.formation.codeDiplome.value,
-                rncp: newV.formation.rncp.value,
+                codeDiplome: newV.formation.codeDiplome.value || null,
+                rncp: newV.formation.rncp.value || null,
                 intituleQualification: newV.formation.intituleQualification.value,
               },
               isLockedField: {
@@ -1069,8 +1091,8 @@ export function useCerfaFormation() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               formation: {
-                codeDiplome: newV.formation.codeDiplome.value,
-                rncp: newV.formation.rncp.value,
+                codeDiplome: newV.formation.codeDiplome.value || null,
+                rncp: newV.formation.rncp.value || null,
                 intituleQualification: newV.formation.intituleQualification.value,
               },
               isLockedField: {
