@@ -1,4 +1,11 @@
+const { mongoose } = require("../../../../mongodb");
+
 const documentSchema = {
+  documentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    description: "Identifiant du document",
+  },
   typeDocument: {
     enum: [
       "CONVENTION_FORMATION",

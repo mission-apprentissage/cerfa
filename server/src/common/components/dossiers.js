@@ -5,6 +5,7 @@ const permissions = require("./permissions");
 const moment = require("moment");
 const { findIndex, find } = require("lodash");
 moment.locale("fr-FR");
+const { mongoose } = require("../../common/mongodb");
 
 module.exports = async () => {
   const buildContributorsResult = async (contributeurEmail, workspaceId, dossierId, { users, permissions, roles }) => {
@@ -154,6 +155,7 @@ module.exports = async () => {
       }).validateAsync(data, { abortEarly: false });
 
       const newDocument = {
+        documentId: mongoose.Types.ObjectId(),
         typeDocument,
         typeFichier: "pdf",
         nomFichier,
