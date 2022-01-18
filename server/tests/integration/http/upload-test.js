@@ -39,7 +39,7 @@ describe("[Routes] Upload", () => {
 
     assert.strictEqual(response.status, 200);
     // eslint-disable-next-line no-unused-vars
-    const { dateAjout, dateMiseAJour, ...restData } = response.data.documents[0];
+    const { dateAjout, dateMiseAJour, documentId, ...restData } = response.data.documents[0];
     assert.deepStrictEqual(restData, {
       cheminFichier: `contrats/${dossierId}/testFile.pdf`,
       nomFichier: "testFile.pdf",
