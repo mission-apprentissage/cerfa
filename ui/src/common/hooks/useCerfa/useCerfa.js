@@ -46,6 +46,10 @@ const hydrate = async (dossier) => {
             ...cerfa.employeur.adresse.codePostal,
             ...cerfaEmployeurController.employeur.adresse.codePostal,
           },
+          departement: {
+            ...cerfa.employeur.adresse.departement,
+            ...cerfaEmployeurController.employeur.adresse.departement,
+          },
         },
       },
       apprenti: {

@@ -62,6 +62,10 @@ export const cerfaEmployeurAdresseCommuneAtom = atom({
   key: "cerfa/employeur/adresse/commune",
   default: null,
 });
+export const cerfaEmployeurAdresseDepartementAtom = atom({
+  key: "cerfa/employeur/adresse/departement",
+  default: null,
+});
 
 export const cerfaEmployeurNomAtom = atom({
   key: "cerfa/employeur/nom",

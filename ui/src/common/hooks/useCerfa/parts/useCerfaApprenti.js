@@ -21,7 +21,7 @@ import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
 import * as apprentiAtoms from "./useCerfaApprentiAtoms";
-import { buildRemunerations } from "../parts/useCerfaContrat";
+import { buildRemunerations } from "../../../utils/form/remunerationsUtils";
 import { useCerfaContrat } from "../parts/useCerfaContrat";
 
 const cerfaApprentiCompletion = (res) => {
@@ -119,13 +119,14 @@ export const CerfaApprentiController = async (dossier) => {
           });
           if (isAgeApprentiInvalidAtStart) return isAgeApprentiInvalidAtStart;
 
-          if (data.dateDebutContrat !== "" && data.dateFinContrat !== "") {
+          if (data.dateDebutContrat !== "" && data.dateFinContrat !== "" && data.employeurAdresseDepartement !== "") {
             const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
               apprentiDateNaissance: value,
               apprentiAge: age,
               dateDebutContrat: data.dateDebutContrat,
               dateFinContrat: data.dateFinContrat,
               remunerationMajoration: data.remunerationMajoration,
+              employeurAdresseDepartement: data.employeurAdresseDepartement,
             });
 
             return {
@@ -741,7 +742,6 @@ export function useCerfaApprenti() {
               departementNaissance: {
                 ...apprentiDepartementNaissance,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -1498,6 +1498,7 @@ export function useCerfaApprenti() {
                 responsableLegal: {
                   adresse: {
                     codePostal: newV.apprenti.responsableLegal.adresse.codePostal.value,
+                    commune: newV.apprenti.responsableLegal.adresse.commune.value,
                   },
                 },
               },

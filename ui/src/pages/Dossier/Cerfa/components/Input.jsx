@@ -198,7 +198,7 @@ const DateInput = ({ onChange, value, type, ...props }) => {
     "Décembre",
   ];
 
-  const CustomDateInput = forwardRef(({ value, onChange, onFocus, onClick, ...props }, ref) => {
+  const CustomDateInput = forwardRef(({ value, onChange, onFocus, isDisabled, onClick, ...props }, ref) => {
     const [internalValue, setInternalValue] = useState(value);
 
     useEffect(() => {
@@ -213,10 +213,17 @@ const DateInput = ({ onChange, value, type, ...props }) => {
       },
       [onChange, value]
     );
-
+    const actions = !isDisabled
+      ? { onClick: onClick, onFocus: onFocus }
+      : {
+          onKeyDown: (e) => {
+            e.preventDefault();
+          },
+        };
     return (
       <MInput
         {...props}
+        isDisabled={isDisabled}
         mask="d/m/Y"
         unmask={true}
         lazy={false}
@@ -229,13 +236,12 @@ const DateInput = ({ onChange, value, type, ...props }) => {
           Y: { mask: IMask.MaskedRange, placeholderChar: "a", from: 1900, to: 2999, maxLength: 4 },
         }}
         onAccept={(currentValue, mask) => {
-          setInternalValue(currentValue);
+          if (!isDisabled) setInternalValue(currentValue);
         }}
         onComplete={onComplete}
         ref={ref}
         value={internalValue}
-        onFocus={onFocus}
-        onClick={onClick}
+        {...actions}
       />
     );
   });
@@ -333,6 +339,8 @@ export default React.memo(
     label,
     isRequired,
     min = 0,
+    throttleTime = 100,
+    debounceTime = 100,
     ...props
   }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -440,8 +448,8 @@ export default React.memo(
       ]
     );
 
-    // const debouncedEventHandler = useMemo(() => debounce(handleChange, 300), []);
-    const throttledEventHandler = useMemo(() => throttle(handleChange, 100), [handleChange]);
+    const eventHandler = useMemo(() => throttle(handleChange, throttleTime), [handleChange, throttleTime]);
+    // const eventHandler = useMemo(() => debounce(handleChange, debounceTime), [handleChange, debounceTime]);
 
     useEffect(() => {
       (async () => {
@@ -543,7 +551,7 @@ export default React.memo(
         //
       })();
       return () => {
-        throttledEventHandler.cancel();
+        eventHandler.cancel();
       };
     }, [
       onAsyncData,
@@ -558,7 +566,7 @@ export default React.memo(
       handleChange,
       type,
       countryCode,
-      throttledEventHandler,
+      eventHandler,
       isRequiredInternal,
     ]);
 
@@ -682,7 +690,7 @@ export default React.memo(
               <Input
                 type={type}
                 name={name}
-                onChange={!field?.inputmask ? throttledEventHandler : handleChange}
+                onChange={!field?.inputmask ? eventHandler : handleChange}
                 value={values[name]}
                 required={isRequiredInternal}
                 pattern={field?.pattern}
@@ -789,6 +797,7 @@ export default React.memo(
                 isInvalid={isErrored}
                 maxLength={field?.maxLength}
                 isDisabled={shouldBeDisabled}
+                min={min}
                 _focus={{
                   borderBottomColor: borderBottomColor,
                   boxShadow: "none",
@@ -819,6 +828,12 @@ export default React.memo(
                 }}
               >
                 <NumberInputField />
+                {numberStepper && (
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                )}
               </NumberInput>
             )}
             {type === "radio" && (

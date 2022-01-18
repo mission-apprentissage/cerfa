@@ -61,4 +61,5 @@ module.exports = {
     clientId: env.get("CERFA_PDS_CLIENT_ID").asString(),
     clientSecret: env.get("CERFA_PDS_CLIENT_SECRET").asString(),
   },
+  agecap_passphrase: env.get("CERFA_AGECAP_PASSPHRASE").asString(),
 };

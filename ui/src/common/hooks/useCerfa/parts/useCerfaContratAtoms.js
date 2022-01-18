@@ -152,6 +152,14 @@ const defaultTaux = {
   value: 0,
   locked: true,
 };
+const defaultTauxMinimal = {
+  description: "Seuil légal en %",
+  example: 57,
+  label: "% de rémunération du SMIC",
+  default: "",
+  value: 0,
+  locked: true,
+};
 
 const defaultSalaireBrut = {
   description: "Salaire brut [Calculé]",
@@ -195,6 +203,10 @@ export const cerfaContratRemunerationsAnnuelles11TauxAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/11/taux",
   default: defaultTaux,
 });
+export const cerfaContratRemunerationsAnnuelles11TauxMinimalAtom = atom({
+  key: "cerfa/contrat/remunerationsAnnuelles/11/tauxMinimal",
+  default: defaultTauxMinimal,
+});
 export const cerfaContratRemunerationsAnnuelles11TypeSalaireAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/11/typeSalaire",
   default: defaultTypeSalaire,
@@ -215,6 +227,10 @@ export const cerfaContratRemunerationsAnnuelles12DateFinAtom = atom({
 export const cerfaContratRemunerationsAnnuelles12TauxAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/12/taux",
   default: defaultTaux,
+});
+export const cerfaContratRemunerationsAnnuelles12TauxMinimalAtom = atom({
+  key: "cerfa/contrat/remunerationsAnnuelles/12/tauxMinimal",
+  default: defaultTauxMinimal,
 });
 export const cerfaContratRemunerationsAnnuelles12TypeSalaireAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/12/typeSalaire",
@@ -238,6 +254,10 @@ export const cerfaContratRemunerationsAnnuelles21TauxAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/21/taux",
   default: defaultTaux,
 });
+export const cerfaContratRemunerationsAnnuelles21TauxMinimalAtom = atom({
+  key: "cerfa/contrat/remunerationsAnnuelles/21/tauxMinimal",
+  default: defaultTauxMinimal,
+});
 export const cerfaContratRemunerationsAnnuelles21TypeSalaireAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/21/typeSalaire",
   default: defaultTypeSalaire,
@@ -258,6 +278,10 @@ export const cerfaContratRemunerationsAnnuelles22DateFinAtom = atom({
 export const cerfaContratRemunerationsAnnuelles22TauxAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/22/taux",
   default: defaultTaux,
+});
+export const cerfaContratRemunerationsAnnuelles22TauxMinimalAtom = atom({
+  key: "cerfa/contrat/remunerationsAnnuelles/22/tauxMinimal",
+  default: defaultTauxMinimal,
 });
 export const cerfaContratRemunerationsAnnuelles22TypeSalaireAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/22/typeSalaire",
@@ -281,6 +305,10 @@ export const cerfaContratRemunerationsAnnuelles31TauxAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/31/taux",
   default: defaultTaux,
 });
+export const cerfaContratRemunerationsAnnuelles31TauxMinimalAtom = atom({
+  key: "cerfa/contrat/remunerationsAnnuelles/31/tauxMinimal",
+  default: defaultTauxMinimal,
+});
 export const cerfaContratRemunerationsAnnuelles31TypeSalaireAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/31/typeSalaire",
   default: defaultTypeSalaire,
@@ -301,6 +329,10 @@ export const cerfaContratRemunerationsAnnuelles32DateFinAtom = atom({
 export const cerfaContratRemunerationsAnnuelles32TauxAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/32/taux",
   default: defaultTaux,
+});
+export const cerfaContratRemunerationsAnnuelles32TauxMinimalAtom = atom({
+  key: "cerfa/contrat/remunerationsAnnuelles/32/tauxMinimal",
+  default: defaultTauxMinimal,
 });
 export const cerfaContratRemunerationsAnnuelles32TypeSalaireAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/32/typeSalaire",
@@ -324,6 +356,10 @@ export const cerfaContratRemunerationsAnnuelles41TauxAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/41/taux",
   default: defaultTaux,
 });
+export const cerfaContratRemunerationsAnnuelles41TauxMinimalAtom = atom({
+  key: "cerfa/contrat/remunerationsAnnuelles/41/tauxMinimal",
+  default: defaultTauxMinimal,
+});
 export const cerfaContratRemunerationsAnnuelles41TypeSalaireAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/41/typeSalaire",
   default: defaultTypeSalaire,
@@ -344,6 +380,10 @@ export const cerfaContratRemunerationsAnnuelles42DateFinAtom = atom({
 export const cerfaContratRemunerationsAnnuelles42TauxAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/42/taux",
   default: defaultTaux,
+});
+export const cerfaContratRemunerationsAnnuelles42TauxMinimalAtom = atom({
+  key: "cerfa/contrat/remunerationsAnnuelles/42/tauxMinimal",
+  default: defaultTauxMinimal,
 });
 export const cerfaContratRemunerationsAnnuelles42TypeSalaireAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles/42/typeSalaire",

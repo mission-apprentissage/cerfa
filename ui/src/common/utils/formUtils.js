@@ -155,6 +155,7 @@ export const doAsyncCodePostalActions = async (value, data, dossierId) => {
         data: {
           codePostal: value,
           commune: response.result.commune,
+          departement: response.result.num_departement,
         },
         message: null,
       };

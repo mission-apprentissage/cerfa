@@ -32,6 +32,16 @@ const remunerationAnnuelleSchema = {
       return !this.draft;
     },
   },
+  tauxMinimal: {
+    type: Number,
+    description: "Seuil légal en %",
+    example: 57,
+    label: "% de rémunération du SMIC",
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
+  },
   typeSalaire: {
     enum: ["SMIC", "SMC"],
     type: String,

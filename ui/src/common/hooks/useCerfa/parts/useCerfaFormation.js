@@ -715,6 +715,7 @@ export function useCerfaFormation() {
               organismeFormation: {
                 adresse: {
                   codePostal: newV.organismeFormation.adresse.codePostal.value,
+                  commune: newV.organismeFormation.adresse.commune.value,
                 },
               },
             });

@@ -8,12 +8,14 @@ import {
   cerfaContratDateFinContratAtom,
   cerfaContratRemunerationMajorationAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+import { cerfaEmployeurAdresseDepartementAtom } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import InputCerfa from "./Input";
 
 const FormLearner = () => {
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
   const dateFinContrat = useRecoilValue(cerfaContratDateFinContratAtom);
   const remunerationMajoration = useRecoilValue(cerfaContratRemunerationMajorationAtom);
+  const employeurAdresseDepartement = useRecoilValue(cerfaEmployeurAdresseDepartementAtom);
   const {
     get: {
       apprenti: {
@@ -279,6 +281,7 @@ const FormLearner = () => {
               dateDebutContrat: dateDebutContrat?.value,
               remunerationMajoration: remunerationMajoration?.valueDb,
               dateFinContrat: dateFinContrat?.value,
+              employeurAdresseDepartement: employeurAdresseDepartement?.value,
             }}
           />
           <InputCerfa

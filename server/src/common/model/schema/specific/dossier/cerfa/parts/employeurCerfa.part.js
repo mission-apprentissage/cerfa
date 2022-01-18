@@ -1,5 +1,6 @@
 const adresseSchema = require("./adresse.part");
 const idccEnum = require("./idcc.part");
+const departementEnum = require("./departements.part");
 
 const employeurCerfaSchema = {
   denomination: {
@@ -137,6 +138,30 @@ const employeurCerfaSchema = {
   },
   adresse: {
     ...adresseSchema,
+    departement: {
+      enum: [null, ...departementEnum.map((d) => d.replace(/^(0){1,2}/, ""))],
+      maxLength: 3,
+      minLength: 1,
+      validate: {
+        validator: function (v) {
+          if (!v) return true;
+          return /^([1-9]|[2][1-9]|2[AB]|[13456789][0-9]|9[012345]|97[12346])$/.test(v);
+        },
+        message: (props) => `${props.value} n'est pas un departement valide`,
+      },
+      type: String,
+      description: "Département de l'employeur",
+      label: "Département de l'employeur :",
+      example: "1 Ain, 99 Étranger",
+      pattern: "^([1-9]|[2][1-9]|2[AB]|[13456789][0-9]|9[012345]|97[12346])$",
+      requiredMessage: "le département de l'employeur est obligatoire",
+      validateMessage: ` n'est pas un département valide`,
+      default: null,
+      nullable: true,
+      required: function () {
+        return !this.draft;
+      },
+    },
   },
   nom: {
     maxLength: 200,
