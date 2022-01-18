@@ -9,11 +9,12 @@ module.exports = ({ users }) => {
   router.put(
     "/user",
     tryCatch(async ({ body, user }, res) => {
-      const { nom, prenom, email, telephone, beta } = await Joi.object({
+      const { nom, prenom, email, telephone, beta, civility } = await Joi.object({
         prenom: Joi.string().default(null).allow(null),
         nom: Joi.string().default(null).allow(null),
         email: Joi.string().required(),
         telephone: Joi.string().default(null).allow(null),
+        civility: Joi.string().default(null).allow(null),
         beta: Joi.string().default(null).allow(null),
       }).validateAsync(body, { abortEarly: false });
 
@@ -29,6 +30,7 @@ module.exports = ({ users }) => {
       await users.updateUser(userDb._id, {
         prenom: prenom || user.prenom,
         nom: nom || user.nom,
+        civility: civility || user.civility,
         telephone: telephone || user.telephone,
         beta_test: beta || user.beta,
       });

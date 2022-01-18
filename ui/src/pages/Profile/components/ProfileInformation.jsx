@@ -31,6 +31,7 @@ const ProfileInformation = () => {
       username: auth.username || "",
       telephone: auth.telephone ? auth.telephone.replace("+", "") : "",
       email: auth.email || "",
+      civility: auth.civility || "",
       beta: auth.beta || "",
     },
     validationSchema: Yup.object().shape({
@@ -38,15 +39,17 @@ const ProfileInformation = () => {
       name: Yup.string(),
       username: Yup.string(),
       phone: Yup.string(),
+      civility: Yup.string(),
       email: Yup.string().email("Email invalide"),
     }),
-    onSubmit: ({ nom, prenom, telephone, email, beta }, { setSubmitting }) => {
+    onSubmit: ({ nom, prenom, telephone, email, beta, civility }, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
         try {
           await _put(`/api/v1/profile/user`, {
             nom: nom || null,
             prenom: prenom || null,
             telephone: telephone ? `+${telephone}` : null,
+            civility: civility || null,
             email,
             beta: beta || null,
           });
@@ -67,7 +70,31 @@ const ProfileInformation = () => {
         <Heading as="h1" fontSize="32px">
           Mes informations
         </Heading>
-        <Flex mt={5}>
+        <Box mt={8}>
+          <RadioGroup value={values.civility}>
+            <HStack>
+              <Radio
+                type="radio"
+                name="civility"
+                value={"Monsieur"}
+                checked={values.civility !== "Madame"}
+                onChange={handleChange}
+              >
+                Monsieur
+              </Radio>
+              <Radio
+                type="radio"
+                name="civility"
+                value="Madame"
+                checked={values.civility === "Madame"}
+                onChange={handleChange}
+              >
+                Madame
+              </Radio>
+            </HStack>
+          </RadioGroup>
+        </Box>
+        <Flex mt={2}>
           <FormControl isRequired mt={2} isInvalid={errors.prenom}>
             <FormLabel>Prénom</FormLabel>
             <Input type="text" name="prenom" value={values.prenom} onChange={handleChange} required />
