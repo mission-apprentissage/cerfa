@@ -1,10 +1,25 @@
 import React from "react";
 import { Box, FormLabel, Flex } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
 
 import { useCerfaEmployeur } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeur";
+import {
+  cerfaContratDateDebutContratAtom,
+  cerfaContratDateFinContratAtom,
+  cerfaContratRemunerationMajorationAtom,
+} from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+import {
+  cerfaApprentiDateNaissanceAtom,
+  cerfaApprentiAgeAtom,
+} from "../../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
 import InputCerfa from "./Input";
 
 const FormEmployer = ({ onFetched }) => {
+  const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
+  const dateFinContrat = useRecoilValue(cerfaContratDateFinContratAtom);
+  const remunerationMajoration = useRecoilValue(cerfaContratRemunerationMajorationAtom);
+  const apprentiDateNaissance = useRecoilValue(cerfaApprentiDateNaissanceAtom);
+  const apprentiAge = useRecoilValue(cerfaApprentiAgeAtom);
   const {
     get: {
       employeur: {
@@ -16,7 +31,7 @@ const FormEmployer = ({ onFetched }) => {
         libelleIdcc,
         telephone,
         courriel,
-        adresse: { numero, voie, complement, codePostal, commune },
+        adresse: { numero, voie, complement, codePostal, commune, departement },
         typeEmployeur,
         employeurSpecifique,
         // caisseComplementaire,
@@ -44,6 +59,7 @@ const FormEmployer = ({ onFetched }) => {
           complement: onSubmittedEmployeurAdresseComplement,
           codePostal: onSubmittedEmployeurAdresseCodePostal,
           commune: onSubmittedEmployeurAdresseCommune,
+          departement: onSubmittedEmployeurAdresseDepartement,
         },
       },
     },
@@ -58,6 +74,13 @@ const FormEmployer = ({ onFetched }) => {
         mb="10"
         // hasComments
         onSubmittedField={onSubmittedEmployeurSiret}
+        onAsyncData={{
+          dateDebutContrat: dateDebutContrat?.value,
+          remunerationMajoration: remunerationMajoration?.valueDb,
+          dateFinContrat: dateFinContrat?.value,
+          apprentiDateNaissance: apprentiDateNaissance?.value,
+          apprentiAge: apprentiAge?.value,
+        }}
       />
       <Flex>
         <Box w="55%" flex="1">
@@ -104,6 +127,13 @@ const FormEmployer = ({ onFetched }) => {
             mt="2"
             onSubmittedField={onSubmittedEmployeurAdresseCodePostal}
             hasInfo={false}
+            onAsyncData={{
+              dateDebutContrat: dateDebutContrat?.value,
+              remunerationMajoration: remunerationMajoration?.valueDb,
+              dateFinContrat: dateFinContrat?.value,
+              apprentiDateNaissance: apprentiDateNaissance?.value,
+              apprentiAge: apprentiAge?.value,
+            }}
           />
           <InputCerfa
             path="employeur.adresse.commune"
@@ -112,6 +142,22 @@ const FormEmployer = ({ onFetched }) => {
             mt="2"
             onSubmittedField={onSubmittedEmployeurAdresseCommune}
             hasInfo={false}
+          />
+          <InputCerfa
+            path="employeur.adresse.departement"
+            field={departement}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurAdresseDepartement}
+            // throttleTime={0}
+            hasInfo={false}
+            onAsyncData={{
+              dateDebutContrat: dateDebutContrat?.value,
+              remunerationMajoration: remunerationMajoration?.valueDb,
+              dateFinContrat: dateFinContrat?.value,
+              apprentiDateNaissance: apprentiDateNaissance?.value,
+              apprentiAge: apprentiAge?.value,
+            }}
           />
 
           <InputCerfa

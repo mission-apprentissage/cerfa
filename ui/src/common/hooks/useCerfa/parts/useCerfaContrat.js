@@ -20,6 +20,7 @@ import {
   caclAgeFromStringDate,
   normalizeInputNumberForDb,
 } from "../../../utils/formUtils";
+import { buildRemunerations } from "../../../utils/form/remunerationsUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
@@ -79,537 +80,6 @@ const cerfaContratCompletion = (res) => {
   }
 
   return fieldCompletionPercentage(fieldsToKeep, countFields);
-};
-
-export const buildRemunerations = (data) => {
-  const dateDebutContrat = DateTime.fromISO(data.dateDebutContrat).setLocale("fr-FR");
-  const dateFinContrat = DateTime.fromISO(data.dateFinContrat).setLocale("fr-FR");
-  const apprentiDateNaissance = DateTime.fromISO(data.apprentiDateNaissance).setLocale("fr-FR");
-
-  const dateFinA1 = dateDebutContrat.plus({ years: 1 }).minus({ days: 1 });
-  const dateDebutA2 = dateDebutContrat.plus({ years: 1 });
-  const dateFinA2 = dateDebutA2.plus({ years: 1 }).minus({ days: 1 });
-  const dateDebutA3 = dateDebutA2.plus({ years: 1 });
-  const dateFinA3 = dateDebutA3.plus({ years: 1 }).minus({ days: 1 });
-  const dateDebutA4 = dateDebutA3.plus({ years: 1 });
-  // const dateFinA4 = dateDebutA4.plus({ years: 1 }).minus({ days: 1 });
-
-  const ageA1 = Math.floor(data.apprentiAge);
-  const anniversaireA1 = apprentiDateNaissance.plus({ years: ageA1 + 1 });
-  const ageA2 = ageA1 + 1;
-  const anniversaireA2 = anniversaireA1.plus({ years: 1 });
-  const ageA3 = ageA2 + 1;
-  const anniversaireA3 = anniversaireA2.plus({ years: 1 });
-  const ageA4 = ageA3 + 1;
-  const anniversaireA4 = anniversaireA3.plus({ years: 1 });
-  const ageA5 = ageA4 + 1;
-
-  // console.table([
-  //   { date: apprentiDateNaissance.toFormat("yyyy-MM-dd"), age: ageA1 },
-  //   { date: anniversaireA1.toFormat("yyyy-MM-dd"), age: ageA2 },
-  //   { date: anniversaireA2.toFormat("yyyy-MM-dd"), age: ageA3 },
-  //   { date: anniversaireA3.toFormat("yyyy-MM-dd"), age: ageA4 },
-  // ]);
-
-  const SMIC = 1603.12; // 10.57/h    (mayotte:  7.98/h)   Pour 35h  => Mayotte 1210.30
-  const seuils = [17, 18, 21, 26];
-  const getSeuils = (age) => {
-    if (age <= seuils[0]) return 0;
-    if (age >= seuils[1] && age < seuils[2]) return 1;
-    if (age >= seuils[2] && age < seuils[3]) return 2;
-    if (age >= seuils[3]) return 3;
-  };
-
-  const taux = {
-    a1: {
-      0: 27,
-      1: 43,
-      2: 53,
-      3: 100,
-    },
-    a2: {
-      0: 39,
-      1: 51,
-      2: 61,
-      3: 100,
-    },
-    a3: {
-      0: 55,
-      1: 67,
-      2: 78,
-      3: 100,
-    },
-    a4: {
-      0: 55,
-      1: 67,
-      2: 78,
-      3: 100,
-    },
-  };
-
-  const isChangingTaux = (currentAge, nextAge) => {
-    return getSeuils(nextAge) > getSeuils(currentAge);
-  };
-
-  let finRemuneration = false;
-
-  let result1 = {
-    11: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-    12: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-  };
-  if (isChangingTaux(ageA1, ageA2)) {
-    const dateFin11 = anniversaireA1.minus({ days: anniversaireA1.toObject().day }).plus({ months: 1 });
-    const dateDebut12 = dateFin11.plus({ days: 1 });
-    const taux11 = taux.a1[getSeuils(ageA1)] + data.remunerationMajoration;
-    const taux12 = taux.a1[getSeuils(ageA2)] + data.remunerationMajoration;
-
-    if (dateFin11 >= dateFinContrat) {
-      finRemuneration = true;
-      result1 = {
-        11: {
-          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux11) / 100,
-        },
-        12: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    } else if (dateFinA1 >= dateFinContrat) {
-      finRemuneration = true;
-      result1 = {
-        11: {
-          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
-          dateFin: dateFin11.toFormat("yyyy-MM-dd"),
-          taux: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux11) / 100,
-        },
-        12: {
-          dateDebut: dateDebut12.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux12,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux12) / 100,
-        },
-      };
-    } else {
-      result1 = {
-        11: {
-          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
-          dateFin: dateFin11.toFormat("yyyy-MM-dd"),
-          taux: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux11) / 100,
-        },
-        12: {
-          dateDebut: dateDebut12.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinA1.toFormat("yyyy-MM-dd"),
-          taux: taux12,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux12) / 100,
-        },
-      };
-    }
-  } else {
-    const taux11 = taux.a1[getSeuils(ageA1)] + data.remunerationMajoration;
-    if (dateFinA1 >= dateFinContrat) {
-      finRemuneration = true;
-      result1 = {
-        11: {
-          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux11) / 100,
-        },
-        12: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    } else {
-      result1 = {
-        11: {
-          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinA1.toFormat("yyyy-MM-dd"),
-          taux: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux11) / 100,
-        },
-        12: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    }
-  }
-
-  let result2 = {
-    21: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-    22: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-  };
-  if (isChangingTaux(ageA2, ageA3) && !finRemuneration) {
-    const dateFin21 = anniversaireA2.minus({ days: anniversaireA2.toObject().day }).plus({ months: 1 });
-    const dateDebut22 = dateFin21.plus({ days: 1 });
-    const taux21 = taux.a2[getSeuils(ageA2)] + data.remunerationMajoration;
-    const taux22 = taux.a2[getSeuils(ageA3)] + data.remunerationMajoration;
-
-    if (dateFin21 >= dateFinContrat) {
-      finRemuneration = true;
-      result2 = {
-        21: {
-          dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux21) / 100,
-        },
-        22: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    } else if (dateFinA2 >= dateFinContrat) {
-      finRemuneration = true;
-      result2 = {
-        21: {
-          dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
-          dateFin: dateFin21.toFormat("yyyy-MM-dd"),
-          taux: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux21) / 100,
-        },
-        22: {
-          dateDebut: dateDebut22.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux22,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux22) / 100,
-        },
-      };
-    } else {
-      result2 = {
-        21: {
-          dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
-          dateFin: dateFin21.toFormat("yyyy-MM-dd"),
-          taux: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux21) / 100,
-        },
-        22: {
-          dateDebut: dateDebut22.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinA2.toFormat("yyyy-MM-dd"),
-          taux: taux22,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux22) / 100,
-        },
-      };
-    }
-  } else if (!finRemuneration) {
-    const taux21 = taux.a2[getSeuils(ageA2)] + data.remunerationMajoration;
-
-    if (dateFinA2 >= dateFinContrat) {
-      finRemuneration = true;
-      result2 = {
-        21: {
-          dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux21) / 100,
-        },
-        22: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    } else {
-      result2 = {
-        21: {
-          dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinA2.toFormat("yyyy-MM-dd"),
-          taux: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux21) / 100,
-        },
-        22: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    }
-  }
-
-  let result3 = {
-    31: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-    32: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-  };
-  if (isChangingTaux(ageA3, ageA4) && !finRemuneration) {
-    const dateFin31 = anniversaireA3.minus({ days: anniversaireA3.toObject().day }).plus({ months: 1 });
-    const dateDebut32 = dateFin31.plus({ days: 1 });
-    const taux31 = taux.a3[getSeuils(ageA3)] + data.remunerationMajoration;
-    const taux32 = taux.a3[getSeuils(ageA4)] + data.remunerationMajoration;
-
-    if (dateFin31 >= dateFinContrat) {
-      finRemuneration = true;
-      result3 = {
-        31: {
-          dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux31) / 100,
-        },
-        32: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    } else if (dateFinA3 >= dateFinContrat) {
-      finRemuneration = true;
-      result3 = {
-        31: {
-          dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
-          dateFin: dateFin31.toFormat("yyyy-MM-dd"),
-          taux: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux31) / 100,
-        },
-        32: {
-          dateDebut: dateDebut32.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux32,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux32) / 100,
-        },
-      };
-    } else {
-      result3 = {
-        31: {
-          dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
-          dateFin: dateFin31.toFormat("yyyy-MM-dd"),
-          taux: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux31) / 100,
-        },
-        32: {
-          dateDebut: dateDebut32.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinA3.toFormat("yyyy-MM-dd"),
-          taux: taux32,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux32) / 100,
-        },
-      };
-    }
-  } else if (!finRemuneration) {
-    const taux31 = taux.a3[getSeuils(ageA3)] + data.remunerationMajoration;
-
-    if (dateFinA3 >= dateFinContrat) {
-      finRemuneration = true;
-      result3 = {
-        31: {
-          dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux31) / 100,
-        },
-        32: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    } else {
-      result3 = {
-        31: {
-          dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinA3.toFormat("yyyy-MM-dd"),
-          taux: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux31) / 100,
-        },
-        32: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    }
-  }
-
-  let result4 = {
-    41: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-    42: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-  };
-  if (isChangingTaux(ageA4, ageA5) && !finRemuneration) {
-    const dateFin41 = anniversaireA4.minus({ days: anniversaireA4.toObject().day }).plus({ months: 1 });
-    const dateDebut42 = dateFin41.plus({ days: 1 });
-    const taux41 = taux.a4[getSeuils(ageA4)] + data.remunerationMajoration;
-    const taux42 = taux.a4[getSeuils(ageA5)] + data.remunerationMajoration;
-
-    if (dateFin41 >= dateFinContrat) {
-      finRemuneration = true;
-      result4 = {
-        41: {
-          dateDebut: dateDebutA4.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux41,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux41) / 100,
-        },
-        42: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    } else {
-      result4 = {
-        41: {
-          dateDebut: dateDebutA4.toFormat("yyyy-MM-dd"),
-          dateFin: dateFin41.toFormat("yyyy-MM-dd"),
-          taux: taux41,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux41) / 100,
-        },
-        42: {
-          dateDebut: dateDebut42.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux42,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux42) / 100,
-        },
-      };
-    }
-  } else if (!finRemuneration) {
-    const taux41 = taux.a4[getSeuils(ageA4)] + data.remunerationMajoration;
-    result4 = {
-      41: {
-        dateDebut: dateDebutA4.toFormat("yyyy-MM-dd"),
-        dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-        taux: taux41,
-        typeSalaire: "SMIC",
-        salaireBrut: (SMIC * taux41) / 100,
-      },
-      42: {
-        dateDebut: "",
-        dateFin: "",
-        taux: 0,
-        typeSalaire: "SMIC",
-        salaireBrut: 0,
-      },
-    };
-  }
-
-  const remunerationsAnnuelles = {
-    ...result1,
-    ...result2,
-    ...result3,
-    ...result4,
-  };
-
-  const remunerationsAnnuellesDbValue = [];
-  const remKeys = Object.keys(remunerationsAnnuelles);
-  for (let index = 0; index < remKeys.length; index++) {
-    const remKey = remKeys[index];
-    const remPart = remunerationsAnnuelles[remKey];
-    if (remPart.taux > 0) {
-      remunerationsAnnuellesDbValue.push({
-        dateDebut: DateTime.fromISO(remPart.dateDebut).setLocale("fr-FR").ts,
-        dateFin: DateTime.fromISO(remPart.dateFin).setLocale("fr-FR").ts,
-        taux: remPart.taux,
-        typeSalaire: remPart.typeSalaire,
-        salaireBrut: remPart.salaireBrut.toFixed(2),
-        ordre: `${remKey[0]}.${remKey[1]}`,
-      });
-    }
-  }
-
-  return {
-    remunerationsAnnuelles,
-    remunerationsAnnuellesDbValue,
-    salaireEmbauche: remunerationsAnnuelles["11"].salaireBrut,
-  };
 };
 
 export const CerfaContratController = async (dossier) => {
@@ -728,10 +198,18 @@ export const CerfaContratController = async (dossier) => {
             if (isAgeMaitre2InvalidAtStart) return isAgeMaitre2InvalidAtStart;
           }
 
-          if (data.apprentiDateNaissance !== "" && data.dateFinContrat !== "") {
+          if (
+            data.apprentiDateNaissance !== "" &&
+            data.dateFinContrat !== "" &&
+            data.employeurAdresseDepartement !== ""
+          ) {
             const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-              ...data,
+              apprentiDateNaissance: data.apprentiDateNaissance,
+              apprentiAge: data.apprentiAge,
               dateDebutContrat: value,
+              dateFinContrat: data.dateFinContrat,
+              remunerationMajoration: data.remunerationMajoration,
+              employeurAdresseDepartement: data.employeurAdresseDepartement,
             });
 
             return {
@@ -827,10 +305,18 @@ export const CerfaContratController = async (dossier) => {
             }
           }
 
-          if (data.apprentiDateNaissance !== "" && data.dateDebutContrat !== "") {
+          if (
+            data.apprentiDateNaissance !== "" &&
+            data.dateDebutContrat !== "" &&
+            data.employeurAdresseDepartement !== ""
+          ) {
             const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-              ...data,
+              apprentiDateNaissance: data.apprentiDateNaissance,
+              apprentiAge: data.apprentiAge,
+              dateDebutContrat: data.dateDebutContrat,
               dateFinContrat: value,
+              remunerationMajoration: data.remunerationMajoration,
+              employeurAdresseDepartement: data.employeurAdresseDepartement,
             });
 
             return {
@@ -901,10 +387,19 @@ export const CerfaContratController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
-          if (data.apprentiDateNaissance !== "" && data.dateFinContrat !== "") {
+          if (
+            data.apprentiDateNaissance !== "" &&
+            data.dateFinContrat !== "" &&
+            data.dateDebutContrat !== "" &&
+            data.employeurAdresseDepartement !== ""
+          ) {
             const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-              ...data,
+              apprentiDateNaissance: data.apprentiDateNaissance,
+              apprentiAge: data.apprentiAge,
+              dateDebutContrat: data.dateDebutContrat,
+              dateFinContrat: data.dateFinContrat,
               remunerationMajoration: convertOptionToValue({ ...data.remunerationMajoration, value: value }),
+              employeurAdresseDepartement: data.employeurAdresseDepartement,
             });
 
             return {
@@ -2305,14 +1800,13 @@ export function useCerfaContrat() {
             contrat: {
               remunerationMajoration: {
                 ...contratRemunerationMajoration,
-                value: data.remunerationMajoration,
+                value: data.remunerationMajoration || "",
                 valueDb: convertOptionToValue({ ...contratRemunerationMajoration, value: data.remunerationMajoration }),
               },
             },
           };
           if (contratRemunerationMajoration.value !== newV.contrat.remunerationMajoration.value) {
             setContratRemunerationMajoration(newV.contrat.remunerationMajoration);
-
             let dataToSave = {
               contrat: {
                 remunerationMajoration: convertOptionToValue(newV.contrat.remunerationMajoration),
@@ -2395,7 +1889,7 @@ export function useCerfaContrat() {
             ...convertValueToDate(remunerationsAnnuelles.dateFin),
             locked: true,
           });
-          setContratRemunerationsAnnuelles11Taux({ ...remunerationsAnnuelles.taux, locked: true });
+          setContratRemunerationsAnnuelles11Taux({ ...remunerationsAnnuelles.taux, locked: false });
           setContratRemunerationsAnnuelles11TypeSalaire({
             ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
             locked: true,

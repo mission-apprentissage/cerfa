@@ -16,15 +16,18 @@ import {
   cerfaFormationDateDebutFormationAtom,
   cerfaFormationDateFinFormationAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
+
+import { cerfaEmployeurAdresseDepartementAtom } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import InputCerfa from "./Input";
 
 const FormContract = () => {
-  const apprentiDateNaissance = useRecoilValue(cerfaApprentiDateNaissanceAtom);
   const maitre1DateNaissance = useRecoilValue(cerfaMaitre1DateNaissanceAtom);
   const maitre2DateNaissance = useRecoilValue(cerfaMaitre2DateNaissanceAtom);
   const formationDateDebutFormation = useRecoilValue(cerfaFormationDateDebutFormationAtom);
   const formationDateFinFormation = useRecoilValue(cerfaFormationDateFinFormationAtom);
+  const apprentiDateNaissance = useRecoilValue(cerfaApprentiDateNaissanceAtom);
   const apprentiAge = useRecoilValue(cerfaApprentiAgeAtom);
+  const employeurAdresseDepartement = useRecoilValue(cerfaEmployeurAdresseDepartementAtom);
 
   const {
     get: {
@@ -183,6 +186,8 @@ const FormContract = () => {
               apprentiDateNaissance: apprentiDateNaissance?.value,
               apprentiAge: apprentiAge?.value,
               remunerationMajoration: remunerationMajoration?.valueDb,
+              employeurAdresseDepartement: employeurAdresseDepartement?.value,
+
               maitre1DateNaissance: maitre1DateNaissance?.value,
               maitre2DateNaissance: maitre2DateNaissance?.value,
 
@@ -222,6 +227,7 @@ const FormContract = () => {
               remunerationMajoration: remunerationMajoration?.valueDb,
               apprentiDateNaissance: apprentiDateNaissance?.value,
               apprentiAge: apprentiAge?.value,
+              employeurAdresseDepartement: employeurAdresseDepartement?.value,
             }}
           />
           {/* <InputCerfa
@@ -278,10 +284,14 @@ const FormContract = () => {
             dateDebutContrat: dateDebutContrat?.value,
             apprentiAge: apprentiAge?.value,
             dateFinContrat: dateFinContrat?.value,
+            employeurAdresseDepartement: employeurAdresseDepartement?.value,
           }}
         />
         <Box mt={6} borderColor={"dgalt"} borderWidth={2} px={4} py={3} borderStyle="dashed" rounded="md">
-          {(dateDebutContrat.value === "" || dateFinContrat.value === "" || apprentiDateNaissance.value === "") && (
+          {(dateDebutContrat.value === "" ||
+            dateFinContrat.value === "" ||
+            apprentiDateNaissance.value === "" ||
+            employeurAdresseDepartement.value === "") && (
             <VStack alignItems="flex-start" color="mgalt">
               <Text>Le calcul de la rémunération est automatique.</Text>
               <Text>Vous devez, pour cela, renseigner les éléments suivants : </Text>
@@ -306,6 +316,13 @@ const FormContract = () => {
                   color={dateFinContrat.value === "" ? "error" : "green.500"}
                 >
                   La date de fin du contrat
+                </ListItem>
+                <ListItem
+                  fontWeight="400"
+                  fontStyle="italic"
+                  color={dateFinContrat.value === "" ? "error" : "green.500"}
+                >
+                  Le département de l'employeur
                 </ListItem>
               </UnorderedList>
             </VStack>
@@ -399,6 +416,7 @@ const FormContract = () => {
                             hasInfo={false}
                             type="numberPrefixed"
                             format={(val) => val + ` %`}
+                            numberStepper={true}
                             parse={(val) => val.replace(/^ %/, "")}
                           />
                           <Box w="100%" position="relative" fontStyle="italic" color="disablegrey" py={2}>

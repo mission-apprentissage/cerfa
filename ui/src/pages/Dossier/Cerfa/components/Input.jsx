@@ -339,6 +339,8 @@ export default React.memo(
     label,
     isRequired,
     min = 0,
+    throttleTime = 100,
+    debounceTime = 100,
     ...props
   }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -446,8 +448,8 @@ export default React.memo(
       ]
     );
 
-    // const debouncedEventHandler = useMemo(() => debounce(handleChange, 300), []);
-    const throttledEventHandler = useMemo(() => throttle(handleChange, 100), [handleChange]);
+    const eventHandler = useMemo(() => throttle(handleChange, throttleTime), [handleChange, throttleTime]);
+    // const eventHandler = useMemo(() => debounce(handleChange, debounceTime), [handleChange, debounceTime]);
 
     useEffect(() => {
       (async () => {
@@ -549,7 +551,7 @@ export default React.memo(
         //
       })();
       return () => {
-        throttledEventHandler.cancel();
+        eventHandler.cancel();
       };
     }, [
       onAsyncData,
@@ -564,7 +566,7 @@ export default React.memo(
       handleChange,
       type,
       countryCode,
-      throttledEventHandler,
+      eventHandler,
       isRequiredInternal,
     ]);
 
@@ -688,7 +690,7 @@ export default React.memo(
               <Input
                 type={type}
                 name={name}
-                onChange={!field?.inputmask ? throttledEventHandler : handleChange}
+                onChange={!field?.inputmask ? eventHandler : handleChange}
                 value={values[name]}
                 required={isRequiredInternal}
                 pattern={field?.pattern}
@@ -825,6 +827,12 @@ export default React.memo(
                 }}
               >
                 <NumberInputField />
+                {numberStepper && (
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                )}
               </NumberInput>
             )}
             {type === "radio" && (
