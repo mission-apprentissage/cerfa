@@ -79,6 +79,7 @@ const FormContract = () => {
         avantageLogement: onSubmittedContratAvantageLogement,
         autreAvantageEnNature: onSubmittedContratAutreAvantageEnNature,
         remunerationMajoration: onSubmittedContratRemunerationMajoration,
+        remunerationTaux: onSubmittedContratRemunerationsAnnuellesTaux,
       },
     },
   } = useCerfaContrat();
@@ -412,12 +413,17 @@ const FormContract = () => {
                           <InputCerfa
                             path={`contrat.remunerationsAnnuelles.${path}.taux`}
                             field={remunerationsAnnuelle.taux}
+                            min={remunerationsAnnuelle.tauxMinimal.value}
                             mt="2"
                             hasInfo={false}
+                            numberStepper={true}
+                            // type="number"
                             type="numberPrefixed"
                             format={(val) => val + ` %`}
-                            numberStepper={true}
                             parse={(val) => val.replace(/^ %/, "")}
+                            onSubmittedField={(fieldPath, data) =>
+                              onSubmittedContratRemunerationsAnnuellesTaux(fieldPath, data, path)
+                            }
                           />
                           <Box w="100%" position="relative" fontStyle="italic" color="disablegrey" py={2}>
                             soit {remunerationsAnnuelle.salaireBrut.value} € / mois

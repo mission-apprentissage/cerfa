@@ -92,6 +92,31 @@ const findSmicAtDate = (lookupDate) => {
   return smicObjResult;
 };
 
+export const buildRemunerationsDbValue = (remunerationsAnnuelles) => {
+  const remunerationsAnnuellesDbValue = [];
+  const remKeys = Object.keys(remunerationsAnnuelles);
+  for (let index = 0; index < remKeys.length; index++) {
+    const remKey = remKeys[index];
+    const remPart = remunerationsAnnuelles[remKey];
+    if (remPart.taux > 0) {
+      remunerationsAnnuellesDbValue.push({
+        dateDebut: DateTime.fromISO(remPart.dateDebut).setLocale("fr-FR").ts,
+        dateFin: DateTime.fromISO(remPart.dateFin).setLocale("fr-FR").ts,
+        taux: remPart.taux,
+        tauxMinimal: remPart.tauxMinimal,
+        typeSalaire: remPart.typeSalaire,
+        salaireBrut: remPart.salaireBrut.toFixed(2),
+        ordre: `${remKey[0]}.${remKey[1]}`,
+      });
+    }
+  }
+
+  return {
+    remunerationsAnnuellesDbValue,
+    salaireEmbauche: remunerationsAnnuelles["11"].salaireBrut,
+  };
+};
+
 export const buildRemunerations = (data) => {
   const dateDebutContrat = DateTime.fromISO(data.dateDebutContrat).setLocale("fr-FR");
   const dateFinContrat = DateTime.fromISO(data.dateFinContrat).setLocale("fr-FR");
@@ -523,27 +548,11 @@ export const buildRemunerations = (data) => {
     ...result4,
   };
 
-  const remunerationsAnnuellesDbValue = [];
-  const remKeys = Object.keys(remunerationsAnnuelles);
-  for (let index = 0; index < remKeys.length; index++) {
-    const remKey = remKeys[index];
-    const remPart = remunerationsAnnuelles[remKey];
-    if (remPart.taux > 0) {
-      remunerationsAnnuellesDbValue.push({
-        dateDebut: DateTime.fromISO(remPart.dateDebut).setLocale("fr-FR").ts,
-        dateFin: DateTime.fromISO(remPart.dateFin).setLocale("fr-FR").ts,
-        taux: remPart.taux,
-        tauxMinimal: remPart.tauxMinimal,
-        typeSalaire: remPart.typeSalaire,
-        salaireBrut: remPart.salaireBrut.toFixed(2),
-        ordre: `${remKey[0]}.${remKey[1]}`,
-      });
-    }
-  }
+  const { remunerationsAnnuellesDbValue, salaireEmbauche } = buildRemunerationsDbValue(remunerationsAnnuelles);
 
   return {
     remunerationsAnnuelles,
     remunerationsAnnuellesDbValue,
-    salaireEmbauche: remunerationsAnnuelles["11"].salaireBrut,
+    salaireEmbauche,
   };
 };

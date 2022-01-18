@@ -1,5 +1,6 @@
 const axios = require("axios");
 const logger = require("../logger");
+const config = require("../../config");
 const ApiError = require("./_apiError");
 const apiRateLimiter = require("./_apiRateLimiter");
 
@@ -48,12 +49,13 @@ const fs = require("fs");
 //   );
 // };
 
-const CERT_PATH = "data/agecap";
+const CERT_PATH = "/data/agecap";
 
 const httpsAgent = new https.Agent({
-  key: fs.readFileSync(`${__dirname}/${CERT_PATH}/client-key.pem`),
-  cert: fs.readFileSync(`${__dirname}/${CERT_PATH}/client-crt.pem`),
-  ca: [fs.readFileSync(`${__dirname}/${CERT_PATH}/server-ca-crt.pem`)],
+  key: fs.readFileSync(`${CERT_PATH}/client-key.pem`),
+  cert: fs.readFileSync(`${CERT_PATH}/client-crt.pem`),
+  ca: [fs.readFileSync(`${CERT_PATH}/server-ca-crt.pem`)],
+  passphrase: config.agecap_passphrase,
 });
 
 // Cf Documentation : Api Agecap

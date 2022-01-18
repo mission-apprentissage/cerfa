@@ -20,7 +20,7 @@ import {
   caclAgeFromStringDate,
   normalizeInputNumberForDb,
 } from "../../../utils/formUtils";
-import { buildRemunerations } from "../../../utils/form/remunerationsUtils";
+import { buildRemunerations, buildRemunerationsDbValue } from "../../../utils/form/remunerationsUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
@@ -536,6 +536,9 @@ export function useCerfaContrat() {
   const [contratSalaireEmbauche, setContratSalaireEmbauche] = useRecoilState(
     contratAtoms.cerfaContratSalaireEmbaucheAtom
   );
+  const [contratRemunerationsAnnuelles, setContratRemunerationsAnnuelles] = useRecoilState(
+    contratAtoms.cerfaContratRemunerationsAnnuellesAtom
+  );
   const [contratCaisseRetraiteComplementaire, setContratCaisseRetraiteComplementaire] = useRecoilState(
     contratAtoms.cerfaContratCaisseRetraiteComplementaireAtom
   );
@@ -562,6 +565,9 @@ export function useCerfaContrat() {
   const [contratRemunerationsAnnuelles11Taux, setContratRemunerationsAnnuelles11Taux] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles11TauxAtom
   );
+  const [contratRemunerationsAnnuelles11TauxMinimal, setContratRemunerationsAnnuelles11TauxMinimal] = useRecoilState(
+    contratAtoms.cerfaContratRemunerationsAnnuelles11TauxMinimalAtom
+  );
   const [contratRemunerationsAnnuelles11TypeSalaire, setContratRemunerationsAnnuelles11TypeSalaire] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles11TypeSalaireAtom
   );
@@ -578,6 +584,9 @@ export function useCerfaContrat() {
   const [contratRemunerationsAnnuelles12Taux, setContratRemunerationsAnnuelles12Taux] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles12TauxAtom
   );
+  const [contratRemunerationsAnnuelles12TauxMinimal, setContratRemunerationsAnnuelles12TauxMinimal] = useRecoilState(
+    contratAtoms.cerfaContratRemunerationsAnnuelles12TauxMinimalAtom
+  );
   const [contratRemunerationsAnnuelles12TypeSalaire, setContratRemunerationsAnnuelles12TypeSalaire] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles12TypeSalaireAtom
   );
@@ -592,6 +601,9 @@ export function useCerfaContrat() {
   );
   const [contratRemunerationsAnnuelles21Taux, setContratRemunerationsAnnuelles21Taux] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles21TauxAtom
+  );
+  const [contratRemunerationsAnnuelles21TauxMinimal, setContratRemunerationsAnnuelles21TauxMinimal] = useRecoilState(
+    contratAtoms.cerfaContratRemunerationsAnnuelles21TauxMinimalAtom
   );
   const [contratRemunerationsAnnuelles21TypeSalaire, setContratRemunerationsAnnuelles21TypeSalaire] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles21TypeSalaireAtom
@@ -608,6 +620,9 @@ export function useCerfaContrat() {
   const [contratRemunerationsAnnuelles22Taux, setContratRemunerationsAnnuelles22Taux] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles22TauxAtom
   );
+  const [contratRemunerationsAnnuelles22TauxMinimal, setContratRemunerationsAnnuelles22TauxMinimal] = useRecoilState(
+    contratAtoms.cerfaContratRemunerationsAnnuelles22TauxMinimalAtom
+  );
   const [contratRemunerationsAnnuelles22TypeSalaire, setContratRemunerationsAnnuelles22TypeSalaire] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles22TypeSalaireAtom
   );
@@ -622,6 +637,9 @@ export function useCerfaContrat() {
   );
   const [contratRemunerationsAnnuelles31Taux, setContratRemunerationsAnnuelles31Taux] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles31TauxAtom
+  );
+  const [contratRemunerationsAnnuelles31TauxMinimal, setContratRemunerationsAnnuelles31TauxMinimal] = useRecoilState(
+    contratAtoms.cerfaContratRemunerationsAnnuelles31TauxMinimalAtom
   );
   const [contratRemunerationsAnnuelles31TypeSalaire, setContratRemunerationsAnnuelles31TypeSalaire] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles31TypeSalaireAtom
@@ -638,6 +656,9 @@ export function useCerfaContrat() {
   const [contratRemunerationsAnnuelles32Taux, setContratRemunerationsAnnuelles32Taux] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles32TauxAtom
   );
+  const [contratRemunerationsAnnuelles32TauxMinimal, setContratRemunerationsAnnuelles32TauxMinimal] = useRecoilState(
+    contratAtoms.cerfaContratRemunerationsAnnuelles32TauxMinimalAtom
+  );
   const [contratRemunerationsAnnuelles32TypeSalaire, setContratRemunerationsAnnuelles32TypeSalaire] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles32TypeSalaireAtom
   );
@@ -652,6 +673,9 @@ export function useCerfaContrat() {
   );
   const [contratRemunerationsAnnuelles41Taux, setContratRemunerationsAnnuelles41Taux] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles41TauxAtom
+  );
+  const [contratRemunerationsAnnuelles41TauxMinimal, setContratRemunerationsAnnuelles41TauxMinimal] = useRecoilState(
+    contratAtoms.cerfaContratRemunerationsAnnuelles41TauxMinimalAtom
   );
   const [contratRemunerationsAnnuelles41TypeSalaire, setContratRemunerationsAnnuelles41TypeSalaire] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles41TypeSalaireAtom
@@ -668,6 +692,9 @@ export function useCerfaContrat() {
   const [contratRemunerationsAnnuelles42Taux, setContratRemunerationsAnnuelles42Taux] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles42TauxAtom
   );
+  const [contratRemunerationsAnnuelles42TauxMinimal, setContratRemunerationsAnnuelles42TauxMinimal] = useRecoilState(
+    contratAtoms.cerfaContratRemunerationsAnnuelles42TauxMinimalAtom
+  );
   const [contratRemunerationsAnnuelles42TypeSalaire, setContratRemunerationsAnnuelles42TypeSalaire] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuelles42TypeSalaireAtom
   );
@@ -677,6 +704,7 @@ export function useCerfaContrat() {
 
   const setRemunerations = useCallback(
     async (data) => {
+      setContratRemunerationsAnnuelles(data.remunerationsAnnuelles);
       setContratSalaireEmbauche({
         ...contratSalaireEmbauche,
         value: data.salaireEmbauche.toFixed(2),
@@ -693,6 +721,10 @@ export function useCerfaContrat() {
       setContratRemunerationsAnnuelles11Taux({
         ...contratRemunerationsAnnuelles11Taux,
         value: data.remunerationsAnnuelles["11"].taux,
+      });
+      setContratRemunerationsAnnuelles11TauxMinimal({
+        ...contratRemunerationsAnnuelles11TauxMinimal,
+        value: data.remunerationsAnnuelles["11"].tauxMinimal,
       });
       setContratRemunerationsAnnuelles11TypeSalaire({
         ...contratRemunerationsAnnuelles11TypeSalaire,
@@ -715,6 +747,10 @@ export function useCerfaContrat() {
         ...contratRemunerationsAnnuelles12Taux,
         value: data.remunerationsAnnuelles["12"].taux,
       });
+      setContratRemunerationsAnnuelles12TauxMinimal({
+        ...contratRemunerationsAnnuelles12TauxMinimal,
+        value: data.remunerationsAnnuelles["12"].tauxMinimal,
+      });
       setContratRemunerationsAnnuelles12TypeSalaire({
         ...contratRemunerationsAnnuelles12TypeSalaire,
         value: data.remunerationsAnnuelles["12"].typeSalaire,
@@ -735,6 +771,10 @@ export function useCerfaContrat() {
       setContratRemunerationsAnnuelles21Taux({
         ...contratRemunerationsAnnuelles21Taux,
         value: data.remunerationsAnnuelles["21"].taux,
+      });
+      setContratRemunerationsAnnuelles21TauxMinimal({
+        ...contratRemunerationsAnnuelles21TauxMinimal,
+        value: data.remunerationsAnnuelles["21"].tauxMinimal,
       });
       setContratRemunerationsAnnuelles21TypeSalaire({
         ...contratRemunerationsAnnuelles21TypeSalaire,
@@ -757,6 +797,10 @@ export function useCerfaContrat() {
         ...contratRemunerationsAnnuelles22Taux,
         value: data.remunerationsAnnuelles["22"].taux,
       });
+      setContratRemunerationsAnnuelles22TauxMinimal({
+        ...contratRemunerationsAnnuelles22TauxMinimal,
+        value: data.remunerationsAnnuelles["22"].tauxMinimal,
+      });
       setContratRemunerationsAnnuelles22TypeSalaire({
         ...contratRemunerationsAnnuelles22TypeSalaire,
         value: data.remunerationsAnnuelles["22"].typeSalaire,
@@ -777,6 +821,10 @@ export function useCerfaContrat() {
       setContratRemunerationsAnnuelles31Taux({
         ...contratRemunerationsAnnuelles31Taux,
         value: data.remunerationsAnnuelles["31"].taux,
+      });
+      setContratRemunerationsAnnuelles31TauxMinimal({
+        ...contratRemunerationsAnnuelles31TauxMinimal,
+        value: data.remunerationsAnnuelles["31"].tauxMinimal,
       });
       setContratRemunerationsAnnuelles31TypeSalaire({
         ...contratRemunerationsAnnuelles31TypeSalaire,
@@ -799,6 +847,10 @@ export function useCerfaContrat() {
         ...contratRemunerationsAnnuelles32Taux,
         value: data.remunerationsAnnuelles["32"].taux,
       });
+      setContratRemunerationsAnnuelles32TauxMinimal({
+        ...contratRemunerationsAnnuelles32TauxMinimal,
+        value: data.remunerationsAnnuelles["32"].tauxMinimal,
+      });
       setContratRemunerationsAnnuelles32TypeSalaire({
         ...contratRemunerationsAnnuelles32TypeSalaire,
         value: data.remunerationsAnnuelles["32"].typeSalaire,
@@ -819,6 +871,10 @@ export function useCerfaContrat() {
       setContratRemunerationsAnnuelles41Taux({
         ...contratRemunerationsAnnuelles41Taux,
         value: data.remunerationsAnnuelles["41"].taux,
+      });
+      setContratRemunerationsAnnuelles41TauxMinimal({
+        ...contratRemunerationsAnnuelles41TauxMinimal,
+        value: data.remunerationsAnnuelles["41"].tauxMinimal,
       });
       setContratRemunerationsAnnuelles41TypeSalaire({
         ...contratRemunerationsAnnuelles41TypeSalaire,
@@ -841,6 +897,10 @@ export function useCerfaContrat() {
         ...contratRemunerationsAnnuelles42Taux,
         value: data.remunerationsAnnuelles["42"].taux,
       });
+      setContratRemunerationsAnnuelles42TauxMinimal({
+        ...contratRemunerationsAnnuelles42TauxMinimal,
+        value: data.remunerationsAnnuelles["42"].tauxMinimal,
+      });
       setContratRemunerationsAnnuelles42TypeSalaire({
         ...contratRemunerationsAnnuelles42TypeSalaire,
         value: data.remunerationsAnnuelles["42"].typeSalaire,
@@ -855,82 +915,99 @@ export function useCerfaContrat() {
       contratRemunerationsAnnuelles11DateFin,
       contratRemunerationsAnnuelles11SalaireBrut,
       contratRemunerationsAnnuelles11Taux,
+      contratRemunerationsAnnuelles11TauxMinimal,
       contratRemunerationsAnnuelles11TypeSalaire,
       contratRemunerationsAnnuelles12DateDebut,
       contratRemunerationsAnnuelles12DateFin,
       contratRemunerationsAnnuelles12SalaireBrut,
       contratRemunerationsAnnuelles12Taux,
+      contratRemunerationsAnnuelles12TauxMinimal,
       contratRemunerationsAnnuelles12TypeSalaire,
       contratRemunerationsAnnuelles21DateDebut,
       contratRemunerationsAnnuelles21DateFin,
       contratRemunerationsAnnuelles21SalaireBrut,
       contratRemunerationsAnnuelles21Taux,
+      contratRemunerationsAnnuelles21TauxMinimal,
       contratRemunerationsAnnuelles21TypeSalaire,
       contratRemunerationsAnnuelles22DateDebut,
       contratRemunerationsAnnuelles22DateFin,
       contratRemunerationsAnnuelles22SalaireBrut,
       contratRemunerationsAnnuelles22Taux,
+      contratRemunerationsAnnuelles22TauxMinimal,
       contratRemunerationsAnnuelles22TypeSalaire,
       contratRemunerationsAnnuelles31DateDebut,
       contratRemunerationsAnnuelles31DateFin,
       contratRemunerationsAnnuelles31SalaireBrut,
       contratRemunerationsAnnuelles31Taux,
+      contratRemunerationsAnnuelles31TauxMinimal,
       contratRemunerationsAnnuelles31TypeSalaire,
       contratRemunerationsAnnuelles32DateDebut,
       contratRemunerationsAnnuelles32DateFin,
       contratRemunerationsAnnuelles32SalaireBrut,
       contratRemunerationsAnnuelles32Taux,
+      contratRemunerationsAnnuelles32TauxMinimal,
       contratRemunerationsAnnuelles32TypeSalaire,
       contratRemunerationsAnnuelles41DateDebut,
       contratRemunerationsAnnuelles41DateFin,
       contratRemunerationsAnnuelles41SalaireBrut,
       contratRemunerationsAnnuelles41Taux,
+      contratRemunerationsAnnuelles41TauxMinimal,
       contratRemunerationsAnnuelles41TypeSalaire,
       contratRemunerationsAnnuelles42DateDebut,
       contratRemunerationsAnnuelles42DateFin,
       contratRemunerationsAnnuelles42SalaireBrut,
       contratRemunerationsAnnuelles42Taux,
+      contratRemunerationsAnnuelles42TauxMinimal,
       contratRemunerationsAnnuelles42TypeSalaire,
       contratSalaireEmbauche,
+      setContratRemunerationsAnnuelles,
       setContratRemunerationsAnnuelles11DateDebut,
       setContratRemunerationsAnnuelles11DateFin,
       setContratRemunerationsAnnuelles11SalaireBrut,
       setContratRemunerationsAnnuelles11Taux,
+      setContratRemunerationsAnnuelles11TauxMinimal,
       setContratRemunerationsAnnuelles11TypeSalaire,
       setContratRemunerationsAnnuelles12DateDebut,
       setContratRemunerationsAnnuelles12DateFin,
       setContratRemunerationsAnnuelles12SalaireBrut,
       setContratRemunerationsAnnuelles12Taux,
+      setContratRemunerationsAnnuelles12TauxMinimal,
       setContratRemunerationsAnnuelles12TypeSalaire,
       setContratRemunerationsAnnuelles21DateDebut,
       setContratRemunerationsAnnuelles21DateFin,
       setContratRemunerationsAnnuelles21SalaireBrut,
       setContratRemunerationsAnnuelles21Taux,
+      setContratRemunerationsAnnuelles21TauxMinimal,
       setContratRemunerationsAnnuelles21TypeSalaire,
       setContratRemunerationsAnnuelles22DateDebut,
       setContratRemunerationsAnnuelles22DateFin,
       setContratRemunerationsAnnuelles22SalaireBrut,
       setContratRemunerationsAnnuelles22Taux,
+      setContratRemunerationsAnnuelles22TauxMinimal,
       setContratRemunerationsAnnuelles22TypeSalaire,
       setContratRemunerationsAnnuelles31DateDebut,
       setContratRemunerationsAnnuelles31DateFin,
       setContratRemunerationsAnnuelles31SalaireBrut,
       setContratRemunerationsAnnuelles31Taux,
+      setContratRemunerationsAnnuelles31TauxMinimal,
       setContratRemunerationsAnnuelles31TypeSalaire,
       setContratRemunerationsAnnuelles32DateDebut,
       setContratRemunerationsAnnuelles32DateFin,
       setContratRemunerationsAnnuelles32SalaireBrut,
       setContratRemunerationsAnnuelles32Taux,
+      setContratRemunerationsAnnuelles32TauxMinimal,
       setContratRemunerationsAnnuelles32TypeSalaire,
       setContratRemunerationsAnnuelles41DateDebut,
       setContratRemunerationsAnnuelles41DateFin,
       setContratRemunerationsAnnuelles41SalaireBrut,
       setContratRemunerationsAnnuelles41Taux,
+      setContratRemunerationsAnnuelles41TauxMinimal,
       setContratRemunerationsAnnuelles41TypeSalaire,
       setContratRemunerationsAnnuelles42DateDebut,
       setContratRemunerationsAnnuelles42DateFin,
       setContratRemunerationsAnnuelles42SalaireBrut,
       setContratRemunerationsAnnuelles42Taux,
+      setContratRemunerationsAnnuelles42TauxMinimal,
       setContratRemunerationsAnnuelles42TypeSalaire,
       setContratSalaireEmbauche,
     ]
@@ -1841,6 +1918,97 @@ export function useCerfaContrat() {
     ]
   );
 
+  const onSubmittedContratRemunerationsAnnuellesTaux = useCallback(
+    async (path, data, part) => {
+      try {
+        if (path === `contrat.remunerationsAnnuelles.${part}.taux`) {
+          let getterTaux = null;
+          let setterTaux = null;
+          switch (part) {
+            case "11":
+              getterTaux = contratRemunerationsAnnuelles11Taux;
+              setterTaux = setContratRemunerationsAnnuelles11Taux;
+              break;
+            case "12":
+              getterTaux = contratRemunerationsAnnuelles12Taux;
+              setterTaux = setContratRemunerationsAnnuelles12Taux;
+              break;
+            case "21":
+              getterTaux = contratRemunerationsAnnuelles21Taux;
+              setterTaux = setContratRemunerationsAnnuelles21Taux;
+              break;
+            case "22":
+              getterTaux = contratRemunerationsAnnuelles22Taux;
+              setterTaux = setContratRemunerationsAnnuelles22Taux;
+              break;
+            case "31":
+              getterTaux = contratRemunerationsAnnuelles31Taux;
+              setterTaux = setContratRemunerationsAnnuelles31Taux;
+              break;
+            case "32":
+              getterTaux = contratRemunerationsAnnuelles32Taux;
+              setterTaux = setContratRemunerationsAnnuelles32Taux;
+              break;
+            case "41":
+              getterTaux = contratRemunerationsAnnuelles41Taux;
+              setterTaux = setContratRemunerationsAnnuelles41Taux;
+              break;
+            case "42":
+              getterTaux = contratRemunerationsAnnuelles42Taux;
+              setterTaux = setContratRemunerationsAnnuelles42Taux;
+              break;
+            default:
+              break;
+          }
+          if (getterTaux && setterTaux) {
+            setterTaux({
+              ...getterTaux,
+              value: data,
+            });
+            let newRemunerationsAnnuellesPart = { ...contratRemunerationsAnnuelles[part] };
+            newRemunerationsAnnuellesPart.taux = parseInt(data);
+
+            const { salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerationsDbValue({
+              ...contratRemunerationsAnnuelles,
+              [part]: newRemunerationsAnnuellesPart,
+            });
+
+            let dataToSave = {
+              contrat: {
+                remunerationsAnnuelles: remunerationsAnnuellesDbValue,
+                salaireEmbauche: salaireEmbauche.toFixed(2),
+              },
+            };
+            await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [
+      cerfa?.id,
+      contratRemunerationsAnnuelles,
+      contratRemunerationsAnnuelles11Taux,
+      contratRemunerationsAnnuelles12Taux,
+      contratRemunerationsAnnuelles21Taux,
+      contratRemunerationsAnnuelles22Taux,
+      contratRemunerationsAnnuelles31Taux,
+      contratRemunerationsAnnuelles32Taux,
+      contratRemunerationsAnnuelles41Taux,
+      contratRemunerationsAnnuelles42Taux,
+      dossier?._id,
+      setContratRemunerationsAnnuelles11Taux,
+      setContratRemunerationsAnnuelles12Taux,
+      setContratRemunerationsAnnuelles21Taux,
+      setContratRemunerationsAnnuelles22Taux,
+      setContratRemunerationsAnnuelles31Taux,
+      setContratRemunerationsAnnuelles32Taux,
+      setContratRemunerationsAnnuelles41Taux,
+      setContratRemunerationsAnnuelles42Taux,
+    ]
+  );
+
   const setAll = async (res) => {
     setContratModeContractuel(convertValueToOption(res.contrat.modeContractuel));
     setContratTypeContratApp(convertValueToMultipleSelectOption(res.contrat.typeContratApp));
@@ -1890,6 +2058,7 @@ export function useCerfaContrat() {
             locked: true,
           });
           setContratRemunerationsAnnuelles11Taux({ ...remunerationsAnnuelles.taux, locked: false });
+          setContratRemunerationsAnnuelles11TauxMinimal({ ...remunerationsAnnuelles.tauxMinimal, locked: false });
           setContratRemunerationsAnnuelles11TypeSalaire({
             ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
             locked: true,
@@ -1906,6 +2075,7 @@ export function useCerfaContrat() {
             locked: true,
           });
           setContratRemunerationsAnnuelles12Taux({ ...remunerationsAnnuelles.taux, locked: true });
+          setContratRemunerationsAnnuelles12TauxMinimal({ ...remunerationsAnnuelles.tauxMinimal, locked: true });
           setContratRemunerationsAnnuelles12TypeSalaire({
             ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
             locked: true,
@@ -1923,6 +2093,7 @@ export function useCerfaContrat() {
             locked: true,
           });
           setContratRemunerationsAnnuelles21Taux({ ...remunerationsAnnuelles.taux, locked: true });
+          setContratRemunerationsAnnuelles21TauxMinimal({ ...remunerationsAnnuelles.tauxMinimal, locked: true });
           setContratRemunerationsAnnuelles21TypeSalaire({
             ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
             locked: true,
@@ -1939,6 +2110,7 @@ export function useCerfaContrat() {
             locked: true,
           });
           setContratRemunerationsAnnuelles22Taux({ ...remunerationsAnnuelles.taux, locked: true });
+          setContratRemunerationsAnnuelles22TauxMinimal({ ...remunerationsAnnuelles.tauxMinimal, locked: true });
           setContratRemunerationsAnnuelles22TypeSalaire({
             ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
             locked: true,
@@ -1956,6 +2128,7 @@ export function useCerfaContrat() {
             locked: true,
           });
           setContratRemunerationsAnnuelles31Taux({ ...remunerationsAnnuelles.taux, locked: true });
+          setContratRemunerationsAnnuelles31TauxMinimal({ ...remunerationsAnnuelles.tauxMinimal, locked: true });
           setContratRemunerationsAnnuelles31TypeSalaire({
             ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
             locked: true,
@@ -1972,6 +2145,7 @@ export function useCerfaContrat() {
             locked: true,
           });
           setContratRemunerationsAnnuelles32Taux({ ...remunerationsAnnuelles.taux, locked: true });
+          setContratRemunerationsAnnuelles32TauxMinimal({ ...remunerationsAnnuelles.tauxMinimal, locked: true });
           setContratRemunerationsAnnuelles32TypeSalaire({
             ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
             locked: true,
@@ -1989,6 +2163,7 @@ export function useCerfaContrat() {
             locked: true,
           });
           setContratRemunerationsAnnuelles41Taux({ ...remunerationsAnnuelles.taux, locked: true });
+          setContratRemunerationsAnnuelles41TauxMinimal({ ...remunerationsAnnuelles.tauxMinimal, locked: true });
           setContratRemunerationsAnnuelles41TypeSalaire({
             ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
             locked: true,
@@ -2005,6 +2180,7 @@ export function useCerfaContrat() {
             locked: true,
           });
           setContratRemunerationsAnnuelles42Taux({ ...remunerationsAnnuelles.taux, locked: true });
+          setContratRemunerationsAnnuelles42TauxMinimal({ ...remunerationsAnnuelles.tauxMinimal, locked: true });
           setContratRemunerationsAnnuelles42TypeSalaire({
             ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
             locked: true,
@@ -2056,6 +2232,7 @@ export function useCerfaContrat() {
             dateDebut: contratRemunerationsAnnuelles11DateDebut,
             dateFin: contratRemunerationsAnnuelles11DateFin,
             taux: contratRemunerationsAnnuelles11Taux,
+            tauxMinimal: contratRemunerationsAnnuelles11TauxMinimal,
             typeSalaire: contratRemunerationsAnnuelles11TypeSalaire,
             salaireBrut: contratRemunerationsAnnuelles11SalaireBrut,
           },
@@ -2063,6 +2240,7 @@ export function useCerfaContrat() {
             dateDebut: contratRemunerationsAnnuelles12DateDebut,
             dateFin: contratRemunerationsAnnuelles12DateFin,
             taux: contratRemunerationsAnnuelles12Taux,
+            tauxMinimal: contratRemunerationsAnnuelles12TauxMinimal,
             typeSalaire: contratRemunerationsAnnuelles12TypeSalaire,
             salaireBrut: contratRemunerationsAnnuelles12SalaireBrut,
           },
@@ -2070,6 +2248,7 @@ export function useCerfaContrat() {
             dateDebut: contratRemunerationsAnnuelles21DateDebut,
             dateFin: contratRemunerationsAnnuelles21DateFin,
             taux: contratRemunerationsAnnuelles21Taux,
+            tauxMinimal: contratRemunerationsAnnuelles21TauxMinimal,
             typeSalaire: contratRemunerationsAnnuelles21TypeSalaire,
             salaireBrut: contratRemunerationsAnnuelles21SalaireBrut,
           },
@@ -2077,6 +2256,7 @@ export function useCerfaContrat() {
             dateDebut: contratRemunerationsAnnuelles22DateDebut,
             dateFin: contratRemunerationsAnnuelles22DateFin,
             taux: contratRemunerationsAnnuelles22Taux,
+            tauxMinimal: contratRemunerationsAnnuelles22TauxMinimal,
             typeSalaire: contratRemunerationsAnnuelles22TypeSalaire,
             salaireBrut: contratRemunerationsAnnuelles22SalaireBrut,
           },
@@ -2084,6 +2264,7 @@ export function useCerfaContrat() {
             dateDebut: contratRemunerationsAnnuelles31DateDebut,
             dateFin: contratRemunerationsAnnuelles31DateFin,
             taux: contratRemunerationsAnnuelles31Taux,
+            tauxMinimal: contratRemunerationsAnnuelles31TauxMinimal,
             typeSalaire: contratRemunerationsAnnuelles31TypeSalaire,
             salaireBrut: contratRemunerationsAnnuelles31SalaireBrut,
           },
@@ -2091,6 +2272,7 @@ export function useCerfaContrat() {
             dateDebut: contratRemunerationsAnnuelles32DateDebut,
             dateFin: contratRemunerationsAnnuelles32DateFin,
             taux: contratRemunerationsAnnuelles32Taux,
+            tauxMinimal: contratRemunerationsAnnuelles32TauxMinimal,
             typeSalaire: contratRemunerationsAnnuelles32TypeSalaire,
             salaireBrut: contratRemunerationsAnnuelles32SalaireBrut,
           },
@@ -2098,6 +2280,7 @@ export function useCerfaContrat() {
             dateDebut: contratRemunerationsAnnuelles41DateDebut,
             dateFin: contratRemunerationsAnnuelles41DateFin,
             taux: contratRemunerationsAnnuelles41Taux,
+            tauxMinimal: contratRemunerationsAnnuelles41TauxMinimal,
             typeSalaire: contratRemunerationsAnnuelles41TypeSalaire,
             salaireBrut: contratRemunerationsAnnuelles41SalaireBrut,
           },
@@ -2105,6 +2288,7 @@ export function useCerfaContrat() {
             dateDebut: contratRemunerationsAnnuelles42DateDebut,
             dateFin: contratRemunerationsAnnuelles42DateFin,
             taux: contratRemunerationsAnnuelles42Taux,
+            tauxMinimal: contratRemunerationsAnnuelles42TauxMinimal,
             typeSalaire: contratRemunerationsAnnuelles42TypeSalaire,
             salaireBrut: contratRemunerationsAnnuelles42SalaireBrut,
           },
@@ -2136,6 +2320,7 @@ export function useCerfaContrat() {
         avantageLogement: onSubmittedContratAvantageLogement,
         autreAvantageEnNature: onSubmittedContratAutreAvantageEnNature,
         remunerationMajoration: onSubmittedContratRemunerationMajoration,
+        remunerationTaux: onSubmittedContratRemunerationsAnnuellesTaux,
       },
     },
   };

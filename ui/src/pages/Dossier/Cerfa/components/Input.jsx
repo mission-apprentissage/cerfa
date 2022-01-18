@@ -797,6 +797,7 @@ export default React.memo(
                 isInvalid={isErrored}
                 maxLength={field?.maxLength}
                 isDisabled={shouldBeDisabled}
+                min={min}
                 _focus={{
                   borderBottomColor: borderBottomColor,
                   boxShadow: "none",
