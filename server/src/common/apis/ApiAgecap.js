@@ -49,12 +49,11 @@ const fs = require("fs");
 //   );
 // };
 
-const CERT_PATH = "data/agecap";
+const CERT_PATH = "/data/agecap";
 
 const httpsAgent = new https.Agent({
   key: fs.readFileSync(`${CERT_PATH}/client-key.pem`),
   cert: fs.readFileSync(`${CERT_PATH}/client-crt.pem`),
-  ca: [fs.readFileSync(`${CERT_PATH}/server-ca-crt.pem`)],
   passphrase: config.agecap_passphrase,
 });
 
