@@ -1,3 +1,19 @@
+# [1.14.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0...v1.14.0-beta.1) (2022-01-18)
+
+
+### Bug Fixes
+
+* application de la désactivation sur les champs date ([3d664b9](https://github.com/mission-apprentissage/cerfa/commit/3d664b9ca6f46285beec6481a7427d981fb83256))
+* chemin certificats ([ea29d0b](https://github.com/mission-apprentissage/cerfa/commit/ea29d0b4a91b6bee0b5eb17d3f500706439ef60b))
+* pds url production ([5241b31](https://github.com/mission-apprentissage/cerfa/commit/5241b315ee7a49621b0a24a53506d0556b550f2a))
+
+
+### Features
+
+* ajout département employeur ([87abc0e](https://github.com/mission-apprentissage/cerfa/commit/87abc0e9a39ed3727b1ff0f4efdd52212cb24ac0))
+* ajout job de test Agecap Api ([aa585ad](https://github.com/mission-apprentissage/cerfa/commit/aa585ad9496534a03d229e6c1f8e6d65a8279858))
+* base modification remuneration + debug test api agecap ([b7bbb4f](https://github.com/mission-apprentissage/cerfa/commit/b7bbb4f2b9abdec357c198c2e55c39ad91c95dda))
+
 # [1.13.0](https://github.com/mission-apprentissage/cerfa/compare/v1.12.0...v1.13.0) (2022-01-17)
 
 
