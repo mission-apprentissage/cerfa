@@ -48,7 +48,7 @@ const fs = require("fs");
 //   );
 // };
 
-const CERT_PATH = "/agecap";
+const CERT_PATH = "data/agecap";
 
 const httpsAgent = new https.Agent({
   key: fs.readFileSync(`${__dirname}/${CERT_PATH}/client-key.pem`),
