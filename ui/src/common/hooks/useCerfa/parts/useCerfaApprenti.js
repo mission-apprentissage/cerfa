@@ -125,7 +125,7 @@ export const CerfaApprentiController = async (dossier) => {
               apprentiAge: age,
               dateDebutContrat: data.dateDebutContrat,
               dateFinContrat: data.dateFinContrat,
-              remunerationMajoration: data.remunerationMajoration,
+              remunerationsAnnuelles: data.remunerationsAnnuelles,
               employeurAdresseDepartement: data.employeurAdresseDepartement,
             });
 

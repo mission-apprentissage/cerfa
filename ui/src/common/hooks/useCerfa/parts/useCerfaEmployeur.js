@@ -92,7 +92,7 @@ export const CerfaEmployeurController = async (dossier) => {
               apprentiAge: data.apprentiAge,
               dateDebutContrat: data.dateDebutContrat,
               dateFinContrat: data.dateFinContrat,
-              remunerationMajoration: data.remunerationMajoration,
+              remunerationsAnnuelles: data.remunerationsAnnuelles,
               employeurAdresseDepartement: response.result.num_departement,
             });
 
@@ -193,7 +193,7 @@ export const CerfaEmployeurController = async (dossier) => {
                   apprentiAge: data.apprentiAge,
                   dateDebutContrat: data.dateDebutContrat,
                   dateFinContrat: data.dateFinContrat,
-                  remunerationMajoration: data.remunerationMajoration,
+                  remunerationsAnnuelles: data.remunerationsAnnuelles,
                   employeurAdresseDepartement: result.departement,
                 });
 
@@ -223,7 +223,7 @@ export const CerfaEmployeurController = async (dossier) => {
                 apprentiAge: data.apprentiAge,
                 dateDebutContrat: data.dateDebutContrat,
                 dateFinContrat: data.dateFinContrat,
-                remunerationMajoration: data.remunerationMajoration,
+                remunerationsAnnuelles: data.remunerationsAnnuelles,
                 employeurAdresseDepartement: value,
               });
 
