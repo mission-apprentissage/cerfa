@@ -7,48 +7,6 @@ const apiRateLimiter = require("./_apiRateLimiter");
 const https = require("https");
 const fs = require("fs");
 
-// const HOST = "sia-refonte-api-agecap-rec-ext.rct01.kleegroup.com";
-// const ROOT_PATH = "/agecap-api";
-// const CERT_PATH = "/agecap";
-// const requestAgecap = (path) => {
-//   const req = https.request(
-//     {
-//       host: HOST,
-//       port: 443,
-//       secureProtocol: "TLSv1_2_method",
-//       key: fs.readFileSync(`${__dirname}/${CERT_PATH}/client-key.pem`),
-//       cert: fs.readFileSync(`${__dirname}/${CERT_PATH}/client-crt.pem`),
-//       ca: [fs.readFileSync(`${__dirname}/${CERT_PATH}/server-ca-crt.pem`)],
-//       path: `${ROOT_PATH}${path}`,
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     },
-//     function (response) {
-//       console.log("Response statusCode: ", response.statusCode);
-//       console.log("Response headers: ", response.headers);
-//       console.log("Server Host Name: " + response.connection.getPeerCertificate().subject.CN);
-//       if (response.statusCode !== 200) {
-//         console.log(`Wrong status code`);
-//         return;
-//       }
-//       let rawData = "";
-//       response.on("data", function (data) {
-//         rawData += data;
-//       });
-//       response.on("end", function () {
-//         if (rawData.length > 0) {
-//           console.log(`Received message: ${rawData}`);
-//         }
-//         console.log(`TLS Connection closed!`);
-//         req.end();
-//         return;
-//       });
-//     }
-//   );
-// };
-
 const CERT_PATH = "/data/agecap";
 
 const httpsAgent = new https.Agent({

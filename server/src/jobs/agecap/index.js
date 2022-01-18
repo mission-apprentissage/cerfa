@@ -9,7 +9,7 @@ const run = async () => {
   try {
     const response = await apiAgecap.authenticate();
     console.log(response);
-    logger.error(`[AGECAP API] Auth successed`);
+    logger.log(`[AGECAP API] Auth successed`);
   } catch (error) {
     logger.error(error);
     logger.error(`[AGECAP API] Auth Failed`);
