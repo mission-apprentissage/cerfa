@@ -1,3 +1,10 @@
+# [1.14.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.1...v1.14.0-beta.2) (2022-01-18)
+
+
+### Bug Fixes
+
+* fix chemin des certifications Agecap ([39e0162](https://github.com/mission-apprentissage/cerfa/commit/39e016230689dcd86ad576044ac24a2bebddcf1e))
+
 # [1.14.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0...v1.14.0-beta.1) (2022-01-18)
 
 
