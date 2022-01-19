@@ -153,6 +153,7 @@ module.exports = (components) => {
         "inviteWorkspace",
         {
           username: user.username,
+          civility: user.civility,
           wksname: wks.nom,
           user2role: newUserRole.title,
           publicUrl: config.publicUrl,
