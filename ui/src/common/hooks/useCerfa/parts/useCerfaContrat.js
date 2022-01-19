@@ -14,7 +14,6 @@ import {
   convertValueToOption,
   convertValueToMultipleSelectOption,
   convertMultipleSelectOptionToValue,
-  isAgeInValidLowerAtDate,
   caclAgeAtDate,
   normalizeInputNumberForDb,
 } from "../../../utils/formUtils";

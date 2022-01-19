@@ -33,9 +33,15 @@ export const CerfaFormationController = async (dossier) => {
               rncp: value,
               dossierId: dossier._id,
             });
-
             // TODO All cases
             if (response.messages.code_rncp === "Ok") {
+              if (response.result.active_inactive === "INACTIVE") {
+                return {
+                  successed: false,
+                  data: null,
+                  message: `Le code ${value} est inactif.`,
+                };
+              }
               if (!response.result.cfds) {
                 return {
                   successed: true,
@@ -1072,7 +1078,6 @@ export function useCerfaFormation() {
                 ...formationCodeDiplome,
                 value: data.cfd || "",
                 forceUpdate: formationCodeDiplome.value === data.cfd,
-                // locked: data.cfd !== "",
               },
               rncp: {
                 ...formationRncp,
