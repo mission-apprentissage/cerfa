@@ -37,7 +37,11 @@ module.exports = (components) => {
   const buildCerfaResult = (cerfa) => {
     function customizer(objValue, srcValue) {
       if (objValue !== undefined) {
-        return { ...objValue, value: srcValue || srcValue === false || srcValue === 0 ? srcValue : "" };
+        return {
+          ...objValue,
+          value:
+            srcValue || srcValue === false || srcValue === 0 ? srcValue : typeof objValue.type === "object" ? null : "",
+        };
       }
     }
 
@@ -207,7 +211,7 @@ module.exports = (components) => {
           sexe: Joi.string(),
           nationalite: Joi.number(),
           dateNaissance: Joi.date(),
-          age: Joi.number(),
+          age: Joi.number().allow(null),
           departementNaissance: Joi.string(),
           communeNaissance: Joi.string(),
           nir: Joi.string(),
@@ -291,6 +295,7 @@ module.exports = (components) => {
           avantageLogement: Joi.number().allow(null),
           autreAvantageEnNature: Joi.boolean().allow(null),
           remunerationMajoration: Joi.number(),
+          smic: Joi.object({}).unknown(),
           remunerationsAnnuelles: Joi.array().items({
             dateDebut: Joi.date(),
             dateFin: Joi.date(),

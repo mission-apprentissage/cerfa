@@ -87,14 +87,15 @@ export const CerfaEmployeurController = async (dossier) => {
           }
 
           if (data.apprentiDateNaissance !== "" && data.dateFinContrat !== "" && data.dateDebutContrat !== "") {
-            const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-              apprentiDateNaissance: data.apprentiDateNaissance,
-              apprentiAge: data.apprentiAge,
-              dateDebutContrat: data.dateDebutContrat,
-              dateFinContrat: data.dateFinContrat,
-              remunerationMajoration: data.remunerationMajoration,
-              employeurAdresseDepartement: response.result.num_departement,
-            });
+            const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue, smicObj } =
+              buildRemunerations({
+                apprentiDateNaissance: data.apprentiDateNaissance,
+                apprentiAge: data.apprentiAge,
+                dateDebutContrat: data.dateDebutContrat,
+                dateFinContrat: data.dateFinContrat,
+                remunerationsAnnuelles: data.remunerationsAnnuelles,
+                employeurAdresseDepartement: response.result.num_departement,
+              });
 
             return {
               successed: true,
@@ -102,6 +103,7 @@ export const CerfaEmployeurController = async (dossier) => {
                 ...response.result,
                 remunerationsAnnuelles,
                 remunerationsAnnuellesDbValue,
+                smicObj,
                 salaireEmbauche,
               },
               message: null,
@@ -188,14 +190,15 @@ export const CerfaEmployeurController = async (dossier) => {
 
             if (result.successed) {
               if (data.apprentiDateNaissance !== "" && data.dateFinContrat !== "" && data.dateDebutContrat !== "") {
-                const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-                  apprentiDateNaissance: data.apprentiDateNaissance,
-                  apprentiAge: data.apprentiAge,
-                  dateDebutContrat: data.dateDebutContrat,
-                  dateFinContrat: data.dateFinContrat,
-                  remunerationMajoration: data.remunerationMajoration,
-                  employeurAdresseDepartement: result.departement,
-                });
+                const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue, smicObj } =
+                  buildRemunerations({
+                    apprentiDateNaissance: data.apprentiDateNaissance,
+                    apprentiAge: data.apprentiAge,
+                    dateDebutContrat: data.dateDebutContrat,
+                    dateFinContrat: data.dateFinContrat,
+                    remunerationsAnnuelles: data.remunerationsAnnuelles,
+                    employeurAdresseDepartement: result.departement,
+                  });
 
                 return {
                   successed: true,
@@ -203,6 +206,7 @@ export const CerfaEmployeurController = async (dossier) => {
                     ...result.data,
                     remunerationsAnnuelles,
                     remunerationsAnnuellesDbValue,
+                    smicObj,
                     salaireEmbauche,
                   },
                   message: null,
@@ -218,14 +222,15 @@ export const CerfaEmployeurController = async (dossier) => {
             await new Promise((resolve) => setTimeout(resolve, 100));
 
             if (data.apprentiDateNaissance !== "" && data.dateFinContrat !== "" && data.dateDebutContrat !== "") {
-              const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-                apprentiDateNaissance: data.apprentiDateNaissance,
-                apprentiAge: data.apprentiAge,
-                dateDebutContrat: data.dateDebutContrat,
-                dateFinContrat: data.dateFinContrat,
-                remunerationMajoration: data.remunerationMajoration,
-                employeurAdresseDepartement: value,
-              });
+              const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue, smicObj } =
+                buildRemunerations({
+                  apprentiDateNaissance: data.apprentiDateNaissance,
+                  apprentiAge: data.apprentiAge,
+                  dateDebutContrat: data.dateDebutContrat,
+                  dateFinContrat: data.dateFinContrat,
+                  remunerationsAnnuelles: data.remunerationsAnnuelles,
+                  employeurAdresseDepartement: value,
+                });
 
               return {
                 successed: true,
@@ -233,6 +238,7 @@ export const CerfaEmployeurController = async (dossier) => {
                   departement: value,
                   remunerationsAnnuelles,
                   remunerationsAnnuellesDbValue,
+                  smicObj,
                   salaireEmbauche,
                 },
                 message: null,
@@ -477,6 +483,7 @@ export function useCerfaEmployeur() {
               contrat: {
                 remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
                 salaireEmbauche: data.salaireEmbauche.toFixed(2),
+                smic: data.smicObj,
               },
             };
           }
@@ -776,6 +783,7 @@ export function useCerfaEmployeur() {
                 contrat: {
                   remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
                   salaireEmbauche: data.salaireEmbauche.toFixed(2),
+                  smic: data.smicObj,
                 },
               };
             }
@@ -867,6 +875,7 @@ export function useCerfaEmployeur() {
                 contrat: {
                   remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
                   salaireEmbauche: data.salaireEmbauche.toFixed(2),
+                  smic: data.smicObj,
                 },
               };
             }
