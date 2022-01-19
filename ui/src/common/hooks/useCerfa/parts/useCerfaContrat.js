@@ -1443,6 +1443,7 @@ export function useCerfaContrat() {
     setContratDateConclusion(convertValueToDate(res.contrat.dateConclusion));
     setContratDateFinContrat(convertValueToDate(res.contrat.dateFinContrat));
     setContratDateRupture(convertValueToDate(res.contrat.dateRupture));
+
     setContratLieuSignatureContrat(res.contrat.lieuSignatureContrat);
 
     const typeDerog = getTypeDerogation(convertValueToOption(res.contrat.typeDerogation), {

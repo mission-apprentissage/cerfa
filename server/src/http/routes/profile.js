@@ -9,13 +9,14 @@ module.exports = ({ users }) => {
   router.put(
     "/user",
     tryCatch(async ({ body, user }, res) => {
+      // eslint-disable-next-line no-unused-vars
       const { nom, prenom, email, telephone, beta, civility } = await Joi.object({
         prenom: Joi.string().default(null).allow(null),
         nom: Joi.string().default(null).allow(null),
         email: Joi.string().required(),
         telephone: Joi.string().default(null).allow(null),
         civility: Joi.string().default(null).allow(null),
-        beta: Joi.string().default(null).allow(null),
+        // beta: Joi.string().default(null).allow(null),
       }).validateAsync(body, { abortEarly: false });
 
       if (user.email !== email) {
@@ -32,7 +33,7 @@ module.exports = ({ users }) => {
         nom: nom || user.nom,
         civility: civility || user.civility,
         telephone: telephone || user.telephone,
-        beta_test: beta || user.beta,
+        // beta_test: beta || user.beta,
       });
 
       res.json({ message: `Profile updated` });

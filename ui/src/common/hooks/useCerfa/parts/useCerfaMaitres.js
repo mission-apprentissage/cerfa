@@ -57,14 +57,17 @@ export const CerfaMaitresController = async (dossier) => {
             };
           }
 
-          const { age } = caclAgeAtDate(value, data.dateDebutContrat);
+          if (data.dateDebutContrat !== "") {
+            const { age } = caclAgeAtDate(value, data.dateDebutContrat);
 
-          if (age < 18) {
-            return {
-              successed: false,
-              data: null,
-              message: "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
-            };
+            if (age < 18) {
+              return {
+                successed: false,
+                data: null,
+                message:
+                  "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+              };
+            }
           }
 
           return {
@@ -92,15 +95,17 @@ export const CerfaMaitresController = async (dossier) => {
               message: "La date de naissance de peut pas être dans le futur",
             };
           }
+          if (data.dateDebutContrat !== "") {
+            const { age } = caclAgeAtDate(value, data.dateDebutContrat);
 
-          const { age } = caclAgeAtDate(value, data.dateDebutContrat);
-
-          if (age < 18) {
-            return {
-              successed: false,
-              data: null,
-              message: "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
-            };
+            if (age < 18) {
+              return {
+                successed: false,
+                data: null,
+                message:
+                  "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+              };
+            }
           }
 
           return {

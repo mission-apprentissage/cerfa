@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Heading, Center, Button, Spinner, Text } from "@chakra-ui/react";
-import { useRecoilValueLoadable } from "recoil";
+import { useRecoilValueLoadable, useSetRecoilState } from "recoil";
 
 import useAuth from "../../../common/hooks/useAuth";
 import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
@@ -11,6 +11,7 @@ import Tooltip from "../../../common/components/Tooltip";
 import { ExternalLinkLine } from "../../../theme/components/icons";
 
 import { useSignatures } from "../../../common/hooks/useDossier/useSignatures";
+import { signaturesPdfLoadedAtom } from "../../../common/hooks/useDossier/signaturesAtoms";
 import InputCerfa from "../Cerfa/components/Input";
 
 import { cerfaPartFormationCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
@@ -23,6 +24,8 @@ const ContratPdf = ({ dossierId }) => {
   let [auth] = useAuth();
   const [pdfBase64, setPdfBase64] = useState(null);
   const [pdfIsLoading, setPdfIsLoading] = useState(true);
+  const setPdfLoaded = useSetRecoilState(signaturesPdfLoadedAtom);
+
   const { isLoading, cerfa } = useCerfa();
 
   useEffect(() => {
@@ -62,8 +65,10 @@ const ContratPdf = ({ dossierId }) => {
           <PdfViewer
             url={`/api/v1/cerfa/pdf/${cerfa.id}/?workspaceId=${auth.workspaceId}&dossierId=${dossierId}`}
             pdfBase64={pdfBase64}
+            showDownload={false}
             documentLoaded={() => {
               setPdfIsLoading(false);
+              setPdfLoaded(true);
             }}
           />
         )}
@@ -72,7 +77,7 @@ const ContratPdf = ({ dossierId }) => {
         <Box mt={8} mb={12}>
           <Center>
             <Button
-              size="lg"
+              size="md"
               variant="primary"
               bg="greenmedium.500"
               onClick={onSignClicked}
@@ -97,7 +102,7 @@ export default ({ dossierId }) => {
   const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
   const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
   const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
-  const { lieuSignatureContrat, onSubmittedContratLieuSignatureContrat } = useSignatures();
+  const { signaturesCompletion, lieuSignatureContrat, onSubmittedContratLieuSignatureContrat } = useSignatures();
 
   const cerfaComplete =
     employeurCompletionAtom?.contents === 100 &&
@@ -105,6 +110,7 @@ export default ({ dossierId }) => {
     maitresCompletionAtom?.contents === 100 &&
     contratCompletionAtom?.contents === 100 &&
     formationCompletion?.contents === 100;
+  const signatureComplete = signaturesCompletion === 100;
 
   if (!cerfaComplete) {
     return (
@@ -117,6 +123,16 @@ export default ({ dossierId }) => {
             <Text>Le Cerfa doit être complété à 100% avant de commencer la procédure de finalisation du dossier.</Text>
           </Tooltip>
         </Center>
+      </Box>
+    );
+  }
+
+  if (!signatureComplete) {
+    return (
+      <Box mt={8}>
+        <Heading as="h3" fontSize="1.4rem">
+          Merci de préciser le lieu de signature du contrat:
+        </Heading>
         <InputCerfa
           path="contrat.lieuSignatureContrat"
           field={lieuSignatureContrat}

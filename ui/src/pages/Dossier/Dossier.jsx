@@ -34,6 +34,7 @@ import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
 import { AvatarPlus, StepWip, TickBubble } from "../../theme/components/icons";
 
 import { documentsCompletionAtom } from "../../common/hooks/useDossier/documentsAtoms";
+import { signaturesCompletionAtom, signaturesPdfLoadedAtom } from "../../common/hooks/useDossier/signaturesAtoms";
 import { cerfaPartFormationCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
 import {
   cerfaPartEmployeurCompletionAtom,
@@ -122,6 +123,8 @@ export default () => {
   const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
 
   const documentsCompletion = useRecoilValueLoadable(documentsCompletionAtom);
+  const signaturesCompletion = useRecoilValueLoadable(signaturesCompletionAtom);
+  const signaturesPdfLoaded = useRecoilValueLoadable(signaturesPdfLoadedAtom);
 
   const cerfaComplete =
     employeurCompletionAtom?.contents === 100 &&
@@ -130,7 +133,8 @@ export default () => {
     contratCompletionAtom?.contents === 100 &&
     formationCompletion?.contents === 100;
   const documentsComplete = documentsCompletion?.contents === 100;
-  const signaturesComplete = cerfaComplete && documentsComplete; // TODO lieu de signature
+  const signatureComplete = signaturesCompletion?.contents === 100;
+  const signaturesComplete = cerfaComplete && documentsComplete && signatureComplete;
 
   useEffect(() => {
     const run = async () => {
@@ -337,9 +341,15 @@ export default () => {
                 size="md"
                 onClick={() => {}}
                 variant="primary"
-                isDisabled={!cerfaComplete || employeurPrivePublic?.contents?.value === "Employeur privé"}
+                isDisabled={
+                  !signaturesComplete ||
+                  employeurPrivePublic?.contents?.value === "Employeur privé" ||
+                  !signaturesPdfLoaded?.contents
+                }
+                bg="greenmedium.500"
+                _hover={{ bg: "greenmedium.600" }}
               >
-                Télécharger le dossier finalisé
+                Finaliser et Télécharger le dossier
               </Button>
             )}
           </Flex>

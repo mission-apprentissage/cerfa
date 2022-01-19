@@ -8,6 +8,7 @@ import { CerfaEmployeurController, useCerfaEmployeur } from "./parts/useCerfaEmp
 import { CerfaApprentiController, useCerfaApprenti } from "./parts/useCerfaApprenti";
 import { CerfaMaitresController, useCerfaMaitres } from "./parts/useCerfaMaitres";
 import { CerfaContratController, useCerfaContrat } from "./parts/useCerfaContrat";
+// import { useSignatures } from "../useDossier/useSignatures";
 
 const hydrate = async (dossier) => {
   try {
@@ -193,6 +194,7 @@ export function useCerfa() {
   const { setAll: setCerfaApprenti } = useCerfaApprenti();
   const { setAll: setCerfaMaitres } = useCerfaMaitres();
   const { setAll: setCerfaContrat } = useCerfaContrat();
+  // const { setAll: setSignatures } = useSignatures();
 
   // eslint-disable-next-line no-unused-vars
   const { data, isLoading, isFetching } = useQuery(
@@ -205,6 +207,7 @@ export function useCerfa() {
       setCerfaApprenti(res);
       setCerfaMaitres(res);
       setCerfaContrat(res);
+      // setSignatures(res);
       return Promise.resolve(res);
     },
     {

@@ -1,41 +1,29 @@
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import { saveCerfa } from "../useCerfa/useCerfa";
 import { cerfaAtom } from "../useCerfa/cerfaAtom";
 import { dossierAtom } from "./dossierAtom";
-// import { documentsCompletionAtom } from "./documentsAtoms";
+import { signaturesCompletionAtom } from "./signaturesAtoms";
 import { cerfaContratLieuSignatureContratAtom } from "../useCerfa/parts/useCerfaContratAtoms";
 
-const setSignaturesCompletions = (typeContratApp, employeurAttestationPieces, documents) => {
-  // let countFields = 0;
-  // const isRequired =
-  //   typeContratApp?.valueDb === 11 ||
-  //   typeContratApp?.valueDb === 21 ||
-  //   typeContratApp?.valueDb === 22 ||
-  //   typeContratApp?.valueDb === 23 ||
-  //   typeContratApp?.valueDb === 33 ||
-  //   typeContratApp?.valueDb === 34 ||
-  //   typeContratApp?.valueDb === 35;
-  // let count = documents.length > 0 ? 1 : 0;
-  // if (isRequired) {
-  //   countFields = 1;
-  // } else if (!typeContratApp?.valueDb) {
-  //   countFields = 1;
-  // }
-  // if (employeurAttestationPieces.value === "true") {
-  //   count = count + 1;
-  // }
-  // countFields = countFields + 1;
-  // const percent = countFields === 0 ? 100 : (count * 100) / countFields;
-  // return { percent, isRequired };
+const setSignaturesCompletions = (lieuSignatureContrat) => {
+  let countFields = 1;
+
+  let count = 0;
+
+  if (lieuSignatureContrat.value !== "") {
+    count = 1;
+  }
+
+  return countFields === 0 ? 100 : (count * 100) / countFields;
 };
 
 export function useSignatures(typeDocument) {
   const cerfa = useRecoilValue(cerfaAtom);
   const dossier = useRecoilValue(dossierAtom);
 
-  // const [signaturesCompletion, setSignaturesCompletion] = useRecoilState(documentsCompletionAtom);
+  const [signaturesCompletion, setSignaturesCompletion] = useRecoilState(signaturesCompletionAtom);
   const [contratLieuSignatureContrat, setContratLieuSignatureContrat] = useRecoilState(
     cerfaContratLieuSignatureContratAtom
   );
@@ -49,7 +37,6 @@ export function useSignatures(typeDocument) {
               lieuSignatureContrat: {
                 ...contratLieuSignatureContrat,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -61,34 +48,29 @@ export function useSignatures(typeDocument) {
                 lieuSignatureContrat: newV.contrat.lieuSignatureContrat.value,
               },
             });
-            // setPartContratCompletion(cerfaContratCompletion(res));
+            setSignaturesCompletion(setSignaturesCompletions(res.contrat.lieuSignatureContrat));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [
-      contratLieuSignatureContrat,
-      setContratLieuSignatureContrat,
-      dossier?._id,
-      cerfa?.id,
-      // setPartContratCompletion
-    ]
+    [contratLieuSignatureContrat, setContratLieuSignatureContrat, dossier?._id, cerfa?.id, setSignaturesCompletion]
   );
 
-  // useEffect(() => {
-  //   if (typeContratApp && employeurAttestationPieces && dossier) {
-  //     const docs = dossier.documents.filter((i) => i.typeDocument === typeDocument);
-  //     setDocuments(docs);
-  //     const { percent, isRequired } = setDocumentsCompletions(typeContratApp, employeurAttestationPieces, docs);
-  //     setDocumentsCompletion(percent);
-  //     setIsRequired(isRequired);
-  //   }
-  // }, [setDocuments, employeurAttestationPieces, setDocumentsCompletion, typeContratApp, dossier, typeDocument]);
+  const setAll = async (res) => {
+    setContratLieuSignatureContrat(res.contrat.lieuSignatureContrat);
+  };
+
+  useEffect(() => {
+    if (contratLieuSignatureContrat) {
+      setSignaturesCompletion(setSignaturesCompletions(contratLieuSignatureContrat));
+    }
+  }, [contratLieuSignatureContrat, setSignaturesCompletion]);
 
   return {
-    // setSignaturesCompletions,
+    setAll,
+    signaturesCompletion,
     lieuSignatureContrat: contratLieuSignatureContrat,
     onSubmittedContratLieuSignatureContrat,
   };

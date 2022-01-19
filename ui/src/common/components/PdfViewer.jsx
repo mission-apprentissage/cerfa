@@ -4,7 +4,7 @@ import { Document, Page } from "react-pdf/dist/esm/entry.webpack";
 import { DownloadLine } from "../../theme/components/icons";
 import Pagination from "./Pagination";
 
-const PdfViewer = ({ url, pdfBase64, documentLoaded }) => {
+const PdfViewer = ({ url, pdfBase64, documentLoaded, showDownload = true }) => {
   const [numPages, setNumPages] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
@@ -46,12 +46,14 @@ const PdfViewer = ({ url, pdfBase64, documentLoaded }) => {
             <Text>
               Page {pageNumber} sur {numPages}{" "}
             </Text>
-            <Center mt={1}>
-              <Link href={url} isExternal color="bluefrance">
-                <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
-                Télécharger le pdf
-              </Link>
-            </Center>
+            {showDownload && (
+              <Center mt={1}>
+                <Link href={url} isExternal color="bluefrance">
+                  <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
+                  Télécharger le pdf
+                </Link>
+              </Center>
+            )}
           </Box>
         )}
       </Flex>

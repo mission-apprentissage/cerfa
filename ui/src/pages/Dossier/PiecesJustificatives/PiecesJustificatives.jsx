@@ -19,7 +19,7 @@ export default () => {
           </Text>
         </Tooltip>
       )}
-      {typeContratApp.valueDb && typeContratApp.valueDb !== "" && (
+      {typeContratApp?.valueDb && typeContratApp?.valueDb !== "" && (
         <>
           <UploadFiles
             title={`Convention de formation${!isRequired ? " (Optionnel)" : " (Obligatoire)"}`}
