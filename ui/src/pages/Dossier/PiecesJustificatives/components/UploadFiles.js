@@ -158,7 +158,9 @@ export default ({ title, onUploadSuccessed, typeDocument }) => {
                           {file.path || file.nomFichier} - {formatBytes(file.size || file.tailleFichier)}
                         </Link>
                       </Box>
-                      <Bin boxSize="5" color="redmarianne" cursor="pointer" onClick={() => onDeleteClicked(file)} />
+                      {dossier.draft && (
+                        <Bin boxSize="5" color="redmarianne" cursor="pointer" onClick={() => onDeleteClicked(file)} />
+                      )}
                     </HStack>
                   </ListItem>
                 );
@@ -167,29 +169,31 @@ export default ({ title, onUploadSuccessed, typeDocument }) => {
           </>
         )}
       </Box>
-      <Box {...getRootProps({ style })} mb={8}>
-        {!isSubmitting && (
-          <>
-            <Input {...getInputProps()} />
-            {isDragActive ? (
-              <Text>Glissez et déposez ici ...</Text>
-            ) : (
-              <>
-                <DownloadLine boxSize="4" color="bluefrance" mb={4} />
-                <Text color="mgalt">
-                  Glisser le fichier dans cette zone ou cliquez sur le bouton pour ajouter un document depuis votre
-                  disque dur
-                </Text>
-                <Text color="mgalt">(pdf uniquement, maximum 10mb)</Text>
-                <Button size="md" variant="secondary" mt={4}>
-                  Ajouter un document
-                </Button>
-              </>
-            )}
-          </>
-        )}
-        {isSubmitting && <Spinner />}
-      </Box>
+      {dossier.draft && (
+        <Box {...getRootProps({ style })} mb={8}>
+          {!isSubmitting && (
+            <>
+              <Input {...getInputProps()} />
+              {isDragActive ? (
+                <Text>Glissez et déposez ici ...</Text>
+              ) : (
+                <>
+                  <DownloadLine boxSize="4" color="bluefrance" mb={4} />
+                  <Text color="mgalt">
+                    Glisser le fichier dans cette zone ou cliquez sur le bouton pour ajouter un document depuis votre
+                    disque dur
+                  </Text>
+                  <Text color="mgalt">(pdf uniquement, maximum 10mb)</Text>
+                  <Button size="md" variant="secondary" mt={4}>
+                    Ajouter un document
+                  </Button>
+                </>
+              )}
+            </>
+          )}
+          {isSubmitting && <Spinner />}
+        </Box>
+      )}
     </>
   );
 };

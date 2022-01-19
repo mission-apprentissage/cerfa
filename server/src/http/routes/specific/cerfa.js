@@ -67,9 +67,17 @@ module.exports = (components) => {
         },
       },
       apprenti: {
-        ...mergeWith(cloneDeep(cerfaSchema.apprenti), cerfa.apprenti, customizer),
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.apprenti), cerfa.apprenti, customizer),
+          cerfa.isLockedField.apprenti,
+          customizerLock
+        ),
         adresse: {
-          ...mergeWith(cloneDeep(cerfaSchema.apprenti.adresse), cerfa.apprenti.adresse, customizer),
+          ...mergeWith(
+            mergeWith(cloneDeep(cerfaSchema.apprenti.adresse), cerfa.apprenti.adresse, customizer),
+            cerfa.isLockedField.apprenti.adresse,
+            customizerLock
+          ),
         },
         responsableLegal: {
           ...mergeWith(
@@ -87,10 +95,18 @@ module.exports = (components) => {
         },
       },
       maitre1: {
-        ...mergeWith(cloneDeep(cerfaSchema.maitre1), cerfa.maitre1, customizer),
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.maitre1), cerfa.maitre1, customizer),
+          cerfa.isLockedField.maitre1,
+          customizerLock
+        ),
       },
       maitre2: {
-        ...mergeWith(cloneDeep(cerfaSchema.maitre2), cerfa.maitre2, customizer),
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.maitre1), cerfa.maitre2, customizer),
+          cerfa.isLockedField.maitre2,
+          customizerLock
+        ),
       },
       formation: {
         ...mergeWith(
@@ -130,6 +146,7 @@ module.exports = (components) => {
         },
       },
       id: cerfa._id.toString(),
+      draft: cerfa.draft,
     };
   };
 

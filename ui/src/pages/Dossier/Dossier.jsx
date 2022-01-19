@@ -18,7 +18,7 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import { useSetRecoilState, useRecoilValueLoadable } from "recoil";
 import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 import { _put } from "../../common/httpClient";
-// import useAuth from "../../common/hooks/useAuth";
+import useAuth from "../../common/hooks/useAuth";
 import PromptModal from "../../common/components/Modals/PromptModal";
 // import { betaVersion, BetaFeatures } from "../../common/components/BetaFeatures";
 import AcknowledgeModal from "../../common/components/Modals/AcknowledgeModal";
@@ -31,7 +31,9 @@ import LivePeopleAvatar from "./components/LivePeopleAvatar";
 
 import { useDossier } from "../../common/hooks/useDossier/useDossier";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
-import { AvatarPlus, StepWip, TickBubble } from "../../theme/components/icons";
+// import { dossierAtom } from "../../common/hooks/useDossier/dossierAtom";
+// import { cerfaAtom } from "../../common/hooks/useCerfa/cerfaAtom";
+import { AvatarPlus, StepWip, TickBubble, DownloadLine } from "../../theme/components/icons";
 
 import { documentsCompletionAtom } from "../../common/hooks/useDossier/documentsAtoms";
 import { signaturesCompletionAtom, signaturesPdfLoadedAtom } from "../../common/hooks/useDossier/signaturesAtoms";
@@ -97,16 +99,24 @@ const stepByPath = ["cerfa", "documents", "signatures", "etat"];
 // };
 
 const EndModal = ({ dossier, ...modal }) => {
-  const onReplyClicked = async (answer) => {
-    try {
-      let publish = await _put(`/api/v1/dossier/entity/${dossier._id}/publish`, {
-        dossierId: dossier._id,
-      });
-      console.log(publish);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  // const setDossier = useSetRecoilState(dossierAtom);
+  // const setCerfa = useSetRecoilState(cerfaAtom);
+
+  let onReplyClicked = useCallback(
+    async (answer) => {
+      try {
+        await _put(`/api/v1/dossier/entity/${dossier._id}/publish`, {
+          dossierId: dossier._id,
+        });
+        // setDossier(publish.dossier);
+        // setCerfa(publish.cerfa);
+        window.location.reload();
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [dossier._id]
+  );
 
   return (
     <>
@@ -138,6 +148,7 @@ const EndModal = ({ dossier, ...modal }) => {
 
 export default () => {
   let match = useRouteMatch();
+  let [auth] = useAuth();
   const inviteModal = useDisclosure();
   const { nextStep, prevStep, activeStep, setStep } = useSteps({
     initialStep: stepByPath.indexOf(match.params.step),
@@ -385,7 +396,7 @@ export default () => {
                 Passer à l'étape suivante
               </Button>
             )}
-            {activeStep === steps.length - 1 && (
+            {activeStep === steps.length - 1 && dossier.draft && (
               <Button
                 size="md"
                 onClick={() => {
@@ -401,6 +412,27 @@ export default () => {
                 _hover={{ bg: "greenmedium.600" }}
               >
                 Finaliser et Télécharger le dossier
+              </Button>
+            )}
+            {activeStep === steps.length - 1 && !dossier.draft && (
+              <Button
+                as={Link}
+                href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?workspaceId=${auth.workspaceId}&dossierId=${dossier._id}`}
+                isExternal
+                size="md"
+                variant="primary"
+                bg="greenmedium.500"
+                _hover={{ bg: "greenmedium.600" }}
+                color="white"
+                isDisabled={
+                  !signaturesComplete ||
+                  employeurPrivePublic?.contents?.value === "Employeur privé" ||
+                  !signaturesPdfLoaded?.contents
+                }
+                borderRadius={0}
+              >
+                <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
+                Télécharger le pdf
               </Button>
             )}
           </Flex>

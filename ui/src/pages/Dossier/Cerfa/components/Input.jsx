@@ -850,7 +850,7 @@ export default React.memo(
                           value={option.label}
                           checked={values[name] === option.label}
                           onChange={handleChange}
-                          isDisabled={option.locked}
+                          isDisabled={option.locked || shouldBeDisabled}
                         >
                           {option.label}
                         </Radio>

@@ -51,7 +51,8 @@ const cerfaApprentiCompletion = (res) => {
     apprentiInscriptionSportifDeHautNiveau: res.apprenti.inscriptionSportifDeHautNiveau,
   };
   let countFields = 20;
-  const majeur = res.apprenti.age.value >= 18;
+  const ageApprenti = !res.apprenti.age.value || res.apprenti.age.value === "" ? 18 : res.apprenti.age.value;
+  const majeur = ageApprenti >= 18;
   const nonEmancipe = res.apprenti.apprentiMineurNonEmancipe.value;
   const apprentiResponsableLegalMemeAdresse = res.apprenti.responsableLegal.memeAdresse.value;
 
@@ -400,7 +401,7 @@ export function useCerfaApprenti() {
   );
 
   const onSubmittedApprentiDateNaissance = useCallback(
-    async (path, data) => {
+    async (path, data, forcedTriggered) => {
       try {
         if (path === "apprenti.dateNaissance") {
           const newV = {
@@ -415,16 +416,39 @@ export function useCerfaApprenti() {
               },
             },
           };
-          if (apprentiDateNaissance.value !== newV.apprenti.dateNaissance.value) {
-            setApprentiDateNaissance(newV.apprenti.dateNaissance);
-            setApprentiAge(newV.apprenti.age);
+          let shouldSaveInDb = false;
+          let dataToSave = null;
+          if (!forcedTriggered) {
+            if (apprentiDateNaissance.value !== newV.apprenti.dateNaissance.value) {
+              setApprentiDateNaissance(newV.apprenti.dateNaissance);
+              setApprentiAge(newV.apprenti.age);
 
-            let dataToSave = {
+              dataToSave = {
+                apprenti: {
+                  dateNaissance: convertDateToValue(newV.apprenti.dateNaissance),
+                  age: newV.apprenti.age.value,
+                },
+              };
+              shouldSaveInDb = true;
+
+              refreshTypeDerogation({
+                dateNaissance: data.dateNaissance,
+                age: newV.apprenti.age.value,
+                contratDateDebutContratString: data.dateDebutContrat,
+              });
+            }
+          } else {
+            dataToSave = {
               apprenti: {
                 dateNaissance: convertDateToValue(newV.apprenti.dateNaissance),
-                age: newV.apprenti.age.value,
+                age: apprentiAge.value,
               },
             };
+            setApprentiDateNaissance({ ...apprentiDateNaissance, triggerValidation: false });
+            shouldSaveInDb = true;
+          }
+
+          if (shouldSaveInDb) {
             if (data.remunerationsAnnuelles && data.remunerationsAnnuellesDbValue && data.salaireEmbauche) {
               setRemunerations(data);
               dataToSave = {
@@ -441,12 +465,6 @@ export function useCerfaApprenti() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
-
-            refreshTypeDerogation({
-              dateNaissance: data.dateNaissance,
-              age: newV.apprenti.age.value,
-              contratDateDebutContratString: data.dateDebutContrat,
-            });
           }
         }
       } catch (e) {
@@ -1677,7 +1695,7 @@ export function useCerfaApprenti() {
         nationalite: apprentiNationalite,
         dateNaissance: apprentiDateNaissance,
         age: apprentiAge,
-        majeur: apprentiAge?.value >= 18,
+        majeur: !apprentiAge?.value ? true : apprentiAge?.value >= 18,
         departementNaissance: apprentiDepartementNaissance,
         communeNaissance: apprentiCommuneNaissance,
         nir: apprentiNir,

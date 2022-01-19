@@ -422,6 +422,7 @@ const FormContract = () => {
                   path="contrat.salaireEmbauche"
                   field={salaireEmbauche}
                   type="number"
+                  precision={2}
                   mt="2"
                   // onSubmittedField={onSubmittedContratSalaireEmbauche}
                 />

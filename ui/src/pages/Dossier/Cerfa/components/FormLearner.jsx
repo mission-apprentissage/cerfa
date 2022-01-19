@@ -25,6 +25,7 @@ const FormLearner = () => {
         sexe,
         nationalite,
         dateNaissance,
+        age,
         majeur,
         departementNaissance,
         communeNaissance,
@@ -100,6 +101,7 @@ const FormLearner = () => {
       },
     },
   } = useCerfaApprenti();
+
   return (
     <Box>
       <Flex>
@@ -179,7 +181,7 @@ const FormLearner = () => {
             onSubmittedField={onSubmittedApprentiCourriel}
           />
 
-          {!majeur && dateNaissance.value !== "" && (
+          {!majeur && dateNaissance.value !== "" && age.value && age.value !== "" && (
             <Box mt={5}>
               <Text>L'apprenti(e) est mineur, merci de compléter les informations suivantes</Text>
               <InputCerfa
