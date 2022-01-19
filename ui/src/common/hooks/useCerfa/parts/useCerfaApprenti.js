@@ -12,8 +12,7 @@ import {
   convertMultipleSelectOptionToValue,
   convertOptionToValue,
   convertValueToOption,
-  isAgeInValidLowerAtDate,
-  caclAgeFromStringDate,
+  caclAgeAtDate,
   normalizeInputNumberForDb,
   doAsyncCodePostalActions,
 } from "../../../utils/formUtils";
@@ -23,6 +22,7 @@ import { dossierAtom } from "../../useDossier/dossierAtom";
 import * as apprentiAtoms from "./useCerfaApprentiAtoms";
 import { buildRemunerations } from "../../../utils/form/remunerationsUtils";
 import { useCerfaContrat } from "../parts/useCerfaContrat";
+import { DateTime } from "luxon";
 
 const cerfaApprentiCompletion = (res) => {
   let fieldsToKeep = {
@@ -92,9 +92,11 @@ export const CerfaApprentiController = async (dossier) => {
       dateNaissance: {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
-          const { age, dateNaissance } = caclAgeFromStringDate(value);
+          const dateNaissance = DateTime.fromISO(value).setLocale("fr-FR");
+          const today = DateTime.now().setLocale("fr-FR");
+          let age = null;
 
-          if (age === 0) {
+          if (dateNaissance > today) {
             return {
               successed: false,
               data: null,
@@ -102,44 +104,51 @@ export const CerfaApprentiController = async (dossier) => {
             };
           }
 
-          if (age < 14) {
-            return {
-              successed: false,
-              data: null,
-              message: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
-            };
-          }
+          if (data.dateDebutContrat !== "") {
+            const cAge = caclAgeAtDate(value, data.dateDebutContrat);
+            age = cAge.age;
 
-          const isAgeApprentiInvalidAtStart = isAgeInValidLowerAtDate({
-            dateNaissance,
-            age,
-            dateString: data.dateDebutContrat,
-            limitAge: 15,
-            label: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
-          });
-          if (isAgeApprentiInvalidAtStart) return isAgeApprentiInvalidAtStart;
+            if (age < 14) {
+              return {
+                successed: false,
+                data: null,
+                message: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
+              };
+            }
 
-          if (data.dateDebutContrat !== "" && data.dateFinContrat !== "" && data.employeurAdresseDepartement !== "") {
-            const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-              apprentiDateNaissance: value,
-              apprentiAge: age,
-              dateDebutContrat: data.dateDebutContrat,
-              dateFinContrat: data.dateFinContrat,
-              remunerationMajoration: data.remunerationMajoration,
-              employeurAdresseDepartement: data.employeurAdresseDepartement,
-            });
+            if (age < 15) {
+              return {
+                successed: false,
+                data: null,
+                message: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
+              };
+            }
 
-            return {
-              successed: true,
-              data: {
-                dateNaissance: value,
-                age,
-                remunerationsAnnuelles,
-                remunerationsAnnuellesDbValue,
-                salaireEmbauche,
-              },
-              message: null,
-            };
+            if (data.dateFinContrat !== "" && data.employeurAdresseDepartement !== "") {
+              const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue, smicObj } =
+                buildRemunerations({
+                  apprentiDateNaissance: value,
+                  apprentiAge: age,
+                  dateDebutContrat: data.dateDebutContrat,
+                  dateFinContrat: data.dateFinContrat,
+                  remunerationsAnnuelles: data.remunerationsAnnuelles,
+                  employeurAdresseDepartement: data.employeurAdresseDepartement,
+                });
+
+              return {
+                successed: true,
+                data: {
+                  dateNaissance: value,
+                  age,
+                  remunerationsAnnuelles,
+                  remunerationsAnnuellesDbValue,
+                  smicObj,
+                  salaireEmbauche,
+                  dateDebutContrat: data.dateDebutContrat,
+                },
+                message: null,
+              };
+            }
           }
 
           return {
@@ -147,6 +156,7 @@ export const CerfaApprentiController = async (dossier) => {
             data: {
               dateNaissance: value,
               age,
+              dateDebutContrat: data.dateDebutContrat,
             },
             message: null,
           };
@@ -422,6 +432,7 @@ export function useCerfaApprenti() {
                 contrat: {
                   remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
                   salaireEmbauche: data.salaireEmbauche.toFixed(2),
+                  smic: data.smicObj,
                 },
               };
             }
@@ -431,7 +442,11 @@ export function useCerfaApprenti() {
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
 
-            refreshTypeDerogation();
+            refreshTypeDerogation({
+              dateNaissance: data.dateNaissance,
+              age: newV.apprenti.age.value,
+              contratDateDebutContratString: data.dateDebutContrat,
+            });
           }
         }
       } catch (e) {

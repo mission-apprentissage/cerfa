@@ -151,6 +151,7 @@ module.exports = (components) => {
           "simple-grettings",
           {
             username: user.username,
+            civility: user.civility,
             publicUrl: config.publicUrl,
           }
         );

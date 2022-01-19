@@ -111,10 +111,10 @@ const hydrate = async (dossier) => {
           ...cerfa.contrat.dateEffetAvenant,
           ...cerfaContratController.contrat.dateEffetAvenant,
         },
-        remunerationMajoration: {
-          ...cerfa.contrat.remunerationMajoration,
-          ...cerfaContratController.contrat.remunerationMajoration,
-        },
+        // remunerationMajoration: {
+        //   ...cerfa.contrat.remunerationMajoration,
+        //   ...cerfaContratController.contrat.remunerationMajoration,
+        // },
         typeDerogation: {
           ...cerfa.contrat.typeDerogation,
           ...cerfaContratController.contrat.typeDerogation,

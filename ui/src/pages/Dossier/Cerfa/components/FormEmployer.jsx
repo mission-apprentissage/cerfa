@@ -6,7 +6,7 @@ import { useCerfaEmployeur } from "../../../../common/hooks/useCerfa/parts/useCe
 import {
   cerfaContratDateDebutContratAtom,
   cerfaContratDateFinContratAtom,
-  cerfaContratRemunerationMajorationAtom,
+  cerfaContratRemunerationsAnnuellesAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 import {
   cerfaApprentiDateNaissanceAtom,
@@ -17,7 +17,7 @@ import InputCerfa from "./Input";
 const FormEmployer = ({ onFetched }) => {
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
   const dateFinContrat = useRecoilValue(cerfaContratDateFinContratAtom);
-  const remunerationMajoration = useRecoilValue(cerfaContratRemunerationMajorationAtom);
+  const remunerationsAnnuelles = useRecoilValue(cerfaContratRemunerationsAnnuellesAtom);
   const apprentiDateNaissance = useRecoilValue(cerfaApprentiDateNaissanceAtom);
   const apprentiAge = useRecoilValue(cerfaApprentiAgeAtom);
   const {
@@ -76,7 +76,7 @@ const FormEmployer = ({ onFetched }) => {
         onSubmittedField={onSubmittedEmployeurSiret}
         onAsyncData={{
           dateDebutContrat: dateDebutContrat?.value,
-          remunerationMajoration: remunerationMajoration?.valueDb,
+          remunerationsAnnuelles: remunerationsAnnuelles,
           dateFinContrat: dateFinContrat?.value,
           apprentiDateNaissance: apprentiDateNaissance?.value,
           apprentiAge: apprentiAge?.value,
@@ -129,7 +129,7 @@ const FormEmployer = ({ onFetched }) => {
             hasInfo={false}
             onAsyncData={{
               dateDebutContrat: dateDebutContrat?.value,
-              remunerationMajoration: remunerationMajoration?.valueDb,
+              remunerationsAnnuelles: remunerationsAnnuelles,
               dateFinContrat: dateFinContrat?.value,
               apprentiDateNaissance: apprentiDateNaissance?.value,
               apprentiAge: apprentiAge?.value,
@@ -153,7 +153,7 @@ const FormEmployer = ({ onFetched }) => {
             hasInfo={false}
             onAsyncData={{
               dateDebutContrat: dateDebutContrat?.value,
-              remunerationMajoration: remunerationMajoration?.valueDb,
+              remunerationsAnnuelles: remunerationsAnnuelles,
               dateFinContrat: dateFinContrat?.value,
               apprentiDateNaissance: apprentiDateNaissance?.value,
               apprentiAge: apprentiAge?.value,

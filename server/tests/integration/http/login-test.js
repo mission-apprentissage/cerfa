@@ -38,6 +38,7 @@ describe("[Routes] Login", () => {
       confirmed: false,
       siret: null,
       telephone: null,
+      civility: null,
       cgu: null,
       beta: null,
       permissions: {

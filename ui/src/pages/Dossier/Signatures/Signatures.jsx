@@ -110,9 +110,7 @@ export default ({ dossierId }) => {
         </Heading>
         <Center mt={5}>
           <Tooltip variant="alert">
-            <Text>
-              Le Cerfa doit être complété à 100% avant de commencer la procédure de télécharger le dossier finalisé.
-            </Text>
+            <Text>Le Cerfa doit être complété à 100% avant de commencer la procédure de finalisation du dossier.</Text>
           </Tooltip>
         </Center>
       </Box>

@@ -270,6 +270,11 @@ const contratSchema = {
       return !this.draft;
     },
   },
+  smic: {
+    type: {},
+    description: "Smic en vigeur [calculé]",
+    default: null,
+  },
   remunerationMajoration: {
     enum: [0, 10, 20],
     type: Number,

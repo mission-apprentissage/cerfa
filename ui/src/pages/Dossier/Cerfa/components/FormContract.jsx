@@ -48,13 +48,13 @@ const FormContract = () => {
         dureeTravailHebdoHeures,
         dureeTravailHebdoMinutes,
         travailRisque,
-        salaireEmbauche,
         // caisseRetraiteComplementaire,
         avantageNature,
         avantageNourriture,
         avantageLogement,
         autreAvantageEnNature,
-        remunerationMajoration,
+        salaireEmbauche,
+        smic,
         remunerationsAnnuelles,
       },
     },
@@ -78,7 +78,6 @@ const FormContract = () => {
         avantageNourriture: onSubmittedContratAvantageNourriture,
         avantageLogement: onSubmittedContratAvantageLogement,
         autreAvantageEnNature: onSubmittedContratAutreAvantageEnNature,
-        remunerationMajoration: onSubmittedContratRemunerationMajoration,
         remunerationTaux: onSubmittedContratRemunerationsAnnuellesTaux,
       },
     },
@@ -185,14 +184,13 @@ const FormContract = () => {
             onSubmittedField={onSubmittedContratDateDebutContrat}
             onAsyncData={{
               apprentiDateNaissance: apprentiDateNaissance?.value,
-              apprentiAge: apprentiAge?.value,
-              remunerationMajoration: remunerationMajoration?.valueDb,
               employeurAdresseDepartement: employeurAdresseDepartement?.value,
+              dateFinContrat: dateFinContrat?.value,
+              remunerationsAnnuelles: remunerationsAnnuelles,
 
               maitre1DateNaissance: maitre1DateNaissance?.value,
               maitre2DateNaissance: maitre2DateNaissance?.value,
 
-              dateFinContrat: dateFinContrat?.value,
               dateEffetAvenant: dateEffetAvenant?.value,
 
               formationDateDebutFormation: formationDateDebutFormation?.value,
@@ -224,11 +222,10 @@ const FormContract = () => {
               dateDebutContrat: dateDebutContrat?.value,
               dateEffetAvenant: dateEffetAvenant?.value,
               formationDateFinFormation: formationDateFinFormation?.value,
-
-              remunerationMajoration: remunerationMajoration?.valueDb,
               apprentiDateNaissance: apprentiDateNaissance?.value,
               apprentiAge: apprentiAge?.value,
               employeurAdresseDepartement: employeurAdresseDepartement?.value,
+              remunerationsAnnuelles: remunerationsAnnuelles,
             }}
           />
           {/* <InputCerfa
@@ -273,29 +270,16 @@ const FormContract = () => {
         <FormLabel fontWeight={700} fontSize="1.3rem">
           Rémunération
         </FormLabel>
-        <InputCerfa
-          path="contrat.remunerationMajoration"
-          field={remunerationMajoration}
-          type="select"
-          mt="2"
-          onSubmittedField={onSubmittedContratRemunerationMajoration}
-          onAsyncData={{
-            remunerationMajoration: remunerationMajoration,
-            apprentiDateNaissance: apprentiDateNaissance?.value,
-            dateDebutContrat: dateDebutContrat?.value,
-            apprentiAge: apprentiAge?.value,
-            dateFinContrat: dateFinContrat?.value,
-            employeurAdresseDepartement: employeurAdresseDepartement?.value,
-          }}
-        />
         <Box mt={6} borderColor={"dgalt"} borderWidth={2} px={4} py={3} borderStyle="dashed" rounded="md">
           {(dateDebutContrat.value === "" ||
             dateFinContrat.value === "" ||
             apprentiDateNaissance.value === "" ||
             employeurAdresseDepartement.value === "") && (
             <VStack alignItems="flex-start" color="mgalt">
-              <Text>Le calcul de la rémunération est automatique.</Text>
-              <Text>Vous devez, pour cela, renseigner les éléments suivants : </Text>
+              <Text>
+                L'outil détermine les périodes de rémunération et s'assure du respect du minimum légale pour chacune des
+                périodes, à partir des éléments renseignés.
+              </Text>
               <UnorderedList ml="30px !important">
                 <ListItem
                   fontWeight="400"
@@ -321,7 +305,7 @@ const FormContract = () => {
                 <ListItem
                   fontWeight="400"
                   fontStyle="italic"
-                  color={dateFinContrat.value === "" ? "error" : "green.500"}
+                  color={employeurAdresseDepartement.value === "" ? "error" : "green.500"}
                 >
                   Le département de l'employeur
                 </ListItem>
@@ -329,67 +313,60 @@ const FormContract = () => {
             </VStack>
           )}
           <Collapse
-            in={dateDebutContrat.value !== "" && dateFinContrat.value !== "" && apprentiDateNaissance.value !== ""}
+            in={
+              dateDebutContrat.value !== "" &&
+              dateFinContrat.value !== "" &&
+              apprentiDateNaissance.value !== "" &&
+              employeurAdresseDepartement.value !== ""
+            }
             animateOpacity
           >
-            {remunerationsAnnuelles.map((ra, i) => {
-              if (i === 1 || i === 3 || i === 5 || i === 7) return null;
-              const [remPart1, remPart2] = [remunerationsAnnuelles[i], remunerationsAnnuelles[i + 1]];
+            {Object.keys(remunerationsAnnuelles).map((part, ite) => {
+              if (ite === 1 || ite === 3 || ite === 5 || ite === 7) return null;
+              let sub1 = 0;
+              let sub2 = 0;
+              if (ite === 0) {
+                sub1 = 11;
+                sub2 = 12;
+              } else if (ite === 2) {
+                sub1 = 21;
+                sub2 = 22;
+              } else if (ite === 4) {
+                sub1 = 31;
+                sub2 = 32;
+              } else if (ite === 6) {
+                sub1 = 41;
+                sub2 = 42;
+              }
+
+              const [remPart1, remPart2] = [remunerationsAnnuelles[sub1], remunerationsAnnuelles[sub2]];
               const emptyLine = remPart1.taux.value === 0 && remPart2.taux.value === 0;
+
               return (
-                <Box key={i}>
-                  {i === 0 && !emptyLine && (
+                <Box key={ite}>
+                  {ite === 0 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold">
                       1 re année, du
                     </Box>
                   )}
-                  {i === 2 && !emptyLine && (
+                  {ite === 2 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold" mt={2}>
                       2 eme année, du
                     </Box>
                   )}
-                  {i === 4 && !emptyLine && (
+                  {ite === 4 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold" mt={2}>
                       3 eme année, du
                     </Box>
                   )}
-                  {i === 6 && !emptyLine && (
+                  {ite === 6 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold" mt={2}>
                       4 eme année, du
                     </Box>
                   )}
                   <Box>
                     {[remPart1, remPart2].map((remunerationsAnnuelle, j) => {
-                      let path = "";
-                      switch (i + j) {
-                        case 0:
-                          path = "11";
-                          break;
-                        case 1:
-                          path = "12";
-                          break;
-                        case 2:
-                          path = "21";
-                          break;
-                        case 3:
-                          path = "22";
-                          break;
-                        case 4:
-                          path = "31";
-                          break;
-                        case 5:
-                          path = "32";
-                          break;
-                        case 6:
-                          path = "41";
-                          break;
-                        case 7:
-                          path = "42";
-                          break;
-
-                        default:
-                          break;
-                      }
+                      let path = j === 0 ? `${sub1}` : `${sub2}`;
                       if (remunerationsAnnuelle.taux.value === 0) {
                         return null;
                       }
@@ -425,8 +402,9 @@ const FormContract = () => {
                               onSubmittedContratRemunerationsAnnuellesTaux(fieldPath, data, path)
                             }
                           />
-                          <Box w="100%" position="relative" fontStyle="italic" color="disablegrey" py={2}>
-                            soit {remunerationsAnnuelle.salaireBrut.value} € / mois
+                          <Box w="100%" position="relative" fontStyle="italic" color="disablegrey" pl={2}>
+                            soit {remunerationsAnnuelle.salaireBrut.value.toFixed(2)} € / mois. <br />
+                            Seuil minimal légal {remunerationsAnnuelle.tauxMinimal.value} %
                           </Box>
                           {/* <Box mt="1.7rem !important">%</Box>
                           <Box mt="1.7rem !important">du</Box>
@@ -455,6 +433,24 @@ const FormContract = () => {
                   // onSubmittedField={onSubmittedContratSalaireEmbauche}
                 />
               </Box>
+            </Flex>
+            <Flex mt={5}>
+              {!smic?.isSmicException && (
+                <Text>
+                  Calculé sur la base du SMIC {smic?.annee} de {smic?.selectedSmic}€ mensuel (
+                  {smic?.heuresHebdomadaires}
+                  €/h) [Date d'entrée en vigueur {smic?.dateEntreeEnVigueur}]
+                </Text>
+              )}
+              {smic?.isSmicException && (
+                <Text>
+                  Calculé sur la base du SMIC {smic?.annee} pour{" "}
+                  <strong>{smic?.exceptions[employeurAdresseDepartement.value].nomDepartement}</strong> de{" "}
+                  {smic?.selectedSmic}€ mensuel (
+                  {smic?.exceptions[employeurAdresseDepartement.value].heuresHebdomadaires}
+                  €/h) [Date d'entrée en vigueur {smic?.dateEntreeEnVigueur}]
+                </Text>
+              )}
             </Flex>
           </Collapse>
         </Box>

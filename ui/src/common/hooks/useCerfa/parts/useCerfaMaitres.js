@@ -4,14 +4,13 @@
 
 import { useCallback } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-
+import { DateTime } from "luxon";
 import {
   fieldCompletionPercentage,
   convertValueToDate,
   convertDateToValue,
   convertValueToOption,
-  isAgeInValidLowerAtDate,
-  caclAgeFromStringDate,
+  caclAgeAtDate,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
@@ -46,9 +45,11 @@ export const CerfaMaitresController = async (dossier) => {
       dateNaissance: {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
-          const { age, dateNaissance } = caclAgeFromStringDate(value);
 
-          if (age === 0) {
+          const dateNaissance = DateTime.fromISO(value).setLocale("fr-FR");
+          const today = DateTime.now().setLocale("fr-FR");
+
+          if (dateNaissance > today) {
             return {
               successed: false,
               data: null,
@@ -56,14 +57,15 @@ export const CerfaMaitresController = async (dossier) => {
             };
           }
 
-          const isAgeMaitreInvalidAtStart = isAgeInValidLowerAtDate({
-            dateNaissance,
-            age,
-            dateString: data.dateDebutContrat,
-            limitAge: 18,
-            label: "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
-          });
-          if (isAgeMaitreInvalidAtStart) return isAgeMaitreInvalidAtStart;
+          const { age } = caclAgeAtDate(value, data.dateDebutContrat);
+
+          if (age < 18) {
+            return {
+              successed: false,
+              data: null,
+              message: "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+            };
+          }
 
           return {
             successed: true,
@@ -80,9 +82,10 @@ export const CerfaMaitresController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
-          const { age, dateNaissance } = caclAgeFromStringDate(value);
+          const dateNaissance = DateTime.fromISO(value).setLocale("fr-FR");
+          const today = DateTime.now().setLocale("fr-FR");
 
-          if (age === 0) {
+          if (dateNaissance > today) {
             return {
               successed: false,
               data: null,
@@ -90,14 +93,15 @@ export const CerfaMaitresController = async (dossier) => {
             };
           }
 
-          const isAgeMaitreInvalidAtStart = isAgeInValidLowerAtDate({
-            dateNaissance,
-            age,
-            dateString: data.dateDebutContrat,
-            limitAge: 18,
-            label: "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
-          });
-          if (isAgeMaitreInvalidAtStart) return isAgeMaitreInvalidAtStart;
+          const { age } = caclAgeAtDate(value, data.dateDebutContrat);
+
+          if (age < 18) {
+            return {
+              successed: false,
+              data: null,
+              message: "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+            };
+          }
 
           return {
             successed: true,

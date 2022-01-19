@@ -64,6 +64,7 @@ module.exports = ({ users, sessions, mailer }) => {
         "forgotten-password",
         {
           url,
+          civility: user.civility,
           username: user.username,
           publicUrl: config.publicUrl,
         }
