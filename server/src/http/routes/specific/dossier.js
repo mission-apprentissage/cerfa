@@ -185,6 +185,7 @@ module.exports = (components) => {
         "inviteDossier",
         {
           username: user.username,
+          civility: user.civility,
           dossiernom: dossier.nom,
           user2role: newUserRole.title,
           publicUrl: config.publicUrl,
