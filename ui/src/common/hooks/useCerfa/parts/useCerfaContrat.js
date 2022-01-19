@@ -928,37 +928,6 @@ export function useCerfaContrat() {
     ]
   );
 
-  const onSubmittedContratLieuSignatureContrat = useCallback(
-    async (path, data) => {
-      try {
-        if (path === "contrat.lieuSignatureContrat") {
-          const newV = {
-            contrat: {
-              lieuSignatureContrat: {
-                ...contratLieuSignatureContrat,
-                value: data,
-                // forceUpdate: false, // IF data = "" true
-              },
-            },
-          };
-          if (contratLieuSignatureContrat.value !== newV.contrat.lieuSignatureContrat.value) {
-            setContratLieuSignatureContrat(newV.contrat.lieuSignatureContrat);
-
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
-              contrat: {
-                lieuSignatureContrat: newV.contrat.lieuSignatureContrat.value,
-              },
-            });
-            setPartContratCompletion(cerfaContratCompletion(res));
-          }
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [contratLieuSignatureContrat, setContratLieuSignatureContrat, dossier?._id, cerfa?.id, setPartContratCompletion]
-  );
-
   const onSubmittedContratTravailRisque = useCallback(
     async (path, data) => {
       try {
@@ -1599,7 +1568,6 @@ export function useCerfaContrat() {
         dateConclusion: onSubmittedContratDateConclusion,
         dateFinContrat: onSubmittedContratDateFinContrat,
         dateRupture: onSubmittedContratDateRupture,
-        lieuSignatureContrat: onSubmittedContratLieuSignatureContrat,
         typeDerogation: onSubmittedContratTypeDerogation,
         dureeTravailHebdoHeures: onSubmittedContratDureeTravailHebdoHeures,
         contratDureeTravailHebdoMinutes: onSubmittedContratDureeTravailHebdoMinutes,

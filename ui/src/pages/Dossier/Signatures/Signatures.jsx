@@ -10,6 +10,9 @@ import { PdfViewer } from "../../../common/components/PdfViewer";
 import Tooltip from "../../../common/components/Tooltip";
 import { ExternalLinkLine } from "../../../theme/components/icons";
 
+import { useSignatures } from "../../../common/hooks/useDossier/useSignatures";
+import InputCerfa from "../Cerfa/components/Input";
+
 import { cerfaPartFormationCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
 import { cerfaPartEmployeurCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import { cerfaPartMaitresCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
@@ -94,6 +97,7 @@ export default ({ dossierId }) => {
   const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
   const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
   const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
+  const { lieuSignatureContrat, onSubmittedContratLieuSignatureContrat } = useSignatures();
 
   const cerfaComplete =
     employeurCompletionAtom?.contents === 100 &&
@@ -113,6 +117,13 @@ export default ({ dossierId }) => {
             <Text>Le Cerfa doit être complété à 100% avant de commencer la procédure de finalisation du dossier.</Text>
           </Tooltip>
         </Center>
+        <InputCerfa
+          path="contrat.lieuSignatureContrat"
+          field={lieuSignatureContrat}
+          type="text"
+          mt="2"
+          onSubmittedField={onSubmittedContratLieuSignatureContrat}
+        />
       </Box>
     );
   }
