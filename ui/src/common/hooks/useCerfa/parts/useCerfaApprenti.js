@@ -12,7 +12,6 @@ import {
   convertMultipleSelectOptionToValue,
   convertOptionToValue,
   convertValueToOption,
-  isAgeInValidLowerAtDate,
   caclAgeAtDate,
   normalizeInputNumberForDb,
   doAsyncCodePostalActions,
@@ -117,14 +116,13 @@ export const CerfaApprentiController = async (dossier) => {
               };
             }
 
-            const isAgeApprentiInvalidAtStart = isAgeInValidLowerAtDate({
-              dateNaissance,
-              age,
-              dateString: data.dateDebutContrat,
-              limitAge: 15,
-              label: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
-            });
-            if (isAgeApprentiInvalidAtStart) return isAgeApprentiInvalidAtStart;
+            if (age < 15) {
+              return {
+                successed: false,
+                data: null,
+                message: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
+              };
+            }
 
             if (data.dateFinContrat !== "" && data.employeurAdresseDepartement !== "") {
               const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue, smicObj } =

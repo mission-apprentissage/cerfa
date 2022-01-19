@@ -158,28 +158,26 @@ export const CerfaContratController = async (dossier) => {
 
           if (data.maitre1DateNaissance !== "") {
             const { age: ageMaitre1 } = caclAgeAtDate(data.maitre1DateNaissance, value);
-            const dateNaissanceMaitre1 = DateTime.fromISO(data.maitre1DateNaissance).setLocale("fr-FR");
-            const isAgeMaitre1InvalidAtStart = isAgeInValidLowerAtDate({
-              dateNaissance: dateNaissanceMaitre1,
-              age: ageMaitre1,
-              dateString: value,
-              limitAge: 18,
-              label: "Le maître d'apprentissage 1 doit avoir au moins 18 ans à la date de début d'exécution du contrat",
-            });
-            if (isAgeMaitre1InvalidAtStart) return isAgeMaitre1InvalidAtStart;
+            if (ageMaitre1 < 18) {
+              return {
+                successed: false,
+                data: null,
+                message:
+                  "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+              };
+            }
           }
 
           if (data.maitre2DateNaissance !== "") {
             const { age: ageMaitre2 } = caclAgeAtDate(data.maitre2DateNaissance, value);
-            const dateNaissanceMaitre2 = DateTime.fromISO(data.maitre2DateNaissance).setLocale("fr-FR");
-            const isAgeMaitre2InvalidAtStart = isAgeInValidLowerAtDate({
-              dateNaissance: dateNaissanceMaitre2,
-              age: ageMaitre2,
-              dateString: value,
-              limitAge: 18,
-              label: "Le maître d'apprentissage 2 doit avoir au moins 18 ans à la date de début d'exécution du contrat",
-            });
-            if (isAgeMaitre2InvalidAtStart) return isAgeMaitre2InvalidAtStart;
+            if (ageMaitre2 < 18) {
+              return {
+                successed: false,
+                data: null,
+                message:
+                  "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+              };
+            }
           }
 
           let age = null;
@@ -187,14 +185,13 @@ export const CerfaContratController = async (dossier) => {
             const cAge = caclAgeAtDate(data.apprentiDateNaissance, value);
             age = cAge.age;
 
-            const isAgeApprentiInvalidAtStart = isAgeInValidLowerAtDate({
-              dateNaissance: DateTime.fromISO(data.apprentiDateNaissance).setLocale("fr-FR"),
-              age,
-              dateString: value,
-              limitAge: 15,
-              label: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
-            });
-            if (isAgeApprentiInvalidAtStart) return isAgeApprentiInvalidAtStart;
+            if (age < 15) {
+              return {
+                successed: false,
+                data: null,
+                message: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
+              };
+            }
 
             if (data.dateFinContrat !== "" && data.employeurAdresseDepartement !== "") {
               const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue, smicObj } =

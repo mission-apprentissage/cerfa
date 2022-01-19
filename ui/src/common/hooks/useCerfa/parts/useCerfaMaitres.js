@@ -10,7 +10,6 @@ import {
   convertValueToDate,
   convertDateToValue,
   convertValueToOption,
-  isAgeInValidLowerAtDate,
   caclAgeAtDate,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
@@ -60,14 +59,13 @@ export const CerfaMaitresController = async (dossier) => {
 
           const { age } = caclAgeAtDate(value, data.dateDebutContrat);
 
-          const isAgeMaitreInvalidAtStart = isAgeInValidLowerAtDate({
-            dateNaissance,
-            age,
-            dateString: data.dateDebutContrat,
-            limitAge: 18,
-            label: "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
-          });
-          if (isAgeMaitreInvalidAtStart) return isAgeMaitreInvalidAtStart;
+          if (age < 18) {
+            return {
+              successed: false,
+              data: null,
+              message: "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+            };
+          }
 
           return {
             successed: true,
@@ -97,14 +95,13 @@ export const CerfaMaitresController = async (dossier) => {
 
           const { age } = caclAgeAtDate(value, data.dateDebutContrat);
 
-          const isAgeMaitreInvalidAtStart = isAgeInValidLowerAtDate({
-            dateNaissance,
-            age,
-            dateString: data.dateDebutContrat,
-            limitAge: 18,
-            label: "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
-          });
-          if (isAgeMaitreInvalidAtStart) return isAgeMaitreInvalidAtStart;
+          if (age < 18) {
+            return {
+              successed: false,
+              data: null,
+              message: "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+            };
+          }
 
           return {
             successed: true,
