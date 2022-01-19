@@ -202,7 +202,7 @@ module.exports = (components) => {
           caisseComplementaire: Joi.string().allow(""),
           regimeSpecifique: Joi.boolean(),
           attestationEligibilite: Joi.boolean().allow(null),
-          attestationPieces: Joi.boolean(),
+          attestationPieces: Joi.boolean().allow(null),
           privePublic: Joi.boolean(),
         }),
         apprenti: Joi.object({

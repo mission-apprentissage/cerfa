@@ -1179,7 +1179,7 @@ export function useCerfaEmployeur() {
     setEmployeurEmployeurSpecifique(convertValueToOption(res.employeur.employeurSpecifique));
     setEmployeurCaisseComplementaire(res.employeur.caisseComplementaire);
     setEmployeurRegimeSpecifique(convertValueToOption(res.employeur.regimeSpecifique));
-    setEmployeurAttestationPieces(res.employeur.attestationPieces);
+    setEmployeurAttestationPieces(convertValueToOption(res.employeur.attestationPieces));
 
     setEmployeurPrivePublic(convertValueToOption(res.employeur.privePublic));
 
