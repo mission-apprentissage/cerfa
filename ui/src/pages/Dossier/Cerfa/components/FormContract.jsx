@@ -228,13 +228,6 @@ const FormContract = () => {
               remunerationsAnnuelles: remunerationsAnnuelles,
             }}
           />
-          {/* <InputCerfa
-            path="contrat.lieuSignatureContrat"
-            field={lieuSignatureContrat}
-            type="text"
-            mt="2"
-            onSubmittedField={onSubmittedContratLieuSignatureContrat}
-          /> */}
         </Box>
       </Flex>
       <Box pt={4}>
@@ -429,6 +422,7 @@ const FormContract = () => {
                   path="contrat.salaireEmbauche"
                   field={salaireEmbauche}
                   type="number"
+                  precision={2}
                   mt="2"
                   // onSubmittedField={onSubmittedContratSalaireEmbauche}
                 />

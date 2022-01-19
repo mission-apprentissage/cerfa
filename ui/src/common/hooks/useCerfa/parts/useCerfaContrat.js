@@ -21,7 +21,7 @@ import { buildRemunerations, buildRemunerationsDbValue } from "../../../utils/fo
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
-import { cerfaApprentiAgeAtom } from "./useCerfaApprentiAtoms";
+import { cerfaApprentiAgeAtom, cerfaApprentiDateNaissanceAtom } from "./useCerfaApprentiAtoms";
 import * as contratAtoms from "./useCerfaContratAtoms";
 
 const cerfaContratCompletion = (res) => {
@@ -442,6 +442,8 @@ export function useCerfaContrat() {
   const dossier = useRecoilValue(dossierAtom);
   const apprentiAge = useRecoilValue(cerfaApprentiAgeAtom);
   const setApprentiAge = useSetRecoilState(cerfaApprentiAgeAtom);
+  const apprentiDateNaissance = useRecoilValue(cerfaApprentiDateNaissanceAtom);
+  const setApprentiDateNaissance = useSetRecoilState(cerfaApprentiDateNaissanceAtom);
 
   //Internal
   const [partContratCompletion, setPartContratCompletion] = useRecoilState(contratAtoms.cerfaPartContratCompletionAtom);
@@ -624,6 +626,7 @@ export function useCerfaContrat() {
 
               if (!apprentiAge.value && newV.apprenti.age.value !== apprentiAge.value) {
                 setApprentiAge(newV.apprenti.age);
+                setApprentiDateNaissance({ ...apprentiDateNaissance, triggerValidation: true });
               }
 
               const typeDerog = getTypeDerogation(contratTypeDerogation, {
@@ -684,6 +687,8 @@ export function useCerfaContrat() {
       setContratDateDebutContrat,
       seContratDureeContrat,
       setApprentiAge,
+      setApprentiDateNaissance,
+      apprentiDateNaissance,
       dossier?._id,
       cerfa?.id,
       setPartContratCompletion,
@@ -926,37 +931,6 @@ export function useCerfaContrat() {
       cerfa?.id,
       setPartContratCompletion,
     ]
-  );
-
-  const onSubmittedContratLieuSignatureContrat = useCallback(
-    async (path, data) => {
-      try {
-        if (path === "contrat.lieuSignatureContrat") {
-          const newV = {
-            contrat: {
-              lieuSignatureContrat: {
-                ...contratLieuSignatureContrat,
-                value: data,
-                // forceUpdate: false, // IF data = "" true
-              },
-            },
-          };
-          if (contratLieuSignatureContrat.value !== newV.contrat.lieuSignatureContrat.value) {
-            setContratLieuSignatureContrat(newV.contrat.lieuSignatureContrat);
-
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
-              contrat: {
-                lieuSignatureContrat: newV.contrat.lieuSignatureContrat.value,
-              },
-            });
-            setPartContratCompletion(cerfaContratCompletion(res));
-          }
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [contratLieuSignatureContrat, setContratLieuSignatureContrat, dossier?._id, cerfa?.id, setPartContratCompletion]
   );
 
   const onSubmittedContratTravailRisque = useCallback(
@@ -1474,6 +1448,7 @@ export function useCerfaContrat() {
     setContratDateConclusion(convertValueToDate(res.contrat.dateConclusion));
     setContratDateFinContrat(convertValueToDate(res.contrat.dateFinContrat));
     setContratDateRupture(convertValueToDate(res.contrat.dateRupture));
+
     setContratLieuSignatureContrat(res.contrat.lieuSignatureContrat);
 
     const typeDerog = getTypeDerogation(convertValueToOption(res.contrat.typeDerogation), {
@@ -1514,6 +1489,7 @@ export function useCerfaContrat() {
       41: { ...emptyLineObj },
       42: { ...emptyLineObj },
     };
+    const shouldBeLock = !res.draft;
     for (let index = 0; index < res.contrat.remunerationsAnnuelles.length; index++) {
       const remunerationsAnnuelles = res.contrat.remunerationsAnnuelles[index];
 
@@ -1525,8 +1501,8 @@ export function useCerfaContrat() {
         ...convertValueToDate(remunerationsAnnuelles.dateFin),
         locked: true,
       };
-      const taux = { ...remunerationsAnnuelles.taux, locked: false };
-      const tauxMinimal = { ...remunerationsAnnuelles.tauxMinimal, locked: false };
+      const taux = { ...remunerationsAnnuelles.taux, locked: shouldBeLock };
+      const tauxMinimal = { ...remunerationsAnnuelles.tauxMinimal, locked: shouldBeLock };
       const typeSalaire = {
         ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
         locked: true,
@@ -1599,7 +1575,6 @@ export function useCerfaContrat() {
         dateConclusion: onSubmittedContratDateConclusion,
         dateFinContrat: onSubmittedContratDateFinContrat,
         dateRupture: onSubmittedContratDateRupture,
-        lieuSignatureContrat: onSubmittedContratLieuSignatureContrat,
         typeDerogation: onSubmittedContratTypeDerogation,
         dureeTravailHebdoHeures: onSubmittedContratDureeTravailHebdoHeures,
         contratDureeTravailHebdoMinutes: onSubmittedContratDureeTravailHebdoMinutes,

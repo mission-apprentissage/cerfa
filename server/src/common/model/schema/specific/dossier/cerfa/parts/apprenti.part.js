@@ -154,9 +154,9 @@ const apprentiSchema = {
     nullable: function () {
       return this.draft;
     },
-    required: function () {
-      return !this.draft;
-    },
+    // required: function () {
+    //   return !this.draft;
+    // },
   },
   regimeSocial: {
     enum: [0, 1, 2],

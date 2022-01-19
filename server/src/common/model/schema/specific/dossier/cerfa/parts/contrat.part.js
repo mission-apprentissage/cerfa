@@ -43,9 +43,6 @@ const contratSchema = {
   modeContractuel: {
     ...modeContractuelSchema,
     default: null,
-    required: function () {
-      return !this.draft;
-    },
     label: "Mode contratctuel",
     requiredMessage: "le mode de contrat est obligatoire",
   },
@@ -225,9 +222,9 @@ const contratSchema = {
     nullable: true,
     default: null,
     example: 3,
-    required: function () {
-      return this.contrat.avantageNature;
-    },
+    // required: function () {
+    //   return this.contrat.avantageNature;
+    // },
     isNotRequiredForm: true,
   },
   avantageLogement: {
@@ -237,9 +234,9 @@ const contratSchema = {
     nullable: true,
     default: null,
     example: 456,
-    required: function () {
-      return this.contrat.avantageNature;
-    },
+    // required: function () {
+    //   return this.contrat.avantageNature;
+    // },
     isNotRequiredForm: true,
   },
   autreAvantageEnNature: {
@@ -249,9 +246,9 @@ const contratSchema = {
     nullable: true,
     default: null,
     example: true,
-    required: function () {
-      return this.contrat.avantageNature;
-    },
+    // required: function () {
+    //   return this.contrat.avantageNature;
+    // },
     options: [
       {
         label: "true",

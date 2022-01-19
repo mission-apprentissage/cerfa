@@ -8,7 +8,7 @@ const permissionsDossierMiddleware = require("../../middlewares/permissionsDossi
 
 module.exports = (components) => {
   const router = express.Router();
-  const { dossiers, users, roles, permissions, mailer } = components;
+  const { dossiers, users, roles, permissions, mailer, cerfas } = components;
 
   router.get(
     "/entity/:id",
@@ -23,6 +23,7 @@ module.exports = (components) => {
       if (!owner) {
         throw Boom.badRequest("Something went wrong");
       }
+      const cerfa = await cerfas.findCerfaByDossierId(dossier._id);
 
       res.json({
         ...dossier,
@@ -30,6 +31,7 @@ module.exports = (components) => {
         owner: {
           ...owner,
         },
+        cerfaId: cerfa._id,
       });
     })
   );
@@ -74,9 +76,12 @@ module.exports = (components) => {
     "/entity/:id/publish",
     permissionsDossierMiddleware(components, ["dossier/publication"]),
     tryCatch(async ({ params }, res) => {
-      await dossiers.publishDossier(params.id);
+      const dossier = await dossiers.publishDossier(params.id);
 
-      return res.json({ publish: true });
+      const cerfa = await cerfas.findCerfaByDossierId(params.id);
+      await cerfas.publishCerfa(cerfa._id);
+
+      return res.json({ publish: true, dossier, cerfa });
     })
   );
 

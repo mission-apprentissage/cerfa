@@ -17,9 +17,9 @@ import { Step, Steps, useSteps } from "chakra-ui-steps-rework-mna";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { useSetRecoilState, useRecoilValueLoadable } from "recoil";
 import { hasContextAccessTo } from "../../common/utils/rolesUtils";
-// import { _put } from "../../common/httpClient";
-// import useAuth from "../../common/hooks/useAuth";
-// import PromptModal from "../../common/components/Modals/PromptModal";
+import { _put } from "../../common/httpClient";
+import useAuth from "../../common/hooks/useAuth";
+import PromptModal from "../../common/components/Modals/PromptModal";
 // import { betaVersion, BetaFeatures } from "../../common/components/BetaFeatures";
 import AcknowledgeModal from "../../common/components/Modals/AcknowledgeModal";
 
@@ -31,9 +31,12 @@ import LivePeopleAvatar from "./components/LivePeopleAvatar";
 
 import { useDossier } from "../../common/hooks/useDossier/useDossier";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
-import { AvatarPlus, StepWip, TickBubble } from "../../theme/components/icons";
+// import { dossierAtom } from "../../common/hooks/useDossier/dossierAtom";
+// import { cerfaAtom } from "../../common/hooks/useCerfa/cerfaAtom";
+import { AvatarPlus, StepWip, TickBubble, DownloadLine } from "../../theme/components/icons";
 
 import { documentsCompletionAtom } from "../../common/hooks/useDossier/documentsAtoms";
+import { signaturesCompletionAtom, signaturesPdfLoadedAtom } from "../../common/hooks/useDossier/signaturesAtoms";
 import { cerfaPartFormationCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
 import {
   cerfaPartEmployeurCompletionAtom,
@@ -95,8 +98,57 @@ const stepByPath = ["cerfa", "documents", "signatures", "etat"];
 //   );
 // };
 
+const EndModal = ({ dossier, ...modal }) => {
+  // const setDossier = useSetRecoilState(dossierAtom);
+  // const setCerfa = useSetRecoilState(cerfaAtom);
+
+  let onReplyClicked = useCallback(
+    async (answer) => {
+      try {
+        await _put(`/api/v1/dossier/entity/${dossier._id}/publish`, {
+          dossierId: dossier._id,
+        });
+        // setDossier(publish.dossier);
+        // setCerfa(publish.cerfa);
+        window.location.reload();
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [dossier._id]
+  );
+
+  return (
+    <>
+      <PromptModal
+        title="Souhaitez-vous conclure ce dossier ?"
+        isOpen={modal.isOpen}
+        onClose={modal.onClose}
+        onOk={() => {
+          onReplyClicked();
+          modal.onClose();
+        }}
+        onKo={() => {
+          onReplyClicked("non");
+          modal.onClose();
+        }}
+        bgOverlay="rgba(0, 0, 0, 0.28)"
+      >
+        <Text mb={1}>
+          Cette opération clôturera l'édition de ce dossier. Vous pourrez néanmoins le consulter à tout moment.
+        </Text>
+        <Text mb={1}>
+          <br />
+          Vous pourrez par la suite, télécharger le contrat généré.
+        </Text>
+      </PromptModal>
+    </>
+  );
+};
+
 export default () => {
   let match = useRouteMatch();
+  let [auth] = useAuth();
   const inviteModal = useDisclosure();
   const { nextStep, prevStep, activeStep, setStep } = useSteps({
     initialStep: stepByPath.indexOf(match.params.step),
@@ -114,6 +166,7 @@ export default () => {
   const employeurPrivePublic = useRecoilValueLoadable(cerfaEmployeurPrivePublicAtom);
   const [hasSeenPrivateSectorModal, setHasSeenPrivateSectorModal] = useState(false);
   const isPrivateSectorAckModal = useDisclosure({ defaultIsOpen: true });
+  const endModal = useDisclosure();
 
   const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
   const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
@@ -122,6 +175,8 @@ export default () => {
   const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
 
   const documentsCompletion = useRecoilValueLoadable(documentsCompletionAtom);
+  const signaturesCompletion = useRecoilValueLoadable(signaturesCompletionAtom);
+  const signaturesPdfLoaded = useRecoilValueLoadable(signaturesPdfLoadedAtom);
 
   const cerfaComplete =
     employeurCompletionAtom?.contents === 100 &&
@@ -130,7 +185,8 @@ export default () => {
     contratCompletionAtom?.contents === 100 &&
     formationCompletion?.contents === 100;
   const documentsComplete = documentsCompletion?.contents === 100;
-  const signaturesComplete = cerfaComplete && documentsComplete; // TODO lieu de signature
+  const signatureComplete = signaturesCompletion?.contents === 100;
+  const signaturesComplete = cerfaComplete && documentsComplete && signatureComplete;
 
   useEffect(() => {
     const run = async () => {
@@ -208,6 +264,7 @@ export default () => {
   return (
     <Box w="100%" px={[1, 1, 6, 6]}>
       {/* <AskBetaTest /> */}
+      <EndModal {...endModal} dossier={dossier} />
       <AcknowledgeModal
         title="Vous êtes employeur privé"
         isOpen={
@@ -239,9 +296,16 @@ export default () => {
         <HStack mt={6}>
           <Heading as="h1" flexGrow="1">
             {dossier.nom}
-            <Badge variant="draft" ml={5}>
-              Brouillon
-            </Badge>
+            {dossier.draft && (
+              <Badge variant="draft" ml={5}>
+                Brouillon
+              </Badge>
+            )}
+            {!dossier.draft && (
+              <Badge variant="waitingSignature" ml={5}>
+                En cours d'instruction
+              </Badge>
+            )}
             <Badge variant="solid" bg="grey.100" color="grey.500" textStyle="sm" px="15px" ml="10px">
               <Text as="i">
                 {/* {!dossier.saved ? "Non sauvegardé" : `Dernière sauvegarde ${prettyPrintDate(dossier.lastModified)}`} */}
@@ -332,14 +396,43 @@ export default () => {
                 Passer à l'étape suivante
               </Button>
             )}
-            {activeStep === steps.length - 1 && (
+            {activeStep === steps.length - 1 && dossier.draft && (
               <Button
                 size="md"
-                onClick={() => {}}
+                onClick={() => {
+                  endModal.onOpen();
+                }}
                 variant="primary"
-                isDisabled={!cerfaComplete || employeurPrivePublic?.contents?.value === "Employeur privé"}
+                isDisabled={
+                  !signaturesComplete ||
+                  employeurPrivePublic?.contents?.value === "Employeur privé" ||
+                  !signaturesPdfLoaded?.contents
+                }
+                bg="greenmedium.500"
+                _hover={{ bg: "greenmedium.600" }}
               >
-                Télécharger le dossier finalisé
+                Finaliser et Télécharger le dossier
+              </Button>
+            )}
+            {activeStep === steps.length - 1 && !dossier.draft && (
+              <Button
+                as={Link}
+                href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?workspaceId=${auth.workspaceId}&dossierId=${dossier._id}`}
+                isExternal
+                size="md"
+                variant="primary"
+                bg="greenmedium.500"
+                _hover={{ bg: "greenmedium.600" }}
+                color="white"
+                isDisabled={
+                  !signaturesComplete ||
+                  employeurPrivePublic?.contents?.value === "Employeur privé" ||
+                  !signaturesPdfLoaded?.contents
+                }
+                borderRadius={0}
+              >
+                <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
+                Télécharger le pdf
               </Button>
             )}
           </Flex>

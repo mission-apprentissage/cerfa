@@ -37,7 +37,7 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
         },
         Etat: {
           Header: "Statut",
-          width: 60,
+          width: 90,
           value: null,
         },
         Last: {
@@ -87,7 +87,12 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
           );
         },
         Etat: (value, i) => {
-          return <Center>{dossiers[i].draft && <Badge variant="draft">Brouillon</Badge>}</Center>;
+          return (
+            <Center>
+              {dossiers[i].draft && <Badge variant="draft">Brouillon</Badge>}
+              {!dossiers[i].draft && <Badge variant="waitingSignature">En cours d'instruction</Badge>}
+            </Center>
+          );
         },
         Last: (value, i) => {
           return <Center>{value}</Center>;
