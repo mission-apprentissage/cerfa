@@ -395,11 +395,11 @@ export const CerfaContratController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
-          if (parseInt(value) > 99) {
+          if (parseInt(value) > 40) {
             return {
               successed: false,
               data: null,
-              message: "la durée de travail hebdomadaire en heures ne peut excéder 99",
+              message: "la durée de travail hebdomadaire en heures ne peut excéder 40h",
             };
           }
 
@@ -416,11 +416,11 @@ export const CerfaContratController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
-          if (parseInt(value) > 60) {
+          if (parseInt(value) > 59) {
             return {
               successed: false,
               data: null,
-              message: "la durée de travail hebdomadaire en minutes ne peut excéder 60",
+              message: "la durée de travail hebdomadaire en minutes ne peut excéder 59 minutes",
             };
           }
 
