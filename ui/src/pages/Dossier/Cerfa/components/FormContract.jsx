@@ -48,13 +48,14 @@ const FormContract = () => {
         dureeTravailHebdoHeures,
         dureeTravailHebdoMinutes,
         travailRisque,
-        salaireEmbauche,
         // caisseRetraiteComplementaire,
         avantageNature,
         avantageNourriture,
         avantageLogement,
         autreAvantageEnNature,
-        contratRemunerationsAnnuellesArray,
+        salaireEmbauche,
+        smic,
+        remunerationsAnnuelles,
       },
     },
     onSubmit: {
@@ -81,8 +82,6 @@ const FormContract = () => {
       },
     },
   } = useCerfaContrat();
-
-  // console.log(contratRemunerationsAnnuellesArray);
 
   return (
     <Box>
@@ -185,10 +184,9 @@ const FormContract = () => {
             onSubmittedField={onSubmittedContratDateDebutContrat}
             onAsyncData={{
               apprentiDateNaissance: apprentiDateNaissance?.value,
-              apprentiAge: apprentiAge?.value,
               employeurAdresseDepartement: employeurAdresseDepartement?.value,
               dateFinContrat: dateFinContrat?.value,
-              remunerationsAnnuelles: contratRemunerationsAnnuellesArray,
+              remunerationsAnnuelles: remunerationsAnnuelles,
 
               maitre1DateNaissance: maitre1DateNaissance?.value,
               maitre2DateNaissance: maitre2DateNaissance?.value,
@@ -227,7 +225,7 @@ const FormContract = () => {
               apprentiDateNaissance: apprentiDateNaissance?.value,
               apprentiAge: apprentiAge?.value,
               employeurAdresseDepartement: employeurAdresseDepartement?.value,
-              remunerationsAnnuelles: contratRemunerationsAnnuellesArray,
+              remunerationsAnnuelles: remunerationsAnnuelles,
             }}
           />
           {/* <InputCerfa
@@ -313,10 +311,15 @@ const FormContract = () => {
             </VStack>
           )}
           <Collapse
-            in={dateDebutContrat.value !== "" && dateFinContrat.value !== "" && apprentiDateNaissance.value !== ""}
+            in={
+              dateDebutContrat.value !== "" &&
+              dateFinContrat.value !== "" &&
+              apprentiDateNaissance.value !== "" &&
+              employeurAdresseDepartement.value !== ""
+            }
             animateOpacity
           >
-            {Object.keys(contratRemunerationsAnnuellesArray).map((part, ite) => {
+            {Object.keys(remunerationsAnnuelles).map((part, ite) => {
               if (ite === 1 || ite === 3 || ite === 5 || ite === 7) return null;
               let sub1 = 0;
               let sub2 = 0;
@@ -334,10 +337,7 @@ const FormContract = () => {
                 sub2 = 42;
               }
 
-              const [remPart1, remPart2] = [
-                contratRemunerationsAnnuellesArray[sub1],
-                contratRemunerationsAnnuellesArray[sub2],
-              ];
+              const [remPart1, remPart2] = [remunerationsAnnuelles[sub1], remunerationsAnnuelles[sub2]];
               const emptyLine = remPart1.taux.value === 0 && remPart2.taux.value === 0;
 
               return (
@@ -400,8 +400,9 @@ const FormContract = () => {
                               onSubmittedContratRemunerationsAnnuellesTaux(fieldPath, data, path)
                             }
                           />
-                          <Box w="100%" position="relative" fontStyle="italic" color="disablegrey" py={2}>
-                            soit {remunerationsAnnuelle.salaireBrut.value} € / mois
+                          <Box w="100%" position="relative" fontStyle="italic" color="disablegrey" pl={2}>
+                            soit {remunerationsAnnuelle.salaireBrut.value.toFixed(2)} € / mois. <br />
+                            Seuil minimal légal {remunerationsAnnuelle.tauxMinimal.value} %
                           </Box>
                           {/* <Box mt="1.7rem !important">%</Box>
                           <Box mt="1.7rem !important">du</Box>
@@ -430,6 +431,22 @@ const FormContract = () => {
                   // onSubmittedField={onSubmittedContratSalaireEmbauche}
                 />
               </Box>
+            </Flex>
+            <Flex mt={5}>
+              {!smic.isSmicException && (
+                <Text>
+                  Calculé sur la base du SMIC {smic.annee} de {smic.selectedSmic}€ mensuel ({smic.heuresHebdomadaires}
+                  €/h) [Date d'entrée en vigueur {smic.dateEntreeEnVigueur}]
+                </Text>
+              )}
+              {smic.isSmicException && (
+                <Text>
+                  Calculé sur la base du SMIC {smic.annee} pour{" "}
+                  <strong>{smic.exceptions[employeurAdresseDepartement.value].nomDepartement}</strong> de{" "}
+                  {smic.selectedSmic}€ mensuel ({smic.exceptions[employeurAdresseDepartement.value].heuresHebdomadaires}
+                  €/h) [Date d'entrée en vigueur {smic.dateEntreeEnVigueur}]
+                </Text>
+              )}
             </Flex>
           </Collapse>
         </Box>

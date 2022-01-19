@@ -4,14 +4,14 @@
 
 import { useCallback } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-
+import { DateTime } from "luxon";
 import {
   fieldCompletionPercentage,
   convertValueToDate,
   convertDateToValue,
   convertValueToOption,
   isAgeInValidLowerAtDate,
-  caclAgeFromStringDate,
+  caclAgeAtDate,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
@@ -46,15 +46,19 @@ export const CerfaMaitresController = async (dossier) => {
       dateNaissance: {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
-          const { age, dateNaissance } = caclAgeFromStringDate(value);
 
-          if (age === 0) {
+          const dateNaissance = DateTime.fromISO(value).setLocale("fr-FR");
+          const today = DateTime.now().setLocale("fr-FR");
+
+          if (dateNaissance > today) {
             return {
               successed: false,
               data: null,
               message: "La date de naissance de peut pas être dans le futur",
             };
           }
+
+          const { age } = caclAgeAtDate(value, data.dateDebutContrat);
 
           const isAgeMaitreInvalidAtStart = isAgeInValidLowerAtDate({
             dateNaissance,
@@ -80,15 +84,18 @@ export const CerfaMaitresController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
-          const { age, dateNaissance } = caclAgeFromStringDate(value);
+          const dateNaissance = DateTime.fromISO(value).setLocale("fr-FR");
+          const today = DateTime.now().setLocale("fr-FR");
 
-          if (age === 0) {
+          if (dateNaissance > today) {
             return {
               successed: false,
               data: null,
               message: "La date de naissance de peut pas être dans le futur",
             };
           }
+
+          const { age } = caclAgeAtDate(value, data.dateDebutContrat);
 
           const isAgeMaitreInvalidAtStart = isAgeInValidLowerAtDate({
             dateNaissance,

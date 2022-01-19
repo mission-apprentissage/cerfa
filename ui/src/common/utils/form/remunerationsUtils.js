@@ -4,6 +4,7 @@ const SMICs = {
   2022: {
     smics: [
       {
+        annee: 2022,
         mensuel: 1603.12,
         horaire: 10.57,
         heuresHebdomadaires: 35,
@@ -27,6 +28,7 @@ const SMICs = {
   2021: {
     smics: [
       {
+        annee: 2021,
         mensuel: 1589.47,
         horaire: 10.48,
         heuresHebdomadaires: 35,
@@ -46,6 +48,7 @@ const SMICs = {
         },
       },
       {
+        annee: 2021,
         mensuel: 1554.58,
         horaire: 10.25,
         heuresHebdomadaires: 35,
@@ -150,8 +153,10 @@ export const buildRemunerations = (data) => {
   const smicObj = findSmicAtDate(dateDebutContrat);
   let SMIC = smicObj.mensuel;
   const departementEmployeur = data.employeurAdresseDepartement;
+  let isSmicException = false;
   if (smicObj.exceptions && smicObj.exceptions[departementEmployeur]) {
     SMIC = smicObj.exceptions[departementEmployeur].mensuel;
+    isSmicException = true;
   }
 
   const seuils = [17, 18, 21, 26];
@@ -595,6 +600,10 @@ export const buildRemunerations = (data) => {
     remunerationsAnnuelles,
     remunerationsAnnuellesDbValue,
     salaireEmbauche,
-    smicObj,
+    smicObj: {
+      ...smicObj,
+      isSmicException,
+      selectedSmic: SMIC,
+    },
   };
 };

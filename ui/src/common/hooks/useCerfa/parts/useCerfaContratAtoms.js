@@ -86,10 +86,7 @@ export const cerfaContratTravailRisqueAtom = atom({
   key: "cerfa/contrat/travailRisque",
   default: null,
 });
-export const cerfaContratSalaireEmbaucheAtom = atom({
-  key: "cerfa/contrat/salaireEmbauche",
-  default: null,
-});
+
 export const cerfaContratCaisseRetraiteComplementaireAtom = atom({
   key: "cerfa/contrat/caisseRetraiteComplementaire",
   default: null,
@@ -116,7 +113,14 @@ export const cerfaContratRemunerationsAnnuellesAtom = atom({
   key: "cerfa/contrat/remunerationsAnnuelles",
   default: [],
 });
-
+export const cerfaContratSalaireEmbaucheAtom = atom({
+  key: "cerfa/contrat/salaireEmbauche",
+  default: null,
+});
+export const cerfaContratSmicAtom = atom({
+  key: "cerfa/contrat/smic",
+  default: null,
+});
 ///////
 
 export const defaultDateDebut = {

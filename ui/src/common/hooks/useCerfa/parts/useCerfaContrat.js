@@ -4,7 +4,7 @@
 
 import { useCallback } from "react";
 import { DateTime } from "luxon";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import {
   fieldCompletionPercentage,
@@ -15,16 +15,14 @@ import {
   convertValueToMultipleSelectOption,
   convertMultipleSelectOptionToValue,
   isAgeInValidLowerAtDate,
-  isAgeGreaterOrEqualAtDate,
-  isAgeLowerAtDate,
-  caclAgeFromStringDate,
+  caclAgeAtDate,
   normalizeInputNumberForDb,
 } from "../../../utils/formUtils";
 import { buildRemunerations, buildRemunerationsDbValue } from "../../../utils/form/remunerationsUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
-// import { cerfaApprentiDateNaissanceAtom } from "./useCerfaApprentiAtoms";
+import { cerfaApprentiAgeAtom } from "./useCerfaApprentiAtoms";
 import * as contratAtoms from "./useCerfaContratAtoms";
 
 const cerfaContratCompletion = (res) => {
@@ -158,21 +156,9 @@ export const CerfaContratController = async (dossier) => {
             }
           }
 
-          if (data.apprentiDateNaissance !== "") {
-            const isAgeApprentiInvalidAtStart = isAgeInValidLowerAtDate({
-              dateNaissance: DateTime.fromISO(data.apprentiDateNaissance).setLocale("fr-FR"),
-              age: data.apprentiAge,
-              dateString: value,
-              limitAge: 15,
-              label: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
-            });
-            if (isAgeApprentiInvalidAtStart) return isAgeApprentiInvalidAtStart;
-          }
-
           if (data.maitre1DateNaissance !== "") {
-            const { age: ageMaitre1, dateNaissance: dateNaissanceMaitre1 } = caclAgeFromStringDate(
-              data.maitre1DateNaissance
-            );
+            const { age: ageMaitre1 } = caclAgeAtDate(data.maitre1DateNaissance, value);
+            const dateNaissanceMaitre1 = DateTime.fromISO(data.maitre1DateNaissance).setLocale("fr-FR");
             const isAgeMaitre1InvalidAtStart = isAgeInValidLowerAtDate({
               dateNaissance: dateNaissanceMaitre1,
               age: ageMaitre1,
@@ -184,9 +170,8 @@ export const CerfaContratController = async (dossier) => {
           }
 
           if (data.maitre2DateNaissance !== "") {
-            const { age: ageMaitre2, dateNaissance: dateNaissanceMaitre2 } = caclAgeFromStringDate(
-              data.maitre2DateNaissance
-            );
+            const { age: ageMaitre2 } = caclAgeAtDate(data.maitre2DateNaissance, value);
+            const dateNaissanceMaitre2 = DateTime.fromISO(data.maitre2DateNaissance).setLocale("fr-FR");
             const isAgeMaitre2InvalidAtStart = isAgeInValidLowerAtDate({
               dateNaissance: dateNaissanceMaitre2,
               age: ageMaitre2,
@@ -197,34 +182,47 @@ export const CerfaContratController = async (dossier) => {
             if (isAgeMaitre2InvalidAtStart) return isAgeMaitre2InvalidAtStart;
           }
 
-          if (
-            data.apprentiDateNaissance !== "" &&
-            data.dateFinContrat !== "" &&
-            data.employeurAdresseDepartement !== ""
-          ) {
-            const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-              apprentiDateNaissance: data.apprentiDateNaissance,
-              apprentiAge: data.apprentiAge,
-              dateDebutContrat: value,
-              dateFinContrat: data.dateFinContrat,
-              employeurAdresseDepartement: data.employeurAdresseDepartement,
-              remunerationsAnnuelles: data.remunerationsAnnuelles,
-            });
+          let age = null;
+          if (data.apprentiDateNaissance !== "") {
+            const cAge = caclAgeAtDate(data.apprentiDateNaissance, value);
+            age = cAge.age;
 
-            return {
-              successed: true,
-              data: {
-                dateDebutContrat: value,
-                dateFinContrat: data.dateFinContrat,
-                remunerationsAnnuelles,
-                remunerationsAnnuellesDbValue,
-                salaireEmbauche,
-                dureeContrat,
-                apprentiDateNaissance: data.apprentiDateNaissance,
-                apprentiAge: data.apprentiAge,
-              },
-              message: null,
-            };
+            const isAgeApprentiInvalidAtStart = isAgeInValidLowerAtDate({
+              dateNaissance: DateTime.fromISO(data.apprentiDateNaissance).setLocale("fr-FR"),
+              age,
+              dateString: value,
+              limitAge: 15,
+              label: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
+            });
+            if (isAgeApprentiInvalidAtStart) return isAgeApprentiInvalidAtStart;
+
+            if (data.dateFinContrat !== "" && data.employeurAdresseDepartement !== "") {
+              const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue, smicObj } =
+                buildRemunerations({
+                  apprentiDateNaissance: data.apprentiDateNaissance,
+                  apprentiAge: age,
+                  dateDebutContrat: value,
+                  dateFinContrat: data.dateFinContrat,
+                  employeurAdresseDepartement: data.employeurAdresseDepartement,
+                  remunerationsAnnuelles: data.remunerationsAnnuelles,
+                });
+
+              return {
+                successed: true,
+                data: {
+                  dateDebutContrat: value,
+                  dateFinContrat: data.dateFinContrat,
+                  remunerationsAnnuelles,
+                  remunerationsAnnuellesDbValue,
+                  smicObj,
+                  salaireEmbauche,
+                  dureeContrat,
+                  apprentiDateNaissance: data.apprentiDateNaissance,
+                  apprentiAge: age,
+                },
+                message: null,
+              };
+            }
           }
 
           return {
@@ -234,7 +232,7 @@ export const CerfaContratController = async (dossier) => {
               dateFinContrat: data.dateFinContrat,
               dureeContrat,
               apprentiDateNaissance: data.apprentiDateNaissance,
-              apprentiAge: data.apprentiAge,
+              apprentiAge: age,
             },
             message: null,
           };
@@ -309,14 +307,15 @@ export const CerfaContratController = async (dossier) => {
             data.dateDebutContrat !== "" &&
             data.employeurAdresseDepartement !== ""
           ) {
-            const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-              apprentiDateNaissance: data.apprentiDateNaissance,
-              apprentiAge: data.apprentiAge,
-              dateDebutContrat: data.dateDebutContrat,
-              dateFinContrat: value,
-              employeurAdresseDepartement: data.employeurAdresseDepartement,
-              remunerationsAnnuelles: data.remunerationsAnnuelles,
-            });
+            const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue, smicObj } =
+              buildRemunerations({
+                apprentiDateNaissance: data.apprentiDateNaissance,
+                apprentiAge: data.apprentiAge,
+                dateDebutContrat: data.dateDebutContrat,
+                dateFinContrat: value,
+                employeurAdresseDepartement: data.employeurAdresseDepartement,
+                remunerationsAnnuelles: data.remunerationsAnnuelles,
+              });
 
             return {
               successed: true,
@@ -327,6 +326,7 @@ export const CerfaContratController = async (dossier) => {
                 dureeContrat,
                 remunerationsAnnuelles,
                 remunerationsAnnuellesDbValue,
+                smicObj,
                 salaireEmbauche,
               },
               message: null,
@@ -444,6 +444,8 @@ export const CerfaContratController = async (dossier) => {
 export function useCerfaContrat() {
   const cerfa = useRecoilValue(cerfaAtom);
   const dossier = useRecoilValue(dossierAtom);
+  const apprentiAge = useRecoilValue(cerfaApprentiAgeAtom);
+  const setApprentiAge = useSetRecoilState(cerfaApprentiAgeAtom);
 
   //Internal
   const [partContratCompletion, setPartContratCompletion] = useRecoilState(contratAtoms.cerfaPartContratCompletionAtom);
@@ -507,12 +509,10 @@ export function useCerfaContrat() {
   const [contratSalaireEmbauche, setContratSalaireEmbauche] = useRecoilState(
     contratAtoms.cerfaContratSalaireEmbaucheAtom
   );
+  const [contratSmic, setContratSmic] = useRecoilState(contratAtoms.cerfaContratSmicAtom);
   const [contratRemunerationsAnnuelles, setContratRemunerationsAnnuelles] = useRecoilState(
     contratAtoms.cerfaContratRemunerationsAnnuellesAtom
   );
-  // const [contratRemunerationMajoration, setContratRemunerationMajoration] = useRecoilState(
-  //   contratAtoms.cerfaContratRemunerationMajorationAtom
-  // );
 
   const setRemunerations = useCallback(
     async (data) => {
@@ -522,24 +522,21 @@ export function useCerfaContrat() {
         ...contratSalaireEmbauche,
         value: data.salaireEmbauche.toFixed(2),
       });
+
+      setContratSmic(data.smicObj);
     },
-    [contratSalaireEmbauche, setContratRemunerationsAnnuelles, setContratSalaireEmbauche]
+    [contratSalaireEmbauche, setContratRemunerationsAnnuelles, setContratSalaireEmbauche, setContratSmic]
   );
 
-  let refreshTypeDerogation = useCallback(() => {
-    setContratTypeDerogation({ ...contratTypeDerogation, triggerValidation: true });
-  }, [contratTypeDerogation, setContratTypeDerogation]);
-
   let getTypeDerogation = (typeDerogation = null, { dateNaissance, age, contratDateDebutContratString }) => {
-    const opts = {
-      dateNaissance: DateTime.fromISO(dateNaissance).setLocale("fr-FR"),
-      age,
-      limitDateString: contratDateDebutContratString,
-    };
-    const isApprentiGEQ16 = isAgeGreaterOrEqualAtDate({ ...opts, limitAge: 16 });
-    const isApprentiLOW16 = isAgeLowerAtDate({ ...opts, limitAge: 16 });
-    const isApprentiGEQ30 = isAgeGreaterOrEqualAtDate({ ...opts, limitAge: 30 });
-    const isApprentiLOW30 = isAgeGreaterOrEqualAtDate({ ...opts, limitAge: 30 });
+    if (dateNaissance === "" || !age || contratDateDebutContratString === "") {
+      return typeDerogation;
+    }
+
+    const isApprentiGEQ16 = age >= 16;
+    const isApprentiLOW16 = age < 16;
+    const isApprentiGEQ30 = age >= 30;
+    const isApprentiLOW30 = age < 30;
 
     // 11 not allowed if age >= 16 à la date d'execution
     // if age  à la date d'execution < 16   type 11 ||  50
@@ -549,11 +546,13 @@ export function useCerfaContrat() {
     let valueForbidden = false;
     for (let i = 0; i < typeDerogation.options.length; i++) {
       let option = { ...typeDerogation.options[i] };
-      if (isApprentiGEQ16) {
-        if (option.value === 11) {
-          option.locked = true;
-        } else {
+      option.locked = false;
+
+      if (isApprentiGEQ30) {
+        if (option.value === 12 || option.value === 50) {
           option.locked = false;
+        } else {
+          option.locked = true;
         }
       } else if (isApprentiLOW16) {
         if (option.value === 11 || option.value === 50) {
@@ -561,17 +560,16 @@ export function useCerfaContrat() {
         } else {
           option.locked = true;
         }
-      } else if (isApprentiGEQ30) {
-        if (option.value === 12 || option.value === 50) {
-          option.locked = false;
-        } else {
-          option.locked = true;
+      } else {
+        if (isApprentiGEQ16) {
+          if (option.value === 11) {
+            option.locked = true;
+          }
         }
-      } else if (isApprentiLOW30) {
-        if (option.value === 12) {
-          option.locked = true;
-        } else {
-          option.locked = false;
+        if (isApprentiLOW30) {
+          if (option.value === 12) {
+            option.locked = true;
+          }
         }
       }
 
@@ -588,6 +586,18 @@ export function useCerfaContrat() {
     }
   };
 
+  let refreshTypeDerogation = useCallback(
+    ({ dateNaissance, age, contratDateDebutContratString }) => {
+      const typeDerog = getTypeDerogation(contratTypeDerogation, {
+        dateNaissance,
+        age,
+        contratDateDebutContratString,
+      });
+      setContratTypeDerogation({ ...typeDerog, triggerValidation: true });
+    },
+    [contratTypeDerogation, setContratTypeDerogation]
+  );
+
   const onSubmittedContratDateDebutContrat = useCallback(
     async (path, data, forcedTriggered) => {
       try {
@@ -603,6 +613,12 @@ export function useCerfaContrat() {
                 value: data.dureeContrat,
               },
             },
+            apprenti: {
+              age: {
+                ...apprentiAge,
+                value: data.apprentiAge,
+              },
+            },
           };
           let shouldSaveInDb = false;
           if (!forcedTriggered) {
@@ -610,7 +626,16 @@ export function useCerfaContrat() {
               if (contratDateFinContrat.value !== "")
                 setContratDateFinContrat({ ...contratDateFinContrat, triggerValidation: true });
 
-              refreshTypeDerogation();
+              if (!apprentiAge.value && newV.apprenti.age.value !== apprentiAge.value) {
+                setApprentiAge(newV.apprenti.age);
+              }
+
+              const typeDerog = getTypeDerogation(contratTypeDerogation, {
+                dateNaissance: data.apprentiDateNaissance,
+                age: data.apprentiAge,
+                contratDateDebutContratString: data.dateDebutContrat,
+              });
+              setContratTypeDerogation({ ...typeDerog });
 
               setContratDateDebutContrat(newV.contrat.dateDebutContrat);
               seContratDureeContrat(newV.contrat.dureeContrat);
@@ -628,6 +653,9 @@ export function useCerfaContrat() {
                 dateDebutContrat: convertDateToValue(newV.contrat.dateDebutContrat),
                 dureeContrat: data.dureeContrat,
               },
+              apprenti: {
+                age: newV.apprenti.age.value,
+              },
             };
             if (data.remunerationsAnnuelles && data.remunerationsAnnuellesDbValue && data.salaireEmbauche) {
               setRemunerations(data);
@@ -636,6 +664,7 @@ export function useCerfaContrat() {
                   ...dataToSave.contrat,
                   remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
                   salaireEmbauche: data.salaireEmbauche.toFixed(2),
+                  smic: data.smicObj,
                 },
               };
             }
@@ -651,11 +680,14 @@ export function useCerfaContrat() {
     [
       contratDateDebutContrat,
       contratDureeContrat,
+      apprentiAge,
       contratDateFinContrat,
       setContratDateFinContrat,
-      refreshTypeDerogation,
+      contratTypeDerogation,
+      setContratTypeDerogation,
       setContratDateDebutContrat,
       seContratDureeContrat,
+      setApprentiAge,
       dossier?._id,
       cerfa?.id,
       setPartContratCompletion,
@@ -770,6 +802,7 @@ export function useCerfaContrat() {
                   ...dataToSave.contrat,
                   remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
                   salaireEmbauche: data.salaireEmbauche.toFixed(2),
+                  smic: data.smicObj,
                 },
               };
             }
@@ -1388,20 +1421,25 @@ export function useCerfaContrat() {
         if (path === `contrat.remunerationsAnnuelles.${part}.taux`) {
           let newRemunerationsAnnuellesTauxPart = { ...contratRemunerationsAnnuelles[part].taux };
           newRemunerationsAnnuellesTauxPart.value = parseInt(data);
+          let newRemunerationsAnnuellesSalaireBrutPart = { ...contratRemunerationsAnnuelles[part].salaireBrut };
+          newRemunerationsAnnuellesSalaireBrutPart.value =
+            (contratSmic?.selectedSmic * newRemunerationsAnnuellesTauxPart.value) / 100;
 
           const newRemunerationsAnnuellesFormValue = {
             ...contratRemunerationsAnnuelles,
             [part]: {
               ...contratRemunerationsAnnuelles[part],
               taux: newRemunerationsAnnuellesTauxPart,
+              salaireBrut: newRemunerationsAnnuellesSalaireBrutPart,
             },
           };
-
-          setContratRemunerationsAnnuelles(newRemunerationsAnnuellesFormValue);
 
           const { salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerationsDbValue(
             newRemunerationsAnnuellesFormValue
           );
+
+          setContratRemunerationsAnnuelles(newRemunerationsAnnuellesFormValue);
+          setContratSalaireEmbauche({ ...contratSalaireEmbauche, value: salaireEmbauche });
 
           let dataToSave = {
             contrat: {
@@ -1410,13 +1448,20 @@ export function useCerfaContrat() {
             },
           };
           await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
-          // }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [cerfa?.id, contratRemunerationsAnnuelles, dossier?._id, setContratRemunerationsAnnuelles]
+    [
+      cerfa?.id,
+      contratRemunerationsAnnuelles,
+      contratSalaireEmbauche,
+      contratSmic?.selectedSmic,
+      dossier?._id,
+      setContratRemunerationsAnnuelles,
+      setContratSalaireEmbauche,
+    ]
   );
 
   const setAll = async (res) => {
@@ -1452,6 +1497,7 @@ export function useCerfaContrat() {
     setContratAutreAvantageEnNature(convertValueToOption(res.contrat.autreAvantageEnNature));
 
     setContratSalaireEmbauche(res.contrat.salaireEmbauche);
+    setContratSmic(res.contrat.smic.value);
 
     const emptyLineObj = {
       dateDebut: { ...contratAtoms.defaultDateDebut },
@@ -1534,13 +1580,14 @@ export function useCerfaContrat() {
         dureeTravailHebdoHeures: contratDureeTravailHebdoHeures,
         dureeTravailHebdoMinutes: contratDureeTravailHebdoMinutes,
         travailRisque: contratTravailRisque,
-        salaireEmbauche: contratSalaireEmbauche,
         caisseRetraiteComplementaire: contratCaisseRetraiteComplementaire,
         avantageNature: contratAvantageNature,
         avantageNourriture: contratAvantageNourriture,
         avantageLogement: contratAvantageLogement,
         autreAvantageEnNature: contratAutreAvantageEnNature,
-        contratRemunerationsAnnuellesArray: contratRemunerationsAnnuelles,
+        salaireEmbauche: contratSalaireEmbauche,
+        smic: contratSmic,
+        remunerationsAnnuelles: contratRemunerationsAnnuelles,
       },
     },
     setAll,
