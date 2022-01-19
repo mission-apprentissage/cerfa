@@ -43,9 +43,6 @@ const contratSchema = {
   modeContractuel: {
     ...modeContractuelSchema,
     default: null,
-    required: function () {
-      return !this.draft;
-    },
     label: "Mode contratctuel",
     requiredMessage: "le mode de contrat est obligatoire",
   },

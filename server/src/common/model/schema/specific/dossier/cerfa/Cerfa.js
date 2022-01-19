@@ -21,14 +21,17 @@ const cerfaSchema = {
     nom: {
       ...maitreApprentissageSchema.nom,
       isNotRequiredForm: true,
+      required: false,
     },
     prenom: {
       ...maitreApprentissageSchema.prenom,
       isNotRequiredForm: true,
+      required: false,
     },
     dateNaissance: {
       ...maitreApprentissageSchema.dateNaissance,
       isNotRequiredForm: true,
+      required: false,
     },
   },
   formation: {

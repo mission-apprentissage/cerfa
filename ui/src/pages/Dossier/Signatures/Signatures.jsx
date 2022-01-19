@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Heading, Center, Button, Spinner, Text } from "@chakra-ui/react";
+import { Box, Heading, Center, Button, Spinner, Text, HStack } from "@chakra-ui/react";
 import { useRecoilValueLoadable, useSetRecoilState } from "recoil";
 
 import useAuth from "../../../common/hooks/useAuth";
@@ -25,7 +25,6 @@ const ContratPdf = ({ dossierId }) => {
   const [pdfBase64, setPdfBase64] = useState(null);
   const [pdfIsLoading, setPdfIsLoading] = useState(true);
   const setPdfLoaded = useSetRecoilState(signaturesPdfLoadedAtom);
-
   const { isLoading, cerfa } = useCerfa();
 
   useEffect(() => {
@@ -43,6 +42,7 @@ const ContratPdf = ({ dossierId }) => {
       }
     };
     run();
+    return () => {};
   }, [auth, cerfa, dossierId]);
 
   const onSignClicked = async () => {
@@ -97,13 +97,15 @@ const ContratPdf = ({ dossierId }) => {
 };
 
 export default ({ dossierId }) => {
+  const { isLoading, cerfa } = useCerfa();
   const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
   const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
   const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
   const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
   const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
-  const { signaturesCompletion, lieuSignatureContrat, onSubmittedContratLieuSignatureContrat } = useSignatures();
-
+  const { signaturesCompletion, lieuSignatureContrat, onSubmittedContratLieuSignatureContrat, setAll } =
+    useSignatures("CONVENTION_FORMATION");
+  const [value, setValue] = useState(lieuSignatureContrat?.value);
   const cerfaComplete =
     employeurCompletionAtom?.contents === 100 &&
     apprentiCompletionAtom?.contents === 100 &&
@@ -111,6 +113,10 @@ export default ({ dossierId }) => {
     contratCompletionAtom?.contents === 100 &&
     formationCompletion?.contents === 100;
   const signatureComplete = signaturesCompletion === 100;
+
+  useEffect(() => {
+    if (!isLoading) setAll(cerfa);
+  }, [cerfa, isLoading, setAll]);
 
   if (!cerfaComplete) {
     return (
@@ -129,17 +135,29 @@ export default ({ dossierId }) => {
 
   if (!signatureComplete) {
     return (
-      <Box mt={8}>
+      <Box mt={8} mb={16}>
         <Heading as="h3" fontSize="1.4rem">
           Merci de préciser le lieu de signature du contrat:
         </Heading>
-        <InputCerfa
-          path="contrat.lieuSignatureContrat"
-          field={lieuSignatureContrat}
-          type="text"
-          mt="2"
-          onSubmittedField={onSubmittedContratLieuSignatureContrat}
-        />
+        <HStack spacing={8} alignItems="end">
+          <InputCerfa
+            path="contrat.lieuSignatureContrat"
+            field={lieuSignatureContrat}
+            type="text"
+            mt="2"
+            onSubmittedField={(path, data) => setValue(data)}
+            w="40%"
+          />
+          <Button
+            size="md"
+            onClick={() =>
+              value !== "" ? onSubmittedContratLieuSignatureContrat("contrat.lieuSignatureContrat", value) : false
+            }
+            variant="primary"
+          >
+            Enrgistrer
+          </Button>
+        </HStack>
       </Box>
     );
   }

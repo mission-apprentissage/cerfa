@@ -8,7 +8,7 @@ const permissionsDossierMiddleware = require("../../middlewares/permissionsDossi
 
 module.exports = (components) => {
   const router = express.Router();
-  const { dossiers, users, roles, permissions, mailer } = components;
+  const { dossiers, users, roles, permissions, mailer, cerfas } = components;
 
   router.get(
     "/entity/:id",
@@ -75,6 +75,9 @@ module.exports = (components) => {
     permissionsDossierMiddleware(components, ["dossier/publication"]),
     tryCatch(async ({ params }, res) => {
       await dossiers.publishDossier(params.id);
+
+      const cerfa = await cerfas.findCerfaByDossierId(params.id);
+      await cerfas.publishCerfa(cerfa._id);
 
       return res.json({ publish: true });
     })

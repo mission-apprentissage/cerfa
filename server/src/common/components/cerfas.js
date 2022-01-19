@@ -28,6 +28,7 @@ module.exports = async () => {
       }
       return result;
     },
+    findCerfaByDossierId: async (dossierId, select = {}) => await Cerfa.findOne({ dossierId }, select).lean(),
     publishCerfa: async (id) => {
       const found = await Cerfa.findById(id).lean();
 
@@ -37,10 +38,27 @@ module.exports = async () => {
 
       // eslint-disable-next-line no-unused-vars
       const { _id, __v, dossierId, ...cerfa } = found;
-      const validate = await Cerfa.create({ ...cerfa, dossierId: mongoose.Types.ObjectId().toString(), draft: false });
+      const validate = await Cerfa.create({
+        ...cerfa,
+        contrat: {
+          ...cerfa.contrat,
+          dateConclusion: new Date(),
+        },
+        dossierId: mongoose.Types.ObjectId().toString(),
+        draft: false,
+      });
       await validate.delete();
 
-      return await Cerfa.findOneAndUpdate({ _id: id }, { draft: false }, { new: true });
+      return await Cerfa.findOneAndUpdate(
+        { _id: id },
+        {
+          draft: false,
+          contrat: {
+            dateConclusion: new Date(),
+          },
+        },
+        { new: true }
+      );
     },
     unpublishCerfa: async (id) => {
       const found = await Cerfa.findById(id).lean();

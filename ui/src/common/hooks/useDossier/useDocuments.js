@@ -1,14 +1,21 @@
 import { useEffect, useState, useCallback } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { saveCerfa } from "../useCerfa/useCerfa";
 import { cerfaAtom } from "../useCerfa/cerfaAtom";
 import { dossierAtom } from "./dossierAtom";
 import { documentsCompletionAtom, documentsAtom } from "./documentsAtoms";
-import { cerfaContratTypeContratAppAtom } from "../useCerfa/parts/useCerfaContratAtoms";
+import {
+  cerfaContratTypeContratAppAtom,
+  cerfaContratLieuSignatureContratAtom,
+} from "../useCerfa/parts/useCerfaContratAtoms";
 import { cerfaEmployeurAttestationPiecesAtom } from "../useCerfa/parts/useCerfaEmployeurAtoms";
 
-import { convertMultipleSelectOptionToValue } from "../../utils/formUtils";
+import {
+  convertValueToMultipleSelectOption,
+  convertValueToOption,
+  convertMultipleSelectOptionToValue,
+} from "../../utils/formUtils";
 
 const setDocumentsCompletions = (typeContratApp, employeurAttestationPieces, documents) => {
   let countFields = 0;
@@ -51,6 +58,8 @@ export function useDocuments(typeDocument) {
   );
   const [isRequired, setIsRequired] = useState(true);
   const typeContratApp = useRecoilValue(cerfaContratTypeContratAppAtom);
+
+  const setContratLieuSignatureContrat = useSetRecoilState(cerfaContratLieuSignatureContratAtom);
 
   const onSubmittedEmployeurAttestationPieces = useCallback(
     async (path, data) => {
@@ -95,6 +104,20 @@ export function useDocuments(typeDocument) {
     ]
   );
 
+  const setAll = useCallback(
+    async (res) => {
+      const docs = dossier.documents.filter((i) => i.typeDocument === typeDocument);
+      const { percent } = setDocumentsCompletions(
+        convertValueToMultipleSelectOption(res.contrat.typeContratApp),
+        convertValueToOption(res.employeur.attestationPieces),
+        docs
+      );
+      setDocumentsCompletion(percent);
+      setContratLieuSignatureContrat(res.contrat.lieuSignatureContrat);
+    },
+    [dossier, setDocumentsCompletion, setContratLieuSignatureContrat, typeDocument]
+  );
+
   useEffect(() => {
     if (typeContratApp && employeurAttestationPieces && dossier) {
       const docs = dossier.documents.filter((i) => i.typeDocument === typeDocument);
@@ -106,6 +129,9 @@ export function useDocuments(typeDocument) {
   }, [setDocuments, employeurAttestationPieces, setDocumentsCompletion, typeContratApp, dossier, typeDocument]);
 
   return {
+    setAll,
+    setDocumentsCompletions,
+    setDocumentsCompletion,
     documentsCompletion,
     isRequired,
     typeContratApp,

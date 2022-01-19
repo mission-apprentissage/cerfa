@@ -17,9 +17,9 @@ import { Step, Steps, useSteps } from "chakra-ui-steps-rework-mna";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { useSetRecoilState, useRecoilValueLoadable } from "recoil";
 import { hasContextAccessTo } from "../../common/utils/rolesUtils";
-// import { _put } from "../../common/httpClient";
+import { _put } from "../../common/httpClient";
 // import useAuth from "../../common/hooks/useAuth";
-// import PromptModal from "../../common/components/Modals/PromptModal";
+import PromptModal from "../../common/components/Modals/PromptModal";
 // import { betaVersion, BetaFeatures } from "../../common/components/BetaFeatures";
 import AcknowledgeModal from "../../common/components/Modals/AcknowledgeModal";
 
@@ -96,6 +96,46 @@ const stepByPath = ["cerfa", "documents", "signatures", "etat"];
 //   );
 // };
 
+const EndModal = ({ dossier, ...modal }) => {
+  const onReplyClicked = async (answer) => {
+    try {
+      let publish = await _put(`/api/v1/dossier/entity/${dossier._id}/publish`, {
+        dossierId: dossier._id,
+      });
+      console.log(publish);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  return (
+    <>
+      <PromptModal
+        title="Souhaitez-vous conclure ce dossier ?"
+        isOpen={modal.isOpen}
+        onClose={modal.onClose}
+        onOk={() => {
+          onReplyClicked();
+          modal.onClose();
+        }}
+        onKo={() => {
+          onReplyClicked("non");
+          modal.onClose();
+        }}
+        bgOverlay="rgba(0, 0, 0, 0.28)"
+      >
+        <Text mb={1}>
+          Cette opération clôturera l'édition de ce dossier. Vous pourrez néanmoins le consulter à tout moment.
+        </Text>
+        <Text mb={1}>
+          <br />
+          Vous pourrez par la suite, télécharger le contrat généré.
+        </Text>
+      </PromptModal>
+    </>
+  );
+};
+
 export default () => {
   let match = useRouteMatch();
   const inviteModal = useDisclosure();
@@ -115,6 +155,7 @@ export default () => {
   const employeurPrivePublic = useRecoilValueLoadable(cerfaEmployeurPrivePublicAtom);
   const [hasSeenPrivateSectorModal, setHasSeenPrivateSectorModal] = useState(false);
   const isPrivateSectorAckModal = useDisclosure({ defaultIsOpen: true });
+  const endModal = useDisclosure();
 
   const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
   const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
@@ -212,6 +253,7 @@ export default () => {
   return (
     <Box w="100%" px={[1, 1, 6, 6]}>
       {/* <AskBetaTest /> */}
+      <EndModal {...endModal} dossier={dossier} />
       <AcknowledgeModal
         title="Vous êtes employeur privé"
         isOpen={
@@ -243,9 +285,16 @@ export default () => {
         <HStack mt={6}>
           <Heading as="h1" flexGrow="1">
             {dossier.nom}
-            <Badge variant="draft" ml={5}>
-              Brouillon
-            </Badge>
+            {dossier.draft && (
+              <Badge variant="draft" ml={5}>
+                Brouillon
+              </Badge>
+            )}
+            {!dossier.draft && (
+              <Badge variant="waitingSignature" ml={5}>
+                En cours d'instruction
+              </Badge>
+            )}
             <Badge variant="solid" bg="grey.100" color="grey.500" textStyle="sm" px="15px" ml="10px">
               <Text as="i">
                 {/* {!dossier.saved ? "Non sauvegardé" : `Dernière sauvegarde ${prettyPrintDate(dossier.lastModified)}`} */}
@@ -339,7 +388,9 @@ export default () => {
             {activeStep === steps.length - 1 && (
               <Button
                 size="md"
-                onClick={() => {}}
+                onClick={() => {
+                  endModal.onOpen();
+                }}
                 variant="primary"
                 isDisabled={
                   !signaturesComplete ||
