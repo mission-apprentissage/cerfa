@@ -350,12 +350,18 @@ const employeurCerfaSchema = {
   attestationPieces: {
     type: Boolean,
     description: "Atteste de disposer des pièces justificatives",
-    label: "Atteste de disposer des pièces justificatives :",
-    default: false,
-    example: false,
+    label: "L'employeur atteste de disposer des pièces justificatives",
+    requiredMessage: "Il est obligatoire que l'employeur dispose des pièces justificatives",
+    default: null,
     required: function () {
       return !this.draft;
     },
+    options: [
+      {
+        label: "true",
+        value: true,
+      },
+    ],
   },
   privePublic: {
     type: Boolean,

@@ -33,6 +33,7 @@ import { useDossier } from "../../common/hooks/useDossier/useDossier";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
 import { AvatarPlus, StepWip, TickBubble } from "../../theme/components/icons";
 
+import { documentsCompletionAtom } from "../../common/hooks/useDossier/documentsAtoms";
 import { cerfaPartFormationCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
 import {
   cerfaPartEmployeurCompletionAtom,
@@ -120,14 +121,16 @@ export default () => {
   const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
   const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
 
+  const documentsCompletion = useRecoilValueLoadable(documentsCompletionAtom);
+
   const cerfaComplete =
     employeurCompletionAtom?.contents === 100 &&
     apprentiCompletionAtom?.contents === 100 &&
     maitresCompletionAtom?.contents === 100 &&
     contratCompletionAtom?.contents === 100 &&
     formationCompletion?.contents === 100;
-  const documentsComplete = false;
-  const signaturesComplete = false;
+  const documentsComplete = documentsCompletion?.contents === 100;
+  const signaturesComplete = cerfaComplete && documentsComplete; // TODO lieu de signature
 
   useEffect(() => {
     const run = async () => {

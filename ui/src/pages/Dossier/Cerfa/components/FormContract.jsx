@@ -276,8 +276,10 @@ const FormContract = () => {
             apprentiDateNaissance.value === "" ||
             employeurAdresseDepartement.value === "") && (
             <VStack alignItems="flex-start" color="mgalt">
-              <Text>Le calcul de la rémunération est automatique.</Text>
-              <Text>Vous devez, pour cela, renseigner les éléments suivants : </Text>
+              <Text>
+                L'outil détermine les périodes de rémunération et s'assure du respect du minimum légale pour chacune des
+                périodes, à partir des éléments renseignés.
+              </Text>
               <UnorderedList ml="30px !important">
                 <ListItem
                   fontWeight="400"
@@ -433,18 +435,20 @@ const FormContract = () => {
               </Box>
             </Flex>
             <Flex mt={5}>
-              {!smic.isSmicException && (
+              {!smic?.isSmicException && (
                 <Text>
-                  Calculé sur la base du SMIC {smic.annee} de {smic.selectedSmic}€ mensuel ({smic.heuresHebdomadaires}
-                  €/h) [Date d'entrée en vigueur {smic.dateEntreeEnVigueur}]
+                  Calculé sur la base du SMIC {smic?.annee} de {smic?.selectedSmic}€ mensuel (
+                  {smic?.heuresHebdomadaires}
+                  €/h) [Date d'entrée en vigueur {smic?.dateEntreeEnVigueur}]
                 </Text>
               )}
-              {smic.isSmicException && (
+              {smic?.isSmicException && (
                 <Text>
-                  Calculé sur la base du SMIC {smic.annee} pour{" "}
-                  <strong>{smic.exceptions[employeurAdresseDepartement.value].nomDepartement}</strong> de{" "}
-                  {smic.selectedSmic}€ mensuel ({smic.exceptions[employeurAdresseDepartement.value].heuresHebdomadaires}
-                  €/h) [Date d'entrée en vigueur {smic.dateEntreeEnVigueur}]
+                  Calculé sur la base du SMIC {smic?.annee} pour{" "}
+                  <strong>{smic?.exceptions[employeurAdresseDepartement.value].nomDepartement}</strong> de{" "}
+                  {smic?.selectedSmic}€ mensuel (
+                  {smic?.exceptions[employeurAdresseDepartement.value].heuresHebdomadaires}
+                  €/h) [Date d'entrée en vigueur {smic?.dateEntreeEnVigueur}]
                 </Text>
               )}
             </Flex>
