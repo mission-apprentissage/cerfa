@@ -1,3 +1,10 @@
+# [1.14.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.6...v1.14.0-beta.7) (2022-01-20)
+
+
+### Bug Fixes
+
+* correction enregistrement uai en db. Autres: region , dpt, voie ([#139](https://github.com/mission-apprentissage/cerfa/issues/139)) ([d3194f8](https://github.com/mission-apprentissage/cerfa/commit/d3194f8f05b23695069ca4bbf306eafb4d90409a))
+
 # [1.14.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.5...v1.14.0-beta.6) (2022-01-20)
 
 
