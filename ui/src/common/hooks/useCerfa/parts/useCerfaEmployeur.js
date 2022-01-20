@@ -39,6 +39,7 @@ const cerfaEmployeurCompletion = (res) => {
     employeurAdresseCodePostal: res.employeur.adresse.codePostal,
     employeurAdresseCommune: res.employeur.adresse.commune,
     employeurAdresseDepartement: res.employeur.adresse.departement,
+    employeurAdresseRegion: res.employeur.adresse.region,
     // employeurNom: res.employeur.nom,
     // employeurPrenom: res.employeur.prenom,
     employeurTypeEmployeur: res.employeur.typeEmployeur,
@@ -48,7 +49,7 @@ const cerfaEmployeurCompletion = (res) => {
     // employeurPrivePublic: res.employeur.privePublic,
   };
 
-  return fieldCompletionPercentage(fieldsToKeep, 14);
+  return fieldCompletionPercentage(fieldsToKeep, 15);
 };
 
 export const CerfaEmployeurController = async (dossier) => {
@@ -385,7 +386,10 @@ export function useCerfaEmployeur() {
                 },
                 voie: {
                   ...employeurAdresseVoie,
-                  value: data.type_voie || data.nom_voie ? `${data.type_voie} ${data.nom_voie}` : "",
+                  value:
+                    data.type_voie || data.nom_voie
+                      ? `${data.type_voie ? `${data.type_voie} ` : ""}${data.nom_voie}`
+                      : "",
                   locked: false,
                 },
                 complement: { ...employeurAdresseComplement, value: data.complement_adresse || "", locked: false },

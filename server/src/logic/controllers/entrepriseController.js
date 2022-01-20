@@ -142,7 +142,7 @@ class EntrepriseApiData {
         nom_voie: etablissementApiInfo.adresse.nom_voie,
         complement_adresse: etablissementApiInfo.adresse.complement_adresse,
         code_postal: etablissementApiInfo.adresse.code_postal,
-        num_departement: etablissementApiInfo.adresse.code_postal.substring(0, 2),
+        num_departement: code_dept,
         nom_departement: nom_dept,
         nom_academie: nom_academie,
         num_academie: num_academie,

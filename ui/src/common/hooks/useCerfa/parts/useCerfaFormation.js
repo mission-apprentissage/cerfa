@@ -451,7 +451,10 @@ export function useCerfaFormation() {
                 },
                 voie: {
                   ...organismeFormationAdresseVoie,
-                  value: data.type_voie || data.nom_voie ? `${data.type_voie} ${data.nom_voie}` : "",
+                  value:
+                    data.type_voie || data.nom_voie
+                      ? `${data.type_voie ? `${data.type_voie} ` : ""}${data.nom_voie}`
+                      : "",
                   locked: false,
                 },
                 complement: {
@@ -469,45 +472,45 @@ export function useCerfaFormation() {
             },
           };
 
-          if (organismeFormationSiret.value !== newV.organismeFormation.siret.value) {
-            setOrganismeFormationSiret(newV.organismeFormation.siret);
-            setOrganismeFormationDenomination(newV.organismeFormation.denomination);
-            setOrganismeFormationUaiCfa(newV.organismeFormation.uaiCfa);
-            setOrganismeFormationAdresseNumero(newV.organismeFormation.adresse.numero);
-            setOrganismeFormationAdresseVoie(newV.organismeFormation.adresse.voie);
-            setOrganismeFormationAdresseComplement(newV.organismeFormation.adresse.complement);
-            setOrganismeFormationAdresseCodePostal(newV.organismeFormation.adresse.codePostal);
-            setOrganismeFormationAdresseCommune(newV.organismeFormation.adresse.commune);
+          // if (organismeFormationSiret.value !== newV.organismeFormation.siret.value) {
+          setOrganismeFormationSiret(newV.organismeFormation.siret);
+          setOrganismeFormationDenomination(newV.organismeFormation.denomination);
+          setOrganismeFormationUaiCfa(newV.organismeFormation.uaiCfa);
+          setOrganismeFormationAdresseNumero(newV.organismeFormation.adresse.numero);
+          setOrganismeFormationAdresseVoie(newV.organismeFormation.adresse.voie);
+          setOrganismeFormationAdresseComplement(newV.organismeFormation.adresse.complement);
+          setOrganismeFormationAdresseCodePostal(newV.organismeFormation.adresse.codePostal);
+          setOrganismeFormationAdresseCommune(newV.organismeFormation.adresse.commune);
 
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+          const res = await saveCerfa(dossier?._id, cerfa?.id, {
+            organismeFormation: {
+              siret: newV.organismeFormation.siret.value,
+              denomination: newV.organismeFormation.denomination.value,
+              uaiCfa: newV.organismeFormation.uaiCfa.value || null,
+              adresse: {
+                numero: normalizeInputNumberForDb(newV.organismeFormation.adresse.numero.value),
+                voie: newV.organismeFormation.adresse.voie.value,
+                complement: newV.organismeFormation.adresse.complement.value,
+                codePostal: newV.organismeFormation.adresse.codePostal.value,
+                commune: newV.organismeFormation.adresse.commune.value,
+              },
+            },
+            isLockedField: {
               organismeFormation: {
-                siret: newV.organismeFormation.siret.value,
-                denomination: newV.organismeFormation.denomination.value,
-                uaiCfa: newV.organismeFormation.uaiCfa.value || null,
+                denomination: false,
+                uaiCfa: false,
                 adresse: {
-                  numero: normalizeInputNumberForDb(newV.organismeFormation.adresse.numero.value),
-                  voie: newV.organismeFormation.adresse.voie.value,
-                  complement: newV.organismeFormation.adresse.complement.value,
-                  codePostal: newV.organismeFormation.adresse.codePostal.value,
-                  commune: newV.organismeFormation.adresse.commune.value,
+                  numero: false,
+                  voie: false,
+                  complement: false,
+                  codePostal: false,
+                  commune: false,
                 },
               },
-              isLockedField: {
-                organismeFormation: {
-                  denomination: false,
-                  uaiCfa: false,
-                  adresse: {
-                    numero: false,
-                    voie: false,
-                    complement: false,
-                    codePostal: false,
-                    commune: false,
-                  },
-                },
-              },
-            });
-            setPartFormationCompletionAtom(cerfaFormationCompletion(res));
-          }
+            },
+          });
+          setPartFormationCompletionAtom(cerfaFormationCompletion(res));
+          // }
         }
       } catch (e) {
         console.error(e);
@@ -545,7 +548,6 @@ export function useCerfaFormation() {
               denomination: {
                 ...organismeFormationDenomination,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -753,7 +755,6 @@ export function useCerfaFormation() {
                 commune: {
                   ...organismeFormationAdresseCommune,
                   value: data,
-                  // forceUpdate: false, // IF data = "" true
                 },
               },
             },
@@ -794,17 +795,23 @@ export function useCerfaFormation() {
                 ...organismeFormationUaiCfa,
                 value: data,
                 locked: false,
-                forceUpdate: false, // IF data = "" true
               },
             },
           };
           setOrganismeFormationUaiCfa(newV.organismeFormation.uaiCfa);
+
+          const res = await saveCerfa(dossier?._id, cerfa?.id, {
+            organismeFormation: {
+              uaiCfa: newV.organismeFormation.uaiCfa.value || null,
+            },
+          });
+          setPartFormationCompletionAtom(cerfaFormationCompletion(res));
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [organismeFormationUaiCfa, setOrganismeFormationUaiCfa]
+    [cerfa?.id, dossier?._id, organismeFormationUaiCfa, setOrganismeFormationUaiCfa, setPartFormationCompletionAtom]
   );
 
   const onSubmittedFormationDateFinFormation = useCallback(
