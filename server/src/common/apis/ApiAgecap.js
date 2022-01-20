@@ -67,12 +67,14 @@ class ApiAgecap {
       }
       try {
         logger.debug(`[Agecap API] send contrat`);
-        let response = await client.post(`contrats`, contratAgecap, {
+        let response = await client.post(`contrats/`, contratAgecap, {
           headers: { Authorization: `Bearer ${this.token}` },
         });
 
         return response;
       } catch (e) {
+        console.log(e);
+        console.log(e.response.data);
         throw new ApiError("Api Agecap contrat", `${e.message}`, e.code || e.response.status);
       }
     });

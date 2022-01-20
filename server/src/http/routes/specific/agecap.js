@@ -38,24 +38,24 @@ module.exports = (components) => {
           typeSalaire,
         };
       };
-      const Annee1Periode1 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "1.1" }), toKeep));
-      const Annee1Periode2 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "1.2" }), toKeep));
-      const Annee2Periode1 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "2.1" }), toKeep));
-      const Annee2Periode2 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "2.2" }), toKeep));
-      const Annee3Periode1 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "3.1" }), toKeep));
-      const Annee3Periode2 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "3.2" }), toKeep));
-      const Annee4Periode1 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "4.1" }), toKeep));
-      const Annee4Periode2 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "4.2" }), toKeep));
+      const annee1Periode1 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "1.1" }), toKeep));
+      const annee1Periode2 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "1.2" }), toKeep));
+      const annee2Periode1 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "2.1" }), toKeep));
+      const annee2Periode2 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "2.2" }), toKeep));
+      const annee3Periode1 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "3.1" }), toKeep));
+      const annee3Periode2 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "3.2" }), toKeep));
+      const annee4Periode1 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "4.1" }), toKeep));
+      const annee4Periode2 = convertInside(pick(find(cerfa.contrat.remunerationsAnnuelles, { ordre: "4.2" }), toKeep));
 
       const remunerationsAnnuellesStructurees = {
-        ...(Object.keys(Annee1Periode1).length > 0 ? { Annee1Periode1 } : {}),
-        ...(Object.keys(Annee1Periode2).length > 0 ? { Annee1Periode2 } : {}),
-        ...(Object.keys(Annee2Periode1).length > 0 ? { Annee2Periode1 } : {}),
-        ...(Object.keys(Annee2Periode2).length > 0 ? { Annee2Periode2 } : {}),
-        ...(Object.keys(Annee3Periode1).length > 0 ? { Annee3Periode1 } : {}),
-        ...(Object.keys(Annee3Periode2).length > 0 ? { Annee3Periode2 } : {}),
-        ...(Object.keys(Annee4Periode1).length > 0 ? { Annee4Periode1 } : {}),
-        ...(Object.keys(Annee4Periode2).length > 0 ? { Annee4Periode2 } : {}),
+        ...(Object.keys(annee1Periode1).length > 0 ? { annee1Periode1 } : {}),
+        ...(Object.keys(annee1Periode2).length > 0 ? { annee1Periode2 } : {}),
+        ...(Object.keys(annee2Periode1).length > 0 ? { annee2Periode1 } : {}),
+        ...(Object.keys(annee2Periode2).length > 0 ? { annee2Periode2 } : {}),
+        ...(Object.keys(annee3Periode1).length > 0 ? { annee3Periode1 } : {}),
+        ...(Object.keys(annee3Periode2).length > 0 ? { annee3Periode2 } : {}),
+        ...(Object.keys(annee4Periode1).length > 0 ? { annee4Periode1 } : {}),
+        ...(Object.keys(annee4Periode2).length > 0 ? { annee4Periode2 } : {}),
       };
 
       const contratAgecap = {
@@ -69,7 +69,7 @@ module.exports = (components) => {
           caisseComplementaire: "NA",
           regimeSpecifique: cerfa.employeur.regimeSpecifique,
           codeIdcc: cerfa.employeur.codeIdcc,
-          libelleidcc: cerfa.employeur.libelleIdcc,
+          libelleIdcc: cerfa.employeur.libelleIdcc,
           telephone: cerfa.employeur.telephone.replace("+33", "0"), // TO CONVERT   + => 00
           courriel: cerfa.employeur.courriel,
           adresse: {
@@ -89,14 +89,14 @@ module.exports = (components) => {
           sexe: cerfa.apprenti.sexe === "M" ? 1 : 2,
           nationalite: cerfa.apprenti.nationalite,
           dateNaissance: convertDate(cerfa.apprenti.dateNaissance),
-          departementNaissance: cerfa.apprenti.departementNaissance,
+          departementNaissance: cerfa.apprenti.departementNaissance.padStart(3, "0"),
           communeNaissance: cerfa.apprenti.communeNaissance,
           regimeSocial: cerfa.apprenti.regimeSocial,
           sportifEntraineurArbitreJugeHautNiveau: cerfa.apprenti.inscriptionSportifDeHautNiveau,
           handicap: cerfa.apprenti.handicap,
           situationAvantContrat: cerfa.apprenti.situationAvantContrat,
           diplome: cerfa.apprenti.diplome,
-          derniereClasse: cerfa.apprenti.derniereClasse,
+          derniereClasse: `${cerfa.apprenti.derniereClasse}`,
           diplomePrepare: cerfa.apprenti.diplomePrepare,
           intituleDiplomePrepare: cerfa.apprenti.intituleDiplomePrepare,
           apprentiMineurNonEmancipe: cerfa.apprenti.apprentiMineurNonEmancipe,
