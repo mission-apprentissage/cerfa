@@ -31,6 +31,7 @@ services:
       - ./server/src:/app/src # Allows source folders to be watched
       - ./server/config:/app/config
       - cerfa_server_data:/data
+      - ./server/agecap:/data/agecap
     environment:
       - CERFA_ENV=dev
       - CERFA_LOG_LEVEL=debug
