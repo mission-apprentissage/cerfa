@@ -1,3 +1,10 @@
+# [1.14.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.5...v1.14.0-beta.6) (2022-01-20)
+
+
+### Bug Fixes
+
+* Envoi vers AGECAP api  ([#131](https://github.com/mission-apprentissage/cerfa/issues/131)) ([56721c7](https://github.com/mission-apprentissage/cerfa/commit/56721c7821cf2094e0416b8de172779530463e9d))
+
 # [1.14.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.4...v1.14.0-beta.5) (2022-01-20)
 
 
