@@ -275,7 +275,7 @@ export function useCerfaApprenti() {
   );
 
   const resetInDbResponsableLegalData = useCallback(
-    async (prevDataToSave, reset, skipKey) => {
+    async (prevDataToSave, reset, skipKey, majeur) => {
       let dataToSave = prevDataToSave;
       if (reset) {
         dataToSave = {
@@ -283,7 +283,11 @@ export function useCerfaApprenti() {
           apprenti: {
             ...dataToSave.apprenti,
             apprentiMineurNonEmancipe:
-              skipKey === "apprentiMineurNonEmancipe" ? dataToSave.apprenti.apprentiMineurNonEmancipe : null,
+              skipKey === "apprentiMineurNonEmancipe"
+                ? dataToSave.apprenti.apprentiMineurNonEmancipe
+                : majeur
+                ? false
+                : null,
             responsableLegal: {
               nom: null,
               prenom: null,
@@ -461,7 +465,12 @@ export function useCerfaApprenti() {
               };
             }
 
-            dataToSave = await resetInDbResponsableLegalData(dataToSave, data.age >= 18);
+            dataToSave = await resetInDbResponsableLegalData(
+              dataToSave,
+              apprentiAge.value >= 18,
+              null,
+              apprentiAge.value >= 18
+            );
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
