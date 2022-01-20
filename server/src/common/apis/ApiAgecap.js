@@ -6,6 +6,9 @@ const apiRateLimiter = require("./_apiRateLimiter");
 const https = require("https");
 const fs = require("fs");
 const FormData = require("form-data");
+const { getFromStorage } = require("../utils/ovhUtils");
+const { compose } = require("oleoduc");
+const { PassThrough } = require("stream");
 
 const CERT_PATH = "/data/agecap";
 
@@ -28,9 +31,10 @@ const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
 });
 
 class ApiAgecap {
-  constructor() {
+  constructor(crypto) {
     this.token = "";
     this.auth = false;
+    this.crypto = crypto;
   }
   authenticate() {
     return executeWithRateLimiting(async (client) => {
@@ -71,12 +75,15 @@ class ApiAgecap {
       if (!this.auth) {
         throw new ApiError("Api Agecap", `Not authenticate`);
       }
-      const formData = new FormData();
 
-      // TODO SEND POST multiPart/form-data
-      // const stream = await getFromStorage(document.cheminFichier);
-      // formData.append(`${document.nomFichier}`, fs.createReadStream(FILE));
-      // await oleoduc(stream, crypto.isCipherAvailable() ? crypto.decipher(dossierId) : noop(), res);
+      const formData = new FormData();
+      formData.append(
+        `${document.nomFichier}`,
+        compose(
+          await getFromStorage(document.cheminFichier),
+          this.crypto.isCipherAvailable() ? this.crypto.decipher(dossierId) : new PassThrough()
+        )
+      );
 
       try {
         logger.debug(`[Agecap API] send document`);
@@ -95,5 +102,4 @@ class ApiAgecap {
   }
 }
 
-const apiAgecap = new ApiAgecap();
-module.exports = apiAgecap;
+module.exports = ApiAgecap;
