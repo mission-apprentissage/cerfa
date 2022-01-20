@@ -236,7 +236,11 @@ module.exports = (components) => {
         console.log(error);
       }
 
-      // await apiAgecap.sendDocument(dossierId, document)
+      // try {
+      //   await apiAgecap.sendDocument(dossierId, dossier.documents[0]);
+      // } catch (error) {
+      //   console.log(error);
+      // }
 
       return res.json(contratAgecap);
     })

@@ -485,7 +485,7 @@ export function useCerfaFormation() {
                 denomination: newV.organismeFormation.denomination.value,
                 uaiCfa: newV.organismeFormation.uaiCfa.value || null,
                 adresse: {
-                  numero: newV.organismeFormation.adresse.numero.value,
+                  numero: normalizeInputNumberForDb(newV.organismeFormation.adresse.numero.value),
                   voie: newV.organismeFormation.adresse.voie.value,
                   complement: newV.organismeFormation.adresse.complement.value,
                   codePostal: newV.organismeFormation.adresse.codePostal.value,
