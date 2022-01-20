@@ -1,3 +1,10 @@
+# [1.14.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.7...v1.14.0-beta.8) (2022-01-20)
+
+
+### Bug Fixes
+
+* correctif agacep api ([#140](https://github.com/mission-apprentissage/cerfa/issues/140)) ([ef55fee](https://github.com/mission-apprentissage/cerfa/commit/ef55feeaaca536c016c169b4c89ca3469735419b))
+
 # [1.14.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.6...v1.14.0-beta.7) (2022-01-20)
 
 
