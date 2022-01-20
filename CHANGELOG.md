@@ -1,3 +1,10 @@
+# [1.14.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.8...v1.14.0-beta.9) (2022-01-20)
+
+
+### Bug Fixes
+
+* remise à zero de "mineur non emancipe" si l'apprenti est majeur ([86bf775](https://github.com/mission-apprentissage/cerfa/commit/86bf7757909c23d13f2f2721366498906eda3373))
+
 # [1.14.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.7...v1.14.0-beta.8) (2022-01-20)
 
 
