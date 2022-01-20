@@ -12,12 +12,14 @@ import {
   Spinner,
   useDisclosure,
   Link,
+  UnorderedList,
+  ListItem,
 } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps-rework-mna";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { useSetRecoilState, useRecoilValueLoadable } from "recoil";
-import { hasContextAccessTo } from "../../common/utils/rolesUtils";
-import { _put } from "../../common/httpClient";
+import { useSetRecoilState, useRecoilValueLoadable, useRecoilValue } from "recoil";
+import { hasContextAccessTo, hasPageAccessTo } from "../../common/utils/rolesUtils";
+import { _put, _post } from "../../common/httpClient";
 import useAuth from "../../common/hooks/useAuth";
 import PromptModal from "../../common/components/Modals/PromptModal";
 // import { betaVersion, BetaFeatures } from "../../common/components/BetaFeatures";
@@ -32,7 +34,7 @@ import LivePeopleAvatar from "./components/LivePeopleAvatar";
 import { useDossier } from "../../common/hooks/useDossier/useDossier";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
 // import { dossierAtom } from "../../common/hooks/useDossier/dossierAtom";
-// import { cerfaAtom } from "../../common/hooks/useCerfa/cerfaAtom";
+import { cerfaAtom } from "../../common/hooks/useCerfa/cerfaAtom";
 import { AvatarPlus, StepWip, TickBubble, DownloadLine } from "../../theme/components/icons";
 
 import { documentsCompletionAtom } from "../../common/hooks/useDossier/documentsAtoms";
@@ -99,8 +101,8 @@ const stepByPath = ["cerfa", "documents", "signatures", "etat"];
 // };
 
 const EndModal = ({ dossier, ...modal }) => {
-  // const setDossier = useSetRecoilState(dossierAtom);
-  // const setCerfa = useSetRecoilState(cerfaAtom);
+  const cerfa = useRecoilValue(cerfaAtom);
+  const [ddets, setDdets] = useState(null);
 
   let onReplyClicked = useCallback(
     async (answer) => {
@@ -108,8 +110,6 @@ const EndModal = ({ dossier, ...modal }) => {
         await _put(`/api/v1/dossier/entity/${dossier._id}/publish`, {
           dossierId: dossier._id,
         });
-        // setDossier(publish.dossier);
-        // setCerfa(publish.cerfa);
         window.location.reload();
       } catch (e) {
         console.error(e);
@@ -117,6 +117,20 @@ const EndModal = ({ dossier, ...modal }) => {
     },
     [dossier._id]
   );
+
+  useEffect(() => {
+    const run = async () => {
+      const code_region = cerfa.employeur.adresse.region.value;
+      const code_dpt = cerfa.employeur.adresse.departement.value;
+      const response = await _post(`/api/v1/dreetsddets/`, {
+        code_region,
+        code_dpt,
+        dossierId: dossier._id,
+      });
+      setDdets(response.ddets);
+    };
+    run();
+  }, [cerfa, dossier._id]);
 
   return (
     <>
@@ -141,6 +155,24 @@ const EndModal = ({ dossier, ...modal }) => {
           <br />
           Vous pourrez par la suite, télécharger le contrat généré.
         </Text>
+        {ddets && (
+          <Box mt={8}>
+            <Text fontWeight="bold" mb={5}>
+              DDETS destinataire du contrat
+            </Text>
+            <UnorderedList ml="30px !important">
+              <ListItem>{ddets.DDETS}</ListItem>
+              <ListItem>
+                Email de dépôt: <strong>{ddets["Mail_depot"]}</strong>
+              </ListItem>
+              <ListItem>Téléphone: {ddets["Telephone"]}</ListItem>
+              <ListItem>
+                Informations complémentaires:
+                <br /> {ddets["Informations_complementaires"]}
+              </ListItem>
+            </UnorderedList>
+          </Box>
+        )}
       </PromptModal>
     </>
   );
@@ -248,6 +280,17 @@ export default () => {
     prevStep();
   }, [activeStep, cerfaComplete, prevStep, step1Visited, stepStateSteps23]);
 
+  let onSendToAgecap = useCallback(async () => {
+    try {
+      const response = await _post(`/api/v1/agecap/`, {
+        dossierId: dossier._id,
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dossier?._id]);
+
   if (!isloaded)
     return (
       <Center>
@@ -264,7 +307,7 @@ export default () => {
   return (
     <Box w="100%" px={[1, 1, 6, 6]}>
       {/* <AskBetaTest /> */}
-      <EndModal {...endModal} dossier={dossier} />
+      {endModal.isOpen && <EndModal {...endModal} dossier={dossier} />}
       <AcknowledgeModal
         title="Vous êtes employeur privé"
         isOpen={
@@ -415,25 +458,44 @@ export default () => {
               </Button>
             )}
             {activeStep === steps.length - 1 && !dossier.draft && (
-              <Button
-                as={Link}
-                href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?workspaceId=${auth.workspaceId}&dossierId=${dossier._id}`}
-                isExternal
-                size="md"
-                variant="primary"
-                bg="greenmedium.500"
-                _hover={{ bg: "greenmedium.600" }}
-                color="white"
-                isDisabled={
-                  !signaturesComplete ||
-                  employeurPrivePublic?.contents?.value === "Employeur privé" ||
-                  !signaturesPdfLoaded?.contents
-                }
-                borderRadius={0}
-              >
-                <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
-                Télécharger le pdf
-              </Button>
+              <>
+                <Button
+                  as={Link}
+                  href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?workspaceId=${auth.workspaceId}&dossierId=${dossier._id}`}
+                  isExternal
+                  size="md"
+                  variant="primary"
+                  bg="greenmedium.500"
+                  _hover={{ bg: "greenmedium.600" }}
+                  color="white"
+                  isDisabled={
+                    !signaturesComplete ||
+                    employeurPrivePublic?.contents?.value === "Employeur privé" ||
+                    !signaturesPdfLoaded?.contents
+                  }
+                  borderRadius={0}
+                >
+                  <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
+                  Télécharger le pdf
+                </Button>
+                {hasPageAccessTo(auth, "dossier/send_agecap") && (
+                  <Button
+                    size="md"
+                    onClick={onSendToAgecap}
+                    variant="primary"
+                    ml={12}
+                    isDisabled={
+                      !signaturesComplete ||
+                      employeurPrivePublic?.contents?.value === "Employeur privé" ||
+                      !signaturesPdfLoaded?.contents
+                    }
+                    bg="greenmedium.500"
+                    _hover={{ bg: "greenmedium.600" }}
+                  >
+                    Télétransmettre vers Agecap
+                  </Button>
+                )}
+              </>
             )}
           </Flex>
         </Flex>

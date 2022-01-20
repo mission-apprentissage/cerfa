@@ -31,7 +31,7 @@ const FormEmployer = ({ onFetched }) => {
         libelleIdcc,
         telephone,
         courriel,
-        adresse: { numero, voie, complement, codePostal, commune, departement },
+        adresse: { numero, voie, complement, codePostal, commune, departement, region },
         typeEmployeur,
         employeurSpecifique,
         // caisseComplementaire,
@@ -60,6 +60,7 @@ const FormEmployer = ({ onFetched }) => {
           codePostal: onSubmittedEmployeurAdresseCodePostal,
           commune: onSubmittedEmployeurAdresseCommune,
           departement: onSubmittedEmployeurAdresseDepartement,
+          region: onSubmittedEmployeurAdresseRegion,
         },
       },
     },
@@ -149,7 +150,6 @@ const FormEmployer = ({ onFetched }) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedEmployeurAdresseDepartement}
-            // throttleTime={0}
             hasInfo={false}
             onAsyncData={{
               dateDebutContrat: dateDebutContrat?.value,
@@ -158,6 +158,14 @@ const FormEmployer = ({ onFetched }) => {
               apprentiDateNaissance: apprentiDateNaissance?.value,
               apprentiAge: apprentiAge?.value,
             }}
+          />
+          <InputCerfa
+            path="employeur.adresse.region"
+            field={region}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurAdresseRegion}
+            hasInfo={false}
           />
 
           <InputCerfa

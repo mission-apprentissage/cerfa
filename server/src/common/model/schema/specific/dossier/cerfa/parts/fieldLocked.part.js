@@ -61,6 +61,10 @@ const fieldLockedSchema = {
         type: Boolean,
         default: true,
       },
+      region: {
+        type: Boolean,
+        default: true,
+      },
     },
     nom: {
       type: Boolean,

@@ -11,6 +11,7 @@ const historySchema = require("./specific/dossier/cerfa/History");
 const permissionSchema = require("./specific/Permission");
 const workspaceSchema = require("./specific/Workspace");
 const categoriesJuridiqueSchema = require("./specific/CategoriesJuridique");
+const ddetsDreetsSchema = require("./specific/DdetsDreets");
 
 module.exports = {
   logSchema,
@@ -28,4 +29,5 @@ module.exports = {
   permissionSchema,
   workspaceSchema,
   categoriesJuridiqueSchema,
+  ddetsDreetsSchema,
 };

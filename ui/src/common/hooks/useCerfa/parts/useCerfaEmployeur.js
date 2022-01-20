@@ -187,7 +187,6 @@ export const CerfaEmployeurController = async (dossier) => {
           doAsyncActions: async (value, data) => {
             await new Promise((resolve) => setTimeout(resolve, 100));
             const result = await doAsyncCodePostalActions(value, data, dossier._id);
-
             if (result.successed) {
               if (data.apprentiDateNaissance !== "" && data.dateFinContrat !== "" && data.dateDebutContrat !== "") {
                 const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue, smicObj } =
@@ -336,6 +335,9 @@ export function useCerfaEmployeur() {
   const [employeurAdresseDepartement, setEmployeurAdresseDepartement] = useRecoilState(
     employeurAtoms.cerfaEmployeurAdresseDepartementAtom
   );
+  const [employeurAdresseRegion, setEmployeurAdresseRegion] = useRecoilState(
+    employeurAtoms.cerfaEmployeurAdresseRegionAtom
+  );
   const [employeurNom, setEmployeurNom] = useRecoilState(employeurAtoms.cerfaEmployeurNomAtom);
   const [employeurPrenom, setEmployeurPrenom] = useRecoilState(employeurAtoms.cerfaEmployeurPrenomAtom);
   const [employeurTypeEmployeur, setEmployeurTypeEmployeur] = useRecoilState(
@@ -390,6 +392,7 @@ export function useCerfaEmployeur() {
                 codePostal: { ...employeurAdresseCodePostal, value: data.code_postal || "", locked: false },
                 commune: { ...employeurAdresseCommune, value: data.commune_implantation_nom || "", locked: false },
                 departement: { ...employeurAdresseDepartement, value: data.num_departement || "", locked: false },
+                region: { ...employeurAdresseRegion, value: data.num_region || "", locked: false },
               },
               privePublic: {
                 ...employeurPrivePublic,
@@ -437,6 +440,7 @@ export function useCerfaEmployeur() {
           setEmployeurAdresseCodePostal(newV.employeur.adresse.codePostal);
           setEmployeurAdresseCommune(newV.employeur.adresse.commune);
           setEmployeurAdresseDepartement(newV.employeur.adresse.departement);
+          setEmployeurAdresseRegion(newV.employeur.adresse.region);
 
           setEmployeurPrivePublic(convertValueToOption(newV.employeur.privePublic));
 
@@ -456,6 +460,7 @@ export function useCerfaEmployeur() {
                 codePostal: newV.employeur.adresse.codePostal.value.trim(),
                 commune: newV.employeur.adresse.commune.value.trim(),
                 departement: newV.employeur.adresse.departement.value,
+                region: newV.employeur.adresse.region.value,
               },
             },
             isLockedField: {
@@ -472,6 +477,7 @@ export function useCerfaEmployeur() {
                   codePostal: false,
                   commune: false,
                   departement: false,
+                  region: false,
                 },
               },
             },
@@ -504,6 +510,7 @@ export function useCerfaEmployeur() {
       employeurAdresseComplement,
       employeurAdresseDepartement,
       employeurAdresseNumero,
+      employeurAdresseRegion,
       employeurAdresseVoie,
       employeurCodeIdcc,
       employeurDenomination,
@@ -517,6 +524,7 @@ export function useCerfaEmployeur() {
       setEmployeurAdresseComplement,
       setEmployeurAdresseDepartement,
       setEmployeurAdresseNumero,
+      setEmployeurAdresseRegion,
       setEmployeurAdresseVoie,
       setEmployeurCodeIdcc,
       setEmployeurDenomination,
@@ -759,6 +767,10 @@ export function useCerfaEmployeur() {
                   ...employeurAdresseDepartement,
                   value: data.departement,
                 },
+                region: {
+                  ...employeurAdresseRegion,
+                  value: data.region,
+                },
               },
             },
           };
@@ -766,6 +778,7 @@ export function useCerfaEmployeur() {
             setEmployeurAdresseCodePostal(newV.employeur.adresse.codePostal);
             setEmployeurAdresseCommune(newV.employeur.adresse.commune);
             setEmployeurAdresseDepartement(newV.employeur.adresse.departement);
+            setEmployeurAdresseRegion(newV.employeur.adresse.region);
 
             let dataToSave = {
               employeur: {
@@ -773,6 +786,7 @@ export function useCerfaEmployeur() {
                   codePostal: newV.employeur.adresse.codePostal.value.trim(),
                   commune: newV.employeur.adresse.commune.value.trim(),
                   departement: newV.employeur.adresse.departement.value.trim(),
+                  region: newV.employeur.adresse.departement.value.trim(),
                 },
               },
             };
@@ -800,9 +814,11 @@ export function useCerfaEmployeur() {
       employeurAdresseCodePostal,
       employeurAdresseCommune,
       employeurAdresseDepartement,
+      employeurAdresseRegion,
       setEmployeurAdresseCodePostal,
       setEmployeurAdresseCommune,
       setEmployeurAdresseDepartement,
+      setEmployeurAdresseRegion,
       dossier?._id,
       cerfa?.id,
       setPartEmployeurCompletionAtom,
@@ -820,7 +836,6 @@ export function useCerfaEmployeur() {
                 commune: {
                   ...employeurAdresseCommune,
                   value: data,
-                  // forceUpdate: false, // IF data = "" true
                 },
               },
             },
@@ -896,6 +911,40 @@ export function useCerfaEmployeur() {
       setPartEmployeurCompletionAtom,
       setRemunerations,
     ]
+  );
+
+  const onSubmittedEmployeurAdresseRegion = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "employeur.adresse.region") {
+          const newV = {
+            employeur: {
+              adresse: {
+                region: {
+                  ...employeurAdresseRegion,
+                  value: data,
+                },
+              },
+            },
+          };
+          if (employeurAdresseRegion.value !== newV.employeur.adresse.region.value) {
+            setEmployeurAdresseRegion(newV.employeur.adresse.region);
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              employeur: {
+                adresse: {
+                  region: newV.employeur.adresse.region.value,
+                },
+              },
+            });
+            setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [employeurAdresseRegion, setEmployeurAdresseRegion, dossier?._id, cerfa?.id, setPartEmployeurCompletionAtom]
   );
 
   const onSubmittedEmployeurTypeEmployeur = useCallback(
@@ -1173,6 +1222,8 @@ export function useCerfaEmployeur() {
     setEmployeurAdresseCodePostal(res.employeur.adresse.codePostal);
     setEmployeurAdresseCommune(res.employeur.adresse.commune);
     setEmployeurAdresseDepartement(res.employeur.adresse.departement);
+    setEmployeurAdresseRegion(res.employeur.adresse.region);
+
     setEmployeurNom(res.employeur.nom);
     setEmployeurPrenom(res.employeur.prenom);
     setEmployeurTypeEmployeur(convertValueToMultipleSelectOption(res.employeur.typeEmployeur));
@@ -1206,6 +1257,7 @@ export function useCerfaEmployeur() {
           codePostal: employeurAdresseCodePostal,
           commune: employeurAdresseCommune,
           departement: employeurAdresseDepartement,
+          region: employeurAdresseRegion,
         },
         nom: employeurNom, //
         prenom: employeurPrenom, //
@@ -1239,6 +1291,7 @@ export function useCerfaEmployeur() {
           codePostal: onSubmittedEmployeurAdresseCodePostal,
           commune: onSubmittedEmployeurAdresseCommune,
           departement: onSubmittedEmployeurAdresseDepartement,
+          region: onSubmittedEmployeurAdresseRegion,
         },
       },
     },

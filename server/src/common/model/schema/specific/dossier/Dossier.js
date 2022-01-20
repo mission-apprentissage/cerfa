@@ -19,6 +19,18 @@ const dossierSchema = {
       return !this.draft;
     },
   },
+  dreets: {
+    type: Number,
+    description: "DREETS destinataire du contrat - code région d'exécution du contrat",
+    nullable: true,
+    default: null,
+  },
+  ddets: {
+    type: String,
+    description: "DDETS destinataire du contrat - code département d'éxécution du contrat",
+    nullable: true,
+    default: null,
+  },
   numeroExterne: {
     type: String,
     description: "Identifiant externe ou numéro de dossier (utilisé dans les communications entre le CFA et l'OPCO)",

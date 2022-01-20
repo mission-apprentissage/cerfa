@@ -21,6 +21,7 @@
     "playground": "node src/jobs/playground/index.js",
     "jobs": "node src/jobs/index.js",
     "categjurid:import": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/categJuridiqueImporter/index.js",
+    "dreetsddets:import": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/ddetsDreetsImporter/index.js",
     "agecap:api:test": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/agecap/index.js",
     "zipStorage": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/zipStorage.js",
     "clear": "node src/jobs/clear/index.js",

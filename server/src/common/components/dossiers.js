@@ -102,6 +102,22 @@ module.exports = async () => {
         { new: true }
       );
     },
+    updateDreetsDdets: async (id, dreets, ddets) => {
+      const found = await Dossier.findById(id).lean();
+
+      if (!found) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      return await Dossier.findOneAndUpdate(
+        { _id: id },
+        {
+          dreets,
+          ddets,
+        },
+        { new: true }
+      );
+    },
     getDocuments: async (id) => {
       const found = await Dossier.findById(id).lean();
 

@@ -10,6 +10,7 @@ const createRoles = require("./roles");
 const createClamav = require("./clamav");
 const createCrypto = require("./crypto");
 const createSessions = require("./session");
+const createDreetsDdets = require("./dreetsDdets");
 const config = require("../../config");
 
 module.exports = async (options = {}) => {
@@ -27,6 +28,7 @@ module.exports = async (options = {}) => {
   const clamav = options.clamav || (await createClamav(config.clamav.uri));
   const crypto = options.crypto || createCrypto(config.ovh.storage.encryptionKey);
   const sessions = options.session || (await createSessions());
+  const dreetsDdets = options.dreetsDdets || (await createDreetsDdets());
 
   return {
     users,
@@ -37,6 +39,7 @@ module.exports = async (options = {}) => {
     // below specific
     workspaces,
     dossiers,
+    dreetsDdets,
     connectionsDossiers,
     cerfas,
     permissions,

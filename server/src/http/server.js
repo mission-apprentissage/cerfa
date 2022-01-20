@@ -26,8 +26,10 @@ const history = require("./routes/specific/history");
 const siret = require("./routes/specific/siret");
 const geo = require("./routes/specific/geo");
 const naf = require("./routes/specific/naf");
+const dreetsDdets = require("./routes/specific/dreetsDdets");
 const cfdrncp = require("./routes/specific/cfdrncp");
 const signDocument = require("./routes/specific/signDocument");
+const agecap = require("./routes/specific/agecap");
 
 const supportPage = require("./routes/specific/supportPage");
 const pds = require("./routes/specific/pds");
@@ -78,8 +80,10 @@ module.exports = async (components) => {
   app.use("/api/v1/siret", siret(components));
   app.use("/api/v1/geo", checkJwtToken, geo(components));
   app.use("/api/v1/naf", checkJwtToken, naf(components));
+  app.use("/api/v1/dreetsddets", checkJwtToken, dreetsDdets(components));
   app.use("/api/v1/cfdrncp", checkJwtToken, cfdrncp(components));
   app.use("/api/v1/sign_document", checkJwtToken, signDocument(components));
+  app.use("/api/v1/agecap", checkJwtToken, pageAccessMiddleware(["dossier/send_agecap"]), agecap(components));
 
   app.get(
     "/api",

@@ -66,6 +66,7 @@ module.exports = async () => {
                 codePostal: true,
                 commune: true,
                 departement: true,
+                region: true,
               },
               siret: true,
               denomination: true,

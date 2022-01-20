@@ -154,6 +154,10 @@ export default [
           },
         ],
       },
+      {
+        feature: "Télétransmettre Agecap",
+        ref: "dossier/send_agecap",
+      },
     ],
   },
 ];

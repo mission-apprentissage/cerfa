@@ -76,9 +76,15 @@ module.exports = (components) => {
     "/entity/:id/publish",
     permissionsDossierMiddleware(components, ["dossier/publication"]),
     tryCatch(async ({ params }, res) => {
-      const dossier = await dossiers.publishDossier(params.id);
-
       const cerfa = await cerfas.findCerfaByDossierId(params.id);
+
+      await dossiers.updateDreetsDdets(
+        params.id,
+        parseInt(cerfa.employeur.adresse.region),
+        cerfa.employeur.adresse.departement
+      );
+
+      const dossier = await dossiers.publishDossier(params.id);
       await cerfas.publishCerfa(cerfa._id);
 
       return res.json({ publish: true, dossier, cerfa });

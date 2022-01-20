@@ -598,7 +598,7 @@ export default React.memo(
           <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>{label || field?.label}</FormLabel>
         )}
         <HStack>
-          <InputGroup>
+          <InputGroup id={`${name}_group_input`}>
             {type === "select" && (
               <Select
                 name={name}
@@ -690,6 +690,7 @@ export default React.memo(
               <Input
                 type={type}
                 name={name}
+                id={`${name}_input`}
                 onChange={!field?.inputmask ? eventHandler : handleChange}
                 value={values[name]}
                 required={isRequiredInternal}

@@ -58,6 +58,11 @@ module.exports = {
       schema.index({ CATEGJURID: 1 });
     },
   }),
+  DdetsDreets: createModel("ddetsDreets", schema.ddetsDreetsSchema, {
+    createMongoDBIndexes: (schema) => {
+      schema.index({ SIRET: 1, code_region: 1 });
+    },
+  }),
 
   // TODO
   Commentaire: createModel("commentaire", schema.commentaireSchema),

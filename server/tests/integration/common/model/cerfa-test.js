@@ -24,6 +24,7 @@ describe("Cerfa", () => {
           codePostal: "75000",
           commune: "PARIS",
           departement: "75",
+          region: "93",
         },
         nom: "LEFEVBRE",
         prenom: "MARTINE",

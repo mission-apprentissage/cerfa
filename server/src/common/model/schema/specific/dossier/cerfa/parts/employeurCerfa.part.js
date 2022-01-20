@@ -162,6 +162,19 @@ const employeurCerfaSchema = {
         return !this.draft;
       },
     },
+    region: {
+      type: String,
+      description: "Région de l'employeur",
+      label: "Région de l'employeur :",
+      example: "93 Provence-Alpes-Côte d'Azur",
+      requiredMessage: "la région de l'employeur est obligatoire",
+      validateMessage: ` n'est pas une région valide`,
+      default: null,
+      nullable: true,
+      required: function () {
+        return !this.draft;
+      },
+    },
   },
   nom: {
     maxLength: 200,

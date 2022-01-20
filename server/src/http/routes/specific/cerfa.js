@@ -211,6 +211,7 @@ module.exports = (components) => {
             codePostal: Joi.string().allow(""),
             commune: Joi.string().allow(""),
             departement: Joi.string(),
+            region: Joi.string(),
           }),
           nom: Joi.string(),
           prenom: Joi.string(),
