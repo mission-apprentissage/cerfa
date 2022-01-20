@@ -1,3 +1,10 @@
+# [1.14.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.4...v1.14.0-beta.5) (2022-01-20)
+
+
+### Features
+
+* rapide implementation region + ddets dreets ([96e8cf8](https://github.com/mission-apprentissage/cerfa/commit/96e8cf8a07efdc6fe04c6c72aebb615b36d4781e))
+
 # [1.14.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.3...v1.14.0-beta.4) (2022-01-19)
 
 
