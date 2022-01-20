@@ -500,6 +500,7 @@ const apprentiSchema = {
         complement: null,
         codePostal: null,
         commune: null,
+        pays: null,
       },
     },
   },

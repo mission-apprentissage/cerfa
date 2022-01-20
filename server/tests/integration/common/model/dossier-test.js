@@ -9,6 +9,7 @@ describe("Dossier", () => {
       draft: false,
       documents: [
         {
+          documentId: "61e6e1897c887edc137e8f40",
           typeDocument: "CONVENTION_FORMATION",
           typeFichier: "pdf",
           nomFichier: "conventionFormation",

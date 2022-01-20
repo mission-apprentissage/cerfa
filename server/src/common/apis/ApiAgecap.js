@@ -3,17 +3,27 @@ const logger = require("../logger");
 const config = require("../../config");
 const ApiError = require("./_apiError");
 const apiRateLimiter = require("./_apiRateLimiter");
-
 const https = require("https");
 const fs = require("fs");
+const FormData = require("form-data");
+const { getFromStorage } = require("../utils/ovhUtils");
+const { compose } = require("oleoduc");
+const { PassThrough } = require("stream");
 
 const CERT_PATH = "/data/agecap";
 
-const httpsAgent = new https.Agent({
-  key: fs.readFileSync(`${CERT_PATH}/client-key.pem`),
-  cert: fs.readFileSync(`${CERT_PATH}/client-crt.pem`),
-  passphrase: config.agecap_passphrase,
-});
+let optAgent = {};
+
+try {
+  optAgent = {
+    key: fs.readFileSync(`${CERT_PATH}/client-key.pem`),
+    cert: fs.readFileSync(`${CERT_PATH}/client-crt.pem`),
+    passphrase: config.agecap_passphrase,
+  };
+} catch (e) {
+  console.log(e);
+}
+const httpsAgent = new https.Agent(optAgent);
 
 // Cf Documentation : Api Agecap
 const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
@@ -28,18 +38,75 @@ const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
 });
 
 class ApiAgecap {
+  constructor(crypto) {
+    this.token = "";
+    this.auth = false;
+    this.crypto = crypto;
+  }
   authenticate() {
     return executeWithRateLimiting(async (client) => {
+      if (this.auth) return true;
       try {
         logger.debug(`[Agecap API] Authenticate`);
         let response = await client.post(`authenticate`);
-        return response;
+        if (!response?.data?.token) {
+          throw new ApiError("Api Agecap", ` Authenticate: Something went wrong`);
+        }
+        this.token = response.data.token;
+        this.auth = true;
+        return true;
       } catch (e) {
         throw new ApiError("Api Agecap", `${e.message}`, e.code || e.response.status);
       }
     });
   }
+  sendContrat(contratAgecap) {
+    return executeWithRateLimiting(async (client) => {
+      if (!this.auth) {
+        throw new ApiError("Api Agecap", `Not authenticate`);
+      }
+      try {
+        logger.debug(`[Agecap API] send contrat`);
+        let response = await client.post(`contrats`, contratAgecap, {
+          headers: { Authorization: `Bearer ${this.token}` },
+        });
+
+        return response;
+      } catch (e) {
+        throw new ApiError("Api Agecap contrat", `${e.message}`, e.code || e.response.status);
+      }
+    });
+  }
+  sendDocument(dossierId, document) {
+    return executeWithRateLimiting(async (client) => {
+      if (!this.auth) {
+        throw new ApiError("Api Agecap", `Not authenticate`);
+      }
+
+      const formData = new FormData();
+      formData.append(
+        `${document.nomFichier}`,
+        compose(
+          await getFromStorage(document.cheminFichier),
+          this.crypto.isCipherAvailable() ? this.crypto.decipher(dossierId) : new PassThrough()
+        )
+      );
+
+      try {
+        logger.debug(`[Agecap API] send document`);
+        let response = await client.post(`contrats/${dossierId}/pj/${document.documentId}`, formData, {
+          headers: {
+            ...formData.getHeaders(),
+            Authorization: `Bearer ${this.token}`,
+          },
+        });
+
+        return response;
+      } catch (e) {
+        throw new ApiError("Api Agecap document", `${e.message}`, e.code || e.response.status);
+      }
+    });
+  }
 }
 
-const apiAgecap = new ApiAgecap();
-module.exports = apiAgecap;
+module.exports = ApiAgecap;
