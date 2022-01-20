@@ -12,11 +12,18 @@ const { PassThrough } = require("stream");
 
 const CERT_PATH = "/data/agecap";
 
-const httpsAgent = new https.Agent({
-  key: fs.readFileSync(`${CERT_PATH}/client-key.pem`),
-  cert: fs.readFileSync(`${CERT_PATH}/client-crt.pem`),
-  passphrase: config.agecap_passphrase,
-});
+let optAgent = {};
+
+try {
+  optAgent = {
+    key: fs.readFileSync(`${CERT_PATH}/client-key.pem`),
+    cert: fs.readFileSync(`${CERT_PATH}/client-crt.pem`),
+    passphrase: config.agecap_passphrase,
+  };
+} catch (e) {
+  console.log(e);
+}
+const httpsAgent = new https.Agent(optAgent);
 
 // Cf Documentation : Api Agecap
 const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
