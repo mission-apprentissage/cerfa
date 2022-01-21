@@ -4,6 +4,9 @@ const buildErrorLog = (rawError) => {
   let error;
   if (rawError.isBoom) {
     error = rawError;
+    if (rawError.output.payload.message === "Validation") {
+      error.output.payload.details = rawError.data;
+    }
   } else if (rawError.name === "ValidationError") {
     //This is a joi validation error
     error = Boom.badRequest("Erreur de validation");

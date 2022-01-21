@@ -1,33 +1,13 @@
 const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
-const {
-  cloneDeep,
-  mergeWith,
-  // set
-} = require("lodash");
+const { cloneDeep, mergeWith } = require("lodash");
 const merge = require("deepmerge");
 const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 const cerfaSchema = require("../../../common/model/schema/specific/dossier/cerfa/Cerfa");
 const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfaController");
-
-// const checkRequiredField = (cerfa) => {
-//   let result = {};
-//   const validationObj = new Cerfa(cerfa);
-//   const validatedModel = validationObj.validateSync();
-//   if (validatedModel) {
-//     const keys = Object.keys(validatedModel.errors);
-//     for (let i = 0; i < keys.length; i++) {
-//       const err = validatedModel.errors[keys[i]];
-//       if (err.kind === "required") {
-//         set(result, `${err.path}.isNotRequiredForm`, false);
-//       }
-//     }
-//   }
-//   return result;
-// };
 
 module.exports = (components) => {
   const router = express.Router();

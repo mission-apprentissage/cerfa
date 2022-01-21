@@ -98,6 +98,9 @@ const apprentiSchema = {
     nullable: true,
     default: null,
     example: 17,
+    required: function () {
+      return !this.draft;
+    },
   },
   departementNaissance: {
     enum: [null, ...departementEnum.map((d) => d.replace(/^(0){1,2}/, ""))],

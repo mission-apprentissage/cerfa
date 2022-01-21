@@ -110,7 +110,7 @@ const EndModal = ({ dossier, ...modal }) => {
         await _put(`/api/v1/dossier/entity/${dossier._id}/publish`, {
           dossierId: dossier._id,
         });
-        window.location.reload();
+        window.location.replace(window.location.pathname.replace(/\/[^/]*$/, "/signatures"));
       } catch (e) {
         console.error(e);
       }
@@ -135,7 +135,7 @@ const EndModal = ({ dossier, ...modal }) => {
   return (
     <>
       <PromptModal
-        title="Souhaitez-vous conclure ce dossier ?"
+        title="Souhaitez-vous terminer ce dossier ?"
         isOpen={modal.isOpen}
         onClose={modal.onClose}
         onOk={() => {
@@ -147,13 +147,15 @@ const EndModal = ({ dossier, ...modal }) => {
           modal.onClose();
         }}
         bgOverlay="rgba(0, 0, 0, 0.28)"
+        okText={"Oui, passer au téléchargement"}
+        koText={"Non, continuer l'édition"}
       >
         <Text mb={1}>
           Cette opération clôturera l'édition de ce dossier. Vous pourrez néanmoins le consulter à tout moment.
         </Text>
         <Text mb={1}>
           <br />
-          Vous pourrez par la suite, télécharger le contrat généré.
+          Vous pourrez par la suite, télécharger le contrat généré au format pdf.
         </Text>
         {ddets && (
           <Box mt={8}>
