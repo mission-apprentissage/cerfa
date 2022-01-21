@@ -53,6 +53,7 @@ const contratSchema = {
       return !this.draft;
     },
     label: "Type de contrat ou d'avenant",
+    requiredMessage: "le type de contrat ou d'avenant est obligatoire",
   },
   numeroContratPrecedent: {
     type: String,

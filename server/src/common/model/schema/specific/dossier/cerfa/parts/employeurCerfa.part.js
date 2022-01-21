@@ -7,7 +7,7 @@ const employeurCerfaSchema = {
     // maxLength: 80,
     type: String,
     description: "Dénomination de l'employeur",
-    label: "Nom et prénom ou dénomination :",
+    label: "Dénomination :",
     requiredMessage: "La dénomination de l'employeur est obligatoire",
     example: "ENERGIE 3000",
     default: null,
@@ -203,6 +203,7 @@ const employeurCerfaSchema = {
     nullable: true,
     default: null,
     label: "Type d'employeur :",
+    requiredMessage: "le type d'employeur est obligatoire",
     description:
       "**Type d'mployeur** :\r\n<br /> *Privé*\r\n<br /> 11 : Entreprise inscrite au répertoire des métiers ou au registre des entreprises pour l’Alsace-Moselle\r\n<br /> 12 : Entreprise inscrite uniquement au registre du commerce et des sociétés\r\n<br /> 13 : Entreprises dont les salariés relèvent de la mutualité sociale agricole\r\n<br /> 14 : Profession libérale\r\n<br /> 15 : Association\r\n<br /> 16 : Autre employeur privé\r\n<br /> *Public*\r\n<br /> 21 : Service de l’Etat (administrations centrales et leurs services déconcentrés de la fonction publique d’Etat)\r\n<br /> 22 : Commune\r\n<br /> 23 : Département\r\n<br /> 24 : Région\r\n<br /> 25 : Etablissement public hospitalier\r\n<br /> 26 : Etablissement public local d’enseignement\r\n<br /> 27 : Etablissement public administratif de l’Etat\r\n<br /> 28 : Etablissement public administratif local(y compris établissement public de coopération intercommunale EPCI)\r\n<br /> 29 : Autre employeur public",
 

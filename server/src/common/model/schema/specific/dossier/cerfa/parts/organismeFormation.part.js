@@ -6,6 +6,7 @@ const organismeFormationSchema = {
     type: String,
     description: "Nom de l'organisme de formation responsable",
     label: "Dénomination du CFA responsable :",
+    requiredMessage: "la dénomination du CFA responsable est obligatoire",
     example: "CFA",
     default: null,
     required: function () {

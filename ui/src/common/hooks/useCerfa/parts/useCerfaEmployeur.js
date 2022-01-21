@@ -410,7 +410,7 @@ export function useCerfaEmployeur() {
               libelleIdcc: {
                 ...employeurLibelleIdcc,
                 value: data.conventionCollective?.titre || "",
-                locked: false,
+                // locked: false,
               },
               nombreDeSalaries: {
                 ...employeurNombreDeSalaries,
@@ -472,7 +472,7 @@ export function useCerfaEmployeur() {
                 denomination: false,
                 naf: false,
                 codeIdcc: false,
-                libelleIdcc: false,
+                // libelleIdcc: false,
                 nombreDeSalaries: false,
                 adresse: {
                   numero: false,
@@ -985,6 +985,7 @@ export function useCerfaEmployeur() {
 
   const onSubmittedEmployeurEmployeurSpecifique = useCallback(
     async (path, data) => {
+      console.log(data);
       try {
         if (path === "employeur.employeurSpecifique") {
           const newV = {
@@ -1001,7 +1002,7 @@ export function useCerfaEmployeur() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {
-                employeurSpecifique: convertOptionToValue(newV.employeur.employeurSpecifique),
+                employeurSpecifique: convertOptionToValue(newV.employeur.employeurSpecifique) || 0,
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));

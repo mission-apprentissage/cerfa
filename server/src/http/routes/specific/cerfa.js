@@ -284,7 +284,7 @@ module.exports = (components) => {
           lieuSignatureContrat: Joi.string(),
           typeDerogation: Joi.number().allow(null),
           dureeTravailHebdoHeures: Joi.number(),
-          dureeTravailHebdoMinutes: Joi.number(),
+          dureeTravailHebdoMinutes: Joi.number().allow(null),
           travailRisque: Joi.boolean(),
           salaireEmbauche: Joi.number(),
           caisseRetraiteComplementaire: Joi.string().allow(""),

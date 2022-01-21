@@ -45,6 +45,7 @@ const apprentiSchema = {
     type: String,
     label: "Sexe :",
     description: "**Sexe de l'apprenti**\r\n<br />M : Homme\r\n<br />F : Femme",
+    requiredMessage: "le sexe de l'apprenti(e) est obligatoire",
     options: [
       {
         label: "M : Homme",
@@ -64,6 +65,7 @@ const apprentiSchema = {
       return !this.draft;
     },
     label: "Nationalité :",
+    requiredMessage: "la nationalité de l'apprenti(e) est obligatoire",
     description:
       "**Nationalité** :\r\n<br />1 : Française\r\n<br />2 : Union Européenne\r\n<br />3 : Etranger hors Union Européenne",
     options: [
@@ -170,6 +172,7 @@ const apprentiSchema = {
     },
     description: "**Régime social** :\r\n<br />1 : MSA\r\n<br />2 : URSSAF",
     label: "Régime social :",
+    requiredMessage: "le régime social de l'apprenti(e) est obligatoire",
     options: [
       {
         label: "1 MSA",
@@ -209,6 +212,7 @@ const apprentiSchema = {
       return !this.draft;
     },
     label: "Situation avant ce contrat :",
+    requiredMessage: "la situation social avant ce contrat de l'apprenti(e) est obligatoire",
     options: [
       {
         label: "1 Scolaire",
@@ -267,6 +271,7 @@ const apprentiSchema = {
   diplome: {
     ...diplomeSchema,
     label: "Diplôme ou titre le plus élevé obtenu :",
+    requiredMessage: "le diplôme ou titre le plus élevé obtenu par l'apprenti(e) est obligatoire",
     default: null,
     required: function () {
       return !this.draft;
@@ -280,6 +285,7 @@ const apprentiSchema = {
       return !this.draft;
     },
     label: "Dernière classe / année suivie :",
+    requiredMessage: "la dernière classe / année suivie par l'apprenti(e) est obligatoire",
     description:
       "**Dernière année ou classe suivie par l'apprenti** :\r\n<br /> 1 : l'apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre\r\n<br /> 11 : l’apprenti a suivi la 1ère année du cycle et l’a validée (examens réussis mais année non diplômante)\r\n<br /> 12 : l’apprenti a suivi la 1ère année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 21 : l’apprenti a suivi la 2è année du cycle et l’a validée (examens réussis mais année non diplômante)\r\n<br /> 22 : l’apprenti a suivi la 2è année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 31 : l’apprenti a suivi la 3è année du cycle et l’a validée (examens réussis mais année non diplômante, cycle adapté)\r\n<br /> 32 : l’apprenti a suivi la 3è année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 40 : l’apprenti a achevé le 1er cycle de l’enseignement secondaire (collège)\r\n<br /> 41 : l’apprenti a interrompu ses études en classe de 3è\r\n<br /> 42 : l’apprenti a interrompu ses études en classe de 4è",
     options: [
@@ -334,6 +340,7 @@ const apprentiSchema = {
   diplomePrepare: {
     ...diplomeSchema,
     label: "Dernier diplôme ou titre préparé :",
+    requiredMessage: "le dernier diplôme ou titre préparé par l'apprenti(e) est obligatoire",
     default: null,
     required: function () {
       return !this.draft;
@@ -383,6 +390,7 @@ const apprentiSchema = {
       message: (props) => `${props.value} n'est pas un courriel valide`,
     },
     example: "jf.martin@orange.fr",
+    requiredMessage: "le courriel de l'apprenti(e) est obligatoire",
     default: null,
     required: function () {
       return !this.draft;
@@ -442,6 +450,7 @@ const apprentiSchema = {
         },
         description: "Nom du représentant légal",
         label: "Nom du représentant légal:",
+        requiredMessage: "le nom du représentant légal est obligatoire",
         example: "Honore",
       },
       prenom: {
@@ -453,6 +462,7 @@ const apprentiSchema = {
         },
         description: "Prénom du représentant légal",
         label: "Prénom du représentant légal:",
+        requiredMessage: "le prénom du représentant légal est obligatoire",
         example: "Robert",
       },
       memeAdresse: {
