@@ -391,8 +391,8 @@ const apprentiSchema = {
   adresse: {
     ...adresseSchema,
     pays: {
-      enum: [null, ...paysEnum.map(({ value }) => value)],
-      default: "FRANCE",
+      enum: [null, ...paysEnum.map(({ code }) => code)],
+      default: "FR",
       type: String,
       description: "Pays",
       label: "Pays :",
@@ -400,9 +400,9 @@ const apprentiSchema = {
       required: function () {
         return !this.draft;
       },
-      options: paysEnum.map(({ label, value }) => ({
+      options: paysEnum.map(({ label, code }) => ({
         label: capitalize(label),
-        value,
+        value: code,
       })),
     },
   },

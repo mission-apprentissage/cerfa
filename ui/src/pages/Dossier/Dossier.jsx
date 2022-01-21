@@ -33,9 +33,8 @@ import LivePeopleAvatar from "./components/LivePeopleAvatar";
 
 import { useDossier } from "../../common/hooks/useDossier/useDossier";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
-// import { dossierAtom } from "../../common/hooks/useDossier/dossierAtom";
 import { cerfaAtom } from "../../common/hooks/useCerfa/cerfaAtom";
-import { AvatarPlus, StepWip, TickBubble, DownloadLine } from "../../theme/components/icons";
+import { AvatarPlus, StepWip, TickBubble, DownloadLine, SentPaperPlane } from "../../theme/components/icons";
 
 import { documentsCompletionAtom } from "../../common/hooks/useDossier/documentsAtoms";
 import { signaturesCompletionAtom, signaturesPdfLoadedAtom } from "../../common/hooks/useDossier/signaturesAtoms";
@@ -427,9 +426,11 @@ export default () => {
             })}
           </Steps>
           <Flex width="100%" justify="flex-start" mt={8} mb={10}>
-            <Button mr={4} size="md" variant="secondary" onClick={onClickPrevStep} isDisabled={activeStep === 0}>
-              Revenir
-            </Button>
+            {activeStep !== steps.length - 1 && dossier.draft && (
+              <Button mr={4} size="md" variant="secondary" onClick={onClickPrevStep} isDisabled={activeStep === 0}>
+                Revenir
+              </Button>
+            )}
 
             {activeStep < steps.length - 1 && (
               <Button
@@ -460,7 +461,7 @@ export default () => {
               </Button>
             )}
             {activeStep === steps.length - 1 && !dossier.draft && (
-              <>
+              <Center w="full">
                 <Button
                   as={Link}
                   href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?workspaceId=${auth.workspaceId}&dossierId=${dossier._id}`}
@@ -491,13 +492,14 @@ export default () => {
                       employeurPrivePublic?.contents?.value === "Employeur privé" ||
                       !signaturesPdfLoaded?.contents
                     }
-                    bg="greenmedium.500"
-                    _hover={{ bg: "greenmedium.600" }}
+                    bg="orangemedium.500"
+                    _hover={{ bg: "orangemedium.600" }}
                   >
+                    <SentPaperPlane boxSize="4" mr="0.5rem" />
                     Télétransmettre vers Agecap
                   </Button>
                 )}
-              </>
+              </Center>
             )}
           </Flex>
         </Flex>

@@ -2,8 +2,10 @@ const express = require("express");
 const Joi = require("joi");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
+const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const ApiAgecap = require("../../../common/apis/ApiAgecap");
 const { find, pick } = require("lodash");
+const Boom = require("boom");
 const { DateTime } = require("luxon");
 
 module.exports = (components) => {
@@ -58,6 +60,14 @@ module.exports = (components) => {
         ...(Object.keys(annee4Periode2).length > 0 ? { annee4Periode2 } : {}),
       };
 
+      const pjs = dossier.documents.map(({ documentId, nomFichier, typeFichier, typeDocument, hash }) => ({
+        identifiant: documentId,
+        nom: nomFichier,
+        format: typeFichier,
+        type: typeDocument,
+        checksum: hash,
+      }));
+
       const contratAgecap = {
         employeur: {
           denomination: cerfa.employeur.denomination,
@@ -96,7 +106,7 @@ module.exports = (components) => {
           handicap: cerfa.apprenti.handicap,
           situationAvantContrat: cerfa.apprenti.situationAvantContrat,
           diplome: cerfa.apprenti.diplome,
-          derniereClasse: `${cerfa.apprenti.derniereClasse}`,
+          derniereClasse: `${cerfa.apprenti.derniereClasse}`.padStart(2, "0"),
           diplomePrepare: cerfa.apprenti.diplomePrepare,
           intituleDiplomePrepare: cerfa.apprenti.intituleDiplomePrepare,
           apprentiMineurNonEmancipe: cerfa.apprenti.apprentiMineurNonEmancipe,
@@ -161,7 +171,8 @@ module.exports = (components) => {
           salaireEmbauche: cerfa.contrat.salaireEmbauche,
           avantageNourriture: cerfa.contrat.avantageNourriture || undefined,
           avantageLogement: cerfa.contrat.avantageLogement || undefined,
-          autreAvantageEnNature: cerfa.contrat.autreAvantageEnNature || undefined,
+          autreAvantageEnNature:
+            cerfa.contrat.autreAvantageEnNature !== null ? cerfa.contrat.autreAvantageEnNature : false,
           remunerationsAnnuellesStructurees,
 
           lieuSignatureContrat: cerfa.contrat.lieuSignatureContrat,
@@ -175,13 +186,7 @@ module.exports = (components) => {
             courrielContact: user.email,
             // commentaireTransmission
             // lien: "",
-            // pj: [{
-            //     identifiant: dossier.documents[0].documentId,
-            //     nom: dossier.documents[0].nomFichier,
-            //     format: dossier.documents[0].typeFichier,
-            //     type: dossier.documents[0].typeDocument,
-            //     checksum: dossier.documents[0].hash,
-            // }]
+            pj: pjs,
           },
         },
         formation: {
@@ -225,24 +230,42 @@ module.exports = (components) => {
         },
       };
 
-      ///////
+      /* Send to  Agecap */
       const apiAgecap = new ApiAgecap(crypto);
       await apiAgecap.authenticate();
 
+      let sendContratResponse = null;
+      let sendDocumentResponses = [];
+
       try {
-        const response = await apiAgecap.sendContrat(contratAgecap);
-        console.log(response);
+        sendContratResponse = await apiAgecap.sendContrat(contratAgecap);
       } catch (error) {
         console.log(error);
+        throw Boom.badRequest("Doesn't exist", error);
       }
 
-      // try {
-      //   await apiAgecap.sendDocument(dossierId, dossier.documents[0]);
-      // } catch (error) {
-      //   console.log(error);
-      // }
+      if (contratAgecap.detailsContrat.infoTransmission.pj.length > 0 && sendContratResponse.status === 201) {
+        let hasError = false;
+        await asyncForEach(dossier.documents, async (document) => {
+          try {
+            const sendDocumentResponse = await apiAgecap.sendDocument(dossierId, document);
+            sendDocumentResponses.push({
+              documentId: document.documentId,
+              data: sendDocumentResponse.data,
+            });
+          } catch (error) {
+            console.log(error);
+            hasError = true;
+            sendDocumentResponses.push({
+              documentId: document.documentId,
+              data: error,
+            });
+          }
+        });
+        if (hasError) throw Boom.badRequest("Doesn't exist", sendDocumentResponses);
+      }
 
-      return res.json(contratAgecap);
+      return res.json({ contrat: sendContratResponse.data, documents: sendDocumentResponses });
     })
   );
 
