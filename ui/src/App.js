@@ -107,10 +107,10 @@ const ForceAcceptCGU = ({ children }) => {
             )}
             {auth.cgu && (
               <Text fontSize="1.1rem" fontWeight="bold">
-                Nos conditions générale d'utilisation ont changées depuis votre dernières visite. ({auth.cgu} ->{" "}
+                Nos conditions générales d'utilisation ont changé depuis votre dernières visite. ({auth.cgu} ->{" "}
                 {cguVersion()}) <br />
                 <br />
-                Merci de lire attentivement les conditions générale d'utilisation avant de les accepter.
+                Merci de lire attentivement les conditions générales d'utilisation avant de les accepter.
               </Text>
             )}
           </Box>
