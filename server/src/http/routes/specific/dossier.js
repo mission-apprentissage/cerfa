@@ -84,8 +84,8 @@ module.exports = (components) => {
         cerfa.employeur.adresse.departement
       );
 
-      const dossier = await dossiers.publishDossier(params.id);
       await cerfas.publishCerfa(cerfa._id);
+      const dossier = await dossiers.publishDossier(params.id);
 
       return res.json({ publish: true, dossier, cerfa });
     })

@@ -2,6 +2,25 @@ const { Cerfa } = require("../model/index");
 const { mongoose } = require("../../common/mongodb");
 const Joi = require("joi");
 const Boom = require("boom");
+const { set, get } = require("lodash");
+const cerfaSchema = require("../model/schema/specific/dossier/cerfa/Cerfa");
+
+const buildErrorResult = (validatedModel) => {
+  let result = { reason: "" };
+  if (validatedModel) {
+    const keys = Object.keys(validatedModel.errors);
+    for (let i = 0; i < keys.length; i++) {
+      const err = validatedModel.errors[keys[i]];
+      if (err.kind === "required") {
+        set(result, `${err.path}`, { ...get(cerfaSchema, `${err.path}`), isErrored: true });
+      }
+    }
+  }
+  if (result.apprenti?.apprentiMineurNonEmancipe) {
+    result.reason = "Nous avons détecté un problème sur l'âge de l'apprenti(e)";
+  }
+  return result;
+};
 
 module.exports = async () => {
   return {
@@ -38,16 +57,33 @@ module.exports = async () => {
 
       // eslint-disable-next-line no-unused-vars
       const { _id, __v, dossierId, ...cerfa } = found;
-      const validate = await Cerfa.create({
-        ...cerfa,
-        contrat: {
-          ...cerfa.contrat,
-          dateConclusion: new Date(),
-        },
-        dossierId: mongoose.Types.ObjectId().toString(),
-        draft: false,
-      });
-      await validate.delete();
+      let errorResult = null;
+      try {
+        const validate = await Cerfa.create({
+          ...cerfa,
+          contrat: {
+            ...cerfa.contrat,
+            dateConclusion: new Date(),
+          },
+          dossierId: mongoose.Types.ObjectId().toString(),
+          draft: false,
+        });
+        await validate.delete();
+      } catch (e) {
+        errorResult = buildErrorResult(e, cerfa);
+      }
+
+      if (errorResult) {
+        if (errorResult.apprenti?.apprentiMineurNonEmancipe) {
+          if (cerfa.apprenti.age >= 18) {
+            cerfa.apprenti.apprentiMineurNonEmancipe = false;
+          } else {
+            throw Boom.badData("Validation", errorResult);
+          }
+        } else {
+          throw Boom.badData("Validation", errorResult);
+        }
+      }
 
       return await Cerfa.findOneAndUpdate(
         { _id: id },
@@ -56,6 +92,9 @@ module.exports = async () => {
           contrat: {
             ...cerfa.contrat,
             dateConclusion: new Date(),
+          },
+          apprenti: {
+            ...cerfa.apprenti,
           },
           isLockedField: {
             employeur: {

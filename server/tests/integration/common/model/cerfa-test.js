@@ -41,6 +41,7 @@ describe("Cerfa", () => {
         sexe: "M",
         nationalite: 1,
         dateNaissance: "2001-01-01T00:00:00+0000",
+        age: 17,
         departementNaissance: "95",
         communeNaissance: "Bourg-en-Bresse",
         nir: "101010100100153",
