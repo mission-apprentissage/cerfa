@@ -1,3 +1,10 @@
+# [1.14.0-beta.12](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.11...v1.14.0-beta.12) (2022-01-21)
+
+
+### Bug Fixes
+
+* cgu orthographe ([#146](https://github.com/mission-apprentissage/cerfa/issues/146)) ([d025849](https://github.com/mission-apprentissage/cerfa/commit/d0258490112c97cb7615345c414043aba8e54f0a))
+
 # [1.14.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.10...v1.14.0-beta.11) (2022-01-21)
 
 
