@@ -7,7 +7,7 @@ const https = require("https");
 const fs = require("fs");
 const FormData = require("form-data");
 const { getFromStorage } = require("../utils/ovhUtils");
-const { compose } = require("oleoduc");
+const { oleoduc, writeData } = require("oleoduc");
 const { PassThrough } = require("stream");
 
 const CERT_PATH = "/data/agecap";
@@ -85,17 +85,23 @@ class ApiAgecap {
         throw new ApiError("Api Agecap", `Not authenticate`);
       }
 
-      const formData = new FormData();
-      formData.append(
-        `${document.nomFichier}`,
-        compose(
-          await getFromStorage(document.cheminFichier),
-          this.crypto.isCipherAvailable() ? this.crypto.decipher(dossierId) : new PassThrough()
-        )
+      const _buf = [];
+      await oleoduc(
+        await getFromStorage(document.cheminFichier),
+        this.crypto.isCipherAvailable() ? this.crypto.decipher(dossierId) : new PassThrough(),
+        writeData((chunk) => _buf.push(chunk))
       );
+
+      const formData = new FormData();
+      formData.append(`file`, Buffer.concat(_buf), {
+        filename: `${document.nomFichier}`,
+        contentType: "application/pdf",
+        knownLength: document.tailleFichier,
+      });
 
       try {
         logger.debug(`[Agecap API] send document`);
+
         let response = await client.post(`contrats/${dossierId}/pj/${document.documentId}`, formData, {
           headers: {
             ...formData.getHeaders(),
@@ -105,6 +111,8 @@ class ApiAgecap {
 
         return response;
       } catch (e) {
+        console.log(e);
+        console.log(e.response.data);
         throw new ApiError("Api Agecap document", `${e.message}`, e.code || e.response.status);
       }
     });
