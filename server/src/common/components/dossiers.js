@@ -282,6 +282,8 @@ module.exports = async () => {
         await removePermission(perm._id);
       }
 
+      // TODO remove documents as well !
+
       await Cerfa.deleteOne({ dossierId: found._id });
 
       return await Dossier.deleteOne({ _id });

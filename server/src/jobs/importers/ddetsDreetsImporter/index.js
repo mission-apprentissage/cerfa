@@ -1,6 +1,5 @@
 const csvToJson = require("convert-csv-to-json-latin");
-const logger = require("../../common/logger");
-const { runScript } = require("../scriptWrapper");
+const logger = require("../../../common/logger");
 const path = require("path");
 
 const cleanUpKeysAndValues = (obj) => {
@@ -42,6 +41,4 @@ const importer = async (db, assetsDir = path.join(__dirname, "./assets")) => {
   logger.info(`[DDETS DREETS Importer] Ended`);
 };
 
-runScript(async ({ db }) => {
-  await importer(db);
-});
+module.exports = importer;
