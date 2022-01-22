@@ -127,7 +127,8 @@ const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, 
 
   useEffect(() => {
     if (value !== "") setInternalValue(`${value}`);
-  }, [value]);
+    else if (internalValue !== "") setInternalValue("");
+  }, [internalValue, value]);
 
   let onComplete = useCallback(
     async (completValue) => {
