@@ -1,5 +1,5 @@
 import React, { lazy, useEffect } from "react";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, Center } from "@chakra-ui/react";
 import { useDocuments } from "../../../common/hooks/useDossier/useDocuments";
 import InputCerfa from "../Cerfa/components/Input";
 import Tooltip from "../../../common/components/Tooltip";
@@ -18,14 +18,16 @@ export default () => {
   }, [cerfa, isLoading, setAll]);
 
   return (
-    <Box mt={8} pt={2}>
+    <Box mt={12} pt={2} minH="25vh">
       {!typeContratApp?.valueDb && (
-        <Tooltip variant="alert">
-          <Text>
-            Veuillez renseigner <strong>le type de contrat</strong> dans le formulaire afin de déterminer quelle(s)
-            pièces justificatives sont nécessaires.
-          </Text>
-        </Tooltip>
+        <Center>
+          <Tooltip variant="alert">
+            <Text>
+              Veuillez renseigner <strong>le type de contrat</strong> dans le formulaire afin de déterminer quelle(s)
+              pièces justificatives sont nécessaires.
+            </Text>
+          </Tooltip>
+        </Center>
       )}
       {typeContratApp?.valueDb && typeContratApp?.valueDb !== "" && (
         <>

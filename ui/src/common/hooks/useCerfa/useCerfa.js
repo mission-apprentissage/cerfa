@@ -1,12 +1,8 @@
-// import { useEffect } from "react";
 import { _get, _put } from "../../httpClient";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useQuery } from "react-query";
 import { dossierAtom } from "../useDossier/dossierAtom";
-import {
-  cerfaAtom,
-  // cerfaIsLoadingAtom
-} from "./cerfaAtom";
+import { cerfaAtom } from "./cerfaAtom";
 import { CerfaFormationController, cerfaFormationCompletion } from "./parts/useCerfaFormation";
 import { CerfaEmployeurController, cerfaEmployeurCompletion } from "./parts/useCerfaEmployeur";
 import { CerfaApprentiController, cerfaApprentiCompletion } from "./parts/useCerfaApprenti";
@@ -194,7 +190,6 @@ export const saveCerfa = async (dossierId, cerfaId, data) => {
 export function useCerfa() {
   const dossier = useRecoilValue(dossierAtom);
   const [cerfa, setCerfa] = useRecoilState(cerfaAtom);
-  // const [isLoading, setIsLoading] = useRecoilState(cerfaIsLoadingAtom);
 
   const setPartFormationCompletionAtom = useSetRecoilState(cerfaPartFormationCompletionAtom);
   const setPartEmployeurCompletionAtom = useSetRecoilState(cerfaPartEmployeurCompletionAtom);
@@ -219,48 +214,9 @@ export function useCerfa() {
     },
     {
       refetchOnWindowFocus: false,
-      // refetchOnMount: false,
+      refetchOnMount: false,
     }
   );
-
-  // useEffect(() => {
-  //   const abortController = new AbortController();
-
-  //   hydrate(dossier)
-  //     .then((res) => {
-  //       if (!abortController.signal.aborted) {
-  //         setCerfa(res);
-
-  //         setPartFormationCompletionAtom(cerfaFormationCompletion(res));
-  //         setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
-  //         setPartApprentiCompletion(cerfaApprentiCompletion(res));
-  //         setPartMaitresCompletion(cerfaMaitresCompletion(res));
-  //         setPartContratCompletion(cerfaContratCompletion(res));
-  //         setIsLoading(false);
-  //       }
-  //     })
-  //     .catch((e) => {
-  //       if (!abortController.signal.aborted) {
-  //         // setError(e);
-  //       }
-  //     });
-  //   return () => {
-  //     abortController.abort();
-  //   };
-  // }, [
-  //   dossier,
-  //   setCerfa,
-  //   setIsLoading,
-  //   setPartApprentiCompletion,
-  //   setPartContratCompletion,
-  //   setPartEmployeurCompletionAtom,
-  //   setPartFormationCompletionAtom,
-  //   setPartMaitresCompletion,
-  // ]);
-
-  // if (error !== null) {
-  //   throw error;
-  // }
 
   return {
     isLoading,

@@ -32,7 +32,7 @@ import {
 import { cerfaEmployeurAdresseDepartementAtom } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import InputCerfa from "./Input";
 
-const FormContract = () => {
+const FormContract = React.memo(() => {
   const maitre1DateNaissance = useRecoilValue(cerfaMaitre1DateNaissanceAtom);
   const maitre2DateNaissance = useRecoilValue(cerfaMaitre2DateNaissanceAtom);
   const formationDateDebutFormation = useRecoilValue(cerfaFormationDateDebutFormationAtom);
@@ -467,9 +467,9 @@ const FormContract = () => {
               {smic?.isSmicException && (
                 <Text>
                   Calculé sur la base du SMIC {smic?.annee} pour{" "}
-                  <strong>{smic?.exceptions[employeurAdresseDepartement.value].nomDepartement}</strong> de{" "}
+                  <strong>{smic?.exceptions[employeurAdresseDepartement.value]?.nomDepartement}</strong> de{" "}
                   {smic?.selectedSmic}€ mensuel (
-                  {smic?.exceptions[employeurAdresseDepartement.value].heuresHebdomadaires}
+                  {smic?.exceptions[employeurAdresseDepartement.value]?.heuresHebdomadaires}
                   €/h) [Date d'entrée en vigueur {smic?.dateEntreeEnVigueur}]
                 </Text>
               )}
@@ -534,6 +534,6 @@ const FormContract = () => {
       </Box>
     </Box>
   );
-};
+});
 
 export default FormContract;

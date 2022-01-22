@@ -14,7 +14,7 @@ import {
 } from "../../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
 import InputCerfa from "./Input";
 
-const FormEmployer = ({ onFetched }) => {
+const FormEmployer = React.memo(({ onFetched }) => {
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
   const dateFinContrat = useRecoilValue(cerfaContratDateFinContratAtom);
   const remunerationsAnnuelles = useRecoilValue(cerfaContratRemunerationsAnnuellesAtom);
@@ -254,6 +254,6 @@ const FormEmployer = ({ onFetched }) => {
       </Flex>
     </Box>
   );
-};
+});
 
 export default FormEmployer;

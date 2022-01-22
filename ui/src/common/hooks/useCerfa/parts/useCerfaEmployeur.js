@@ -427,6 +427,7 @@ export function useCerfaEmployeur() {
 
           setEmployeurDenomination(newV.employeur.denomination);
           setEmployeurNaf(newV.employeur.naf);
+
           setEmployeurCodeIdcc(newV.employeur.codeIdcc);
 
           let libelleIdcc = newV.employeur.libelleIdcc.value;
@@ -553,7 +554,6 @@ export function useCerfaEmployeur() {
               denomination: {
                 ...employeurDenomination,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -624,7 +624,15 @@ export function useCerfaEmployeur() {
           if (employeurCodeIdcc.value !== newV.employeur.codeIdcc.value) {
             setEmployeurCodeIdcc(newV.employeur.codeIdcc);
 
-            if (newV.employeur.libelleIdcc !== "") setEmployeurLibelleIdcc(newV.employeur.libelleIdcc);
+            let libelleIdcc = newV.employeur.libelleIdcc.value;
+
+            if (libelleIdcc === "") {
+              const index = newV.employeur.codeIdcc.enum.indexOf(newV.employeur.codeIdcc.value);
+              if (index !== -1) {
+                libelleIdcc = employeurLibelleIdcc.enum[index];
+              }
+            }
+            setEmployeurLibelleIdcc({ ...newV.employeur.libelleIdcc, value: libelleIdcc });
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, {
               employeur: {

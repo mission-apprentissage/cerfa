@@ -6,7 +6,7 @@ import { useCerfaMaitres } from "../../../../common/hooks/useCerfa/parts/useCerf
 import { cerfaContratDateDebutContratAtom } from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 import InputCerfa from "./Input";
 
-const FormLearningMaster = () => {
+const FormLearningMaster = React.memo(() => {
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
   const {
     isLoading,
@@ -104,6 +104,6 @@ const FormLearningMaster = () => {
       />
     </Box>
   );
-};
+});
 
 export default FormLearningMaster;

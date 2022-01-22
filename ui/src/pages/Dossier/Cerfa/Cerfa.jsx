@@ -41,7 +41,7 @@ import FormLearningMaster from "./components/FormLearningMaster";
 import FormContract from "./components/FormContract";
 import FormFormation from "./components/FormFormation";
 
-export default () => {
+export default React.memo(() => {
   const { isLoading, isFetching } = useCerfa();
   const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
   const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
@@ -61,19 +61,8 @@ export default () => {
   //   !maitresIsLoading.contents &&
   //   !apprentiIsLoading.contents &&
   //   !contratIsLoading.contents;
-  // console.log({ isFetching, isLoading });
-  // console.log({
-  //   formation: formationIsLoading.contents,
-  //   employeur: employeurIsLoading.contents,
-  //   maitres: maitresIsLoading.contents,
-  //   apprenti: apprentiIsLoading.contents,
-  //   contrat: contratIsLoading.contents,
-  //   allBlocksLoaded,
-  // });
-  // console.log({ allBlocksLoaded });
-  // if ((isLoading || isFetching) && !isLoaded)
+
   if (isLoading || isFetching)
-    // if (isLoading)
     return (
       <Center>
         <Spinner />
@@ -81,7 +70,7 @@ export default () => {
     );
 
   return (
-    <Accordion allowMultiple allowToggle mt={12}>
+    <Accordion allowMultiple allowToggle mt={12} minH="25vh">
       {[
         {
           title: "Employeur",
@@ -132,7 +121,6 @@ export default () => {
                     <AddFill fontSize="12px" color="bluefrance" />
                   )}
                 </AccordionButton>
-                {/* <AccordionPanel pb={4}>{isExpanded && <Component />}</AccordionPanel> */}
                 <AccordionPanel pb={4}>{<Component />}</AccordionPanel>
               </>
             )}
@@ -141,4 +129,4 @@ export default () => {
       })}
     </Accordion>
   );
-};
+});

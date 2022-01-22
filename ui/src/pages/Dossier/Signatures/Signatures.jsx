@@ -55,7 +55,7 @@ const ContratPdf = ({ dossierId }) => {
   };
 
   return (
-    <Box mt={8}>
+    <Box mt={8} minH="30vh">
       <Heading as="h3" fontSize="1.4rem">
         Votre contrat généré:
       </Heading>
@@ -120,11 +120,8 @@ export default ({ dossierId }) => {
 
   if (!cerfaComplete) {
     return (
-      <Box mt={8}>
-        <Heading as="h3" fontSize="1.4rem">
-          Votre contrat généré:
-        </Heading>
-        <Center mt={5}>
+      <Box mt={12} pt={2} minH="25vh">
+        <Center>
           <Tooltip variant="alert">
             <Text>Le Cerfa doit être complété à 100% avant de commencer la procédure de finalisation du dossier.</Text>
           </Tooltip>
@@ -135,7 +132,7 @@ export default ({ dossierId }) => {
 
   if (!signatureComplete) {
     return (
-      <Box mt={8} mb={16}>
+      <Box mt={8} mb={16} minH="25vh">
         <Heading as="h3" fontSize="1.4rem">
           Merci de préciser le lieu de signature du contrat:
         </Heading>
