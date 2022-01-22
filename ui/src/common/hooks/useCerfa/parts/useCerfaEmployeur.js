@@ -2,7 +2,7 @@
  * Multiple states on purpose to avoid full re-rendering at each modification
  */
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { _post } from "../../../httpClient";
 import { useRecoilState, useRecoilValue } from "recoil";
 
@@ -22,7 +22,7 @@ import * as employeurAtoms from "./useCerfaEmployeurAtoms";
 import { buildRemunerations } from "../../../utils/form/remunerationsUtils";
 import { useCerfaContrat } from "../parts/useCerfaContrat";
 
-const cerfaEmployeurCompletion = (res) => {
+export const cerfaEmployeurCompletion = (res) => {
   let fieldsToKeep = {
     employeurSiret: res.employeur.siret,
     employeurDenomination: res.employeur.denomination,
@@ -305,6 +305,7 @@ export function useCerfaEmployeur() {
   const [partEmployeurCompletion, setPartEmployeurCompletionAtom] = useRecoilState(
     employeurAtoms.cerfaPartEmployeurCompletionAtom
   );
+  const [isLoading, setIsLoading] = useRecoilState(employeurAtoms.cerfaPartEmployeurIsLoadingAtom);
 
   const [employeurSiret, setEmployeurSiret] = useRecoilState(employeurAtoms.cerfaEmployeurSiretAtom);
   const [employeurDenomination, setEmployeurDenomination] = useRecoilState(
@@ -1210,40 +1211,77 @@ export function useCerfaEmployeur() {
     [cerfa?.id, dossier?._id, employeurRegimeSpecifique, setEmployeurRegimeSpecifique, setPartEmployeurCompletionAtom]
   );
 
-  const setAll = async (res) => {
-    setEmployeurSiret(res.employeur.siret);
-    setEmployeurDenomination(res.employeur.denomination);
-    setEmployeurRaisonSociale(res.employeur.raison_sociale);
-    setEmployeurNaf(res.employeur.naf);
-    setEmployeurNombreDeSalaries(res.employeur.nombreDeSalaries);
+  const setAll = useCallback(
+    (res) => {
+      setEmployeurSiret(res.employeur.siret);
+      setEmployeurDenomination(res.employeur.denomination);
+      setEmployeurRaisonSociale(res.employeur.raison_sociale);
+      setEmployeurNaf(res.employeur.naf);
+      setEmployeurNombreDeSalaries(res.employeur.nombreDeSalaries);
 
-    setEmployeurCodeIdcc(res.employeur.codeIdcc);
+      setEmployeurCodeIdcc(res.employeur.codeIdcc);
 
-    setEmployeurLibelleIdcc(res.employeur.libelleIdcc);
-    setEmployeurTelephone({ ...res.employeur.telephone, value: res.employeur.telephone.value.replace("+", "") });
-    setEmployeurCourriel(res.employeur.courriel);
-    setEmployeurAdresseNumero(res.employeur.adresse.numero);
-    setEmployeurAdresseVoie(res.employeur.adresse.voie);
-    setEmployeurAdresseComplement(res.employeur.adresse.complement);
-    setEmployeurAdresseCodePostal(res.employeur.adresse.codePostal);
-    setEmployeurAdresseCommune(res.employeur.adresse.commune);
-    setEmployeurAdresseDepartement(res.employeur.adresse.departement);
-    setEmployeurAdresseRegion(res.employeur.adresse.region);
+      setEmployeurLibelleIdcc(res.employeur.libelleIdcc);
+      setEmployeurTelephone({ ...res.employeur.telephone, value: res.employeur.telephone.value.replace("+", "") });
+      setEmployeurCourriel(res.employeur.courriel);
+      setEmployeurAdresseNumero(res.employeur.adresse.numero);
+      setEmployeurAdresseVoie(res.employeur.adresse.voie);
+      setEmployeurAdresseComplement(res.employeur.adresse.complement);
+      setEmployeurAdresseCodePostal(res.employeur.adresse.codePostal);
+      setEmployeurAdresseCommune(res.employeur.adresse.commune);
+      setEmployeurAdresseDepartement(res.employeur.adresse.departement);
+      setEmployeurAdresseRegion(res.employeur.adresse.region);
 
-    setEmployeurNom(res.employeur.nom);
-    setEmployeurPrenom(res.employeur.prenom);
-    setEmployeurTypeEmployeur(convertValueToMultipleSelectOption(res.employeur.typeEmployeur));
-    setEmployeurEmployeurSpecifique(convertValueToOption(res.employeur.employeurSpecifique));
-    setEmployeurCaisseComplementaire(res.employeur.caisseComplementaire);
-    setEmployeurRegimeSpecifique(convertValueToOption(res.employeur.regimeSpecifique));
-    setEmployeurAttestationPieces(convertValueToOption(res.employeur.attestationPieces));
+      setEmployeurNom(res.employeur.nom);
+      setEmployeurPrenom(res.employeur.prenom);
+      setEmployeurTypeEmployeur(convertValueToMultipleSelectOption(res.employeur.typeEmployeur));
+      setEmployeurEmployeurSpecifique(convertValueToOption(res.employeur.employeurSpecifique));
+      setEmployeurCaisseComplementaire(res.employeur.caisseComplementaire);
+      setEmployeurRegimeSpecifique(convertValueToOption(res.employeur.regimeSpecifique));
+      setEmployeurAttestationPieces(convertValueToOption(res.employeur.attestationPieces));
 
-    setEmployeurPrivePublic(convertValueToOption(res.employeur.privePublic));
+      setEmployeurPrivePublic(convertValueToOption(res.employeur.privePublic));
 
-    setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
-  };
+      setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+    },
+    [
+      setEmployeurAdresseCodePostal,
+      setEmployeurAdresseCommune,
+      setEmployeurAdresseComplement,
+      setEmployeurAdresseDepartement,
+      setEmployeurAdresseNumero,
+      setEmployeurAdresseRegion,
+      setEmployeurAdresseVoie,
+      setEmployeurAttestationPieces,
+      setEmployeurCaisseComplementaire,
+      setEmployeurCodeIdcc,
+      setEmployeurCourriel,
+      setEmployeurDenomination,
+      setEmployeurEmployeurSpecifique,
+      setEmployeurLibelleIdcc,
+      setEmployeurNaf,
+      setEmployeurNom,
+      setEmployeurNombreDeSalaries,
+      setEmployeurPrenom,
+      setEmployeurPrivePublic,
+      setEmployeurRaisonSociale,
+      setEmployeurRegimeSpecifique,
+      setEmployeurSiret,
+      setEmployeurTelephone,
+      setEmployeurTypeEmployeur,
+      setPartEmployeurCompletionAtom,
+    ]
+  );
+
+  useEffect(() => {
+    if (cerfa && isLoading) {
+      setAll(cerfa);
+      setIsLoading(false);
+    }
+  }, [cerfa, isLoading, setAll, setIsLoading]);
 
   return {
+    isLoading,
     completion: partEmployeurCompletion,
     get: {
       employeur: {

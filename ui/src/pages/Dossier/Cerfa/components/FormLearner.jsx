@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, FormLabel, Text, Flex, Collapse } from "@chakra-ui/react";
+import { Box, FormLabel, Text, Flex, Collapse, Center, Spinner } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
 import { useCerfaApprenti } from "../../../../common/hooks/useCerfa/parts/useCerfaApprenti";
@@ -18,6 +18,7 @@ const FormLearner = () => {
   const employeurAdresseDepartement = useRecoilValue(cerfaEmployeurAdresseDepartementAtom);
 
   const {
+    isLoading,
     get: {
       apprenti: {
         nom,
@@ -101,6 +102,13 @@ const FormLearner = () => {
       },
     },
   } = useCerfaApprenti();
+
+  if (isLoading || !dateDebutContrat || !dateFinContrat || !employeurAdresseDepartement)
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
 
   return (
     <Box>

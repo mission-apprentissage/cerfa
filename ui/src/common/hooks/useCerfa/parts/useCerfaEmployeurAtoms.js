@@ -5,6 +5,11 @@ export const cerfaPartEmployeurCompletionAtom = atom({
   default: 0,
 });
 
+export const cerfaPartEmployeurIsLoadingAtom = atom({
+  key: "cerfa/part/employeur/isLoading",
+  default: true,
+});
+
 export const cerfaEmployeurSiretAtom = atom({
   key: "cerfa/employeur/siret",
   default: null,

@@ -4,6 +4,10 @@ export const cerfaPartContratCompletionAtom = atom({
   key: "cerfa/part/contrat/completion",
   default: 0,
 });
+export const cerfaPartContratIsLoadingAtom = atom({
+  key: "cerfa/part/contrat/isLoading",
+  default: true,
+});
 
 export const cerfaContratModeContractuelAtom = atom({
   key: "cerfa/contrat/modeContractuel",

@@ -2,7 +2,7 @@
  * Multiple states on purpose to avoid full re-rendering at each modification
  */
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   fieldCompletionPercentage,
@@ -24,7 +24,7 @@ import { buildRemunerations } from "../../../utils/form/remunerationsUtils";
 import { useCerfaContrat } from "../parts/useCerfaContrat";
 import { DateTime } from "luxon";
 
-const cerfaApprentiCompletion = (res) => {
+export const cerfaApprentiCompletion = (res) => {
   let fieldsToKeep = {
     apprentiNom: res.apprenti.nom,
     apprentiPrenom: res.apprenti.prenom,
@@ -191,6 +191,7 @@ export function useCerfaApprenti() {
   const [partApprentiCompletion, setPartApprentiCompletion] = useRecoilState(
     apprentiAtoms.cerfaPartApprentiCompletionAtom
   );
+  const [isLoading, setIsLoading] = useRecoilState(apprentiAtoms.cerfaPartApprentiIsLoadingAtom);
 
   const [apprentiNom, setApprentiNom] = useRecoilState(apprentiAtoms.cerfaApprentiNomAtom);
   const [apprentiPrenom, setApprentiPrenom] = useRecoilState(apprentiAtoms.cerfaApprentiPrenomAtom);
@@ -1651,50 +1652,98 @@ export function useCerfaApprenti() {
     ]
   );
 
-  const setAll = async (res) => {
-    setApprentiNom(res.apprenti.nom);
-    setApprentiPrenom(res.apprenti.prenom);
-    setApprentiSexe(convertValueToOption(res.apprenti.sexe));
-    setApprentiNationalite(convertValueToOption(res.apprenti.nationalite));
-    setApprentiDateNaissance(convertValueToDate(res.apprenti.dateNaissance));
-    setApprentiAge(res.apprenti.age);
-    setApprentiDepartementNaissance(res.apprenti.departementNaissance);
-    setApprentiCommuneNaissance(res.apprenti.communeNaissance);
-    setApprentiNir(res.apprenti.nir);
-    setApprentiRegimeSocial(convertValueToOption(res.apprenti.regimeSocial));
-    setApprentiHandicap(convertValueToOption(res.apprenti.handicap));
-    setApprentiSituationAvantContrat(convertValueToOption(res.apprenti.situationAvantContrat));
+  const setAll = useCallback(
+    (res) => {
+      setApprentiNom(res.apprenti.nom);
+      setApprentiPrenom(res.apprenti.prenom);
+      setApprentiSexe(convertValueToOption(res.apprenti.sexe));
+      setApprentiNationalite(convertValueToOption(res.apprenti.nationalite));
+      setApprentiDateNaissance(convertValueToDate(res.apprenti.dateNaissance));
+      setApprentiAge(res.apprenti.age);
+      setApprentiDepartementNaissance(res.apprenti.departementNaissance);
+      setApprentiCommuneNaissance(res.apprenti.communeNaissance);
+      setApprentiNir(res.apprenti.nir);
+      setApprentiRegimeSocial(convertValueToOption(res.apprenti.regimeSocial));
+      setApprentiHandicap(convertValueToOption(res.apprenti.handicap));
+      setApprentiSituationAvantContrat(convertValueToOption(res.apprenti.situationAvantContrat));
 
-    setApprentiDiplome(convertValueToMultipleSelectOption(res.apprenti.diplome));
-    setApprentiDerniereClasse(convertValueToOption(res.apprenti.derniereClasse));
-    setApprentiDiplomePrepare(convertValueToMultipleSelectOption(res.apprenti.diplomePrepare));
+      setApprentiDiplome(convertValueToMultipleSelectOption(res.apprenti.diplome));
+      setApprentiDerniereClasse(convertValueToOption(res.apprenti.derniereClasse));
+      setApprentiDiplomePrepare(convertValueToMultipleSelectOption(res.apprenti.diplomePrepare));
 
-    setApprentiIntituleDiplomePrepare(res.apprenti.intituleDiplomePrepare);
-    setApprentiTelephone({ ...res.apprenti.telephone, value: res.apprenti.telephone.value.replace("+", "") });
-    setApprentiCourriel(res.apprenti.courriel);
-    setApprentiAdresseNumero(res.apprenti.adresse.numero);
-    setApprentiAdresseVoie(res.apprenti.adresse.voie);
-    setApprentiAdresseComplement(res.apprenti.adresse.complement);
-    setApprentiAdresseCodePostal(res.apprenti.adresse.codePostal);
-    setApprentiAdresseCommune(res.apprenti.adresse.commune);
-    setApprentiAdressePays(convertValueToOption(res.apprenti.adresse.pays));
-    setApprentiInscriptionSportifDeHautNiveau(convertValueToOption(res.apprenti.inscriptionSportifDeHautNiveau));
+      setApprentiIntituleDiplomePrepare(res.apprenti.intituleDiplomePrepare);
+      setApprentiTelephone({ ...res.apprenti.telephone, value: res.apprenti.telephone.value.replace("+", "") });
+      setApprentiCourriel(res.apprenti.courriel);
+      setApprentiAdresseNumero(res.apprenti.adresse.numero);
+      setApprentiAdresseVoie(res.apprenti.adresse.voie);
+      setApprentiAdresseComplement(res.apprenti.adresse.complement);
+      setApprentiAdresseCodePostal(res.apprenti.adresse.codePostal);
+      setApprentiAdresseCommune(res.apprenti.adresse.commune);
+      setApprentiAdressePays(convertValueToOption(res.apprenti.adresse.pays));
+      setApprentiInscriptionSportifDeHautNiveau(convertValueToOption(res.apprenti.inscriptionSportifDeHautNiveau));
 
-    setApprentiApprentiMineurNonEmancipe(convertValueToOption(res.apprenti.apprentiMineurNonEmancipe));
-    setApprentiResponsableLegalNom(res.apprenti.responsableLegal.nom);
-    setApprentiResponsableLegalPrenom(res.apprenti.responsableLegal.prenom);
-    setApprentiResponsableLegalMemeAdresse(convertValueToOption(res.apprenti.responsableLegal.memeAdresse));
-    setApprentiResponsableLegalAdresseNumero(res.apprenti.responsableLegal.adresse.numero);
-    setApprentiResponsableLegalAdresseVoie(res.apprenti.responsableLegal.adresse.voie);
-    setApprentiResponsableLegalAdresseComplement(res.apprenti.responsableLegal.adresse.complement);
-    setApprentiResponsableLegalAdresseCodePostal(res.apprenti.responsableLegal.adresse.codePostal);
-    setApprentiResponsableLegalAdresseCommune(res.apprenti.responsableLegal.adresse.commune);
-    setApprentiResponsableLegalAdressePays(convertValueToOption(res.apprenti.responsableLegal.adresse.pays));
+      setApprentiApprentiMineurNonEmancipe(convertValueToOption(res.apprenti.apprentiMineurNonEmancipe));
+      setApprentiResponsableLegalNom(res.apprenti.responsableLegal.nom);
+      setApprentiResponsableLegalPrenom(res.apprenti.responsableLegal.prenom);
+      setApprentiResponsableLegalMemeAdresse(convertValueToOption(res.apprenti.responsableLegal.memeAdresse));
+      setApprentiResponsableLegalAdresseNumero(res.apprenti.responsableLegal.adresse.numero);
+      setApprentiResponsableLegalAdresseVoie(res.apprenti.responsableLegal.adresse.voie);
+      setApprentiResponsableLegalAdresseComplement(res.apprenti.responsableLegal.adresse.complement);
+      setApprentiResponsableLegalAdresseCodePostal(res.apprenti.responsableLegal.adresse.codePostal);
+      setApprentiResponsableLegalAdresseCommune(res.apprenti.responsableLegal.adresse.commune);
+      setApprentiResponsableLegalAdressePays(convertValueToOption(res.apprenti.responsableLegal.adresse.pays));
 
-    setPartApprentiCompletion(cerfaApprentiCompletion(res));
-  };
+      setPartApprentiCompletion(cerfaApprentiCompletion(res));
+    },
+    [
+      setApprentiNom,
+      setApprentiPrenom,
+      setApprentiSexe,
+      setApprentiNationalite,
+      setApprentiDateNaissance,
+      setApprentiAge,
+      setApprentiDepartementNaissance,
+      setApprentiCommuneNaissance,
+      setApprentiNir,
+      setApprentiRegimeSocial,
+      setApprentiHandicap,
+      setApprentiSituationAvantContrat,
+      setApprentiDiplome,
+      setApprentiDerniereClasse,
+      setApprentiDiplomePrepare,
+      setApprentiIntituleDiplomePrepare,
+      setApprentiTelephone,
+      setApprentiCourriel,
+      setApprentiAdresseNumero,
+      setApprentiAdresseVoie,
+      setApprentiAdresseComplement,
+      setApprentiAdresseCodePostal,
+      setApprentiAdresseCommune,
+      setApprentiAdressePays,
+      setApprentiInscriptionSportifDeHautNiveau,
+      setApprentiApprentiMineurNonEmancipe,
+      setApprentiResponsableLegalNom,
+      setApprentiResponsableLegalPrenom,
+      setApprentiResponsableLegalMemeAdresse,
+      setApprentiResponsableLegalAdresseNumero,
+      setApprentiResponsableLegalAdresseVoie,
+      setApprentiResponsableLegalAdresseComplement,
+      setApprentiResponsableLegalAdresseCodePostal,
+      setApprentiResponsableLegalAdresseCommune,
+      setApprentiResponsableLegalAdressePays,
+      setPartApprentiCompletion,
+    ]
+  );
+
+  useEffect(() => {
+    if (cerfa && isLoading) {
+      setAll(cerfa);
+      setIsLoading(false);
+    }
+  }, [cerfa, isLoading, setAll, setIsLoading]);
 
   return {
+    isLoading,
     completion: partApprentiCompletion,
     get: {
       apprenti: {

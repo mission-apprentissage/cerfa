@@ -1,5 +1,17 @@
 import React from "react";
-import { Box, FormLabel, Text, Flex, HStack, Collapse, VStack, UnorderedList, ListItem } from "@chakra-ui/react";
+import {
+  Box,
+  FormLabel,
+  Text,
+  Flex,
+  HStack,
+  Collapse,
+  VStack,
+  UnorderedList,
+  ListItem,
+  Center,
+  Spinner,
+} from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
 import { departements } from "../../../../common/constants/departements";
@@ -30,6 +42,7 @@ const FormContract = () => {
   const employeurAdresseDepartement = useRecoilValue(cerfaEmployeurAdresseDepartementAtom);
 
   const {
+    isLoading,
     get: {
       contrat: {
         // modeContractuel: contratModeContractuel,
@@ -82,6 +95,22 @@ const FormContract = () => {
       },
     },
   } = useCerfaContrat();
+
+  if (
+    isLoading ||
+    !apprentiDateNaissance ||
+    !apprentiAge ||
+    !employeurAdresseDepartement ||
+    !maitre1DateNaissance ||
+    !maitre2DateNaissance ||
+    !formationDateDebutFormation ||
+    !formationDateFinFormation
+  )
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
 
   return (
     <Box>

@@ -2,7 +2,7 @@
  * Multiple states on purpose to avoid full re-rendering at each modification
  */
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { DateTime } from "luxon";
 import {
@@ -17,7 +17,7 @@ import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
 import * as maitresAtoms from "./useCerfaMaitresAtoms";
 
-const cerfaMaitresCompletion = (res) => {
+export const cerfaMaitresCompletion = (res) => {
   let fieldsToKeep = {
     maitre1Nom: res.maitre1.nom,
     maitre1Prenom: res.maitre1.prenom,
@@ -126,6 +126,8 @@ export function useCerfaMaitres() {
   const dossier = useRecoilValue(dossierAtom);
 
   const [partMaitresCompletion, setPartMaitresCompletion] = useRecoilState(maitresAtoms.cerfaPartMaitresCompletionAtom);
+
+  const [isLoading, setIsLoading] = useRecoilState(maitresAtoms.cerfaPartMaitresIsLoadingAtom);
 
   const [maitre1Nom, setMaitre1Nom] = useRecoilState(maitresAtoms.cerfaMaitre1NomAtom);
   const [maitre1Prenom, setMaitre1Prenom] = useRecoilState(maitresAtoms.cerfaMaitre1PrenomAtom);
@@ -359,21 +361,41 @@ export function useCerfaMaitres() {
     ]
   );
 
-  const setAll = async (res) => {
-    setMaitre1Nom(res.maitre1.nom);
-    setMaitre1Prenom(res.maitre1.prenom);
-    setMaitre1DateNaissance(convertValueToDate(res.maitre1.dateNaissance));
+  const setAll = useCallback(
+    (res) => {
+      setMaitre1Nom(res.maitre1.nom);
+      setMaitre1Prenom(res.maitre1.prenom);
+      setMaitre1DateNaissance(convertValueToDate(res.maitre1.dateNaissance));
 
-    setMaitre2Nom(res.maitre2.nom);
-    setMaitre2Prenom(res.maitre2.prenom);
-    setMaitre2DateNaissance(convertValueToDate(res.maitre2.dateNaissance));
+      setMaitre2Nom(res.maitre2.nom);
+      setMaitre2Prenom(res.maitre2.prenom);
+      setMaitre2DateNaissance(convertValueToDate(res.maitre2.dateNaissance));
 
-    setEmployeurAttestationEligibilite(convertValueToOption(res.employeur.attestationEligibilite));
+      setEmployeurAttestationEligibilite(convertValueToOption(res.employeur.attestationEligibilite));
 
-    setPartMaitresCompletion(cerfaMaitresCompletion(res));
-  };
+      setPartMaitresCompletion(cerfaMaitresCompletion(res));
+    },
+    [
+      setEmployeurAttestationEligibilite,
+      setMaitre1DateNaissance,
+      setMaitre1Nom,
+      setMaitre1Prenom,
+      setMaitre2DateNaissance,
+      setMaitre2Nom,
+      setMaitre2Prenom,
+      setPartMaitresCompletion,
+    ]
+  );
+
+  useEffect(() => {
+    if (cerfa && isLoading) {
+      setAll(cerfa);
+      setIsLoading(false);
+    }
+  }, [cerfa, isLoading, setAll, setIsLoading]);
 
   return {
+    isLoading,
     completion: partMaitresCompletion,
     get: {
       maitre1: {

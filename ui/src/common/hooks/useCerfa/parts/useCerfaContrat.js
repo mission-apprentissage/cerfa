@@ -2,7 +2,7 @@
  * Multiple states on purpose to avoid full re-rendering at each modification
  */
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { DateTime } from "luxon";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
@@ -24,7 +24,7 @@ import { dossierAtom } from "../../useDossier/dossierAtom";
 import { cerfaApprentiAgeAtom, cerfaApprentiDateNaissanceAtom } from "./useCerfaApprentiAtoms";
 import * as contratAtoms from "./useCerfaContratAtoms";
 
-const cerfaContratCompletion = (res) => {
+export const cerfaContratCompletion = (res) => {
   let fieldsToKeep = {
     // contratModeContractuel: res.contrat.modeContractuel,
     contratTypeContratApp: res.contrat.typeContratApp,
@@ -447,6 +447,8 @@ export function useCerfaContrat() {
 
   //Internal
   const [partContratCompletion, setPartContratCompletion] = useRecoilState(contratAtoms.cerfaPartContratCompletionAtom);
+
+  const [isLoading, setIsLoading] = useRecoilState(contratAtoms.cerfaPartContratIsLoadingAtom);
 
   const [contratModeContractuel, setContratModeContractuel] = useRecoilState(
     contratAtoms.cerfaContratModeContractuelAtom
@@ -1434,107 +1436,145 @@ export function useCerfaContrat() {
     ]
   );
 
-  const setAll = async (res) => {
-    setContratModeContractuel(convertValueToOption(res.contrat.modeContractuel));
-    setContratTypeContratApp(convertValueToMultipleSelectOption(res.contrat.typeContratApp));
-    setContratNumeroContratPrecedent(res.contrat.numeroContratPrecedent);
-    setNumeroContratPrecedentDetails(res.contrat.numeroContratPrecedent.value);
+  const setAll = useCallback(
+    (res) => {
+      setContratModeContractuel(convertValueToOption(res.contrat.modeContractuel));
+      setContratTypeContratApp(convertValueToMultipleSelectOption(res.contrat.typeContratApp));
+      setContratNumeroContratPrecedent(res.contrat.numeroContratPrecedent);
+      setNumeroContratPrecedentDetails(res.contrat.numeroContratPrecedent.value);
 
-    setContratNoContrat(res.contrat.noContrat);
-    setContratNoAvenant(res.contrat.noAvenant);
-    setContratDateDebutContrat(convertValueToDate(res.contrat.dateDebutContrat));
-    seContratDureeContrat(res.contrat.dureeContrat);
-    setContratDateEffetAvenant(convertValueToDate(res.contrat.dateEffetAvenant));
-    setContratDateConclusion(convertValueToDate(res.contrat.dateConclusion));
-    setContratDateFinContrat(convertValueToDate(res.contrat.dateFinContrat));
-    setContratDateRupture(convertValueToDate(res.contrat.dateRupture));
+      setContratNoContrat(res.contrat.noContrat);
+      setContratNoAvenant(res.contrat.noAvenant);
+      setContratDateDebutContrat(convertValueToDate(res.contrat.dateDebutContrat));
+      seContratDureeContrat(res.contrat.dureeContrat);
+      setContratDateEffetAvenant(convertValueToDate(res.contrat.dateEffetAvenant));
+      setContratDateConclusion(convertValueToDate(res.contrat.dateConclusion));
+      setContratDateFinContrat(convertValueToDate(res.contrat.dateFinContrat));
+      setContratDateRupture(convertValueToDate(res.contrat.dateRupture));
 
-    setContratLieuSignatureContrat(res.contrat.lieuSignatureContrat);
+      setContratLieuSignatureContrat(res.contrat.lieuSignatureContrat);
 
-    const typeDerog = getTypeDerogation(convertValueToOption(res.contrat.typeDerogation), {
-      dateNaissance: convertValueToDate(res.apprenti.dateNaissance).value,
-      age: res.apprenti.age.value,
-      contratDateDebutContratString: convertValueToDate(res.contrat.dateDebutContrat).value,
-    });
-    setContratTypeDerogation(typeDerog);
+      const typeDerog = getTypeDerogation(convertValueToOption(res.contrat.typeDerogation), {
+        dateNaissance: convertValueToDate(res.apprenti.dateNaissance).value,
+        age: res.apprenti.age.value,
+        contratDateDebutContratString: convertValueToDate(res.contrat.dateDebutContrat).value,
+      });
+      setContratTypeDerogation(typeDerog);
 
-    setContratDureeTravailHebdoHeures(res.contrat.dureeTravailHebdoHeures);
-    setContratDureeTravailHebdoMinutes(res.contrat.dureeTravailHebdoMinutes);
-    setContratTravailRisque(convertValueToOption(res.contrat.travailRisque));
-    setContratCaisseRetraiteComplementaire(res.contrat.caisseRetraiteComplementaire);
-    setContratAvantageNature(convertValueToOption(res.contrat.avantageNature));
-    setContratAvantageNourriture(res.contrat.avantageNourriture);
-    setContratAvantageLogement(res.contrat.avantageLogement);
-    setContratAutreAvantageEnNature(convertValueToOption(res.contrat.autreAvantageEnNature));
+      setContratDureeTravailHebdoHeures(res.contrat.dureeTravailHebdoHeures);
+      setContratDureeTravailHebdoMinutes(res.contrat.dureeTravailHebdoMinutes);
+      setContratTravailRisque(convertValueToOption(res.contrat.travailRisque));
+      setContratCaisseRetraiteComplementaire(res.contrat.caisseRetraiteComplementaire);
+      setContratAvantageNature(convertValueToOption(res.contrat.avantageNature));
+      setContratAvantageNourriture(res.contrat.avantageNourriture);
+      setContratAvantageLogement(res.contrat.avantageLogement);
+      setContratAutreAvantageEnNature(convertValueToOption(res.contrat.autreAvantageEnNature));
 
-    setContratSalaireEmbauche(res.contrat.salaireEmbauche);
-    setContratSmic(res.contrat.smic.value);
+      setContratSalaireEmbauche(res.contrat.salaireEmbauche);
+      setContratSmic(res.contrat.smic.value);
 
-    const emptyLineObj = {
-      dateDebut: { ...contratAtoms.defaultDateDebut },
-      dateFin: { ...contratAtoms.defaultDateFin },
-      taux: { ...contratAtoms.defaultTaux },
-      tauxMinimal: { ...contratAtoms.defaultTauxMinimal },
-      typeSalaire: { ...contratAtoms.defaultSalaireBrut },
-      salaireBrut: { ...contratAtoms.defaultTypeSalaire },
-    };
-
-    let remunerationsAnnuellesFormValue = {
-      11: { ...emptyLineObj },
-      12: { ...emptyLineObj },
-      21: { ...emptyLineObj },
-      22: { ...emptyLineObj },
-      31: { ...emptyLineObj },
-      32: { ...emptyLineObj },
-      41: { ...emptyLineObj },
-      42: { ...emptyLineObj },
-    };
-    const shouldBeLock = !res.draft;
-    for (let index = 0; index < res.contrat.remunerationsAnnuelles.length; index++) {
-      const remunerationsAnnuelles = res.contrat.remunerationsAnnuelles[index];
-
-      const dateDebut = {
-        ...convertValueToDate(remunerationsAnnuelles.dateDebut),
-        locked: true,
+      const emptyLineObj = {
+        dateDebut: { ...contratAtoms.defaultDateDebut },
+        dateFin: { ...contratAtoms.defaultDateFin },
+        taux: { ...contratAtoms.defaultTaux },
+        tauxMinimal: { ...contratAtoms.defaultTauxMinimal },
+        typeSalaire: { ...contratAtoms.defaultSalaireBrut },
+        salaireBrut: { ...contratAtoms.defaultTypeSalaire },
       };
-      const dateFin = {
-        ...convertValueToDate(remunerationsAnnuelles.dateFin),
-        locked: true,
-      };
-      const taux = {
-        ...remunerationsAnnuelles.taux,
-        locked: shouldBeLock,
-        mask: contratAtoms.defaultTaux.mask,
-        maskBlocks: contratAtoms.defaultTaux.maskBlocks,
-        requiredMessage: contratAtoms.defaultTaux.requiredMessage,
-      };
-      const tauxMinimal = { ...remunerationsAnnuelles.tauxMinimal, locked: shouldBeLock };
-      const typeSalaire = {
-        ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
-        locked: true,
-      };
-      const salaireBrut = { ...remunerationsAnnuelles.salaireBrut, locked: true };
 
-      let part = remunerationsAnnuelles.ordre.value.replace(".", "");
+      let remunerationsAnnuellesFormValue = {
+        11: { ...emptyLineObj },
+        12: { ...emptyLineObj },
+        21: { ...emptyLineObj },
+        22: { ...emptyLineObj },
+        31: { ...emptyLineObj },
+        32: { ...emptyLineObj },
+        41: { ...emptyLineObj },
+        42: { ...emptyLineObj },
+      };
+      const shouldBeLock = !res.draft;
+      for (let index = 0; index < res.contrat.remunerationsAnnuelles.length; index++) {
+        const remunerationsAnnuelles = res.contrat.remunerationsAnnuelles[index];
 
-      if (part) {
-        remunerationsAnnuellesFormValue[part] = {
-          dateDebut: { ...dateDebut },
-          dateFin: { ...dateFin },
-          taux: { ...taux },
-          tauxMinimal: { ...tauxMinimal },
-          typeSalaire: { ...typeSalaire },
-          salaireBrut: { ...salaireBrut },
+        const dateDebut = {
+          ...convertValueToDate(remunerationsAnnuelles.dateDebut),
+          locked: true,
         };
+        const dateFin = {
+          ...convertValueToDate(remunerationsAnnuelles.dateFin),
+          locked: true,
+        };
+        const taux = {
+          ...remunerationsAnnuelles.taux,
+          locked: shouldBeLock,
+          mask: contratAtoms.defaultTaux.mask,
+          maskBlocks: contratAtoms.defaultTaux.maskBlocks,
+          requiredMessage: contratAtoms.defaultTaux.requiredMessage,
+        };
+        const tauxMinimal = { ...remunerationsAnnuelles.tauxMinimal, locked: shouldBeLock };
+        const typeSalaire = {
+          ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
+          locked: true,
+        };
+        const salaireBrut = { ...remunerationsAnnuelles.salaireBrut, locked: true };
+
+        let part = remunerationsAnnuelles.ordre.value.replace(".", "");
+
+        if (part) {
+          remunerationsAnnuellesFormValue[part] = {
+            dateDebut: { ...dateDebut },
+            dateFin: { ...dateFin },
+            taux: { ...taux },
+            tauxMinimal: { ...tauxMinimal },
+            typeSalaire: { ...typeSalaire },
+            salaireBrut: { ...salaireBrut },
+          };
+        }
       }
+
+      setContratRemunerationsAnnuelles(remunerationsAnnuellesFormValue);
+
+      setPartContratCompletion(cerfaContratCompletion(res));
+    },
+    [
+      seContratDureeContrat,
+      setContratAutreAvantageEnNature,
+      setContratAvantageLogement,
+      setContratAvantageNature,
+      setContratAvantageNourriture,
+      setContratCaisseRetraiteComplementaire,
+      setContratDateConclusion,
+      setContratDateDebutContrat,
+      setContratDateEffetAvenant,
+      setContratDateFinContrat,
+      setContratDateRupture,
+      setContratDureeTravailHebdoHeures,
+      setContratDureeTravailHebdoMinutes,
+      setContratLieuSignatureContrat,
+      setContratModeContractuel,
+      setContratNoAvenant,
+      setContratNoContrat,
+      setContratNumeroContratPrecedent,
+      setContratRemunerationsAnnuelles,
+      setContratSalaireEmbauche,
+      setContratSmic,
+      setContratTravailRisque,
+      setContratTypeContratApp,
+      setContratTypeDerogation,
+      setNumeroContratPrecedentDetails,
+      setPartContratCompletion,
+    ]
+  );
+
+  useEffect(() => {
+    if (cerfa && isLoading) {
+      setAll(cerfa);
+      setIsLoading(false);
     }
-
-    setContratRemunerationsAnnuelles(remunerationsAnnuellesFormValue);
-
-    setPartContratCompletion(cerfaContratCompletion(res));
-  };
+  }, [cerfa, isLoading, setAll, setIsLoading]);
 
   return {
+    isLoading,
     completion: partContratCompletion,
     get: {
       contrat: {

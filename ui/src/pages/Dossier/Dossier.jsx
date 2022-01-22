@@ -419,6 +419,10 @@ export default () => {
                   state={index === 0 ? stepState1 : index === 1 ? stepState2 : stepState3}
                 >
                   {index === 0 && <Cerfa />}
+                  {/* <Cerfa /> */}
+                  {/* <Box opacity={index === 0 ? 1 : 0} h={index === 0 ? "auto" : 0}>
+                    <Cerfa />
+                  </Box> */}
                   {index === 1 && <PiecesJustificatives />}
                   {index === 2 && <Signatures dossierId={dossier._id} />}
                 </Step>
@@ -426,7 +430,7 @@ export default () => {
             })}
           </Steps>
           <Flex width="100%" justify="flex-start" mt={8} mb={10}>
-            {activeStep !== steps.length - 1 && dossier.draft && (
+            {activeStep <= steps.length - 1 && dossier.draft && (
               <Button mr={4} size="md" variant="secondary" onClick={onClickPrevStep} isDisabled={activeStep === 0}>
                 Revenir
               </Button>

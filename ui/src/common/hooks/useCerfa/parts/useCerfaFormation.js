@@ -2,7 +2,11 @@
  * Multiple states on purpose to avoid full re-rendering at each modification
  */
 
-import { useCallback } from "react";
+import {
+  useCallback,
+  useEffect,
+  // useState
+} from "react";
 import { DateTime } from "luxon";
 import { _post } from "../../../httpClient";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -345,7 +349,7 @@ export const CerfaFormationController = async (dossier) => {
   };
 };
 
-const cerfaFormationCompletion = (res) => {
+export const cerfaFormationCompletion = (res) => {
   let fieldsToKeep = {
     organismeFormationSiret: res.organismeFormation.siret,
     organismeFormationDenomination: res.organismeFormation.denomination,
@@ -374,6 +378,7 @@ export function useCerfaFormation() {
   const [partFormationCompletion, setPartFormationCompletionAtom] = useRecoilState(
     formationAtoms.cerfaPartFormationCompletionAtom
   );
+  const [isLoading, setIsLoading] = useRecoilState(formationAtoms.cerfaPartFormationIsLoadingAtom);
 
   const [organismeFormationSiret, setOrganismeFormationSiret] = useRecoilState(
     formationAtoms.cerfaOrganismeFormationSiretAtom
@@ -1171,30 +1176,60 @@ export function useCerfaFormation() {
     ]
   );
 
-  const setAll = async (res) => {
-    setOrganismeFormationSiret(res.organismeFormation.siret);
-    setOrganismeFormationDenomination(res.organismeFormation.denomination);
-    setOrganismeFormationFormationInterne(convertValueToOption(res.organismeFormation.formationInterne));
-    setOrganismeFormationUaiCfa(res.organismeFormation.uaiCfa);
-    setOrganismeFormationAdresseNumero(res.organismeFormation.adresse.numero);
-    setOrganismeFormationAdresseVoie(res.organismeFormation.adresse.voie);
-    setOrganismeFormationAdresseComplement(res.organismeFormation.adresse.complement);
-    setOrganismeFormationAdresseCodePostal(res.organismeFormation.adresse.codePostal);
-    setOrganismeFormationAdresseCommune(res.organismeFormation.adresse.commune);
+  const setAll = useCallback(
+    (res) => {
+      setOrganismeFormationSiret(res.organismeFormation.siret);
+      setOrganismeFormationDenomination(res.organismeFormation.denomination);
+      setOrganismeFormationFormationInterne(convertValueToOption(res.organismeFormation.formationInterne));
+      setOrganismeFormationUaiCfa(res.organismeFormation.uaiCfa);
+      setOrganismeFormationAdresseNumero(res.organismeFormation.adresse.numero);
+      setOrganismeFormationAdresseVoie(res.organismeFormation.adresse.voie);
+      setOrganismeFormationAdresseComplement(res.organismeFormation.adresse.complement);
+      setOrganismeFormationAdresseCodePostal(res.organismeFormation.adresse.codePostal);
+      setOrganismeFormationAdresseCommune(res.organismeFormation.adresse.commune);
 
-    setFormationRncp(res.formation.rncp);
-    setFormationCodeDiplome(res.formation.codeDiplome);
-    setFormationDateDebutFormation(convertValueToDate(res.formation.dateDebutFormation));
-    setFormationDateFinFormation(convertValueToDate(res.formation.dateFinFormation));
-    setFormationDureeFormationCalc(res.formation.dureeFormationCalc);
-    setFormationDureeFormation(res.formation.dureeFormation);
-    setFormationIntituleQualification(res.formation.intituleQualification);
-    setFormationTypeDiplome(convertValueToMultipleSelectOption(res.formation.typeDiplome));
+      setFormationRncp(res.formation.rncp);
+      setFormationCodeDiplome(res.formation.codeDiplome);
+      setFormationDateDebutFormation(convertValueToDate(res.formation.dateDebutFormation));
+      setFormationDateFinFormation(convertValueToDate(res.formation.dateFinFormation));
+      setFormationDureeFormationCalc(res.formation.dureeFormationCalc);
+      setFormationDureeFormation(res.formation.dureeFormation);
+      setFormationIntituleQualification(res.formation.intituleQualification);
+      setFormationTypeDiplome(convertValueToMultipleSelectOption(res.formation.typeDiplome));
 
-    setPartFormationCompletionAtom(cerfaFormationCompletion(res));
-  };
+      setPartFormationCompletionAtom(cerfaFormationCompletion(res));
+    },
+    [
+      setFormationCodeDiplome,
+      setFormationDateDebutFormation,
+      setFormationDateFinFormation,
+      setFormationDureeFormation,
+      setFormationDureeFormationCalc,
+      setFormationIntituleQualification,
+      setFormationRncp,
+      setFormationTypeDiplome,
+      setOrganismeFormationAdresseCodePostal,
+      setOrganismeFormationAdresseCommune,
+      setOrganismeFormationAdresseComplement,
+      setOrganismeFormationAdresseNumero,
+      setOrganismeFormationAdresseVoie,
+      setOrganismeFormationDenomination,
+      setOrganismeFormationFormationInterne,
+      setOrganismeFormationSiret,
+      setOrganismeFormationUaiCfa,
+      setPartFormationCompletionAtom,
+    ]
+  );
+
+  useEffect(() => {
+    if (cerfa && isLoading) {
+      setAll(cerfa);
+      setIsLoading(false);
+    }
+  }, [cerfa, isLoading, setAll, setIsLoading]);
 
   return {
+    isLoading,
     completion: partFormationCompletion,
     get: {
       organismeFormation: {

@@ -4,6 +4,10 @@ export const cerfaPartFormationCompletionAtom = atom({
   key: "cerfa/part/formation/completion",
   default: 0,
 });
+export const cerfaPartFormationIsLoadingAtom = atom({
+  key: "cerfa/part/formation/isLoading",
+  default: true,
+});
 
 export const cerfaOrganismeFormationSiretAtom = atom({
   key: "cerfa/organismeFormation/siret",
