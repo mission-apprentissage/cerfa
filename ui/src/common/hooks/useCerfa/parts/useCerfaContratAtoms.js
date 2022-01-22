@@ -152,21 +152,16 @@ export const defaultTaux = {
   default: "",
   value: 0,
   locked: false,
-  // mask: "PP %",
-  // maskBlocks: [
-  //   {
-  //     name: "P",
-  //     mask: "0",
-  //   },
-  //   // {
-  //   //   name: "P",
-  //   //   mask: "MaskedRange",
-  //   //   placeholderChar: "_",
-  //   //   from: 1,
-  //   //   to: 12,
-  //   //   maxLength: 2,
-  //   // },
-  // ],
+  mask: "P %",
+  maskBlocks: [
+    {
+      name: "P",
+      mask: "Number",
+      signed: true, // disallow negative
+      normalizeZeros: true, // appends or removes zeros at ends
+      max: 10000,
+    },
+  ],
 };
 export const defaultTauxMinimal = {
   description: "Seuil légal en %",

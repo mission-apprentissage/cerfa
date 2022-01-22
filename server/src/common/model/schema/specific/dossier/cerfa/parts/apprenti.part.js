@@ -16,6 +16,14 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\D*$",
+      },
+    ],
   },
   // nomUsage: {
   //   maxLength: 80,
@@ -35,6 +43,14 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\D*$",
+      },
+    ],
   },
   sexe: {
     enum: ["M", "F", null],
@@ -140,6 +156,14 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\D*$",
+      },
+    ],
   },
   nir: {
     maxLength: 15,
@@ -452,6 +476,14 @@ const apprentiSchema = {
         label: "Nom du représentant légal:",
         requiredMessage: "le nom du représentant légal est obligatoire",
         example: "Honore",
+        mask: "C",
+        maskBlocks: [
+          {
+            name: "C",
+            mask: "Pattern",
+            pattern: "^\\D*$",
+          },
+        ],
       },
       prenom: {
         maxLength: 80,
@@ -464,6 +496,14 @@ const apprentiSchema = {
         label: "Prénom du représentant légal:",
         requiredMessage: "le prénom du représentant légal est obligatoire",
         example: "Robert",
+        mask: "C",
+        maskBlocks: [
+          {
+            name: "C",
+            mask: "Pattern",
+            pattern: "^\\D*$",
+          },
+        ],
       },
       memeAdresse: {
         type: Boolean,

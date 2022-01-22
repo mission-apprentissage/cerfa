@@ -253,6 +253,16 @@ const contratSchema = {
     //   return this.contrat.avantageNature;
     // },
     isNotRequiredForm: true,
+    mask: "X € / rep\\as",
+    maskBlocks: [
+      {
+        name: "X",
+        mask: "Number",
+        signed: true, // disallow negative
+        normalizeZeros: true, // appends or removes zeros at ends
+        max: 10000,
+      },
+    ],
   },
   avantageLogement: {
     type: Number,
@@ -265,6 +275,16 @@ const contratSchema = {
     //   return this.contrat.avantageNature;
     // },
     isNotRequiredForm: true,
+    mask: "X € / mois",
+    maskBlocks: [
+      {
+        name: "X",
+        mask: "Number",
+        signed: true, // disallow negative
+        normalizeZeros: true, // appends or removes zeros at ends
+        max: 10000,
+      },
+    ],
   },
   autreAvantageEnNature: {
     type: Boolean,

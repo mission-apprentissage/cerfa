@@ -78,12 +78,12 @@ const buildValidationSchema = (field, name, type, isRequiredInternal, countryCod
 
 const MInput = IMaskMixin(({ inputRef, ...props }) => <ChackraInput {...props} ref={inputRef} />);
 
-const MaskedInput = ({ value, onChange, mask, maskblocks, ...props }) => {
-  const [internalValue, setInternalValue] = useState(value);
+const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, ...props }) => {
+  const [internalValue, setInternalValue] = useState(`${value}`);
   const inputRef = useRef(null);
 
-  const blocks = useMemo(() => {
-    return maskblocks.reduce((acc, item) => {
+  let blocks = useMemo(() => {
+    return maskblocks?.reduce((acc, item) => {
       if (item.mask === "MaskedRange")
         acc[item.name] = {
           mask: IMask.MaskedRange,
@@ -91,6 +91,8 @@ const MaskedInput = ({ value, onChange, mask, maskblocks, ...props }) => {
           from: item.from,
           to: item.to,
           maxLength: item.maxLength,
+          autofix: item.autofix,
+          lazy: item.lazy,
         };
       else if (item.mask === "MaskedEnum")
         acc[item.name] = {
@@ -99,16 +101,31 @@ const MaskedInput = ({ value, onChange, mask, maskblocks, ...props }) => {
           enum: item.enum,
           maxLength: item.maxLength,
         };
+      else if (item.mask === "Number")
+        acc[item.name] = {
+          mask: Number,
+          radix: ".", // fractional delimiter
+          mapToRadix: ["."], // symbols to process as radix
+          normalizeZeros: item.normalizeZeros,
+          scale: precision,
+          signed: item.signed,
+          min: min,
+          max: item.max,
+        };
+      else if (item.mask === "Pattern")
+        acc[item.name] = {
+          mask: new RegExp(item.pattern),
+        };
       else
         acc[item.name] = {
           mask: item.mask,
         };
       return acc;
     }, {});
-  }, [maskblocks]);
+  }, [maskblocks, min, precision]);
 
   useEffect(() => {
-    if (value !== "") setInternalValue(value);
+    if (value !== "") setInternalValue(`${value}`);
   }, [value]);
 
   let onComplete = useCallback(
@@ -302,6 +319,8 @@ export default React.memo(
     min = 0,
     throttleTime = 100,
     debounceTime = 100,
+    format = undefined,
+    parse = undefined,
     ...props
   }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -409,12 +428,13 @@ export default React.memo(
     let convertValue = useCallback(
       (currentValue) => {
         let val = currentValue;
-        if (forceUpperCase && type === "text") val = val.toUpperCase().trimStart();
+        if (type === "number" && parse) val = parse(val);
+        else if (forceUpperCase && type === "text") val = val.toUpperCase().trimStart();
         else if (type === "text") val = val.trimStart();
         else if (type === "date") val = DateTime.fromJSDate(val).setLocale("fr-FR").toFormat("yyyy-MM-dd");
         return val;
       },
-      [forceUpperCase, type]
+      [forceUpperCase, parse, type]
     );
 
     let handleChange = useCallback(
@@ -675,9 +695,21 @@ export default React.memo(
             {(type === "text" || type === "email") && (
               <Input {...commonProps} type={type} onChange={eventHandler} {...styleProps} {...maskedProps} />
             )}
-            {type === "number" && (
+            {type === "number" && !numberStepper && (
+              <Input
+                {...commonProps}
+                type={type}
+                onChange={eventHandler}
+                {...styleProps}
+                {...maskedProps}
+                min={min}
+                precision={precision}
+              />
+            )}
+            {type === "number" && numberStepper && (
               <NumberInput
                 {...commonProps}
+                value={format ? format(values[name]) : values[name]}
                 onChange={(val) => handleChange({ persist: () => {}, target: { value: val } })}
                 precision={precision}
                 min={min}

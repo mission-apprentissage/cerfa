@@ -387,6 +387,8 @@ const FormContract = () => {
                             mt="2"
                             hasInfo={false}
                             numberStepper={true}
+                            format={(val) => val + ` %`}
+                            parse={(val) => val.replace(/^ %/, "")}
                             type="number"
                             onSubmittedField={(fieldPath, data) =>
                               onSubmittedContratRemunerationsAnnuellesTaux(fieldPath, data, path)
@@ -473,22 +475,20 @@ const FormContract = () => {
                   path="contrat.avantageNourriture"
                   field={avantageNourriture}
                   type="number"
-                  // format={(val) => val + ` €`}
-                  // parse={(val) => val.replace(/^ €/, "")}
+                  min={1}
                   mt="2"
                   onSubmittedField={onSubmittedContratAvantageNourriture}
                 />
-                € / repas
               </Box>
               <Box ml={5}>
                 <InputCerfa
                   path="contrat.avantageLogement"
                   field={avantageLogement}
                   type="number"
+                  min={1}
                   mt="2"
                   onSubmittedField={onSubmittedContratAvantageLogement}
                 />
-                € / mois
               </Box>
             </Flex>
             <Box>

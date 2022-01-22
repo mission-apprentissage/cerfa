@@ -1506,6 +1506,7 @@ export function useCerfaContrat() {
         locked: shouldBeLock,
         mask: contratAtoms.defaultTaux.mask,
         maskBlocks: contratAtoms.defaultTaux.maskBlocks,
+        requiredMessage: contratAtoms.defaultTaux.requiredMessage,
       };
       const tauxMinimal = { ...remunerationsAnnuelles.tauxMinimal, locked: shouldBeLock };
       const typeSalaire = {
