@@ -103,6 +103,14 @@ const employeurCerfaSchema = {
     example: "0043",
     pattern: "^[0-9]{4}$",
     validateMessage: `le code IDCC n'est pas au bon format`,
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\d*$",
+      },
+    ],
   },
   libelleIdcc: {
     enum: [null, ...idccEnum.map(({ libelle }) => libelle)],
