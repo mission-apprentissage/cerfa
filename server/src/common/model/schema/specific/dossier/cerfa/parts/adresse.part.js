@@ -8,6 +8,8 @@ const adresseSchema = {
     nullable: true,
     example: 13,
     default: null,
+    pattern: "^(?!0{1})[0-9]*$",
+    validateMessage: `le numéro de voie ne peut pas commencer par zéro`,
   },
   voie: {
     type: String,

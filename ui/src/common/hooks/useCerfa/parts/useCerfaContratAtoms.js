@@ -148,9 +148,25 @@ export const defaultTaux = {
     "Taux du SMIC ou SMC applicable pour définir la rémunération de l'apprenti, en fonction de l'âge de l'apprent et de l'année d'exécution du contrat, voir notice (grille de rémunération minimale)",
   example: 75,
   label: "% de rémunération du SMIC",
+  requiredMessage: "le taux de rémunération est obligatoire",
   default: "",
   value: 0,
   locked: false,
+  // mask: "PP %",
+  // maskBlocks: [
+  //   {
+  //     name: "P",
+  //     mask: "0",
+  //   },
+  //   // {
+  //   //   name: "P",
+  //   //   mask: "MaskedRange",
+  //   //   placeholderChar: "_",
+  //   //   from: 1,
+  //   //   to: 12,
+  //   //   maxLength: 2,
+  //   // },
+  // ],
 };
 export const defaultTauxMinimal = {
   description: "Seuil légal en %",
@@ -189,207 +205,3 @@ export const defaultTypeSalaire = {
   value: "SMIC",
   locked: true,
 };
-
-// //1.1
-// export const cerfaContratRemunerationsAnnuelles11DateDebutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/11/dateDebut",
-//   default: defaultDateDebut,
-// });
-// export const cerfaContratRemunerationsAnnuelles11DateFinAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/11/dateFin",
-//   default: defaultDateFin,
-// });
-// export const cerfaContratRemunerationsAnnuelles11TauxAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/11/taux",
-//   default: defaultTaux,
-// });
-// export const cerfaContratRemunerationsAnnuelles11TauxMinimalAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/11/tauxMinimal",
-//   default: defaultTauxMinimal,
-// });
-// export const cerfaContratRemunerationsAnnuelles11TypeSalaireAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/11/typeSalaire",
-//   default: defaultTypeSalaire,
-// });
-// export const cerfaContratRemunerationsAnnuelles11SalaireBrutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/11/salaireBrut",
-//   default: defaultSalaireBrut,
-// });
-// //1.2
-// export const cerfaContratRemunerationsAnnuelles12DateDebutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/12/dateDebut",
-//   default: defaultDateDebut,
-// });
-// export const cerfaContratRemunerationsAnnuelles12DateFinAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/12/dateFin",
-//   default: defaultDateFin,
-// });
-// export const cerfaContratRemunerationsAnnuelles12TauxAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/12/taux",
-//   default: defaultTaux,
-// });
-// export const cerfaContratRemunerationsAnnuelles12TauxMinimalAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/12/tauxMinimal",
-//   default: defaultTauxMinimal,
-// });
-// export const cerfaContratRemunerationsAnnuelles12TypeSalaireAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/12/typeSalaire",
-//   default: defaultTypeSalaire,
-// });
-// export const cerfaContratRemunerationsAnnuelles12SalaireBrutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/12/salaireBrut",
-//   default: defaultSalaireBrut,
-// });
-
-// //2.1
-// export const cerfaContratRemunerationsAnnuelles21DateDebutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/21/dateDebut",
-//   default: defaultDateDebut,
-// });
-// export const cerfaContratRemunerationsAnnuelles21DateFinAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/21/dateFin",
-//   default: defaultDateFin,
-// });
-// export const cerfaContratRemunerationsAnnuelles21TauxAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/21/taux",
-//   default: defaultTaux,
-// });
-// export const cerfaContratRemunerationsAnnuelles21TauxMinimalAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/21/tauxMinimal",
-//   default: defaultTauxMinimal,
-// });
-// export const cerfaContratRemunerationsAnnuelles21TypeSalaireAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/21/typeSalaire",
-//   default: defaultTypeSalaire,
-// });
-// export const cerfaContratRemunerationsAnnuelles21SalaireBrutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/21/salaireBrut",
-//   default: defaultSalaireBrut,
-// });
-// //2.2
-// export const cerfaContratRemunerationsAnnuelles22DateDebutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/22/dateDebut",
-//   default: defaultDateDebut,
-// });
-// export const cerfaContratRemunerationsAnnuelles22DateFinAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/22/dateFin",
-//   default: defaultDateFin,
-// });
-// export const cerfaContratRemunerationsAnnuelles22TauxAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/22/taux",
-//   default: defaultTaux,
-// });
-// export const cerfaContratRemunerationsAnnuelles22TauxMinimalAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/22/tauxMinimal",
-//   default: defaultTauxMinimal,
-// });
-// export const cerfaContratRemunerationsAnnuelles22TypeSalaireAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/22/typeSalaire",
-//   default: defaultTypeSalaire,
-// });
-// export const cerfaContratRemunerationsAnnuelles22SalaireBrutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/22/salaireBrut",
-//   default: defaultSalaireBrut,
-// });
-
-// //3.1
-// export const cerfaContratRemunerationsAnnuelles31DateDebutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/31/dateDebut",
-//   default: defaultDateDebut,
-// });
-// export const cerfaContratRemunerationsAnnuelles31DateFinAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/31/dateFin",
-//   default: defaultDateFin,
-// });
-// export const cerfaContratRemunerationsAnnuelles31TauxAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/31/taux",
-//   default: defaultTaux,
-// });
-// export const cerfaContratRemunerationsAnnuelles31TauxMinimalAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/31/tauxMinimal",
-//   default: defaultTauxMinimal,
-// });
-// export const cerfaContratRemunerationsAnnuelles31TypeSalaireAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/31/typeSalaire",
-//   default: defaultTypeSalaire,
-// });
-// export const cerfaContratRemunerationsAnnuelles31SalaireBrutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/31/salaireBrut",
-//   default: defaultSalaireBrut,
-// });
-// //3.2
-// export const cerfaContratRemunerationsAnnuelles32DateDebutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/32/dateDebut",
-//   default: defaultDateDebut,
-// });
-// export const cerfaContratRemunerationsAnnuelles32DateFinAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/32/dateFin",
-//   default: defaultDateFin,
-// });
-// export const cerfaContratRemunerationsAnnuelles32TauxAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/32/taux",
-//   default: defaultTaux,
-// });
-// export const cerfaContratRemunerationsAnnuelles32TauxMinimalAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/32/tauxMinimal",
-//   default: defaultTauxMinimal,
-// });
-// export const cerfaContratRemunerationsAnnuelles32TypeSalaireAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/32/typeSalaire",
-//   default: defaultTypeSalaire,
-// });
-// export const cerfaContratRemunerationsAnnuelles32SalaireBrutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/32/salaireBrut",
-//   default: defaultSalaireBrut,
-// });
-
-// //4.1
-// export const cerfaContratRemunerationsAnnuelles41DateDebutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/41/dateDebut",
-//   default: defaultDateDebut,
-// });
-// export const cerfaContratRemunerationsAnnuelles41DateFinAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/41/dateFin",
-//   default: defaultDateFin,
-// });
-// export const cerfaContratRemunerationsAnnuelles41TauxAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/41/taux",
-//   default: defaultTaux,
-// });
-// export const cerfaContratRemunerationsAnnuelles41TauxMinimalAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/41/tauxMinimal",
-//   default: defaultTauxMinimal,
-// });
-// export const cerfaContratRemunerationsAnnuelles41TypeSalaireAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/41/typeSalaire",
-//   default: defaultTypeSalaire,
-// });
-// export const cerfaContratRemunerationsAnnuelles41SalaireBrutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/41/salaireBrut",
-//   default: defaultSalaireBrut,
-// });
-// //4.2
-// export const cerfaContratRemunerationsAnnuelles42DateDebutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/42/dateDebut",
-//   default: defaultDateDebut,
-// });
-// export const cerfaContratRemunerationsAnnuelles42DateFinAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/42/dateFin",
-//   default: defaultDateFin,
-// });
-// export const cerfaContratRemunerationsAnnuelles42TauxAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/42/taux",
-//   default: defaultTaux,
-// });
-// export const cerfaContratRemunerationsAnnuelles42TauxMinimalAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/42/tauxMinimal",
-//   default: defaultTauxMinimal,
-// });
-// export const cerfaContratRemunerationsAnnuelles42TypeSalaireAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/42/typeSalaire",
-//   default: defaultTypeSalaire,
-// });
-// export const cerfaContratRemunerationsAnnuelles42SalaireBrutAtom = atom({
-//   key: "cerfa/contrat/remunerationsAnnuelles/42/salaireBrut",
-//   default: defaultSalaireBrut,
-// });

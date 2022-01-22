@@ -58,6 +58,8 @@ const employeurCerfaSchema = {
     label: "Code NAF de l'employeur :",
     requiredMessage: "le code NAF est obligatoire",
     example: "1031Z",
+    pattern: "^.{1,6}$", // /^([0-9]{2}\\.?[0-9]{2}[a-zA-Z]{1})$/
+    validateMessage: `le code NAF n'est pas au bon format`,
   },
   nombreDeSalaries: {
     type: Number,
@@ -83,6 +85,8 @@ const employeurCerfaSchema = {
     label: "Code IDCC de la convention collective appliquée : ",
     requiredMessage: "le code idcc est obligatoire",
     example: "0043",
+    pattern: "^[0-9]{4}$",
+    validateMessage: `le code IDCC n'est pas au bon format`,
   },
   libelleIdcc: {
     enum: [null, ...idccEnum.map(({ libelle }) => libelle)],

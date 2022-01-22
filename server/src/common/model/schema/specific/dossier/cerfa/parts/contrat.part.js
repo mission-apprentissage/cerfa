@@ -2,40 +2,66 @@ const modeContractuelSchema = require("./modeContractuel.part");
 const typeContratSchema = require("./typeContrat.part");
 const typeDerogationSchema = require("./typeDerogation.part");
 const remunerationAnnuelleSchema = require("./remunerationAnnuelle.part");
-const departementEnum = require("./departements.part");
 
 const numContratChecks = {
-  max: 15,
   example: "02B202212000000",
-  mask: "DEP 0000 MM NN 0000",
+  mask: "DEP Y M N 0000",
   maskBlocks: [
     {
-      name: "DEP",
+      name: "D",
       mask: "MaskedEnum",
-      enum: departementEnum,
+      placeholderChar: "_",
+      enum: ["0", "9"],
+      maxLength: 1,
     },
     {
-      name: "MM",
+      name: "E",
       mask: "MaskedRange",
+      placeholderChar: "_",
+      from: 0,
+      to: 9,
+      maxLength: 1,
+    },
+    {
+      name: "P",
+      mask: "MaskedEnum",
+      placeholderChar: "_",
+      enum: ["A", "B", "a", "b", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+      maxLength: 1,
+    },
+    {
+      name: "Y",
+      mask: "MaskedRange",
+      placeholderChar: "_",
+      from: 1900,
+      to: 2999,
+      maxLength: 4,
+    },
+    {
+      name: "M",
+      mask: "MaskedRange",
+      placeholderChar: "_",
       from: 1,
       to: 12,
+      maxLength: 2,
     },
     {
-      name: "NN",
+      name: "N",
       mask: "MaskedEnum",
-      enum: ["NC", ...new Array(100).fill().map((e, i) => (i < 10 ? `0${i}` : `${i}`))],
+      placeholderChar: "_",
+      enum: ["NC", "nc", ...new Array(100).fill().map((e, i) => (i < 10 ? `0${i}` : `${i}`))],
+      maxLength: 2,
     },
   ],
-  forbiddenStartWith: ["1", "2", "3", "4", "5", "6", "7", "8", "99", "90", "91", "92", "93", "94", "95"],
 
   validate: {
     validator: function (v) {
       if (!v) return true;
-      return /^(0[0-9][0-9]|02[AB]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])(NC|[0-9]{2})([0-9]{4})$/.test(v);
+      return /^(0[0-9][0-9]|02[ABab]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])((NC|nc)|[0-9]{2})([0-9]{4})$/.test(v);
     },
     message: (props) => `${props.value} n'est pas un numéro valide`,
   },
-  pattern: "^(0[0-9][0-9]|02[AB]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])(NC|[0-9]{2})([0-9]{4})$",
+  pattern: "^(0[0-9][0-9]|02[ABab]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])((NC|nc)|[0-9]{2})([0-9]{4})$",
   validateMessage: `n'est pas un numéro valide`,
 };
 

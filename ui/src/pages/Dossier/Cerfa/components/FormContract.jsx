@@ -387,10 +387,7 @@ const FormContract = () => {
                             mt="2"
                             hasInfo={false}
                             numberStepper={true}
-                            // type="number"
-                            type="numberPrefixed"
-                            format={(val) => val + ` %`}
-                            parse={(val) => val.replace(/^ %/, "")}
+                            type="number"
                             onSubmittedField={(fieldPath, data) =>
                               onSubmittedContratRemunerationsAnnuellesTaux(fieldPath, data, path)
                             }

@@ -1501,7 +1501,12 @@ export function useCerfaContrat() {
         ...convertValueToDate(remunerationsAnnuelles.dateFin),
         locked: true,
       };
-      const taux = { ...remunerationsAnnuelles.taux, locked: shouldBeLock };
+      const taux = {
+        ...remunerationsAnnuelles.taux,
+        locked: shouldBeLock,
+        mask: contratAtoms.defaultTaux.mask,
+        maskBlocks: contratAtoms.defaultTaux.maskBlocks,
+      };
       const tauxMinimal = { ...remunerationsAnnuelles.tauxMinimal, locked: shouldBeLock };
       const typeSalaire = {
         ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
