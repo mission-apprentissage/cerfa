@@ -119,6 +119,7 @@ const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, 
       else
         acc[item.name] = {
           mask: item.mask,
+          placeholderChar: item.placeholderChar,
         };
       return acc;
     }, {});

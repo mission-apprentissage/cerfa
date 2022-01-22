@@ -258,6 +258,7 @@ export const CerfaEmployeurController = async (dossier) => {
       naf: {
         doAsyncActions: async (value, data) => {
           try {
+            console.log(value);
             const insert = (str, index, value) => {
               return str.substr(0, index) + value + str.substr(index);
             };

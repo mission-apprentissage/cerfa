@@ -77,14 +77,14 @@ const adresseSchema = {
     required: function () {
       return !this.draft;
     },
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\D*$",
-      },
-    ],
+    // mask: "C",
+    // maskBlocks: [
+    //   {
+    //     name: "C",
+    //     mask: "Pattern",
+    //     pattern: "^\\D*$",
+    //   },
+    // ],
   },
 };
 module.exports = adresseSchema;

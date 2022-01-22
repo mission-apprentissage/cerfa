@@ -28,7 +28,7 @@ const employeurCerfaSchema = {
     validate: {
       validator: function (v) {
         if (!v) return true;
-        return /^([0-9]{14}|[0-9]{9} [0-9]{4})$/.test(v);
+        return /^([0-9]{14})$/.test(v);
       },
       message: (props) => `${props.value} n'est pas un siret valide`,
     },
@@ -45,7 +45,15 @@ const employeurCerfaSchema = {
     label: "N° SIRET de l'employeur :",
     requiredMessage: "Le siret est obligatoire",
     validateMessage: `n'est pas un siret valide`,
-    pattern: "^([0-9]{14}|[0-9]{9} [0-9]{4})$",
+    pattern: "^([0-9]{14})$",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\d*$",
+      },
+    ],
   },
   naf: {
     maxLength: 6,
@@ -58,8 +66,16 @@ const employeurCerfaSchema = {
     label: "Code NAF de l'employeur :",
     requiredMessage: "le code NAF est obligatoire",
     example: "1031Z",
-    pattern: "^.{1,6}$", // /^([0-9]{2}\\.?[0-9]{2}[a-zA-Z]{1})$/
+    pattern: "^([0-9]){2}\\.?([0-9]){0,2}([a-zA-Z]){0,1}$",
     validateMessage: `le code NAF n'est pas au bon format`,
+    mask: "N",
+    maskBlocks: [
+      {
+        name: "N",
+        mask: "00[.][0][0][a]",
+        placeholderChar: "_",
+      },
+    ],
   },
   nombreDeSalaries: {
     type: Number,
