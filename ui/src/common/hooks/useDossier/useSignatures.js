@@ -1,13 +1,11 @@
-import { useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import { saveCerfa } from "../useCerfa/useCerfa";
 import { cerfaAtom } from "../useCerfa/cerfaAtom";
 import { dossierAtom } from "./dossierAtom";
-import { signaturesCompletionAtom } from "./signaturesAtoms";
 import { cerfaContratLieuSignatureContratAtom } from "../useCerfa/parts/useCerfaContratAtoms";
-import { useDocuments } from "./useDocuments";
-import { convertValueToMultipleSelectOption, convertValueToOption } from "../../utils/formUtils";
+import { signaturesCompletionAtom } from "./signaturesAtoms";
 
 const setSignaturesCompletions = (lieuSignatureContrat) => {
   let countFields = 1;
@@ -21,12 +19,12 @@ const setSignaturesCompletions = (lieuSignatureContrat) => {
   return countFields === 0 ? 100 : (count * 100) / countFields;
 };
 
-export function useSignatures(typeDocument) {
+export function useSignatures() {
   const cerfa = useRecoilValue(cerfaAtom);
   const dossier = useRecoilValue(dossierAtom);
-  const { setDocumentsCompletions, setDocumentsCompletion } = useDocuments();
 
-  const [signaturesCompletion, setSignaturesCompletion] = useRecoilState(signaturesCompletionAtom);
+  const [signaturesCompletion, setSignaturesCompletionInternal] = useState(null);
+  const [sca, setScA] = useRecoilState(signaturesCompletionAtom);
   const [contratLieuSignatureContrat, setContratLieuSignatureContrat] = useRecoilState(
     cerfaContratLieuSignatureContratAtom
   );
@@ -51,40 +49,38 @@ export function useSignatures(typeDocument) {
                 lieuSignatureContrat: newV.contrat.lieuSignatureContrat.value,
               },
             });
-            setSignaturesCompletion(setSignaturesCompletions(res.contrat.lieuSignatureContrat));
+            const percent = setSignaturesCompletions(res.contrat.lieuSignatureContrat);
+            setSignaturesCompletionInternal(percent);
+            setScA(percent);
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [contratLieuSignatureContrat, setContratLieuSignatureContrat, dossier?._id, cerfa?.id, setSignaturesCompletion]
+    [contratLieuSignatureContrat, setContratLieuSignatureContrat, dossier?._id, cerfa?.id, setScA]
   );
 
-  const setAll = useCallback(
+  const setSignaturesCompletion = useCallback(
     async (res) => {
-      const docs = dossier.documents.filter((i) => i.typeDocument === typeDocument);
-      const { percent } = setDocumentsCompletions(
-        convertValueToMultipleSelectOption(res.contrat.typeContratApp),
-        convertValueToOption(res.employeur.attestationPieces),
-        docs
-      );
-      setDocumentsCompletion(percent);
-      setContratLieuSignatureContrat(res.contrat.lieuSignatureContrat);
-    },
-    [dossier, setDocumentsCompletions, setDocumentsCompletion, setContratLieuSignatureContrat, typeDocument]
-  );
+      const contratLieuSignatureContratToUse = contratLieuSignatureContrat || res.contrat.lieuSignatureContrat;
 
-  useEffect(() => {
-    if (contratLieuSignatureContrat) {
-      setSignaturesCompletion(setSignaturesCompletions(contratLieuSignatureContrat));
-    }
-  }, [contratLieuSignatureContrat, setSignaturesCompletion]);
+      const percent = setSignaturesCompletions(contratLieuSignatureContratToUse);
+      setSignaturesCompletionInternal(percent);
+      setScA(percent);
+
+      if (!contratLieuSignatureContrat) {
+        setContratLieuSignatureContrat(contratLieuSignatureContratToUse);
+      }
+    },
+    [contratLieuSignatureContrat, setContratLieuSignatureContrat, setScA]
+  );
 
   return {
-    setAll,
+    setSignaturesCompletion,
     signaturesCompletion,
-    lieuSignatureContrat: contratLieuSignatureContrat,
+    sca,
+    contratLieuSignatureContrat,
     onSubmittedContratLieuSignatureContrat,
   };
 }

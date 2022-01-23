@@ -482,9 +482,7 @@ export function useCerfaContrat() {
   const [contratDateConclusion, setContratDateConclusion] = useRecoilState(contratAtoms.cerfaContratDateConclusionAtom);
   const [contratDateFinContrat, setContratDateFinContrat] = useRecoilState(contratAtoms.cerfaContratDateFinContratAtom);
   const [contratDateRupture, setContratDateRupture] = useRecoilState(contratAtoms.cerfaContratDateRuptureAtom);
-  const [contratLieuSignatureContrat, setContratLieuSignatureContrat] = useRecoilState(
-    contratAtoms.cerfaContratLieuSignatureContratAtom
-  );
+
   const [contratTypeDerogation, setContratTypeDerogation] = useRecoilState(contratAtoms.cerfaContratTypeDerogationAtom);
   const [contratDureeTravailHebdoHeures, setContratDureeTravailHebdoHeures] = useRecoilState(
     contratAtoms.cerfaContratDureeTravailHebdoHeuresAtom
@@ -841,7 +839,6 @@ export function useCerfaContrat() {
               dateRupture: {
                 ...contratDateRupture,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -944,7 +941,6 @@ export function useCerfaContrat() {
               travailRisque: {
                 ...contratTravailRisque,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -1451,8 +1447,6 @@ export function useCerfaContrat() {
       setContratDateFinContrat(convertValueToDate(res.contrat.dateFinContrat));
       setContratDateRupture(convertValueToDate(res.contrat.dateRupture));
 
-      setContratLieuSignatureContrat(res.contrat.lieuSignatureContrat);
-
       const typeDerog = getTypeDerogation(convertValueToOption(res.contrat.typeDerogation), {
         dateNaissance: convertValueToDate(res.apprenti.dateNaissance).value,
         age: res.apprenti.age.value,
@@ -1549,7 +1543,6 @@ export function useCerfaContrat() {
       setContratDateRupture,
       setContratDureeTravailHebdoHeures,
       setContratDureeTravailHebdoMinutes,
-      setContratLieuSignatureContrat,
       setContratModeContractuel,
       setContratNoAvenant,
       setContratNoContrat,
@@ -1592,7 +1585,6 @@ export function useCerfaContrat() {
         dateConclusion: contratDateConclusion,
         dateFinContrat: contratDateFinContrat,
         dateRupture: contratDateRupture,
-        lieuSignatureContrat: contratLieuSignatureContrat,
         typeDerogation: contratTypeDerogation,
         dureeTravailHebdoHeures: contratDureeTravailHebdoHeures,
         dureeTravailHebdoMinutes: contratDureeTravailHebdoMinutes,

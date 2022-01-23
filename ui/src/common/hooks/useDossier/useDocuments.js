@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { saveCerfa } from "../useCerfa/useCerfa";
 import { cerfaAtom } from "../useCerfa/cerfaAtom";
 import { dossierAtom } from "./dossierAtom";
-import { documentsAtom, documentsIsRequiredAtom } from "./documentsAtoms";
+import { documentsAtom, documentsIsRequiredAtom, documentsCompletionAtom } from "./documentsAtoms";
 import { cerfaContratTypeContratAppAtom } from "../useCerfa/parts/useCerfaContratAtoms";
 import { cerfaEmployeurAttestationPiecesAtom } from "../useCerfa/parts/useCerfaEmployeurAtoms";
 
@@ -49,6 +49,7 @@ export function useDocuments() {
 
   const [documents, setDocuments] = useRecoilState(documentsAtom);
   const [isRequired, setIsRequired] = useRecoilState(documentsIsRequiredAtom);
+  const [, setDcA] = useRecoilState(documentsCompletionAtom);
 
   const [documentsCompletion, setDocumentsCompletionInternal] = useState(null);
   const [employeurAttestationPieces, setEmployeurAttestationPieces] = useRecoilState(
@@ -85,20 +86,14 @@ export function useDocuments() {
           );
 
           setDocumentsCompletionInternal(percent);
+          setDcA(percent);
           // }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [
-      employeurAttestationPieces,
-      setEmployeurAttestationPieces,
-      dossier?._id,
-      cerfa?.id,
-      documents,
-      setDocumentsCompletionInternal,
-    ]
+    [employeurAttestationPieces, setEmployeurAttestationPieces, dossier?._id, cerfa?.id, documents, setDcA]
   );
 
   const onDocumentsChanged = useCallback(
@@ -113,8 +108,9 @@ export function useDocuments() {
         docs
       );
       setDocumentsCompletionInternal(percent);
+      setDcA(percent);
     },
-    [contratTypeContratApp, dossier, employeurAttestationPieces, setDocuments, setDossier]
+    [contratTypeContratApp, dossier, employeurAttestationPieces, setDcA, setDocuments, setDossier]
   );
 
   const setDocumentsCompletion = useCallback(
@@ -132,6 +128,7 @@ export function useDocuments() {
         docs
       );
       setDocumentsCompletionInternal(percent);
+      setDcA(percent);
       setIsRequired(isRequired);
 
       if (!employeurAttestationPieces) {
@@ -145,6 +142,7 @@ export function useDocuments() {
       contratTypeContratApp,
       employeurAttestationPieces,
       setContratTypeContratApp,
+      setDcA,
       setDocuments,
       setEmployeurAttestationPieces,
       setIsRequired,

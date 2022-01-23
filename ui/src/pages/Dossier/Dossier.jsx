@@ -33,11 +33,12 @@ import LivePeopleAvatar from "./components/LivePeopleAvatar";
 
 import { useDossier } from "../../common/hooks/useDossier/useDossier";
 import { useDocuments } from "../../common/hooks/useDossier/useDocuments";
+import { useSignatures } from "../../common/hooks/useDossier/useSignatures";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
 import { cerfaAtom } from "../../common/hooks/useCerfa/cerfaAtom";
 import { AvatarPlus, StepWip, TickBubble, DownloadLine, SentPaperPlane } from "../../theme/components/icons";
 
-import { signaturesCompletionAtom, signaturesPdfLoadedAtom } from "../../common/hooks/useDossier/signaturesAtoms";
+import { signaturesPdfLoadedAtom } from "../../common/hooks/useDossier/signaturesAtoms";
 import { cerfaPartFormationCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
 import {
   cerfaPartEmployeurCompletionAtom,
@@ -198,6 +199,8 @@ export default () => {
   const cerfa = useRecoilValue(cerfaAtom);
   const { documentsCompletion, setDocumentsCompletion } = useDocuments();
   const [documentsComplete, setDocumentsComplete] = useState(false);
+  const { signaturesCompletion, setSignaturesCompletion } = useSignatures();
+  const [signaturesComplete, setSignaturesComplete] = useState(false);
 
   const setWorkspaceTitle = useSetRecoilState(workspaceTitleAtom);
   const employeurPrivePublic = useRecoilValueLoadable(cerfaEmployeurPrivePublicAtom);
@@ -211,7 +214,6 @@ export default () => {
   const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
   const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
 
-  const signaturesCompletion = useRecoilValueLoadable(signaturesCompletionAtom);
   const signaturesPdfLoaded = useRecoilValueLoadable(signaturesPdfLoadedAtom);
 
   const cerfaPercentageCompletion =
@@ -227,8 +229,7 @@ export default () => {
     maitresCompletionAtom?.contents === 100 &&
     contratCompletionAtom?.contents === 100 &&
     formationCompletion?.contents === 100;
-  const signatureComplete = signaturesCompletion?.contents === 100;
-  const signaturesComplete = cerfaComplete && documentsComplete && signatureComplete;
+  const dossierComplete = cerfaComplete && documentsComplete && signaturesComplete;
 
   useEffect(() => {
     const run = async () => {
@@ -238,23 +239,29 @@ export default () => {
 
       if (documentsCompletion === null && cerfa && dossier) {
         setDocumentsCompletion(cerfa, dossier);
-      } else if (cerfa) {
+      }
+      if (signaturesCompletion === null && cerfa) {
+        setSignaturesCompletion(cerfa);
+      }
+
+      if (cerfa && documentsCompletion !== null && signaturesCompletion !== null) {
         const documentsCompleteTmp = documentsCompletion === 100;
+        const signaturesCompleteTmp = signaturesCompletion === 100;
 
         setDocumentsComplete(documentsCompleteTmp);
+        setSignaturesComplete(signaturesCompleteTmp);
 
         if (match.params.step === "cerfa") {
           if (cerfaPercentageCompletion > 0) {
             setStep1Visited(true);
-            // console.log("HERE", documentsCompleteTmp);
             setStep2State(documentsCompleteTmp ? "success" : "error");
-            setStep3State(!signaturesComplete ? "error" : undefined);
+            setStep3State(!signaturesCompleteTmp ? "error" : "success");
           }
         } else if (match.params.step === "documents") {
           setStep2Visited(true);
           setStep3Visited(true);
           setStep1State(!cerfaComplete ? "error" : undefined);
-          setStep3State(!signaturesComplete ? "error" : undefined);
+          setStep3State(!signaturesCompleteTmp ? "error" : "success");
         } else if (match.params.step === "signatures") {
           setStep3Visited(true);
           setStep2Visited(true);
@@ -275,8 +282,10 @@ export default () => {
     isloaded,
     match.params.step,
     setDocumentsCompletion,
+    setSignaturesCompletion,
     setWorkspaceTitle,
     signaturesComplete,
+    signaturesCompletion,
   ]);
 
   let stepStateSteps23 = useCallback(
@@ -284,15 +293,12 @@ export default () => {
       if (!documentsComplete && nextActiveStep !== 1) {
         setStep2State(step2Visited ? "error" : undefined);
       } else {
-        // console.log(1);
         setStep2State(documentsComplete ? (nextActiveStep === 0 ? "success" : undefined) : undefined);
       }
 
       if (!signaturesComplete && nextActiveStep !== 2) {
-        // console.log(2);
         setStep3State(step3Visited ? "error" : undefined);
       } else {
-        // console.log(3);
         setStep3State(undefined);
       }
 
@@ -521,7 +527,7 @@ export default () => {
                 }}
                 variant="primary"
                 isDisabled={
-                  !signaturesComplete ||
+                  !dossierComplete ||
                   employeurPrivePublic?.contents?.value === "Employeur privé" ||
                   !signaturesPdfLoaded?.contents
                 }
@@ -543,7 +549,7 @@ export default () => {
                   _hover={{ bg: "greenmedium.600" }}
                   color="white"
                   isDisabled={
-                    !signaturesComplete ||
+                    !dossierComplete ||
                     employeurPrivePublic?.contents?.value === "Employeur privé" ||
                     !signaturesPdfLoaded?.contents
                   }
@@ -559,7 +565,7 @@ export default () => {
                     variant="primary"
                     ml={12}
                     isDisabled={
-                      !signaturesComplete ||
+                      !dossierComplete ||
                       employeurPrivePublic?.contents?.value === "Employeur privé" ||
                       !signaturesPdfLoaded?.contents
                     }

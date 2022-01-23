@@ -14,6 +14,8 @@ import { useSignatures } from "../../../common/hooks/useDossier/useSignatures";
 import { signaturesPdfLoadedAtom } from "../../../common/hooks/useDossier/signaturesAtoms";
 import InputCerfa from "../Cerfa/components/Input";
 
+import { documentsCompletionAtom } from "../../../common/hooks/useDossier/documentsAtoms";
+
 import { cerfaPartFormationCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
 import { cerfaPartEmployeurCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import { cerfaPartMaitresCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
@@ -97,26 +99,29 @@ const ContratPdf = ({ dossierId }) => {
 };
 
 export default ({ dossierId }) => {
-  const { isLoading, cerfa } = useCerfa();
+  useCerfa();
+  const {
+    sca: signaturesCompletion,
+    contratLieuSignatureContrat,
+    onSubmittedContratLieuSignatureContrat,
+  } = useSignatures();
+
+  const documentsCompletion = useRecoilValueLoadable(documentsCompletionAtom);
+
   const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
   const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
   const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
   const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
   const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
-  const { signaturesCompletion, lieuSignatureContrat, onSubmittedContratLieuSignatureContrat, setAll } =
-    useSignatures("CONVENTION_FORMATION");
-  const [value, setValue] = useState(lieuSignatureContrat?.value);
+  const [value, setValue] = useState(contratLieuSignatureContrat?.value);
   const cerfaComplete =
     employeurCompletionAtom?.contents === 100 &&
     apprentiCompletionAtom?.contents === 100 &&
     maitresCompletionAtom?.contents === 100 &&
     contratCompletionAtom?.contents === 100 &&
     formationCompletion?.contents === 100;
+  const documentsComplete = documentsCompletion?.contents === 100;
   const signatureComplete = signaturesCompletion === 100;
-
-  useEffect(() => {
-    if (!isLoading) setAll(cerfa);
-  }, [cerfa, isLoading, setAll]);
 
   if (!cerfaComplete) {
     return (
@@ -124,6 +129,21 @@ export default ({ dossierId }) => {
         <Center>
           <Tooltip variant="alert">
             <Text>Le Cerfa doit être complété à 100% avant de commencer la procédure de finalisation du dossier.</Text>
+          </Tooltip>
+        </Center>
+      </Box>
+    );
+  }
+
+  if (!documentsComplete) {
+    return (
+      <Box mt={12} pt={2} minH="25vh">
+        <Center>
+          <Tooltip variant="alert">
+            <Text>
+              Les pièces justificatives doivnt être complétées à 100% avant de commencer la procédure de finalisation du
+              dossier.
+            </Text>
           </Tooltip>
         </Center>
       </Box>
@@ -139,7 +159,7 @@ export default ({ dossierId }) => {
         <HStack spacing={8} alignItems="end">
           <InputCerfa
             path="contrat.lieuSignatureContrat"
-            field={lieuSignatureContrat}
+            field={contratLieuSignatureContrat}
             type="text"
             mt="2"
             onSubmittedField={(path, data) => setValue(data)}
