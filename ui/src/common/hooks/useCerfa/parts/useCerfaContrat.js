@@ -1178,7 +1178,6 @@ export function useCerfaContrat() {
               salaireEmbauche: {
                 ...contratSalaireEmbauche,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };

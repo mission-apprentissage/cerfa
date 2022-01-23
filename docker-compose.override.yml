@@ -11,7 +11,7 @@ services:
     stdin_open: true
     volumes:
       - ./ui:/app #Allows source folders to be watched
-      - /app/node_modules/
+      # - /app/node_modules/
     build:
       args:
         - REACT_APP_ENV=dev

@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Box, HStack, Button, Heading, Input, ListItem, Text, List, useToast, Spinner, Link } from "@chakra-ui/react";
 import { useDropzone } from "react-dropzone";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { _postFile, _delete } from "../../../../common/httpClient";
 import { DownloadLine, File, Bin } from "../../../../theme/components/icons";
 import { dossierAtom } from "../../../../common/hooks/useDossier/dossierAtom";
-import { documentsAtom } from "../../../../common/hooks/useDossier/documentsAtoms";
+import { useDocuments } from "../../../../common/hooks/useDossier/useDocuments";
 import { hasContextAccessTo } from "../../../../common/utils/rolesUtils";
 import queryString from "query-string";
 
@@ -41,13 +41,11 @@ function formatBytes(bytes, decimals = 2) {
 }
 
 export default ({ title, onUploadSuccessed, typeDocument }) => {
-  // const dossier = useRecoilValue(dossierAtom);
-  const [dossier, setDossier] = useRecoilState(dossierAtom);
+  const dossier = useRecoilValue(dossierAtom);
   const toast = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadError, setUploadError] = useState(null);
-  // const [documents, setDocuments] = useState(dossier.documents.filter((i) => i.typeDocument === typeDocument));
-  const [documents, setDocuments] = useRecoilState(documentsAtom);
+  const { documents, onDocumentsChanged } = useDocuments();
 
   const maxFiles = 1;
 
@@ -63,9 +61,7 @@ export default ({ title, onUploadSuccessed, typeDocument }) => {
           `${endpoint}/v1/upload?dossierId=${dossier._id}&typeDocument=${typeDocument}`,
           data
         );
-        const docs = documents.filter((i) => i.typeDocument === typeDocument);
-        setDocuments(docs);
-        setDossier({ ...dossier, documents: docs });
+        onDocumentsChanged(documents, typeDocument);
         toast({
           title: "Le fichier a bien été déposé",
           status: "success",
@@ -83,7 +79,7 @@ export default ({ title, onUploadSuccessed, typeDocument }) => {
         setIsSubmitting(false);
       }
     },
-    [dossier, setDocuments, setDossier, toast, typeDocument]
+    [dossier._id, onDocumentsChanged, toast, typeDocument]
   );
 
   const onDropRejected = useCallback(
@@ -108,9 +104,7 @@ export default ({ title, onUploadSuccessed, typeDocument }) => {
           const { documents } = await _delete(
             `${endpoint}/v1/upload?dossierId=${dossier._id}&${queryString.stringify(data)}`
           );
-          const docs = documents.filter((i) => i.typeDocument === typeDocument);
-          setDocuments(docs);
-          setDossier({ ...dossier, documents: docs });
+          onDocumentsChanged(documents, typeDocument);
         } catch (e) {
           console.error(e);
         }

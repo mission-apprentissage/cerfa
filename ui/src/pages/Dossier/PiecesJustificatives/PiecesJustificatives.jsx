@@ -1,21 +1,18 @@
-import React, { lazy, useEffect } from "react";
+import React, { lazy } from "react";
 import { Box, Text, Center } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
 import { useDocuments } from "../../../common/hooks/useDossier/useDocuments";
 import InputCerfa from "../Cerfa/components/Input";
 import Tooltip from "../../../common/components/Tooltip";
 import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
+import { cerfaContratTypeContratAppAtom } from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 
 const UploadFiles = lazy(() => import("./components/UploadFiles"));
 
 export default () => {
-  const { isLoading, cerfa } = useCerfa();
-
-  const { isRequired, employeurAttestationPieces, onSubmittedEmployeurAttestationPieces, typeContratApp, setAll } =
-    useDocuments("CONVENTION_FORMATION");
-
-  useEffect(() => {
-    if (!isLoading) setAll(cerfa);
-  }, [cerfa, isLoading, setAll]);
+  const typeContratApp = useRecoilValue(cerfaContratTypeContratAppAtom);
+  useCerfa();
+  const { isRequired, employeurAttestationPieces, onSubmittedEmployeurAttestationPieces } = useDocuments();
 
   return (
     <Box mt={12} pt={2} minH="25vh">

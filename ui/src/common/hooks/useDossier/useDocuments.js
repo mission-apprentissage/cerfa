@@ -1,14 +1,11 @@
-import { useEffect, useState, useCallback } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useState, useCallback } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 import { saveCerfa } from "../useCerfa/useCerfa";
 import { cerfaAtom } from "../useCerfa/cerfaAtom";
 import { dossierAtom } from "./dossierAtom";
-import { documentsCompletionAtom, documentsAtom } from "./documentsAtoms";
-import {
-  cerfaContratTypeContratAppAtom,
-  cerfaContratLieuSignatureContratAtom,
-} from "../useCerfa/parts/useCerfaContratAtoms";
+import { documentsAtom, documentsIsRequiredAtom } from "./documentsAtoms";
+import { cerfaContratTypeContratAppAtom } from "../useCerfa/parts/useCerfaContratAtoms";
 import { cerfaEmployeurAttestationPiecesAtom } from "../useCerfa/parts/useCerfaEmployeurAtoms";
 
 import {
@@ -46,20 +43,19 @@ const setDocumentsCompletions = (typeContratApp, employeurAttestationPieces, doc
   return { percent, isRequired };
 };
 
-export function useDocuments(typeDocument) {
+export function useDocuments() {
   const cerfa = useRecoilValue(cerfaAtom);
-  const dossier = useRecoilValue(dossierAtom);
+  const [dossier, setDossier] = useRecoilState(dossierAtom);
 
   const [documents, setDocuments] = useRecoilState(documentsAtom);
+  const [isRequired, setIsRequired] = useRecoilState(documentsIsRequiredAtom);
 
-  const [documentsCompletion, setDocumentsCompletion] = useRecoilState(documentsCompletionAtom);
+  const [documentsCompletion, setDocumentsCompletionInternal] = useState(null);
   const [employeurAttestationPieces, setEmployeurAttestationPieces] = useRecoilState(
     cerfaEmployeurAttestationPiecesAtom
   );
-  const [isRequired, setIsRequired] = useState(true);
-  const typeContratApp = useRecoilValue(cerfaContratTypeContratAppAtom);
 
-  const setContratLieuSignatureContrat = useSetRecoilState(cerfaContratLieuSignatureContratAtom);
+  const [contratTypeContratApp, setContratTypeContratApp] = useRecoilState(cerfaContratTypeContratAppAtom);
 
   const onSubmittedEmployeurAttestationPieces = useCallback(
     async (path, data) => {
@@ -73,22 +69,23 @@ export function useDocuments(typeDocument) {
               },
             },
           };
-          if (employeurAttestationPieces.value !== newV.employeur.attestationPieces.value) {
-            setEmployeurAttestationPieces(newV.employeur.attestationPieces);
+          // if (employeurAttestationPieces.value !== newV.employeur.attestationPieces.value) {
+          setEmployeurAttestationPieces(newV.employeur.attestationPieces);
 
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
-              employeur: {
-                attestationPieces: newV.employeur.attestationPieces.value === "true" ? true : null,
-              },
-            });
+          const res = await saveCerfa(dossier?._id, cerfa?.id, {
+            employeur: {
+              attestationPieces: newV.employeur.attestationPieces.value === "true" ? true : null,
+            },
+          });
 
-            const { percent } = setDocumentsCompletions(
-              convertMultipleSelectOptionToValue(res.contrat.typeContratApp),
-              newV.employeur.attestationPieces,
-              documents
-            );
-            setDocumentsCompletion(percent);
-          }
+          const { percent } = setDocumentsCompletions(
+            convertMultipleSelectOptionToValue(res.contrat.typeContratApp),
+            newV.employeur.attestationPieces,
+            documents
+          );
+
+          setDocumentsCompletionInternal(percent);
+          // }
         }
       } catch (e) {
         console.error(e);
@@ -100,41 +97,66 @@ export function useDocuments(typeDocument) {
       dossier?._id,
       cerfa?.id,
       documents,
-      setDocumentsCompletion,
+      setDocumentsCompletionInternal,
     ]
   );
 
-  const setAll = useCallback(
-    async (res) => {
-      const docs = dossier.documents.filter((i) => i.typeDocument === typeDocument);
+  const onDocumentsChanged = useCallback(
+    async (newDocumentsArray, typeDocument) => {
+      const docs = newDocumentsArray.filter((i) => i.typeDocument === typeDocument);
+      setDocuments(docs);
+      setDossier({ ...dossier, documents: docs });
+
       const { percent } = setDocumentsCompletions(
-        convertValueToMultipleSelectOption(res.contrat.typeContratApp),
-        convertValueToOption(res.employeur.attestationPieces),
+        convertMultipleSelectOptionToValue(contratTypeContratApp),
+        employeurAttestationPieces,
         docs
       );
-      setDocumentsCompletion(percent);
-      setContratLieuSignatureContrat(res.contrat.lieuSignatureContrat);
+      setDocumentsCompletionInternal(percent);
     },
-    [dossier, setDocumentsCompletion, setContratLieuSignatureContrat, typeDocument]
+    [contratTypeContratApp, dossier, employeurAttestationPieces, setDocuments, setDossier]
   );
 
-  useEffect(() => {
-    if (typeContratApp && employeurAttestationPieces && dossier) {
-      const docs = dossier.documents.filter((i) => i.typeDocument === typeDocument);
+  const setDocumentsCompletion = useCallback(
+    async (res, d) => {
+      const docs = d?.documents.filter((i) => i.typeDocument === "CONVENTION_FORMATION");
       setDocuments(docs);
-      const { percent, isRequired } = setDocumentsCompletions(typeContratApp, employeurAttestationPieces, docs);
-      setDocumentsCompletion(percent);
+      const employeurAttestationPiecesToUse =
+        employeurAttestationPieces || convertValueToOption(res.employeur.attestationPieces);
+      const contratTypeContratAppToUse =
+        contratTypeContratApp || convertValueToMultipleSelectOption(res.contrat.typeContratApp);
+
+      const { percent, isRequired } = setDocumentsCompletions(
+        contratTypeContratAppToUse,
+        employeurAttestationPiecesToUse,
+        docs
+      );
+      setDocumentsCompletionInternal(percent);
       setIsRequired(isRequired);
-    }
-  }, [setDocuments, employeurAttestationPieces, setDocumentsCompletion, typeContratApp, dossier, typeDocument]);
+
+      if (!employeurAttestationPieces) {
+        setEmployeurAttestationPieces(employeurAttestationPiecesToUse);
+      }
+      if (!contratTypeContratApp) {
+        setContratTypeContratApp(contratTypeContratAppToUse);
+      }
+    },
+    [
+      contratTypeContratApp,
+      employeurAttestationPieces,
+      setContratTypeContratApp,
+      setDocuments,
+      setEmployeurAttestationPieces,
+      setIsRequired,
+    ]
+  );
 
   return {
-    setAll,
-    setDocumentsCompletions,
+    documents,
+    onDocumentsChanged,
     setDocumentsCompletion,
     documentsCompletion,
     isRequired,
-    typeContratApp,
     employeurAttestationPieces,
     onSubmittedEmployeurAttestationPieces,
   };

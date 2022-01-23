@@ -4119,10 +4119,10 @@ case-sensitive-paths-webpack-plugin@2.3.0:
   resolved "https://registry.yarnpkg.com/case-sensitive-paths-webpack-plugin/-/case-sensitive-paths-webpack-plugin-2.3.0.tgz#23ac613cc9a856e4f88ff8bb73bbb5e989825cf7"
   integrity sha512-/4YgnZS8y1UXXmC02xD5rRrBEu6T5ub+mQHLNRj0fzTRbgdBYhsNo2V5EqwgqrExjxsjtF/OpAKAMkKsxbD5XQ==
 
-chakra-ui-steps-rework-mna@1.5.0-beta.2:
-  version "1.5.0-beta.2"
-  resolved "https://registry.yarnpkg.com/chakra-ui-steps-rework-mna/-/chakra-ui-steps-rework-mna-1.5.0-beta.2.tgz#a775781a2d7e0f336d0ba2a74759f477907a8684"
-  integrity sha512-5ILDeyRgZ9+rQevKQGbrYf0iLtpws68At3lq0wIGx1sx3MnEjPQ57kruBmTesBkz9fuq8r1yrM31pvievamL+A==
+chakra-ui-steps-rework-mna@1.5.0-beta.5:
+  version "1.5.0-beta.5"
+  resolved "https://registry.yarnpkg.com/chakra-ui-steps-rework-mna/-/chakra-ui-steps-rework-mna-1.5.0-beta.5.tgz#f45a8aeb45a3260548c2cf8bd445fb9056b7c933"
+  integrity sha512-4e+U4cU875xgVaOgDQhq0f7UHXcyKBuyJwTM3bJmYebJaQ/4pYv1qkb7GFRLCNKGSz8hyy+e0xlkeyRwkiPUSA==
 
 chalk@2.4.2, chalk@^2.0.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"

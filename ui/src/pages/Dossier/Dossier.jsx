@@ -32,11 +32,11 @@ import { InviteModal } from "./components/InviteModal";
 import LivePeopleAvatar from "./components/LivePeopleAvatar";
 
 import { useDossier } from "../../common/hooks/useDossier/useDossier";
+import { useDocuments } from "../../common/hooks/useDossier/useDocuments";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
 import { cerfaAtom } from "../../common/hooks/useCerfa/cerfaAtom";
 import { AvatarPlus, StepWip, TickBubble, DownloadLine, SentPaperPlane } from "../../theme/components/icons";
 
-import { documentsCompletionAtom } from "../../common/hooks/useDossier/documentsAtoms";
 import { signaturesCompletionAtom, signaturesPdfLoadedAtom } from "../../common/hooks/useDossier/signaturesAtoms";
 import { cerfaPartFormationCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
 import {
@@ -195,6 +195,9 @@ export default () => {
   const [step3Visited, setStep3Visited] = useState(false);
 
   const { isloaded, dossier } = useDossier(match.params.id);
+  const cerfa = useRecoilValue(cerfaAtom);
+  const { documentsCompletion, setDocumentsCompletion } = useDocuments();
+  const [documentsComplete, setDocumentsComplete] = useState(false);
 
   const setWorkspaceTitle = useSetRecoilState(workspaceTitleAtom);
   const employeurPrivePublic = useRecoilValueLoadable(cerfaEmployeurPrivePublicAtom);
@@ -208,7 +211,6 @@ export default () => {
   const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
   const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
 
-  const documentsCompletion = useRecoilValueLoadable(documentsCompletionAtom);
   const signaturesCompletion = useRecoilValueLoadable(signaturesCompletionAtom);
   const signaturesPdfLoaded = useRecoilValueLoadable(signaturesPdfLoadedAtom);
 
@@ -225,7 +227,6 @@ export default () => {
     maitresCompletionAtom?.contents === 100 &&
     contratCompletionAtom?.contents === 100 &&
     formationCompletion?.contents === 100;
-  const documentsComplete = documentsCompletion?.contents === 100;
   const signatureComplete = signaturesCompletion?.contents === 100;
   const signaturesComplete = cerfaComplete && documentsComplete && signatureComplete;
 
@@ -234,33 +235,46 @@ export default () => {
       if (isloaded && dossier) {
         setWorkspaceTitle(dossier.nom);
       }
-      if (match.params.step === "cerfa") {
-        if (cerfaPercentageCompletion > 0) {
-          setStep1Visited(true);
-          setStep2State(!documentsComplete ? "error" : undefined);
+
+      if (documentsCompletion === null && cerfa && dossier) {
+        setDocumentsCompletion(cerfa, dossier);
+      } else if (cerfa) {
+        const documentsCompleteTmp = documentsCompletion === 100;
+
+        setDocumentsComplete(documentsCompleteTmp);
+
+        if (match.params.step === "cerfa") {
+          if (cerfaPercentageCompletion > 0) {
+            setStep1Visited(true);
+            // console.log("HERE", documentsCompleteTmp);
+            setStep2State(documentsCompleteTmp ? "success" : "error");
+            setStep3State(!signaturesComplete ? "error" : undefined);
+          }
+        } else if (match.params.step === "documents") {
+          setStep2Visited(true);
+          setStep3Visited(true);
+          setStep1State(!cerfaComplete ? "error" : undefined);
           setStep3State(!signaturesComplete ? "error" : undefined);
+        } else if (match.params.step === "signatures") {
+          setStep3Visited(true);
+          setStep2Visited(true);
+          setStep1State(!cerfaComplete ? "error" : undefined);
+          setStep2State(!documentsCompleteTmp ? "error" : undefined);
         }
-      } else if (match.params.step === "documents") {
-        setStep2Visited(true);
-        setStep3Visited(true);
-        setStep1State(!cerfaComplete ? "error" : undefined);
-        setStep3State(!signaturesComplete ? "error" : undefined);
-      } else if (match.params.step === "signatures") {
-        setStep3Visited(true);
-        setStep2Visited(true);
-        setStep1State(!cerfaComplete ? "error" : undefined);
-        setStep2State(!documentsComplete ? "error" : undefined);
       }
     };
     run();
   }, [
+    cerfa,
     cerfaComplete,
     cerfaPercentageCompletion,
     documentsComplete,
+    documentsCompletion,
     dossier,
     history,
     isloaded,
     match.params.step,
+    setDocumentsCompletion,
     setWorkspaceTitle,
     signaturesComplete,
   ]);
@@ -270,12 +284,15 @@ export default () => {
       if (!documentsComplete && nextActiveStep !== 1) {
         setStep2State(step2Visited ? "error" : undefined);
       } else {
-        setStep2State(undefined);
+        // console.log(1);
+        setStep2State(documentsComplete ? (nextActiveStep === 0 ? "success" : undefined) : undefined);
       }
 
       if (!signaturesComplete && nextActiveStep !== 2) {
+        // console.log(2);
         setStep3State(step3Visited ? "error" : undefined);
       } else {
+        // console.log(3);
         setStep3State(undefined);
       }
 
@@ -298,8 +315,14 @@ export default () => {
 
     if (nextActiveStep === 0) setStep1Visited(true);
 
+    let newSlug = "/cerfa";
+    if (nextActiveStep === 1) newSlug = "/documents";
+    if (nextActiveStep === 2) newSlug = "/signatures";
+    history.replace(match.url.replace(/\/[^/]*$/, newSlug));
+
     nextStep();
-  }, [activeStep, cerfaComplete, nextStep, stepStateSteps23]);
+  }, [activeStep, cerfaComplete, history, match, nextStep, stepStateSteps23]);
+
   let onClickPrevStep = useCallback(async () => {
     const nextActiveStep = activeStep - 1;
 
@@ -313,8 +336,13 @@ export default () => {
 
     if (nextActiveStep === 0) setStep1Visited(true);
 
+    let newSlug = "/cerfa";
+    if (nextActiveStep === 1) newSlug = "/documents";
+    if (nextActiveStep === 2) newSlug = "/signatures";
+    history.replace(match.url.replace(/\/[^/]*$/, newSlug));
+
     prevStep();
-  }, [activeStep, cerfaComplete, prevStep, step1Visited, stepStateSteps23]);
+  }, [activeStep, cerfaComplete, history, match.url, prevStep, step1Visited, stepStateSteps23]);
 
   let onSendToAgecap = useCallback(async () => {
     try {
@@ -424,6 +452,12 @@ export default () => {
               }
               stepStateSteps23(step);
               if (step === 0) setStep1Visited(true);
+
+              let newSlug = "/cerfa";
+              if (step === 1) newSlug = "/documents";
+              if (step === 2) newSlug = "/signatures";
+              history.replace(match.url.replace(/\/[^/]*$/, newSlug));
+
               return setStep(step);
             }}
             activeStep={activeStep}
