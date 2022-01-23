@@ -1,5 +1,5 @@
 import React, { lazy } from "react";
-import { Switch, useRouteMatch } from "react-router-dom";
+import { Switch, useRouteMatch, Route } from "react-router-dom";
 import { Box, Center, Container, Spinner } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import PrivateRoute from "../../common/components/PrivateRoute";
@@ -13,6 +13,7 @@ import * as WorkspaceParametresNotifications from "./WorkspaceParametresNotifica
 
 const NouveauDossier = lazy(() => import("../Dossier/NouveauDossier"));
 const Dossier = lazy(() => import("../Dossier/Dossier"));
+const NotFoundPage = lazy(() => import("../NotFoundPage"));
 
 const Loader = () => (
   <Center>
@@ -78,6 +79,9 @@ export default () => {
           {hasContextAccessTo(workspace, "wks/page_espace/page_dossiers/ajouter_nouveau_dossier") && (
             <PrivateRoute exact path={paths.nouveauDossier} component={NouveauDossier} />
           )}
+
+          {/* Fallback */}
+          <Route component={NotFoundPage} />
         </Switch>
       </Box>
     </Layout>
