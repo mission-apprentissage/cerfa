@@ -1,13 +1,56 @@
 const { PDFDocument, rgb, StandardFonts } = require("pdf-lib");
-const moment = require("moment");
-const { isFunction, isObject } = require("lodash");
+const { isFunction, isObject, findIndex } = require("lodash");
+const typeVoie = require("../../../../common/constants/typeVoie");
+const { DateTime } = require("luxon");
+
+const strTransform = (value, transformType) => {
+  if (transformType === "toLowerCase") return value.toLowerCase();
+  if (transformType === "toUpperCase") return value.toUpperCase();
+  return value;
+};
+const shortenVoie = (value, transformType) => {
+  const matchIndex = findIndex(typeVoie, (item) =>
+    strTransform(value, transformType).includes(strTransform(item.libelle, transformType))
+  );
+  let replacer = null;
+  if (matchIndex !== -1) replacer = typeVoie[matchIndex];
+  if (!replacer) return null;
+
+  return strTransform(value, transformType)
+    .trim()
+    .replace(strTransform(replacer.libelle, transformType), replacer.code);
+};
+
+const splitMultipleLines = (value, maxLength) => {
+  const reg = new RegExp(`.{1,${maxLength}}(\\s|$)`, "g");
+  const chunks = value.match(reg);
+
+  return chunks;
+};
+
+const convertDate = (value) =>
+  value
+    ? DateTime.fromMillis(value.valueOf()).setZone("Europe/Paris").setLocale("fr-FR").toFormat("dd/MM/yyyy")
+    : undefined;
 
 const fieldsPositions = {
   employeur: {
     denomination: {
       x: 28,
-      y: 685,
-      maxLength: 47,
+      title: (value) => {
+        let newValue = value.toLowerCase();
+
+        const result = [];
+        const lines = splitMultipleLines(newValue, 55);
+        let yFirstLine = 687;
+        if (lines.length > 1) yFirstLine = 690;
+        for (let index = 0; index < lines.length; index++) {
+          const line = lines[index];
+          result.push({ text: line, options: { y: yFirstLine - index * 10 } });
+        }
+
+        return result;
+      },
     },
     adresse: {
       numero: {
@@ -16,49 +59,51 @@ const fieldsPositions = {
         maxLength: 9,
       },
       voie: {
-        x: 155,
-        y: 649,
-        maxLength: 23,
+        x: 152,
+        maxLength: 30,
         title: (value) => {
-          const voieWordToReplace = [
-            ["Boulevard", "blvd"],
-            ["Avenue", "avn"],
-            ["Promenade", "pro"],
-          ];
-          for (let index = 0; index < voieWordToReplace.length; index++) {
-            const [wordToReplace, replaceWith] = voieWordToReplace[index];
-            if (value.includes(wordToReplace)) {
-              return value.replace(wordToReplace, replaceWith);
-            }
+          let shorttened = shortenVoie(value) || shortenVoie(value, "toLowerCase") || shortenVoie(value, "toUpperCase");
+
+          let newValue = shorttened?.toLowerCase() || value.toLowerCase();
+
+          const result = [];
+          const lines = splitMultipleLines(newValue, 30);
+          let yFirstLine = 649;
+          if (lines.length > 1) yFirstLine = 657;
+          for (let index = 0; index < lines.length; index++) {
+            const line = lines[index];
+            result.push({ text: line, options: { y: yFirstLine - index * 12 } });
           }
-          return value;
+
+          return result;
         },
       },
       complement: {
-        x: 95,
-        y: 630,
+        x: 96,
+        y: 631,
         maxLength: 35,
+        title: (value) => value.toLowerCase(),
       },
       codePostal: {
         x: 97,
         y: 610,
         maxLength: 5,
-        title: (value) => {
-          return value.match(/\d{1}/g).join(" ");
-        },
+        title: (value) => value.toLowerCase(),
       },
       commune: {
         x: 89,
         y: 592,
         maxLength: 35,
+        title: (value) => value.toLowerCase(),
       },
     },
     telephone: {
       x: 90,
       y: 574,
-      maxLength: 10,
+      maxLength: 15,
       title: (value) => {
-        return value.match(/\d{2}/g).join(".");
+        let newValue = value.replace("+33", "0");
+        return newValue.match(/\d{2}/g).join(" ");
       },
     },
     courriel: {
@@ -78,10 +123,16 @@ const fieldsPositions = {
     siret: {
       x: 305,
       y: 685,
-      maxLength: 14,
+      maxLength: 28,
       title: (value) => {
         return value.match(/\d{1}/g).join(" ");
       },
+    },
+    privePublic: {
+      x: 391,
+      y: 714,
+      maxLength: 1,
+      title: (value) => (value ? "X" : ""),
     },
     typeEmployeur: {
       x: 400,
@@ -90,46 +141,34 @@ const fieldsPositions = {
     },
     employeurSpecifique: {
       x: 418,
-      y: 648,
+      y: 649,
       maxLength: 1,
+      title: (value) => `${value}`,
     },
     naf: {
       x: 480,
       y: 630,
       maxLength: 6,
-      title: (value) => {
-        return value.match(/\d{1}/g)?.join(" ");
-      },
+      title: (value) => value.toUpperCase(),
     },
     nombreDeSalaries: {
-      x: 305,
-      y: 597,
+      x: 483,
+      y: 612,
       maxLength: 15,
     },
     libelleIdcc: {
       x: 305,
-      y: 560,
       title: (value) => {
-        const maxLength = 50;
-        const word = value.split(" ");
-        const splitWord = value.slice(0, maxLength - 1);
-        const words = splitWord.split(" ");
-        let newWord = "";
-        let newWords = "";
+        let newValue = value.replace("Convention collective ", "").toLowerCase();
 
-        if (value.length > maxLength) {
-          for (let index = 0; index < words.length - 1; index++) {
-            const element = words[index];
-            newWord += element + " ";
-          }
-          for (let jndex = words.length - 1; jndex < word.length; jndex++) {
-            const element = word[jndex];
-            newWords += element + " ";
-          }
-          const splitWord2 = newWords.slice(0, maxLength - 1) + ".";
-          value = [{ text: newWord }, { text: splitWord2, options: { y: 543 } }];
+        const result = [];
+        const lines = splitMultipleLines(newValue, 50);
+        for (let index = 0; index < lines.length; index++) {
+          const line = lines[index];
+          result.push({ text: line, options: { y: 563 - index * 14 } });
         }
-        return value;
+
+        return result;
       },
     },
     codeIdcc: {
@@ -140,18 +179,31 @@ const fieldsPositions = {
     regimeSpecifique: {
       x: 473,
       y: 513,
-      maxLength: 40,
+      maxLength: 3,
+      title: (value) => (value ? "oui" : "non"),
+    },
+    attestationEligibilite: {
+      x: 25,
+      y: 26,
+      maxLength: 1,
+      title: (value) => (value ? "X" : ""),
+    },
+    attestationPieces: {
+      x: 478,
+      y: 251,
+      maxLength: 1,
+      title: (value) => (value ? "X" : ""),
     },
   },
   apprenti: {
     nom: {
       x: 216,
-      y: 481,
+      y: 483,
       maxLength: 100,
     },
     prenom: {
       x: 160,
-      y: 464,
+      y: 465,
       maxLength: 100,
     },
     nir: {
@@ -170,48 +222,49 @@ const fieldsPositions = {
       },
       voie: {
         x: 110,
-        y: 395,
-        maxLength: 37,
         title: (value) => {
-          const voieWordToReplace = [
-            ["Boulevard", "blvd"],
-            ["Avenue", "avn"],
-            ["Promenade", "pro"],
-          ];
-          for (let index = 0; index < voieWordToReplace.length; index++) {
-            const [wordToReplace, replaceWith] = voieWordToReplace[index];
-            if (value.includes(wordToReplace)) {
-              return value.replace(wordToReplace, replaceWith);
-            }
+          let shorttened = shortenVoie(value) || shortenVoie(value, "toLowerCase") || shortenVoie(value, "toUpperCase");
+
+          let newValue = shorttened?.toLowerCase() || value.toLowerCase();
+
+          const result = [];
+          const lines = splitMultipleLines(newValue, 38);
+          let yFirstLine = 395;
+          if (lines.length > 1) yFirstLine = 399;
+          for (let index = 0; index < lines.length; index++) {
+            const line = lines[index];
+            result.push({ text: line, options: { y: yFirstLine - index * 11 } });
           }
-          return value;
+
+          return result;
         },
       },
       complement: {
-        x: 100,
+        x: 97,
         y: 376,
         maxLength: 35,
+        title: (value) => value.toLowerCase(),
       },
       codePostal: {
-        x: 96,
-        y: 359,
+        x: 94,
+        y: 360,
         maxLength: 5,
-        title: (value) => {
-          return value.match(/\d{1}/g).join(" ");
-        },
+        title: (value) => value.toLowerCase(),
       },
       commune: {
-        x: 88,
-        y: 341,
+        x: 86,
+        y: 343,
         maxLength: 39,
+        title: (value) => value.toLowerCase(),
       },
     },
     telephone: {
-      x: 90,
+      x: 88,
       y: 324,
-      maxLength: 10,
+      maxLength: 15,
       title: (value) => {
-        return value.match(/\d{2}/g).join(".");
+        let newValue = value.replace("+33", "0");
+        return newValue.match(/\d{2}/g).join(" ");
       },
     },
     courriel: {
@@ -231,7 +284,7 @@ const fieldsPositions = {
     responsableLegal: {
       nom: {
         x: 28,
-        y: 240,
+        y: 242,
         maxLength: 47,
         title: async (value, options) => {
           const helveticaFont = await options.pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -248,48 +301,50 @@ const fieldsPositions = {
           maxLength: 30,
         },
         voie: {
-          x: 110,
-          y: 214,
-          maxLength: 25,
+          x: 104,
           title: (value) => {
-            const voieWordToReplace = [
-              ["Boulevard", "blvd"],
-              ["Avenue", "avn"],
-              ["Promenade", "pro"],
-            ];
-            for (let index = 0; index < voieWordToReplace.length; index++) {
-              const [wordToReplace, replaceWith] = voieWordToReplace[index];
-              if (value?.includes(wordToReplace)) {
-                return value.replace(wordToReplace, replaceWith);
-              }
+            let shorttened =
+              shortenVoie(value) || shortenVoie(value, "toLowerCase") || shortenVoie(value, "toUpperCase");
+
+            let newValue = shorttened?.toLowerCase() || value.toLowerCase();
+
+            const result = [];
+            const lines = splitMultipleLines(newValue, 37);
+            let yFirstLine = 215;
+            if (lines.length > 1) yFirstLine = 219;
+            for (let index = 0; index < lines.length; index++) {
+              const line = lines[index];
+              result.push({ text: line, options: { y: yFirstLine - index * 11 } });
             }
-            return value || "";
+
+            return result;
           },
         },
         complement: {
-          x: 100,
+          x: 98,
           y: 197,
           maxLength: 35,
+          title: (value) => value.toLowerCase(),
         },
         codePostal: {
-          x: 96,
+          x: 94,
           y: 179,
           maxLength: 30,
-          title: (value) => {
-            return value?.match(/\d{1}/g).join(" ") || "";
-          },
+          title: (value) => value.toLowerCase(),
         },
         commune: {
-          x: 89,
-          y: 161,
+          x: 87,
+          y: 162,
           maxLength: 30,
+          title: (value) => value.toLowerCase(),
         },
       },
     },
     dateNaissance: {
-      x: 405,
+      x: 400,
       y: 442,
       maxLength: 10,
+      title: (value) => convertDate(value),
     },
     sexe: {
       x: (value) => {
@@ -300,14 +355,16 @@ const fieldsPositions = {
       maxLength: 1,
     },
     departementNaissance: {
-      x: 445,
-      y: 407,
+      x: 443,
+      y: 408,
       maxLength: 25,
+      title: (value) => value.toLowerCase(),
     },
     communeNaissance: {
       x: 430,
-      y: 390,
+      y: 391,
       maxLength: 20,
+      title: (value) => value.toLowerCase(),
     },
     nationalite: {
       x: 365,
@@ -352,8 +409,19 @@ const fieldsPositions = {
     },
     intituleDiplomePrepare: {
       x: 304,
-      y: 203,
-      maxLength: 45,
+      title: (value) => {
+        let newValue = value.toLowerCase();
+        const result = [];
+        const lines = splitMultipleLines(newValue, 54);
+        let yFirstLine = 203;
+        if (lines.length > 1) yFirstLine = 207;
+        for (let index = 0; index < lines.length; index++) {
+          const line = lines[index];
+          result.push({ text: line, options: { y: yFirstLine - index * 10 } });
+        }
+
+        return result;
+      },
     },
     diplome: {
       x: 493,
@@ -365,18 +433,21 @@ const fieldsPositions = {
     maitre1: {
       nom: {
         x: 27,
-        y: 98,
+        y: 101,
         maxLength: 46,
+        title: (value) => value.toLowerCase(),
       },
       prenom: {
         x: 27,
         y: 68,
         maxLength: 46,
+        title: (value) => value.toLowerCase(),
       },
       dateNaissance: {
-        x: 128,
-        y: 50,
+        x: 127,
+        y: 51,
         maxLength: 10,
+        title: (value) => convertDate(value),
       },
     },
     maitre2: {
@@ -384,20 +455,29 @@ const fieldsPositions = {
         x: 304,
         y: 98,
         maxLength: 46,
+        title: (value) => value.toLowerCase(),
       },
       prenom: {
         x: 304,
         y: 68,
         maxLength: 46,
+        title: (value) => value.toLowerCase(),
       },
       dateNaissance: {
         x: 405,
-        y: 50,
+        y: 51,
         maxLength: 10,
+        title: (value) => convertDate(value),
       },
     },
   },
   contrat: {
+    lieuSignatureContrat: {
+      x: 65,
+      y: 231,
+      maxLength: 100,
+      title: (value) => value.toLowerCase(),
+    },
     typeContratApp: {
       x: 182,
       y: 805,
@@ -411,39 +491,43 @@ const fieldsPositions = {
     numeroContratPrecedent: {
       x: 373,
       y: 775,
-      maxLength: 25,
+      maxLength: 30,
       title: (value) => {
-        return value?.match(/\d{1}/g).join(" ");
+        return value.match(/.{1}/g).join(" ");
       },
     },
     dateConclusion: {
       x: 127,
       y: 756,
       maxLength: 10,
+      title: (value) => convertDate(value),
     },
     dateDebutContrat: {
       x: 237,
       y: 743,
       maxLength: 10,
+      title: (value) => convertDate(value),
     },
     dateEffetAvenant: {
       x: 505,
       y: 756,
       maxLength: 10,
+      title: (value) => convertDate(value),
     },
     dateFinContrat: {
       x: 113,
       y: 692,
       maxLength: 10,
+      title: (value) => convertDate(value),
     },
     dureeTravailHebdoHeures: {
       x: 306,
-      y: 691,
+      y: 692,
       maxLength: 2,
     },
     dureeTravailHebdoMinutes: {
       x: 370,
-      y: 691,
+      y: 692,
       maxLength: 2,
     },
     travailRisque: {
@@ -466,12 +550,12 @@ const fieldsPositions = {
     },
     avantageNourriture: {
       x: 252,
-      y: 538,
+      y: 539,
       maxLength: 10,
     },
     avantageLogement: {
       x: 408,
-      y: 538,
+      y: 539,
       maxLength: 10,
     },
     autreAvantageEnNature: {
@@ -486,12 +570,14 @@ const fieldsPositions = {
           y: 632,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         dateFin: {
           x: 170,
           y: 632,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         taux: {
           x: 236,
@@ -512,12 +598,14 @@ const fieldsPositions = {
           y: 632,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         dateFin: {
           x: 170 + 255,
           y: 632,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         taux: {
           x: 236 + 255,
@@ -538,12 +626,14 @@ const fieldsPositions = {
           y: 632 - 12,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         dateFin: {
           x: 170,
           y: 632 - 12,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         taux: {
           x: 236,
@@ -564,12 +654,14 @@ const fieldsPositions = {
           y: 632 - 12,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         dateFin: {
           x: 170 + 255,
           y: 632 - 12,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         taux: {
           x: 236 + 255,
@@ -590,12 +682,14 @@ const fieldsPositions = {
           y: 632 - 25,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         dateFin: {
           x: 170,
           y: 632 - 25,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         taux: {
           x: 236,
@@ -616,12 +710,14 @@ const fieldsPositions = {
           y: 632 - 25,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         dateFin: {
           x: 170 + 255,
           y: 632 - 25,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         taux: {
           x: 236 + 255,
@@ -642,12 +738,14 @@ const fieldsPositions = {
           y: 632 - 40,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         dateFin: {
           x: 170,
           y: 632 - 40,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         taux: {
           x: 236,
@@ -668,12 +766,14 @@ const fieldsPositions = {
           y: 632 - 40,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         dateFin: {
           x: 170 + 255,
           y: 632 - 40,
           maxLength: 10,
           defaultSize: 9,
+          title: (value) => convertDate(value),
         },
         taux: {
           x: 236 + 255,
@@ -701,13 +801,38 @@ const fieldsPositions = {
     },
     denomination: {
       x: 27,
-      y: 477,
-      maxLength: 47,
+      // y: 477,
+      // maxLength: 47,
+      title: (value) => {
+        let newValue = value.toLowerCase();
+
+        const result = [];
+        const lines = splitMultipleLines(newValue, 55);
+        let yFirstLine = 478;
+        if (lines.length > 1) yFirstLine = 483;
+        for (let index = 0; index < lines.length; index++) {
+          const line = lines[index];
+          result.push({ text: line, options: { y: yFirstLine - index * 10 } });
+        }
+
+        return result;
+      },
     },
     intituleQualification: {
-      x: 380,
-      y: 491,
-      maxLength: 35,
+      x: 302,
+      title: (value) => {
+        let newValue = value.toLowerCase();
+        const result = [];
+        const lines = splitMultipleLines(newValue, 51);
+        let yFirstLine = 480;
+        if (lines.length > 1) yFirstLine = 483;
+        for (let index = 0; index < lines.length; index++) {
+          const line = lines[index];
+          result.push({ text: line, options: { y: yFirstLine - index * 10 } });
+        }
+
+        return result;
+      },
     },
     typeDiplome: {
       x: 480,
@@ -718,33 +843,27 @@ const fieldsPositions = {
       x: 110,
       y: 463,
       maxLength: 8,
-      title: (value) => {
-        return value.match(/\d{1}/g).join(" ") || "";
-      },
+      title: (value) => value.toUpperCase(),
     },
     codeDiplome: {
       x: 396,
       y: 463,
       maxLength: 8,
-      title: (value) => {
-        return value.match(/\d{1}/g).join(" ") || "";
-      },
+      title: (value) => value.toUpperCase(),
     },
     siret: {
       x: 109,
       y: 448,
-      maxLength: 14,
+      maxLength: 28,
       title: (value) => {
-        return value.match(/\d{1}/g).join(" ") || "";
+        return value.match(/\d{1}/g).join(" ");
       },
     },
     rncp: {
       x: 376,
       y: 449,
       maxLength: 9,
-      title: (value) => {
-        return value.match(/\d{1}/g).join(" ") || "";
-      },
+      title: (value) => value.toUpperCase(),
     },
     adresse: {
       numero: {
@@ -754,65 +873,67 @@ const fieldsPositions = {
       },
       voie: {
         x: 109,
-        y: 415,
-        maxLength: 25,
+        // y: 415,
+        // maxLength: 25,
         title: (value) => {
-          const voieWordToReplace = [
-            ["Boulevard", "blvd"],
-            ["Avenue", "avn"],
-            ["Promenade", "pro"],
-          ];
-          for (let index = 0; index < voieWordToReplace.length; index++) {
-            const [wordToReplace, replaceWith] = voieWordToReplace[index];
-            if (value.includes(wordToReplace)) {
-              return value.replace(wordToReplace, replaceWith);
-            }
+          let shorttened = shortenVoie(value) || shortenVoie(value, "toLowerCase") || shortenVoie(value, "toUpperCase");
+
+          let newValue = shorttened?.toLowerCase() || value.toLowerCase();
+
+          const result = [];
+          const lines = splitMultipleLines(newValue, 37);
+          let yFirstLine = 415;
+          if (lines.length > 1) yFirstLine = 415;
+          for (let index = 0; index < lines.length; index++) {
+            const line = lines[index];
+            result.push({ text: line, options: { y: yFirstLine - index * 11 } });
           }
-          return value || "";
+
+          return result;
         },
       },
       complement: {
         x: 99,
         y: 398,
-        maxLength: 25,
+        maxLength: 40,
+        title: (value) => value.toLowerCase(),
       },
       codePostal: {
         x: 97,
-        y: 380,
+        y: 381,
         maxLength: 5,
-        title: (value) => {
-          return value.match(/\d{1}/g).join(" ") || "";
-        },
+        title: (value) => value.toLowerCase(),
       },
       commune: {
         x: 89,
-        y: 362,
+        y: 363,
         maxLength: 30,
+        title: (value) => value.toLowerCase(),
       },
     },
     dateDebutFormation: {
       x: 304,
       y: 403,
       maxLength: 10,
+      title: (value) => convertDate(value),
     },
     dateFinFormation: {
       x: 304,
-      y: 371,
+      y: 373,
       maxLength: 10,
+      title: (value) => convertDate(value),
     },
     dureeFormation: {
       x: 419,
       y: 357,
-      maxLength: 2,
+      maxLength: 8,
     },
   },
 };
 const capitalizeFirstLetter = (value) => value?.charAt(0).toUpperCase() + value?.slice(1);
 
 const buildFieldDraw = async (value, fieldDefinition, options = {}) => {
-  moment.locale("fr");
-  const isDate = !value ? "" : moment.isDate(value) ? moment(value).format("L") : `${value}`;
-  const title = typeof value === "boolean" ? (value ? "X" : " ") : isDate;
+  const title = typeof value === "boolean" ? (value ? "X" : " ") : !value ? "" : `${value}`;
   const result = {
     title:
       (isFunction(fieldDefinition.title) ? await fieldDefinition.title(value, options) : fieldDefinition.title) ||
@@ -823,8 +944,8 @@ const buildFieldDraw = async (value, fieldDefinition, options = {}) => {
     defaultSize: fieldDefinition.defaultSize ? fieldDefinition.defaultSize : 11,
   };
 
-  if (fieldDefinition.maxLength && (value?.length || 0) > fieldDefinition.maxLength) {
-    result.title = value.slice(0, fieldDefinition.maxLength - 1) + ".";
+  if (fieldDefinition.maxLength && (result.title?.length || 0) > fieldDefinition.maxLength) {
+    result.title = result.title.slice(0, fieldDefinition.maxLength - 1) + ".";
   }
   return result;
 };
@@ -865,6 +986,7 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
   const pdfPagesContent = [
     [
       // TODO EMPLOYEUR
+      await buildFieldDraw(cerfa.employeur.privePublic, fieldsPositions.employeur.privePublic),
       await buildFieldDraw(cerfa.employeur.denomination, fieldsPositions.employeur.denomination),
       await buildFieldDraw(cerfa.employeur.adresse.numero, fieldsPositions.employeur.adresse.numero),
       await buildFieldDraw(cerfa.employeur.adresse.voie, fieldsPositions.employeur.adresse.voie),
@@ -941,6 +1063,7 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
       await buildFieldDraw(cerfa.maitre2.nom, fieldsPositions.maitre.maitre2.nom),
       await buildFieldDraw(cerfa.maitre2.prenom, fieldsPositions.maitre.maitre2.prenom),
       await buildFieldDraw(cerfa.maitre2.dateNaissance, fieldsPositions.maitre.maitre2.dateNaissance),
+      await buildFieldDraw(cerfa.employeur.attestationEligibilite, fieldsPositions.employeur.attestationEligibilite),
     ],
     [
       //TODO Le Contrat
@@ -983,6 +1106,9 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
       await buildFieldDraw(cerfa.organismeFormation.adresse.complement, fieldsPositions.formation.adresse.complement),
       await buildFieldDraw(cerfa.organismeFormation.adresse.codePostal, fieldsPositions.formation.adresse.codePostal),
       await buildFieldDraw(cerfa.organismeFormation.adresse.commune, fieldsPositions.formation.adresse.commune),
+
+      await buildFieldDraw(cerfa.employeur.attestationPieces, fieldsPositions.employeur.attestationPieces),
+      await buildFieldDraw(cerfa.contrat.lieuSignatureContrat, fieldsPositions.contrat.lieuSignatureContrat),
     ],
   ];
 
@@ -992,9 +1118,9 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
     for (let jndex = 0; jndex < pdfPageContent.length; jndex++) {
       const { title, x, y, defaultColor, defaultSize } = pdfPageContent[jndex];
       let arrTitles = Array.isArray(title) ? title : [title];
-      arrTitles.forEach((t) => {
+      arrTitles.forEach((t, ite) => {
         let text = isObject(t) ? t.text : t;
-        const titles = capitalizeFirstLetter(text);
+        const titles = ite === 0 ? capitalizeFirstLetter(text) : text;
         for (let kndex = 0; kndex < titles.length; kndex++) {
           page.drawText(titles, {
             x: x,
