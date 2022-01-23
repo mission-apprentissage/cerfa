@@ -14,11 +14,26 @@ import { useRecoilValueLoadable } from "recoil";
 import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
 import { AddFill, SubtractLine, StepWip, StepComplete } from "../../../theme/components/icons";
 
-import { cerfaPartFormationCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
-import { cerfaPartEmployeurCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
-import { cerfaPartMaitresCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
-import { cerfaPartApprentiCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
-import { cerfaPartContratCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+import {
+  cerfaPartFormationCompletionAtom,
+  // cerfaPartFormationIsLoadingAtom,
+} from "../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
+import {
+  cerfaPartEmployeurCompletionAtom,
+  // cerfaPartEmployeurIsLoadingAtom,
+} from "../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+import {
+  cerfaPartMaitresCompletionAtom,
+  // cerfaPartMaitresIsLoadingAtom,
+} from "../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
+import {
+  cerfaPartApprentiCompletionAtom,
+  // cerfaPartApprentiIsLoadingAtom,
+} from "../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
+import {
+  cerfaPartContratCompletionAtom,
+  // cerfaPartContratIsLoadingAtom,
+} from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 
 import FormEmployer from "./components/FormEmployer";
 import FormLearner from "./components/FormLearner";
@@ -26,15 +41,28 @@ import FormLearningMaster from "./components/FormLearningMaster";
 import FormContract from "./components/FormContract";
 import FormFormation from "./components/FormFormation";
 
-export default () => {
-  const { isLoading } = useCerfa();
+export default React.memo(() => {
+  const { isLoading, isFetching } = useCerfa();
   const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
   const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
   const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
   const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
   const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
 
-  if (isLoading)
+  // const formationIsLoading = useRecoilValueLoadable(cerfaPartFormationIsLoadingAtom);
+  // const employeurIsLoading = useRecoilValueLoadable(cerfaPartEmployeurIsLoadingAtom);
+  // const maitresIsLoading = useRecoilValueLoadable(cerfaPartMaitresIsLoadingAtom);
+  // const apprentiIsLoading = useRecoilValueLoadable(cerfaPartApprentiIsLoadingAtom);
+  // const contratIsLoading = useRecoilValueLoadable(cerfaPartContratIsLoadingAtom);
+
+  // const allBlocksLoaded =
+  //   !formationIsLoading.contents &&
+  //   !employeurIsLoading.contents &&
+  //   !maitresIsLoading.contents &&
+  //   !apprentiIsLoading.contents &&
+  //   !contratIsLoading.contents;
+
+  if (isLoading || isFetching)
     return (
       <Center>
         <Spinner />
@@ -42,7 +70,7 @@ export default () => {
     );
 
   return (
-    <Accordion allowMultiple allowToggle mt={12}>
+    <Accordion allowMultiple allowToggle mt={12} minH="25vh">
       {[
         {
           title: "Employeur",
@@ -93,7 +121,7 @@ export default () => {
                     <AddFill fontSize="12px" color="bluefrance" />
                   )}
                 </AccordionButton>
-                <AccordionPanel pb={4}>{isExpanded && <Component />}</AccordionPanel>
+                <AccordionPanel pb={4}>{<Component />}</AccordionPanel>
               </>
             )}
           </AccordionItem>
@@ -101,4 +129,4 @@ export default () => {
       })}
     </Accordion>
   );
-};
+});

@@ -8,6 +8,8 @@ const adresseSchema = {
     nullable: true,
     example: 13,
     default: null,
+    pattern: "^(?!0{1})[0-9]*$",
+    validateMessage: `le numéro de voie ne peut pas commencer par zéro`,
   },
   voie: {
     type: String,
@@ -75,6 +77,14 @@ const adresseSchema = {
     required: function () {
       return !this.draft;
     },
+    // mask: "C",
+    // maskBlocks: [
+    //   {
+    //     name: "C",
+    //     mask: "Pattern",
+    //     pattern: "^\\D*$",
+    //   },
+    // ],
   },
 };
 module.exports = adresseSchema;

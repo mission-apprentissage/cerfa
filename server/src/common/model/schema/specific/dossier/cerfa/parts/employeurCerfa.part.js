@@ -7,7 +7,7 @@ const employeurCerfaSchema = {
     // maxLength: 80,
     type: String,
     description: "Dénomination de l'employeur",
-    label: "Nom et prénom ou dénomination :",
+    label: "Dénomination :",
     requiredMessage: "La dénomination de l'employeur est obligatoire",
     example: "ENERGIE 3000",
     default: null,
@@ -28,7 +28,7 @@ const employeurCerfaSchema = {
     validate: {
       validator: function (v) {
         if (!v) return true;
-        return /^([0-9]{14}|[0-9]{9} [0-9]{4})$/.test(v);
+        return /^([0-9]{14})$/.test(v);
       },
       message: (props) => `${props.value} n'est pas un siret valide`,
     },
@@ -45,7 +45,15 @@ const employeurCerfaSchema = {
     label: "N° SIRET de l'employeur :",
     requiredMessage: "Le siret est obligatoire",
     validateMessage: `n'est pas un siret valide`,
-    pattern: "^([0-9]{14}|[0-9]{9} [0-9]{4})$",
+    pattern: "^([0-9]{14})$",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\d*$",
+      },
+    ],
   },
   naf: {
     maxLength: 6,
@@ -58,6 +66,16 @@ const employeurCerfaSchema = {
     label: "Code NAF de l'employeur :",
     requiredMessage: "le code NAF est obligatoire",
     example: "1031Z",
+    pattern: "^([0-9]){2}\\.?([0-9]){0,2}([a-zA-Z]){0,1}$",
+    validateMessage: `le code NAF n'est pas au bon format`,
+    mask: "N",
+    maskBlocks: [
+      {
+        name: "N",
+        mask: "00[.][0][0][a]",
+        placeholderChar: "_",
+      },
+    ],
   },
   nombreDeSalaries: {
     type: Number,
@@ -83,6 +101,16 @@ const employeurCerfaSchema = {
     label: "Code IDCC de la convention collective appliquée : ",
     requiredMessage: "le code idcc est obligatoire",
     example: "0043",
+    pattern: "^[0-9]{4}$",
+    validateMessage: `le code IDCC n'est pas au bon format`,
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\d*$",
+      },
+    ],
   },
   libelleIdcc: {
     enum: [null, ...idccEnum.map(({ libelle }) => libelle)],
@@ -203,6 +231,7 @@ const employeurCerfaSchema = {
     nullable: true,
     default: null,
     label: "Type d'employeur :",
+    requiredMessage: "le type d'employeur est obligatoire",
     description:
       "**Type d'mployeur** :\r\n<br /> *Privé*\r\n<br /> 11 : Entreprise inscrite au répertoire des métiers ou au registre des entreprises pour l’Alsace-Moselle\r\n<br /> 12 : Entreprise inscrite uniquement au registre du commerce et des sociétés\r\n<br /> 13 : Entreprises dont les salariés relèvent de la mutualité sociale agricole\r\n<br /> 14 : Profession libérale\r\n<br /> 15 : Association\r\n<br /> 16 : Autre employeur privé\r\n<br /> *Public*\r\n<br /> 21 : Service de l’Etat (administrations centrales et leurs services déconcentrés de la fonction publique d’Etat)\r\n<br /> 22 : Commune\r\n<br /> 23 : Département\r\n<br /> 24 : Région\r\n<br /> 25 : Etablissement public hospitalier\r\n<br /> 26 : Etablissement public local d’enseignement\r\n<br /> 27 : Etablissement public administratif de l’Etat\r\n<br /> 28 : Etablissement public administratif local(y compris établissement public de coopération intercommunale EPCI)\r\n<br /> 29 : Autre employeur public",
 

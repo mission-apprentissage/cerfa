@@ -1,14 +1,15 @@
 import React from "react";
-import { Box, FormLabel, Flex } from "@chakra-ui/react";
+import { Box, FormLabel, Flex, Center, Spinner } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
 import { useCerfaMaitres } from "../../../../common/hooks/useCerfa/parts/useCerfaMaitres";
 import { cerfaContratDateDebutContratAtom } from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 import InputCerfa from "./Input";
 
-const FormLearningMaster = () => {
+const FormLearningMaster = React.memo(() => {
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
   const {
+    isLoading,
     get: {
       maitre1: { nom: maitre1Nom, prenom: maitre1Prenom, dateNaissance: maitre1DateNaissance },
       maitre2: { nom: maitre2Nom, prenom: maitre2Prenom, dateNaissance: maitre2DateNaissance },
@@ -28,6 +29,13 @@ const FormLearningMaster = () => {
       employeur: { attestationEligibilite: onSubmittedEmployeurAttestationEligibilite },
     },
   } = useCerfaMaitres();
+
+  if (isLoading || !dateDebutContrat)
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
 
   return (
     <Box>
@@ -96,6 +104,6 @@ const FormLearningMaster = () => {
       />
     </Box>
   );
-};
+});
 
 export default FormLearningMaster;

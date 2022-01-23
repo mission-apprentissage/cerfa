@@ -1,14 +1,19 @@
 import { _get, _put } from "../../httpClient";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useQuery } from "react-query";
 import { dossierAtom } from "../useDossier/dossierAtom";
 import { cerfaAtom } from "./cerfaAtom";
-import { CerfaFormationController, useCerfaFormation } from "./parts/useCerfaFormation";
-import { CerfaEmployeurController, useCerfaEmployeur } from "./parts/useCerfaEmployeur";
-import { CerfaApprentiController, useCerfaApprenti } from "./parts/useCerfaApprenti";
-import { CerfaMaitresController, useCerfaMaitres } from "./parts/useCerfaMaitres";
-import { CerfaContratController, useCerfaContrat } from "./parts/useCerfaContrat";
-// import { useSignatures } from "../useDossier/useSignatures";
+import { CerfaFormationController, cerfaFormationCompletion } from "./parts/useCerfaFormation";
+import { CerfaEmployeurController, cerfaEmployeurCompletion } from "./parts/useCerfaEmployeur";
+import { CerfaApprentiController, cerfaApprentiCompletion } from "./parts/useCerfaApprenti";
+import { CerfaMaitresController, cerfaMaitresCompletion } from "./parts/useCerfaMaitres";
+import { CerfaContratController, cerfaContratCompletion } from "./parts/useCerfaContrat";
+
+import { cerfaPartFormationCompletionAtom } from "./parts/useCerfaFormationAtoms";
+import { cerfaPartEmployeurCompletionAtom } from "./parts/useCerfaEmployeurAtoms";
+import { cerfaPartApprentiCompletionAtom } from "./parts/useCerfaApprentiAtoms";
+import { cerfaPartMaitresCompletionAtom } from "./parts/useCerfaMaitresAtoms";
+import { cerfaPartContratCompletionAtom } from "./parts/useCerfaContratAtoms";
 
 const hydrate = async (dossier) => {
   try {
@@ -112,10 +117,6 @@ const hydrate = async (dossier) => {
           ...cerfa.contrat.dateEffetAvenant,
           ...cerfaContratController.contrat.dateEffetAvenant,
         },
-        // remunerationMajoration: {
-        //   ...cerfa.contrat.remunerationMajoration,
-        //   ...cerfaContratController.contrat.remunerationMajoration,
-        // },
         typeDerogation: {
           ...cerfa.contrat.typeDerogation,
           ...cerfaContratController.contrat.typeDerogation,
@@ -189,12 +190,12 @@ export const saveCerfa = async (dossierId, cerfaId, data) => {
 export function useCerfa() {
   const dossier = useRecoilValue(dossierAtom);
   const [cerfa, setCerfa] = useRecoilState(cerfaAtom);
-  const { setAll: setCerfaFormation } = useCerfaFormation();
-  const { setAll: setCerfaEmployeur } = useCerfaEmployeur();
-  const { setAll: setCerfaApprenti } = useCerfaApprenti();
-  const { setAll: setCerfaMaitres } = useCerfaMaitres();
-  const { setAll: setCerfaContrat } = useCerfaContrat();
-  // const { setAll: setSignatures } = useSignatures();
+
+  const setPartFormationCompletionAtom = useSetRecoilState(cerfaPartFormationCompletionAtom);
+  const setPartEmployeurCompletionAtom = useSetRecoilState(cerfaPartEmployeurCompletionAtom);
+  const setPartApprentiCompletion = useSetRecoilState(cerfaPartApprentiCompletionAtom);
+  const setPartMaitresCompletion = useSetRecoilState(cerfaPartMaitresCompletionAtom);
+  const setPartContratCompletion = useSetRecoilState(cerfaPartContratCompletionAtom);
 
   // eslint-disable-next-line no-unused-vars
   const { data, isLoading, isFetching } = useQuery(
@@ -202,18 +203,24 @@ export function useCerfa() {
     async () => {
       const res = await hydrate(dossier);
       setCerfa(res);
-      setCerfaFormation(res);
-      setCerfaEmployeur(res);
-      setCerfaApprenti(res);
-      setCerfaMaitres(res);
-      setCerfaContrat(res);
-      // setSignatures(res);
+
+      setPartFormationCompletionAtom(cerfaFormationCompletion(res));
+      setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+      setPartApprentiCompletion(cerfaApprentiCompletion(res));
+      setPartMaitresCompletion(cerfaMaitresCompletion(res));
+      setPartContratCompletion(cerfaContratCompletion(res));
+
       return Promise.resolve(res);
     },
     {
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
   );
 
-  return { isLoading: isFetching || isLoading, cerfa };
+  return {
+    isLoading,
+    isFetching,
+    cerfa,
+  };
 }

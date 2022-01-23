@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, FormLabel, Flex } from "@chakra-ui/react";
+import { Box, FormLabel, Flex, Center, Spinner } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
 import { useCerfaEmployeur } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeur";
@@ -14,13 +14,14 @@ import {
 } from "../../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
 import InputCerfa from "./Input";
 
-const FormEmployer = ({ onFetched }) => {
+const FormEmployer = React.memo(({ onFetched }) => {
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
   const dateFinContrat = useRecoilValue(cerfaContratDateFinContratAtom);
   const remunerationsAnnuelles = useRecoilValue(cerfaContratRemunerationsAnnuellesAtom);
   const apprentiDateNaissance = useRecoilValue(cerfaApprentiDateNaissanceAtom);
   const apprentiAge = useRecoilValue(cerfaApprentiAgeAtom);
   const {
+    isLoading,
     get: {
       employeur: {
         siret,
@@ -65,6 +66,13 @@ const FormEmployer = ({ onFetched }) => {
       },
     },
   } = useCerfaEmployeur();
+
+  if (isLoading || !dateDebutContrat || !dateFinContrat || !apprentiDateNaissance || !apprentiAge)
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
 
   return (
     <Box>
@@ -246,6 +254,6 @@ const FormEmployer = ({ onFetched }) => {
       </Flex>
     </Box>
   );
-};
+});
 
 export default FormEmployer;

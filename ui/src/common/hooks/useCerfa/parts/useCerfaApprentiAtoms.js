@@ -4,6 +4,10 @@ export const cerfaPartApprentiCompletionAtom = atom({
   key: "cerfa/part/apprenti/completion",
   default: 0,
 });
+export const cerfaPartApprentiIsLoadingAtom = atom({
+  key: "cerfa/part/apprenti/isLoading",
+  default: true,
+});
 
 export const cerfaApprentiNomAtom = atom({
   key: "cerfa/apprenti/nom",

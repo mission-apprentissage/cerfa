@@ -1,5 +1,17 @@
 import React from "react";
-import { Box, FormLabel, Text, Flex, HStack, Collapse, VStack, UnorderedList, ListItem } from "@chakra-ui/react";
+import {
+  Box,
+  FormLabel,
+  Text,
+  Flex,
+  HStack,
+  Collapse,
+  VStack,
+  UnorderedList,
+  ListItem,
+  Center,
+  Spinner,
+} from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
 import { departements } from "../../../../common/constants/departements";
@@ -20,7 +32,7 @@ import {
 import { cerfaEmployeurAdresseDepartementAtom } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import InputCerfa from "./Input";
 
-const FormContract = () => {
+const FormContract = React.memo(() => {
   const maitre1DateNaissance = useRecoilValue(cerfaMaitre1DateNaissanceAtom);
   const maitre2DateNaissance = useRecoilValue(cerfaMaitre2DateNaissanceAtom);
   const formationDateDebutFormation = useRecoilValue(cerfaFormationDateDebutFormationAtom);
@@ -30,6 +42,7 @@ const FormContract = () => {
   const employeurAdresseDepartement = useRecoilValue(cerfaEmployeurAdresseDepartementAtom);
 
   const {
+    isLoading,
     get: {
       contrat: {
         // modeContractuel: contratModeContractuel,
@@ -82,6 +95,22 @@ const FormContract = () => {
       },
     },
   } = useCerfaContrat();
+
+  if (
+    isLoading ||
+    !apprentiDateNaissance ||
+    !apprentiAge ||
+    !employeurAdresseDepartement ||
+    !maitre1DateNaissance ||
+    !maitre2DateNaissance ||
+    !formationDateDebutFormation ||
+    !formationDateFinFormation
+  )
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
 
   return (
     <Box>
@@ -387,10 +416,9 @@ const FormContract = () => {
                             mt="2"
                             hasInfo={false}
                             numberStepper={true}
-                            // type="number"
-                            type="numberPrefixed"
                             format={(val) => val + ` %`}
                             parse={(val) => val.replace(/^ %/, "")}
+                            type="number"
                             onSubmittedField={(fieldPath, data) =>
                               onSubmittedContratRemunerationsAnnuellesTaux(fieldPath, data, path)
                             }
@@ -439,9 +467,9 @@ const FormContract = () => {
               {smic?.isSmicException && (
                 <Text>
                   Calculé sur la base du SMIC {smic?.annee} pour{" "}
-                  <strong>{smic?.exceptions[employeurAdresseDepartement.value].nomDepartement}</strong> de{" "}
+                  <strong>{smic?.exceptions[employeurAdresseDepartement.value]?.nomDepartement}</strong> de{" "}
                   {smic?.selectedSmic}€ mensuel (
-                  {smic?.exceptions[employeurAdresseDepartement.value].heuresHebdomadaires}
+                  {smic?.exceptions[employeurAdresseDepartement.value]?.heuresHebdomadaires}
                   €/h) [Date d'entrée en vigueur {smic?.dateEntreeEnVigueur}]
                 </Text>
               )}
@@ -476,22 +504,20 @@ const FormContract = () => {
                   path="contrat.avantageNourriture"
                   field={avantageNourriture}
                   type="number"
-                  // format={(val) => val + ` €`}
-                  // parse={(val) => val.replace(/^ €/, "")}
+                  min={1}
                   mt="2"
                   onSubmittedField={onSubmittedContratAvantageNourriture}
                 />
-                € / repas
               </Box>
               <Box ml={5}>
                 <InputCerfa
                   path="contrat.avantageLogement"
                   field={avantageLogement}
                   type="number"
+                  min={1}
                   mt="2"
                   onSubmittedField={onSubmittedContratAvantageLogement}
                 />
-                € / mois
               </Box>
             </Flex>
             <Box>
@@ -508,6 +534,6 @@ const FormContract = () => {
       </Box>
     </Box>
   );
-};
+});
 
 export default FormContract;
