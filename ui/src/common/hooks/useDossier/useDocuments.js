@@ -38,7 +38,9 @@ const setDocumentsCompletions = (typeContratApp, employeurAttestationPieces, doc
   }
   countFields = countFields + 1;
 
-  const percent = countFields === 0 ? 100 : (count * 100) / countFields;
+  const pCalc = (count * 100) / countFields;
+
+  const percent = countFields === 0 || pCalc > 100 ? 100 : pCalc;
 
   return { percent, isRequired };
 };

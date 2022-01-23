@@ -36,17 +36,24 @@ const convertDate = (value) =>
 const fieldsPositions = {
   employeur: {
     denomination: {
-      x: 28,
+      x: 25,
       title: (value) => {
         let newValue = value.toLowerCase();
 
         const result = [];
-        const lines = splitMultipleLines(newValue, 55);
+        const maxLine = 2;
+        const maxCharacters = 45;
+        const lines = splitMultipleLines(newValue, maxCharacters);
         let yFirstLine = 687;
         if (lines.length > 1) yFirstLine = 690;
         for (let index = 0; index < lines.length; index++) {
+          if (index === maxLine) break;
           const line = lines[index];
           result.push({ text: line, options: { y: yFirstLine - index * 10 } });
+        }
+
+        if (lines.length > maxLine) {
+          result[maxLine - 1].text = result[maxLine - 1].text.slice(0, maxCharacters - 1) + "…";
         }
 
         return result;
@@ -67,12 +74,18 @@ const fieldsPositions = {
           let newValue = shorttened?.toLowerCase() || value.toLowerCase();
 
           const result = [];
-          const lines = splitMultipleLines(newValue, 30);
+          const maxLine = 2;
+          const maxCharacters = 25;
+          const lines = splitMultipleLines(newValue, maxCharacters);
           let yFirstLine = 649;
           if (lines.length > 1) yFirstLine = 657;
           for (let index = 0; index < lines.length; index++) {
+            if (index === maxLine) break;
             const line = lines[index];
             result.push({ text: line, options: { y: yFirstLine - index * 12 } });
+          }
+          if (lines.length > maxLine) {
+            result[maxLine - 1].text = result[maxLine - 1].text.slice(0, maxCharacters - 1) + "…";
           }
 
           return result;
@@ -130,9 +143,10 @@ const fieldsPositions = {
     },
     privePublic: {
       x: 391,
-      y: 714,
+      y: 711,
       maxLength: 1,
-      title: (value) => (value ? "X" : ""),
+      title: (value) => (value ? "×" : ""),
+      defaultSize: 24,
     },
     typeEmployeur: {
       x: 400,
@@ -162,10 +176,18 @@ const fieldsPositions = {
         let newValue = value.replace("Convention collective ", "").toLowerCase();
 
         const result = [];
-        const lines = splitMultipleLines(newValue, 50);
+        const maxLine = 3;
+        const maxCharacters = 43;
+        const lines = splitMultipleLines(newValue, maxCharacters);
+        let yFirstLine = 563;
+        if (lines.length > 1) yFirstLine = 566;
         for (let index = 0; index < lines.length; index++) {
+          if (index === maxLine) break;
           const line = lines[index];
-          result.push({ text: line, options: { y: 563 - index * 14 } });
+          result.push({ text: line, options: { y: yFirstLine - index * 10 } });
+        }
+        if (lines.length > maxLine) {
+          result[maxLine - 1].text = result[maxLine - 1].text.slice(0, maxCharacters - 1) + "…";
         }
 
         return result;
@@ -183,16 +205,18 @@ const fieldsPositions = {
       title: (value) => (value ? "oui" : "non"),
     },
     attestationEligibilite: {
-      x: 25,
-      y: 26,
+      x: 23,
+      y: 23,
       maxLength: 1,
-      title: (value) => (value ? "X" : ""),
+      title: (value) => (value ? "×" : ""),
+      defaultSize: 24,
     },
     attestationPieces: {
       x: 478,
-      y: 251,
+      y: 249,
       maxLength: 1,
-      title: (value) => (value ? "X" : ""),
+      title: (value) => (value ? "×" : ""),
+      defaultSize: 24,
     },
   },
   apprenti: {
@@ -228,12 +252,18 @@ const fieldsPositions = {
           let newValue = shorttened?.toLowerCase() || value.toLowerCase();
 
           const result = [];
-          const lines = splitMultipleLines(newValue, 38);
+          const maxLine = 2;
+          const maxCharacters = 32;
+          const lines = splitMultipleLines(newValue, maxCharacters);
           let yFirstLine = 395;
           if (lines.length > 1) yFirstLine = 399;
           for (let index = 0; index < lines.length; index++) {
+            if (index === maxLine) break;
             const line = lines[index];
             result.push({ text: line, options: { y: yFirstLine - index * 11 } });
+          }
+          if (lines.length > maxLine) {
+            result[maxLine - 1].text = result[maxLine - 1].text.slice(0, maxCharacters - 1) + "…";
           }
 
           return result;
@@ -309,12 +339,18 @@ const fieldsPositions = {
             let newValue = shorttened?.toLowerCase() || value.toLowerCase();
 
             const result = [];
-            const lines = splitMultipleLines(newValue, 37);
+            const maxLine = 2;
+            const maxCharacters = 32;
+            const lines = splitMultipleLines(newValue, maxCharacters);
             let yFirstLine = 215;
             if (lines.length > 1) yFirstLine = 219;
             for (let index = 0; index < lines.length; index++) {
+              if (index === maxLine) break;
               const line = lines[index];
               result.push({ text: line, options: { y: yFirstLine - index * 11 } });
+            }
+            if (lines.length > maxLine) {
+              result[maxLine - 1].text = result[maxLine - 1].text.slice(0, maxCharacters - 1) + "…";
             }
 
             return result;
@@ -348,10 +384,11 @@ const fieldsPositions = {
     },
     sexe: {
       x: (value) => {
-        return value === "M" ? 340 : 370;
+        return value === "M" ? 338 : 368;
       },
-      y: 425,
-      title: "X",
+      y: 422,
+      title: "×",
+      defaultSize: 24,
       maxLength: 1,
     },
     departementNaissance: {
@@ -378,19 +415,21 @@ const fieldsPositions = {
     },
     inscriptionSportifDeHautNiveau: {
       x: (value) => {
-        return value === true ? 305 : 360;
+        return value === true ? 303 : 358;
       },
-      y: 317,
+      y: 313,
       maxLength: 1,
-      title: "X",
+      title: "×",
+      defaultSize: 24,
     },
     handicap: {
       x: (value) => {
-        return value === true ? 365 : 418;
+        return value === true ? 362 : 413;
       },
-      y: 286,
+      y: 283,
       maxLength: 1,
-      title: "X",
+      title: "×",
+      defaultSize: 24,
     },
     situationAvantContrat: {
       x: 438,
@@ -412,12 +451,18 @@ const fieldsPositions = {
       title: (value) => {
         let newValue = value.toLowerCase();
         const result = [];
-        const lines = splitMultipleLines(newValue, 54);
+        const maxLine = 2;
+        const maxCharacters = 45;
+        const lines = splitMultipleLines(newValue, maxCharacters);
         let yFirstLine = 203;
-        if (lines.length > 1) yFirstLine = 207;
+        if (lines.length > 1) yFirstLine = 208;
         for (let index = 0; index < lines.length; index++) {
+          if (index === maxLine) break;
           const line = lines[index];
           result.push({ text: line, options: { y: yFirstLine - index * 10 } });
+        }
+        if (lines.length > maxLine) {
+          result[maxLine - 1].text = result[maxLine - 1].text.slice(0, maxCharacters - 1) + "…";
         }
 
         return result;
@@ -534,9 +579,10 @@ const fieldsPositions = {
       x: (value) => {
         return value === true ? 398 : 453;
       },
-      y: 669,
+      y: 667,
       maxLength: 1,
-      title: "X",
+      title: "×",
+      defaultSize: 24,
     },
     salaireEmbauche: {
       x: 29,
@@ -559,9 +605,11 @@ const fieldsPositions = {
       maxLength: 10,
     },
     autreAvantageEnNature: {
-      x: 555,
-      y: 538,
-      maxLength: 10,
+      x: 552,
+      y: 536,
+      maxLength: 1,
+      title: (value) => (value ? "×" : ""),
+      defaultSize: 24,
     },
     remunerationsAnnuelles: {
       1.1: {
@@ -795,24 +843,29 @@ const fieldsPositions = {
       x: (value) => {
         return value === true ? 123 : 177;
       },
-      y: 503,
+      y: 501,
       maxLength: 1,
-      title: "X",
+      title: "×",
+      defaultSize: 24,
     },
     denomination: {
       x: 27,
-      // y: 477,
-      // maxLength: 47,
       title: (value) => {
         let newValue = value.toLowerCase();
 
         const result = [];
-        const lines = splitMultipleLines(newValue, 55);
+        const maxLine = 2;
+        const maxCharacters = 45;
+        const lines = splitMultipleLines(newValue, maxCharacters);
         let yFirstLine = 478;
         if (lines.length > 1) yFirstLine = 483;
         for (let index = 0; index < lines.length; index++) {
+          if (index === maxLine) break;
           const line = lines[index];
           result.push({ text: line, options: { y: yFirstLine - index * 10 } });
+        }
+        if (lines.length > maxLine) {
+          result[maxLine - 1].text = result[maxLine - 1].text.slice(0, maxCharacters - 1) + "…";
         }
 
         return result;
@@ -823,12 +876,18 @@ const fieldsPositions = {
       title: (value) => {
         let newValue = value.toLowerCase();
         const result = [];
-        const lines = splitMultipleLines(newValue, 51);
+        const maxLine = 2;
+        const maxCharacters = 42;
+        const lines = splitMultipleLines(newValue, maxCharacters);
         let yFirstLine = 480;
-        if (lines.length > 1) yFirstLine = 483;
+        if (lines.length > 1) yFirstLine = 484;
         for (let index = 0; index < lines.length; index++) {
+          if (index === maxLine) break;
           const line = lines[index];
           result.push({ text: line, options: { y: yFirstLine - index * 10 } });
+        }
+        if (lines.length > maxLine) {
+          result[maxLine - 1].text = result[maxLine - 1].text.slice(0, maxCharacters - 1) + "…";
         }
 
         return result;
@@ -933,15 +992,15 @@ const fieldsPositions = {
 const capitalizeFirstLetter = (value) => value?.charAt(0).toUpperCase() + value?.slice(1);
 
 const buildFieldDraw = async (value, fieldDefinition, options = {}) => {
-  const title = typeof value === "boolean" ? (value ? "X" : " ") : !value ? "" : `${value}`;
+  const title = typeof value === "boolean" ? (value ? "×" : " ") : !value ? "" : `${value}`;
   const result = {
     title:
       (isFunction(fieldDefinition.title) ? await fieldDefinition.title(value, options) : fieldDefinition.title) ||
       title,
     x: isFunction(fieldDefinition.x) ? await fieldDefinition.x(value, options) : fieldDefinition.x,
     y: fieldDefinition.y,
-    defaultColor: rgb(0.9, 0.4, 0.3),
-    defaultSize: fieldDefinition.defaultSize ? fieldDefinition.defaultSize : 11,
+    defaultColor: rgb(0.05, 0.51, 0.49), // rgb(0.13, 0.59, 0.49), //rgb(0.9, 0.4, 0.3),
+    defaultSize: fieldDefinition.defaultSize ? fieldDefinition.defaultSize : 10,
   };
 
   if (fieldDefinition.maxLength && (result.title?.length || 0) > fieldDefinition.maxLength) {
@@ -980,7 +1039,7 @@ const buildRemunerations = async (remunerationsAnnuelles) => {
 
 module.exports = async (pdfCerfaEmpty, cerfa) => {
   const pdfDoc = await PDFDocument.load(pdfCerfaEmpty);
-  const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const writtingFont = await pdfDoc.embedFont(StandardFonts.Courier); // TimesRoman // Courier // Helvetica
   const pages = pdfDoc.getPages();
 
   const pdfPagesContent = [
@@ -1127,7 +1186,7 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
             y: y,
             size: defaultSize,
             color: defaultColor,
-            font: helveticaFont,
+            font: writtingFont,
             ...(t.options || {}),
           });
         }
