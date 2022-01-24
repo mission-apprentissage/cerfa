@@ -112,6 +112,11 @@ const FormContract = React.memo(() => {
       </Center>
     );
 
+  // TODO dirty fast cover issue
+  if (typeContratApp === null) {
+    window.location.reload();
+  }
+
   return (
     <Box>
       <Flex>
@@ -158,16 +163,16 @@ const FormContract = React.memo(() => {
             </Text>
           )}
 
-          {(typeContratApp.valueDb === 21 ||
-            typeContratApp.valueDb === 22 ||
-            typeContratApp.valueDb === 23 ||
-            typeContratApp.valueDb === 31 ||
-            typeContratApp.valueDb === 32 ||
-            typeContratApp.valueDb === 33 ||
-            typeContratApp.valueDb === 34 ||
-            typeContratApp.valueDb === 35 ||
-            typeContratApp.valueDb === 36 ||
-            typeContratApp.valueDb === 37) && (
+          {(typeContratApp?.valueDb === 21 ||
+            typeContratApp?.valueDb === 22 ||
+            typeContratApp?.valueDb === 23 ||
+            typeContratApp?.valueDb === 31 ||
+            typeContratApp?.valueDb === 32 ||
+            typeContratApp?.valueDb === 33 ||
+            typeContratApp?.valueDb === 34 ||
+            typeContratApp?.valueDb === 35 ||
+            typeContratApp?.valueDb === 36 ||
+            typeContratApp?.valueDb === 37) && (
             <InputCerfa
               path="contrat.numeroContratPrecedent"
               field={numeroContratPrecedent}
@@ -175,12 +180,12 @@ const FormContract = React.memo(() => {
               mt="2"
               onSubmittedField={onSubmittedContratNumeroContratPrecedent}
               label={
-                typeContratApp.valueDb === 21 || typeContratApp.valueDb === 22 || typeContratApp.valueDb === 23
+                typeContratApp?.valueDb === 21 || typeContratApp?.valueDb === 22 || typeContratApp?.valueDb === 23
                   ? numeroContratPrecedent.labelSuccession
                   : numeroContratPrecedent.labelAvenant
               }
               isRequired={
-                !(typeContratApp.valueDb === 21 || typeContratApp.valueDb === 22 || typeContratApp.valueDb === 23)
+                !(typeContratApp?.valueDb === 21 || typeContratApp?.valueDb === 22 || typeContratApp?.valueDb === 23)
               }
             />
           )}
@@ -225,13 +230,13 @@ const FormContract = React.memo(() => {
               formationDateDebutFormation: formationDateDebutFormation?.value,
             }}
           />
-          {(typeContratApp.valueDb === 31 ||
-            typeContratApp.valueDb === 32 ||
-            typeContratApp.valueDb === 33 ||
-            typeContratApp.valueDb === 34 ||
-            typeContratApp.valueDb === 35 ||
-            typeContratApp.valueDb === 36 ||
-            typeContratApp.valueDb === 37) && (
+          {(typeContratApp?.valueDb === 31 ||
+            typeContratApp?.valueDb === 32 ||
+            typeContratApp?.valueDb === 33 ||
+            typeContratApp?.valueDb === 34 ||
+            typeContratApp?.valueDb === 35 ||
+            typeContratApp?.valueDb === 36 ||
+            typeContratApp?.valueDb === 37) && (
             <InputCerfa
               path="contrat.dateEffetAvenant"
               field={dateEffetAvenant}

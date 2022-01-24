@@ -522,7 +522,7 @@ const fieldsPositions = {
       x: 65,
       y: 231,
       maxLength: 100,
-      title: (value) => value.toLowerCase(),
+      title: (value) => value?.toLowerCase(),
     },
     typeContratApp: {
       x: 182,
