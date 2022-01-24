@@ -83,7 +83,7 @@ module.exports = (components) => {
       },
       maitre2: {
         ...mergeWith(
-          mergeWith(cloneDeep(cerfaSchema.maitre1), cerfa.maitre2, customizer),
+          mergeWith(cloneDeep(cerfaSchema.maitre2), cerfa.maitre2, customizer),
           cerfa.isLockedField.maitre2,
           customizerLock
         ),
@@ -190,8 +190,8 @@ module.exports = (components) => {
             label: Joi.string().allow(""),
             codePostal: Joi.string().allow(""),
             commune: Joi.string().allow(""),
-            departement: Joi.string(),
-            region: Joi.string(),
+            departement: Joi.string().allow(""),
+            region: Joi.string().allow(""),
           }),
           nom: Joi.string(),
           prenom: Joi.string(),

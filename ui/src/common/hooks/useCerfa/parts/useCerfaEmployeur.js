@@ -72,6 +72,7 @@ export const CerfaEmployeurController = async (dossier) => {
           //   when: Date.now(),
           //   who: "Antoine Bigard", // TODO Get user
           // });
+
           if (Object.keys(response.result).length === 0) {
             return {
               successed: false,
@@ -84,6 +85,14 @@ export const CerfaEmployeurController = async (dossier) => {
               successed: false,
               data: null,
               message: `Le Siret ${value} est un établissement fermé.`,
+            };
+          }
+
+          if (response.result.secretSiret) {
+            return {
+              successed: true,
+              data: response.result,
+              message: `Votre siret est valide. En revanche, en raison de sa nature, nous ne pouvons pas récupérer les informations reliées.`,
             };
           }
 
@@ -422,9 +431,9 @@ export function useCerfaEmployeur() {
             },
           };
 
-          // if (employeurSiret.value !== newV.employeur.siret.value) {
-          setEmployeurSiret(newV.employeur.siret);
-
+          if (!data.secretSiret) {
+            setEmployeurSiret(newV.employeur.siret);
+          }
           setEmployeurDenomination(newV.employeur.denomination);
           setEmployeurNaf(newV.employeur.naf);
 
@@ -475,7 +484,6 @@ export function useCerfaEmployeur() {
                 denomination: false,
                 naf: false,
                 codeIdcc: false,
-                // libelleIdcc: false,
                 nombreDeSalaries: false,
                 adresse: {
                   numero: false,
@@ -503,7 +511,6 @@ export function useCerfaEmployeur() {
 
           const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
           setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
-          // }
         }
       } catch (e) {
         console.error(e);

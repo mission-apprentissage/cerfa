@@ -10,6 +10,14 @@ const adresseSchema = {
     default: null,
     pattern: "^(?!0{1})[0-9]*$",
     validateMessage: `le numéro de voie ne peut pas commencer par zéro`,
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\d*$",
+      },
+    ],
   },
   voie: {
     type: String,
@@ -22,6 +30,14 @@ const adresseSchema = {
     required: function () {
       return !this.draft;
     },
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\D*$",
+      },
+    ],
   },
   complement: {
     type: String,
@@ -65,6 +81,14 @@ const adresseSchema = {
     required: function () {
       return !this.draft;
     },
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\d*$",
+      },
+    ],
   },
   commune: {
     maxLength: 80,
@@ -77,14 +101,14 @@ const adresseSchema = {
     required: function () {
       return !this.draft;
     },
-    // mask: "C",
-    // maskBlocks: [
-    //   {
-    //     name: "C",
-    //     mask: "Pattern",
-    //     pattern: "^\\D*$",
-    //   },
-    // ],
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
   },
 };
 module.exports = adresseSchema;

@@ -199,7 +199,7 @@ export default () => {
   const cerfa = useRecoilValue(cerfaAtom);
   const { documentsCompletion, setDocumentsCompletion } = useDocuments();
   const [documentsComplete, setDocumentsComplete] = useState(false);
-  const { signaturesCompletion, setSignaturesCompletion } = useSignatures();
+  const { signaturesCompletion, sca, setSignaturesCompletion } = useSignatures();
   const [signaturesComplete, setSignaturesComplete] = useState(false);
 
   const setWorkspaceTitle = useSetRecoilState(workspaceTitleAtom);
@@ -246,7 +246,7 @@ export default () => {
 
       if (cerfa && documentsCompletion !== null && signaturesCompletion !== null) {
         const documentsCompleteTmp = documentsCompletion === 100;
-        const signaturesCompleteTmp = signaturesCompletion === 100;
+        const signaturesCompleteTmp = sca === 100;
 
         setDocumentsComplete(documentsCompleteTmp);
         setSignaturesComplete(signaturesCompleteTmp);
@@ -286,6 +286,7 @@ export default () => {
     setWorkspaceTitle,
     signaturesComplete,
     signaturesCompletion,
+    sca,
   ]);
 
   let stepStateSteps23 = useCallback(

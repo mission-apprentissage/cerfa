@@ -67,7 +67,7 @@ class ApiAgecap {
       }
       try {
         logger.debug(`[Agecap API] send contrat`);
-        let response = await client.post(`contrats/`, contratAgecap, {
+        let response = await client.post(`contrats`, contratAgecap, {
           headers: { Authorization: `Bearer ${this.token}` },
         });
 

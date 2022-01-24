@@ -121,6 +121,7 @@ const employeurCerfaSchema = {
     label: "Libellé de la convention collective appliquée:",
     requiredMessage: "Le libellé de la convention collective est obligatoire",
     nullable: true,
+    isNotRequiredForm: true,
     example:
       "Convention collective nationale des entreprises de commission, de courtage et de commerce intracommunautaire et d'importation-exportation de France métropolitaine",
   },
@@ -167,13 +168,13 @@ const employeurCerfaSchema = {
   adresse: {
     ...adresseSchema,
     departement: {
-      enum: [null, ...departementEnum.map((d) => d.replace(/^(0){1,2}/, ""))],
+      enum: [null, ...departementEnum.map((d) => d.replace(/^(0){1}/, ""))],
       maxLength: 3,
       minLength: 1,
       validate: {
         validator: function (v) {
           if (!v) return true;
-          return /^([1-9]|[2][1-9]|2[AB]|[13456789][0-9]|9[012345]|97[12346])$/.test(v);
+          return /^([0-9][0-9]|2[AB]|9[012345]|97[12346])$/.test(v);
         },
         message: (props) => `${props.value} n'est pas un departement valide`,
       },
@@ -181,7 +182,7 @@ const employeurCerfaSchema = {
       description: "Département de l'employeur",
       label: "Département de l'employeur :",
       example: "1 Ain, 99 Étranger",
-      pattern: "^([1-9]|[2][1-9]|2[AB]|[13456789][0-9]|9[012345]|97[12346])$",
+      pattern: "^([0-9][0-9]|2[AB]|9[012345]|97[12346])$",
       requiredMessage: "le département de l'employeur est obligatoire",
       validateMessage: ` n'est pas un département valide`,
       default: null,
