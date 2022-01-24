@@ -13,6 +13,8 @@ const buildErrorResult = (validatedModel) => {
       const err = validatedModel.errors[keys[i]];
       if (err.kind === "required") {
         set(result, `${err.path}`, { ...get(cerfaSchema, `${err.path}`), isErrored: true });
+      } else if (err.kind === "enum") {
+        set(result, `${err.path}`, { message: "Value not found in enum", isErrored: true });
       }
     }
   }
@@ -64,6 +66,10 @@ module.exports = async () => {
           contrat: {
             ...cerfa.contrat,
             dateConclusion: new Date(),
+          },
+          employeur: {
+            ...cerfa.employeur,
+            libelleIdcc: undefined,
           },
           dossierId: mongoose.Types.ObjectId().toString(),
           draft: false,
