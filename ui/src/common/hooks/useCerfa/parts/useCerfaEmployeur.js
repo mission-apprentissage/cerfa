@@ -143,7 +143,7 @@ export const CerfaEmployeurController = async (dossier) => {
             return {
               successed: false,
               data: null,
-              message: "Le code idcc n'est valide",
+              message: "Le code IDCC n'est pas valide",
             };
           }
 

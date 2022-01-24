@@ -151,7 +151,14 @@ export function useDocuments() {
     ]
   );
 
+  const reset = useCallback(async () => {
+    setDocumentsCompletionInternal(null);
+    setEmployeurAttestationPieces(null);
+    setContratTypeContratApp(null);
+  }, [setContratTypeContratApp, setEmployeurAttestationPieces]);
+
   return {
+    reset,
     documents,
     onDocumentsChanged,
     setDocumentsCompletion,

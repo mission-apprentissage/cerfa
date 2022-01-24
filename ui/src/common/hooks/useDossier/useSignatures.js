@@ -76,7 +76,13 @@ export function useSignatures() {
     [contratLieuSignatureContrat, setContratLieuSignatureContrat, setScA]
   );
 
+  const reset = useCallback(async () => {
+    setSignaturesCompletionInternal(null);
+    setContratLieuSignatureContrat(null);
+  }, [setContratLieuSignatureContrat]);
+
   return {
+    reset,
     setSignaturesCompletion,
     signaturesCompletion,
     sca,

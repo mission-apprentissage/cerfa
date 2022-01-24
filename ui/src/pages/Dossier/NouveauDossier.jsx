@@ -87,7 +87,7 @@ export default () => {
               <strong>Pour le volet apprenti :</strong> la date de naissance, l'adresse et le parcours scolaire
             </ListItem>
             <ListItem fontStyle="italic" my={2}>
-              <strong>Pour le volet formation :</strong> les n°de iret/uai du CFA, du code RNCP/diplôme, les dates de
+              <strong>Pour le volet formation :</strong> Les n° de Siret/uai du CFA, du code RNCP/diplôme, les dates de
               formation
             </ListItem>
             <ListItem fontStyle="italic" my={2}>

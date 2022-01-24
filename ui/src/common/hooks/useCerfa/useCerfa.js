@@ -15,6 +15,9 @@ import { cerfaPartApprentiCompletionAtom } from "./parts/useCerfaApprentiAtoms";
 import { cerfaPartMaitresCompletionAtom } from "./parts/useCerfaMaitresAtoms";
 import { cerfaPartContratCompletionAtom } from "./parts/useCerfaContratAtoms";
 
+import { useDocuments } from "../useDossier/useDocuments";
+import { useSignatures } from "../useDossier/useSignatures";
+
 const hydrate = async (dossier) => {
   try {
     const cerfa = await _get(`/api/v1/cerfa?dossierId=${dossier._id}`);
@@ -197,6 +200,11 @@ export function useCerfa() {
   const setPartMaitresCompletion = useSetRecoilState(cerfaPartMaitresCompletionAtom);
   const setPartContratCompletion = useSetRecoilState(cerfaPartContratCompletionAtom);
 
+  const { reset: resetDocuments } = useDocuments();
+  const { reset: resetSignatures } = useSignatures();
+
+  const shouldBeReset = cerfa?.id !== dossier?.cerfaId;
+
   // eslint-disable-next-line no-unused-vars
   const { data, isLoading, isFetching } = useQuery(
     "cerfa",
@@ -210,11 +218,16 @@ export function useCerfa() {
       setPartMaitresCompletion(cerfaMaitresCompletion(res));
       setPartContratCompletion(cerfaContratCompletion(res));
 
+      if (shouldBeReset) {
+        resetDocuments();
+        resetSignatures();
+      }
+
       return Promise.resolve(res);
     },
     {
       refetchOnWindowFocus: false,
-      refetchOnMount: false,
+      refetchOnMount: shouldBeReset,
     }
   );
 

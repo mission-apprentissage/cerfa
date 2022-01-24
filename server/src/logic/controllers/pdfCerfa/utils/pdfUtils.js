@@ -95,7 +95,7 @@ const fieldsPositions = {
         x: 96,
         y: 631,
         maxLength: 35,
-        title: (value) => value.toLowerCase(),
+        title: (value) => value?.toLowerCase() || "",
       },
       codePostal: {
         x: 97,
@@ -273,7 +273,7 @@ const fieldsPositions = {
         x: 97,
         y: 376,
         maxLength: 35,
-        title: (value) => value.toLowerCase(),
+        title: (value) => value?.toLowerCase() || "",
       },
       codePostal: {
         x: 94,
@@ -320,7 +320,7 @@ const fieldsPositions = {
           const helveticaFont = await options.pdfDoc.embedFont(StandardFonts.Helvetica);
           return [
             { text: value || "" },
-            { text: options.prenom, options: { x: 35 + helveticaFont.widthOfTextAtSize(value || "", 11) } },
+            { text: options.prenom || "", options: { x: 35 + helveticaFont.widthOfTextAtSize(value || "", 11) } },
           ];
         },
       },
@@ -333,6 +333,7 @@ const fieldsPositions = {
         voie: {
           x: 104,
           title: (value) => {
+            if (!value) return "";
             let shorttened =
               shortenVoie(value) || shortenVoie(value, "toLowerCase") || shortenVoie(value, "toUpperCase");
 
@@ -360,19 +361,19 @@ const fieldsPositions = {
           x: 98,
           y: 197,
           maxLength: 35,
-          title: (value) => value.toLowerCase(),
+          title: (value) => value?.toLowerCase() || "",
         },
         codePostal: {
           x: 94,
           y: 179,
           maxLength: 30,
-          title: (value) => value.toLowerCase(),
+          title: (value) => value?.toLowerCase(),
         },
         commune: {
           x: 87,
           y: 162,
           maxLength: 30,
-          title: (value) => value.toLowerCase(),
+          title: (value) => value?.toLowerCase(),
         },
       },
     },
@@ -500,19 +501,19 @@ const fieldsPositions = {
         x: 304,
         y: 98,
         maxLength: 46,
-        title: (value) => value.toLowerCase(),
+        title: (value) => value?.toLowerCase() || "",
       },
       prenom: {
         x: 304,
         y: 68,
         maxLength: 46,
-        title: (value) => value.toLowerCase(),
+        title: (value) => value?.toLowerCase() || "",
       },
       dateNaissance: {
         x: 405,
         y: 51,
         maxLength: 10,
-        title: (value) => convertDate(value),
+        title: (value) => (value ? convertDate(value) : ""),
       },
     },
   },
@@ -521,7 +522,7 @@ const fieldsPositions = {
       x: 65,
       y: 231,
       maxLength: 100,
-      title: (value) => value.toLowerCase(),
+      title: (value) => value?.toLowerCase(),
     },
     typeContratApp: {
       x: 182,
@@ -538,6 +539,7 @@ const fieldsPositions = {
       y: 775,
       maxLength: 30,
       title: (value) => {
+        if (!value) return "";
         return value.match(/.{1}/g).join(" ");
       },
     },
@@ -557,7 +559,7 @@ const fieldsPositions = {
       x: 505,
       y: 756,
       maxLength: 10,
-      title: (value) => convertDate(value),
+      title: (value) => (value ? convertDate(value) : ""),
     },
     dateFinContrat: {
       x: 113,
@@ -618,14 +620,14 @@ const fieldsPositions = {
           y: 632,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         dateFin: {
           x: 170,
           y: 632,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
           x: 236,
@@ -646,14 +648,14 @@ const fieldsPositions = {
           y: 632,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         dateFin: {
           x: 170 + 255,
           y: 632,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
           x: 236 + 255,
@@ -674,14 +676,14 @@ const fieldsPositions = {
           y: 632 - 12,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         dateFin: {
           x: 170,
           y: 632 - 12,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
           x: 236,
@@ -702,14 +704,14 @@ const fieldsPositions = {
           y: 632 - 12,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         dateFin: {
           x: 170 + 255,
           y: 632 - 12,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
           x: 236 + 255,
@@ -730,14 +732,14 @@ const fieldsPositions = {
           y: 632 - 25,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         dateFin: {
           x: 170,
           y: 632 - 25,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
           x: 236,
@@ -758,14 +760,14 @@ const fieldsPositions = {
           y: 632 - 25,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         dateFin: {
           x: 170 + 255,
           y: 632 - 25,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
           x: 236 + 255,
@@ -786,14 +788,14 @@ const fieldsPositions = {
           y: 632 - 40,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         dateFin: {
           x: 170,
           y: 632 - 40,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
           x: 236,
@@ -814,14 +816,14 @@ const fieldsPositions = {
           y: 632 - 40,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         dateFin: {
           x: 170 + 255,
           y: 632 - 40,
           maxLength: 10,
           defaultSize: 9,
-          title: (value) => convertDate(value),
+          title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
           x: 236 + 255,
@@ -902,13 +904,13 @@ const fieldsPositions = {
       x: 110,
       y: 463,
       maxLength: 8,
-      title: (value) => value.toUpperCase(),
+      title: (value) => value?.toUpperCase(),
     },
     codeDiplome: {
       x: 396,
       y: 463,
       maxLength: 8,
-      title: (value) => value.toUpperCase(),
+      title: (value) => value?.toUpperCase(),
     },
     siret: {
       x: 109,
@@ -922,7 +924,7 @@ const fieldsPositions = {
       x: 376,
       y: 449,
       maxLength: 9,
-      title: (value) => value.toUpperCase(),
+      title: (value) => value?.toUpperCase(),
     },
     adresse: {
       numero: {
@@ -955,7 +957,7 @@ const fieldsPositions = {
         x: 99,
         y: 398,
         maxLength: 40,
-        title: (value) => value.toLowerCase(),
+        title: (value) => value?.toLowerCase() || "",
       },
       codePostal: {
         x: 97,
@@ -974,13 +976,13 @@ const fieldsPositions = {
       x: 304,
       y: 403,
       maxLength: 10,
-      title: (value) => convertDate(value),
+      title: (value) => (value ? convertDate(value) : ""),
     },
     dateFinFormation: {
       x: 304,
       y: 373,
       maxLength: 10,
-      title: (value) => convertDate(value),
+      title: (value) => (value ? convertDate(value) : ""),
     },
     dureeFormation: {
       x: 419,
@@ -1177,6 +1179,7 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
     for (let jndex = 0; jndex < pdfPageContent.length; jndex++) {
       const { title, x, y, defaultColor, defaultSize } = pdfPageContent[jndex];
       let arrTitles = Array.isArray(title) ? title : [title];
+      console.log(arrTitles);
       arrTitles.forEach((t, ite) => {
         let text = isObject(t) ? t.text : t;
         const titles = ite === 0 ? capitalizeFirstLetter(text) : text;
