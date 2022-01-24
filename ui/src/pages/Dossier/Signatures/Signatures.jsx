@@ -172,7 +172,7 @@ export default ({ dossierId }) => {
             }
             variant="primary"
           >
-            Enrgistrer
+            Enregistrer
           </Button>
         </HStack>
       </Box>
