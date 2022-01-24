@@ -1,3 +1,10 @@
+# [1.14.0-beta.20](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.19...v1.14.0-beta.20) (2022-01-24)
+
+
+### Features
+
+* bouton radio sans idcc, fix rafraîchissant dossier, fin de dossier et autres  ([#205](https://github.com/mission-apprentissage/cerfa/issues/205)) ([5aa3476](https://github.com/mission-apprentissage/cerfa/commit/5aa3476b84f0ec6dbf7e45b4222122aeb75d5dc9))
+
 # [1.14.0-beta.19](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.18...v1.14.0-beta.19) (2022-01-24)
 
 
