@@ -161,7 +161,7 @@ const apprentiSchema = {
       {
         name: "C",
         mask: "Pattern",
-        pattern: "^\\D*$",
+        pattern: "^.*$",
       },
     ],
   },

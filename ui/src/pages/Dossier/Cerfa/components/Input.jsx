@@ -80,7 +80,9 @@ const MInput = IMaskMixin(({ inputRef, ...props }) => <ChackraInput {...props} r
 
 const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, ...props }) => {
   const [internalValue, setInternalValue] = useState(`${value}`);
+  const [focused, setFocused] = useState(null);
   const inputRef = useRef(null);
+  const prevFieldValueRef = useRef("");
 
   let blocks = useMemo(() => {
     return maskblocks?.reduce((acc, item) => {
@@ -126,13 +128,20 @@ const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, 
   }, [maskblocks, min, precision]);
 
   useEffect(() => {
-    if (value !== "") setInternalValue(`${value}`);
-    else if (internalValue !== "") setInternalValue("");
-  }, [internalValue, value]);
+    if (focused !== true && prevFieldValueRef.current !== value) {
+      // console.log("Update Value");
+      prevFieldValueRef.current = value;
+      if (value !== "") setInternalValue(`${value}`);
+      else if (internalValue !== "") setInternalValue("");
+    }
+  }, [focused, internalValue, value]);
 
   let onComplete = useCallback(
-    async (completValue) => {
+    async (completValue, forced = false) => {
+      // console.log("onComplete");
+      // if (completValue !== value && (focused === false || forced === true)) {
       if (completValue !== value) {
+        // console.log("onChange");
         onChange({ persist: () => {}, target: { value: completValue } });
       }
     },
@@ -146,15 +155,25 @@ const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, 
       unmask={true}
       lazy={false}
       placeholderChar="_"
-      overwrite={true}
+      // overwrite={true}
       autofix={true}
       blocks={blocks}
       onAccept={(currentValue, mask) => {
+        // console.log("onAccept", currentValue);
         setInternalValue(currentValue);
       }}
       onComplete={onComplete}
       ref={inputRef}
       value={internalValue}
+      onFocus={() => {
+        // console.log("Focus");
+        setFocused(true);
+      }}
+      onBlur={() => {
+        // console.log("Focus out");
+        setFocused(false);
+        onComplete(internalValue, true);
+      }}
     />
   );
 };
@@ -210,7 +229,7 @@ const DateInput = ({ onChange, value, type, ...props }) => {
         unmask={true}
         lazy={false}
         placeholderChar="_"
-        overwrite={true}
+        // overwrite={true}
         autofix={true}
         blocks={{
           d: { mask: IMask.MaskedRange, placeholderChar: "j", from: 1, to: 31, maxLength: 2 },
@@ -320,7 +339,7 @@ export default React.memo(
     isRequired,
     min = 0,
     throttleTime = 100,
-    debounceTime = 100,
+    debounceTime = 300,
     format = undefined,
     parse = undefined,
     ...props
