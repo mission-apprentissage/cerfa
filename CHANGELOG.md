@@ -1,3 +1,49 @@
+# [1.14.0](https://github.com/mission-apprentissage/cerfa/compare/v1.13.0...v1.14.0) (2022-01-24)
+
+
+### Bug Fixes
+
+* application de la désactivation sur les champs date ([3d664b9](https://github.com/mission-apprentissage/cerfa/commit/3d664b9ca6f46285beec6481a7427d981fb83256))
+* base validation données formulaire côté serveur ([#141](https://github.com/mission-apprentissage/cerfa/issues/141)) ([d592fd0](https://github.com/mission-apprentissage/cerfa/commit/d592fd011917ba1737a498a5d6b3f81c80e1dd3d))
+* cgu orthographe ([#146](https://github.com/mission-apprentissage/cerfa/issues/146)) ([d025849](https://github.com/mission-apprentissage/cerfa/commit/d0258490112c97cb7615345c414043aba8e54f0a))
+* changements ([#204](https://github.com/mission-apprentissage/cerfa/issues/204)) ([3b1eb28](https://github.com/mission-apprentissage/cerfa/commit/3b1eb286f3beeb90e815557f535fbe2d85b43dda))
+* chemin certificats ([ea29d0b](https://github.com/mission-apprentissage/cerfa/commit/ea29d0b4a91b6bee0b5eb17d3f500706439ef60b))
+* correctif agacep api ([#140](https://github.com/mission-apprentissage/cerfa/issues/140)) ([ef55fee](https://github.com/mission-apprentissage/cerfa/commit/ef55feeaaca536c016c169b4c89ca3469735419b))
+* correction enregistrement uai en db. Autres: region , dpt, voie ([#139](https://github.com/mission-apprentissage/cerfa/issues/139)) ([d3194f8](https://github.com/mission-apprentissage/cerfa/commit/d3194f8f05b23695069ca4bbf306eafb4d90409a))
+* departement sur 2 caractères à la saisie ([13f23b0](https://github.com/mission-apprentissage/cerfa/commit/13f23b01df18736bece5c421596de6adde860993))
+* Envoi vers AGECAP api  ([#131](https://github.com/mission-apprentissage/cerfa/issues/131)) ([56721c7](https://github.com/mission-apprentissage/cerfa/commit/56721c7821cf2094e0416b8de172779530463e9d))
+* fin de dossier ([8f5c8fa](https://github.com/mission-apprentissage/cerfa/commit/8f5c8fa00011ab566843a5d5d03a0797934a0624))
+* fin de dossier ([#158](https://github.com/mission-apprentissage/cerfa/issues/158)) ([773030b](https://github.com/mission-apprentissage/cerfa/commit/773030b5795ed5fd2c03c1c20da40c1d960672d4))
+* fix chemin des certifications Agecap ([39e0162](https://github.com/mission-apprentissage/cerfa/commit/39e016230689dcd86ad576044ac24a2bebddcf1e))
+* génération pdf, chargement cerfa trop rapide ([43f865e](https://github.com/mission-apprentissage/cerfa/commit/43f865ee1f7bf08aa87da1cb4a611663f9ad4da1))
+* limite d'age apprenti, maîtres / à la date de debut de contrat ([8246d6c](https://github.com/mission-apprentissage/cerfa/commit/8246d6cbf901b11092689848250fba89de423f79))
+* limite des heures hebdomadaire à 40h ([e27ef5d](https://github.com/mission-apprentissage/cerfa/commit/e27ef5dac3568c844be455348d41b824266db0bd))
+* patrons et validation des champs formulaire ([ef78575](https://github.com/mission-apprentissage/cerfa/commit/ef785758a001b3030c91800512e5be48d215bc6b))
+* pds url production ([5241b31](https://github.com/mission-apprentissage/cerfa/commit/5241b315ee7a49621b0a24a53506d0556b550f2a))
+* remise à zero de "mineur non emancipe" si l'apprenti est majeur ([86bf775](https://github.com/mission-apprentissage/cerfa/commit/86bf7757909c23d13f2f2721366498906eda3373))
+* remise à zéro des taux de completion ([5ba6ead](https://github.com/mission-apprentissage/cerfa/commit/5ba6eade17c97df6f6248e80dcbd54dc5017f497))
+* retours recette ([b684496](https://github.com/mission-apprentissage/cerfa/commit/b68449612540b35fd15b8a4f13918344fae3ade4))
+* rncp inactif ([#119](https://github.com/mission-apprentissage/cerfa/issues/119)) ([5f1ee63](https://github.com/mission-apprentissage/cerfa/commit/5f1ee63bba856f42ed382a649ea49a58bbf2c562))
+* roll back! ([7346556](https://github.com/mission-apprentissage/cerfa/commit/7346556e40a1cc0598b6bd16720268a70a8918f7))
+
+
+### Features
+
+* ajout de l'attestation Pj employeur + correction rafraîchissement ([#121](https://github.com/mission-apprentissage/cerfa/issues/121)) ([40d96c4](https://github.com/mission-apprentissage/cerfa/commit/40d96c448f99b85e390f8a0009f34e2a94c65d4d))
+* ajout département employeur ([87abc0e](https://github.com/mission-apprentissage/cerfa/commit/87abc0e9a39ed3727b1ff0f4efdd52212cb24ac0))
+* ajout job de test Agecap Api ([aa585ad](https://github.com/mission-apprentissage/cerfa/commit/aa585ad9496534a03d229e6c1f8e6d65a8279858))
+* ajout lieu de signature, attestion pieces, fin de dossier, passage en cours d’instruction ([#130](https://github.com/mission-apprentissage/cerfa/issues/130)) ([19ed067](https://github.com/mission-apprentissage/cerfa/commit/19ed06783f72d7b175112a5bc68832ea85cc9a24))
+* ajout numero de version dans le pied de page ([b30c8cf](https://github.com/mission-apprentissage/cerfa/commit/b30c8cf9a8bd710bf2708dd220d285a0c8641318))
+* base modification remuneration + debug test api agecap ([b7bbb4f](https://github.com/mission-apprentissage/cerfa/commit/b7bbb4f2b9abdec357c198c2e55c39ad91c95dda))
+* bouton radio sans idcc, fix rafraîchissant dossier, fin de dossier et autres  ([#205](https://github.com/mission-apprentissage/cerfa/issues/205)) ([5aa3476](https://github.com/mission-apprentissage/cerfa/commit/5aa3476b84f0ec6dbf7e45b4222122aeb75d5dc9))
+* correction age apprenti + fin nouveau tableau rémunération ([9e5a66c](https://github.com/mission-apprentissage/cerfa/commit/9e5a66c03e9cd55e3b1588961162bded4e614935))
+* première télétransmission vers agecap ([#144](https://github.com/mission-apprentissage/cerfa/issues/144)) ([c56181d](https://github.com/mission-apprentissage/cerfa/commit/c56181d64ccd9b526c730bab94e03b3232025b7b))
+* rapide implementation region + ddets dreets ([96e8cf8](https://github.com/mission-apprentissage/cerfa/commit/96e8cf8a07efdc6fe04c6c72aebb615b36d4781e))
+* réécriture rémunérations ([cd943ea](https://github.com/mission-apprentissage/cerfa/commit/cd943eafbea9c269cf16d30a6b69a14e4c9f7bdc))
+* retour de recette ([d141128](https://github.com/mission-apprentissage/cerfa/commit/d141128d22968404f4fb7fdcd926727c3269beab))
+* retour de recette et debug  ([#151](https://github.com/mission-apprentissage/cerfa/issues/151)) ([f068643](https://github.com/mission-apprentissage/cerfa/commit/f068643fcb80f05175566517aba1a53a49ef084c))
+* **ui:** Ajout des champs civilité  ([#116](https://github.com/mission-apprentissage/cerfa/issues/116)) ([f5e26c9](https://github.com/mission-apprentissage/cerfa/commit/f5e26c9ff7557c8855c5cd067f1f841bf4272125))
+
 # [1.14.0-beta.20](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.19...v1.14.0-beta.20) (2022-01-24)
 
 
