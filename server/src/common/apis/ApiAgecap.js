@@ -73,9 +73,9 @@ class ApiAgecap {
 
         return response;
       } catch (e) {
-        console.log(e);
-        console.log(e.response.data);
-        throw new ApiError("Api Agecap contrat", `${e.message}`, e.code || e.response.status);
+        // console.log(e);
+        // console.log(e.response.data);
+        throw new ApiError("Api Agecap contrat", `${e.message}`, { contratAgecap, ...e.response.data });
       }
     });
   }
@@ -113,7 +113,7 @@ class ApiAgecap {
       } catch (e) {
         console.log(e);
         console.log(e.response.data);
-        throw new ApiError("Api Agecap document", `${e.message}`, e.code || e.response.status);
+        throw new ApiError("Api Agecap document", `${e.message}`, e.response.data);
       }
     });
   }

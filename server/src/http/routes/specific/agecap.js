@@ -7,6 +7,7 @@ const ApiAgecap = require("../../../common/apis/ApiAgecap");
 const { find, pick } = require("lodash");
 const Boom = require("boom");
 const { DateTime } = require("luxon");
+const idccEnum = require("../../../common/model/schema/specific/dossier/cerfa/parts/idcc.part");
 
 module.exports = (components) => {
   const router = express.Router();
@@ -60,13 +61,15 @@ module.exports = (components) => {
         ...(Object.keys(annee4Periode2).length > 0 ? { annee4Periode2 } : {}),
       };
 
-      const pjs = dossier.documents.map(({ documentId, nomFichier, typeFichier, typeDocument, hash }) => ({
+      const pjs = dossier.documents.map(({ documentId, nomFichier, typeDocument, hash }) => ({
         identifiant: documentId,
         nom: nomFichier,
-        format: typeFichier,
-        type: typeDocument,
+        format: "PDF", // typeFichier,
+        type: typeDocument === "CONVENTION_FORMATION" ? "1" : "2",
         checksum: hash,
       }));
+
+      const libelleIdcc = find(idccEnum, { code: cerfa.employeur.codeIdcc })?.libelle || cerfa.employeur.libelleIdcc;
 
       const contratAgecap = {
         employeur: {
@@ -79,7 +82,7 @@ module.exports = (components) => {
           caisseComplementaire: "NA",
           regimeSpecifique: cerfa.employeur.regimeSpecifique,
           codeIdcc: cerfa.employeur.codeIdcc,
-          libelleIdcc: cerfa.employeur.libelleIdcc,
+          libelleIdcc: libelleIdcc,
           telephone: cerfa.employeur.telephone.replace("+33", "0"), // TO CONVERT   + => 00
           courriel: cerfa.employeur.courriel,
           adresse: {
@@ -179,7 +182,7 @@ module.exports = (components) => {
           numeroEnregistrementContrat: dossier._id,
           infoTransmission: {
             organismeDREETS: dossier.dreets,
-            organismeDDETS: dossier.ddets,
+            organismeDDETS: dossier.ddets.startsWith("97") ? "99" : dossier.ddets,
             nomContact: user.nom,
             prenomContact: user.prenom,
             // telephoneContact: user.telephone.replace("+33", "0"),
