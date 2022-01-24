@@ -1,3 +1,16 @@
+# [1.14.0-beta.14](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.13...v1.14.0-beta.14) (2022-01-24)
+
+
+### Bug Fixes
+
+* génération pdf, chargement cerfa trop rapide ([43f865e](https://github.com/mission-apprentissage/cerfa/commit/43f865ee1f7bf08aa87da1cb4a611663f9ad4da1))
+* remise à zéro des taux de completion ([5ba6ead](https://github.com/mission-apprentissage/cerfa/commit/5ba6eade17c97df6f6248e80dcbd54dc5017f497))
+
+
+### Features
+
+* retour de recette ([d141128](https://github.com/mission-apprentissage/cerfa/commit/d141128d22968404f4fb7fdcd926727c3269beab))
+
 # [1.14.0-beta.13](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.12...v1.14.0-beta.13) (2022-01-23)
 
 
