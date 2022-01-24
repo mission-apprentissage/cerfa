@@ -1,0 +1,15 @@
+export const DOSSIER_STATUS = {
+  BROUILLON: "Brouillon",
+  EN_ATTENTE_SIGNATURES: "En attente de signatures",
+  DOSSIER_TERMINE: "Dossier terminé",
+  DOSSIER_TERMINE_EN_ATTENTE_TRANSMISSION: "Dossier terminé en attente de transmission",
+  TRANSMIS: "Transmis",
+  EN_COURS_INSTRUCTION: "En cours d'instruction",
+  INCOMPLET: "Demande de complément",
+  DEPOSE: "Déposé",
+  REFUSE: "Refusé",
+  ENGAGE: "Engagé",
+  ANNULE: "Annulé",
+  RUTPURE: "Rupture",
+  SOLDE: "Soldé",
+};

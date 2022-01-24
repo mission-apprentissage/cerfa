@@ -1,21 +1,10 @@
 import React from "react";
-import {
-  Text,
-  Badge,
-  Button,
-  HStack,
-  Link,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Avatar,
-  Center,
-} from "@chakra-ui/react";
+import { Text, Button, HStack, Link, Menu, MenuButton, MenuList, MenuItem, Avatar, Center } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { DateTime } from "luxon";
 import { Parametre } from "../../../theme/components/icons";
 import { Table } from "../../../common/components/Table";
+import { StatusBadge } from "../../../common/components/StatusBadge";
 import { useRecoilValue } from "recoil";
 import { hasContextAccessTo } from "../../../common/utils/rolesUtils";
 import { workspaceAtom } from "../../../common/hooks/workspaceAtoms";
@@ -89,8 +78,7 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
         Etat: (value, i) => {
           return (
             <Center>
-              {dossiers[i].draft && <Badge variant="draft">Brouillon</Badge>}
-              {!dossiers[i].draft && <Badge variant="waitingSignature">En cours d'instruction</Badge>}
+              <StatusBadge status={dossiers[i].etat} />
             </Center>
           );
         },

@@ -268,6 +268,8 @@ module.exports = (components) => {
         if (hasError) throw Boom.badRequest("Doesn't exist", sendDocumentResponses);
       }
 
+      await dossiers.updateEtatDossier(dossierId, "TRANSMIS");
+
       return res.json({ contrat: sendContratResponse.data, documents: sendDocumentResponses });
     })
   );
