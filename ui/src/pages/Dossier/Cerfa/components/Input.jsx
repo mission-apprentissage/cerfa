@@ -331,6 +331,7 @@ export default React.memo(
     const [shouldBeDisabled, setShouldBeDisabled] = useState(false);
     const [fromInternal, setFromInternal] = useState(false);
     const [countryCode, setCountryCode] = useState("fr");
+    const [success, setSuccess] = useState({});
 
     const prevOnAsyncDataRef = useRef();
     const prevFieldValueRef = useRef("");
@@ -472,6 +473,10 @@ export default React.memo(
         setIsLoading(false);
 
         // console.log({ successed, data, message });
+
+        if (successed) setSuccess({ [name]: message });
+        else setSuccess({});
+
         setErrors({ [name]: message });
         if (data) {
           return await onSubmittedField(path, data);
@@ -835,7 +840,8 @@ export default React.memo(
             </Box>
           )}
         </HStack>
-        {errors[name] && <FormErrorMessage>{errors[name]}</FormErrorMessage>}
+        {errors[name] && !success[name] && <FormErrorMessage>{errors[name]}</FormErrorMessage>}
+        {success[name] && <FormErrorMessage color="green.500">{success[name]}</FormErrorMessage>}
       </FormControl>
     );
   }
