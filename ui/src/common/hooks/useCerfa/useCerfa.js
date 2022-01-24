@@ -132,6 +132,10 @@ const hydrate = async (dossier) => {
           ...cerfa.contrat.dureeTravailHebdoMinutes,
           ...cerfaContratController.contrat.dureeTravailHebdoMinutes,
         },
+        numeroContratPrecedent: {
+          ...cerfa.contrat.numeroContratPrecedent,
+          ...cerfaContratController.contrat.numeroContratPrecedent,
+        },
       },
       formation: {
         ...cerfa.formation,

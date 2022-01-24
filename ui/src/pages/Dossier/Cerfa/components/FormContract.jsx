@@ -29,7 +29,10 @@ import {
   cerfaFormationDateFinFormationAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
 
-import { cerfaEmployeurAdresseDepartementAtom } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+import {
+  cerfaEmployeurAdresseDepartementAtom,
+  cerfaEmployeurSiretAtom,
+} from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import InputCerfa from "./Input";
 
 const FormContract = React.memo(() => {
@@ -40,6 +43,7 @@ const FormContract = React.memo(() => {
   const apprentiDateNaissance = useRecoilValue(cerfaApprentiDateNaissanceAtom);
   const apprentiAge = useRecoilValue(cerfaApprentiAgeAtom);
   const employeurAdresseDepartement = useRecoilValue(cerfaEmployeurAdresseDepartementAtom);
+  const employeurSiret = useRecoilValue(cerfaEmployeurSiretAtom);
 
   const {
     isLoading,
@@ -187,6 +191,7 @@ const FormContract = React.memo(() => {
               isRequired={
                 !(typeContratApp?.valueDb === 21 || typeContratApp?.valueDb === 22 || typeContratApp?.valueDb === 23)
               }
+              onAsyncData={{ typeContratAppDbValue: typeContratApp?.valueDb, employeurSiret: employeurSiret?.value }}
             />
           )}
           {numeroContratPrecedent.value !== "" && (

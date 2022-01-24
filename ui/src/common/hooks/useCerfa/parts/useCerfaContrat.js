@@ -5,6 +5,7 @@
 import { useCallback, useEffect } from "react";
 import { DateTime } from "luxon";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { _post } from "../../../httpClient";
 
 import {
   fieldCompletionPercentage,
@@ -23,6 +24,8 @@ import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
 import { cerfaApprentiAgeAtom, cerfaApprentiDateNaissanceAtom } from "./useCerfaApprentiAtoms";
 import * as contratAtoms from "./useCerfaContratAtoms";
+
+const ENV = process.env.REACT_APP_ENV;
 
 export const cerfaContratCompletion = (res) => {
   let fieldsToKeep = {
@@ -428,6 +431,53 @@ export const CerfaContratController = async (dossier) => {
             successed: true,
             data: {
               dureeTravailHebdoMinutes: value,
+            },
+            message: null,
+          };
+        },
+      },
+      numeroContratPrecedent: {
+        doAsyncActions: async (value, { typeContratAppDbValue, employeurSiret }) => {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          if (employeurSiret === "") {
+            return {
+              successed: false,
+              data: null,
+              message: "Veuillez saisir le siret de l'employeur dans la partie Employeur",
+            };
+          }
+
+          if (ENV !== "production") {
+            if (!(typeContratAppDbValue === 21 || typeContratAppDbValue === 22 || typeContratAppDbValue === 23)) {
+              const response = await _post(`/api/v1/agecap/verifNumeroContratPrecedent`, {
+                numeroContratPrecedent: value,
+                employeurSiret,
+                dossierId: dossier._id,
+              });
+
+              if (response.message.includes("Impossible de retrouver un dossier unique pour le contrat")) {
+                return {
+                  successed: false,
+                  data: null,
+                  message: `Impossible de retrouver un dossier dans AGECAP pour le contrat n°${value} et le siret ${employeurSiret}`,
+                };
+              }
+
+              if (response.message !== "ok") {
+                return {
+                  successed: false,
+                  data: null,
+                  message: response.message,
+                };
+              }
+            }
+          }
+
+          return {
+            successed: true,
+            data: {
+              numeroContratPrecedent: value,
             },
             message: null,
           };
@@ -1134,22 +1184,22 @@ export function useCerfaContrat() {
             contrat: {
               numeroContratPrecedent: {
                 ...contratNumeroContratPrecedent,
-                value: data,
+                value: data.numeroContratPrecedent,
               },
             },
           };
-          if (contratNumeroContratPrecedent.value !== newV.contrat.numeroContratPrecedent.value) {
-            setContratNumeroContratPrecedent(newV.contrat.numeroContratPrecedent);
+          // if (contratNumeroContratPrecedent.value !== newV.contrat.numeroContratPrecedent.value) {
+          setContratNumeroContratPrecedent(newV.contrat.numeroContratPrecedent);
 
-            setNumeroContratPrecedentDetails(data);
+          setNumeroContratPrecedentDetails(data.numeroContratPrecedent);
 
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
-              contrat: {
-                numeroContratPrecedent: newV.contrat.numeroContratPrecedent.value || null,
-              },
-            });
-            setPartContratCompletion(cerfaContratCompletion(res));
-          }
+          const res = await saveCerfa(dossier?._id, cerfa?.id, {
+            contrat: {
+              numeroContratPrecedent: newV.contrat.numeroContratPrecedent.value || null,
+            },
+          });
+          setPartContratCompletion(cerfaContratCompletion(res));
+          // }
         }
       } catch (e) {
         console.error(e);
