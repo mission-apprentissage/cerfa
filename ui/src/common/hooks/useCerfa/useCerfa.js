@@ -214,7 +214,7 @@ export function useCerfa() {
     },
     {
       refetchOnWindowFocus: false,
-      refetchOnMount: false,
+      refetchOnMount: cerfa?.id !== dossier?.cerfaId,
     }
   );
 
