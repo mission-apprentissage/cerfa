@@ -29,6 +29,7 @@ const FormEmployer = React.memo(({ onFetched }) => {
         naf,
         nombreDeSalaries,
         codeIdcc,
+        codeIdccSpecial,
         libelleIdcc,
         telephone,
         courriel,
@@ -49,6 +50,7 @@ const FormEmployer = React.memo(({ onFetched }) => {
         nombreDeSalaries: onSubmittedEmployeurNombreDeSalaries,
         naf: onSubmittedEmployeurNaf,
         codeIdcc: onSubmittedEmployeurCodeIdcc,
+        codeIdccSpecial: onSubmittedEmployeurCodeIdccSpecial,
         libelleIdcc: onSubmittedEmployeurLibelleIdcc,
         // caisseComplementaire: onSubmittedEmployeurCaisseComplementaire,
         telephone: onSubmittedEmployeurTelephone,
@@ -215,23 +217,32 @@ const FormEmployer = React.memo(({ onFetched }) => {
             precision={0}
             onSubmittedField={onSubmittedEmployeurNombreDeSalaries}
           />
-          <InputCerfa
-            path="employeur.codeIdcc"
-            field={codeIdcc}
-            type="text"
-            mt="2"
-            onSubmittedField={onSubmittedEmployeurCodeIdcc}
-            onAsyncData={{
-              enumCodeIdcc: codeIdcc.enum,
-              enumLibelleIdcc: libelleIdcc.enum,
-              libelleIdcc: libelleIdcc.value,
-            }}
-          />
+          <Box mt={8}>
+            <InputCerfa
+              path="employeur.codeIdcc"
+              field={codeIdcc}
+              type="text"
+              mt="2"
+              onSubmittedField={onSubmittedEmployeurCodeIdcc}
+              onAsyncData={{
+                enumCodeIdcc: codeIdcc.enum,
+                enumLibelleIdcc: libelleIdcc.enum,
+                libelleIdcc: libelleIdcc.value,
+              }}
+            />
+            <InputCerfa
+              path="employeur.codeIdcc.special"
+              field={codeIdccSpecial}
+              type="radio"
+              mt="2"
+              hasInfo={false}
+              onSubmittedField={onSubmittedEmployeurCodeIdccSpecial}
+            />
+          </Box>
           <InputCerfa
             path="employeur.libelleIdcc"
             field={libelleIdcc}
             type="text"
-            mt="2"
             onSubmittedField={onSubmittedEmployeurLibelleIdcc}
           />
           {/* <InputCerfa
@@ -245,7 +256,7 @@ const FormEmployer = React.memo(({ onFetched }) => {
             path="employeur.regimeSpecifique"
             field={regimeSpecifique}
             type="radio"
-            mt="2"
+            mt="8"
             onSubmittedField={onSubmittedEmployeurRegimeSpecifique}
           />
           {/* <InputCerfa path="employeur.attestationEligibilite" field={attestationEligibilite} type="text" mt="2" /> */}

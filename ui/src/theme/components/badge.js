@@ -53,8 +53,8 @@ const Badge = {
     },
     termine: {
       ...commonStatusBadgeStyle,
-      bg: "greenmedium.500",
-      color: "white",
+      bg: "#a5f5a4",
+      color: "#01441c",
     },
     pending: {
       ...commonStatusBadgeStyle,

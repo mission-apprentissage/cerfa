@@ -29,7 +29,7 @@ export const StatusBadge = ({ status, text, withIcon = false, ...badgeProps }) =
     EN_ATTENTE_SIGNATURES: "waitingSignature",
     DOSSIER_TERMINE: "termine",
     DOSSIER_TERMINE_EN_ATTENTE_TRANSMISSION: "waitingSignature",
-    TRANSMIS: "conforme",
+    TRANSMIS: "waitingSignature",
     EN_COURS_INSTRUCTION: "pending",
     INCOMPLET: "nonConforme",
     DEPOSE: "published",

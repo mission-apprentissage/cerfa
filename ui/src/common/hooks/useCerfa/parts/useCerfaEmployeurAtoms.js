@@ -34,6 +34,30 @@ export const cerfaEmployeurCodeIdccAtom = atom({
   key: "cerfa/employeur/codeIdcc",
   default: null,
 });
+export const cerfaEmployeurCodeIdcSpecialAtom = atom({
+  key: "cerfa/employeur/codeIdcc/special",
+  default: {
+    description: "Autres cas",
+    label: "",
+    default: null,
+    nullable: true,
+    example: "Sans convention collective",
+    options: [
+      {
+        label: "Sans convention collective",
+        value: "9999",
+      },
+      {
+        label: "Convention non encore en vigueur",
+        value: "9998",
+      },
+    ],
+    value: "",
+    locked: true,
+    isNotRequiredForm: true,
+    valueDb: "",
+  },
+});
 export const cerfaEmployeurLibelleIdccAtom = atom({
   key: "cerfa/employeur/libelleIdcc",
   default: null,
