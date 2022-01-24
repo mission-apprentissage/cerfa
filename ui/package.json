@@ -55,8 +55,8 @@
     "prettier": "2.5.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "REACT_APP_VERSION=$npm_package_version react-scripts start",
+    "build": "REACT_APP_VERSION=$npm_package_version react-scripts build",
     "test": "react-scripts test",
     "test:coverage": "react-scripts test --watchAll=false --coverage",
     "eject": "react-scripts eject"

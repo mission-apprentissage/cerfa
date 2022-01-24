@@ -3,6 +3,7 @@ import { Box, Container, Flex, Link, List, ListItem, Text } from "@chakra-ui/rea
 import { NavLink } from "react-router-dom";
 import { ExternalLinkLine } from "../../../theme/components/icons";
 import { Logo } from "./Logo";
+const APP_VERSION = process.env.REACT_APP_VERSION;
 
 const Footer = () => {
   return (
@@ -126,7 +127,7 @@ const Footer = () => {
               </ListItem>
             </List>
             <Text textStyle="xs" mt={[2, 2, 0]}>
-              © République française 2021
+              {APP_VERSION && `v.${APP_VERSION} `}© République française 2021
             </Text>
           </Flex>
         </Container>
