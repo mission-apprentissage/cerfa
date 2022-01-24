@@ -328,6 +328,9 @@ export function useCerfaEmployeur() {
     employeurAtoms.cerfaEmployeurNombreDeSalariesAtom
   );
   const [employeurCodeIdcc, setEmployeurCodeIdcc] = useRecoilState(employeurAtoms.cerfaEmployeurCodeIdccAtom);
+  const [employeurCodeIdccSpecial, setEmployeurCodeIdccSpecial] = useRecoilState(
+    employeurAtoms.cerfaEmployeurCodeIdcSpecialAtom
+  );
   const [employeurLibelleIdcc, setEmployeurLibelleIdcc] = useRecoilState(employeurAtoms.cerfaEmployeurLibelleIdccAtom);
   const [employeurTelephone, setEmployeurTelephone] = useRecoilState(employeurAtoms.cerfaEmployeurTelephoneAtom);
   const [employeurCourriel, setEmployeurCourriel] = useRecoilState(employeurAtoms.cerfaEmployeurCourrielAtom);
@@ -438,6 +441,11 @@ export function useCerfaEmployeur() {
           setEmployeurNaf(newV.employeur.naf);
 
           setEmployeurCodeIdcc(newV.employeur.codeIdcc);
+          setEmployeurCodeIdccSpecial({
+            ...employeurCodeIdccSpecial,
+            locked: false,
+            value: newV.employeur.codeIdcc.value,
+          });
 
           let libelleIdcc = newV.employeur.libelleIdcc.value;
 
@@ -527,6 +535,7 @@ export function useCerfaEmployeur() {
       employeurAdresseRegion,
       employeurAdresseVoie,
       employeurCodeIdcc,
+      employeurCodeIdccSpecial,
       employeurDenomination,
       employeurLibelleIdcc,
       employeurNaf,
@@ -541,6 +550,7 @@ export function useCerfaEmployeur() {
       setEmployeurAdresseRegion,
       setEmployeurAdresseVoie,
       setEmployeurCodeIdcc,
+      setEmployeurCodeIdccSpecial,
       setEmployeurDenomination,
       setEmployeurLibelleIdcc,
       setEmployeurNaf,
@@ -631,6 +641,8 @@ export function useCerfaEmployeur() {
           if (employeurCodeIdcc.value !== newV.employeur.codeIdcc.value) {
             setEmployeurCodeIdcc(newV.employeur.codeIdcc);
 
+            setEmployeurCodeIdccSpecial({ ...employeurCodeIdccSpecial, value: newV.employeur.codeIdcc.value });
+
             let libelleIdcc = newV.employeur.libelleIdcc.value;
 
             if (libelleIdcc === "") {
@@ -658,8 +670,56 @@ export function useCerfaEmployeur() {
       cerfa?.id,
       dossier?._id,
       employeurCodeIdcc,
+      employeurCodeIdccSpecial,
       employeurLibelleIdcc,
       setEmployeurCodeIdcc,
+      setEmployeurCodeIdccSpecial,
+      setEmployeurLibelleIdcc,
+      setPartEmployeurCompletionAtom,
+    ]
+  );
+
+  const onSubmittedEmployeurCodeIdccSpecial = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "employeur.codeIdcc.special") {
+          if (employeurCodeIdccSpecial.value !== data) {
+            setEmployeurCodeIdccSpecial({ ...employeurCodeIdccSpecial, value: data });
+            const codeIdcc = convertOptionToValue({ ...employeurCodeIdccSpecial, value: data });
+
+            setEmployeurCodeIdcc({ ...employeurCodeIdcc, value: codeIdcc });
+
+            let libelleIdcc = "";
+
+            if (libelleIdcc === "") {
+              const index = employeurCodeIdcc.enum.indexOf(codeIdcc);
+              if (index !== -1) {
+                libelleIdcc = employeurLibelleIdcc.enum[index];
+              }
+            }
+            setEmployeurLibelleIdcc({ ...employeurLibelleIdcc, value: libelleIdcc });
+
+            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              employeur: {
+                codeIdcc: codeIdcc,
+                libelleIdcc: libelleIdcc.trim(),
+              },
+            });
+            setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [
+      cerfa?.id,
+      dossier?._id,
+      employeurCodeIdcc,
+      employeurCodeIdccSpecial,
+      employeurLibelleIdcc,
+      setEmployeurCodeIdcc,
+      setEmployeurCodeIdccSpecial,
       setEmployeurLibelleIdcc,
       setPartEmployeurCompletionAtom,
     ]
@@ -1235,6 +1295,11 @@ export function useCerfaEmployeur() {
       setEmployeurNombreDeSalaries(res.employeur.nombreDeSalaries);
 
       setEmployeurCodeIdcc(res.employeur.codeIdcc);
+      const codeIdccSpecial = convertValueToOption({
+        ...employeurCodeIdccSpecial,
+        value: `${res.employeur.codeIdcc.value}`,
+      });
+      setEmployeurCodeIdccSpecial({ ...codeIdccSpecial, locked: res.employeur.siret.value === "" });
 
       setEmployeurLibelleIdcc(res.employeur.libelleIdcc);
       setEmployeurTelephone({ ...res.employeur.telephone, value: res.employeur.telephone.value.replace("+", "") });
@@ -1260,6 +1325,7 @@ export function useCerfaEmployeur() {
       setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
     },
     [
+      employeurCodeIdccSpecial,
       setEmployeurAdresseCodePostal,
       setEmployeurAdresseCommune,
       setEmployeurAdresseComplement,
@@ -1270,6 +1336,7 @@ export function useCerfaEmployeur() {
       setEmployeurAttestationPieces,
       setEmployeurCaisseComplementaire,
       setEmployeurCodeIdcc,
+      setEmployeurCodeIdccSpecial,
       setEmployeurCourriel,
       setEmployeurDenomination,
       setEmployeurEmployeurSpecifique,
@@ -1306,6 +1373,7 @@ export function useCerfaEmployeur() {
         naf: employeurNaf,
         nombreDeSalaries: employeurNombreDeSalaries,
         codeIdcc: employeurCodeIdcc,
+        codeIdccSpecial: employeurCodeIdccSpecial,
         libelleIdcc: employeurLibelleIdcc,
         telephone: employeurTelephone,
         courriel: employeurCourriel,
@@ -1338,6 +1406,7 @@ export function useCerfaEmployeur() {
         employeurSpecifique: onSubmittedEmployeurEmployeurSpecifique,
         nombreDeSalaries: onSubmittedEmployeurNombreDeSalaries,
         codeIdcc: onSubmittedEmployeurCodeIdcc,
+        codeIdccSpecial: onSubmittedEmployeurCodeIdccSpecial,
         libelleIdcc: onSubmittedEmployeurLibelleIdcc,
         caisseComplementaire: onSubmittedEmployeurCaisseComplementaire,
         telephone: onSubmittedEmployeurTelephone,

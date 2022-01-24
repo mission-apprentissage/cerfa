@@ -14,6 +14,14 @@ const employeurCerfaSchema = {
     required: function () {
       return !this.draft;
     },
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
   },
   raison_sociale: {
     type: String,
@@ -88,6 +96,14 @@ const employeurCerfaSchema = {
     label: "Effectif salarié de l'entreprise :",
     requiredMessage: "Effectif salarié de l'entreprise est obligatoire",
     example: 123,
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\d*$",
+      },
+    ],
   },
   codeIdcc: {
     enum: [null, ...idccEnum.map(({ code }) => code)],
@@ -192,7 +208,7 @@ const employeurCerfaSchema = {
       },
     },
     region: {
-      type: String,
+      type: Number,
       description: "Région de l'employeur",
       label: "Région de l'employeur :",
       example: "93 Provence-Alpes-Côte d'Azur",
@@ -203,6 +219,14 @@ const employeurCerfaSchema = {
       required: function () {
         return !this.draft;
       },
+      mask: "C",
+      maskBlocks: [
+        {
+          name: "C",
+          mask: "Pattern",
+          pattern: "^\\d*$",
+        },
+      ],
     },
   },
   nom: {

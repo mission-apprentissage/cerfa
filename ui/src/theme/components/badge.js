@@ -1,9 +1,8 @@
 const commonStatusBadgeStyle = {
   fontSize: "omega",
-  fontWeight: 400,
+  fontWeight: 500,
   borderRadius: 20,
-  pl: 1,
-  pr: 3,
+  px: 3,
   py: 1,
   textTransform: "none",
 };
@@ -52,6 +51,11 @@ const Badge = {
       border: "1px solid",
       borderColor: "orangemedium.300",
     },
+    termine: {
+      ...commonStatusBadgeStyle,
+      bg: "greensoftc",
+      color: "white",
+    },
     pending: {
       ...commonStatusBadgeStyle,
       bg: "greenmedium.200",
@@ -61,10 +65,8 @@ const Badge = {
     },
     reject: {
       ...commonStatusBadgeStyle,
-      bg: "#D5DBEF",
-      color: "grey.800",
-      border: "1px solid",
-      borderColor: "#D5DBEF",
+      bg: "redmarianne",
+      color: "white",
     },
     unknown: {
       ...commonStatusBadgeStyle,
@@ -84,9 +86,6 @@ const Badge = {
       ...commonStatusBadgeStyle,
       bg: "#E3E3FD",
       color: "bluefrance",
-      pl: "15px",
-      fontWeight: "500",
-      pr: "15px",
     },
     sign: {
       ...commonStatusBadgeStyle,

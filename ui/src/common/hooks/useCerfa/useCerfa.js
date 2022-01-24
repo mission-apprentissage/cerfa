@@ -3,11 +3,11 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useQuery } from "react-query";
 import { dossierAtom } from "../useDossier/dossierAtom";
 import { cerfaAtom } from "./cerfaAtom";
-import { CerfaFormationController, cerfaFormationCompletion } from "./parts/useCerfaFormation";
-import { CerfaEmployeurController, cerfaEmployeurCompletion } from "./parts/useCerfaEmployeur";
-import { CerfaApprentiController, cerfaApprentiCompletion } from "./parts/useCerfaApprenti";
-import { CerfaMaitresController, cerfaMaitresCompletion } from "./parts/useCerfaMaitres";
-import { CerfaContratController, cerfaContratCompletion } from "./parts/useCerfaContrat";
+import { CerfaFormationController, cerfaFormationCompletion, useCerfaFormation } from "./parts/useCerfaFormation";
+import { CerfaEmployeurController, cerfaEmployeurCompletion, useCerfaEmployeur } from "./parts/useCerfaEmployeur";
+import { CerfaApprentiController, cerfaApprentiCompletion, useCerfaApprenti } from "./parts/useCerfaApprenti";
+import { CerfaMaitresController, cerfaMaitresCompletion, useCerfaMaitres } from "./parts/useCerfaMaitres";
+import { CerfaContratController, cerfaContratCompletion, useCerfaContrat } from "./parts/useCerfaContrat";
 
 import { cerfaPartFormationCompletionAtom } from "./parts/useCerfaFormationAtoms";
 import { cerfaPartEmployeurCompletionAtom } from "./parts/useCerfaEmployeurAtoms";
@@ -132,6 +132,10 @@ const hydrate = async (dossier) => {
           ...cerfa.contrat.dureeTravailHebdoMinutes,
           ...cerfaContratController.contrat.dureeTravailHebdoMinutes,
         },
+        numeroContratPrecedent: {
+          ...cerfa.contrat.numeroContratPrecedent,
+          ...cerfaContratController.contrat.numeroContratPrecedent,
+        },
       },
       formation: {
         ...cerfa.formation,
@@ -200,6 +204,12 @@ export function useCerfa() {
   const setPartMaitresCompletion = useSetRecoilState(cerfaPartMaitresCompletionAtom);
   const setPartContratCompletion = useSetRecoilState(cerfaPartContratCompletionAtom);
 
+  const { setAll: setCerfaFormation } = useCerfaFormation();
+  const { setAll: setCerfaEmployeur } = useCerfaEmployeur();
+  const { setAll: setCerfaApprenti } = useCerfaApprenti();
+  const { setAll: setCerfaMaitres } = useCerfaMaitres();
+  const { setAll: setCerfaContrat } = useCerfaContrat();
+
   const { reset: resetDocuments } = useDocuments();
   const { reset: resetSignatures } = useSignatures();
 
@@ -221,6 +231,11 @@ export function useCerfa() {
       if (shouldBeReset) {
         resetDocuments();
         resetSignatures();
+        setCerfaFormation(res);
+        setCerfaEmployeur(res);
+        setCerfaApprenti(res);
+        setCerfaMaitres(res);
+        setCerfaContrat(res);
       }
 
       return Promise.resolve(res);

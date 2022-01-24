@@ -12,6 +12,14 @@ const organismeFormationSchema = {
     required: function () {
       return !this.draft;
     },
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
   },
   formationInterne: {
     type: Boolean,

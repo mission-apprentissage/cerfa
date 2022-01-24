@@ -433,6 +433,7 @@ export default React.memo(
         isDisabled: shouldBeDisabled,
         required: isRequiredInternal,
         maxLength: field?.maxLength,
+        autoComplete: "off-",
       }),
       [
         field?.description,
@@ -752,7 +753,12 @@ export default React.memo(
             )}
             {type === "radio" && (
               <HStack>
-                <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>{label || field?.label}</FormLabel>
+                {label ||
+                  (field?.label && (
+                    <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>
+                      {label || field?.label}
+                    </FormLabel>
+                  ))}
                 <RadioGroup value={values[name]}>
                   <HStack>
                     {field.options.map((option, k) => {

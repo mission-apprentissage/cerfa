@@ -1,21 +1,10 @@
 import React from "react";
-import {
-  Text,
-  Badge,
-  Button,
-  HStack,
-  Link,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Avatar,
-  Center,
-} from "@chakra-ui/react";
+import { Text, Button, HStack, Link, Menu, MenuButton, MenuList, MenuItem, Avatar, Center } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { DateTime } from "luxon";
 import { Parametre } from "../../../theme/components/icons";
 import { Table } from "../../../common/components/Table";
+import { StatusBadge } from "../../../common/components/StatusBadge";
 import { useRecoilValue } from "recoil";
 import { hasContextAccessTo } from "../../../common/utils/rolesUtils";
 import { workspaceAtom } from "../../../common/hooks/workspaceAtoms";
@@ -53,11 +42,14 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
       }))}
       components={{
         Nom: (value, i) => {
+          let step = "signatures";
+          if (dossiers[i].etat === "BROUILLON") step = "cerfa";
+
           return (
             <Center>
               <Link
                 as={NavLink}
-                to={`${baseUrl}/${dossiers[i]._id}/cerfa`}
+                to={`${baseUrl}/${dossiers[i]._id}/${step}`}
                 _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.300" }}
                 w="full"
                 h="full"
@@ -89,8 +81,7 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
         Etat: (value, i) => {
           return (
             <Center>
-              {dossiers[i].draft && <Badge variant="draft">Brouillon</Badge>}
-              {!dossiers[i].draft && <Badge variant="waitingSignature">En cours d'instruction</Badge>}
+              <StatusBadge status={dossiers[i].etat} />
             </Center>
           );
         },

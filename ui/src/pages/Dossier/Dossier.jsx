@@ -23,6 +23,7 @@ import { _put, _post } from "../../common/httpClient";
 import useAuth from "../../common/hooks/useAuth";
 import PromptModal from "../../common/components/Modals/PromptModal";
 // import { betaVersion, BetaFeatures } from "../../common/components/BetaFeatures";
+import { StatusBadge } from "../../common/components/StatusBadge";
 import AcknowledgeModal from "../../common/components/Modals/AcknowledgeModal";
 
 import Cerfa from "./Cerfa/Cerfa";
@@ -36,6 +37,10 @@ import { useDocuments } from "../../common/hooks/useDossier/useDocuments";
 import { useSignatures } from "../../common/hooks/useDossier/useSignatures";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
 import { cerfaAtom } from "../../common/hooks/useCerfa/cerfaAtom";
+import {
+  cerfaEmployeurAdresseDepartementAtom,
+  cerfaEmployeurAdresseRegionAtom,
+} from "../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import { AvatarPlus, StepWip, TickBubble, DownloadLine, SentPaperPlane } from "../../theme/components/icons";
 
 import { signaturesPdfLoadedAtom } from "../../common/hooks/useDossier/signaturesAtoms";
@@ -102,6 +107,9 @@ const stepByPath = ["cerfa", "documents", "signatures"];
 
 const EndModal = ({ dossier, ...modal }) => {
   const cerfa = useRecoilValue(cerfaAtom);
+  const employeurAdresseDepartement = useRecoilValue(cerfaEmployeurAdresseDepartementAtom);
+  const employeurAdresseRegion = useRecoilValue(cerfaEmployeurAdresseRegionAtom);
+
   const [ddets, setDdets] = useState(null);
 
   let onReplyClicked = useCallback(
@@ -120,17 +128,26 @@ const EndModal = ({ dossier, ...modal }) => {
 
   useEffect(() => {
     const run = async () => {
-      const code_region = cerfa.employeur.adresse.region.value;
-      const code_dpt = cerfa.employeur.adresse.departement.value;
-      const response = await _post(`/api/v1/dreetsddets/`, {
-        code_region,
-        code_dpt,
-        dossierId: dossier._id,
-      });
-      setDdets(response.ddets);
+      const code_region = cerfa.employeur.adresse.region.value || employeurAdresseRegion.value;
+      const code_dpt = cerfa.employeur.adresse.departement.value || employeurAdresseDepartement.value;
+
+      if (code_region && code_dpt) {
+        const response = await _post(`/api/v1/dreetsddets/`, {
+          code_region,
+          code_dpt,
+          dossierId: dossier._id,
+        });
+        setDdets(response.ddets);
+      }
     };
     run();
-  }, [cerfa, dossier._id]);
+  }, [
+    cerfa.employeur.adresse.departement.value,
+    cerfa.employeur.adresse.region.value,
+    dossier._id,
+    employeurAdresseDepartement,
+    employeurAdresseRegion,
+  ]);
 
   return (
     <>
@@ -410,16 +427,7 @@ export default () => {
         <HStack mt={6}>
           <Heading as="h1" flexGrow="1">
             {dossier.nom}
-            {dossier.draft && (
-              <Badge variant="draft" ml={5}>
-                Brouillon
-              </Badge>
-            )}
-            {!dossier.draft && (
-              <Badge variant="waitingSignature" ml={5}>
-                En cours d'instruction
-              </Badge>
-            )}
+            <StatusBadge status={dossier.etat} ml={5} />
             <Badge variant="solid" bg="grey.100" color="grey.500" textStyle="sm" px="15px" ml="10px">
               <Text as="i">
                 {/* {!dossier.saved ? "Non sauvegardé" : `Dernière sauvegarde ${prettyPrintDate(dossier.lastModified)}`} */}
@@ -559,7 +567,7 @@ export default () => {
                   <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
                   Télécharger le pdf
                 </Button>
-                {hasPageAccessTo(auth, "dossier/send_agecap") && (
+                {hasPageAccessTo(auth, "dossier/send_agecap") && dossier.etat === "DOSSIER_TERMINE" && (
                   <Button
                     size="md"
                     onClick={onSendToAgecap}
