@@ -54,7 +54,7 @@ module.exports = {
       label: "20 Boulevard de la liberté",
       codePostal: "75000",
       commune: "PARIS",
-      pays: "FRANCE",
+      pays: "FR",
     },
     responsableLegal: {
       nom: "Honore",
@@ -66,7 +66,7 @@ module.exports = {
         label: "20 Boulevard de la liberté",
         codePostal: "75000",
         commune: "PARIS",
-        pays: "FRANCE",
+        pays: "FR",
       },
     },
     inscriptionSportifDeHautNiveau: false,
