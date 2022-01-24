@@ -1,3 +1,13 @@
+# [1.14.0-beta.18](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.17...v1.14.0-beta.18) (2022-01-24)
+
+
+### Bug Fixes
+
+* departement sur 2 caractères à la saisie ([13f23b0](https://github.com/mission-apprentissage/cerfa/commit/13f23b01df18736bece5c421596de6adde860993))
+* fin de dossier ([8f5c8fa](https://github.com/mission-apprentissage/cerfa/commit/8f5c8fa00011ab566843a5d5d03a0797934a0624))
+* patrons et validation des champs formulaire ([ef78575](https://github.com/mission-apprentissage/cerfa/commit/ef785758a001b3030c91800512e5be48d215bc6b))
+* retours recette ([b684496](https://github.com/mission-apprentissage/cerfa/commit/b68449612540b35fd15b8a4f13918344fae3ade4))
+
 # [1.14.0-beta.17](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0-beta.16...v1.14.0-beta.17) (2022-01-24)
 
 
