@@ -2,7 +2,11 @@
  * Multiple states on purpose to avoid full re-rendering at each modification
  */
 
-import { useCallback } from "react";
+import {
+  useCallback,
+  useEffect,
+  // useState
+} from "react";
 import { DateTime } from "luxon";
 import { _post } from "../../../httpClient";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -33,9 +37,15 @@ export const CerfaFormationController = async (dossier) => {
               rncp: value,
               dossierId: dossier._id,
             });
-
             // TODO All cases
             if (response.messages.code_rncp === "Ok") {
+              if (response.result.active_inactive === "INACTIVE") {
+                return {
+                  successed: false,
+                  data: null,
+                  message: `Le code ${value} est inactif.`,
+                };
+              }
               if (!response.result.cfds) {
                 return {
                   successed: true,
@@ -339,7 +349,7 @@ export const CerfaFormationController = async (dossier) => {
   };
 };
 
-const cerfaFormationCompletion = (res) => {
+export const cerfaFormationCompletion = (res) => {
   let fieldsToKeep = {
     organismeFormationSiret: res.organismeFormation.siret,
     organismeFormationDenomination: res.organismeFormation.denomination,
@@ -368,6 +378,7 @@ export function useCerfaFormation() {
   const [partFormationCompletion, setPartFormationCompletionAtom] = useRecoilState(
     formationAtoms.cerfaPartFormationCompletionAtom
   );
+  const [isLoading, setIsLoading] = useRecoilState(formationAtoms.cerfaPartFormationIsLoadingAtom);
 
   const [organismeFormationSiret, setOrganismeFormationSiret] = useRecoilState(
     formationAtoms.cerfaOrganismeFormationSiretAtom
@@ -445,7 +456,10 @@ export function useCerfaFormation() {
                 },
                 voie: {
                   ...organismeFormationAdresseVoie,
-                  value: data.type_voie || data.nom_voie ? `${data.type_voie} ${data.nom_voie}` : "",
+                  value:
+                    data.type_voie || data.nom_voie
+                      ? `${data.type_voie ? `${data.type_voie} ` : ""}${data.nom_voie}`
+                      : "",
                   locked: false,
                 },
                 complement: {
@@ -463,45 +477,45 @@ export function useCerfaFormation() {
             },
           };
 
-          if (organismeFormationSiret.value !== newV.organismeFormation.siret.value) {
-            setOrganismeFormationSiret(newV.organismeFormation.siret);
-            setOrganismeFormationDenomination(newV.organismeFormation.denomination);
-            setOrganismeFormationUaiCfa(newV.organismeFormation.uaiCfa);
-            setOrganismeFormationAdresseNumero(newV.organismeFormation.adresse.numero);
-            setOrganismeFormationAdresseVoie(newV.organismeFormation.adresse.voie);
-            setOrganismeFormationAdresseComplement(newV.organismeFormation.adresse.complement);
-            setOrganismeFormationAdresseCodePostal(newV.organismeFormation.adresse.codePostal);
-            setOrganismeFormationAdresseCommune(newV.organismeFormation.adresse.commune);
+          // if (organismeFormationSiret.value !== newV.organismeFormation.siret.value) {
+          setOrganismeFormationSiret(newV.organismeFormation.siret);
+          setOrganismeFormationDenomination(newV.organismeFormation.denomination);
+          setOrganismeFormationUaiCfa(newV.organismeFormation.uaiCfa);
+          setOrganismeFormationAdresseNumero(newV.organismeFormation.adresse.numero);
+          setOrganismeFormationAdresseVoie(newV.organismeFormation.adresse.voie);
+          setOrganismeFormationAdresseComplement(newV.organismeFormation.adresse.complement);
+          setOrganismeFormationAdresseCodePostal(newV.organismeFormation.adresse.codePostal);
+          setOrganismeFormationAdresseCommune(newV.organismeFormation.adresse.commune);
 
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
+          const res = await saveCerfa(dossier?._id, cerfa?.id, {
+            organismeFormation: {
+              siret: newV.organismeFormation.siret.value,
+              denomination: newV.organismeFormation.denomination.value,
+              uaiCfa: newV.organismeFormation.uaiCfa.value || null,
+              adresse: {
+                numero: normalizeInputNumberForDb(newV.organismeFormation.adresse.numero.value),
+                voie: newV.organismeFormation.adresse.voie.value,
+                complement: newV.organismeFormation.adresse.complement.value,
+                codePostal: newV.organismeFormation.adresse.codePostal.value,
+                commune: newV.organismeFormation.adresse.commune.value,
+              },
+            },
+            isLockedField: {
               organismeFormation: {
-                siret: newV.organismeFormation.siret.value,
-                denomination: newV.organismeFormation.denomination.value,
-                uaiCfa: newV.organismeFormation.uaiCfa.value || null,
+                denomination: false,
+                uaiCfa: false,
                 adresse: {
-                  numero: newV.organismeFormation.adresse.numero.value,
-                  voie: newV.organismeFormation.adresse.voie.value,
-                  complement: newV.organismeFormation.adresse.complement.value,
-                  codePostal: newV.organismeFormation.adresse.codePostal.value,
-                  commune: newV.organismeFormation.adresse.commune.value,
+                  numero: false,
+                  voie: false,
+                  complement: false,
+                  codePostal: false,
+                  commune: false,
                 },
               },
-              isLockedField: {
-                organismeFormation: {
-                  denomination: false,
-                  uaiCfa: false,
-                  adresse: {
-                    numero: false,
-                    voie: false,
-                    complement: false,
-                    codePostal: false,
-                    commune: false,
-                  },
-                },
-              },
-            });
-            setPartFormationCompletionAtom(cerfaFormationCompletion(res));
-          }
+            },
+          });
+          setPartFormationCompletionAtom(cerfaFormationCompletion(res));
+          // }
         }
       } catch (e) {
         console.error(e);
@@ -539,7 +553,6 @@ export function useCerfaFormation() {
               denomination: {
                 ...organismeFormationDenomination,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -715,6 +728,7 @@ export function useCerfaFormation() {
               organismeFormation: {
                 adresse: {
                   codePostal: newV.organismeFormation.adresse.codePostal.value,
+                  commune: newV.organismeFormation.adresse.commune.value,
                 },
               },
             });
@@ -746,7 +760,6 @@ export function useCerfaFormation() {
                 commune: {
                   ...organismeFormationAdresseCommune,
                   value: data,
-                  // forceUpdate: false, // IF data = "" true
                 },
               },
             },
@@ -787,17 +800,23 @@ export function useCerfaFormation() {
                 ...organismeFormationUaiCfa,
                 value: data,
                 locked: false,
-                forceUpdate: false, // IF data = "" true
               },
             },
           };
           setOrganismeFormationUaiCfa(newV.organismeFormation.uaiCfa);
+
+          const res = await saveCerfa(dossier?._id, cerfa?.id, {
+            organismeFormation: {
+              uaiCfa: newV.organismeFormation.uaiCfa.value || null,
+            },
+          });
+          setPartFormationCompletionAtom(cerfaFormationCompletion(res));
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [organismeFormationUaiCfa, setOrganismeFormationUaiCfa]
+    [cerfa?.id, dossier?._id, organismeFormationUaiCfa, setOrganismeFormationUaiCfa, setPartFormationCompletionAtom]
   );
 
   const onSubmittedFormationDateFinFormation = useCallback(
@@ -1071,7 +1090,6 @@ export function useCerfaFormation() {
                 ...formationCodeDiplome,
                 value: data.cfd || "",
                 forceUpdate: formationCodeDiplome.value === data.cfd,
-                // locked: data.cfd !== "",
               },
               rncp: {
                 ...formationRncp,
@@ -1158,30 +1176,60 @@ export function useCerfaFormation() {
     ]
   );
 
-  const setAll = async (res) => {
-    setOrganismeFormationSiret(res.organismeFormation.siret);
-    setOrganismeFormationDenomination(res.organismeFormation.denomination);
-    setOrganismeFormationFormationInterne(convertValueToOption(res.organismeFormation.formationInterne));
-    setOrganismeFormationUaiCfa(res.organismeFormation.uaiCfa);
-    setOrganismeFormationAdresseNumero(res.organismeFormation.adresse.numero);
-    setOrganismeFormationAdresseVoie(res.organismeFormation.adresse.voie);
-    setOrganismeFormationAdresseComplement(res.organismeFormation.adresse.complement);
-    setOrganismeFormationAdresseCodePostal(res.organismeFormation.adresse.codePostal);
-    setOrganismeFormationAdresseCommune(res.organismeFormation.adresse.commune);
+  const setAll = useCallback(
+    (res) => {
+      setOrganismeFormationSiret(res.organismeFormation.siret);
+      setOrganismeFormationDenomination(res.organismeFormation.denomination);
+      setOrganismeFormationFormationInterne(convertValueToOption(res.organismeFormation.formationInterne));
+      setOrganismeFormationUaiCfa(res.organismeFormation.uaiCfa);
+      setOrganismeFormationAdresseNumero(res.organismeFormation.adresse.numero);
+      setOrganismeFormationAdresseVoie(res.organismeFormation.adresse.voie);
+      setOrganismeFormationAdresseComplement(res.organismeFormation.adresse.complement);
+      setOrganismeFormationAdresseCodePostal(res.organismeFormation.adresse.codePostal);
+      setOrganismeFormationAdresseCommune(res.organismeFormation.adresse.commune);
 
-    setFormationRncp(res.formation.rncp);
-    setFormationCodeDiplome(res.formation.codeDiplome);
-    setFormationDateDebutFormation(convertValueToDate(res.formation.dateDebutFormation));
-    setFormationDateFinFormation(convertValueToDate(res.formation.dateFinFormation));
-    setFormationDureeFormationCalc(res.formation.dureeFormationCalc);
-    setFormationDureeFormation(res.formation.dureeFormation);
-    setFormationIntituleQualification(res.formation.intituleQualification);
-    setFormationTypeDiplome(convertValueToMultipleSelectOption(res.formation.typeDiplome));
+      setFormationRncp(res.formation.rncp);
+      setFormationCodeDiplome(res.formation.codeDiplome);
+      setFormationDateDebutFormation(convertValueToDate(res.formation.dateDebutFormation));
+      setFormationDateFinFormation(convertValueToDate(res.formation.dateFinFormation));
+      setFormationDureeFormationCalc(res.formation.dureeFormationCalc);
+      setFormationDureeFormation(res.formation.dureeFormation);
+      setFormationIntituleQualification(res.formation.intituleQualification);
+      setFormationTypeDiplome(convertValueToMultipleSelectOption(res.formation.typeDiplome));
 
-    setPartFormationCompletionAtom(cerfaFormationCompletion(res));
-  };
+      setPartFormationCompletionAtom(cerfaFormationCompletion(res));
+    },
+    [
+      setFormationCodeDiplome,
+      setFormationDateDebutFormation,
+      setFormationDateFinFormation,
+      setFormationDureeFormation,
+      setFormationDureeFormationCalc,
+      setFormationIntituleQualification,
+      setFormationRncp,
+      setFormationTypeDiplome,
+      setOrganismeFormationAdresseCodePostal,
+      setOrganismeFormationAdresseCommune,
+      setOrganismeFormationAdresseComplement,
+      setOrganismeFormationAdresseNumero,
+      setOrganismeFormationAdresseVoie,
+      setOrganismeFormationDenomination,
+      setOrganismeFormationFormationInterne,
+      setOrganismeFormationSiret,
+      setOrganismeFormationUaiCfa,
+      setPartFormationCompletionAtom,
+    ]
+  );
+
+  useEffect(() => {
+    if (cerfa && isLoading) {
+      setAll(cerfa);
+      setIsLoading(false);
+    }
+  }, [cerfa, isLoading, setAll, setIsLoading]);
 
   return {
+    isLoading,
     completion: partFormationCompletion,
     get: {
       organismeFormation: {

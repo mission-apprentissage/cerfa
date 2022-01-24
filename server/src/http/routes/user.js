@@ -49,6 +49,7 @@ module.exports = ({ users, roles, mailer }) => {
 
       await mailer.sendEmail(user.email, `[${config.env} Contrat publique apprentissage] Bienvenue`, "grettings", {
         username: user.username,
+        civility: user.civility,
         tmpPwd: password,
         publicUrl: config.publicUrl,
       });

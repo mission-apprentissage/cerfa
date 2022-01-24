@@ -2,23 +2,22 @@
  * Multiple states on purpose to avoid full re-rendering at each modification
  */
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-
+import { DateTime } from "luxon";
 import {
   fieldCompletionPercentage,
   convertValueToDate,
   convertDateToValue,
   convertValueToOption,
-  isAgeInValidLowerAtDate,
-  caclAgeFromStringDate,
+  caclAgeAtDate,
 } from "../../../utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
 import * as maitresAtoms from "./useCerfaMaitresAtoms";
 
-const cerfaMaitresCompletion = (res) => {
+export const cerfaMaitresCompletion = (res) => {
   let fieldsToKeep = {
     maitre1Nom: res.maitre1.nom,
     maitre1Prenom: res.maitre1.prenom,
@@ -46,9 +45,11 @@ export const CerfaMaitresController = async (dossier) => {
       dateNaissance: {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
-          const { age, dateNaissance } = caclAgeFromStringDate(value);
 
-          if (age === 0) {
+          const dateNaissance = DateTime.fromISO(value).setLocale("fr-FR");
+          const today = DateTime.now().setLocale("fr-FR");
+
+          if (dateNaissance > today) {
             return {
               successed: false,
               data: null,
@@ -56,14 +57,18 @@ export const CerfaMaitresController = async (dossier) => {
             };
           }
 
-          const isAgeMaitreInvalidAtStart = isAgeInValidLowerAtDate({
-            dateNaissance,
-            age,
-            dateString: data.dateDebutContrat,
-            limitAge: 18,
-            label: "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
-          });
-          if (isAgeMaitreInvalidAtStart) return isAgeMaitreInvalidAtStart;
+          if (data.dateDebutContrat !== "") {
+            const { age } = caclAgeAtDate(value, data.dateDebutContrat);
+
+            if (age < 18) {
+              return {
+                successed: false,
+                data: null,
+                message:
+                  "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+              };
+            }
+          }
 
           return {
             successed: true,
@@ -80,24 +85,28 @@ export const CerfaMaitresController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
-          const { age, dateNaissance } = caclAgeFromStringDate(value);
+          const dateNaissance = DateTime.fromISO(value).setLocale("fr-FR");
+          const today = DateTime.now().setLocale("fr-FR");
 
-          if (age === 0) {
+          if (dateNaissance > today) {
             return {
               successed: false,
               data: null,
               message: "La date de naissance de peut pas être dans le futur",
             };
           }
+          if (data.dateDebutContrat !== "") {
+            const { age } = caclAgeAtDate(value, data.dateDebutContrat);
 
-          const isAgeMaitreInvalidAtStart = isAgeInValidLowerAtDate({
-            dateNaissance,
-            age,
-            dateString: data.dateDebutContrat,
-            limitAge: 18,
-            label: "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
-          });
-          if (isAgeMaitreInvalidAtStart) return isAgeMaitreInvalidAtStart;
+            if (age < 18) {
+              return {
+                successed: false,
+                data: null,
+                message:
+                  "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+              };
+            }
+          }
 
           return {
             successed: true,
@@ -117,6 +126,8 @@ export function useCerfaMaitres() {
   const dossier = useRecoilValue(dossierAtom);
 
   const [partMaitresCompletion, setPartMaitresCompletion] = useRecoilState(maitresAtoms.cerfaPartMaitresCompletionAtom);
+
+  const [isLoading, setIsLoading] = useRecoilState(maitresAtoms.cerfaPartMaitresIsLoadingAtom);
 
   const [maitre1Nom, setMaitre1Nom] = useRecoilState(maitresAtoms.cerfaMaitre1NomAtom);
   const [maitre1Prenom, setMaitre1Prenom] = useRecoilState(maitresAtoms.cerfaMaitre1PrenomAtom);
@@ -350,21 +361,41 @@ export function useCerfaMaitres() {
     ]
   );
 
-  const setAll = async (res) => {
-    setMaitre1Nom(res.maitre1.nom);
-    setMaitre1Prenom(res.maitre1.prenom);
-    setMaitre1DateNaissance(convertValueToDate(res.maitre1.dateNaissance));
+  const setAll = useCallback(
+    (res) => {
+      setMaitre1Nom(res.maitre1.nom);
+      setMaitre1Prenom(res.maitre1.prenom);
+      setMaitre1DateNaissance(convertValueToDate(res.maitre1.dateNaissance));
 
-    setMaitre2Nom(res.maitre2.nom);
-    setMaitre2Prenom(res.maitre2.prenom);
-    setMaitre2DateNaissance(convertValueToDate(res.maitre2.dateNaissance));
+      setMaitre2Nom(res.maitre2.nom);
+      setMaitre2Prenom(res.maitre2.prenom);
+      setMaitre2DateNaissance(convertValueToDate(res.maitre2.dateNaissance));
 
-    setEmployeurAttestationEligibilite(convertValueToOption(res.employeur.attestationEligibilite));
+      setEmployeurAttestationEligibilite(convertValueToOption(res.employeur.attestationEligibilite));
 
-    setPartMaitresCompletion(cerfaMaitresCompletion(res));
-  };
+      setPartMaitresCompletion(cerfaMaitresCompletion(res));
+    },
+    [
+      setEmployeurAttestationEligibilite,
+      setMaitre1DateNaissance,
+      setMaitre1Nom,
+      setMaitre1Prenom,
+      setMaitre2DateNaissance,
+      setMaitre2Nom,
+      setMaitre2Prenom,
+      setPartMaitresCompletion,
+    ]
+  );
+
+  useEffect(() => {
+    if (cerfa && isLoading) {
+      setAll(cerfa);
+      setIsLoading(false);
+    }
+  }, [cerfa, isLoading, setAll, setIsLoading]);
 
   return {
+    isLoading,
     completion: partMaitresCompletion,
     get: {
       maitre1: {

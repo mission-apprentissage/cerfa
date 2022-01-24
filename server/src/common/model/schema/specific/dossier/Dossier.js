@@ -19,6 +19,18 @@ const dossierSchema = {
       return !this.draft;
     },
   },
+  dreets: {
+    type: Number,
+    description: "DREETS destinataire du contrat - code région d'exécution du contrat",
+    nullable: true,
+    default: null,
+  },
+  ddets: {
+    type: String,
+    description: "DDETS destinataire du contrat - code département d'éxécution du contrat",
+    nullable: true,
+    default: null,
+  },
   numeroExterne: {
     type: String,
     description: "Identifiant externe ou numéro de dossier (utilisé dans les communications entre le CFA et l'OPCO)",
@@ -39,13 +51,25 @@ const dossierSchema = {
     example: "222222222222",
   },
   etat: {
-    enum: ["TRANSMIS", "EN_COURS_INSTRUCTION", "ENGAGE", "ANNULE", "REFUSE", "RUTPURE", "SOLDE", null],
+    enum: [
+      "BROUILLON",
+      "EN_ATTENTE_SIGNATURES",
+      "DOSSIER_TERMINE",
+      "DOSSIER_TERMINE_EN_ATTENTE_TRANSMISSION",
+      "TRANSMIS",
+      "EN_COURS_INSTRUCTION",
+      "INCOMPLET",
+      "DEPOSE",
+      "REFUSE",
+      "ENGAGE",
+      "ANNULE",
+      "RUTPURE",
+      "SOLDE",
+      null,
+    ],
     type: String,
-    default: null,
+    default: "BROUILLON",
     nullable: true,
-    required: function () {
-      return !this.draft;
-    },
     description:
       "**Etat du contrat** :\r\n<br />TRANSMIS\r\n<br />EN_COURS_INSTRUCTION\r\n<br />ENGAGE\r\n<br />ANNULE\r\n<br />REFUSE\r\n<br />RUPTURE\r\n<br />SOLDE",
   },

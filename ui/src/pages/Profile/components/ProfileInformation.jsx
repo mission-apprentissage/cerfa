@@ -11,7 +11,7 @@ import {
   HStack,
   RadioGroup,
   Radio,
-  Text,
+  // Text,
   Divider,
 } from "@chakra-ui/react";
 import PhoneInput from "react-phone-input-2";
@@ -19,7 +19,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import useAuth from "../../../common/hooks/useAuth";
 import { _put } from "../../../common/httpClient";
-import { betaVersion, BetaFeatures } from "../../../common/components/BetaFeatures";
+// import { betaVersion, BetaFeatures } from "../../../common/components/BetaFeatures";
 
 const ProfileInformation = () => {
   let [auth] = useAuth();
@@ -31,24 +31,27 @@ const ProfileInformation = () => {
       username: auth.username || "",
       telephone: auth.telephone ? auth.telephone.replace("+", "") : "",
       email: auth.email || "",
-      beta: auth.beta || "",
+      civility: auth.civility || "",
+      // beta: auth.beta || "",
     },
     validationSchema: Yup.object().shape({
       prenom: Yup.string(),
       name: Yup.string(),
       username: Yup.string(),
       phone: Yup.string(),
+      civility: Yup.string(),
       email: Yup.string().email("Email invalide"),
     }),
-    onSubmit: ({ nom, prenom, telephone, email, beta }, { setSubmitting }) => {
+    onSubmit: ({ nom, prenom, telephone, email, beta, civility }, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
         try {
           await _put(`/api/v1/profile/user`, {
             nom: nom || null,
             prenom: prenom || null,
             telephone: telephone ? `+${telephone}` : null,
+            civility: civility || null,
             email,
-            beta: beta || null,
+            // beta: beta || null,
           });
           window.location.reload();
         } catch (e) {
@@ -67,7 +70,31 @@ const ProfileInformation = () => {
         <Heading as="h1" fontSize="32px">
           Mes informations
         </Heading>
-        <Flex mt={5}>
+        <Box mt={8}>
+          <RadioGroup value={values.civility}>
+            <HStack>
+              <Radio
+                type="radio"
+                name="civility"
+                value={"Monsieur"}
+                checked={values.civility !== "Madame"}
+                onChange={handleChange}
+              >
+                Monsieur
+              </Radio>
+              <Radio
+                type="radio"
+                name="civility"
+                value="Madame"
+                checked={values.civility === "Madame"}
+                onChange={handleChange}
+              >
+                Madame
+              </Radio>
+            </HStack>
+          </RadioGroup>
+        </Box>
+        <Flex mt={2}>
           <FormControl isRequired mt={2} isInvalid={errors.prenom}>
             <FormLabel>Prénom</FormLabel>
             <Input type="text" name="prenom" value={values.prenom} onChange={handleChange} required />
@@ -106,7 +133,7 @@ const ProfileInformation = () => {
           </FormControl>
         </Flex>
         <Divider mt={10} mb={4} borderWidth="2px" />
-        <Box>
+        {/* <Box>
           <HStack>
             <FormLabel fontWeight="bold">Activer les fonctionnalité expérimentales de la plateforme ?</FormLabel>
             <RadioGroup value={values.beta}>
@@ -131,7 +158,7 @@ const ProfileInformation = () => {
             <BetaFeatures borderColor={"dgalt"} borderWidth={1} px={4} py={3} maxH="30vh" my={3} />
           </Box>
         </Box>
-        <Divider mt={10} mb={4} borderWidth="2px" />
+        <Divider mt={10} mb={4} borderWidth="2px" /> */}
       </Box>
       <Box mt="2rem">
         <Button variant="primary" onClick={handleSubmit} type="submit">

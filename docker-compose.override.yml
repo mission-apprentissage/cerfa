@@ -11,7 +11,7 @@ services:
     stdin_open: true
     volumes:
       - ./ui:/app #Allows source folders to be watched
-      - /app/node_modules/
+      # - /app/node_modules/
     build:
       args:
         - REACT_APP_ENV=dev
@@ -31,6 +31,7 @@ services:
       - ./server/src:/app/src # Allows source folders to be watched
       - ./server/config:/app/config
       - cerfa_server_data:/data
+      - ./server/agecap:/data/agecap
     environment:
       - CERFA_ENV=dev
       - CERFA_LOG_LEVEL=debug

@@ -1,11 +1,27 @@
 import React from "react";
-import { Box, FormLabel, Flex } from "@chakra-ui/react";
+import { Box, FormLabel, Flex, Center, Spinner } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
 
 import { useCerfaEmployeur } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeur";
+import {
+  cerfaContratDateDebutContratAtom,
+  cerfaContratDateFinContratAtom,
+  cerfaContratRemunerationsAnnuellesAtom,
+} from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+import {
+  cerfaApprentiDateNaissanceAtom,
+  cerfaApprentiAgeAtom,
+} from "../../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
 import InputCerfa from "./Input";
 
-const FormEmployer = ({ onFetched }) => {
+const FormEmployer = React.memo(({ onFetched }) => {
+  const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
+  const dateFinContrat = useRecoilValue(cerfaContratDateFinContratAtom);
+  const remunerationsAnnuelles = useRecoilValue(cerfaContratRemunerationsAnnuellesAtom);
+  const apprentiDateNaissance = useRecoilValue(cerfaApprentiDateNaissanceAtom);
+  const apprentiAge = useRecoilValue(cerfaApprentiAgeAtom);
   const {
+    isLoading,
     get: {
       employeur: {
         siret,
@@ -13,10 +29,11 @@ const FormEmployer = ({ onFetched }) => {
         naf,
         nombreDeSalaries,
         codeIdcc,
+        codeIdccSpecial,
         libelleIdcc,
         telephone,
         courriel,
-        adresse: { numero, voie, complement, codePostal, commune },
+        adresse: { numero, voie, complement, codePostal, commune, departement, region },
         typeEmployeur,
         employeurSpecifique,
         // caisseComplementaire,
@@ -33,6 +50,7 @@ const FormEmployer = ({ onFetched }) => {
         nombreDeSalaries: onSubmittedEmployeurNombreDeSalaries,
         naf: onSubmittedEmployeurNaf,
         codeIdcc: onSubmittedEmployeurCodeIdcc,
+        codeIdccSpecial: onSubmittedEmployeurCodeIdccSpecial,
         libelleIdcc: onSubmittedEmployeurLibelleIdcc,
         // caisseComplementaire: onSubmittedEmployeurCaisseComplementaire,
         telephone: onSubmittedEmployeurTelephone,
@@ -44,10 +62,19 @@ const FormEmployer = ({ onFetched }) => {
           complement: onSubmittedEmployeurAdresseComplement,
           codePostal: onSubmittedEmployeurAdresseCodePostal,
           commune: onSubmittedEmployeurAdresseCommune,
+          departement: onSubmittedEmployeurAdresseDepartement,
+          region: onSubmittedEmployeurAdresseRegion,
         },
       },
     },
   } = useCerfaEmployeur();
+
+  if (isLoading || !dateDebutContrat || !dateFinContrat || !apprentiDateNaissance || !apprentiAge)
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
 
   return (
     <Box>
@@ -58,6 +85,13 @@ const FormEmployer = ({ onFetched }) => {
         mb="10"
         // hasComments
         onSubmittedField={onSubmittedEmployeurSiret}
+        onAsyncData={{
+          dateDebutContrat: dateDebutContrat?.value,
+          remunerationsAnnuelles: remunerationsAnnuelles,
+          dateFinContrat: dateFinContrat?.value,
+          apprentiDateNaissance: apprentiDateNaissance?.value,
+          apprentiAge: apprentiAge?.value,
+        }}
       />
       <Flex>
         <Box w="55%" flex="1">
@@ -104,6 +138,13 @@ const FormEmployer = ({ onFetched }) => {
             mt="2"
             onSubmittedField={onSubmittedEmployeurAdresseCodePostal}
             hasInfo={false}
+            onAsyncData={{
+              dateDebutContrat: dateDebutContrat?.value,
+              remunerationsAnnuelles: remunerationsAnnuelles,
+              dateFinContrat: dateFinContrat?.value,
+              apprentiDateNaissance: apprentiDateNaissance?.value,
+              apprentiAge: apprentiAge?.value,
+            }}
           />
           <InputCerfa
             path="employeur.adresse.commune"
@@ -111,6 +152,29 @@ const FormEmployer = ({ onFetched }) => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedEmployeurAdresseCommune}
+            hasInfo={false}
+          />
+          <InputCerfa
+            path="employeur.adresse.departement"
+            field={departement}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurAdresseDepartement}
+            hasInfo={false}
+            onAsyncData={{
+              dateDebutContrat: dateDebutContrat?.value,
+              remunerationsAnnuelles: remunerationsAnnuelles,
+              dateFinContrat: dateFinContrat?.value,
+              apprentiDateNaissance: apprentiDateNaissance?.value,
+              apprentiAge: apprentiAge?.value,
+            }}
+          />
+          <InputCerfa
+            path="employeur.adresse.region"
+            field={region}
+            type="text"
+            mt="2"
+            onSubmittedField={onSubmittedEmployeurAdresseRegion}
             hasInfo={false}
           />
 
@@ -153,23 +217,32 @@ const FormEmployer = ({ onFetched }) => {
             precision={0}
             onSubmittedField={onSubmittedEmployeurNombreDeSalaries}
           />
-          <InputCerfa
-            path="employeur.codeIdcc"
-            field={codeIdcc}
-            type="text"
-            mt="2"
-            onSubmittedField={onSubmittedEmployeurCodeIdcc}
-            onAsyncData={{
-              enumCodeIdcc: codeIdcc.enum,
-              enumLibelleIdcc: libelleIdcc.enum,
-              libelleIdcc: libelleIdcc.value,
-            }}
-          />
+          <Box mt={8}>
+            <InputCerfa
+              path="employeur.codeIdcc"
+              field={codeIdcc}
+              type="text"
+              mt="2"
+              onSubmittedField={onSubmittedEmployeurCodeIdcc}
+              onAsyncData={{
+                enumCodeIdcc: codeIdcc.enum,
+                enumLibelleIdcc: libelleIdcc.enum,
+                libelleIdcc: libelleIdcc.value,
+              }}
+            />
+            <InputCerfa
+              path="employeur.codeIdcc.special"
+              field={codeIdccSpecial}
+              type="radio"
+              mt="2"
+              hasInfo={false}
+              onSubmittedField={onSubmittedEmployeurCodeIdccSpecial}
+            />
+          </Box>
           <InputCerfa
             path="employeur.libelleIdcc"
             field={libelleIdcc}
             type="text"
-            mt="2"
             onSubmittedField={onSubmittedEmployeurLibelleIdcc}
           />
           {/* <InputCerfa
@@ -183,7 +256,7 @@ const FormEmployer = ({ onFetched }) => {
             path="employeur.regimeSpecifique"
             field={regimeSpecifique}
             type="radio"
-            mt="2"
+            mt="8"
             onSubmittedField={onSubmittedEmployeurRegimeSpecifique}
           />
           {/* <InputCerfa path="employeur.attestationEligibilite" field={attestationEligibilite} type="text" mt="2" /> */}
@@ -192,6 +265,6 @@ const FormEmployer = ({ onFetched }) => {
       </Flex>
     </Box>
   );
-};
+});
 
 export default FormEmployer;

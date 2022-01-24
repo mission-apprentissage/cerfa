@@ -4,6 +4,10 @@ export const cerfaPartMaitresCompletionAtom = atom({
   key: "cerfa/part/maitres/completion",
   default: 0,
 });
+export const cerfaPartMaitresIsLoadingAtom = atom({
+  key: "cerfa/part/maitres/isLoading",
+  default: true,
+});
 
 export const cerfaMaitre1NomAtom = atom({
   key: "cerfa/maitre1/nom",

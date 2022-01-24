@@ -1,5 +1,17 @@
 import React from "react";
-import { Box, FormLabel, Text, Flex, HStack, Collapse, VStack, UnorderedList, ListItem } from "@chakra-ui/react";
+import {
+  Box,
+  FormLabel,
+  Text,
+  Flex,
+  HStack,
+  Collapse,
+  VStack,
+  UnorderedList,
+  ListItem,
+  Center,
+  Spinner,
+} from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
 import { departements } from "../../../../common/constants/departements";
@@ -16,17 +28,25 @@ import {
   cerfaFormationDateDebutFormationAtom,
   cerfaFormationDateFinFormationAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
+
+import {
+  cerfaEmployeurAdresseDepartementAtom,
+  cerfaEmployeurSiretAtom,
+} from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import InputCerfa from "./Input";
 
-const FormContract = () => {
-  const apprentiDateNaissance = useRecoilValue(cerfaApprentiDateNaissanceAtom);
+const FormContract = React.memo(() => {
   const maitre1DateNaissance = useRecoilValue(cerfaMaitre1DateNaissanceAtom);
   const maitre2DateNaissance = useRecoilValue(cerfaMaitre2DateNaissanceAtom);
   const formationDateDebutFormation = useRecoilValue(cerfaFormationDateDebutFormationAtom);
   const formationDateFinFormation = useRecoilValue(cerfaFormationDateFinFormationAtom);
+  const apprentiDateNaissance = useRecoilValue(cerfaApprentiDateNaissanceAtom);
   const apprentiAge = useRecoilValue(cerfaApprentiAgeAtom);
+  const employeurAdresseDepartement = useRecoilValue(cerfaEmployeurAdresseDepartementAtom);
+  const employeurSiret = useRecoilValue(cerfaEmployeurSiretAtom);
 
   const {
+    isLoading,
     get: {
       contrat: {
         // modeContractuel: contratModeContractuel,
@@ -45,13 +65,13 @@ const FormContract = () => {
         dureeTravailHebdoHeures,
         dureeTravailHebdoMinutes,
         travailRisque,
-        salaireEmbauche,
         // caisseRetraiteComplementaire,
         avantageNature,
         avantageNourriture,
         avantageLogement,
         autreAvantageEnNature,
-        remunerationMajoration,
+        salaireEmbauche,
+        smic,
         remunerationsAnnuelles,
       },
     },
@@ -75,10 +95,31 @@ const FormContract = () => {
         avantageNourriture: onSubmittedContratAvantageNourriture,
         avantageLogement: onSubmittedContratAvantageLogement,
         autreAvantageEnNature: onSubmittedContratAutreAvantageEnNature,
-        remunerationMajoration: onSubmittedContratRemunerationMajoration,
+        remunerationTaux: onSubmittedContratRemunerationsAnnuellesTaux,
       },
     },
   } = useCerfaContrat();
+
+  if (
+    isLoading ||
+    !apprentiDateNaissance ||
+    !apprentiAge ||
+    !employeurAdresseDepartement ||
+    !maitre1DateNaissance ||
+    !maitre2DateNaissance ||
+    !formationDateDebutFormation ||
+    !formationDateFinFormation
+  )
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
+
+  // TODO dirty fast cover issue
+  if (typeContratApp === null) {
+    window.location.reload();
+  }
 
   return (
     <Box>
@@ -126,16 +167,16 @@ const FormContract = () => {
             </Text>
           )}
 
-          {(typeContratApp.valueDb === 21 ||
-            typeContratApp.valueDb === 22 ||
-            typeContratApp.valueDb === 23 ||
-            typeContratApp.valueDb === 31 ||
-            typeContratApp.valueDb === 32 ||
-            typeContratApp.valueDb === 33 ||
-            typeContratApp.valueDb === 34 ||
-            typeContratApp.valueDb === 35 ||
-            typeContratApp.valueDb === 36 ||
-            typeContratApp.valueDb === 37) && (
+          {(typeContratApp?.valueDb === 21 ||
+            typeContratApp?.valueDb === 22 ||
+            typeContratApp?.valueDb === 23 ||
+            typeContratApp?.valueDb === 31 ||
+            typeContratApp?.valueDb === 32 ||
+            typeContratApp?.valueDb === 33 ||
+            typeContratApp?.valueDb === 34 ||
+            typeContratApp?.valueDb === 35 ||
+            typeContratApp?.valueDb === 36 ||
+            typeContratApp?.valueDb === 37) && (
             <InputCerfa
               path="contrat.numeroContratPrecedent"
               field={numeroContratPrecedent}
@@ -143,13 +184,14 @@ const FormContract = () => {
               mt="2"
               onSubmittedField={onSubmittedContratNumeroContratPrecedent}
               label={
-                typeContratApp.valueDb === 21 || typeContratApp.valueDb === 22 || typeContratApp.valueDb === 23
+                typeContratApp?.valueDb === 21 || typeContratApp?.valueDb === 22 || typeContratApp?.valueDb === 23
                   ? numeroContratPrecedent.labelSuccession
                   : numeroContratPrecedent.labelAvenant
               }
               isRequired={
-                !(typeContratApp.valueDb === 21 || typeContratApp.valueDb === 22 || typeContratApp.valueDb === 23)
+                !(typeContratApp?.valueDb === 21 || typeContratApp?.valueDb === 22 || typeContratApp?.valueDb === 23)
               }
+              onAsyncData={{ typeContratAppDbValue: typeContratApp?.valueDb, employeurSiret: employeurSiret?.value }}
             />
           )}
           {numeroContratPrecedent.value !== "" && (
@@ -181,24 +223,25 @@ const FormContract = () => {
             onSubmittedField={onSubmittedContratDateDebutContrat}
             onAsyncData={{
               apprentiDateNaissance: apprentiDateNaissance?.value,
-              apprentiAge: apprentiAge?.value,
-              remunerationMajoration: remunerationMajoration?.valueDb,
+              employeurAdresseDepartement: employeurAdresseDepartement?.value,
+              dateFinContrat: dateFinContrat?.value,
+              remunerationsAnnuelles: remunerationsAnnuelles,
+
               maitre1DateNaissance: maitre1DateNaissance?.value,
               maitre2DateNaissance: maitre2DateNaissance?.value,
 
-              dateFinContrat: dateFinContrat?.value,
               dateEffetAvenant: dateEffetAvenant?.value,
 
               formationDateDebutFormation: formationDateDebutFormation?.value,
             }}
           />
-          {(typeContratApp.valueDb === 31 ||
-            typeContratApp.valueDb === 32 ||
-            typeContratApp.valueDb === 33 ||
-            typeContratApp.valueDb === 34 ||
-            typeContratApp.valueDb === 35 ||
-            typeContratApp.valueDb === 36 ||
-            typeContratApp.valueDb === 37) && (
+          {(typeContratApp?.valueDb === 31 ||
+            typeContratApp?.valueDb === 32 ||
+            typeContratApp?.valueDb === 33 ||
+            typeContratApp?.valueDb === 34 ||
+            typeContratApp?.valueDb === 35 ||
+            typeContratApp?.valueDb === 36 ||
+            typeContratApp?.valueDb === 37) && (
             <InputCerfa
               path="contrat.dateEffetAvenant"
               field={dateEffetAvenant}
@@ -218,19 +261,12 @@ const FormContract = () => {
               dateDebutContrat: dateDebutContrat?.value,
               dateEffetAvenant: dateEffetAvenant?.value,
               formationDateFinFormation: formationDateFinFormation?.value,
-
-              remunerationMajoration: remunerationMajoration?.valueDb,
               apprentiDateNaissance: apprentiDateNaissance?.value,
               apprentiAge: apprentiAge?.value,
+              employeurAdresseDepartement: employeurAdresseDepartement?.value,
+              remunerationsAnnuelles: remunerationsAnnuelles,
             }}
           />
-          {/* <InputCerfa
-            path="contrat.lieuSignatureContrat"
-            field={lieuSignatureContrat}
-            type="text"
-            mt="2"
-            onSubmittedField={onSubmittedContratLieuSignatureContrat}
-          /> */}
         </Box>
       </Flex>
       <Box pt={4}>
@@ -266,25 +302,16 @@ const FormContract = () => {
         <FormLabel fontWeight={700} fontSize="1.3rem">
           Rémunération
         </FormLabel>
-        <InputCerfa
-          path="contrat.remunerationMajoration"
-          field={remunerationMajoration}
-          type="select"
-          mt="2"
-          onSubmittedField={onSubmittedContratRemunerationMajoration}
-          onAsyncData={{
-            remunerationMajoration: remunerationMajoration,
-            apprentiDateNaissance: apprentiDateNaissance?.value,
-            dateDebutContrat: dateDebutContrat?.value,
-            apprentiAge: apprentiAge?.value,
-            dateFinContrat: dateFinContrat?.value,
-          }}
-        />
         <Box mt={6} borderColor={"dgalt"} borderWidth={2} px={4} py={3} borderStyle="dashed" rounded="md">
-          {(dateDebutContrat.value === "" || dateFinContrat.value === "" || apprentiDateNaissance.value === "") && (
+          {(dateDebutContrat.value === "" ||
+            dateFinContrat.value === "" ||
+            apprentiDateNaissance.value === "" ||
+            employeurAdresseDepartement.value === "") && (
             <VStack alignItems="flex-start" color="mgalt">
-              <Text>Le calcul de la rémunération est automatique.</Text>
-              <Text>Vous devez, pour cela, renseigner les éléments suivants : </Text>
+              <Text>
+                L'outil détermine les périodes de rémunération et s'assure du respect du minimum légale pour chacune des
+                périodes, à partir des éléments renseignés.
+              </Text>
               <UnorderedList ml="30px !important">
                 <ListItem
                   fontWeight="400"
@@ -307,71 +334,71 @@ const FormContract = () => {
                 >
                   La date de fin du contrat
                 </ListItem>
+                <ListItem
+                  fontWeight="400"
+                  fontStyle="italic"
+                  color={employeurAdresseDepartement.value === "" ? "error" : "green.500"}
+                >
+                  Le département de l'employeur
+                </ListItem>
               </UnorderedList>
             </VStack>
           )}
           <Collapse
-            in={dateDebutContrat.value !== "" && dateFinContrat.value !== "" && apprentiDateNaissance.value !== ""}
+            in={
+              dateDebutContrat.value !== "" &&
+              dateFinContrat.value !== "" &&
+              apprentiDateNaissance.value !== "" &&
+              employeurAdresseDepartement.value !== ""
+            }
             animateOpacity
           >
-            {remunerationsAnnuelles.map((ra, i) => {
-              if (i === 1 || i === 3 || i === 5 || i === 7) return null;
-              const [remPart1, remPart2] = [remunerationsAnnuelles[i], remunerationsAnnuelles[i + 1]];
+            {Object.keys(remunerationsAnnuelles).map((part, ite) => {
+              if (ite === 1 || ite === 3 || ite === 5 || ite === 7) return null;
+              let sub1 = 0;
+              let sub2 = 0;
+              if (ite === 0) {
+                sub1 = 11;
+                sub2 = 12;
+              } else if (ite === 2) {
+                sub1 = 21;
+                sub2 = 22;
+              } else if (ite === 4) {
+                sub1 = 31;
+                sub2 = 32;
+              } else if (ite === 6) {
+                sub1 = 41;
+                sub2 = 42;
+              }
+
+              const [remPart1, remPart2] = [remunerationsAnnuelles[sub1], remunerationsAnnuelles[sub2]];
               const emptyLine = remPart1.taux.value === 0 && remPart2.taux.value === 0;
+
               return (
-                <Box key={i}>
-                  {i === 0 && !emptyLine && (
+                <Box key={ite}>
+                  {ite === 0 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold">
                       1 re année, du
                     </Box>
                   )}
-                  {i === 2 && !emptyLine && (
+                  {ite === 2 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold" mt={2}>
                       2 eme année, du
                     </Box>
                   )}
-                  {i === 4 && !emptyLine && (
+                  {ite === 4 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold" mt={2}>
                       3 eme année, du
                     </Box>
                   )}
-                  {i === 6 && !emptyLine && (
+                  {ite === 6 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold" mt={2}>
                       4 eme année, du
                     </Box>
                   )}
                   <Box>
                     {[remPart1, remPart2].map((remunerationsAnnuelle, j) => {
-                      let path = "";
-                      switch (i + j) {
-                        case 0:
-                          path = "11";
-                          break;
-                        case 1:
-                          path = "12";
-                          break;
-                        case 2:
-                          path = "21";
-                          break;
-                        case 3:
-                          path = "22";
-                          break;
-                        case 4:
-                          path = "31";
-                          break;
-                        case 5:
-                          path = "32";
-                          break;
-                        case 6:
-                          path = "41";
-                          break;
-                        case 7:
-                          path = "42";
-                          break;
-
-                        default:
-                          break;
-                      }
+                      let path = j === 0 ? `${sub1}` : `${sub2}`;
                       if (remunerationsAnnuelle.taux.value === 0) {
                         return null;
                       }
@@ -395,14 +422,20 @@ const FormContract = () => {
                           <InputCerfa
                             path={`contrat.remunerationsAnnuelles.${path}.taux`}
                             field={remunerationsAnnuelle.taux}
+                            min={remunerationsAnnuelle.tauxMinimal.value}
                             mt="2"
                             hasInfo={false}
-                            type="numberPrefixed"
+                            numberStepper={true}
                             format={(val) => val + ` %`}
                             parse={(val) => val.replace(/^ %/, "")}
+                            type="number"
+                            onSubmittedField={(fieldPath, data) =>
+                              onSubmittedContratRemunerationsAnnuellesTaux(fieldPath, data, path)
+                            }
                           />
-                          <Box w="100%" position="relative" fontStyle="italic" color="disablegrey" py={2}>
-                            soit {remunerationsAnnuelle.salaireBrut.value} € / mois
+                          <Box w="100%" position="relative" fontStyle="italic" color="disablegrey" pl={2}>
+                            soit {remunerationsAnnuelle.salaireBrut.value.toFixed(2)} € / mois. <br />
+                            Seuil minimal légal {remunerationsAnnuelle.tauxMinimal.value} %
                           </Box>
                           {/* <Box mt="1.7rem !important">%</Box>
                           <Box mt="1.7rem !important">du</Box>
@@ -427,10 +460,29 @@ const FormContract = () => {
                   path="contrat.salaireEmbauche"
                   field={salaireEmbauche}
                   type="number"
+                  precision={2}
                   mt="2"
                   // onSubmittedField={onSubmittedContratSalaireEmbauche}
                 />
               </Box>
+            </Flex>
+            <Flex mt={5}>
+              {!smic?.isSmicException && (
+                <Text>
+                  Calculé sur la base du SMIC {smic?.annee} de {smic?.selectedSmic}€ mensuel (
+                  {smic?.heuresHebdomadaires}
+                  €/h) [Date d'entrée en vigueur {smic?.dateEntreeEnVigueur}]
+                </Text>
+              )}
+              {smic?.isSmicException && (
+                <Text>
+                  Calculé sur la base du SMIC {smic?.annee} pour{" "}
+                  <strong>{smic?.exceptions[employeurAdresseDepartement.value]?.nomDepartement}</strong> de{" "}
+                  {smic?.selectedSmic}€ mensuel (
+                  {smic?.exceptions[employeurAdresseDepartement.value]?.heuresHebdomadaires}
+                  €/h) [Date d'entrée en vigueur {smic?.dateEntreeEnVigueur}]
+                </Text>
+              )}
             </Flex>
           </Collapse>
         </Box>
@@ -462,22 +514,20 @@ const FormContract = () => {
                   path="contrat.avantageNourriture"
                   field={avantageNourriture}
                   type="number"
-                  // format={(val) => val + ` €`}
-                  // parse={(val) => val.replace(/^ €/, "")}
+                  min={1}
                   mt="2"
                   onSubmittedField={onSubmittedContratAvantageNourriture}
                 />
-                € / repas
               </Box>
               <Box ml={5}>
                 <InputCerfa
                   path="contrat.avantageLogement"
                   field={avantageLogement}
                   type="number"
+                  min={1}
                   mt="2"
                   onSubmittedField={onSubmittedContratAvantageLogement}
                 />
-                € / mois
               </Box>
             </Flex>
             <Box>
@@ -494,6 +544,6 @@ const FormContract = () => {
       </Box>
     </Box>
   );
-};
+});
 
 export default FormContract;

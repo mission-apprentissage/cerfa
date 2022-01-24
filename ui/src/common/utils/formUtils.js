@@ -107,36 +107,15 @@ export const isAgeInValidLowerAtDate = ({ dateNaissance, age, dateString, limitA
   }
   return false;
 };
-export const isAgeGreaterOrEqualAtDate = ({ dateNaissance, age, limitDateString, limitAge = 15 }) => {
-  if (age === limitAge - 1 && limitDateString !== "") {
-    const limitDate = DateTime.fromISO(limitDateString).setLocale("fr-FR");
-    const anniversaireA1 = dateNaissance.plus({ years: age + 1 });
-    if (limitDate >= anniversaireA1) {
-      return true;
-    }
-  }
-  return false;
-};
-export const isAgeLowerAtDate = ({ dateNaissance, age, limitDateString, limitAge = 15 }) => {
-  if (age === limitAge - 1 && limitDateString !== "") {
-    const limitDate = DateTime.fromISO(limitDateString).setLocale("fr-FR");
-    const anniversaireA1 = dateNaissance.plus({ years: age + 1 });
-    if (limitDate < anniversaireA1) {
-      return true;
-    }
-  }
-  return false;
-};
 
-export const caclAgeFromStringDate = (dateNaissanceString) => {
+export const caclAgeAtDate = (dateNaissanceString, dateString) => {
   const dateNaissance = DateTime.fromISO(dateNaissanceString).setLocale("fr-FR");
-  const today = DateTime.now().setLocale("fr-FR");
-  const diffInYears = today.diff(dateNaissance, "years");
+  const dateObj = DateTime.fromISO(dateString).setLocale("fr-FR");
+  const diffInYears = dateObj.diff(dateNaissance, "years");
   const { years } = diffInYears.toObject();
   const age = years ? Math.floor(years) : 0;
   return {
     age,
-    dateNaissance: age > 0 ? dateNaissance : null,
   };
 };
 
@@ -155,6 +134,8 @@ export const doAsyncCodePostalActions = async (value, data, dossierId) => {
         data: {
           codePostal: value,
           commune: response.result.commune,
+          departement: response.result.num_departement,
+          region: response.result.num_region,
         },
         message: null,
       };

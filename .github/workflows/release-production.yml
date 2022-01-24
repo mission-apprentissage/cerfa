@@ -80,16 +80,6 @@ jobs:
       - name: Run Lint
         run: yarn lint
 
-      # # Start docker container for tests (e.g: mongodb)
-      # - name: Start Docker
-      #   run: |
-      #     cd ui
-      #     cp .env.example .env
-      #     cd ../server
-      #     cp .env.example .env
-      #     cd ..
-      #     yarn docker:start-ci
-
       # Run mocha tests
       - name: Run Tests
         run: |
@@ -111,10 +101,6 @@ jobs:
           name: codecov-server
           verbose: true
       
-      # # Teardown
-      # - name: Teardown
-      #   run: |
-      #     yarn docker:down
   ciui:
     needs: release
     if: "!startsWith(github.event.head_commit.message, 'chore(release')"
@@ -141,28 +127,28 @@ jobs:
       #     directory: ./ui/coverage
       #     name: codecov-ui
       #     verbose: true
-  deploy:
-    needs: release
-    if: "!startsWith(github.event.head_commit.message, 'chore(release')"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout project
-        uses: actions/checkout@v2
+  # deploy:
+  #   needs: release
+  #   if: "!startsWith(github.event.head_commit.message, 'chore(release')"
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout project
+  #       uses: actions/checkout@v2
 
-      - shell: bash
-        run: echo 'CERFA_HEAD_REF=${{ github.head_ref }}' >> $GITHUB_ENV
+  #     - shell: bash
+  #       run: echo 'CERFA_HEAD_REF=${{ github.head_ref }}' >> $GITHUB_ENV
 
-      - shell: bash
-        run: echo 'CERFA_REF=${{ github.ref }}' >> $GITHUB_ENV
+  #     - shell: bash
+  #       run: echo 'CERFA_REF=${{ github.ref }}' >> $GITHUB_ENV
 
-      - name: Check output
-        run: echo ${CERFA_REF:-${CERFA_REF##*/}}
+  #     - name: Check output
+  #       run: echo ${CERFA_REF:-${CERFA_REF##*/}}
 
-      - name: Request deployment production
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          repository: mission-apprentissage/CERFA-infra
-          token: ${{ secrets.DEVOPS_ACCESS_TOKEN }}
-          event-type: deploy
-          client-payload: '{"envName": "production", "branchName":"main"}'
-        if: github.ref == 'refs/heads/main'
+  #     - name: Request deployment production
+  #       uses: peter-evans/repository-dispatch@v1
+  #       with:
+  #         repository: mission-apprentissage/CERFA-infra
+  #         token: ${{ secrets.DEVOPS_ACCESS_TOKEN }}
+  #         event-type: deploy
+  #         client-payload: '{"envName": "production", "branchName":"main"}'
+  #       if: github.ref == 'refs/heads/main'

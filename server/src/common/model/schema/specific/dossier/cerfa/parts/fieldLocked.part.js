@@ -57,6 +57,14 @@ const fieldLockedSchema = {
         type: Boolean,
         default: true,
       },
+      departement: {
+        type: Boolean,
+        default: true,
+      },
+      region: {
+        type: Boolean,
+        default: true,
+      },
     },
     nom: {
       type: Boolean,

@@ -2,9 +2,10 @@
  * Multiple states on purpose to avoid full re-rendering at each modification
  */
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { DateTime } from "luxon";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { _post } from "../../../httpClient";
 
 import {
   fieldCompletionPercentage,
@@ -14,19 +15,19 @@ import {
   convertValueToOption,
   convertValueToMultipleSelectOption,
   convertMultipleSelectOptionToValue,
-  isAgeInValidLowerAtDate,
-  isAgeGreaterOrEqualAtDate,
-  isAgeLowerAtDate,
-  caclAgeFromStringDate,
+  caclAgeAtDate,
   normalizeInputNumberForDb,
 } from "../../../utils/formUtils";
+import { buildRemunerations, buildRemunerationsDbValue } from "../../../utils/form/remunerationsUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
-// import { cerfaApprentiDateNaissanceAtom } from "./useCerfaApprentiAtoms";
+import { cerfaApprentiAgeAtom, cerfaApprentiDateNaissanceAtom } from "./useCerfaApprentiAtoms";
 import * as contratAtoms from "./useCerfaContratAtoms";
 
-const cerfaContratCompletion = (res) => {
+const ENV = process.env.REACT_APP_ENV;
+
+export const cerfaContratCompletion = (res) => {
   let fieldsToKeep = {
     // contratModeContractuel: res.contrat.modeContractuel,
     contratTypeContratApp: res.contrat.typeContratApp,
@@ -41,7 +42,6 @@ const cerfaContratCompletion = (res) => {
     // contratSalaireEmbauche: res.contrat.salaireEmbauche,
     // contratCaisseRetraiteComplementaire: res.contrat.caisseRetraiteComplementaire,
     contratAvantageNature: res.contrat.avantageNature,
-    // contratRemunerationMajoration: res.contrat.remunerationMajoration,
   };
   let countFields = 6;
   const avantageNature = res.contrat.avantageNature.value;
@@ -79,537 +79,6 @@ const cerfaContratCompletion = (res) => {
   }
 
   return fieldCompletionPercentage(fieldsToKeep, countFields);
-};
-
-export const buildRemunerations = (data) => {
-  const dateDebutContrat = DateTime.fromISO(data.dateDebutContrat).setLocale("fr-FR");
-  const dateFinContrat = DateTime.fromISO(data.dateFinContrat).setLocale("fr-FR");
-  const apprentiDateNaissance = DateTime.fromISO(data.apprentiDateNaissance).setLocale("fr-FR");
-
-  const dateFinA1 = dateDebutContrat.plus({ years: 1 }).minus({ days: 1 });
-  const dateDebutA2 = dateDebutContrat.plus({ years: 1 });
-  const dateFinA2 = dateDebutA2.plus({ years: 1 }).minus({ days: 1 });
-  const dateDebutA3 = dateDebutA2.plus({ years: 1 });
-  const dateFinA3 = dateDebutA3.plus({ years: 1 }).minus({ days: 1 });
-  const dateDebutA4 = dateDebutA3.plus({ years: 1 });
-  // const dateFinA4 = dateDebutA4.plus({ years: 1 }).minus({ days: 1 });
-
-  const ageA1 = Math.floor(data.apprentiAge);
-  const anniversaireA1 = apprentiDateNaissance.plus({ years: ageA1 + 1 });
-  const ageA2 = ageA1 + 1;
-  const anniversaireA2 = anniversaireA1.plus({ years: 1 });
-  const ageA3 = ageA2 + 1;
-  const anniversaireA3 = anniversaireA2.plus({ years: 1 });
-  const ageA4 = ageA3 + 1;
-  const anniversaireA4 = anniversaireA3.plus({ years: 1 });
-  const ageA5 = ageA4 + 1;
-
-  // console.table([
-  //   { date: apprentiDateNaissance.toFormat("yyyy-MM-dd"), age: ageA1 },
-  //   { date: anniversaireA1.toFormat("yyyy-MM-dd"), age: ageA2 },
-  //   { date: anniversaireA2.toFormat("yyyy-MM-dd"), age: ageA3 },
-  //   { date: anniversaireA3.toFormat("yyyy-MM-dd"), age: ageA4 },
-  // ]);
-
-  const SMIC = 1603.12; // 10.57/h    (mayotte:  7.98/h)   Pour 35h  => Mayotte 1210.30
-  const seuils = [17, 18, 21, 26];
-  const getSeuils = (age) => {
-    if (age <= seuils[0]) return 0;
-    if (age >= seuils[1] && age < seuils[2]) return 1;
-    if (age >= seuils[2] && age < seuils[3]) return 2;
-    if (age >= seuils[3]) return 3;
-  };
-
-  const taux = {
-    a1: {
-      0: 27,
-      1: 43,
-      2: 53,
-      3: 100,
-    },
-    a2: {
-      0: 39,
-      1: 51,
-      2: 61,
-      3: 100,
-    },
-    a3: {
-      0: 55,
-      1: 67,
-      2: 78,
-      3: 100,
-    },
-    a4: {
-      0: 55,
-      1: 67,
-      2: 78,
-      3: 100,
-    },
-  };
-
-  const isChangingTaux = (currentAge, nextAge) => {
-    return getSeuils(nextAge) > getSeuils(currentAge);
-  };
-
-  let finRemuneration = false;
-
-  let result1 = {
-    11: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-    12: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-  };
-  if (isChangingTaux(ageA1, ageA2)) {
-    const dateFin11 = anniversaireA1.minus({ days: anniversaireA1.toObject().day }).plus({ months: 1 });
-    const dateDebut12 = dateFin11.plus({ days: 1 });
-    const taux11 = taux.a1[getSeuils(ageA1)] + data.remunerationMajoration;
-    const taux12 = taux.a1[getSeuils(ageA2)] + data.remunerationMajoration;
-
-    if (dateFin11 >= dateFinContrat) {
-      finRemuneration = true;
-      result1 = {
-        11: {
-          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux11) / 100,
-        },
-        12: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    } else if (dateFinA1 >= dateFinContrat) {
-      finRemuneration = true;
-      result1 = {
-        11: {
-          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
-          dateFin: dateFin11.toFormat("yyyy-MM-dd"),
-          taux: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux11) / 100,
-        },
-        12: {
-          dateDebut: dateDebut12.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux12,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux12) / 100,
-        },
-      };
-    } else {
-      result1 = {
-        11: {
-          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
-          dateFin: dateFin11.toFormat("yyyy-MM-dd"),
-          taux: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux11) / 100,
-        },
-        12: {
-          dateDebut: dateDebut12.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinA1.toFormat("yyyy-MM-dd"),
-          taux: taux12,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux12) / 100,
-        },
-      };
-    }
-  } else {
-    const taux11 = taux.a1[getSeuils(ageA1)] + data.remunerationMajoration;
-    if (dateFinA1 >= dateFinContrat) {
-      finRemuneration = true;
-      result1 = {
-        11: {
-          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux11) / 100,
-        },
-        12: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    } else {
-      result1 = {
-        11: {
-          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinA1.toFormat("yyyy-MM-dd"),
-          taux: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux11) / 100,
-        },
-        12: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    }
-  }
-
-  let result2 = {
-    21: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-    22: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-  };
-  if (isChangingTaux(ageA2, ageA3) && !finRemuneration) {
-    const dateFin21 = anniversaireA2.minus({ days: anniversaireA2.toObject().day }).plus({ months: 1 });
-    const dateDebut22 = dateFin21.plus({ days: 1 });
-    const taux21 = taux.a2[getSeuils(ageA2)] + data.remunerationMajoration;
-    const taux22 = taux.a2[getSeuils(ageA3)] + data.remunerationMajoration;
-
-    if (dateFin21 >= dateFinContrat) {
-      finRemuneration = true;
-      result2 = {
-        21: {
-          dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux21) / 100,
-        },
-        22: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    } else if (dateFinA2 >= dateFinContrat) {
-      finRemuneration = true;
-      result2 = {
-        21: {
-          dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
-          dateFin: dateFin21.toFormat("yyyy-MM-dd"),
-          taux: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux21) / 100,
-        },
-        22: {
-          dateDebut: dateDebut22.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux22,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux22) / 100,
-        },
-      };
-    } else {
-      result2 = {
-        21: {
-          dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
-          dateFin: dateFin21.toFormat("yyyy-MM-dd"),
-          taux: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux21) / 100,
-        },
-        22: {
-          dateDebut: dateDebut22.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinA2.toFormat("yyyy-MM-dd"),
-          taux: taux22,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux22) / 100,
-        },
-      };
-    }
-  } else if (!finRemuneration) {
-    const taux21 = taux.a2[getSeuils(ageA2)] + data.remunerationMajoration;
-
-    if (dateFinA2 >= dateFinContrat) {
-      finRemuneration = true;
-      result2 = {
-        21: {
-          dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux21) / 100,
-        },
-        22: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    } else {
-      result2 = {
-        21: {
-          dateDebut: dateDebutA2.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinA2.toFormat("yyyy-MM-dd"),
-          taux: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux21) / 100,
-        },
-        22: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    }
-  }
-
-  let result3 = {
-    31: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-    32: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-  };
-  if (isChangingTaux(ageA3, ageA4) && !finRemuneration) {
-    const dateFin31 = anniversaireA3.minus({ days: anniversaireA3.toObject().day }).plus({ months: 1 });
-    const dateDebut32 = dateFin31.plus({ days: 1 });
-    const taux31 = taux.a3[getSeuils(ageA3)] + data.remunerationMajoration;
-    const taux32 = taux.a3[getSeuils(ageA4)] + data.remunerationMajoration;
-
-    if (dateFin31 >= dateFinContrat) {
-      finRemuneration = true;
-      result3 = {
-        31: {
-          dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux31) / 100,
-        },
-        32: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    } else if (dateFinA3 >= dateFinContrat) {
-      finRemuneration = true;
-      result3 = {
-        31: {
-          dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
-          dateFin: dateFin31.toFormat("yyyy-MM-dd"),
-          taux: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux31) / 100,
-        },
-        32: {
-          dateDebut: dateDebut32.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux32,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux32) / 100,
-        },
-      };
-    } else {
-      result3 = {
-        31: {
-          dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
-          dateFin: dateFin31.toFormat("yyyy-MM-dd"),
-          taux: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux31) / 100,
-        },
-        32: {
-          dateDebut: dateDebut32.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinA3.toFormat("yyyy-MM-dd"),
-          taux: taux32,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux32) / 100,
-        },
-      };
-    }
-  } else if (!finRemuneration) {
-    const taux31 = taux.a3[getSeuils(ageA3)] + data.remunerationMajoration;
-
-    if (dateFinA3 >= dateFinContrat) {
-      finRemuneration = true;
-      result3 = {
-        31: {
-          dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux31) / 100,
-        },
-        32: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    } else {
-      result3 = {
-        31: {
-          dateDebut: dateDebutA3.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinA3.toFormat("yyyy-MM-dd"),
-          taux: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux31) / 100,
-        },
-        32: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    }
-  }
-
-  let result4 = {
-    41: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-    42: {
-      dateDebut: "",
-      dateFin: "",
-      taux: 0,
-      typeSalaire: "SMIC",
-      salaireBrut: 0,
-    },
-  };
-  if (isChangingTaux(ageA4, ageA5) && !finRemuneration) {
-    const dateFin41 = anniversaireA4.minus({ days: anniversaireA4.toObject().day }).plus({ months: 1 });
-    const dateDebut42 = dateFin41.plus({ days: 1 });
-    const taux41 = taux.a4[getSeuils(ageA4)] + data.remunerationMajoration;
-    const taux42 = taux.a4[getSeuils(ageA5)] + data.remunerationMajoration;
-
-    if (dateFin41 >= dateFinContrat) {
-      finRemuneration = true;
-      result4 = {
-        41: {
-          dateDebut: dateDebutA4.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux41,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux41) / 100,
-        },
-        42: {
-          dateDebut: "",
-          dateFin: "",
-          taux: 0,
-          typeSalaire: "SMIC",
-          salaireBrut: 0,
-        },
-      };
-    } else {
-      result4 = {
-        41: {
-          dateDebut: dateDebutA4.toFormat("yyyy-MM-dd"),
-          dateFin: dateFin41.toFormat("yyyy-MM-dd"),
-          taux: taux41,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux41) / 100,
-        },
-        42: {
-          dateDebut: dateDebut42.toFormat("yyyy-MM-dd"),
-          dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-          taux: taux42,
-          typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux42) / 100,
-        },
-      };
-    }
-  } else if (!finRemuneration) {
-    const taux41 = taux.a4[getSeuils(ageA4)] + data.remunerationMajoration;
-    result4 = {
-      41: {
-        dateDebut: dateDebutA4.toFormat("yyyy-MM-dd"),
-        dateFin: dateFinContrat.toFormat("yyyy-MM-dd"),
-        taux: taux41,
-        typeSalaire: "SMIC",
-        salaireBrut: (SMIC * taux41) / 100,
-      },
-      42: {
-        dateDebut: "",
-        dateFin: "",
-        taux: 0,
-        typeSalaire: "SMIC",
-        salaireBrut: 0,
-      },
-    };
-  }
-
-  const remunerationsAnnuelles = {
-    ...result1,
-    ...result2,
-    ...result3,
-    ...result4,
-  };
-
-  const remunerationsAnnuellesDbValue = [];
-  const remKeys = Object.keys(remunerationsAnnuelles);
-  for (let index = 0; index < remKeys.length; index++) {
-    const remKey = remKeys[index];
-    const remPart = remunerationsAnnuelles[remKey];
-    if (remPart.taux > 0) {
-      remunerationsAnnuellesDbValue.push({
-        dateDebut: DateTime.fromISO(remPart.dateDebut).setLocale("fr-FR").ts,
-        dateFin: DateTime.fromISO(remPart.dateFin).setLocale("fr-FR").ts,
-        taux: remPart.taux,
-        typeSalaire: remPart.typeSalaire,
-        salaireBrut: remPart.salaireBrut.toFixed(2),
-        ordre: `${remKey[0]}.${remKey[1]}`,
-      });
-    }
-  }
-
-  return {
-    remunerationsAnnuelles,
-    remunerationsAnnuellesDbValue,
-    salaireEmbauche: remunerationsAnnuelles["11"].salaireBrut,
-  };
 };
 
 export const CerfaContratController = async (dossier) => {
@@ -689,65 +158,70 @@ export const CerfaContratController = async (dossier) => {
             }
           }
 
-          if (data.apprentiDateNaissance !== "") {
-            const isAgeApprentiInvalidAtStart = isAgeInValidLowerAtDate({
-              dateNaissance: DateTime.fromISO(data.apprentiDateNaissance).setLocale("fr-FR"),
-              age: data.apprentiAge,
-              dateString: value,
-              limitAge: 15,
-              label: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
-            });
-            if (isAgeApprentiInvalidAtStart) return isAgeApprentiInvalidAtStart;
-          }
-
           if (data.maitre1DateNaissance !== "") {
-            const { age: ageMaitre1, dateNaissance: dateNaissanceMaitre1 } = caclAgeFromStringDate(
-              data.maitre1DateNaissance
-            );
-            const isAgeMaitre1InvalidAtStart = isAgeInValidLowerAtDate({
-              dateNaissance: dateNaissanceMaitre1,
-              age: ageMaitre1,
-              dateString: value,
-              limitAge: 18,
-              label: "Le maître d'apprentissage 1 doit avoir au moins 18 ans à la date de début d'exécution du contrat",
-            });
-            if (isAgeMaitre1InvalidAtStart) return isAgeMaitre1InvalidAtStart;
+            const { age: ageMaitre1 } = caclAgeAtDate(data.maitre1DateNaissance, value);
+            if (ageMaitre1 < 18) {
+              return {
+                successed: false,
+                data: null,
+                message:
+                  "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+              };
+            }
           }
 
           if (data.maitre2DateNaissance !== "") {
-            const { age: ageMaitre2, dateNaissance: dateNaissanceMaitre2 } = caclAgeFromStringDate(
-              data.maitre2DateNaissance
-            );
-            const isAgeMaitre2InvalidAtStart = isAgeInValidLowerAtDate({
-              dateNaissance: dateNaissanceMaitre2,
-              age: ageMaitre2,
-              dateString: value,
-              limitAge: 18,
-              label: "Le maître d'apprentissage 2 doit avoir au moins 18 ans à la date de début d'exécution du contrat",
-            });
-            if (isAgeMaitre2InvalidAtStart) return isAgeMaitre2InvalidAtStart;
+            const { age: ageMaitre2 } = caclAgeAtDate(data.maitre2DateNaissance, value);
+            if (ageMaitre2 < 18) {
+              return {
+                successed: false,
+                data: null,
+                message:
+                  "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",
+              };
+            }
           }
 
-          if (data.apprentiDateNaissance !== "" && data.dateFinContrat !== "") {
-            const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-              ...data,
-              dateDebutContrat: value,
-            });
+          let age = null;
+          if (data.apprentiDateNaissance !== "") {
+            const cAge = caclAgeAtDate(data.apprentiDateNaissance, value);
+            age = cAge.age;
 
-            return {
-              successed: true,
-              data: {
-                dateDebutContrat: value,
-                dateFinContrat: data.dateFinContrat,
-                remunerationsAnnuelles,
-                remunerationsAnnuellesDbValue,
-                salaireEmbauche,
-                dureeContrat,
-                apprentiDateNaissance: data.apprentiDateNaissance,
-                apprentiAge: data.apprentiAge,
-              },
-              message: null,
-            };
+            if (age < 15) {
+              return {
+                successed: false,
+                data: null,
+                message: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
+              };
+            }
+
+            if (data.dateFinContrat !== "" && data.employeurAdresseDepartement !== "") {
+              const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue, smicObj } =
+                buildRemunerations({
+                  apprentiDateNaissance: data.apprentiDateNaissance,
+                  apprentiAge: age,
+                  dateDebutContrat: value,
+                  dateFinContrat: data.dateFinContrat,
+                  employeurAdresseDepartement: data.employeurAdresseDepartement,
+                  remunerationsAnnuelles: data.remunerationsAnnuelles,
+                });
+
+              return {
+                successed: true,
+                data: {
+                  dateDebutContrat: value,
+                  dateFinContrat: data.dateFinContrat,
+                  remunerationsAnnuelles,
+                  remunerationsAnnuellesDbValue,
+                  smicObj,
+                  salaireEmbauche,
+                  dureeContrat,
+                  apprentiDateNaissance: data.apprentiDateNaissance,
+                  apprentiAge: age,
+                },
+                message: null,
+              };
+            }
           }
 
           return {
@@ -757,7 +231,7 @@ export const CerfaContratController = async (dossier) => {
               dateFinContrat: data.dateFinContrat,
               dureeContrat,
               apprentiDateNaissance: data.apprentiDateNaissance,
-              apprentiAge: data.apprentiAge,
+              apprentiAge: age,
             },
             message: null,
           };
@@ -827,11 +301,20 @@ export const CerfaContratController = async (dossier) => {
             }
           }
 
-          if (data.apprentiDateNaissance !== "" && data.dateDebutContrat !== "") {
-            const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-              ...data,
-              dateFinContrat: value,
-            });
+          if (
+            data.apprentiDateNaissance !== "" &&
+            data.dateDebutContrat !== "" &&
+            data.employeurAdresseDepartement !== ""
+          ) {
+            const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue, smicObj } =
+              buildRemunerations({
+                apprentiDateNaissance: data.apprentiDateNaissance,
+                apprentiAge: data.apprentiAge,
+                dateDebutContrat: data.dateDebutContrat,
+                dateFinContrat: value,
+                employeurAdresseDepartement: data.employeurAdresseDepartement,
+                remunerationsAnnuelles: data.remunerationsAnnuelles,
+              });
 
             return {
               successed: true,
@@ -842,6 +325,7 @@ export const CerfaContratController = async (dossier) => {
                 dureeContrat,
                 remunerationsAnnuelles,
                 remunerationsAnnuellesDbValue,
+                smicObj,
                 salaireEmbauche,
               },
               message: null,
@@ -897,37 +381,6 @@ export const CerfaContratController = async (dossier) => {
           };
         },
       },
-      remunerationMajoration: {
-        doAsyncActions: async (value, data) => {
-          await new Promise((resolve) => setTimeout(resolve, 100));
-
-          if (data.apprentiDateNaissance !== "" && data.dateFinContrat !== "") {
-            const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-              ...data,
-              remunerationMajoration: convertOptionToValue({ ...data.remunerationMajoration, value: value }),
-            });
-
-            return {
-              successed: true,
-              data: {
-                remunerationMajoration: value,
-                remunerationsAnnuelles,
-                remunerationsAnnuellesDbValue,
-                salaireEmbauche,
-              },
-              message: null,
-            };
-          }
-
-          return {
-            successed: true,
-            data: {
-              remunerationMajoration: value,
-            },
-            message: null,
-          };
-        },
-      },
       typeDerogation: {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
@@ -945,11 +398,11 @@ export const CerfaContratController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
-          if (parseInt(value) > 99) {
+          if (parseInt(value) > 40) {
             return {
               successed: false,
               data: null,
-              message: "la durée de travail hebdomadaire en heures ne peut excéder 99",
+              message: "la durée de travail hebdomadaire en heures ne peut excéder 40h",
             };
           }
 
@@ -966,11 +419,11 @@ export const CerfaContratController = async (dossier) => {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
-          if (parseInt(value) > 60) {
+          if (parseInt(value) > 59) {
             return {
               successed: false,
               data: null,
-              message: "la durée de travail hebdomadaire en minutes ne peut excéder 60",
+              message: "la durée de travail hebdomadaire en minutes ne peut excéder 59 minutes",
             };
           }
 
@@ -983,6 +436,53 @@ export const CerfaContratController = async (dossier) => {
           };
         },
       },
+      numeroContratPrecedent: {
+        doAsyncActions: async (value, { typeContratAppDbValue, employeurSiret }) => {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          if (employeurSiret === "") {
+            return {
+              successed: false,
+              data: null,
+              message: "Veuillez saisir le siret de l'employeur dans la partie Employeur",
+            };
+          }
+
+          if (ENV !== "production") {
+            if (!(typeContratAppDbValue === 21 || typeContratAppDbValue === 22 || typeContratAppDbValue === 23)) {
+              const response = await _post(`/api/v1/agecap/verifNumeroContratPrecedent`, {
+                numeroContratPrecedent: value,
+                employeurSiret,
+                dossierId: dossier._id,
+              });
+
+              if (response.message.includes("Impossible de retrouver un dossier unique pour le contrat")) {
+                return {
+                  successed: false,
+                  data: null,
+                  message: `Impossible de retrouver un dossier dans AGECAP pour le contrat n°${value} et le siret ${employeurSiret}`,
+                };
+              }
+
+              if (response.message !== "ok") {
+                return {
+                  successed: false,
+                  data: null,
+                  message: response.message,
+                };
+              }
+            }
+          }
+
+          return {
+            successed: true,
+            data: {
+              numeroContratPrecedent: value,
+            },
+            message: null,
+          };
+        },
+      },
     },
   };
 };
@@ -990,10 +490,15 @@ export const CerfaContratController = async (dossier) => {
 export function useCerfaContrat() {
   const cerfa = useRecoilValue(cerfaAtom);
   const dossier = useRecoilValue(dossierAtom);
-  // const [apprentiDateNaissance, setApprentiDateNaissance] = useRecoilState(cerfaApprentiDateNaissanceAtom);
+  const apprentiAge = useRecoilValue(cerfaApprentiAgeAtom);
+  const setApprentiAge = useSetRecoilState(cerfaApprentiAgeAtom);
+  const apprentiDateNaissance = useRecoilValue(cerfaApprentiDateNaissanceAtom);
+  const setApprentiDateNaissance = useSetRecoilState(cerfaApprentiDateNaissanceAtom);
 
   //Internal
   const [partContratCompletion, setPartContratCompletion] = useRecoilState(contratAtoms.cerfaPartContratCompletionAtom);
+
+  const [isLoading, setIsLoading] = useRecoilState(contratAtoms.cerfaPartContratIsLoadingAtom);
 
   const [contratModeContractuel, setContratModeContractuel] = useRecoilState(
     contratAtoms.cerfaContratModeContractuelAtom
@@ -1027,9 +532,7 @@ export function useCerfaContrat() {
   const [contratDateConclusion, setContratDateConclusion] = useRecoilState(contratAtoms.cerfaContratDateConclusionAtom);
   const [contratDateFinContrat, setContratDateFinContrat] = useRecoilState(contratAtoms.cerfaContratDateFinContratAtom);
   const [contratDateRupture, setContratDateRupture] = useRecoilState(contratAtoms.cerfaContratDateRuptureAtom);
-  const [contratLieuSignatureContrat, setContratLieuSignatureContrat] = useRecoilState(
-    contratAtoms.cerfaContratLieuSignatureContratAtom
-  );
+
   const [contratTypeDerogation, setContratTypeDerogation] = useRecoilState(contratAtoms.cerfaContratTypeDerogationAtom);
   const [contratDureeTravailHebdoHeures, setContratDureeTravailHebdoHeures] = useRecoilState(
     contratAtoms.cerfaContratDureeTravailHebdoHeuresAtom
@@ -1038,9 +541,6 @@ export function useCerfaContrat() {
     contratAtoms.cerfaContratDureeTravailHebdoMinutesAtom
   );
   const [contratTravailRisque, setContratTravailRisque] = useRecoilState(contratAtoms.cerfaContratTravailRisqueAtom);
-  const [contratSalaireEmbauche, setContratSalaireEmbauche] = useRecoilState(
-    contratAtoms.cerfaContratSalaireEmbaucheAtom
-  );
   const [contratCaisseRetraiteComplementaire, setContratCaisseRetraiteComplementaire] = useRecoilState(
     contratAtoms.cerfaContratCaisseRetraiteComplementaireAtom
   );
@@ -1054,407 +554,37 @@ export function useCerfaContrat() {
   const [contratAutreAvantageEnNature, setContratAutreAvantageEnNature] = useRecoilState(
     contratAtoms.cerfaContratAutreAvantageEnNatureAtom
   );
-
-  const [contratRemunerationMajoration, setContratRemunerationMajoration] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationMajorationAtom
+  const [contratSalaireEmbauche, setContratSalaireEmbauche] = useRecoilState(
+    contratAtoms.cerfaContratSalaireEmbaucheAtom
   );
-  const [contratRemunerationsAnnuelles11DateDebut, setContratRemunerationsAnnuelles11DateDebut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles11DateDebutAtom
-  );
-  const [contratRemunerationsAnnuelles11DateFin, setContratRemunerationsAnnuelles11DateFin] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles11DateFinAtom
-  );
-  const [contratRemunerationsAnnuelles11Taux, setContratRemunerationsAnnuelles11Taux] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles11TauxAtom
-  );
-  const [contratRemunerationsAnnuelles11TypeSalaire, setContratRemunerationsAnnuelles11TypeSalaire] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles11TypeSalaireAtom
-  );
-  const [contratRemunerationsAnnuelles11SalaireBrut, setContratRemunerationsAnnuelles11SalaireBrut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles11SalaireBrutAtom
-  );
-
-  const [contratRemunerationsAnnuelles12DateDebut, setContratRemunerationsAnnuelles12DateDebut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles12DateDebutAtom
-  );
-  const [contratRemunerationsAnnuelles12DateFin, setContratRemunerationsAnnuelles12DateFin] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles12DateFinAtom
-  );
-  const [contratRemunerationsAnnuelles12Taux, setContratRemunerationsAnnuelles12Taux] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles12TauxAtom
-  );
-  const [contratRemunerationsAnnuelles12TypeSalaire, setContratRemunerationsAnnuelles12TypeSalaire] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles12TypeSalaireAtom
-  );
-  const [contratRemunerationsAnnuelles12SalaireBrut, setContratRemunerationsAnnuelles12SalaireBrut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles12SalaireBrutAtom
-  );
-  const [contratRemunerationsAnnuelles21DateDebut, setContratRemunerationsAnnuelles21DateDebut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles21DateDebutAtom
-  );
-  const [contratRemunerationsAnnuelles21DateFin, setContratRemunerationsAnnuelles21DateFin] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles21DateFinAtom
-  );
-  const [contratRemunerationsAnnuelles21Taux, setContratRemunerationsAnnuelles21Taux] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles21TauxAtom
-  );
-  const [contratRemunerationsAnnuelles21TypeSalaire, setContratRemunerationsAnnuelles21TypeSalaire] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles21TypeSalaireAtom
-  );
-  const [contratRemunerationsAnnuelles21SalaireBrut, setContratRemunerationsAnnuelles21SalaireBrut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles21SalaireBrutAtom
-  );
-  const [contratRemunerationsAnnuelles22DateDebut, setContratRemunerationsAnnuelles22DateDebut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles22DateDebutAtom
-  );
-  const [contratRemunerationsAnnuelles22DateFin, setContratRemunerationsAnnuelles22DateFin] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles22DateFinAtom
-  );
-  const [contratRemunerationsAnnuelles22Taux, setContratRemunerationsAnnuelles22Taux] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles22TauxAtom
-  );
-  const [contratRemunerationsAnnuelles22TypeSalaire, setContratRemunerationsAnnuelles22TypeSalaire] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles22TypeSalaireAtom
-  );
-  const [contratRemunerationsAnnuelles22SalaireBrut, setContratRemunerationsAnnuelles22SalaireBrut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles22SalaireBrutAtom
-  );
-  const [contratRemunerationsAnnuelles31DateDebut, setContratRemunerationsAnnuelles31DateDebut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles31DateDebutAtom
-  );
-  const [contratRemunerationsAnnuelles31DateFin, setContratRemunerationsAnnuelles31DateFin] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles31DateFinAtom
-  );
-  const [contratRemunerationsAnnuelles31Taux, setContratRemunerationsAnnuelles31Taux] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles31TauxAtom
-  );
-  const [contratRemunerationsAnnuelles31TypeSalaire, setContratRemunerationsAnnuelles31TypeSalaire] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles31TypeSalaireAtom
-  );
-  const [contratRemunerationsAnnuelles31SalaireBrut, setContratRemunerationsAnnuelles31SalaireBrut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles31SalaireBrutAtom
-  );
-  const [contratRemunerationsAnnuelles32DateDebut, setContratRemunerationsAnnuelles32DateDebut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles32DateDebutAtom
-  );
-  const [contratRemunerationsAnnuelles32DateFin, setContratRemunerationsAnnuelles32DateFin] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles32DateFinAtom
-  );
-  const [contratRemunerationsAnnuelles32Taux, setContratRemunerationsAnnuelles32Taux] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles32TauxAtom
-  );
-  const [contratRemunerationsAnnuelles32TypeSalaire, setContratRemunerationsAnnuelles32TypeSalaire] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles32TypeSalaireAtom
-  );
-  const [contratRemunerationsAnnuelles32SalaireBrut, setContratRemunerationsAnnuelles32SalaireBrut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles32SalaireBrutAtom
-  );
-  const [contratRemunerationsAnnuelles41DateDebut, setContratRemunerationsAnnuelles41DateDebut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles41DateDebutAtom
-  );
-  const [contratRemunerationsAnnuelles41DateFin, setContratRemunerationsAnnuelles41DateFin] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles41DateFinAtom
-  );
-  const [contratRemunerationsAnnuelles41Taux, setContratRemunerationsAnnuelles41Taux] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles41TauxAtom
-  );
-  const [contratRemunerationsAnnuelles41TypeSalaire, setContratRemunerationsAnnuelles41TypeSalaire] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles41TypeSalaireAtom
-  );
-  const [contratRemunerationsAnnuelles41SalaireBrut, setContratRemunerationsAnnuelles41SalaireBrut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles41SalaireBrutAtom
-  );
-  const [contratRemunerationsAnnuelles42DateDebut, setContratRemunerationsAnnuelles42DateDebut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles42DateDebutAtom
-  );
-  const [contratRemunerationsAnnuelles42DateFin, setContratRemunerationsAnnuelles42DateFin] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles42DateFinAtom
-  );
-  const [contratRemunerationsAnnuelles42Taux, setContratRemunerationsAnnuelles42Taux] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles42TauxAtom
-  );
-  const [contratRemunerationsAnnuelles42TypeSalaire, setContratRemunerationsAnnuelles42TypeSalaire] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles42TypeSalaireAtom
-  );
-  const [contratRemunerationsAnnuelles42SalaireBrut, setContratRemunerationsAnnuelles42SalaireBrut] = useRecoilState(
-    contratAtoms.cerfaContratRemunerationsAnnuelles42SalaireBrutAtom
+  const [contratSmic, setContratSmic] = useRecoilState(contratAtoms.cerfaContratSmicAtom);
+  const [contratRemunerationsAnnuelles, setContratRemunerationsAnnuelles] = useRecoilState(
+    contratAtoms.cerfaContratRemunerationsAnnuellesAtom
   );
 
   const setRemunerations = useCallback(
     async (data) => {
+      setContratRemunerationsAnnuelles(data.remunerationsAnnuelles);
+
       setContratSalaireEmbauche({
         ...contratSalaireEmbauche,
         value: data.salaireEmbauche.toFixed(2),
       });
 
-      setContratRemunerationsAnnuelles11DateDebut({
-        ...contratRemunerationsAnnuelles11DateDebut,
-        value: data.remunerationsAnnuelles["11"].dateDebut,
-      });
-      setContratRemunerationsAnnuelles11DateFin({
-        ...contratRemunerationsAnnuelles11DateFin,
-        value: data.remunerationsAnnuelles["11"].dateFin,
-      });
-      setContratRemunerationsAnnuelles11Taux({
-        ...contratRemunerationsAnnuelles11Taux,
-        value: data.remunerationsAnnuelles["11"].taux,
-      });
-      setContratRemunerationsAnnuelles11TypeSalaire({
-        ...contratRemunerationsAnnuelles11TypeSalaire,
-        value: data.remunerationsAnnuelles["11"].typeSalaire,
-      });
-      setContratRemunerationsAnnuelles11SalaireBrut({
-        ...contratRemunerationsAnnuelles11SalaireBrut,
-        value: data.remunerationsAnnuelles["11"].salaireBrut.toFixed(2),
-      });
-
-      setContratRemunerationsAnnuelles12DateDebut({
-        ...contratRemunerationsAnnuelles12DateDebut,
-        value: data.remunerationsAnnuelles["12"].dateDebut,
-      });
-      setContratRemunerationsAnnuelles12DateFin({
-        ...contratRemunerationsAnnuelles12DateFin,
-        value: data.remunerationsAnnuelles["12"].dateFin,
-      });
-      setContratRemunerationsAnnuelles12Taux({
-        ...contratRemunerationsAnnuelles12Taux,
-        value: data.remunerationsAnnuelles["12"].taux,
-      });
-      setContratRemunerationsAnnuelles12TypeSalaire({
-        ...contratRemunerationsAnnuelles12TypeSalaire,
-        value: data.remunerationsAnnuelles["12"].typeSalaire,
-      });
-      setContratRemunerationsAnnuelles12SalaireBrut({
-        ...contratRemunerationsAnnuelles12SalaireBrut,
-        value: data.remunerationsAnnuelles["12"].salaireBrut.toFixed(2),
-      });
-
-      setContratRemunerationsAnnuelles21DateDebut({
-        ...contratRemunerationsAnnuelles21DateDebut,
-        value: data.remunerationsAnnuelles["21"].dateDebut,
-      });
-      setContratRemunerationsAnnuelles21DateFin({
-        ...contratRemunerationsAnnuelles21DateFin,
-        value: data.remunerationsAnnuelles["21"].dateFin,
-      });
-      setContratRemunerationsAnnuelles21Taux({
-        ...contratRemunerationsAnnuelles21Taux,
-        value: data.remunerationsAnnuelles["21"].taux,
-      });
-      setContratRemunerationsAnnuelles21TypeSalaire({
-        ...contratRemunerationsAnnuelles21TypeSalaire,
-        value: data.remunerationsAnnuelles["21"].typeSalaire,
-      });
-      setContratRemunerationsAnnuelles21SalaireBrut({
-        ...contratRemunerationsAnnuelles21SalaireBrut,
-        value: data.remunerationsAnnuelles["21"].salaireBrut.toFixed(2),
-      });
-
-      setContratRemunerationsAnnuelles22DateDebut({
-        ...contratRemunerationsAnnuelles22DateDebut,
-        value: data.remunerationsAnnuelles["22"].dateDebut,
-      });
-      setContratRemunerationsAnnuelles22DateFin({
-        ...contratRemunerationsAnnuelles22DateFin,
-        value: data.remunerationsAnnuelles["22"].dateFin,
-      });
-      setContratRemunerationsAnnuelles22Taux({
-        ...contratRemunerationsAnnuelles22Taux,
-        value: data.remunerationsAnnuelles["22"].taux,
-      });
-      setContratRemunerationsAnnuelles22TypeSalaire({
-        ...contratRemunerationsAnnuelles22TypeSalaire,
-        value: data.remunerationsAnnuelles["22"].typeSalaire,
-      });
-      setContratRemunerationsAnnuelles22SalaireBrut({
-        ...contratRemunerationsAnnuelles22SalaireBrut,
-        value: data.remunerationsAnnuelles["22"].salaireBrut.toFixed(2),
-      });
-
-      setContratRemunerationsAnnuelles31DateDebut({
-        ...contratRemunerationsAnnuelles31DateDebut,
-        value: data.remunerationsAnnuelles["31"].dateDebut,
-      });
-      setContratRemunerationsAnnuelles31DateFin({
-        ...contratRemunerationsAnnuelles31DateFin,
-        value: data.remunerationsAnnuelles["31"].dateFin,
-      });
-      setContratRemunerationsAnnuelles31Taux({
-        ...contratRemunerationsAnnuelles31Taux,
-        value: data.remunerationsAnnuelles["31"].taux,
-      });
-      setContratRemunerationsAnnuelles31TypeSalaire({
-        ...contratRemunerationsAnnuelles31TypeSalaire,
-        value: data.remunerationsAnnuelles["31"].typeSalaire,
-      });
-      setContratRemunerationsAnnuelles31SalaireBrut({
-        ...contratRemunerationsAnnuelles31SalaireBrut,
-        value: data.remunerationsAnnuelles["31"].salaireBrut.toFixed(2),
-      });
-
-      setContratRemunerationsAnnuelles32DateDebut({
-        ...contratRemunerationsAnnuelles32DateDebut,
-        value: data.remunerationsAnnuelles["32"].dateDebut,
-      });
-      setContratRemunerationsAnnuelles32DateFin({
-        ...contratRemunerationsAnnuelles32DateFin,
-        value: data.remunerationsAnnuelles["32"].dateFin,
-      });
-      setContratRemunerationsAnnuelles32Taux({
-        ...contratRemunerationsAnnuelles32Taux,
-        value: data.remunerationsAnnuelles["32"].taux,
-      });
-      setContratRemunerationsAnnuelles32TypeSalaire({
-        ...contratRemunerationsAnnuelles32TypeSalaire,
-        value: data.remunerationsAnnuelles["32"].typeSalaire,
-      });
-      setContratRemunerationsAnnuelles32SalaireBrut({
-        ...contratRemunerationsAnnuelles32SalaireBrut,
-        value: data.remunerationsAnnuelles["32"].salaireBrut.toFixed(2),
-      });
-
-      setContratRemunerationsAnnuelles41DateDebut({
-        ...contratRemunerationsAnnuelles41DateDebut,
-        value: data.remunerationsAnnuelles["41"].dateDebut,
-      });
-      setContratRemunerationsAnnuelles41DateFin({
-        ...contratRemunerationsAnnuelles41DateFin,
-        value: data.remunerationsAnnuelles["41"].dateFin,
-      });
-      setContratRemunerationsAnnuelles41Taux({
-        ...contratRemunerationsAnnuelles41Taux,
-        value: data.remunerationsAnnuelles["41"].taux,
-      });
-      setContratRemunerationsAnnuelles41TypeSalaire({
-        ...contratRemunerationsAnnuelles41TypeSalaire,
-        value: data.remunerationsAnnuelles["41"].typeSalaire,
-      });
-      setContratRemunerationsAnnuelles41SalaireBrut({
-        ...contratRemunerationsAnnuelles41SalaireBrut,
-        value: data.remunerationsAnnuelles["41"].salaireBrut.toFixed(2),
-      });
-
-      setContratRemunerationsAnnuelles42DateDebut({
-        ...contratRemunerationsAnnuelles42DateDebut,
-        value: data.remunerationsAnnuelles["42"].dateDebut,
-      });
-      setContratRemunerationsAnnuelles42DateFin({
-        ...contratRemunerationsAnnuelles42DateFin,
-        value: data.remunerationsAnnuelles["42"].dateFin,
-      });
-      setContratRemunerationsAnnuelles42Taux({
-        ...contratRemunerationsAnnuelles42Taux,
-        value: data.remunerationsAnnuelles["42"].taux,
-      });
-      setContratRemunerationsAnnuelles42TypeSalaire({
-        ...contratRemunerationsAnnuelles42TypeSalaire,
-        value: data.remunerationsAnnuelles["42"].typeSalaire,
-      });
-      setContratRemunerationsAnnuelles42SalaireBrut({
-        ...contratRemunerationsAnnuelles42SalaireBrut,
-        value: data.remunerationsAnnuelles["42"].salaireBrut.toFixed(2),
-      });
+      setContratSmic(data.smicObj);
     },
-    [
-      contratRemunerationsAnnuelles11DateDebut,
-      contratRemunerationsAnnuelles11DateFin,
-      contratRemunerationsAnnuelles11SalaireBrut,
-      contratRemunerationsAnnuelles11Taux,
-      contratRemunerationsAnnuelles11TypeSalaire,
-      contratRemunerationsAnnuelles12DateDebut,
-      contratRemunerationsAnnuelles12DateFin,
-      contratRemunerationsAnnuelles12SalaireBrut,
-      contratRemunerationsAnnuelles12Taux,
-      contratRemunerationsAnnuelles12TypeSalaire,
-      contratRemunerationsAnnuelles21DateDebut,
-      contratRemunerationsAnnuelles21DateFin,
-      contratRemunerationsAnnuelles21SalaireBrut,
-      contratRemunerationsAnnuelles21Taux,
-      contratRemunerationsAnnuelles21TypeSalaire,
-      contratRemunerationsAnnuelles22DateDebut,
-      contratRemunerationsAnnuelles22DateFin,
-      contratRemunerationsAnnuelles22SalaireBrut,
-      contratRemunerationsAnnuelles22Taux,
-      contratRemunerationsAnnuelles22TypeSalaire,
-      contratRemunerationsAnnuelles31DateDebut,
-      contratRemunerationsAnnuelles31DateFin,
-      contratRemunerationsAnnuelles31SalaireBrut,
-      contratRemunerationsAnnuelles31Taux,
-      contratRemunerationsAnnuelles31TypeSalaire,
-      contratRemunerationsAnnuelles32DateDebut,
-      contratRemunerationsAnnuelles32DateFin,
-      contratRemunerationsAnnuelles32SalaireBrut,
-      contratRemunerationsAnnuelles32Taux,
-      contratRemunerationsAnnuelles32TypeSalaire,
-      contratRemunerationsAnnuelles41DateDebut,
-      contratRemunerationsAnnuelles41DateFin,
-      contratRemunerationsAnnuelles41SalaireBrut,
-      contratRemunerationsAnnuelles41Taux,
-      contratRemunerationsAnnuelles41TypeSalaire,
-      contratRemunerationsAnnuelles42DateDebut,
-      contratRemunerationsAnnuelles42DateFin,
-      contratRemunerationsAnnuelles42SalaireBrut,
-      contratRemunerationsAnnuelles42Taux,
-      contratRemunerationsAnnuelles42TypeSalaire,
-      contratSalaireEmbauche,
-      setContratRemunerationsAnnuelles11DateDebut,
-      setContratRemunerationsAnnuelles11DateFin,
-      setContratRemunerationsAnnuelles11SalaireBrut,
-      setContratRemunerationsAnnuelles11Taux,
-      setContratRemunerationsAnnuelles11TypeSalaire,
-      setContratRemunerationsAnnuelles12DateDebut,
-      setContratRemunerationsAnnuelles12DateFin,
-      setContratRemunerationsAnnuelles12SalaireBrut,
-      setContratRemunerationsAnnuelles12Taux,
-      setContratRemunerationsAnnuelles12TypeSalaire,
-      setContratRemunerationsAnnuelles21DateDebut,
-      setContratRemunerationsAnnuelles21DateFin,
-      setContratRemunerationsAnnuelles21SalaireBrut,
-      setContratRemunerationsAnnuelles21Taux,
-      setContratRemunerationsAnnuelles21TypeSalaire,
-      setContratRemunerationsAnnuelles22DateDebut,
-      setContratRemunerationsAnnuelles22DateFin,
-      setContratRemunerationsAnnuelles22SalaireBrut,
-      setContratRemunerationsAnnuelles22Taux,
-      setContratRemunerationsAnnuelles22TypeSalaire,
-      setContratRemunerationsAnnuelles31DateDebut,
-      setContratRemunerationsAnnuelles31DateFin,
-      setContratRemunerationsAnnuelles31SalaireBrut,
-      setContratRemunerationsAnnuelles31Taux,
-      setContratRemunerationsAnnuelles31TypeSalaire,
-      setContratRemunerationsAnnuelles32DateDebut,
-      setContratRemunerationsAnnuelles32DateFin,
-      setContratRemunerationsAnnuelles32SalaireBrut,
-      setContratRemunerationsAnnuelles32Taux,
-      setContratRemunerationsAnnuelles32TypeSalaire,
-      setContratRemunerationsAnnuelles41DateDebut,
-      setContratRemunerationsAnnuelles41DateFin,
-      setContratRemunerationsAnnuelles41SalaireBrut,
-      setContratRemunerationsAnnuelles41Taux,
-      setContratRemunerationsAnnuelles41TypeSalaire,
-      setContratRemunerationsAnnuelles42DateDebut,
-      setContratRemunerationsAnnuelles42DateFin,
-      setContratRemunerationsAnnuelles42SalaireBrut,
-      setContratRemunerationsAnnuelles42Taux,
-      setContratRemunerationsAnnuelles42TypeSalaire,
-      setContratSalaireEmbauche,
-    ]
+    [contratSalaireEmbauche, setContratRemunerationsAnnuelles, setContratSalaireEmbauche, setContratSmic]
   );
 
-  let refreshTypeDerogation = useCallback(() => {
-    setContratTypeDerogation({ ...contratTypeDerogation, triggerValidation: true });
-  }, [contratTypeDerogation, setContratTypeDerogation]);
-
   let getTypeDerogation = (typeDerogation = null, { dateNaissance, age, contratDateDebutContratString }) => {
-    const opts = {
-      dateNaissance: DateTime.fromISO(dateNaissance).setLocale("fr-FR"),
-      age,
-      limitDateString: contratDateDebutContratString,
-    };
-    const isApprentiGEQ16 = isAgeGreaterOrEqualAtDate({ ...opts, limitAge: 16 });
-    const isApprentiLOW16 = isAgeLowerAtDate({ ...opts, limitAge: 16 });
-    const isApprentiGEQ30 = isAgeGreaterOrEqualAtDate({ ...opts, limitAge: 30 });
-    const isApprentiLOW30 = isAgeGreaterOrEqualAtDate({ ...opts, limitAge: 30 });
+    if (dateNaissance === "" || !age || contratDateDebutContratString === "") {
+      return typeDerogation;
+    }
+
+    const isApprentiGEQ16 = age >= 16;
+    const isApprentiLOW16 = age < 16;
+    const isApprentiGEQ30 = age >= 30;
+    const isApprentiLOW30 = age < 30;
 
     // 11 not allowed if age >= 16 à la date d'execution
     // if age  à la date d'execution < 16   type 11 ||  50
@@ -1464,11 +594,13 @@ export function useCerfaContrat() {
     let valueForbidden = false;
     for (let i = 0; i < typeDerogation.options.length; i++) {
       let option = { ...typeDerogation.options[i] };
-      if (isApprentiGEQ16) {
-        if (option.value === 11) {
-          option.locked = true;
-        } else {
+      option.locked = false;
+
+      if (isApprentiGEQ30) {
+        if (option.value === 12 || option.value === 50) {
           option.locked = false;
+        } else {
+          option.locked = true;
         }
       } else if (isApprentiLOW16) {
         if (option.value === 11 || option.value === 50) {
@@ -1476,17 +608,16 @@ export function useCerfaContrat() {
         } else {
           option.locked = true;
         }
-      } else if (isApprentiGEQ30) {
-        if (option.value === 12 || option.value === 50) {
-          option.locked = false;
-        } else {
-          option.locked = true;
+      } else {
+        if (isApprentiGEQ16) {
+          if (option.value === 11) {
+            option.locked = true;
+          }
         }
-      } else if (isApprentiLOW30) {
-        if (option.value === 12) {
-          option.locked = true;
-        } else {
-          option.locked = false;
+        if (isApprentiLOW30) {
+          if (option.value === 12) {
+            option.locked = true;
+          }
         }
       }
 
@@ -1503,6 +634,18 @@ export function useCerfaContrat() {
     }
   };
 
+  let refreshTypeDerogation = useCallback(
+    ({ dateNaissance, age, contratDateDebutContratString }) => {
+      const typeDerog = getTypeDerogation(contratTypeDerogation, {
+        dateNaissance,
+        age,
+        contratDateDebutContratString,
+      });
+      setContratTypeDerogation({ ...typeDerog, triggerValidation: true });
+    },
+    [contratTypeDerogation, setContratTypeDerogation]
+  );
+
   const onSubmittedContratDateDebutContrat = useCallback(
     async (path, data, forcedTriggered) => {
       try {
@@ -1518,6 +661,12 @@ export function useCerfaContrat() {
                 value: data.dureeContrat,
               },
             },
+            apprenti: {
+              age: {
+                ...apprentiAge,
+                value: data.apprentiAge,
+              },
+            },
           };
           let shouldSaveInDb = false;
           if (!forcedTriggered) {
@@ -1525,7 +674,17 @@ export function useCerfaContrat() {
               if (contratDateFinContrat.value !== "")
                 setContratDateFinContrat({ ...contratDateFinContrat, triggerValidation: true });
 
-              refreshTypeDerogation();
+              if (!apprentiAge.value && newV.apprenti.age.value !== apprentiAge.value) {
+                setApprentiAge(newV.apprenti.age);
+                setApprentiDateNaissance({ ...apprentiDateNaissance, triggerValidation: true });
+              }
+
+              const typeDerog = getTypeDerogation(contratTypeDerogation, {
+                dateNaissance: data.apprentiDateNaissance,
+                age: data.apprentiAge,
+                contratDateDebutContratString: data.dateDebutContrat,
+              });
+              setContratTypeDerogation({ ...typeDerog });
 
               setContratDateDebutContrat(newV.contrat.dateDebutContrat);
               seContratDureeContrat(newV.contrat.dureeContrat);
@@ -1543,6 +702,9 @@ export function useCerfaContrat() {
                 dateDebutContrat: convertDateToValue(newV.contrat.dateDebutContrat),
                 dureeContrat: data.dureeContrat,
               },
+              apprenti: {
+                age: newV.apprenti.age.value,
+              },
             };
             if (data.remunerationsAnnuelles && data.remunerationsAnnuellesDbValue && data.salaireEmbauche) {
               setRemunerations(data);
@@ -1551,6 +713,7 @@ export function useCerfaContrat() {
                   ...dataToSave.contrat,
                   remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
                   salaireEmbauche: data.salaireEmbauche.toFixed(2),
+                  smic: data.smicObj,
                 },
               };
             }
@@ -1566,11 +729,16 @@ export function useCerfaContrat() {
     [
       contratDateDebutContrat,
       contratDureeContrat,
+      apprentiAge,
       contratDateFinContrat,
       setContratDateFinContrat,
-      refreshTypeDerogation,
+      contratTypeDerogation,
+      setContratTypeDerogation,
       setContratDateDebutContrat,
       seContratDureeContrat,
+      setApprentiAge,
+      setApprentiDateNaissance,
+      apprentiDateNaissance,
       dossier?._id,
       cerfa?.id,
       setPartContratCompletion,
@@ -1685,6 +853,7 @@ export function useCerfaContrat() {
                   ...dataToSave.contrat,
                   remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
                   salaireEmbauche: data.salaireEmbauche.toFixed(2),
+                  smic: data.smicObj,
                 },
               };
             }
@@ -1720,7 +889,6 @@ export function useCerfaContrat() {
               dateRupture: {
                 ...contratDateRupture,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -1814,37 +982,6 @@ export function useCerfaContrat() {
     ]
   );
 
-  const onSubmittedContratLieuSignatureContrat = useCallback(
-    async (path, data) => {
-      try {
-        if (path === "contrat.lieuSignatureContrat") {
-          const newV = {
-            contrat: {
-              lieuSignatureContrat: {
-                ...contratLieuSignatureContrat,
-                value: data,
-                // forceUpdate: false, // IF data = "" true
-              },
-            },
-          };
-          if (contratLieuSignatureContrat.value !== newV.contrat.lieuSignatureContrat.value) {
-            setContratLieuSignatureContrat(newV.contrat.lieuSignatureContrat);
-
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
-              contrat: {
-                lieuSignatureContrat: newV.contrat.lieuSignatureContrat.value,
-              },
-            });
-            setPartContratCompletion(cerfaContratCompletion(res));
-          }
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [contratLieuSignatureContrat, setContratLieuSignatureContrat, dossier?._id, cerfa?.id, setPartContratCompletion]
-  );
-
   const onSubmittedContratTravailRisque = useCallback(
     async (path, data) => {
       try {
@@ -1854,7 +991,6 @@ export function useCerfaContrat() {
               travailRisque: {
                 ...contratTravailRisque,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -2048,22 +1184,22 @@ export function useCerfaContrat() {
             contrat: {
               numeroContratPrecedent: {
                 ...contratNumeroContratPrecedent,
-                value: data,
+                value: data.numeroContratPrecedent,
               },
             },
           };
-          if (contratNumeroContratPrecedent.value !== newV.contrat.numeroContratPrecedent.value) {
-            setContratNumeroContratPrecedent(newV.contrat.numeroContratPrecedent);
+          // if (contratNumeroContratPrecedent.value !== newV.contrat.numeroContratPrecedent.value) {
+          setContratNumeroContratPrecedent(newV.contrat.numeroContratPrecedent);
 
-            setNumeroContratPrecedentDetails(data);
+          setNumeroContratPrecedentDetails(data.numeroContratPrecedent);
 
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
-              contrat: {
-                numeroContratPrecedent: newV.contrat.numeroContratPrecedent.value || null,
-              },
-            });
-            setPartContratCompletion(cerfaContratCompletion(res));
-          }
+          const res = await saveCerfa(dossier?._id, cerfa?.id, {
+            contrat: {
+              numeroContratPrecedent: newV.contrat.numeroContratPrecedent.value || null,
+            },
+          });
+          setPartContratCompletion(cerfaContratCompletion(res));
+          // }
         }
       } catch (e) {
         console.error(e);
@@ -2088,7 +1224,6 @@ export function useCerfaContrat() {
               salaireEmbauche: {
                 ...contratSalaireEmbauche,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -2297,41 +1432,39 @@ export function useCerfaContrat() {
     [cerfa?.id, contratAutreAvantageEnNature, dossier?._id, setContratAutreAvantageEnNature, setPartContratCompletion]
   );
 
-  const onSubmittedContratRemunerationMajoration = useCallback(
-    async (path, data) => {
+  const onSubmittedContratRemunerationsAnnuellesTaux = useCallback(
+    async (path, data, part) => {
       try {
-        if (path === "contrat.remunerationMajoration") {
-          const newV = {
-            contrat: {
-              remunerationMajoration: {
-                ...contratRemunerationMajoration,
-                value: data.remunerationMajoration,
-                valueDb: convertOptionToValue({ ...contratRemunerationMajoration, value: data.remunerationMajoration }),
-              },
+        if (path === `contrat.remunerationsAnnuelles.${part}.taux`) {
+          let newRemunerationsAnnuellesTauxPart = { ...contratRemunerationsAnnuelles[part].taux };
+          newRemunerationsAnnuellesTauxPart.value = parseInt(data);
+          let newRemunerationsAnnuellesSalaireBrutPart = { ...contratRemunerationsAnnuelles[part].salaireBrut };
+          newRemunerationsAnnuellesSalaireBrutPart.value =
+            (contratSmic?.selectedSmic * newRemunerationsAnnuellesTauxPart.value) / 100;
+
+          const newRemunerationsAnnuellesFormValue = {
+            ...contratRemunerationsAnnuelles,
+            [part]: {
+              ...contratRemunerationsAnnuelles[part],
+              taux: newRemunerationsAnnuellesTauxPart,
+              salaireBrut: newRemunerationsAnnuellesSalaireBrutPart,
             },
           };
-          if (contratRemunerationMajoration.value !== newV.contrat.remunerationMajoration.value) {
-            setContratRemunerationMajoration(newV.contrat.remunerationMajoration);
 
-            let dataToSave = {
-              contrat: {
-                remunerationMajoration: convertOptionToValue(newV.contrat.remunerationMajoration),
-              },
-            };
-            if (data.remunerationsAnnuelles && data.remunerationsAnnuellesDbValue && data.salaireEmbauche) {
-              setRemunerations(data);
-              dataToSave = {
-                contrat: {
-                  ...dataToSave.contrat,
-                  remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
-                  salaireEmbauche: data.salaireEmbauche.toFixed(2),
-                },
-              };
-            }
+          const { salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerationsDbValue(
+            newRemunerationsAnnuellesFormValue
+          );
 
-            const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
-            setPartContratCompletion(cerfaContratCompletion(res));
-          }
+          setContratRemunerationsAnnuelles(newRemunerationsAnnuellesFormValue);
+          setContratSalaireEmbauche({ ...contratSalaireEmbauche, value: salaireEmbauche });
+
+          let dataToSave = {
+            contrat: {
+              remunerationsAnnuelles: remunerationsAnnuellesDbValue,
+              salaireEmbauche: salaireEmbauche.toFixed(2),
+            },
+          };
+          await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
         }
       } catch (e) {
         console.error(e);
@@ -2339,194 +1472,151 @@ export function useCerfaContrat() {
     },
     [
       cerfa?.id,
-      contratRemunerationMajoration,
+      contratRemunerationsAnnuelles,
+      contratSalaireEmbauche,
+      contratSmic?.selectedSmic,
       dossier?._id,
-      setContratRemunerationMajoration,
-      setPartContratCompletion,
-      setRemunerations,
+      setContratRemunerationsAnnuelles,
+      setContratSalaireEmbauche,
     ]
   );
 
-  const setAll = async (res) => {
-    setContratModeContractuel(convertValueToOption(res.contrat.modeContractuel));
-    setContratTypeContratApp(convertValueToMultipleSelectOption(res.contrat.typeContratApp));
-    setContratNumeroContratPrecedent(res.contrat.numeroContratPrecedent);
-    setNumeroContratPrecedentDetails(res.contrat.numeroContratPrecedent.value);
+  const setAll = useCallback(
+    (res) => {
+      setContratModeContractuel(convertValueToOption(res.contrat.modeContractuel));
+      setContratTypeContratApp(convertValueToMultipleSelectOption(res.contrat.typeContratApp));
+      setContratNumeroContratPrecedent(res.contrat.numeroContratPrecedent);
+      setNumeroContratPrecedentDetails(res.contrat.numeroContratPrecedent.value);
 
-    setContratNoContrat(res.contrat.noContrat);
-    setContratNoAvenant(res.contrat.noAvenant);
-    setContratDateDebutContrat(convertValueToDate(res.contrat.dateDebutContrat));
-    seContratDureeContrat(res.contrat.dureeContrat);
-    setContratDateEffetAvenant(convertValueToDate(res.contrat.dateEffetAvenant));
-    setContratDateConclusion(convertValueToDate(res.contrat.dateConclusion));
-    setContratDateFinContrat(convertValueToDate(res.contrat.dateFinContrat));
-    setContratDateRupture(convertValueToDate(res.contrat.dateRupture));
-    setContratLieuSignatureContrat(res.contrat.lieuSignatureContrat);
+      setContratNoContrat(res.contrat.noContrat);
+      setContratNoAvenant(res.contrat.noAvenant);
+      setContratDateDebutContrat(convertValueToDate(res.contrat.dateDebutContrat));
+      seContratDureeContrat(res.contrat.dureeContrat);
+      setContratDateEffetAvenant(convertValueToDate(res.contrat.dateEffetAvenant));
+      setContratDateConclusion(convertValueToDate(res.contrat.dateConclusion));
+      setContratDateFinContrat(convertValueToDate(res.contrat.dateFinContrat));
+      setContratDateRupture(convertValueToDate(res.contrat.dateRupture));
 
-    const typeDerog = getTypeDerogation(convertValueToOption(res.contrat.typeDerogation), {
-      dateNaissance: convertValueToDate(res.apprenti.dateNaissance).value,
-      age: res.apprenti.age.value,
-      contratDateDebutContratString: convertValueToDate(res.contrat.dateDebutContrat).value,
-    });
-    setContratTypeDerogation(typeDerog);
+      const typeDerog = getTypeDerogation(convertValueToOption(res.contrat.typeDerogation), {
+        dateNaissance: convertValueToDate(res.apprenti.dateNaissance).value,
+        age: res.apprenti.age.value,
+        contratDateDebutContratString: convertValueToDate(res.contrat.dateDebutContrat).value,
+      });
+      setContratTypeDerogation(typeDerog);
 
-    setContratDureeTravailHebdoHeures(res.contrat.dureeTravailHebdoHeures);
-    setContratDureeTravailHebdoMinutes(res.contrat.dureeTravailHebdoMinutes);
-    setContratTravailRisque(convertValueToOption(res.contrat.travailRisque));
-    setContratSalaireEmbauche(res.contrat.salaireEmbauche);
-    setContratCaisseRetraiteComplementaire(res.contrat.caisseRetraiteComplementaire);
-    setContratAvantageNature(convertValueToOption(res.contrat.avantageNature));
-    setContratAvantageNourriture(res.contrat.avantageNourriture);
-    setContratAvantageLogement(res.contrat.avantageLogement);
-    setContratAutreAvantageEnNature(convertValueToOption(res.contrat.autreAvantageEnNature));
+      setContratDureeTravailHebdoHeures(res.contrat.dureeTravailHebdoHeures);
+      setContratDureeTravailHebdoMinutes(res.contrat.dureeTravailHebdoMinutes);
+      setContratTravailRisque(convertValueToOption(res.contrat.travailRisque));
+      setContratCaisseRetraiteComplementaire(res.contrat.caisseRetraiteComplementaire);
+      setContratAvantageNature(convertValueToOption(res.contrat.avantageNature));
+      setContratAvantageNourriture(res.contrat.avantageNourriture);
+      setContratAvantageLogement(res.contrat.avantageLogement);
+      setContratAutreAvantageEnNature(convertValueToOption(res.contrat.autreAvantageEnNature));
 
-    setContratRemunerationMajoration(convertValueToOption(res.contrat.remunerationMajoration));
+      setContratSalaireEmbauche(res.contrat.salaireEmbauche);
+      setContratSmic(res.contrat.smic.value);
 
-    for (let index = 0; index < res.contrat.remunerationsAnnuelles.length; index++) {
-      const remunerationsAnnuelles = res.contrat.remunerationsAnnuelles[index];
+      const emptyLineObj = {
+        dateDebut: { ...contratAtoms.defaultDateDebut },
+        dateFin: { ...contratAtoms.defaultDateFin },
+        taux: { ...contratAtoms.defaultTaux },
+        tauxMinimal: { ...contratAtoms.defaultTauxMinimal },
+        typeSalaire: { ...contratAtoms.defaultSalaireBrut },
+        salaireBrut: { ...contratAtoms.defaultTypeSalaire },
+      };
 
-      switch (remunerationsAnnuelles.ordre.value) {
-        case "1.1":
-          setContratRemunerationsAnnuelles11DateDebut({
-            ...convertValueToDate(remunerationsAnnuelles.dateDebut),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles11DateFin({
-            ...convertValueToDate(remunerationsAnnuelles.dateFin),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles11Taux({ ...remunerationsAnnuelles.taux, locked: true });
-          setContratRemunerationsAnnuelles11TypeSalaire({
-            ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles11SalaireBrut({ ...remunerationsAnnuelles.salaireBrut, locked: true });
-          break;
-        case "1.2":
-          setContratRemunerationsAnnuelles12DateDebut({
-            ...convertValueToDate(remunerationsAnnuelles.dateDebut),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles12DateFin({
-            ...convertValueToDate(remunerationsAnnuelles.dateFin),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles12Taux({ ...remunerationsAnnuelles.taux, locked: true });
-          setContratRemunerationsAnnuelles12TypeSalaire({
-            ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles12SalaireBrut({ ...remunerationsAnnuelles.salaireBrut, locked: true });
-          break;
+      let remunerationsAnnuellesFormValue = {
+        11: { ...emptyLineObj },
+        12: { ...emptyLineObj },
+        21: { ...emptyLineObj },
+        22: { ...emptyLineObj },
+        31: { ...emptyLineObj },
+        32: { ...emptyLineObj },
+        41: { ...emptyLineObj },
+        42: { ...emptyLineObj },
+      };
+      const shouldBeLock = !res.draft;
+      for (let index = 0; index < res.contrat.remunerationsAnnuelles.length; index++) {
+        const remunerationsAnnuelles = res.contrat.remunerationsAnnuelles[index];
 
-        case "2.1":
-          setContratRemunerationsAnnuelles21DateDebut({
-            ...convertValueToDate(remunerationsAnnuelles.dateDebut),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles21DateFin({
-            ...convertValueToDate(remunerationsAnnuelles.dateFin),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles21Taux({ ...remunerationsAnnuelles.taux, locked: true });
-          setContratRemunerationsAnnuelles21TypeSalaire({
-            ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles21SalaireBrut({ ...remunerationsAnnuelles.salaireBrut, locked: true });
-          break;
-        case "2.2":
-          setContratRemunerationsAnnuelles22DateDebut({
-            ...convertValueToDate(remunerationsAnnuelles.dateDebut),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles22DateFin({
-            ...convertValueToDate(remunerationsAnnuelles.dateFin),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles22Taux({ ...remunerationsAnnuelles.taux, locked: true });
-          setContratRemunerationsAnnuelles22TypeSalaire({
-            ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles22SalaireBrut({ ...remunerationsAnnuelles.salaireBrut, locked: true });
-          break;
+        const dateDebut = {
+          ...convertValueToDate(remunerationsAnnuelles.dateDebut),
+          locked: true,
+        };
+        const dateFin = {
+          ...convertValueToDate(remunerationsAnnuelles.dateFin),
+          locked: true,
+        };
+        const taux = {
+          ...remunerationsAnnuelles.taux,
+          locked: shouldBeLock,
+          mask: contratAtoms.defaultTaux.mask,
+          maskBlocks: contratAtoms.defaultTaux.maskBlocks,
+          requiredMessage: contratAtoms.defaultTaux.requiredMessage,
+        };
+        const tauxMinimal = { ...remunerationsAnnuelles.tauxMinimal, locked: shouldBeLock };
+        const typeSalaire = {
+          ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
+          locked: true,
+        };
+        const salaireBrut = { ...remunerationsAnnuelles.salaireBrut, locked: true };
 
-        case "3.1":
-          setContratRemunerationsAnnuelles31DateDebut({
-            ...convertValueToDate(remunerationsAnnuelles.dateDebut),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles31DateFin({
-            ...convertValueToDate(remunerationsAnnuelles.dateFin),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles31Taux({ ...remunerationsAnnuelles.taux, locked: true });
-          setContratRemunerationsAnnuelles31TypeSalaire({
-            ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles31SalaireBrut({ ...remunerationsAnnuelles.salaireBrut, locked: true });
-          break;
-        case "3.2":
-          setContratRemunerationsAnnuelles32DateDebut({
-            ...convertValueToDate(remunerationsAnnuelles.dateDebut),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles32DateFin({
-            ...convertValueToDate(remunerationsAnnuelles.dateFin),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles32Taux({ ...remunerationsAnnuelles.taux, locked: true });
-          setContratRemunerationsAnnuelles32TypeSalaire({
-            ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles32SalaireBrut({ ...remunerationsAnnuelles.salaireBrut, locked: true });
-          break;
+        let part = remunerationsAnnuelles.ordre.value.replace(".", "");
 
-        case "4.1":
-          setContratRemunerationsAnnuelles41DateDebut({
-            ...convertValueToDate(remunerationsAnnuelles.dateDebut),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles41DateFin({
-            ...convertValueToDate(remunerationsAnnuelles.dateFin),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles41Taux({ ...remunerationsAnnuelles.taux, locked: true });
-          setContratRemunerationsAnnuelles41TypeSalaire({
-            ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles41SalaireBrut({ ...remunerationsAnnuelles.salaireBrut, locked: true });
-          break;
-        case "4.2":
-          setContratRemunerationsAnnuelles42DateDebut({
-            ...convertValueToDate(remunerationsAnnuelles.dateDebut),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles42DateFin({
-            ...convertValueToDate(remunerationsAnnuelles.dateFin),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles42Taux({ ...remunerationsAnnuelles.taux, locked: true });
-          setContratRemunerationsAnnuelles42TypeSalaire({
-            ...convertValueToOption(remunerationsAnnuelles.typeSalaire),
-            locked: true,
-          });
-          setContratRemunerationsAnnuelles42SalaireBrut({ ...remunerationsAnnuelles.salaireBrut, locked: true });
-          break;
-
-        default:
-          break;
+        if (part) {
+          remunerationsAnnuellesFormValue[part] = {
+            dateDebut: { ...dateDebut },
+            dateFin: { ...dateFin },
+            taux: { ...taux },
+            tauxMinimal: { ...tauxMinimal },
+            typeSalaire: { ...typeSalaire },
+            salaireBrut: { ...salaireBrut },
+          };
+        }
       }
-    }
 
-    setPartContratCompletion(cerfaContratCompletion(res));
-  };
+      setContratRemunerationsAnnuelles(remunerationsAnnuellesFormValue);
+
+      setPartContratCompletion(cerfaContratCompletion(res));
+    },
+    [
+      seContratDureeContrat,
+      setContratAutreAvantageEnNature,
+      setContratAvantageLogement,
+      setContratAvantageNature,
+      setContratAvantageNourriture,
+      setContratCaisseRetraiteComplementaire,
+      setContratDateConclusion,
+      setContratDateDebutContrat,
+      setContratDateEffetAvenant,
+      setContratDateFinContrat,
+      setContratDateRupture,
+      setContratDureeTravailHebdoHeures,
+      setContratDureeTravailHebdoMinutes,
+      setContratModeContractuel,
+      setContratNoAvenant,
+      setContratNoContrat,
+      setContratNumeroContratPrecedent,
+      setContratRemunerationsAnnuelles,
+      setContratSalaireEmbauche,
+      setContratSmic,
+      setContratTravailRisque,
+      setContratTypeContratApp,
+      setContratTypeDerogation,
+      setNumeroContratPrecedentDetails,
+      setPartContratCompletion,
+    ]
+  );
+
+  useEffect(() => {
+    if (cerfa && isLoading) {
+      setAll(cerfa);
+      setIsLoading(false);
+    }
+  }, [cerfa, isLoading, setAll, setIsLoading]);
 
   return {
+    isLoading,
     completion: partContratCompletion,
     get: {
       contrat: {
@@ -2545,76 +1635,18 @@ export function useCerfaContrat() {
         dateConclusion: contratDateConclusion,
         dateFinContrat: contratDateFinContrat,
         dateRupture: contratDateRupture,
-        lieuSignatureContrat: contratLieuSignatureContrat,
         typeDerogation: contratTypeDerogation,
         dureeTravailHebdoHeures: contratDureeTravailHebdoHeures,
         dureeTravailHebdoMinutes: contratDureeTravailHebdoMinutes,
         travailRisque: contratTravailRisque,
-        salaireEmbauche: contratSalaireEmbauche,
         caisseRetraiteComplementaire: contratCaisseRetraiteComplementaire,
         avantageNature: contratAvantageNature,
         avantageNourriture: contratAvantageNourriture,
         avantageLogement: contratAvantageLogement,
         autreAvantageEnNature: contratAutreAvantageEnNature,
-        remunerationMajoration: contratRemunerationMajoration,
-        remunerationsAnnuelles: [
-          {
-            dateDebut: contratRemunerationsAnnuelles11DateDebut,
-            dateFin: contratRemunerationsAnnuelles11DateFin,
-            taux: contratRemunerationsAnnuelles11Taux,
-            typeSalaire: contratRemunerationsAnnuelles11TypeSalaire,
-            salaireBrut: contratRemunerationsAnnuelles11SalaireBrut,
-          },
-          {
-            dateDebut: contratRemunerationsAnnuelles12DateDebut,
-            dateFin: contratRemunerationsAnnuelles12DateFin,
-            taux: contratRemunerationsAnnuelles12Taux,
-            typeSalaire: contratRemunerationsAnnuelles12TypeSalaire,
-            salaireBrut: contratRemunerationsAnnuelles12SalaireBrut,
-          },
-          {
-            dateDebut: contratRemunerationsAnnuelles21DateDebut,
-            dateFin: contratRemunerationsAnnuelles21DateFin,
-            taux: contratRemunerationsAnnuelles21Taux,
-            typeSalaire: contratRemunerationsAnnuelles21TypeSalaire,
-            salaireBrut: contratRemunerationsAnnuelles21SalaireBrut,
-          },
-          {
-            dateDebut: contratRemunerationsAnnuelles22DateDebut,
-            dateFin: contratRemunerationsAnnuelles22DateFin,
-            taux: contratRemunerationsAnnuelles22Taux,
-            typeSalaire: contratRemunerationsAnnuelles22TypeSalaire,
-            salaireBrut: contratRemunerationsAnnuelles22SalaireBrut,
-          },
-          {
-            dateDebut: contratRemunerationsAnnuelles31DateDebut,
-            dateFin: contratRemunerationsAnnuelles31DateFin,
-            taux: contratRemunerationsAnnuelles31Taux,
-            typeSalaire: contratRemunerationsAnnuelles31TypeSalaire,
-            salaireBrut: contratRemunerationsAnnuelles31SalaireBrut,
-          },
-          {
-            dateDebut: contratRemunerationsAnnuelles32DateDebut,
-            dateFin: contratRemunerationsAnnuelles32DateFin,
-            taux: contratRemunerationsAnnuelles32Taux,
-            typeSalaire: contratRemunerationsAnnuelles32TypeSalaire,
-            salaireBrut: contratRemunerationsAnnuelles32SalaireBrut,
-          },
-          {
-            dateDebut: contratRemunerationsAnnuelles41DateDebut,
-            dateFin: contratRemunerationsAnnuelles41DateFin,
-            taux: contratRemunerationsAnnuelles41Taux,
-            typeSalaire: contratRemunerationsAnnuelles41TypeSalaire,
-            salaireBrut: contratRemunerationsAnnuelles41SalaireBrut,
-          },
-          {
-            dateDebut: contratRemunerationsAnnuelles42DateDebut,
-            dateFin: contratRemunerationsAnnuelles42DateFin,
-            taux: contratRemunerationsAnnuelles42Taux,
-            typeSalaire: contratRemunerationsAnnuelles42TypeSalaire,
-            salaireBrut: contratRemunerationsAnnuelles42SalaireBrut,
-          },
-        ],
+        salaireEmbauche: contratSalaireEmbauche,
+        smic: contratSmic,
+        remunerationsAnnuelles: contratRemunerationsAnnuelles,
       },
     },
     setAll,
@@ -2630,7 +1662,6 @@ export function useCerfaContrat() {
         dateConclusion: onSubmittedContratDateConclusion,
         dateFinContrat: onSubmittedContratDateFinContrat,
         dateRupture: onSubmittedContratDateRupture,
-        lieuSignatureContrat: onSubmittedContratLieuSignatureContrat,
         typeDerogation: onSubmittedContratTypeDerogation,
         dureeTravailHebdoHeures: onSubmittedContratDureeTravailHebdoHeures,
         contratDureeTravailHebdoMinutes: onSubmittedContratDureeTravailHebdoMinutes,
@@ -2641,7 +1672,7 @@ export function useCerfaContrat() {
         avantageNourriture: onSubmittedContratAvantageNourriture,
         avantageLogement: onSubmittedContratAvantageLogement,
         autreAvantageEnNature: onSubmittedContratAutreAvantageEnNature,
-        remunerationMajoration: onSubmittedContratRemunerationMajoration,
+        remunerationTaux: onSubmittedContratRemunerationsAnnuellesTaux,
       },
     },
   };

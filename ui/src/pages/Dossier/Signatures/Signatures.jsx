@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Box, Heading, Center, Button, Spinner, Text } from "@chakra-ui/react";
-import { useRecoilValueLoadable } from "recoil";
+import { Box, Heading, Center, Button, Spinner, Text, HStack } from "@chakra-ui/react";
+import { useRecoilValueLoadable, useSetRecoilState } from "recoil";
 
 import useAuth from "../../../common/hooks/useAuth";
 import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
@@ -9,6 +9,12 @@ import { _post } from "../../../common/httpClient";
 import { PdfViewer } from "../../../common/components/PdfViewer";
 import Tooltip from "../../../common/components/Tooltip";
 import { ExternalLinkLine } from "../../../theme/components/icons";
+
+import { useSignatures } from "../../../common/hooks/useDossier/useSignatures";
+import { signaturesPdfLoadedAtom } from "../../../common/hooks/useDossier/signaturesAtoms";
+import InputCerfa from "../Cerfa/components/Input";
+
+import { documentsCompletionAtom } from "../../../common/hooks/useDossier/documentsAtoms";
 
 import { cerfaPartFormationCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
 import { cerfaPartEmployeurCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
@@ -20,6 +26,7 @@ const ContratPdf = ({ dossierId }) => {
   let [auth] = useAuth();
   const [pdfBase64, setPdfBase64] = useState(null);
   const [pdfIsLoading, setPdfIsLoading] = useState(true);
+  const setPdfLoaded = useSetRecoilState(signaturesPdfLoadedAtom);
   const { isLoading, cerfa } = useCerfa();
 
   useEffect(() => {
@@ -37,6 +44,7 @@ const ContratPdf = ({ dossierId }) => {
       }
     };
     run();
+    return () => {};
   }, [auth, cerfa, dossierId]);
 
   const onSignClicked = async () => {
@@ -49,7 +57,7 @@ const ContratPdf = ({ dossierId }) => {
   };
 
   return (
-    <Box mt={8}>
+    <Box mt={8} minH="30vh">
       <Heading as="h3" fontSize="1.4rem">
         Votre contrat généré:
       </Heading>
@@ -59,8 +67,10 @@ const ContratPdf = ({ dossierId }) => {
           <PdfViewer
             url={`/api/v1/cerfa/pdf/${cerfa.id}/?workspaceId=${auth.workspaceId}&dossierId=${dossierId}`}
             pdfBase64={pdfBase64}
+            showDownload={false}
             documentLoaded={() => {
               setPdfIsLoading(false);
+              setPdfLoaded(true);
             }}
           />
         )}
@@ -69,7 +79,7 @@ const ContratPdf = ({ dossierId }) => {
         <Box mt={8} mb={12}>
           <Center>
             <Button
-              size="lg"
+              size="md"
               variant="primary"
               bg="greenmedium.500"
               onClick={onSignClicked}
@@ -89,32 +99,82 @@ const ContratPdf = ({ dossierId }) => {
 };
 
 export default ({ dossierId }) => {
+  useCerfa();
+  const {
+    sca: signaturesCompletion,
+    contratLieuSignatureContrat,
+    onSubmittedContratLieuSignatureContrat,
+  } = useSignatures();
+
+  const documentsCompletion = useRecoilValueLoadable(documentsCompletionAtom);
+
   const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
   const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
   const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
   const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
   const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
-
+  const [value, setValue] = useState(contratLieuSignatureContrat?.value);
   const cerfaComplete =
     employeurCompletionAtom?.contents === 100 &&
     apprentiCompletionAtom?.contents === 100 &&
     maitresCompletionAtom?.contents === 100 &&
     contratCompletionAtom?.contents === 100 &&
     formationCompletion?.contents === 100;
+  const documentsComplete = documentsCompletion?.contents === 100;
+  const signatureComplete = signaturesCompletion === 100;
 
   if (!cerfaComplete) {
     return (
-      <Box mt={8}>
-        <Heading as="h3" fontSize="1.4rem">
-          Votre contrat généré:
-        </Heading>
-        <Center mt={5}>
+      <Box mt={12} pt={2} minH="25vh">
+        <Center>
+          <Tooltip variant="alert">
+            <Text>Le Cerfa doit être complété à 100% avant de commencer la procédure de finalisation du dossier.</Text>
+          </Tooltip>
+        </Center>
+      </Box>
+    );
+  }
+
+  if (!documentsComplete) {
+    return (
+      <Box mt={12} pt={2} minH="25vh">
+        <Center>
           <Tooltip variant="alert">
             <Text>
-              Le Cerfa doit être complété à 100% avant de commencer la procédure de télécharger le dossier finalisé.
+              Les pièces justificatives doivnt être complétées à 100% avant de commencer la procédure de finalisation du
+              dossier.
             </Text>
           </Tooltip>
         </Center>
+      </Box>
+    );
+  }
+
+  if (!signatureComplete) {
+    return (
+      <Box mt={8} mb={16} minH="25vh">
+        <Heading as="h3" fontSize="1.4rem">
+          Merci de préciser le lieu de signature du contrat:
+        </Heading>
+        <HStack spacing={8} alignItems="end">
+          <InputCerfa
+            path="contrat.lieuSignatureContrat"
+            field={contratLieuSignatureContrat}
+            type="text"
+            mt="2"
+            onSubmittedField={(path, data) => setValue(data)}
+            w="40%"
+          />
+          <Button
+            size="md"
+            onClick={() =>
+              value !== "" ? onSubmittedContratLieuSignatureContrat("contrat.lieuSignatureContrat", value) : false
+            }
+            variant="primary"
+          >
+            Enregistrer
+          </Button>
+        </HStack>
       </Box>
     );
   }

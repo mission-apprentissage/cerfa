@@ -107,10 +107,10 @@ const ForceAcceptCGU = ({ children }) => {
             )}
             {auth.cgu && (
               <Text fontSize="1.1rem" fontWeight="bold">
-                Nos conditions générale d'utilisation ont changées depuis votre dernières visite. ({auth.cgu} ->{" "}
+                Nos conditions générales d'utilisation ont changé depuis votre dernières visite. ({auth.cgu} ->{" "}
                 {cguVersion()}) <br />
                 <br />
-                Merci de lire attentivement les conditions générale d'utilisation avant de les accepter.
+                Merci de lire attentivement les conditions générales d'utilisation avant de les accepter.
               </Text>
             )}
           </Box>
@@ -181,28 +181,38 @@ export default () => {
                   <Route exact path="/accessibilite" component={Accessibilite} />
 
                   {/* PRIVATE PAGES */}
+                  <Route
+                    path={[
+                      "/admin",
+                      "/mon-compte",
+                      "/mon-espace",
+                      "/partages-avec-moi",
+                      "/partages-avec-moi/dossiers/:id/:step",
+                      "/partages-avec-moi/espaces/:workspaceId",
+                    ]}
+                  >
+                    <ForceCompleteProfile>
+                      <PrivateRoute path="/mon-compte" component={ProfilePage} />
 
-                  <ForceCompleteProfile>
-                    <PrivateRoute path="/mon-compte" component={ProfilePage} />
+                      {/* Mon espaces pages */}
+                      <PrivateRoute path="/mon-espace" component={WorkspacePage} />
+                      {/*  Espace partagé  pages */}
+                      <PrivateRoute exact path="/partages-avec-moi" component={SharedPage} />
+                      <PrivateRoute exact path="/partages-avec-moi/dossiers/:id/:step" component={DossierPage} />
+                      <PrivateRoute path="/partages-avec-moi/espaces/:workspaceId" component={WorkspacePage} />
 
-                    {/* Mon espaces pages */}
-                    <PrivateRoute path="/mon-espace" component={WorkspacePage} />
-                    {/*  Espace partagé  pages */}
-                    <PrivateRoute exact path="/partages-avec-moi" component={SharedPage} />
-                    <PrivateRoute exact path="/partages-avec-moi/dossiers/:id/:step" component={DossierPage} />
-                    <PrivateRoute path="/partages-avec-moi/espaces/:workspaceId" component={WorkspacePage} />
-
-                    {/* PRIVATE ADMIN PAGES */}
-                    {auth && hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
-                      <PrivateRoute exact path="/admin/users" component={Users} />
-                    )}
-                    {auth && hasPageAccessTo(auth, "admin/page_gestion_roles") && (
-                      <PrivateRoute exact path="/admin/roles" component={Roles} />
-                    )}
-                    {auth && hasPageAccessTo(auth, "admin/page_message_maintenance") && (
-                      <PrivateRoute exact path="/admin/maintenance" component={Maintenance} />
-                    )}
-                  </ForceCompleteProfile>
+                      {/* PRIVATE ADMIN PAGES */}
+                      {auth && hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
+                        <PrivateRoute exact path="/admin/users" component={Users} />
+                      )}
+                      {auth && hasPageAccessTo(auth, "admin/page_gestion_roles") && (
+                        <PrivateRoute exact path="/admin/roles" component={Roles} />
+                      )}
+                      {auth && hasPageAccessTo(auth, "admin/page_message_maintenance") && (
+                        <PrivateRoute exact path="/admin/maintenance" component={Maintenance} />
+                      )}
+                    </ForceCompleteProfile>
+                  </Route>
 
                   {/* Fallback */}
                   <Route component={NotFoundPage} />

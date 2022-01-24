@@ -2,7 +2,7 @@
  * Multiple states on purpose to avoid full re-rendering at each modification
  */
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   fieldCompletionPercentage,
@@ -12,8 +12,7 @@ import {
   convertMultipleSelectOptionToValue,
   convertOptionToValue,
   convertValueToOption,
-  isAgeInValidLowerAtDate,
-  caclAgeFromStringDate,
+  caclAgeAtDate,
   normalizeInputNumberForDb,
   doAsyncCodePostalActions,
 } from "../../../utils/formUtils";
@@ -21,10 +20,11 @@ import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
 import * as apprentiAtoms from "./useCerfaApprentiAtoms";
-import { buildRemunerations } from "../parts/useCerfaContrat";
+import { buildRemunerations } from "../../../utils/form/remunerationsUtils";
 import { useCerfaContrat } from "../parts/useCerfaContrat";
+import { DateTime } from "luxon";
 
-const cerfaApprentiCompletion = (res) => {
+export const cerfaApprentiCompletion = (res) => {
   let fieldsToKeep = {
     apprentiNom: res.apprenti.nom,
     apprentiPrenom: res.apprenti.prenom,
@@ -51,7 +51,8 @@ const cerfaApprentiCompletion = (res) => {
     apprentiInscriptionSportifDeHautNiveau: res.apprenti.inscriptionSportifDeHautNiveau,
   };
   let countFields = 20;
-  const majeur = res.apprenti.age.value >= 18;
+  const ageApprenti = !res.apprenti.age.value || res.apprenti.age.value === "" ? 18 : res.apprenti.age.value;
+  const majeur = ageApprenti >= 18;
   const nonEmancipe = res.apprenti.apprentiMineurNonEmancipe.value;
   const apprentiResponsableLegalMemeAdresse = res.apprenti.responsableLegal.memeAdresse.value;
 
@@ -92,9 +93,11 @@ export const CerfaApprentiController = async (dossier) => {
       dateNaissance: {
         doAsyncActions: async (value, data) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
-          const { age, dateNaissance } = caclAgeFromStringDate(value);
+          const dateNaissance = DateTime.fromISO(value).setLocale("fr-FR");
+          const today = DateTime.now().setLocale("fr-FR");
+          let age = null;
 
-          if (age === 0) {
+          if (dateNaissance > today) {
             return {
               successed: false,
               data: null,
@@ -102,43 +105,51 @@ export const CerfaApprentiController = async (dossier) => {
             };
           }
 
-          if (age < 14) {
-            return {
-              successed: false,
-              data: null,
-              message: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
-            };
-          }
+          if (data.dateDebutContrat !== "") {
+            const cAge = caclAgeAtDate(value, data.dateDebutContrat);
+            age = cAge.age;
 
-          const isAgeApprentiInvalidAtStart = isAgeInValidLowerAtDate({
-            dateNaissance,
-            age,
-            dateString: data.dateDebutContrat,
-            limitAge: 15,
-            label: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
-          });
-          if (isAgeApprentiInvalidAtStart) return isAgeApprentiInvalidAtStart;
+            if (age < 14) {
+              return {
+                successed: false,
+                data: null,
+                message: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
+              };
+            }
 
-          if (data.dateDebutContrat !== "" && data.dateFinContrat !== "") {
-            const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue } = buildRemunerations({
-              apprentiDateNaissance: value,
-              apprentiAge: age,
-              dateDebutContrat: data.dateDebutContrat,
-              dateFinContrat: data.dateFinContrat,
-              remunerationMajoration: data.remunerationMajoration,
-            });
+            if (age < 15) {
+              return {
+                successed: false,
+                data: null,
+                message: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat",
+              };
+            }
 
-            return {
-              successed: true,
-              data: {
-                dateNaissance: value,
-                age,
-                remunerationsAnnuelles,
-                remunerationsAnnuellesDbValue,
-                salaireEmbauche,
-              },
-              message: null,
-            };
+            if (data.dateFinContrat !== "" && data.employeurAdresseDepartement !== "") {
+              const { remunerationsAnnuelles, salaireEmbauche, remunerationsAnnuellesDbValue, smicObj } =
+                buildRemunerations({
+                  apprentiDateNaissance: value,
+                  apprentiAge: age,
+                  dateDebutContrat: data.dateDebutContrat,
+                  dateFinContrat: data.dateFinContrat,
+                  remunerationsAnnuelles: data.remunerationsAnnuelles,
+                  employeurAdresseDepartement: data.employeurAdresseDepartement,
+                });
+
+              return {
+                successed: true,
+                data: {
+                  dateNaissance: value,
+                  age,
+                  remunerationsAnnuelles,
+                  remunerationsAnnuellesDbValue,
+                  smicObj,
+                  salaireEmbauche,
+                  dateDebutContrat: data.dateDebutContrat,
+                },
+                message: null,
+              };
+            }
           }
 
           return {
@@ -146,6 +157,7 @@ export const CerfaApprentiController = async (dossier) => {
             data: {
               dateNaissance: value,
               age,
+              dateDebutContrat: data.dateDebutContrat,
             },
             message: null,
           };
@@ -179,6 +191,7 @@ export function useCerfaApprenti() {
   const [partApprentiCompletion, setPartApprentiCompletion] = useRecoilState(
     apprentiAtoms.cerfaPartApprentiCompletionAtom
   );
+  const [isLoading, setIsLoading] = useRecoilState(apprentiAtoms.cerfaPartApprentiIsLoadingAtom);
 
   const [apprentiNom, setApprentiNom] = useRecoilState(apprentiAtoms.cerfaApprentiNomAtom);
   const [apprentiPrenom, setApprentiPrenom] = useRecoilState(apprentiAtoms.cerfaApprentiPrenomAtom);
@@ -263,7 +276,7 @@ export function useCerfaApprenti() {
   );
 
   const resetInDbResponsableLegalData = useCallback(
-    async (prevDataToSave, reset, skipKey) => {
+    async (prevDataToSave, reset, skipKey, majeur) => {
       let dataToSave = prevDataToSave;
       if (reset) {
         dataToSave = {
@@ -271,7 +284,11 @@ export function useCerfaApprenti() {
           apprenti: {
             ...dataToSave.apprenti,
             apprentiMineurNonEmancipe:
-              skipKey === "apprentiMineurNonEmancipe" ? dataToSave.apprenti.apprentiMineurNonEmancipe : null,
+              skipKey === "apprentiMineurNonEmancipe"
+                ? dataToSave.apprenti.apprentiMineurNonEmancipe
+                : majeur
+                ? false
+                : null,
             responsableLegal: {
               nom: null,
               prenom: null,
@@ -389,7 +406,7 @@ export function useCerfaApprenti() {
   );
 
   const onSubmittedApprentiDateNaissance = useCallback(
-    async (path, data) => {
+    async (path, data, forcedTriggered) => {
       try {
         if (path === "apprenti.dateNaissance") {
           const newV = {
@@ -404,16 +421,39 @@ export function useCerfaApprenti() {
               },
             },
           };
-          if (apprentiDateNaissance.value !== newV.apprenti.dateNaissance.value) {
-            setApprentiDateNaissance(newV.apprenti.dateNaissance);
-            setApprentiAge(newV.apprenti.age);
+          let shouldSaveInDb = false;
+          let dataToSave = null;
+          if (!forcedTriggered) {
+            if (apprentiDateNaissance.value !== newV.apprenti.dateNaissance.value) {
+              setApprentiDateNaissance(newV.apprenti.dateNaissance);
+              setApprentiAge(newV.apprenti.age);
 
-            let dataToSave = {
+              dataToSave = {
+                apprenti: {
+                  dateNaissance: convertDateToValue(newV.apprenti.dateNaissance),
+                  age: newV.apprenti.age.value,
+                },
+              };
+              shouldSaveInDb = true;
+
+              refreshTypeDerogation({
+                dateNaissance: data.dateNaissance,
+                age: newV.apprenti.age.value,
+                contratDateDebutContratString: data.dateDebutContrat,
+              });
+            }
+          } else {
+            dataToSave = {
               apprenti: {
                 dateNaissance: convertDateToValue(newV.apprenti.dateNaissance),
-                age: newV.apprenti.age.value,
+                age: apprentiAge.value,
               },
             };
+            setApprentiDateNaissance({ ...apprentiDateNaissance, triggerValidation: false });
+            shouldSaveInDb = true;
+          }
+
+          if (shouldSaveInDb) {
             if (data.remunerationsAnnuelles && data.remunerationsAnnuellesDbValue && data.salaireEmbauche) {
               setRemunerations(data);
               dataToSave = {
@@ -421,16 +461,20 @@ export function useCerfaApprenti() {
                 contrat: {
                   remunerationsAnnuelles: data.remunerationsAnnuellesDbValue,
                   salaireEmbauche: data.salaireEmbauche.toFixed(2),
+                  smic: data.smicObj,
                 },
               };
             }
 
-            dataToSave = await resetInDbResponsableLegalData(dataToSave, data.age >= 18);
+            dataToSave = await resetInDbResponsableLegalData(
+              dataToSave,
+              apprentiAge.value >= 18,
+              null,
+              apprentiAge.value >= 18
+            );
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
-
-            refreshTypeDerogation();
           }
         }
       } catch (e) {
@@ -741,7 +785,6 @@ export function useCerfaApprenti() {
               departementNaissance: {
                 ...apprentiDepartementNaissance,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -1498,6 +1541,7 @@ export function useCerfaApprenti() {
                 responsableLegal: {
                   adresse: {
                     codePostal: newV.apprenti.responsableLegal.adresse.codePostal.value,
+                    commune: newV.apprenti.responsableLegal.adresse.commune.value,
                   },
                 },
               },
@@ -1608,50 +1652,98 @@ export function useCerfaApprenti() {
     ]
   );
 
-  const setAll = async (res) => {
-    setApprentiNom(res.apprenti.nom);
-    setApprentiPrenom(res.apprenti.prenom);
-    setApprentiSexe(convertValueToOption(res.apprenti.sexe));
-    setApprentiNationalite(convertValueToOption(res.apprenti.nationalite));
-    setApprentiDateNaissance(convertValueToDate(res.apprenti.dateNaissance));
-    setApprentiAge(res.apprenti.age);
-    setApprentiDepartementNaissance(res.apprenti.departementNaissance);
-    setApprentiCommuneNaissance(res.apprenti.communeNaissance);
-    setApprentiNir(res.apprenti.nir);
-    setApprentiRegimeSocial(convertValueToOption(res.apprenti.regimeSocial));
-    setApprentiHandicap(convertValueToOption(res.apprenti.handicap));
-    setApprentiSituationAvantContrat(convertValueToOption(res.apprenti.situationAvantContrat));
+  const setAll = useCallback(
+    (res) => {
+      setApprentiNom(res.apprenti.nom);
+      setApprentiPrenom(res.apprenti.prenom);
+      setApprentiSexe(convertValueToOption(res.apprenti.sexe));
+      setApprentiNationalite(convertValueToOption(res.apprenti.nationalite));
+      setApprentiDateNaissance(convertValueToDate(res.apprenti.dateNaissance));
+      setApprentiAge(res.apprenti.age);
+      setApprentiDepartementNaissance(res.apprenti.departementNaissance);
+      setApprentiCommuneNaissance(res.apprenti.communeNaissance);
+      setApprentiNir(res.apprenti.nir);
+      setApprentiRegimeSocial(convertValueToOption(res.apprenti.regimeSocial));
+      setApprentiHandicap(convertValueToOption(res.apprenti.handicap));
+      setApprentiSituationAvantContrat(convertValueToOption(res.apprenti.situationAvantContrat));
 
-    setApprentiDiplome(convertValueToMultipleSelectOption(res.apprenti.diplome));
-    setApprentiDerniereClasse(convertValueToOption(res.apprenti.derniereClasse));
-    setApprentiDiplomePrepare(convertValueToMultipleSelectOption(res.apprenti.diplomePrepare));
+      setApprentiDiplome(convertValueToMultipleSelectOption(res.apprenti.diplome));
+      setApprentiDerniereClasse(convertValueToOption(res.apprenti.derniereClasse));
+      setApprentiDiplomePrepare(convertValueToMultipleSelectOption(res.apprenti.diplomePrepare));
 
-    setApprentiIntituleDiplomePrepare(res.apprenti.intituleDiplomePrepare);
-    setApprentiTelephone({ ...res.apprenti.telephone, value: res.apprenti.telephone.value.replace("+", "") });
-    setApprentiCourriel(res.apprenti.courriel);
-    setApprentiAdresseNumero(res.apprenti.adresse.numero);
-    setApprentiAdresseVoie(res.apprenti.adresse.voie);
-    setApprentiAdresseComplement(res.apprenti.adresse.complement);
-    setApprentiAdresseCodePostal(res.apprenti.adresse.codePostal);
-    setApprentiAdresseCommune(res.apprenti.adresse.commune);
-    setApprentiAdressePays(convertValueToOption(res.apprenti.adresse.pays));
-    setApprentiInscriptionSportifDeHautNiveau(convertValueToOption(res.apprenti.inscriptionSportifDeHautNiveau));
+      setApprentiIntituleDiplomePrepare(res.apprenti.intituleDiplomePrepare);
+      setApprentiTelephone({ ...res.apprenti.telephone, value: res.apprenti.telephone.value.replace("+", "") });
+      setApprentiCourriel(res.apprenti.courriel);
+      setApprentiAdresseNumero(res.apprenti.adresse.numero);
+      setApprentiAdresseVoie(res.apprenti.adresse.voie);
+      setApprentiAdresseComplement(res.apprenti.adresse.complement);
+      setApprentiAdresseCodePostal(res.apprenti.adresse.codePostal);
+      setApprentiAdresseCommune(res.apprenti.adresse.commune);
+      setApprentiAdressePays(convertValueToOption(res.apprenti.adresse.pays));
+      setApprentiInscriptionSportifDeHautNiveau(convertValueToOption(res.apprenti.inscriptionSportifDeHautNiveau));
 
-    setApprentiApprentiMineurNonEmancipe(convertValueToOption(res.apprenti.apprentiMineurNonEmancipe));
-    setApprentiResponsableLegalNom(res.apprenti.responsableLegal.nom);
-    setApprentiResponsableLegalPrenom(res.apprenti.responsableLegal.prenom);
-    setApprentiResponsableLegalMemeAdresse(convertValueToOption(res.apprenti.responsableLegal.memeAdresse));
-    setApprentiResponsableLegalAdresseNumero(res.apprenti.responsableLegal.adresse.numero);
-    setApprentiResponsableLegalAdresseVoie(res.apprenti.responsableLegal.adresse.voie);
-    setApprentiResponsableLegalAdresseComplement(res.apprenti.responsableLegal.adresse.complement);
-    setApprentiResponsableLegalAdresseCodePostal(res.apprenti.responsableLegal.adresse.codePostal);
-    setApprentiResponsableLegalAdresseCommune(res.apprenti.responsableLegal.adresse.commune);
-    setApprentiResponsableLegalAdressePays(convertValueToOption(res.apprenti.responsableLegal.adresse.pays));
+      setApprentiApprentiMineurNonEmancipe(convertValueToOption(res.apprenti.apprentiMineurNonEmancipe));
+      setApprentiResponsableLegalNom(res.apprenti.responsableLegal.nom);
+      setApprentiResponsableLegalPrenom(res.apprenti.responsableLegal.prenom);
+      setApprentiResponsableLegalMemeAdresse(convertValueToOption(res.apprenti.responsableLegal.memeAdresse));
+      setApprentiResponsableLegalAdresseNumero(res.apprenti.responsableLegal.adresse.numero);
+      setApprentiResponsableLegalAdresseVoie(res.apprenti.responsableLegal.adresse.voie);
+      setApprentiResponsableLegalAdresseComplement(res.apprenti.responsableLegal.adresse.complement);
+      setApprentiResponsableLegalAdresseCodePostal(res.apprenti.responsableLegal.adresse.codePostal);
+      setApprentiResponsableLegalAdresseCommune(res.apprenti.responsableLegal.adresse.commune);
+      setApprentiResponsableLegalAdressePays(convertValueToOption(res.apprenti.responsableLegal.adresse.pays));
 
-    setPartApprentiCompletion(cerfaApprentiCompletion(res));
-  };
+      setPartApprentiCompletion(cerfaApprentiCompletion(res));
+    },
+    [
+      setApprentiNom,
+      setApprentiPrenom,
+      setApprentiSexe,
+      setApprentiNationalite,
+      setApprentiDateNaissance,
+      setApprentiAge,
+      setApprentiDepartementNaissance,
+      setApprentiCommuneNaissance,
+      setApprentiNir,
+      setApprentiRegimeSocial,
+      setApprentiHandicap,
+      setApprentiSituationAvantContrat,
+      setApprentiDiplome,
+      setApprentiDerniereClasse,
+      setApprentiDiplomePrepare,
+      setApprentiIntituleDiplomePrepare,
+      setApprentiTelephone,
+      setApprentiCourriel,
+      setApprentiAdresseNumero,
+      setApprentiAdresseVoie,
+      setApprentiAdresseComplement,
+      setApprentiAdresseCodePostal,
+      setApprentiAdresseCommune,
+      setApprentiAdressePays,
+      setApprentiInscriptionSportifDeHautNiveau,
+      setApprentiApprentiMineurNonEmancipe,
+      setApprentiResponsableLegalNom,
+      setApprentiResponsableLegalPrenom,
+      setApprentiResponsableLegalMemeAdresse,
+      setApprentiResponsableLegalAdresseNumero,
+      setApprentiResponsableLegalAdresseVoie,
+      setApprentiResponsableLegalAdresseComplement,
+      setApprentiResponsableLegalAdresseCodePostal,
+      setApprentiResponsableLegalAdresseCommune,
+      setApprentiResponsableLegalAdressePays,
+      setPartApprentiCompletion,
+    ]
+  );
+
+  useEffect(() => {
+    if (cerfa && isLoading) {
+      setAll(cerfa);
+      setIsLoading(false);
+    }
+  }, [cerfa, isLoading, setAll, setIsLoading]);
 
   return {
+    isLoading,
     completion: partApprentiCompletion,
     get: {
       apprenti: {
@@ -1661,7 +1753,7 @@ export function useCerfaApprenti() {
         nationalite: apprentiNationalite,
         dateNaissance: apprentiDateNaissance,
         age: apprentiAge,
-        majeur: apprentiAge?.value >= 18,
+        majeur: !apprentiAge?.value ? true : apprentiAge?.value >= 18,
         departementNaissance: apprentiDepartementNaissance,
         communeNaissance: apprentiCommuneNaissance,
         nir: apprentiNir,

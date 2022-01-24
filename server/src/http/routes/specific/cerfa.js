@@ -1,33 +1,13 @@
 const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
-const {
-  cloneDeep,
-  mergeWith,
-  // set
-} = require("lodash");
+const { cloneDeep, mergeWith } = require("lodash");
 const merge = require("deepmerge");
 const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 const cerfaSchema = require("../../../common/model/schema/specific/dossier/cerfa/Cerfa");
 const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfaController");
-
-// const checkRequiredField = (cerfa) => {
-//   let result = {};
-//   const validationObj = new Cerfa(cerfa);
-//   const validatedModel = validationObj.validateSync();
-//   if (validatedModel) {
-//     const keys = Object.keys(validatedModel.errors);
-//     for (let i = 0; i < keys.length; i++) {
-//       const err = validatedModel.errors[keys[i]];
-//       if (err.kind === "required") {
-//         set(result, `${err.path}.isNotRequiredForm`, false);
-//       }
-//     }
-//   }
-//   return result;
-// };
 
 module.exports = (components) => {
   const router = express.Router();
@@ -37,7 +17,11 @@ module.exports = (components) => {
   const buildCerfaResult = (cerfa) => {
     function customizer(objValue, srcValue) {
       if (objValue !== undefined) {
-        return { ...objValue, value: srcValue || srcValue === false || srcValue === 0 ? srcValue : "" };
+        return {
+          ...objValue,
+          value:
+            srcValue || srcValue === false || srcValue === 0 ? srcValue : typeof objValue.type === "object" ? null : "",
+        };
       }
     }
 
@@ -63,9 +47,17 @@ module.exports = (components) => {
         },
       },
       apprenti: {
-        ...mergeWith(cloneDeep(cerfaSchema.apprenti), cerfa.apprenti, customizer),
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.apprenti), cerfa.apprenti, customizer),
+          cerfa.isLockedField.apprenti,
+          customizerLock
+        ),
         adresse: {
-          ...mergeWith(cloneDeep(cerfaSchema.apprenti.adresse), cerfa.apprenti.adresse, customizer),
+          ...mergeWith(
+            mergeWith(cloneDeep(cerfaSchema.apprenti.adresse), cerfa.apprenti.adresse, customizer),
+            cerfa.isLockedField.apprenti.adresse,
+            customizerLock
+          ),
         },
         responsableLegal: {
           ...mergeWith(
@@ -83,10 +75,18 @@ module.exports = (components) => {
         },
       },
       maitre1: {
-        ...mergeWith(cloneDeep(cerfaSchema.maitre1), cerfa.maitre1, customizer),
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.maitre1), cerfa.maitre1, customizer),
+          cerfa.isLockedField.maitre1,
+          customizerLock
+        ),
       },
       maitre2: {
-        ...mergeWith(cloneDeep(cerfaSchema.maitre2), cerfa.maitre2, customizer),
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.maitre2), cerfa.maitre2, customizer),
+          cerfa.isLockedField.maitre2,
+          customizerLock
+        ),
       },
       formation: {
         ...mergeWith(
@@ -126,6 +126,7 @@ module.exports = (components) => {
         },
       },
       id: cerfa._id.toString(),
+      draft: cerfa.draft,
     };
   };
 
@@ -189,6 +190,8 @@ module.exports = (components) => {
             label: Joi.string().allow(""),
             codePostal: Joi.string().allow(""),
             commune: Joi.string().allow(""),
+            departement: Joi.string().allow(""),
+            region: Joi.string().allow(""),
           }),
           nom: Joi.string(),
           prenom: Joi.string(),
@@ -197,7 +200,7 @@ module.exports = (components) => {
           caisseComplementaire: Joi.string().allow(""),
           regimeSpecifique: Joi.boolean(),
           attestationEligibilite: Joi.boolean().allow(null),
-          attestationPieces: Joi.boolean(),
+          attestationPieces: Joi.boolean().allow(null),
           privePublic: Joi.boolean(),
         }),
         apprenti: Joi.object({
@@ -206,7 +209,7 @@ module.exports = (components) => {
           sexe: Joi.string(),
           nationalite: Joi.number(),
           dateNaissance: Joi.date(),
-          age: Joi.number(),
+          age: Joi.number().allow(null),
           departementNaissance: Joi.string(),
           communeNaissance: Joi.string(),
           nir: Joi.string(),
@@ -281,7 +284,7 @@ module.exports = (components) => {
           lieuSignatureContrat: Joi.string(),
           typeDerogation: Joi.number().allow(null),
           dureeTravailHebdoHeures: Joi.number(),
-          dureeTravailHebdoMinutes: Joi.number(),
+          dureeTravailHebdoMinutes: Joi.number().allow(null),
           travailRisque: Joi.boolean(),
           salaireEmbauche: Joi.number(),
           caisseRetraiteComplementaire: Joi.string().allow(""),
@@ -290,10 +293,12 @@ module.exports = (components) => {
           avantageLogement: Joi.number().allow(null),
           autreAvantageEnNature: Joi.boolean().allow(null),
           remunerationMajoration: Joi.number(),
+          smic: Joi.object({}).unknown(),
           remunerationsAnnuelles: Joi.array().items({
             dateDebut: Joi.date(),
             dateFin: Joi.date(),
             taux: Joi.number(),
+            tauxMinimal: Joi.number(),
             salaireBrut: Joi.number(),
             typeSalaire: Joi.string(),
             ordre: Joi.string(),

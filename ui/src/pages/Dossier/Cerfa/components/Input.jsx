@@ -23,7 +23,7 @@ import {
 } from "@chakra-ui/react";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import PhoneInput from "react-phone-input-2";
-import { IMask, IMaskInput, IMaskMixin } from "react-imask";
+import { IMask, IMaskMixin } from "react-imask";
 import { useFormik } from "formik";
 // import debounce from "lodash.debounce";
 import range from "lodash.range";
@@ -76,106 +76,107 @@ const buildValidationSchema = (field, name, type, isRequiredInternal, countryCod
   });
 };
 
-const MaskedInput = React.memo(({ onChange, mask, value, maskblocks, max, forbiddenstartwith, ...props }) => {
+const MInput = IMaskMixin(({ inputRef, ...props }) => <ChackraInput {...props} ref={inputRef} />);
+
+const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, ...props }) => {
+  const [internalValue, setInternalValue] = useState(`${value}`);
+  const [focused, setFocused] = useState(null);
   const inputRef = useRef(null);
-  const [internalValue, setInternalValue] = useState(value);
+  const prevFieldValueRef = useRef("");
 
-  useEffect(() => {
-    if (value !== "") setInternalValue(value);
-  }, [value]);
-
-  const blocks = useMemo(() => {
-    return maskblocks.reduce((acc, item) => {
+  let blocks = useMemo(() => {
+    return maskblocks?.reduce((acc, item) => {
       if (item.mask === "MaskedRange")
         acc[item.name] = {
           mask: IMask.MaskedRange,
+          placeholderChar: item.placeholderChar,
           from: item.from,
           to: item.to,
+          maxLength: item.maxLength,
+          autofix: item.autofix,
+          lazy: item.lazy,
         };
       else if (item.mask === "MaskedEnum")
         acc[item.name] = {
           mask: IMask.MaskedEnum,
+          placeholderChar: item.placeholderChar,
           enum: item.enum,
+          maxLength: item.maxLength,
+        };
+      else if (item.mask === "Number")
+        acc[item.name] = {
+          mask: Number,
+          radix: ".", // fractional delimiter
+          mapToRadix: ["."], // symbols to process as radix
+          normalizeZeros: item.normalizeZeros,
+          scale: precision,
+          signed: item.signed,
+          min: min,
+          max: item.max,
+        };
+      else if (item.mask === "Pattern")
+        acc[item.name] = {
+          mask: new RegExp(item.pattern),
         };
       else
         acc[item.name] = {
           mask: item.mask,
+          placeholderChar: item.placeholderChar,
         };
       return acc;
     }, {});
-  }, [maskblocks]);
+  }, [maskblocks, min, precision]);
+
+  useEffect(() => {
+    if (focused !== true && prevFieldValueRef.current !== value) {
+      // console.log("Update Value");
+      prevFieldValueRef.current = value;
+      if (value !== "") setInternalValue(`${value}`);
+      else if (internalValue !== "") setInternalValue("");
+    }
+  }, [focused, internalValue, value]);
+
+  let onComplete = useCallback(
+    async (completValue, forced = false) => {
+      // console.log("onComplete");
+      // if (completValue !== value && (focused === false || forced === true)) {
+      if (completValue !== value) {
+        // console.log("onChange");
+        onChange({ persist: () => {}, target: { value: completValue } });
+      }
+    },
+    [onChange, value]
+  );
 
   return (
-    <ChackraInput
+    <MInput
       {...props}
-      as={IMaskInput}
-      ref={inputRef}
-      value={internalValue}
       mask={mask}
-      blocks={blocks}
+      unmask={true}
       lazy={false}
       placeholderChar="_"
-      unmask={true}
-      onAccept={(value, mask) => {
-        if (max === value.length || value === "") {
-          onChange({ persist: () => {}, target: { value } });
-        }
-        if (forbiddenstartwith && forbiddenstartwith.includes(value[0])) {
-          // setInternalValue(`0${value[0]}`);
-          setInternalValue(`0`);
-        }
-        if (forbiddenstartwith && forbiddenstartwith.includes(value[0] + value[1])) {
-          // setInternalValue(`0${value[0]}${value[1]}`);
-          setInternalValue(`09`);
-        }
+      // overwrite={true}
+      autofix={true}
+      blocks={blocks}
+      onAccept={(currentValue, mask) => {
+        // console.log("onAccept", currentValue);
+        setInternalValue(currentValue);
+      }}
+      onComplete={onComplete}
+      ref={inputRef}
+      value={internalValue}
+      onFocus={() => {
+        // console.log("Focus");
+        setFocused(true);
+      }}
+      onBlur={() => {
+        // console.log("Focus out");
+        setFocused(false);
+        onComplete(internalValue, true);
       }}
     />
   );
-});
-
-const MInput = IMaskMixin(({ inputRef, ...props }) => <ChackraInput {...props} ref={inputRef} />);
-
-// TODO DIRTY to merge with other mask input
-// const NafInput = ({ value, onChange, ...props }) => {
-//   const [internalValue, setInternalValue] = useState(value);
-//   const inputRef = useRef(null);
-
-//   useEffect(() => {
-//     if (value !== "") setInternalValue(value);
-//   }, [value]);
-
-//   let onComplete = useCallback(
-//     async (completValue) => {
-//       if (completValue !== value) {
-//         onChange({ persist: () => {}, target: { value: completValue } });
-//       }
-//     },
-//     [onChange, value]
-//   );
-
-//   return (
-//     <MInput
-//       {...props}
-//       mask="d/m/Y"
-//       unmask={true}
-//       lazy={false}
-//       placeholderChar="_"
-//       overwrite={true}
-//       autofix={true}
-//       blocks={{
-//         d: { mask: IMask.MaskedRange, placeholderChar: "j", from: 1, to: 31, maxLength: 2 },
-//         m: { mask: IMask.MaskedRange, placeholderChar: "m", from: 1, to: 12, maxLength: 2 },
-//         Y: { mask: IMask.MaskedRange, placeholderChar: "a", from: 1900, to: 2999, maxLength: 4 },
-//       }}
-//       onAccept={(currentValue, mask) => {
-//         setInternalValue(currentValue);
-//       }}
-//       onComplete={onComplete}
-//       ref={inputRef}
-//       value={internalValue}
-//     />
-//   );
-// };
+};
 
 const DateInput = ({ onChange, value, type, ...props }) => {
   const dateValue = useMemo(() => {
@@ -198,7 +199,7 @@ const DateInput = ({ onChange, value, type, ...props }) => {
     "Décembre",
   ];
 
-  const CustomDateInput = forwardRef(({ value, onChange, onFocus, onClick, ...props }, ref) => {
+  const CustomDateInput = forwardRef(({ value, onChange, onFocus, isDisabled, onClick, ...props }, ref) => {
     const [internalValue, setInternalValue] = useState(value);
 
     useEffect(() => {
@@ -213,15 +214,22 @@ const DateInput = ({ onChange, value, type, ...props }) => {
       },
       [onChange, value]
     );
-
+    const actions = !isDisabled
+      ? { onClick: onClick, onFocus: onFocus }
+      : {
+          onKeyDown: (e) => {
+            e.preventDefault();
+          },
+        };
     return (
       <MInput
         {...props}
+        isDisabled={isDisabled}
         mask="d/m/Y"
         unmask={true}
         lazy={false}
         placeholderChar="_"
-        overwrite={true}
+        // overwrite={true}
         autofix={true}
         blocks={{
           d: { mask: IMask.MaskedRange, placeholderChar: "j", from: 1, to: 31, maxLength: 2 },
@@ -229,13 +237,12 @@ const DateInput = ({ onChange, value, type, ...props }) => {
           Y: { mask: IMask.MaskedRange, placeholderChar: "a", from: 1900, to: 2999, maxLength: 4 },
         }}
         onAccept={(currentValue, mask) => {
-          setInternalValue(currentValue);
+          if (!isDisabled) setInternalValue(currentValue);
         }}
         onComplete={onComplete}
         ref={ref}
         value={internalValue}
-        onFocus={onFocus}
-        onClick={onClick}
+        {...actions}
       />
     );
   });
@@ -325,14 +332,16 @@ export default React.memo(
     hasInfo = true,
     noHistory,
     type,
-    format = (val) => val,
-    parse = (val) => val,
     precision = 2,
     numberStepper = false,
     forceUpperCase = false,
     label,
     isRequired,
     min = 0,
+    throttleTime = 100,
+    debounceTime = 300,
+    format = undefined,
+    parse = undefined,
     ...props
   }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -341,6 +350,7 @@ export default React.memo(
     const [shouldBeDisabled, setShouldBeDisabled] = useState(false);
     const [fromInternal, setFromInternal] = useState(false);
     const [countryCode, setCountryCode] = useState("fr");
+    const [success, setSuccess] = useState({});
 
     const prevOnAsyncDataRef = useRef();
     const prevFieldValueRef = useRef("");
@@ -358,6 +368,49 @@ export default React.memo(
       return !field?.mask ? ChackraInput : MaskedInput;
     }, [field?.mask]);
 
+    const maskedProps = useMemo(() => {
+      return !field?.mask
+        ? {}
+        : {
+            mask: field?.mask,
+            maskblocks: field?.maskBlocks,
+          };
+    }, [field?.mask, field?.maskBlocks]);
+
+    const styleProps = useMemo(
+      () => ({
+        _focus: {
+          borderBottomColor: borderBottomColor,
+          boxShadow: "none",
+          outlineColor: "none",
+        },
+        _focusVisible: {
+          borderBottomColor: borderBottomColor,
+          boxShadow: "none",
+          outline: "2px solid",
+          outlineColor: validated ? "green.500" : isErrored ? "error" : "#2A7FFE",
+          outlineOffset: "2px",
+        },
+        _invalid: {
+          borderBottomColor: borderBottomColor,
+          boxShadow: "none",
+          outline: "2px solid",
+          outlineColor: "error",
+          outlineOffset: "2px",
+        },
+        _hover: {
+          borderBottomColor: borderBottomColor,
+        },
+        _disabled: {
+          fontStyle: "italic",
+          cursor: "not-allowed",
+          opacity: 1,
+          borderBottomColor: "#E5E5E5",
+        },
+      }),
+      [borderBottomColor, isErrored, validated]
+    );
+
     const isRequiredInternal = useMemo(() => {
       return field?.isNotRequiredForm ? !field?.isNotRequiredForm : isRequired !== undefined ? isRequired : true; // TODO tired....
     }, [field?.isNotRequiredForm, isRequired]);
@@ -368,10 +421,37 @@ export default React.memo(
       },
     });
 
+    const commonProps = useMemo(
+      () => ({
+        name,
+        value: values[name],
+        pattern: field?.pattern,
+        placeholder: field?.description,
+        variant: validated ? "valid" : "outline",
+        id: `${name}_input`,
+        isInvalid: isErrored,
+        isDisabled: shouldBeDisabled,
+        required: isRequiredInternal,
+        maxLength: field?.maxLength,
+        autoComplete: "off-",
+      }),
+      [
+        field?.description,
+        field?.maxLength,
+        field?.pattern,
+        isErrored,
+        isRequiredInternal,
+        name,
+        shouldBeDisabled,
+        validated,
+        values,
+      ]
+    );
+
     let convertValue = useCallback(
       (currentValue) => {
         let val = currentValue;
-        if (type === "numberPrefixed") val = parse(val);
+        if (type === "number" && parse) val = parse(val);
         else if (forceUpperCase && type === "text") val = val.toUpperCase().trimStart();
         else if (type === "text") val = val.trimStart();
         else if (type === "date") val = DateTime.fromJSDate(val).setLocale("fr-FR").toFormat("yyyy-MM-dd");
@@ -413,6 +493,10 @@ export default React.memo(
         setIsLoading(false);
 
         // console.log({ successed, data, message });
+
+        if (successed) setSuccess({ [name]: message });
+        else setSuccess({});
+
         setErrors({ [name]: message });
         if (data) {
           return await onSubmittedField(path, data);
@@ -440,8 +524,8 @@ export default React.memo(
       ]
     );
 
-    // const debouncedEventHandler = useMemo(() => debounce(handleChange, 300), []);
-    const throttledEventHandler = useMemo(() => throttle(handleChange, 100), [handleChange]);
+    const eventHandler = useMemo(() => throttle(handleChange, throttleTime), [handleChange, throttleTime]);
+    // const eventHandler = useMemo(() => debounce(handleChange, debounceTime), [handleChange, debounceTime]);
 
     useEffect(() => {
       (async () => {
@@ -457,7 +541,7 @@ export default React.memo(
         // console.log(path, ">>>>", initRef.current, values[name], fieldValue, isValidFieldValue);
         if (initRef.current === 0) {
           if (field) {
-            // console.log("Init");
+            // console.log("Init", initRef.current);
             setShouldBeDisabled(field.locked);
             prevFieldLockRef.current = field.locked;
             if (values[name] === "") {
@@ -543,7 +627,7 @@ export default React.memo(
         //
       })();
       return () => {
-        throttledEventHandler.cancel();
+        eventHandler.cancel();
       };
     }, [
       onAsyncData,
@@ -558,7 +642,7 @@ export default React.memo(
       handleChange,
       type,
       countryCode,
-      throttledEventHandler,
+      eventHandler,
       isRequiredInternal,
     ]);
 
@@ -584,13 +668,12 @@ export default React.memo(
           type === "email" ||
           type === "number" ||
           type === "phone" ||
-          type === "numberPrefixed" ||
           type === "date" ||
           type === "select") && (
           <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>{label || field?.label}</FormLabel>
         )}
         <HStack>
-          <InputGroup>
+          <InputGroup id={`${name}_group_input`}>
             {type === "select" && (
               <Select
                 name={name}
@@ -635,138 +718,29 @@ export default React.memo(
                 )}
               </Select>
             )}
-            {type === "date" && (
-              <DateInput
-                type={type}
-                name={name}
-                onChange={handleChange}
-                value={values[name]}
-                pattern={field?.pattern}
-                placeholder={field?.description}
-                maxLength={field?.maxLength}
-                required={isRequiredInternal}
-                variant={validated ? "valid" : "outline"}
-                isInvalid={isErrored}
-                isDisabled={shouldBeDisabled}
-                _focus={{
-                  borderBottomColor: borderBottomColor,
-                  boxShadow: "none",
-                  outlineColor: "none",
-                }}
-                _focusVisible={{
-                  borderBottomColor: borderBottomColor,
-                  boxShadow: "none",
-                  outline: "2px solid",
-                  outlineColor: validated ? "green.500" : isErrored ? "error" : "#2A7FFE",
-                  outlineOffset: "2px",
-                }}
-                _invalid={{
-                  borderBottomColor: borderBottomColor,
-                  boxShadow: "none",
-                  outline: "2px solid",
-                  outlineColor: "error",
-                  outlineOffset: "2px",
-                }}
-                _hover={{
-                  borderBottomColor: borderBottomColor,
-                }}
-                _disabled={{
-                  fontStyle: "italic",
-                  cursor: "not-allowed",
-                  opacity: 1,
-                  borderBottomColor: "#E5E5E5",
-                }}
-              />
-            )}
+            {type === "date" && <DateInput {...commonProps} type={type} onChange={handleChange} {...styleProps} />}
             {(type === "text" || type === "email") && (
+              <Input {...commonProps} type={type} onChange={eventHandler} {...styleProps} {...maskedProps} />
+            )}
+            {type === "number" && !numberStepper && (
               <Input
+                {...commonProps}
                 type={type}
-                name={name}
-                onChange={!field?.inputmask ? throttledEventHandler : handleChange}
-                value={values[name]}
-                required={isRequiredInternal}
-                pattern={field?.pattern}
-                placeholder={field?.description}
-                variant={validated ? "valid" : "outline"}
-                isInvalid={isErrored}
-                maxLength={field?.maxLength}
-                isDisabled={shouldBeDisabled}
-                _focus={{
-                  borderBottomColor: borderBottomColor,
-                  boxShadow: "none",
-                  outlineColor: "none",
-                }}
-                _focusVisible={{
-                  borderBottomColor: borderBottomColor,
-                  boxShadow: "none",
-                  outline: "2px solid",
-                  outlineColor: validated ? "green.500" : isErrored ? "error" : "#2A7FFE",
-                  outlineOffset: "2px",
-                }}
-                _invalid={{
-                  borderBottomColor: borderBottomColor,
-                  boxShadow: "none",
-                  outline: "2px solid",
-                  outlineColor: "error",
-                  outlineOffset: "2px",
-                }}
-                _hover={{
-                  borderBottomColor: borderBottomColor,
-                }}
-                _disabled={{
-                  fontStyle: "italic",
-                  cursor: "not-allowed",
-                  opacity: 1,
-                  borderBottomColor: "#E5E5E5",
-                }}
-                mask={field?.mask}
-                maskblocks={field?.maskBlocks}
-                max={field?.max}
-                forbiddenstartwith={field?.forbiddenStartWith}
+                onChange={eventHandler}
+                {...styleProps}
+                {...maskedProps}
+                min={min}
+                precision={precision}
               />
             )}
-            {type === "number" && (
+            {type === "number" && numberStepper && (
               <NumberInput
-                name={name}
+                {...commonProps}
+                value={format ? format(values[name]) : values[name]}
                 onChange={(val) => handleChange({ persist: () => {}, target: { value: val } })}
-                value={values[name]}
                 precision={precision}
                 min={min}
-                required={isRequiredInternal}
-                pattern={field?.pattern}
-                placeholder={field?.description}
-                variant={validated ? "valid" : "outline"}
-                isInvalid={isErrored}
-                maxLength={field?.maxLength}
-                isDisabled={shouldBeDisabled}
-                _focus={{
-                  borderBottomColor: borderBottomColor,
-                  boxShadow: "none",
-                  outlineColor: "none",
-                }}
-                _focusVisible={{
-                  borderBottomColor: borderBottomColor,
-                  boxShadow: "none",
-                  outline: "2px solid",
-                  outlineColor: validated ? "green.500" : isErrored ? "error" : "#2A7FFE",
-                  outlineOffset: "2px",
-                }}
-                _invalid={{
-                  borderBottomColor: borderBottomColor,
-                  boxShadow: "none",
-                  outline: "2px solid",
-                  outlineColor: "error",
-                  outlineOffset: "2px",
-                }}
-                _hover={{
-                  borderBottomColor: borderBottomColor,
-                }}
-                _disabled={{
-                  fontStyle: "italic",
-                  cursor: "not-allowed",
-                  opacity: 1,
-                  borderBottomColor: "#E5E5E5",
-                }}
+                {...styleProps}
               >
                 <NumberInputField />
                 {numberStepper && (
@@ -777,53 +751,14 @@ export default React.memo(
                 )}
               </NumberInput>
             )}
-            {type === "numberPrefixed" && (
-              <NumberInput
-                name={name}
-                onChange={(val) => handleChange({ persist: () => {}, target: { value: val } })}
-                value={format(values[name])}
-                required={isRequiredInternal}
-                pattern={field?.pattern}
-                placeholder={field?.description}
-                variant={validated ? "valid" : "outline"}
-                isInvalid={isErrored}
-                maxLength={field?.maxLength}
-                isDisabled={shouldBeDisabled}
-                _focus={{
-                  borderBottomColor: borderBottomColor,
-                  boxShadow: "none",
-                  outlineColor: "none",
-                }}
-                _focusVisible={{
-                  borderBottomColor: borderBottomColor,
-                  boxShadow: "none",
-                  outline: "2px solid",
-                  outlineColor: validated ? "green.500" : isErrored ? "error" : "#2A7FFE",
-                  outlineOffset: "2px",
-                }}
-                _invalid={{
-                  borderBottomColor: borderBottomColor,
-                  boxShadow: "none",
-                  outline: "2px solid",
-                  outlineColor: "error",
-                  outlineOffset: "2px",
-                }}
-                _hover={{
-                  borderBottomColor: borderBottomColor,
-                }}
-                _disabled={{
-                  fontStyle: "italic",
-                  cursor: "not-allowed",
-                  opacity: 1,
-                  borderBottomColor: "#E5E5E5",
-                }}
-              >
-                <NumberInputField />
-              </NumberInput>
-            )}
             {type === "radio" && (
               <HStack>
-                <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>{label || field?.label}</FormLabel>
+                {label ||
+                  (field?.label && (
+                    <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>
+                      {label || field?.label}
+                    </FormLabel>
+                  ))}
                 <RadioGroup value={values[name]}>
                   <HStack>
                     {field.options.map((option, k) => {
@@ -835,7 +770,7 @@ export default React.memo(
                           value={option.label}
                           checked={values[name] === option.label}
                           onChange={handleChange}
-                          isDisabled={option.locked}
+                          isDisabled={option.locked || shouldBeDisabled}
                         >
                           {option.label}
                         </Radio>
@@ -930,7 +865,8 @@ export default React.memo(
             </Box>
           )}
         </HStack>
-        {errors[name] && <FormErrorMessage>{errors[name]}</FormErrorMessage>}
+        {errors[name] && !success[name] && <FormErrorMessage>{errors[name]}</FormErrorMessage>}
+        {success[name] && <FormErrorMessage color="green.500">{success[name]}</FormErrorMessage>}
       </FormControl>
     );
   }

@@ -5,6 +5,11 @@ export const cerfaPartEmployeurCompletionAtom = atom({
   default: 0,
 });
 
+export const cerfaPartEmployeurIsLoadingAtom = atom({
+  key: "cerfa/part/employeur/isLoading",
+  default: true,
+});
+
 export const cerfaEmployeurSiretAtom = atom({
   key: "cerfa/employeur/siret",
   default: null,
@@ -28,6 +33,30 @@ export const cerfaEmployeurNombreDeSalariesAtom = atom({
 export const cerfaEmployeurCodeIdccAtom = atom({
   key: "cerfa/employeur/codeIdcc",
   default: null,
+});
+export const cerfaEmployeurCodeIdcSpecialAtom = atom({
+  key: "cerfa/employeur/codeIdcc/special",
+  default: {
+    description: "Autres cas",
+    label: "",
+    default: null,
+    nullable: true,
+    example: "Sans convention collective",
+    options: [
+      {
+        label: "Sans convention collective",
+        value: "9999",
+      },
+      {
+        label: "Convention non encore en vigueur",
+        value: "9998",
+      },
+    ],
+    value: "",
+    locked: true,
+    isNotRequiredForm: true,
+    valueDb: "",
+  },
 });
 export const cerfaEmployeurLibelleIdccAtom = atom({
   key: "cerfa/employeur/libelleIdcc",
@@ -60,6 +89,14 @@ export const cerfaEmployeurAdresseCodePostalAtom = atom({
 });
 export const cerfaEmployeurAdresseCommuneAtom = atom({
   key: "cerfa/employeur/adresse/commune",
+  default: null,
+});
+export const cerfaEmployeurAdresseDepartementAtom = atom({
+  key: "cerfa/employeur/adresse/departement",
+  default: null,
+});
+export const cerfaEmployeurAdresseRegionAtom = atom({
+  key: "cerfa/employeur/adresse/region",
   default: null,
 });
 

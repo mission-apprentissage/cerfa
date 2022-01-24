@@ -1,20 +1,24 @@
 import React from "react";
-import { Box, FormLabel, Text, Flex, Collapse } from "@chakra-ui/react";
+import { Box, FormLabel, Text, Flex, Collapse, Center, Spinner } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
 import { useCerfaApprenti } from "../../../../common/hooks/useCerfa/parts/useCerfaApprenti";
 import {
   cerfaContratDateDebutContratAtom,
   cerfaContratDateFinContratAtom,
-  cerfaContratRemunerationMajorationAtom,
+  cerfaContratRemunerationsAnnuellesAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+import { cerfaEmployeurAdresseDepartementAtom } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import InputCerfa from "./Input";
 
-const FormLearner = () => {
+const FormLearner = React.memo(() => {
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
   const dateFinContrat = useRecoilValue(cerfaContratDateFinContratAtom);
-  const remunerationMajoration = useRecoilValue(cerfaContratRemunerationMajorationAtom);
+  const remunerationsAnnuelles = useRecoilValue(cerfaContratRemunerationsAnnuellesAtom);
+  const employeurAdresseDepartement = useRecoilValue(cerfaEmployeurAdresseDepartementAtom);
+
   const {
+    isLoading,
     get: {
       apprenti: {
         nom,
@@ -22,6 +26,7 @@ const FormLearner = () => {
         sexe,
         nationalite,
         dateNaissance,
+        age,
         majeur,
         departementNaissance,
         communeNaissance,
@@ -97,6 +102,14 @@ const FormLearner = () => {
       },
     },
   } = useCerfaApprenti();
+
+  if (isLoading || !dateDebutContrat || !dateFinContrat || !employeurAdresseDepartement)
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
+
   return (
     <Box>
       <Flex>
@@ -176,7 +189,7 @@ const FormLearner = () => {
             onSubmittedField={onSubmittedApprentiCourriel}
           />
 
-          {!majeur && dateNaissance.value !== "" && (
+          {!majeur && dateNaissance.value !== "" && age.value && age.value !== "" && (
             <Box mt={5}>
               <Text>L'apprenti(e) est mineur, merci de compléter les informations suivantes</Text>
               <InputCerfa
@@ -277,8 +290,9 @@ const FormLearner = () => {
             onSubmittedField={onSubmittedApprentiDateNaissance}
             onAsyncData={{
               dateDebutContrat: dateDebutContrat?.value,
-              remunerationMajoration: remunerationMajoration?.valueDb,
+              remunerationsAnnuelles: remunerationsAnnuelles,
               dateFinContrat: dateFinContrat?.value,
+              employeurAdresseDepartement: employeurAdresseDepartement?.value,
             }}
           />
           <InputCerfa
@@ -370,6 +384,6 @@ const FormLearner = () => {
       </Flex>
     </Box>
   );
-};
+});
 
 export default FormLearner;

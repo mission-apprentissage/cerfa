@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, FormLabel, Flex } from "@chakra-ui/react";
+import { Box, FormLabel, Flex, Center, Spinner } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
 import { useCerfaFormation } from "../../../../common/hooks/useCerfa/parts/useCerfaFormation";
@@ -13,6 +13,7 @@ const FormFormation = React.memo((props) => {
   const contratDateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
   const contratDateFinContrat = useRecoilValue(cerfaContratDateFinContratAtom);
   const {
+    isLoading,
     get: {
       organismeFormation: {
         siret,
@@ -56,6 +57,13 @@ const FormFormation = React.memo((props) => {
       },
     },
   } = useCerfaFormation();
+
+  if (isLoading || !contratDateDebutContrat || !contratDateFinContrat)
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
 
   return (
     <Box>

@@ -48,6 +48,7 @@ const Register = () => {
       email: "",
       siret: "",
       nom: "",
+      civility: "",
       prenom: "",
     },
     validationSchema: Yup.object().shape({
@@ -60,6 +61,7 @@ const Register = () => {
         })
         .required("Le siret est obligatoire"),
       nom: Yup.string().required("Votre nom est obligatoire"),
+      civility: Yup.string().required("Votre civilité est obligatoire"),
       prenom: Yup.string().required("Votre prénom est obligatoire"),
     }),
     onSubmit: (values) => {
@@ -240,6 +242,31 @@ const Register = () => {
                   value={values.email}
                 />
                 {errors.email && touched.email && <FormErrorMessage>{errors.email}</FormErrorMessage>}
+              </FormControl>
+              <FormControl py={2} mt={5} isRequired isInvalid={errors.civility && touched.civility}>
+                <RadioGroup value={values.civility}>
+                  <HStack>
+                    <Radio
+                      type="radio"
+                      name="civility"
+                      value={"Monsieur"}
+                      checked={values.civility !== "Madame"}
+                      onChange={handleChange}
+                    >
+                      Monsieur
+                    </Radio>
+                    <Radio
+                      type="radio"
+                      name="civility"
+                      value="Madame"
+                      checked={values.civility === "Madame"}
+                      onChange={handleChange}
+                    >
+                      Madame
+                    </Radio>
+                  </HStack>
+                  {errors.civility && touched.civility && <FormErrorMessage>{errors.civility}</FormErrorMessage>}
+                </RadioGroup>
               </FormControl>
               <FormControl py={2} isRequired isInvalid={errors.nom && touched.nom}>
                 <FormLabel>Nom</FormLabel>

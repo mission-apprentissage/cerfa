@@ -143,3 +143,5 @@ sdk/lib
 
 # Local History for Visual Studio Code
 .history/
+
+server/agecap/*.*

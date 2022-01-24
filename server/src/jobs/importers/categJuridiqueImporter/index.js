@@ -1,6 +1,5 @@
 const csvToJson = require("convert-csv-to-json-latin");
-const logger = require("../../common/logger");
-const { runScript } = require("../scriptWrapper");
+const logger = require("../../../common/logger");
 const path = require("path");
 
 const cleanUpKeysAndValues = (obj) => {
@@ -12,7 +11,7 @@ const cleanUpKeysAndValues = (obj) => {
   }, {});
 };
 
-const categJuridiqueImporter = async (db, assetsDir = path.join(__dirname, "./assets")) => {
+const importer = async (db, assetsDir = path.join(__dirname, "./assets")) => {
   logger.info(`[Catégorie juridique importer] Starting`);
 
   // CSV import
@@ -34,6 +33,4 @@ const categJuridiqueImporter = async (db, assetsDir = path.join(__dirname, "./as
   logger.info(`[Catégorie juridique importer] Ended`);
 };
 
-runScript(async ({ db }) => {
-  await categJuridiqueImporter(db);
-});
+module.exports = importer;

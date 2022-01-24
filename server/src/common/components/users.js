@@ -169,6 +169,7 @@ module.exports = async () => {
         username: user.username,
         nom: user.nom,
         prenom: user.prenom,
+        civility: user.civility,
         account_status: user.account_status,
         roles: rolesList,
         acl: uniq([...rolesAcl, ...user.acl]),

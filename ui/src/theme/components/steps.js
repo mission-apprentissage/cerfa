@@ -25,7 +25,10 @@ const Steps = {
       },
       labelContainer: {},
       step: {},
-      stepContainer: {},
+      stepContainer: {
+        _focus: { boxShadow: "none", outlineColor: "none" },
+        _focusVisible: { boxShadow: "0 0 0 3px #2A7FFE", outlineColor: "#2A7FFE" },
+      },
       stepIconContainer: {
         bg: "gray.200",
         borderColor: "gray.200",
@@ -34,6 +37,10 @@ const Steps = {
         _invalid: {
           bg: "flatwarm",
           borderColor: "flatwarm",
+        },
+        _valid: {
+          bg: "greensoftc",
+          borderColor: "greensoftc",
         },
         _activeStep: {
           bg: "bluefrance",
