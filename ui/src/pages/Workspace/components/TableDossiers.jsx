@@ -42,11 +42,14 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
       }))}
       components={{
         Nom: (value, i) => {
+          let step = "signatures";
+          if (dossiers[i].etat === "BROUILLON") step = "cerfa";
+
           return (
             <Center>
               <Link
                 as={NavLink}
-                to={`${baseUrl}/${dossiers[i]._id}/cerfa`}
+                to={`${baseUrl}/${dossiers[i]._id}/${step}`}
                 _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.300" }}
                 w="full"
                 h="full"
