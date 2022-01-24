@@ -199,7 +199,7 @@ export default () => {
   const cerfa = useRecoilValue(cerfaAtom);
   const { documentsCompletion, setDocumentsCompletion } = useDocuments();
   const [documentsComplete, setDocumentsComplete] = useState(false);
-  const { signaturesCompletion, setSignaturesCompletion } = useSignatures();
+  const { signaturesCompletion, sca, setSignaturesCompletion } = useSignatures();
   const [signaturesComplete, setSignaturesComplete] = useState(false);
 
   const setWorkspaceTitle = useSetRecoilState(workspaceTitleAtom);
@@ -244,30 +244,28 @@ export default () => {
         setSignaturesCompletion(cerfa);
       }
 
-      if (cerfa && documentsCompletion !== null && signaturesCompletion !== null) {
-        const documentsCompleteTmp = documentsCompletion === 100;
-        const signaturesCompleteTmp = signaturesCompletion === 100;
+      const documentsCompleteTmp = !documentsCompletion ? false : documentsCompletion === 100;
+      const signaturesCompleteTmp = !sca ? false : sca === 100;
 
-        setDocumentsComplete(documentsCompleteTmp);
-        setSignaturesComplete(signaturesCompleteTmp);
+      setDocumentsComplete(documentsCompleteTmp);
+      setSignaturesComplete(signaturesCompleteTmp);
 
-        if (match.params.step === "cerfa") {
-          if (cerfaPercentageCompletion > 0) {
-            setStep1Visited(true);
-            setStep2State(documentsCompleteTmp ? "success" : "error");
-            setStep3State(!signaturesCompleteTmp ? "error" : "success");
-          }
-        } else if (match.params.step === "documents") {
-          setStep2Visited(true);
-          setStep3Visited(true);
-          setStep1State(!cerfaComplete ? "error" : undefined);
+      if (match.params.step === "cerfa") {
+        if (cerfaPercentageCompletion > 0) {
+          setStep1Visited(true);
+          setStep2State(documentsCompleteTmp ? "success" : "error");
           setStep3State(!signaturesCompleteTmp ? "error" : "success");
-        } else if (match.params.step === "signatures") {
-          setStep3Visited(true);
-          setStep2Visited(true);
-          setStep1State(!cerfaComplete ? "error" : undefined);
-          setStep2State(!documentsCompleteTmp ? "error" : undefined);
         }
+      } else if (match.params.step === "documents") {
+        setStep2Visited(true);
+        setStep3Visited(true);
+        setStep1State(!cerfaComplete ? "error" : undefined);
+        setStep3State(!signaturesCompleteTmp ? "error" : "success");
+      } else if (match.params.step === "signatures") {
+        setStep3Visited(true);
+        setStep2Visited(true);
+        setStep1State(!cerfaComplete ? "error" : undefined);
+        setStep2State(!documentsCompleteTmp ? "error" : undefined);
       }
     };
     run();
@@ -286,6 +284,7 @@ export default () => {
     setWorkspaceTitle,
     signaturesComplete,
     signaturesCompletion,
+    sca,
   ]);
 
   let stepStateSteps23 = useCallback(
