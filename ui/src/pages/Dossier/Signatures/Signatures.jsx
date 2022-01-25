@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Box, Heading, Center, Button, Spinner, Text, HStack } from "@chakra-ui/react";
-import { useRecoilValueLoadable, useSetRecoilState } from "recoil";
+import { Box, Heading, Center, Button, Spinner, Text, HStack, VStack } from "@chakra-ui/react";
+import { useRecoilValueLoadable, useRecoilValue, useSetRecoilState } from "recoil";
 
 import useAuth from "../../../common/hooks/useAuth";
 import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
@@ -20,7 +20,10 @@ import { cerfaPartFormationCompletionAtom } from "../../../common/hooks/useCerfa
 import { cerfaPartEmployeurCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import { cerfaPartMaitresCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
 import { cerfaPartApprentiCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
-import { cerfaPartContratCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+import {
+  cerfaPartContratCompletionAtom,
+  cerfaContratDateDebutContratAtom,
+} from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 
 const ContratPdf = ({ dossierId }) => {
   let [auth] = useAuth();
@@ -103,7 +106,11 @@ export default ({ dossierId }) => {
   const {
     sca: signaturesCompletion,
     contratLieuSignatureContrat,
-    onSubmittedContratLieuSignatureContrat,
+    // onSubmittedContratLieuSignatureContrat,
+    contratDateConclusion,
+    // onSubmittedContratDateConclusion,
+    isLoaded,
+    onSubmitted,
   } = useSignatures();
 
   const documentsCompletion = useRecoilValueLoadable(documentsCompletionAtom);
@@ -113,7 +120,11 @@ export default ({ dossierId }) => {
   const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
   const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
   const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
-  const [value, setValue] = useState(contratLieuSignatureContrat?.value);
+
+  const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
+
+  const [valueLieu, setValueLieu] = useState(contratLieuSignatureContrat?.value);
+  const [valueDate, setValueDate] = useState(contratDateConclusion?.value);
   const cerfaComplete =
     employeurCompletionAtom?.contents === 100 &&
     apprentiCompletionAtom?.contents === 100 &&
@@ -122,6 +133,13 @@ export default ({ dossierId }) => {
     formationCompletion?.contents === 100;
   const documentsComplete = documentsCompletion?.contents === 100;
   const signatureComplete = signaturesCompletion === 100;
+
+  useEffect(() => {
+    if (isLoaded) {
+      setValueLieu(contratLieuSignatureContrat?.value);
+      setValueDate(contratDateConclusion?.value);
+    }
+  }, [contratDateConclusion, contratLieuSignatureContrat, isLoaded]);
 
   if (!cerfaComplete) {
     return (
@@ -150,26 +168,57 @@ export default ({ dossierId }) => {
     );
   }
 
+  if ((valueLieu === undefined && valueDate === undefined) || !isLoaded) {
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    );
+  }
+
   if (!signatureComplete) {
     return (
-      <Box mt={8} mb={16} minH="25vh">
+      <Box mt={16} mb={16} minH="25vh">
         <Heading as="h3" fontSize="1.4rem">
-          Merci de préciser le lieu de signature du contrat:
+          Merci de préciser le lieu et la date de signature du contrat:
         </Heading>
-        <HStack spacing={8} alignItems="end">
-          <InputCerfa
-            path="contrat.lieuSignatureContrat"
-            field={contratLieuSignatureContrat}
-            type="text"
-            mt="2"
-            onSubmittedField={(path, data) => setValue(data)}
-            w="40%"
-          />
+        <HStack spacing={8} mt={8} alignItems="baseline" h="150px">
+          <VStack w="45%">
+            <InputCerfa
+              path="contrat.lieuSignatureContrat"
+              field={contratLieuSignatureContrat}
+              type="text"
+              mt="2"
+              onSubmittedField={(path, data) => setValueLieu(data)}
+              label="Fait à :"
+            />
+            <Text textStyle="sm">&nbsp;</Text>
+          </VStack>
+
+          <VStack>
+            <InputCerfa
+              path="contrat.dateConclusion"
+              field={contratDateConclusion}
+              type="date"
+              mt="2"
+              label="le :"
+              onSubmittedField={(path, data) => setValueDate(data)}
+              onAsyncData={{
+                dateDebutContrat: dateDebutContrat?.value,
+              }}
+            />
+            <Text textStyle="sm">&nbsp;</Text>
+          </VStack>
+        </HStack>
+        <HStack w="full" alignItems="end" justifyContent="end" mt={8}>
           <Button
             size="md"
-            onClick={() =>
-              value !== "" ? onSubmittedContratLieuSignatureContrat("contrat.lieuSignatureContrat", value) : false
-            }
+            onClick={async () => {
+              if (valueLieu !== "" && valueDate !== "") {
+                return onSubmitted(valueLieu, valueDate);
+              }
+              return false;
+            }}
             variant="primary"
           >
             Enregistrer
