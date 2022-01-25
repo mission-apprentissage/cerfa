@@ -1,3 +1,10 @@
+# [1.15.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.15.0-beta.1...v1.15.0-beta.2) (2022-01-25)
+
+
+### Features
+
+* correctif sur les textes ([a6a618f](https://github.com/mission-apprentissage/cerfa/commit/a6a618f8682803a2ea6ca127b1a847ecbcb6d252))
+
 # [1.15.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0...v1.15.0-beta.1) (2022-01-25)
 
 
