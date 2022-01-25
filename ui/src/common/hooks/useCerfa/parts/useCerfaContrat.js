@@ -529,7 +529,7 @@ export function useCerfaContrat() {
   const [contratDateEffetAvenant, setContratDateEffetAvenant] = useRecoilState(
     contratAtoms.cerfaContratDateEffetAvenantAtom
   );
-  const [contratDateConclusion, setContratDateConclusion] = useRecoilState(contratAtoms.cerfaContratDateConclusionAtom);
+  // const [contratDateConclusion, setContratDateConclusion] = useRecoilState(contratAtoms.cerfaContratDateConclusionAtom);
   const [contratDateFinContrat, setContratDateFinContrat] = useRecoilState(contratAtoms.cerfaContratDateFinContratAtom);
   const [contratDateRupture, setContratDateRupture] = useRecoilState(contratAtoms.cerfaContratDateRuptureAtom);
 
@@ -776,36 +776,36 @@ export function useCerfaContrat() {
     [contratDateEffetAvenant, setContratDateEffetAvenant, dossier?._id, cerfa?.id, setPartContratCompletion]
   );
 
-  const onSubmittedContratDateConclusion = useCallback(
-    async (path, data) => {
-      try {
-        if (path === "contrat.dateConclusion") {
-          const newV = {
-            contrat: {
-              dateConclusion: {
-                ...contratDateConclusion,
-                value: data,
-                // forceUpdate: false, // IF data = "" true
-              },
-            },
-          };
-          if (contratDateConclusion.value !== newV.contrat.dateConclusion.value) {
-            setContratDateConclusion(newV.contrat.dateConclusion);
+  // const onSubmittedContratDateConclusion = useCallback(
+  //   async (path, data) => {
+  //     try {
+  //       if (path === "contrat.dateConclusion") {
+  //         const newV = {
+  //           contrat: {
+  //             dateConclusion: {
+  //               ...contratDateConclusion,
+  //               value: data,
+  //               // forceUpdate: false, // IF data = "" true
+  //             },
+  //           },
+  //         };
+  //         if (contratDateConclusion.value !== newV.contrat.dateConclusion.value) {
+  //           setContratDateConclusion(newV.contrat.dateConclusion);
 
-            const res = await saveCerfa(dossier?._id, cerfa?.id, {
-              contrat: {
-                dateConclusion: convertDateToValue(newV.contrat.dateConclusion),
-              },
-            });
-            setPartContratCompletion(cerfaContratCompletion(res));
-          }
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [contratDateConclusion, setContratDateConclusion, dossier?._id, cerfa?.id, setPartContratCompletion]
-  );
+  //           const res = await saveCerfa(dossier?._id, cerfa?.id, {
+  //             contrat: {
+  //               dateConclusion: convertDateToValue(newV.contrat.dateConclusion),
+  //             },
+  //           });
+  //           setPartContratCompletion(cerfaContratCompletion(res));
+  //         }
+  //       }
+  //     } catch (e) {
+  //       console.error(e);
+  //     }
+  //   },
+  //   [contratDateConclusion, setContratDateConclusion, dossier?._id, cerfa?.id, setPartContratCompletion]
+  // );
 
   const onSubmittedContratDateFinContrat = useCallback(
     async (path, data, forcedTriggered) => {
@@ -1493,7 +1493,7 @@ export function useCerfaContrat() {
       setContratDateDebutContrat(convertValueToDate(res.contrat.dateDebutContrat));
       seContratDureeContrat(res.contrat.dureeContrat);
       setContratDateEffetAvenant(convertValueToDate(res.contrat.dateEffetAvenant));
-      setContratDateConclusion(convertValueToDate(res.contrat.dateConclusion));
+      // setContratDateConclusion(convertValueToDate(res.contrat.dateConclusion));
       setContratDateFinContrat(convertValueToDate(res.contrat.dateFinContrat));
       setContratDateRupture(convertValueToDate(res.contrat.dateRupture));
 
@@ -1586,7 +1586,7 @@ export function useCerfaContrat() {
       setContratAvantageNature,
       setContratAvantageNourriture,
       setContratCaisseRetraiteComplementaire,
-      setContratDateConclusion,
+      // setContratDateConclusion,
       setContratDateDebutContrat,
       setContratDateEffetAvenant,
       setContratDateFinContrat,
@@ -1632,7 +1632,7 @@ export function useCerfaContrat() {
         dateDebutContrat: contratDateDebutContrat,
         dureeContrat: contratDureeContrat,
         dateEffetAvenant: contratDateEffetAvenant,
-        dateConclusion: contratDateConclusion,
+        // dateConclusion: contratDateConclusion,
         dateFinContrat: contratDateFinContrat,
         dateRupture: contratDateRupture,
         typeDerogation: contratTypeDerogation,
@@ -1659,7 +1659,7 @@ export function useCerfaContrat() {
         numeroContratPrecedent: onSubmittedContratNumeroContratPrecedent,
         dateDebutContrat: onSubmittedContratDateDebutContrat,
         dateEffetAvenant: onSubmittedContratDateEffetAvenant,
-        dateConclusion: onSubmittedContratDateConclusion,
+        // dateConclusion: onSubmittedContratDateConclusion,
         dateFinContrat: onSubmittedContratDateFinContrat,
         dateRupture: onSubmittedContratDateRupture,
         typeDerogation: onSubmittedContratTypeDerogation,

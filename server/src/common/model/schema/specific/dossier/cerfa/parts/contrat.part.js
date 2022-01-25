@@ -145,8 +145,9 @@ const contratSchema = {
   },
   dateConclusion: {
     type: Date,
-    description: "Date de conclusion du contrat",
+    description: "Date de conclusion du contrat. (Date de signature du présent contrat)",
     label: "Date de conclusion du contrat :",
+    requiredMessage: "La date de conclusion de contrat est obligatoire",
     example: "2021-01-15T00:00:00+0000",
     default: null,
     required: function () {

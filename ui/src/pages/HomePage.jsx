@@ -1,8 +1,9 @@
 import React from "react";
-import { Box, Container, Heading, Text, UnorderedList, ListItem } from "@chakra-ui/react";
+import { Box, Container, Heading, Text, UnorderedList, ListItem, Button, Flex } from "@chakra-ui/react";
 import Layout from "./layout/Layout";
 import { Breadcrumb } from "../common/components/Breadcrumb";
 import { setTitle } from "../common/utils/pageUtils";
+import { NavLink } from "react-router-dom";
 
 export default () => {
   const title = "Accueil";
@@ -46,6 +47,18 @@ export default () => {
               </ListItem>
             </UnorderedList>
           </Box>
+          <Flex justifyContent="end" w="full">
+            <Button
+              as={NavLink}
+              to={"/mon-espace/mes-dossiers"}
+              fontSize={{ base: "md", md: "lg" }}
+              p={{ base: 4, md: 6 }}
+              h={{ base: 8, md: 10 }}
+              variant="primary"
+            >
+              Accéder maintenant
+            </Button>
+          </Flex>
         </Container>
       </Box>
     </Layout>
