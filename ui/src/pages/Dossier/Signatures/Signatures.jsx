@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Box, Heading, Center, Button, Spinner, Text, HStack, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Center,
+  Button,
+  Spinner,
+  Text,
+  HStack,
+  VStack,
+  OrderedList,
+  ListItem,
+  SkeletonText,
+  Link,
+} from "@chakra-ui/react";
 import { useRecoilValueLoadable, useRecoilValue, useSetRecoilState } from "recoil";
+import { NavLink } from "react-router-dom";
 
 import useAuth from "../../../common/hooks/useAuth";
 import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
@@ -14,6 +28,8 @@ import { useSignatures } from "../../../common/hooks/useDossier/useSignatures";
 import { signaturesPdfLoadedAtom } from "../../../common/hooks/useDossier/signaturesAtoms";
 import InputCerfa from "../Cerfa/components/Input";
 
+import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
+
 import { documentsCompletionAtom } from "../../../common/hooks/useDossier/documentsAtoms";
 
 import { cerfaPartFormationCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
@@ -25,20 +41,86 @@ import {
   cerfaContratDateDebutContratAtom,
 } from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 
-const ContratPdf = ({ dossierId }) => {
+const DdetsContainer = () => {
+  const { cerfa } = useCerfa();
+  const dossier = useRecoilValue(dossierAtom);
+
+  const [ddets, setDdets] = useState(null);
+
+  useEffect(() => {
+    const run = async () => {
+      if (cerfa && !ddets) {
+        const code_region = cerfa.employeur.adresse.region.value;
+        const code_dpt = cerfa.employeur.adresse.departement.value;
+        if (code_region && code_dpt) {
+          const response = await _post(`/api/v1/dreetsddets/`, {
+            code_region,
+            code_dpt,
+            dossierId: dossier._id,
+          });
+          setDdets(response.ddets);
+        }
+      }
+    };
+    run();
+  }, [cerfa, ddets, dossier?._id]);
+
+  return (
+    <Box mt={8} mb={8}>
+      {!ddets && <SkeletonText mt="4" noOfLines={4} spacing="4" />}
+      {ddets && (
+        <>
+          <Box>
+            <Text fontWeight="bold" mb={5}>
+              Ce dossier est finalisé, toute modification devra faire l'objet d'un avenant.
+              <br />
+            </Text>
+            <Text>Vos prochaines étapes :</Text>
+            <OrderedList ml="30px !important" my={2}>
+              <ListItem>Imprimez le document pour signatures</ListItem>
+              <ListItem>
+                Envoyez le document signé à l'adresse suivante {ddets.DDETS} <strong>{ddets["Mail_depot"]}</strong>
+              </ListItem>
+
+              <ListItem>Suivez l'avancement de votre dossier depuis votre espace</ListItem>
+            </OrderedList>
+
+            <Text>
+              Pour toute question, vous pouvez contacter votre DEETS au {ddets["Telephone"]} ou{" "}
+              <Link as={NavLink} to={"/support"}>
+                l'assistance
+              </Link>
+            </Text>
+            {ddets["Informations_complementaires"] && (
+              <Text>
+                Informations complémentaires:
+                <br /> {ddets["Informations_complementaires"]}
+              </Text>
+            )}
+          </Box>
+        </>
+      )}
+    </Box>
+  );
+};
+
+const ContratPdf = () => {
   let [auth] = useAuth();
   const [pdfBase64, setPdfBase64] = useState(null);
   const [pdfIsLoading, setPdfIsLoading] = useState(true);
   const setPdfLoaded = useSetRecoilState(signaturesPdfLoadedAtom);
   const { isLoading, cerfa } = useCerfa();
+  const dossier = useRecoilValue(dossierAtom);
+
+  const showDdets = dossier.etat === "DOSSIER_TERMINE" || dossier.etat === "DOSSIER_TERMINE_EN_ATTENTE_TRANSMISSION";
 
   useEffect(() => {
     const run = async () => {
       try {
-        if (dossierId && cerfa?.id) {
+        if (dossier._id && cerfa?.id) {
           const { pdfBase64 } = await _post(`/api/v1/cerfa/pdf/${cerfa.id}`, {
             workspaceId: auth.workspaceId,
-            dossierId,
+            dossierId: dossier._id,
           });
           setPdfBase64(pdfBase64);
         }
@@ -48,12 +130,12 @@ const ContratPdf = ({ dossierId }) => {
     };
     run();
     return () => {};
-  }, [auth, cerfa, dossierId]);
+  }, [auth, cerfa, dossier?._id]);
 
   const onSignClicked = async () => {
     const reponse = await _post(`/api/v1/sign_document`, {
       workspaceId: auth.workspaceId,
-      dossierId,
+      dossierId: dossier._id,
       cerfaId: cerfa.id,
     });
     console.log(reponse);
@@ -61,6 +143,7 @@ const ContratPdf = ({ dossierId }) => {
 
   return (
     <Box mt={8} minH="30vh">
+      {showDdets && <DdetsContainer />}
       <Heading as="h3" fontSize="1.4rem">
         Votre contrat généré:
       </Heading>
@@ -68,7 +151,7 @@ const ContratPdf = ({ dossierId }) => {
         {(isLoading || !pdfBase64) && <Spinner />}
         {!isLoading && pdfBase64 && (
           <PdfViewer
-            url={`/api/v1/cerfa/pdf/${cerfa.id}/?workspaceId=${auth.workspaceId}&dossierId=${dossierId}`}
+            url={`/api/v1/cerfa/pdf/${cerfa.id}/?workspaceId=${auth.workspaceId}&dossierId=${dossier._id}`}
             pdfBase64={pdfBase64}
             showDownload={false}
             documentLoaded={() => {

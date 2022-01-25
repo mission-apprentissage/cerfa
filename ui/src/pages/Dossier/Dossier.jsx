@@ -12,8 +12,8 @@ import {
   Spinner,
   useDisclosure,
   Link,
-  UnorderedList,
-  ListItem,
+  // UnorderedList,
+  // ListItem,
 } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps-rework-mna";
 import { useHistory, useRouteMatch } from "react-router-dom";
@@ -37,10 +37,10 @@ import { useDocuments } from "../../common/hooks/useDossier/useDocuments";
 import { useSignatures } from "../../common/hooks/useDossier/useSignatures";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
 import { cerfaAtom } from "../../common/hooks/useCerfa/cerfaAtom";
-import {
-  cerfaEmployeurAdresseDepartementAtom,
-  cerfaEmployeurAdresseRegionAtom,
-} from "../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+// import {
+//   cerfaEmployeurAdresseDepartementAtom,
+//   cerfaEmployeurAdresseRegionAtom,
+// } from "../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import { AvatarPlus, StepWip, TickBubble, DownloadLine, SentPaperPlane } from "../../theme/components/icons";
 
 import { signaturesPdfLoadedAtom } from "../../common/hooks/useDossier/signaturesAtoms";
@@ -106,11 +106,11 @@ const stepByPath = ["cerfa", "documents", "signatures"];
 // };
 
 const EndModal = ({ dossier, ...modal }) => {
-  const cerfa = useRecoilValue(cerfaAtom);
-  const employeurAdresseDepartement = useRecoilValue(cerfaEmployeurAdresseDepartementAtom);
-  const employeurAdresseRegion = useRecoilValue(cerfaEmployeurAdresseRegionAtom);
+  // const cerfa = useRecoilValue(cerfaAtom);
+  // const employeurAdresseDepartement = useRecoilValue(cerfaEmployeurAdresseDepartementAtom);
+  // const employeurAdresseRegion = useRecoilValue(cerfaEmployeurAdresseRegionAtom);
 
-  const [ddets, setDdets] = useState(null);
+  // const [ddets, setDdets] = useState(null);
 
   let onReplyClicked = useCallback(
     async (answer) => {
@@ -126,33 +126,33 @@ const EndModal = ({ dossier, ...modal }) => {
     [dossier._id]
   );
 
-  useEffect(() => {
-    const run = async () => {
-      const code_region = cerfa.employeur.adresse.region.value || employeurAdresseRegion.value;
-      const code_dpt = cerfa.employeur.adresse.departement.value || employeurAdresseDepartement.value;
+  // useEffect(() => {
+  //   const run = async () => {
+  //     const code_region = cerfa.employeur.adresse.region.value || employeurAdresseRegion.value;
+  //     const code_dpt = cerfa.employeur.adresse.departement.value || employeurAdresseDepartement.value;
 
-      if (code_region && code_dpt) {
-        const response = await _post(`/api/v1/dreetsddets/`, {
-          code_region,
-          code_dpt,
-          dossierId: dossier._id,
-        });
-        setDdets(response.ddets);
-      }
-    };
-    run();
-  }, [
-    cerfa.employeur.adresse.departement.value,
-    cerfa.employeur.adresse.region.value,
-    dossier._id,
-    employeurAdresseDepartement,
-    employeurAdresseRegion,
-  ]);
+  //     if (code_region && code_dpt) {
+  //       const response = await _post(`/api/v1/dreetsddets/`, {
+  //         code_region,
+  //         code_dpt,
+  //         dossierId: dossier._id,
+  //       });
+  //       setDdets(response.ddets);
+  //     }
+  //   };
+  //   run();
+  // }, [
+  //   cerfa.employeur.adresse.departement.value,
+  //   cerfa.employeur.adresse.region.value,
+  //   dossier._id,
+  //   employeurAdresseDepartement,
+  //   employeurAdresseRegion,
+  // ]);
 
   return (
     <>
       <PromptModal
-        title="Souhaitez-vous terminer ce dossier ?"
+        title="Souhaitez-vous finaliser ce dossier ?"
         isOpen={modal.isOpen}
         onClose={modal.onClose}
         onOk={() => {
@@ -167,31 +167,14 @@ const EndModal = ({ dossier, ...modal }) => {
         okText={"Oui, passer au téléchargement"}
         koText={"Non, continuer l'édition"}
       >
-        <Text mb={1}>
-          Cette opération clôturera l'édition de ce dossier. Vous pourrez néanmoins le consulter à tout moment.
+        <Text mt={3}>Cette opération clôturera l’édition de ce dossier :</Text>
+        <Text mt={2}>
+          <strong>toute modification ultérieure devra faire l'objet d'un avenant.</strong>
         </Text>
-        <Text mb={1}>
-          <br />
-          Vous pourrez par la suite, télécharger le contrat généré au format pdf.
+
+        <Text mt={5} fontStyle="italic">
+          Vous pourrez consulter à tout moment ce dossier en lecture.
         </Text>
-        {ddets && (
-          <Box mt={8}>
-            <Text fontWeight="bold" mb={5}>
-              DDETS destinataire du contrat
-            </Text>
-            <UnorderedList ml="30px !important">
-              <ListItem>{ddets.DDETS}</ListItem>
-              <ListItem>
-                Email de dépôt: <strong>{ddets["Mail_depot"]}</strong>
-              </ListItem>
-              <ListItem>Téléphone: {ddets["Telephone"]}</ListItem>
-              <ListItem>
-                Informations complémentaires:
-                <br /> {ddets["Informations_complementaires"]}
-              </ListItem>
-            </UnorderedList>
-          </Box>
-        )}
       </PromptModal>
     </>
   );
