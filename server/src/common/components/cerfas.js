@@ -63,10 +63,10 @@ module.exports = async () => {
       try {
         const validate = await Cerfa.create({
           ...cerfa,
-          contrat: {
-            ...cerfa.contrat,
-            dateConclusion: new Date(),
-          },
+          // contrat: {
+          //   ...cerfa.contrat,
+          //   // dateConclusion: new Date(),
+          // },
           employeur: {
             ...cerfa.employeur,
             libelleIdcc: undefined,
@@ -95,10 +95,10 @@ module.exports = async () => {
         { _id: id },
         {
           draft: false,
-          contrat: {
-            ...cerfa.contrat,
-            dateConclusion: new Date(),
-          },
+          // contrat: {
+          //   ...cerfa.contrat,
+          //   // dateConclusion: new Date(),
+          // },
           apprenti: {
             ...cerfa.apprenti,
           },

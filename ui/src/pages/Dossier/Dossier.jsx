@@ -257,7 +257,11 @@ export default () => {
       if (documentsCompletion === null && cerfa && dossier) {
         setDocumentsCompletion(cerfa, dossier);
       }
-      if (signaturesCompletion === null && cerfa) {
+      // if (signaturesCompletion === null && cerfa) {
+      //   setSignaturesCompletion(cerfa);
+      // }
+      // console.log(signaturesCompletion, cerfa);
+      if (cerfa) {
         setSignaturesCompletion(cerfa);
       }
 
