@@ -166,7 +166,7 @@ module.exports = (components) => {
           webhook: {
             "procedure.finished": [
               {
-                url: `${config.publicUrl}/api/v1/${dossierId}`,
+                url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
                 method: "GET",
                 // headers: {
                 //   "X-Custom-Header": "Yousign Webhook - Test value",
@@ -178,7 +178,20 @@ module.exports = (components) => {
       });
 
       await dossiers.updateEtatDossier(dossierId, "EN_ATTENTE_SIGNATURES");
-      await dossiers.updateSignatures(dossierId, resultProcedures);
+      await dossiers.updateSignatures(dossierId, {
+        ...resultProcedures,
+        webhook: {
+          "procedure.finished": [
+            {
+              url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
+              method: "GET",
+              // headers: {
+              //   "X-Custom-Header": "Yousign Webhook - Test value",
+              // },
+            },
+          ],
+        },
+      });
 
       return res.json(resultProcedures);
     })
@@ -186,7 +199,7 @@ module.exports = (components) => {
 
   // TODO SECURE
   router.get(
-    "/api/v1/sign_document/:id",
+    "/:id",
     tryCatch(async ({ params }, res) => {
       const dossier = await dossiers.findDossierById(params.id);
       if (!dossier) {
