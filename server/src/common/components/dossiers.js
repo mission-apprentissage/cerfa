@@ -259,7 +259,7 @@ module.exports = async () => {
         throw Boom.notFound("Doesn't exist");
       }
 
-      return await Dossier.findOneAndUpdate({ _id: id }, { draft: false, etat: "DOSSIER_TERMINE" }, { new: true });
+      return await Dossier.findOneAndUpdate({ _id: id }, { draft: false, etat: "DOSSIER_FINALISE" }, { new: true });
     },
     unpublishDossier: async (id) => {
       const found = await Dossier.findById(id).lean();

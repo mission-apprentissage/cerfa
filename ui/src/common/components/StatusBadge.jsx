@@ -26,11 +26,13 @@ export const StatusBadge = ({ status, text, withIcon = false, ...badgeProps }) =
   const defaultVariant = "draft";
   const variantsMap = {
     BROUILLON: "draft",
+    DOSSIER_FINALISE: "termine",
     EN_ATTENTE_SIGNATURES: "waitingSignature",
     SIGNATURES_EN_COURS: "waitingSignature",
     SIGNE: "signed",
-    DOSSIER_TERMINE: "termine",
-    DOSSIER_TERMINE_EN_ATTENTE_TRANSMISSION: "waitingSignature",
+    DOSSIER_TERMINE: "termine", // TODO MIGRATION SCRIPT
+    DOSSIER_TERMINE_AVEC_SIGNATURE: "termine",
+    DOSSIER_TERMINE_SANS_SIGNATURE: "termine",
     TRANSMIS: "waitingSignature",
     EN_COURS_INSTRUCTION: "pending",
     INCOMPLET: "nonConforme",
@@ -49,7 +51,7 @@ export const StatusBadge = ({ status, text, withIcon = false, ...badgeProps }) =
       <Center>
         {withIcon && <Icon variant={variant} />}
         <Text {...(withIcon && { ml: 1, as: "span", whiteSpace: "break-spaces" })}>
-          {text ? `${text}` : DOSSIER_STATUS[status]}
+          {text ? `${text}` : DOSSIER_STATUS[status].text}
         </Text>
       </Center>
     </Badge>

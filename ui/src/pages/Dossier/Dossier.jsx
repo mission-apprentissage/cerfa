@@ -299,7 +299,7 @@ export default () => {
                   state={index === 0 ? stepState1 : index === 1 ? stepState2 : stepState3}
                 >
                   {index === 1 && <PiecesJustificatives />}
-                  {index === 2 && <Signatures dossierId={dossier._id} />}
+                  {index === 2 && <Signatures />}
                 </Step>
               );
             })}
