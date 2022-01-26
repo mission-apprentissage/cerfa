@@ -1,3 +1,10 @@
+# [1.16.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.16.0-beta.1...v1.16.0-beta.2) (2022-01-26)
+
+
+### Features
+
+* gracefully **kick out** user that already exist ([e05fc3b](https://github.com/mission-apprentissage/cerfa/commit/e05fc3b5b31faaa08ee982ab711b51f47e938df8))
+
 # [1.16.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.15.0...v1.16.0-beta.1) (2022-01-26)
 
 
