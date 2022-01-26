@@ -159,7 +159,8 @@ module.exports = async () => {
             "CONVENTION_REDUCTION_DUREE",
             "CONVENTION_MOBILITE",
             "FACTURE",
-            "CERTIFICAT_REALISATION"
+            "CERTIFICAT_REALISATION",
+            "CONTRAT"
           )
           .required(),
         // typeFichier: Joi.string().required(), // "pdf"
@@ -213,7 +214,8 @@ module.exports = async () => {
             "CONVENTION_REDUCTION_DUREE",
             "CONVENTION_MOBILITE",
             "FACTURE",
-            "CERTIFICAT_REALISATION"
+            "CERTIFICAT_REALISATION",
+            "CONTRAT"
           )
           .required(),
         nomFichier: Joi.string().required(),

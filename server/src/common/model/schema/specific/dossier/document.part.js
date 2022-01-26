@@ -13,6 +13,7 @@ const documentSchema = {
       "CONVENTION_MOBILITE",
       "FACTURE",
       "CERTIFICAT_REALISATION",
+      "CONTRAT",
       null,
     ],
     type: String,

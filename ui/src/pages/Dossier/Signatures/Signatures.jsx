@@ -117,7 +117,6 @@ const ContratPdf = () => {
       try {
         if (dossier._id && cerfa?.id) {
           const { pdfBase64 } = await _post(`/api/v1/cerfa/pdf/${cerfa.id}`, {
-            workspaceId: auth.workspaceId,
             dossierId: dossier._id,
           });
           setPdfBase64(pdfBase64);
@@ -140,7 +139,7 @@ const ContratPdf = () => {
         {(isLoading || !pdfBase64) && <Spinner />}
         {!isLoading && pdfBase64 && (
           <PdfViewer
-            url={`/api/v1/cerfa/pdf/${cerfa.id}/?workspaceId=${auth.workspaceId}&dossierId=${dossier._id}`}
+            url={`/api/v1/cerfa/pdf/${cerfa.id}/?dossierId=${dossier._id}`}
             pdfBase64={pdfBase64}
             showDownload={false}
             documentLoaded={() => {

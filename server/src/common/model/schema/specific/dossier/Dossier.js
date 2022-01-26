@@ -58,6 +58,7 @@ const dossierSchema = {
     enum: [
       "BROUILLON",
       "EN_ATTENTE_SIGNATURES",
+      "SIGNATURES_EN_COURS",
       "SIGNE",
       "DOSSIER_TERMINE",
       "DOSSIER_TERMINE_EN_ATTENTE_TRANSMISSION",

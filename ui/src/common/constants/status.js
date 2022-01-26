@@ -1,6 +1,7 @@
 export const DOSSIER_STATUS = {
   BROUILLON: "Brouillon",
   EN_ATTENTE_SIGNATURES: "En attente de signatures",
+  SIGNATURES_EN_COURS: "En cours de signatures",
   SIGNE: "Signé",
   DOSSIER_TERMINE: "Dossier terminé",
   DOSSIER_TERMINE_EN_ATTENTE_TRANSMISSION: "Dossier terminé en attente de transmission",

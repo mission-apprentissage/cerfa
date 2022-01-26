@@ -73,7 +73,7 @@ export default ({
         <Center w="full">
           <Button
             as={Link}
-            href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?workspaceId=${auth.workspaceId}&dossierId=${dossier._id}`}
+            href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?dossierId=${dossier._id}`}
             isExternal
             size="md"
             variant="primary"
