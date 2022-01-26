@@ -82,8 +82,8 @@ module.exports = async (components) => {
   app.use("/api/v1/naf", checkJwtToken, naf(components));
   app.use("/api/v1/dreetsddets", checkJwtToken, dreetsDdets(components));
   app.use("/api/v1/cfdrncp", checkJwtToken, cfdrncp(components));
-  app.use("/api/v1/sign_document", checkJwtToken, signDocument(components));
-  app.use("/api/v1/agecap", checkJwtToken, pageAccessMiddleware(["dossier/send_agecap"]), agecap(components));
+  app.use("/api/v1/sign_document", signDocument(components));
+  app.use("/api/v1/agecap", checkJwtToken, pageAccessMiddleware(["send_agecap"]), agecap(components));
 
   app.get(
     "/api",

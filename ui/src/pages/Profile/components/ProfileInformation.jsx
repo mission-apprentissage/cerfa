@@ -11,15 +11,16 @@ import {
   HStack,
   RadioGroup,
   Radio,
-  // Text,
+  Text,
   Divider,
 } from "@chakra-ui/react";
 import PhoneInput from "react-phone-input-2";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import useAuth from "../../../common/hooks/useAuth";
+import { hasPageAccessTo } from "../../../common/utils/rolesUtils";
 import { _put } from "../../../common/httpClient";
-// import { betaVersion, BetaFeatures } from "../../../common/components/BetaFeatures";
+import { betaVersion, BetaFeatures } from "../../../common/components/BetaFeatures";
 
 const ProfileInformation = () => {
   let [auth] = useAuth();
@@ -32,7 +33,7 @@ const ProfileInformation = () => {
       telephone: auth.telephone ? auth.telephone.replace("+", "") : "",
       email: auth.email || "",
       civility: auth.civility || "",
-      // beta: auth.beta || "",
+      beta: auth.beta || "",
     },
     validationSchema: Yup.object().shape({
       prenom: Yup.string(),
@@ -51,7 +52,7 @@ const ProfileInformation = () => {
             telephone: telephone ? `+${telephone}` : null,
             civility: civility || null,
             email,
-            // beta: beta || null,
+            beta: beta || null,
           });
           window.location.reload();
         } catch (e) {
@@ -133,32 +134,34 @@ const ProfileInformation = () => {
           </FormControl>
         </Flex>
         <Divider mt={10} mb={4} borderWidth="2px" />
-        {/* <Box>
-          <HStack>
-            <FormLabel fontWeight="bold">Activer les fonctionnalité expérimentales de la plateforme ?</FormLabel>
-            <RadioGroup value={values.beta}>
-              <HStack>
-                <Radio
-                  type="radio"
-                  name="beta"
-                  value={betaVersion()}
-                  checked={values.beta !== "non"}
-                  onChange={handleChange}
-                >
-                  Oui
-                </Radio>
-                <Radio type="radio" name="beta" value="non" checked={values.beta === "non"} onChange={handleChange}>
-                  Non
-                </Radio>
-              </HStack>
-            </RadioGroup>
-          </HStack>
-          <Box pl={4}>
-            <Text>Cette activation vous donnera accès à :</Text>
-            <BetaFeatures borderColor={"dgalt"} borderWidth={1} px={4} py={3} maxH="30vh" my={3} />
+        {hasPageAccessTo(auth, "signature_beta") && (
+          <Box>
+            <HStack>
+              <FormLabel fontWeight="bold">Activer les fonctionnalité expérimentales de la plateforme ?</FormLabel>
+              <RadioGroup value={values.beta}>
+                <HStack>
+                  <Radio
+                    type="radio"
+                    name="beta"
+                    value={betaVersion()}
+                    checked={values.beta !== "non"}
+                    onChange={handleChange}
+                  >
+                    Oui
+                  </Radio>
+                  <Radio type="radio" name="beta" value="non" checked={values.beta === "non"} onChange={handleChange}>
+                    Non
+                  </Radio>
+                </HStack>
+              </RadioGroup>
+            </HStack>
+            <Box pl={4}>
+              <Text>Cette activation vous donnera accès à :</Text>
+              <BetaFeatures borderColor={"dgalt"} borderWidth={1} px={4} py={3} maxH="30vh" my={3} />
+            </Box>
           </Box>
-        </Box>
-        <Divider mt={10} mb={4} borderWidth="2px" /> */}
+        )}
+        <Divider mt={10} mb={4} borderWidth="2px" />
       </Box>
       <Box mt="2rem">
         <Button variant="primary" onClick={handleSubmit} type="submit">

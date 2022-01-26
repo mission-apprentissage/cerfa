@@ -50,3 +50,4 @@ export * from "./FourIcon";
 export * from "./FiveIcon";
 export * from "./TickBubble";
 export * from "./Check";
+export * from "./BallPenFill";

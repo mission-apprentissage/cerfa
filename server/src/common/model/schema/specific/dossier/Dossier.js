@@ -19,6 +19,10 @@ const dossierSchema = {
       return !this.draft;
     },
   },
+  signatures: {
+    type: {},
+    default: null,
+  },
   dreets: {
     type: Number,
     description: "DREETS destinataire du contrat - code région d'exécution du contrat",
@@ -54,6 +58,7 @@ const dossierSchema = {
     enum: [
       "BROUILLON",
       "EN_ATTENTE_SIGNATURES",
+      "SIGNE",
       "DOSSIER_TERMINE",
       "DOSSIER_TERMINE_EN_ATTENTE_TRANSMISSION",
       "TRANSMIS",

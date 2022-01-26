@@ -6,12 +6,19 @@ const permissionsDossierMiddleware = require("../../middlewares/permissionsDossi
 const { Dossier, Cerfa } = require("../../../common/model/index");
 const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfaController");
 const apiYousign = require("../../../common/apis/yousign/ApiYousign");
+const config = require("../../../config");
+const authMiddleware = require("../../middlewares/authMiddleware");
+const pageAccessMiddleware = require("../../middlewares/pageAccessMiddleware");
 
 module.exports = (components) => {
   const router = express.Router();
 
+  const { dossiers } = components;
+
   router.post(
     "/",
+    authMiddleware(components),
+    pageAccessMiddleware(["signature_beta"]),
     permissionsDossierMiddleware(components, ["dossier/page_signatures/signer"]),
     tryCatch(async (req, res) => {
       let { cerfaId, dossierId } = await Joi.object({
@@ -33,7 +40,7 @@ module.exports = (components) => {
 
       const pdfBytes = await pdfCerfaController.createPdfCerfa(cerfa);
 
-      const name = `contrat_${cerfaId}.pdf`;
+      const name = `contrat_${dossierId}.pdf`;
       const content = Buffer.from(pdfBytes).toString("base64");
 
       const resultFiles = await apiYousign.postFiles({ name, content });
@@ -42,29 +49,100 @@ module.exports = (components) => {
       const resultProcedures = await apiYousign.postProcedures({
         name: `Signature du dossier ${dossier.nom}`,
         description: `Le contrat en apprentissage de .... pour .....`,
+        start: true,
         members: [
+          // {
+          //   firstname: "Employeur",
+          //   lastname: "Bigard",
+          //   email: "antoine.bigard+testEmployeur@beta.gouv.fr",
+          //   phone: "+33612647513",
+          //   operationLevel: "custom",
+          //   operationCustomModes: ["sms"],
+          //   operationModeSmsConfig: {
+          //     content: `eSIGNATURE - {{code}} est le code pour signer le contrat ${dossier.nom}.`,
+          //   },
+          //   fileObjects: [
+          //     {
+          //       file: resultFiles.id,
+          //       page: 2,
+          //       position: "20,149,189,199", // Employeur
+          //       // position: "190,149,360,199", // Apprenti(e)
+          //       // position: "358,149,527,199", // Représentant légal de l'apprenti(e) mineur(e)
+          //       // position: "40,269,173,322", // Cfa
+          //       // mention: "",
+          //       // mention2: "",
+          //     },
+          //   ],
+          // },
           {
-            firstname: "Antoine",
+            firstname: "Apprenti",
             lastname: "Bigard",
-            email: "antoine.bigard@beta.gouv.fr",
+            email: "antoine.bigard+testApprenti@beta.gouv.fr",
             phone: "+33612647513",
             operationLevel: "custom",
             operationCustomModes: ["sms"],
             operationModeSmsConfig: {
-              content: `eSIGNATURE Cerfa - {{code}} est le code pour signer le contrat ${dossier.nom}.`,
+              content: `eSIGNATURE - {{code}} est le code pour signer le contrat ${dossier.nom}.`,
             },
             fileObjects: [
               {
                 file: resultFiles.id,
                 page: 2,
-                position: "20,149,189,199", // Employeur
-                // position: "190,149,360,199", // Apprenti(e)
+                // position: "20,149,189,199", // Employeur
+                position: "190,149,360,199", // Apprenti(e)
                 // position: "358,149,527,199", // Représentant légal de l'apprenti(e) mineur(e)
+                // position: "40,269,173,322", // Cfa
                 // mention: "",
                 // mention2: "",
               },
             ],
           },
+          // {
+          //   firstname: "Legal",
+          //   lastname: "Bigard",
+          //   email: "antoine.bigard+testLegal@beta.gouv.fr",
+          //   phone: "+33612647513",
+          //   operationLevel: "custom",
+          //   operationCustomModes: ["sms"],
+          //   operationModeSmsConfig: {
+          //     content: `eSIGNATURE - {{code}} est le code pour signer le contrat ${dossier.nom}.`,
+          //   },
+          //   fileObjects: [
+          //     {
+          //       file: resultFiles.id,
+          //       page: 2,
+          //       // position: "20,149,189,199", // Employeur
+          //       // position: "190,149,360,199", // Apprenti(e)
+          //       position: "358,149,527,199", // Représentant légal de l'apprenti(e) mineur(e)
+          //       // position: "40,269,173,322", // Cfa
+          //       // mention: "",
+          //       // mention2: "",
+          //     },
+          //   ],
+          // },
+          // {
+          //   firstname: "Cfa",
+          //   lastname: "Bigard",
+          //   email: "antoine.bigard+testCfa@beta.gouv.fr",
+          //   phone: "+33612647513",
+          //   operationLevel: "custom",
+          //   operationCustomModes: ["sms"],
+          //   operationModeSmsConfig: {
+          //     content: `eSIGNATURE - {{code}} est le code pour signer le contrat ${dossier.nom}.`,
+          //   },
+          //   fileObjects: [
+          //     {
+          //       file: resultFiles.id,
+          //       page: 2,
+          //       // position: "20,149,189,199", // Employeur
+          //       // position: "190,149,360,199", // Apprenti(e)
+          //       // position: "358,149,527,199", // Représentant légal de l'apprenti(e) mineur(e)
+          //       position: "40,269,173,322", // Cfa
+          //       // mention: "",
+          //       // mention2: "",
+          //     },
+          //   ],
+          // },
         ],
         config: {
           email: {
@@ -85,12 +163,40 @@ module.exports = (components) => {
               },
             ],
           },
+          webhook: {
+            "procedure.finished": [
+              {
+                url: `${config.publicUrl}/api/v1/${dossierId}`,
+                method: "GET",
+                // headers: {
+                //   "X-Custom-Header": "Yousign Webhook - Test value",
+                // },
+              },
+            ],
+          },
         },
       });
 
-      console.log(resultProcedures);
+      await dossiers.updateEtatDossier(dossierId, "EN_ATTENTE_SIGNATURES");
+      await dossiers.updateSignatures(dossierId, resultProcedures);
 
-      return res.json({ sucess: true });
+      return res.json(resultProcedures);
+    })
+  );
+
+  // TODO SECURE
+  router.get(
+    "/api/v1/sign_document/:id",
+    tryCatch(async ({ params }, res) => {
+      const dossier = await dossiers.findDossierById(params.id);
+      if (!dossier) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      await dossiers.updateEtatDossier("SIGNE");
+      // TODO GET DOCUMENT
+
+      res.json({});
     })
   );
 

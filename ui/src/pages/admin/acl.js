@@ -154,10 +154,14 @@ export default [
           },
         ],
       },
-      {
-        feature: "Télétransmettre Agecap",
-        ref: "dossier/send_agecap",
-      },
     ],
+  },
+  {
+    feature: "Signature électronique - BETA",
+    ref: "signature_beta",
+  },
+  {
+    feature: "Télétransmettre Agecap",
+    ref: "send_agecap",
   },
 ];
