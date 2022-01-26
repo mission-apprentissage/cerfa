@@ -52,9 +52,9 @@ module.exports = (components) => {
         secretOrKey: config.auth.pds.jwtSecret,
       },
       (jwtPayload, done) => {
-        const { expiration } = jwtPayload;
+        const { exp } = jwtPayload;
 
-        if (Date.now() > expiration) {
+        if (Date.now() > exp * 1000) {
           done(new Error("Unauthorized"), false);
         }
 
@@ -125,6 +125,14 @@ module.exports = (components) => {
           .redirect("/mon-espace/mes-dossiers");
       } else {
         // Register
+
+        const alreadyExists = await users.getUser(userinfo.sub);
+        if (alreadyExists) {
+          throw Boom.conflict(`Unable to create`, {
+            message: `Ce courriel est déjà utilisé. Merci de vous connecter directement sur la plateforme`,
+          });
+        }
+
         const tmpPassword = generator.generate({
           length: 10,
           numbers: true,

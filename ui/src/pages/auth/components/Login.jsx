@@ -39,8 +39,12 @@ const Login = () => {
         }
       }
     } catch (e) {
-      console.error(e);
-      setStatus({ error: e.prettyMessage });
+      if (e.messages?.details?.message === "pds login") {
+        setStatus({ error: "Veuillez vous connecter avec le portail de service." });
+      } else {
+        console.error(e);
+        setStatus({ error: e.prettyMessage });
+      }
     }
   };
 

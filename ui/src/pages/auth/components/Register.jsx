@@ -42,7 +42,7 @@ const Register = () => {
   const [entrepriseData, setEntrepriseData] = useState(null);
   const [succeeded, setSucceeded] = useState(false);
 
-  const { values, handleChange, handleSubmit, errors, touched, setFieldValue } = useFormik({
+  const { values, handleChange, handleSubmit, errors, touched, setFieldValue, setErrors } = useFormik({
     initialValues: {
       compte: "",
       email: "",
@@ -79,7 +79,11 @@ const Register = () => {
             setSucceeded(true);
           }
         } catch (e) {
-          console.error(e);
+          if (e.messages?.details?.message === "email already in use") {
+            setErrors({ email: "Ce courriel est déjà utilisé." });
+          } else {
+            console.error(e);
+          }
         }
         resolve("onSubmitHandler publish complete");
       });

@@ -22,9 +22,9 @@ module.exports = ({ users, sessions }) => {
         secretOrKey: config.auth.user.jwtSecret,
       },
       (jwtPayload, done) => {
-        const { expiration } = jwtPayload;
+        const { exp } = jwtPayload;
 
-        if (Date.now() > expiration) {
+        if (Date.now() > exp * 1000) {
           done(new Error("Unauthorized"), false);
         }
 
