@@ -117,7 +117,6 @@ const ContratPdf = () => {
       try {
         if (dossier._id && cerfa?.id) {
           const { pdfBase64 } = await _post(`/api/v1/cerfa/pdf/${cerfa.id}`, {
-            workspaceId: auth.workspaceId,
             dossierId: dossier._id,
           });
           setPdfBase64(pdfBase64);
@@ -134,13 +133,13 @@ const ContratPdf = () => {
     <Box mt={8} minH="30vh">
       {showDdets && <DdetsContainer />}
       <Heading as="h3" fontSize="1.4rem">
-        Votre contrat généré:
+        Votre contrat généré (non signé):
       </Heading>
       <Center mt={5}>
         {(isLoading || !pdfBase64) && <Spinner />}
         {!isLoading && pdfBase64 && (
           <PdfViewer
-            url={`/api/v1/cerfa/pdf/${cerfa.id}/?workspaceId=${auth.workspaceId}&dossierId=${dossier._id}`}
+            url={`/api/v1/cerfa/pdf/${cerfa.id}/?dossierId=${dossier._id}`}
             pdfBase64={pdfBase64}
             showDownload={false}
             documentLoaded={() => {
@@ -153,7 +152,8 @@ const ContratPdf = () => {
   );
 };
 
-export default ({ dossierId }) => {
+export default () => {
+  const dossier = useRecoilValue(dossierAtom);
   useCerfa();
   const {
     sca: signaturesCompletion,
@@ -280,5 +280,25 @@ export default ({ dossierId }) => {
     );
   }
 
-  return <ContratPdf dossierId={dossierId} />;
+  if (
+    !dossier.signatures &&
+    (dossier.etat === "BROUILLON" ||
+      dossier.etat === "DOSSIER_FINALISE" ||
+      dossier.etat === "DOSSIER_TERMINE" || // TODO MIGRATION
+      dossier.etat === "EN_ATTENTE_SIGNATURES" ||
+      dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
+      dossier.etat === "TRANSMIS" ||
+      dossier.etat === "EN_COURS_INSTRUCTION" ||
+      dossier.etat === "INCOMPLET" ||
+      dossier.etat === "DEPOSE" ||
+      dossier.etat === "REFUSE" ||
+      dossier.etat === "ENGAGE" ||
+      dossier.etat === "ANNULE" ||
+      dossier.etat === "RUTPURE" ||
+      dossier.etat === "SOLDE")
+  ) {
+    return <ContratPdf />;
+  }
+
+  return null;
 };

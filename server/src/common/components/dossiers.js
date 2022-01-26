@@ -159,7 +159,8 @@ module.exports = async () => {
             "CONVENTION_REDUCTION_DUREE",
             "CONVENTION_MOBILITE",
             "FACTURE",
-            "CERTIFICAT_REALISATION"
+            "CERTIFICAT_REALISATION",
+            "CONTRAT"
           )
           .required(),
         // typeFichier: Joi.string().required(), // "pdf"
@@ -213,7 +214,8 @@ module.exports = async () => {
             "CONVENTION_REDUCTION_DUREE",
             "CONVENTION_MOBILITE",
             "FACTURE",
-            "CERTIFICAT_REALISATION"
+            "CERTIFICAT_REALISATION",
+            "CONTRAT"
           )
           .required(),
         nomFichier: Joi.string().required(),
@@ -257,7 +259,7 @@ module.exports = async () => {
         throw Boom.notFound("Doesn't exist");
       }
 
-      return await Dossier.findOneAndUpdate({ _id: id }, { draft: false, etat: "DOSSIER_TERMINE" }, { new: true });
+      return await Dossier.findOneAndUpdate({ _id: id }, { draft: false, etat: "DOSSIER_FINALISE" }, { new: true });
     },
     unpublishDossier: async (id) => {
       const found = await Dossier.findById(id).lean();

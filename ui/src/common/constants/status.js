@@ -1,16 +1,71 @@
 export const DOSSIER_STATUS = {
-  BROUILLON: "Brouillon",
-  EN_ATTENTE_SIGNATURES: "En attente de signatures",
-  SIGNE: "Signé",
-  DOSSIER_TERMINE: "Dossier terminé",
-  DOSSIER_TERMINE_EN_ATTENTE_TRANSMISSION: "Dossier terminé en attente de transmission",
-  TRANSMIS: "Transmis",
-  EN_COURS_INSTRUCTION: "En cours d'instruction",
-  INCOMPLET: "Demande de complément",
-  DEPOSE: "Déposé",
-  REFUSE: "Refusé",
-  ENGAGE: "Engagé",
-  ANNULE: "Annulé",
-  RUTPURE: "Rupture",
-  SOLDE: "Soldé",
+  BROUILLON: {
+    priority: 0,
+    text: "Brouillon",
+  },
+  DOSSIER_FINALISE: {
+    priority: 1,
+    text: "Dossier finalisé",
+  },
+  EN_ATTENTE_SIGNATURES: {
+    priority: 2,
+    text: "En attente de signatures",
+  },
+  SIGNATURES_EN_COURS: {
+    priority: 2,
+    text: "En cours de signatures",
+  },
+  SIGNE: {
+    priority: 2,
+    text: "Signé",
+  },
+  DOSSIER_TERMINE: {
+    // TODO MIGRATION SCRIPT
+    priority: 3,
+    text: "Dossier terminé",
+  },
+  DOSSIER_TERMINE_AVEC_SIGNATURE: {
+    priority: 3,
+    text: "Dossier terminé",
+  },
+  DOSSIER_TERMINE_SANS_SIGNATURE: {
+    priority: 3,
+    text: "Dossier terminé",
+  },
+  TRANSMIS: {
+    priority: 4,
+    text: "Transmis",
+  },
+  EN_COURS_INSTRUCTION: {
+    priority: 5,
+    text: "En cours d'instruction",
+  },
+  INCOMPLET: {
+    priority: 6,
+    text: "Demande de complément",
+  },
+  DEPOSE: {
+    priority: 6,
+    text: "Déposé",
+  },
+  REFUSE: {
+    priority: 6,
+    text: "Refusé",
+  },
+  ENGAGE: {
+    priority: 7,
+    text: "Engagé",
+  },
+  ANNULE: {
+    priority: 7,
+    text: "Annulé",
+  },
+  RUTPURE: {
+    priority: 7,
+    text: "Rupture",
+  },
+  SOLDE: {
+    priority: 7,
+    text: "Soldé",
+  },
 };

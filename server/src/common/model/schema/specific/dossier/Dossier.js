@@ -56,20 +56,29 @@ const dossierSchema = {
   },
   etat: {
     enum: [
-      "BROUILLON",
-      "EN_ATTENTE_SIGNATURES",
-      "SIGNE",
-      "DOSSIER_TERMINE",
-      "DOSSIER_TERMINE_EN_ATTENTE_TRANSMISSION",
-      "TRANSMIS",
-      "EN_COURS_INSTRUCTION",
-      "INCOMPLET",
-      "DEPOSE",
-      "REFUSE",
-      "ENGAGE",
-      "ANNULE",
-      "RUTPURE",
-      "SOLDE",
+      "BROUILLON", // 0
+
+      "DOSSIER_FINALISE", // 1
+
+      "EN_ATTENTE_SIGNATURES", // 2
+      "SIGNATURES_EN_COURS", // 2
+      "DOSSIER_TERMINE_AVEC_SIGNATURE", // 3
+
+      "DOSSIER_TERMINE_SANS_SIGNATURE", // 3
+      "DOSSIER_TERMINE", // 3  // TODO MIGRATION
+
+      "TRANSMIS", // 4
+
+      "EN_COURS_INSTRUCTION", // 5
+
+      "INCOMPLET", // 6
+      "DEPOSE", // 6
+      "REFUSE", // 6
+
+      "ENGAGE", // 7
+      "ANNULE", // 7
+      "RUTPURE", // 7
+      "SOLDE", // 7
       null,
     ],
     type: String,
