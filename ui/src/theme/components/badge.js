@@ -82,6 +82,11 @@ const Badge = {
       pl: "15px",
       pr: "15px",
     },
+    signed: {
+      ...commonStatusBadgeStyle,
+      bg: "#E3E3FD",
+      color: "bluefrance",
+    },
     waitingSignature: {
       ...commonStatusBadgeStyle,
       bg: "#E3E3FD",

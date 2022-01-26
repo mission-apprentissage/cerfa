@@ -60,6 +60,19 @@ class ApiYousign {
       }
     });
   }
+  startProcedures(proceduresId) {
+    return executeWithRateLimiting(async (client) => {
+      try {
+        logger.debug(`[Yousign API] Start procedures...`);
+        let response = await client.put(proceduresId, {
+          start: true,
+        });
+        return response.data;
+      } catch (e) {
+        throw new ApiError("Api Yousign", `${e.message}`, e.code || e.response.status);
+      }
+    });
+  }
 }
 
 const apiYousign = new ApiYousign();

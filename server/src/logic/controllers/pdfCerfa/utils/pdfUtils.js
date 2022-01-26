@@ -1179,7 +1179,6 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
     for (let jndex = 0; jndex < pdfPageContent.length; jndex++) {
       const { title, x, y, defaultColor, defaultSize } = pdfPageContent[jndex];
       let arrTitles = Array.isArray(title) ? title : [title];
-      console.log(arrTitles);
       arrTitles.forEach((t, ite) => {
         let text = isObject(t) ? t.text : t;
         const titles = ite === 0 ? capitalizeFirstLetter(text) : text;

@@ -277,6 +277,21 @@ module.exports = async () => {
 
       return await Dossier.findOneAndUpdate({ _id: id }, { etat }, { new: true });
     },
+    updateSignatures: async (id, signatures) => {
+      const found = await Dossier.findById(id).lean();
+
+      if (!found) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      return await Dossier.findOneAndUpdate(
+        { _id: id },
+        {
+          signatures,
+        },
+        { new: true }
+      );
+    },
     removeDossier: async (_id) => {
       const found = await Dossier.findById(_id).lean();
 
