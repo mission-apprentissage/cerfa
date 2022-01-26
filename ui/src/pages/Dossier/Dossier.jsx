@@ -1,47 +1,30 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  Box,
-  Flex,
-  Center,
-  Heading,
-  Button,
-  Container,
-  Badge,
-  HStack,
-  Text,
-  Spinner,
-  useDisclosure,
-  Link,
-  // UnorderedList,
-  // ListItem,
-} from "@chakra-ui/react";
+import { Box, Flex, Center, Container, Spinner, useDisclosure } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps-rework-mna";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { useSetRecoilState, useRecoilValueLoadable, useRecoilValue } from "recoil";
-import { hasContextAccessTo, hasPageAccessTo } from "../../common/utils/rolesUtils";
-import { _put, _post } from "../../common/httpClient";
+
 import useAuth from "../../common/hooks/useAuth";
-import PromptModal from "../../common/components/Modals/PromptModal";
-// import { betaVersion, BetaFeatures } from "../../common/components/BetaFeatures";
-import { StatusBadge } from "../../common/components/StatusBadge";
-import AcknowledgeModal from "../../common/components/Modals/AcknowledgeModal";
+import { hasPageAccessTo } from "../../common/utils/rolesUtils";
 
 import Cerfa from "./Cerfa/Cerfa";
 import PiecesJustificatives from "./PiecesJustificatives/PiecesJustificatives";
 import Signatures from "./Signatures/Signatures";
-import { InviteModal } from "./components/InviteModal";
-import LivePeopleAvatar from "./components/LivePeopleAvatar";
+
+import DossierHeader from "./components/DossierHeader";
+import DossierFooterControls from "./components/DossierFooterControls";
+
+import AskBetaTestModal from "./components/AskBetaTestModal";
+import IsPrivateEmployeurModal from "./components/IsPrivateEmployeurModal";
+import FinalizeModal from "./components/FinalizeModal";
+import ESignatureModal from "./components/ESignatureModal";
 
 import { useDossier } from "../../common/hooks/useDossier/useDossier";
 import { useDocuments } from "../../common/hooks/useDossier/useDocuments";
 import { useSignatures } from "../../common/hooks/useDossier/useSignatures";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
 import { cerfaAtom } from "../../common/hooks/useCerfa/cerfaAtom";
-// import {
-//   cerfaEmployeurAdresseDepartementAtom,
-//   cerfaEmployeurAdresseRegionAtom,
-// } from "../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
-import { AvatarPlus, StepWip, TickBubble, DownloadLine, SentPaperPlane } from "../../theme/components/icons";
+import { StepWip, TickBubble } from "../../theme/components/icons";
 
 import { signaturesPdfLoadedAtom } from "../../common/hooks/useDossier/signaturesAtoms";
 import { cerfaPartFormationCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
@@ -61,130 +44,10 @@ const steps = [
 
 const stepByPath = ["cerfa", "documents", "signatures"];
 
-// const AskBetaTest = () => {
-//   let [auth, setAuth] = useAuth();
-//   const betaModal = useDisclosure({ defaultIsOpen: auth.beta === null });
-
-//   const onReplyClicked = async (answer) => {
-//     try {
-//       let user = await _put(`/api/v1/profile/becomeBeta`, {
-//         beta: answer,
-//       });
-//       setAuth(user);
-//     } catch (e) {
-//       console.error(e);
-//     }
-//   };
-
-//   return (
-//     <>
-//       {auth.sub !== "anonymous" && auth.confirmed && auth.account_status === "CONFIRMED" && (
-//         <PromptModal
-//           title="Fonctionnalités avancées  - expérimentales"
-//           isOpen={betaModal.isOpen}
-//           onClose={betaModal.onClose}
-//           onOk={() => {
-//             onReplyClicked(betaVersion());
-//             betaModal.onClose();
-//           }}
-//           onKo={() => {
-//             onReplyClicked("non");
-//             betaModal.onClose();
-//           }}
-//           bgOverlay="rgba(0, 0, 0, 0.28)"
-//         >
-//           <Text mb={1}>
-//             Souhaitez-vous participer à l'amélioration du service, en testant de nouvelles fonctionnalités ?
-//           </Text>
-//           <Text>Cette activation vous donnera accès à :</Text>
-//           <BetaFeatures borderColor={"dgalt"} borderWidth={1} px={4} py={3} maxH="30vh" my={3} />
-//           <Text>Vous pouvez à tout moment (dés)activer depuis votre profil les fonctionnalités en test</Text>
-//         </PromptModal>
-//       )}
-//     </>
-//   );
-// };
-
-const EndModal = ({ dossier, ...modal }) => {
-  // const cerfa = useRecoilValue(cerfaAtom);
-  // const employeurAdresseDepartement = useRecoilValue(cerfaEmployeurAdresseDepartementAtom);
-  // const employeurAdresseRegion = useRecoilValue(cerfaEmployeurAdresseRegionAtom);
-
-  // const [ddets, setDdets] = useState(null);
-
-  let onReplyClicked = useCallback(
-    async (answer) => {
-      try {
-        await _put(`/api/v1/dossier/entity/${dossier._id}/publish`, {
-          dossierId: dossier._id,
-        });
-        window.location.replace(window.location.pathname.replace(/\/[^/]*$/, "/signatures"));
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [dossier._id]
-  );
-
-  // useEffect(() => {
-  //   const run = async () => {
-  //     const code_region = cerfa.employeur.adresse.region.value || employeurAdresseRegion.value;
-  //     const code_dpt = cerfa.employeur.adresse.departement.value || employeurAdresseDepartement.value;
-
-  //     if (code_region && code_dpt) {
-  //       const response = await _post(`/api/v1/dreetsddets/`, {
-  //         code_region,
-  //         code_dpt,
-  //         dossierId: dossier._id,
-  //       });
-  //       setDdets(response.ddets);
-  //     }
-  //   };
-  //   run();
-  // }, [
-  //   cerfa.employeur.adresse.departement.value,
-  //   cerfa.employeur.adresse.region.value,
-  //   dossier._id,
-  //   employeurAdresseDepartement,
-  //   employeurAdresseRegion,
-  // ]);
-
-  return (
-    <>
-      <PromptModal
-        title="Souhaitez-vous finaliser ce dossier ?"
-        isOpen={modal.isOpen}
-        onClose={modal.onClose}
-        onOk={() => {
-          onReplyClicked();
-          modal.onClose();
-        }}
-        onKo={() => {
-          onReplyClicked("non");
-          modal.onClose();
-        }}
-        bgOverlay="rgba(0, 0, 0, 0.28)"
-        okText={"Oui, passer au téléchargement"}
-        koText={"Non, continuer l'édition"}
-      >
-        <Text mt={3}>Cette opération clôturera l’édition de ce dossier :</Text>
-        <Text mt={2}>
-          <strong>toute modification ultérieure devra faire l'objet d'un avenant.</strong>
-        </Text>
-
-        <Text mt={5} fontStyle="italic">
-          Vous pourrez consulter à tout moment ce dossier en lecture.
-        </Text>
-      </PromptModal>
-    </>
-  );
-};
-
 export default () => {
   let match = useRouteMatch();
-  let [auth] = useAuth();
   const history = useHistory();
-  const inviteModal = useDisclosure();
+  let [auth] = useAuth();
   const { nextStep, prevStep, activeStep, setStep } = useSteps({
     initialStep: stepByPath.indexOf(match.params.step),
   });
@@ -206,7 +69,8 @@ export default () => {
   const employeurPrivePublic = useRecoilValueLoadable(cerfaEmployeurPrivePublicAtom);
   const [hasSeenPrivateSectorModal, setHasSeenPrivateSectorModal] = useState(false);
   const isPrivateSectorAckModal = useDisclosure({ defaultIsOpen: true });
-  const endModal = useDisclosure();
+  const finalizeModalDisclosure = useDisclosure();
+  const eSignatureModalDisclosure = useDisclosure();
 
   const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
   const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
@@ -240,10 +104,7 @@ export default () => {
       if (documentsCompletion === null && cerfa && dossier) {
         setDocumentsCompletion(cerfa, dossier);
       }
-      // if (signaturesCompletion === null && cerfa) {
-      //   setSignaturesCompletion(cerfa);
-      // }
-      // console.log(signaturesCompletion, cerfa);
+
       if (cerfa) {
         setSignaturesCompletion(cerfa);
       }
@@ -355,17 +216,6 @@ export default () => {
     prevStep();
   }, [activeStep, cerfaComplete, history, match.url, prevStep, step1Visited, stepStateSteps23]);
 
-  let onSendToAgecap = useCallback(async () => {
-    try {
-      const response = await _post(`/api/v1/agecap/`, {
-        dossierId: dossier._id,
-      });
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [dossier?._id]);
-
   if (!isloaded)
     return (
       <Center>
@@ -381,10 +231,10 @@ export default () => {
 
   return (
     <Box w="100%" px={[1, 1, 6, 6]}>
-      {/* <AskBetaTest /> */}
-      {endModal.isOpen && <EndModal {...endModal} dossier={dossier} />}
-      <AcknowledgeModal
-        title="Vous êtes employeur privé"
+      {hasPageAccessTo(auth, "signature_beta") && <AskBetaTestModal />}
+      {finalizeModalDisclosure.isOpen && <FinalizeModal {...finalizeModalDisclosure} dossier={dossier} />}
+      {eSignatureModalDisclosure.isOpen && <ESignatureModal {...eSignatureModalDisclosure} dossier={dossier} />}
+      <IsPrivateEmployeurModal
         isOpen={
           employeurPrivePublic?.contents?.value === "Employeur privé" &&
           !hasSeenPrivateSectorModal &&
@@ -398,50 +248,9 @@ export default () => {
           setHasSeenPrivateSectorModal(true);
           isPrivateSectorAckModal.onClose();
         }}
-      >
-        <Text>
-          Ce service de dépôt en ligne est reservé aux employeurs publics pour le moment. <br />
-          Vous ne pourrez pas continuer ce dossier. <br />
-          <br />
-          Veuillez consulter{" "}
-          <Link href={"/"} color={"bluefrance"} textDecoration={"underline"} isExternal>
-            la fiche pratique
-          </Link>{" "}
-          pour établir un contrat d'apprentissage en tant qu'employeur privé.
-        </Text>
-      </AcknowledgeModal>
+      />
       <Container maxW="xl">
-        <HStack mt={6}>
-          <Heading as="h1" flexGrow="1">
-            {dossier.nom}
-            <StatusBadge status={dossier.etat} ml={5} />
-            <Badge variant="solid" bg="grey.100" color="grey.500" textStyle="sm" px="15px" ml="10px">
-              <Text as="i">
-                {/* {!dossier.saved ? "Non sauvegardé" : `Dernière sauvegarde ${prettyPrintDate(dossier.lastModified)}`} */}
-                {!dossier.saved ? "Non sauvegardé" : `Sauvegarde automatique activée`}
-              </Text>
-            </Badge>
-          </Heading>
-          <HStack>
-            <LivePeopleAvatar />
-            {hasContextAccessTo(dossier, "dossier/page_parametres/gestion_acces") && (
-              <>
-                <Button size="md" onClick={inviteModal.onOpen} variant="secondary">
-                  <AvatarPlus />
-                  <Text as="span" ml={2}>
-                    Partager
-                  </Text>
-                </Button>
-                <InviteModal
-                  title="Partager le dossier"
-                  size="md"
-                  isOpen={inviteModal.isOpen}
-                  onClose={inviteModal.onClose}
-                />
-              </>
-            )}
-          </HStack>
-        </HStack>
+        <DossierHeader dossier={dossier} />
 
         <Flex flexDir="column" width="100%" mt={9}>
           <Steps
@@ -498,83 +307,18 @@ export default () => {
           <Box opacity={activeStep === 0 ? 1 : 0} h={activeStep === 0 ? "auto" : 0}>
             {(step1Visited || activeStep === 0) && <Cerfa />}
           </Box>
-          <Flex width="100%" justify="flex-start" mt={8} mb={10}>
-            {activeStep <= steps.length - 1 && dossier.draft && (
-              <Button mr={4} size="md" variant="secondary" onClick={onClickPrevStep} isDisabled={activeStep === 0}>
-                Revenir
-              </Button>
-            )}
-
-            {activeStep < steps.length - 1 && (
-              <Button
-                size="md"
-                onClick={onClickNextStep}
-                variant="primary"
-                isDisabled={employeurPrivePublic?.contents?.value === "Employeur privé"}
-              >
-                Passer à l'étape suivante
-              </Button>
-            )}
-            {activeStep === steps.length - 1 && dossier.draft && (
-              <Button
-                size="md"
-                onClick={() => {
-                  endModal.onOpen();
-                }}
-                variant="primary"
-                isDisabled={
-                  !dossierComplete ||
-                  employeurPrivePublic?.contents?.value === "Employeur privé" ||
-                  !signaturesPdfLoaded?.contents
-                }
-                bg="greenmedium.500"
-                _hover={{ bg: "greenmedium.600" }}
-              >
-                Finaliser et Télécharger le dossier
-              </Button>
-            )}
-            {activeStep === steps.length - 1 && !dossier.draft && (
-              <Center w="full">
-                <Button
-                  as={Link}
-                  href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?workspaceId=${auth.workspaceId}&dossierId=${dossier._id}`}
-                  isExternal
-                  size="md"
-                  variant="primary"
-                  bg="greenmedium.500"
-                  _hover={{ bg: "greenmedium.600" }}
-                  color="white"
-                  isDisabled={
-                    !dossierComplete ||
-                    employeurPrivePublic?.contents?.value === "Employeur privé" ||
-                    !signaturesPdfLoaded?.contents
-                  }
-                  borderRadius={0}
-                >
-                  <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
-                  Télécharger le pdf
-                </Button>
-                {hasPageAccessTo(auth, "dossier/send_agecap") && dossier.etat === "DOSSIER_TERMINE" && (
-                  <Button
-                    size="md"
-                    onClick={onSendToAgecap}
-                    variant="primary"
-                    ml={12}
-                    isDisabled={
-                      !dossierComplete ||
-                      employeurPrivePublic?.contents?.value === "Employeur privé" ||
-                      !signaturesPdfLoaded?.contents
-                    }
-                    bg="orangemedium.500"
-                    _hover={{ bg: "orangemedium.600" }}
-                  >
-                    <SentPaperPlane boxSize="4" mr="0.5rem" />
-                    Télétransmettre vers Agecap
-                  </Button>
-                )}
-              </Center>
-            )}
-          </Flex>
+          <DossierFooterControls
+            activeStep={activeStep}
+            steps={steps}
+            dossier={dossier}
+            onClickPrevStep={onClickPrevStep}
+            onClickNextStep={onClickNextStep}
+            finalizeModalDisclosure={finalizeModalDisclosure}
+            eSignatureModalDisclosure={eSignatureModalDisclosure}
+            dossierComplete={dossierComplete}
+            employeurPrivePublic={employeurPrivePublic}
+            signaturesPdfLoaded={signaturesPdfLoaded}
+          />
         </Flex>
       </Container>
     </Box>

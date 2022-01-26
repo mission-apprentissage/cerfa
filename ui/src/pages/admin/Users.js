@@ -20,6 +20,7 @@ import {
   Input,
   Stack,
   useToast,
+  Text,
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -167,6 +168,7 @@ const UserLine = ({ user, roles }) => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <Text>Compte créé sur: {user?.orign_register}</Text>
       <FormControl py={2}>
         <FormLabel>Nom</FormLabel>
         <Input type="text" id="newNom" name="newNom" value={values.newNom} onChange={handleChange} />
@@ -306,7 +308,7 @@ export default () => {
                             borderColor={"bluefrance"}
                           >
                             <Box flex="1" textAlign="left" fontSize="gamma">
-                              {user.username}
+                              {user.username} - {user.prenom} {user.nom}
                             </Box>
                             <AccordionIcon />
                           </AccordionButton>

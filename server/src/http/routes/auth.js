@@ -46,6 +46,10 @@ module.exports = ({ users, mailer, sessions }) => {
         return res.status(401).json({ message: "Utilisateur non trouvé" });
       }
 
+      if (user.orign_register === "PDS") {
+        throw Boom.conflict(`Wrong connection method`, { message: `pds login` });
+      }
+
       const auth = await users.authenticate(user.email, password);
 
       if (!auth) return res.status(401).json({ message: "Utilisateur non trouvé" });
@@ -79,24 +83,26 @@ module.exports = ({ users, mailer, sessions }) => {
   router.post(
     "/register",
     tryCatch(async ({ body }, res) => {
-      const { compte, siret, email, password, nom, prenom } = await Joi.object({
+      const { compte, siret, email, password, nom, prenom, civility } = await Joi.object({
         compte: Joi.string().required(),
         email: Joi.string().required(),
         password: Joi.string().required(),
         siret: Joi.string().required(),
         nom: Joi.string().required(),
         prenom: Joi.string().required(),
+        civility: Joi.string().required(),
       }).validateAsync(body, { abortEarly: false });
 
       const alreadyExists = await users.getUser(email);
       if (alreadyExists) {
-        throw Boom.conflict(`Unable to create, user ${email} already exists`);
+        throw Boom.conflict(`Unable to create`, { message: `email already in use` });
       }
 
       const user = await users.createUser(email, password, {
         siret,
         nom,
         prenom,
+        civility,
         roles: compte === "entreprise" || compte === "cfa" ? [compte] : [],
         orign_register: "ORIGIN",
       });
