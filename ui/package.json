@@ -2,7 +2,7 @@
   "name": "mna-cerfa-ui",
   "description": "[MNA] Générateur de contrat d'apprentissage UI",
   "repository": "https://github.com/mission-apprentissage/cerfa.git",
-  "version": "1.15.0",
+  "version": "1.16.0-beta.1",
   "author": "MNA",
   "license": "MIT",
   "private": true,

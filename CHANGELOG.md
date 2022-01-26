@@ -1,3 +1,10 @@
+# [1.16.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.15.0...v1.16.0-beta.1) (2022-01-26)
+
+
+### Features
+
+* nettoyage code + tests interne esignature ([#216](https://github.com/mission-apprentissage/cerfa/issues/216)) ([43a0897](https://github.com/mission-apprentissage/cerfa/commit/43a0897cd29ff5ad820c16f17de5f789f75c3d71))
+
 # [1.15.0](https://github.com/mission-apprentissage/cerfa/compare/v1.14.0...v1.15.0) (2022-01-25)
 
 
