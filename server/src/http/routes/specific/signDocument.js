@@ -206,7 +206,7 @@ module.exports = (components) => {
         throw Boom.notFound("Doesn't exist");
       }
 
-      await dossiers.updateEtatDossier("SIGNE");
+      await dossiers.updateEtatDossier(params.id, "SIGNE");
       // TODO GET DOCUMENT
 
       res.json({});
