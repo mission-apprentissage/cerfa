@@ -1,3 +1,16 @@
+# [1.17.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.16.0...v1.17.0-beta.1) (2022-01-26)
+
+
+### Bug Fixes
+
+* date de début de contrat dans la rémunération ([efb8ee3](https://github.com/mission-apprentissage/cerfa/commit/efb8ee31e79d9683c7598cae91da00d2db44c4c9))
+
+
+### Features
+
+* base parcours signature électronique + tests ([91e4e1c](https://github.com/mission-apprentissage/cerfa/commit/91e4e1c69e0daf571d4911089b2de28d7d8af737))
+* wip ([9753c54](https://github.com/mission-apprentissage/cerfa/commit/9753c543296c54c3048484978bbbc84d2b6a67e8))
+
 # [1.16.0](https://github.com/mission-apprentissage/cerfa/compare/v1.15.0...v1.16.0) (2022-01-26)
 
 
