@@ -29,10 +29,11 @@ module.exports = (components) => {
     pageAccessMiddleware(["signature_beta"]),
     permissionsDossierMiddleware(components, ["dossier/page_signatures/signer"]),
     tryCatch(async (req, res) => {
-      let { cerfaId, dossierId } = await Joi.object({
+      let { cerfaId, dossierId, signataires } = await Joi.object({
         test: Joi.boolean(),
         dossierId: Joi.string().required(),
         cerfaId: Joi.string().required(),
+        signataires: Joi.object({}).unknown(), // TODO
       })
         .unknown()
         .validateAsync(req.body, { abortEarly: false });
@@ -72,29 +73,29 @@ module.exports = (components) => {
         page: 2,
       };
 
-      const resultProcedures = await apiYousign.postProcedures({
+      const dataToSend = {
         name: `Signature du dossier ${dossier.nom}`,
         description: `Le contrat en apprentissage de ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} pour ${cerfa.employeur.denomination}`,
         start: true,
         members: [
-          // {
-          //   firstname: "Employeur",
-          //   lastname: "Bigard",
-          //   email: "antoine.bigard+testEmployeur@beta.gouv.fr",
-          //   phone: "+33612647513",
-          //   ...operationDetails,
-          //   fileObjects: [
-          //     {
-          //       ...constantFile,
-          //       position: positions.employeur,
-          //     },
-          //   ],
-          // },
           {
-            firstname: "Apprenti",
-            lastname: "Bigard",
-            email: "antoine.bigard@beta.gouv.fr", // +testApprenti
-            phone: "+33612647513",
+            firstname: signataires.employeur.firstname,
+            lastname: signataires.employeur.lastname,
+            email: signataires.employeur.email,
+            phone: signataires.employeur.phone,
+            ...operationDetails,
+            fileObjects: [
+              {
+                ...constantFile,
+                position: positions.employeur,
+              },
+            ],
+          },
+          {
+            firstname: signataires.apprenti.firstname,
+            lastname: signataires.apprenti.lastname,
+            email: signataires.apprenti.email,
+            phone: signataires.apprenti.phone,
             ...operationDetails,
             fileObjects: [
               {
@@ -116,19 +117,19 @@ module.exports = (components) => {
           //     },
           //   ],
           // },
-          {
-            firstname: "Cfa",
-            lastname: "Bigard",
-            email: "antoine.bigard@beta.gouv.fr", // +testCfa
-            phone: "+33612647513",
-            ...operationDetails,
-            fileObjects: [
-              {
-                ...constantFile,
-                position: positions.cfa,
-              },
-            ],
-          },
+          // {
+          //   firstname: signataires.cfa.firstname,
+          //   lastname: signataires.cfa.lastname,
+          //   email: signataires.cfa.email,
+          //   phone: signataires.cfa.phone,
+          //   ...operationDetails,
+          //   fileObjects: [
+          //     {
+          //       ...constantFile,
+          //       position: positions.cfa,
+          //     },
+          //   ],
+          // },
         ],
         config: {
           email: {
@@ -142,15 +143,6 @@ module.exports = (components) => {
             ],
           },
           webhook: {
-            "procedure.finished": [
-              {
-                url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
-                method: "POST",
-                // headers: {
-                //   "X-Custom-Header": "Yousign Webhook - Test value",
-                // },
-              },
-            ],
             "member.finished": [
               {
                 url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
@@ -162,11 +154,11 @@ module.exports = (components) => {
             ],
           },
         },
-      });
-      console.log(`${config.publicUrl}/api/v1/sign_document/${dossierId}`);
+      };
+      const resultProcedures = await apiYousign.postProcedures(dataToSend);
 
       await dossiers.updateEtatDossier(dossierId, "EN_ATTENTE_SIGNATURES");
-      await dossiers.updateSignatures(dossierId, resultProcedures);
+      await dossiers.updateSignatures(dossierId, { procedure: resultProcedures });
 
       return res.json({ success: true });
     })
@@ -175,6 +167,7 @@ module.exports = (components) => {
   // TODO SECURE IT
   router.post(
     "/:id",
+    // eslint-disable-next-line no-unused-vars
     tryCatch(async ({ body, params, user }, res) => {
       let { test } = await Joi.object({
         test: Joi.boolean(),
@@ -186,28 +179,25 @@ module.exports = (components) => {
       if (!dossier) {
         throw Boom.notFound("Doesn't exist");
       }
-      const dossierId = params.id;
-      const yousignFile = dossier.files[0];
 
-      await dossiers.updateSignatures(params.id, body);
+      const { procedure } = await dossiers.updateSignatures(params.id, body);
+      const dossierId = params.id;
+      const yousignFile = procedure.files[0];
 
       let { hashStream, getHash } = crypto.checksum();
       let filename = yousignFile.name;
       let path = `contrats/${dossierId}/${filename}`;
-
       const documents = await dossiers.getDocuments(dossierId);
       const contratDocument = find(documents, { typeDocument: "CONTRAT" });
       if (contratDocument) {
         await deleteFromStorage(path);
       }
-
       await oleoduc(
         await apiYousign.getFile(yousignFile.id.replace("/files/", "")),
         hashStream,
         crypto.isCipherAvailable() ? crypto.cipher(dossierId) : noop(),
         test ? noop() : await uploadToStorage(path, { contentType: "application/pdf" })
       );
-
       if (!contratDocument) {
         let hash = await getHash();
         await dossiers.addDocument(dossierId, {
@@ -216,11 +206,12 @@ module.exports = (components) => {
           nomFichier: filename,
           cheminFichier: path,
           tailleFichier: 0,
-          userEmail: user.email,
+          userEmail: "yousign@hooks.fr", // user.email,
         });
       }
 
-      if (body.status === "finished") {
+      const doneMembers = procedure.members.filter(({ status }) => status === "done");
+      if (body.eventName === "procedure.finished" || (doneMembers && doneMembers.length === procedure.members.length)) {
         await dossiers.updateEtatDossier(params.id, "DOSSIER_TERMINE_AVEC_SIGNATURE");
       } else {
         await dossiers.updateEtatDossier(params.id, "SIGNATURES_EN_COURS");

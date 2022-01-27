@@ -26,7 +26,9 @@ export const StatusBadge = ({ status, text, withIcon = false, ...badgeProps }) =
   const defaultVariant = "draft";
   const variantsMap = {
     BROUILLON: "draft",
-    DOSSIER_FINALISE: "termine",
+    DOSSIER_FINALISE_EN_ATTENTE_ACTION: "waitingSignature",
+    EN_ATTENTE_DECLENCHEMENT_SIGNATURES: "waitingSignature",
+    EN_ATTENTE_SIGNATURE: "waitingSignature",
     EN_ATTENTE_SIGNATURES: "waitingSignature",
     SIGNATURES_EN_COURS: "waitingSignature",
     SIGNE: "signed",

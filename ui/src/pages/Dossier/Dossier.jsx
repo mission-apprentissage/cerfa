@@ -233,7 +233,7 @@ export default () => {
     <Box w="100%" px={[1, 1, 6, 6]}>
       {hasPageAccessTo(auth, "signature_beta") && <AskBetaTestModal />}
       {finalizeModalDisclosure.isOpen && <FinalizeModal {...finalizeModalDisclosure} dossier={dossier} />}
-      {eSignatureModalDisclosure.isOpen && <ESignatureModal {...eSignatureModalDisclosure} dossier={dossier} />}
+      {eSignatureModalDisclosure.isOpen && <ESignatureModal {...eSignatureModalDisclosure} />}
       <IsPrivateEmployeurModal
         isOpen={
           employeurPrivePublic?.contents?.value === "Employeur privé" &&
@@ -310,7 +310,6 @@ export default () => {
           <DossierFooterControls
             activeStep={activeStep}
             steps={steps}
-            dossier={dossier}
             onClickPrevStep={onClickPrevStep}
             onClickNextStep={onClickNextStep}
             finalizeModalDisclosure={finalizeModalDisclosure}

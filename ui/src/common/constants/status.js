@@ -3,9 +3,17 @@ export const DOSSIER_STATUS = {
     priority: 0,
     text: "Brouillon",
   },
-  DOSSIER_FINALISE: {
+  DOSSIER_FINALISE_EN_ATTENTE_ACTION: {
     priority: 1,
-    text: "Dossier finalisé",
+    text: "Dossier finalisé en attente d'action",
+  },
+  EN_ATTENTE_DECLENCHEMENT_SIGNATURES: {
+    priority: 2,
+    text: "En attente d'action",
+  },
+  EN_ATTENTE_SIGNATURE: {
+    priority: 2,
+    text: "En attente de signature",
   },
   EN_ATTENTE_SIGNATURES: {
     priority: 2,

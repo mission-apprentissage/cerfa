@@ -10,6 +10,85 @@ module.exports = (components) => {
   const router = express.Router();
   const { dossiers, users, roles, permissions, mailer, cerfas } = components;
 
+  const buildDossierResult = async (dossier, user) => {
+    const owner = await users.getUserById(dossier.owner, { email: 1, nom: 1, prenom: 1, _id: 0 });
+    if (!owner) {
+      throw Boom.badRequest("Something went wrong");
+    }
+    const cerfa = await cerfas.findCerfaByDossierId(dossier._id);
+
+    const contributors = await dossiers.getContributeurs(dossier._id, components);
+
+    // TODO CLEAN THIS
+    let apprentiStatus = "EN_ATTENTE_SIGNATURE";
+    let employeurStatus = "EN_ATTENTE_SIGNATURE";
+    let cfaStatus = "EN_ATTENTE_SIGNATURE";
+
+    let signataires = {
+      employeur: null,
+      apprenti: {
+        firstname: cerfa.apprenti.prenom,
+        lastname: cerfa.apprenti.nom,
+        email: cerfa.apprenti.courriel,
+        phone: cerfa.apprenti.telephone,
+        status: apprentiStatus,
+      },
+      legal: null,
+      cfa: null,
+    };
+    for (let index = 0; index < contributors.length; index++) {
+      const contributor = contributors[index];
+      if (contributor.permission.name === "dossier.signataire") {
+        if (contributor.user.type === "entreprise") {
+          signataires.employeur = {
+            firstname: contributor.user.prenom,
+            lastname: contributor.user.nom,
+            email: contributor.user.email,
+            phone: contributor.user.telephone,
+            status: employeurStatus,
+          };
+        } else if (contributor.user.type === "cfa") {
+          signataires.cfa = {
+            firstname: contributor.user.prenom,
+            lastname: contributor.user.nom,
+            email: contributor.user.email,
+            phone: contributor.user.telephone,
+            status: cfaStatus,
+          };
+        }
+      }
+    }
+
+    if (dossiers.signatures) {
+      const { procedure } = dossiers.signatures;
+      const doneMembers = procedure.members.filter(({ status }) => status === "done");
+      for (let index = 0; index < doneMembers.length; index++) {
+        const doneMember = doneMembers[index];
+        if (doneMember.email === signataires.apprenti.email && doneMember.phone === signataires.apprenti.phone) {
+          signataires.apprenti.status = "SIGNE";
+        } else if (
+          doneMember.email === signataires.employeur.email &&
+          doneMember.phone === signataires.employeur.phone
+        ) {
+          signataires.employeur.status = "SIGNE";
+        } else if (doneMember.email === signataires.cfa.email && doneMember.phone === signataires.cfa.phone) {
+          signataires.cfa.status = "SIGNE";
+        }
+      }
+    }
+
+    return {
+      ...dossier,
+      contributeurs: contributors,
+      signataires,
+      acl: user.currentPermissionAcl,
+      owner: {
+        ...owner,
+      },
+      cerfaId: cerfa._id,
+    };
+  };
+
   router.get(
     "/entity/:id",
     permissionsDossierMiddleware(components, ["dossier"]),
@@ -19,20 +98,9 @@ module.exports = (components) => {
         throw Boom.notFound("Doesn't exist");
       }
 
-      const owner = await users.getUserById(dossier.owner, { email: 1, nom: 1, prenom: 1, _id: 0 });
-      if (!owner) {
-        throw Boom.badRequest("Something went wrong");
-      }
-      const cerfa = await cerfas.findCerfaByDossierId(dossier._id);
+      const results = await buildDossierResult(dossier, user);
 
-      res.json({
-        ...dossier,
-        acl: user.currentPermissionAcl,
-        owner: {
-          ...owner,
-        },
-        cerfaId: cerfa._id,
-      });
+      res.json(results);
     })
   );
 
@@ -69,6 +137,32 @@ module.exports = (components) => {
       const saved = await dossiers.saveDossier(params.id);
 
       return res.json(saved);
+    })
+  );
+
+  router.put(
+    "/entity/:id/mode",
+    permissionsDossierMiddleware(components, ["dossier/publication"]),
+    tryCatch(async ({ body, params, user }, res) => {
+      const { mode } = await Joi.object({
+        mode: Joi.string()
+          .valid("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE", "NOUVEAU_CONTRAT_SIGNATURE_PAPIER")
+          .required(),
+      })
+        .unknown()
+        .validateAsync(body, { abortEarly: false });
+
+      if (mode === "NOUVEAU_CONTRAT_SIGNATURE_PAPIER") {
+        await dossiers.updateEtatDossier(params.id, "DOSSIER_TERMINE_SANS_SIGNATURE");
+      } else {
+        await dossiers.updateEtatDossier(params.id, "EN_ATTENTE_DECLENCHEMENT_SIGNATURES");
+      }
+
+      const updatedDossier = await dossiers.updateModeDossier(params.id, mode);
+
+      const result = await buildDossierResult(updatedDossier._doc, user);
+
+      return res.json(result);
     })
   );
 
