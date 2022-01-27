@@ -1,3 +1,10 @@
+# [1.17.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.17.0-beta.1...v1.17.0-beta.2) (2022-01-27)
+
+
+### Features
+
+* signature electronique **ultra fast dev** ([#222](https://github.com/mission-apprentissage/cerfa/issues/222)) ([660fac2](https://github.com/mission-apprentissage/cerfa/commit/660fac212152a3ead5668df036b59af58aad2013))
+
 # [1.17.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.16.0...v1.17.0-beta.1) (2022-01-26)
 
 
