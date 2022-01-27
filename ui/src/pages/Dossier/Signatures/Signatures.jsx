@@ -346,9 +346,9 @@ export default () => {
 
   if (
     !dossier.signatures &&
-    // dossier.etat === "BROUILLON" ||
-    // dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION" ||
-    (dossier.etat === "DOSSIER_TERMINE" || // TODO MIGRATION
+    (dossier.etat === "BROUILLON" ||
+      // dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION" ||
+      dossier.etat === "DOSSIER_TERMINE" || // TODO MIGRATION
       dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
       dossier.etat === "TRANSMIS" ||
       dossier.etat === "EN_COURS_INSTRUCTION" ||
