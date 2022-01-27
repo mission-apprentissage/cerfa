@@ -59,19 +59,19 @@ module.exports = (components) => {
       }
     }
 
-    if (dossiers.signatures) {
-      const { procedure } = dossiers.signatures;
+    if (dossier.signatures) {
+      const { procedure } = dossier.signatures;
       const doneMembers = procedure.members.filter(({ status }) => status === "done");
       for (let index = 0; index < doneMembers.length; index++) {
         const doneMember = doneMembers[index];
         if (doneMember.email === signataires.apprenti.email && doneMember.phone === signataires.apprenti.phone) {
           signataires.apprenti.status = "SIGNE";
         } else if (
-          doneMember.email === signataires.employeur.email &&
-          doneMember.phone === signataires.employeur.phone
+          doneMember.email === signataires.employeur?.email &&
+          doneMember.phone === signataires.employeur?.phone
         ) {
           signataires.employeur.status = "SIGNE";
-        } else if (doneMember.email === signataires.cfa.email && doneMember.phone === signataires.cfa.phone) {
+        } else if (doneMember.email === signataires.cfa?.email && doneMember.phone === signataires.cfa?.phone) {
           signataires.cfa.status = "SIGNE";
         }
       }
