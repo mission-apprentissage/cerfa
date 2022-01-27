@@ -223,7 +223,7 @@ module.exports = (components) => {
         });
       }
 
-      const doneMembers = body.members.filter(({ status }) => status === "done");
+      const doneMembers = body.procedure.members.filter(({ status }) => status === "done");
 
       if (body.eventName === "procedure.finished" || doneMembers.length === body.members.length) {
         await dossiers.updateEtatDossier(params.id, "DOSSIER_TERMINE_AVEC_SIGNATURE");
