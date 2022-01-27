@@ -222,8 +222,9 @@ module.exports = (components) => {
           userEmail: "yousign@hooks.fr", // user.email,
         });
       }
-
-      if (body.status === "finished") {
+      //members "status": "done",
+      // "status": "pending",
+      if (body.eventName === "finished") {
         await dossiers.updateEtatDossier(params.id, "DOSSIER_TERMINE_AVEC_SIGNATURE");
       } else {
         await dossiers.updateEtatDossier(params.id, "SIGNATURES_EN_COURS");
