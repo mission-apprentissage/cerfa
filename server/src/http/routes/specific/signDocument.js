@@ -175,6 +175,7 @@ module.exports = (components) => {
   // TODO SECURE IT
   router.post(
     "/:id",
+    // eslint-disable-next-line no-unused-vars
     tryCatch(async ({ body, params, user }, res) => {
       let { test } = await Joi.object({
         test: Joi.boolean(),
@@ -216,7 +217,7 @@ module.exports = (components) => {
           nomFichier: filename,
           cheminFichier: path,
           tailleFichier: 0,
-          userEmail: user.email,
+          userEmail: "yousign@hooks.fr", // user.email,
         });
       }
 
