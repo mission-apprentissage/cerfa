@@ -84,9 +84,8 @@ export default ({
               _hover={{ bg: "greenmedium.600" }}
               color="white"
               isDisabled={
-                !dossierComplete ||
-                employeurPrivePublic?.contents?.value === "Employeur privé" ||
-                !signaturesPdfLoaded?.contents
+                !dossierComplete || employeurPrivePublic?.contents?.value === "Employeur privé"
+                //  || !signaturesPdfLoaded?.contents
               }
               borderRadius={0}
               px={8}
