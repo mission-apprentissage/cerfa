@@ -225,7 +225,10 @@ module.exports = (components) => {
 
       const doneMembers = body.procedure.members.filter(({ status }) => status === "done");
 
-      if (body.eventName === "procedure.finished" || doneMembers.length === body.members.length) {
+      if (
+        body.eventName === "procedure.finished" ||
+        (doneMembers && doneMembers.length === body.procedure.members.length)
+      ) {
         await dossiers.updateEtatDossier(params.id, "DOSSIER_TERMINE_AVEC_SIGNATURE");
       } else {
         await dossiers.updateEtatDossier(params.id, "SIGNATURES_EN_COURS");
