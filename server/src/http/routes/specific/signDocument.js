@@ -181,7 +181,7 @@ module.exports = (components) => {
       }
 
       const { _doc } = await dossiers.updateSignatures(params.id, body);
-      const { procedure } = _doc;
+      const { procedure } = _doc.signatures;
       const dossierId = params.id;
       const yousignFile = procedure.files[0];
 
