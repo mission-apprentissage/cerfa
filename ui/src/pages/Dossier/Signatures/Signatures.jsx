@@ -12,6 +12,8 @@ import {
   ListItem,
   SkeletonText,
   Link,
+  Stack,
+  Skeleton,
 } from "@chakra-ui/react";
 import { useRecoilValueLoadable, useRecoilValue, useSetRecoilState } from "recoil";
 import { NavLink } from "react-router-dom";
@@ -110,7 +112,10 @@ const ContratPdf = () => {
   const { isLoading, cerfa } = useCerfa();
   const dossier = useRecoilValue(dossierAtom);
 
-  const showDdets = dossier.etat === "DOSSIER_TERMINE" || dossier.etat === "DOSSIER_TERMINE_EN_ATTENTE_TRANSMISSION";
+  const showDdets =
+    dossier.etat === "DOSSIER_TERMINE" ||
+    dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
+    dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE";
 
   useEffect(() => {
     const run = async () => {
@@ -282,10 +287,9 @@ export default () => {
 
   if (
     !dossier.signatures &&
-    (dossier.etat === "BROUILLON" ||
-      dossier.etat === "DOSSIER_FINALISE" ||
-      dossier.etat === "DOSSIER_TERMINE" || // TODO MIGRATION
-      dossier.etat === "EN_ATTENTE_SIGNATURES" ||
+    // dossier.etat === "BROUILLON" ||
+    // dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION" ||
+    (dossier.etat === "DOSSIER_TERMINE" || // TODO MIGRATION
       dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
       dossier.etat === "TRANSMIS" ||
       dossier.etat === "EN_COURS_INSTRUCTION" ||
@@ -300,5 +304,13 @@ export default () => {
     return <ContratPdf />;
   }
 
-  return null;
+  return (
+    <Box mt="5rem">
+      <Stack>
+        <Skeleton height="20px" />
+        <Skeleton height="20px" />
+        <Skeleton height="20px" />
+      </Stack>
+    </Box>
+  );
 };

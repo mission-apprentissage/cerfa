@@ -10,6 +10,23 @@ module.exports = (components) => {
   const router = express.Router();
   const { dossiers, users, roles, permissions, mailer, cerfas } = components;
 
+  const buildDossierResult = async (dossier, user) => {
+    const owner = await users.getUserById(dossier.owner, { email: 1, nom: 1, prenom: 1, _id: 0 });
+    if (!owner) {
+      throw Boom.badRequest("Something went wrong");
+    }
+    const cerfa = await cerfas.findCerfaByDossierId(dossier._id);
+
+    return {
+      ...dossier,
+      acl: user.currentPermissionAcl,
+      owner: {
+        ...owner,
+      },
+      cerfaId: cerfa._id,
+    };
+  };
+
   router.get(
     "/entity/:id",
     permissionsDossierMiddleware(components, ["dossier"]),
@@ -19,20 +36,9 @@ module.exports = (components) => {
         throw Boom.notFound("Doesn't exist");
       }
 
-      const owner = await users.getUserById(dossier.owner, { email: 1, nom: 1, prenom: 1, _id: 0 });
-      if (!owner) {
-        throw Boom.badRequest("Something went wrong");
-      }
-      const cerfa = await cerfas.findCerfaByDossierId(dossier._id);
+      const results = await buildDossierResult(dossier, user);
 
-      res.json({
-        ...dossier,
-        acl: user.currentPermissionAcl,
-        owner: {
-          ...owner,
-        },
-        cerfaId: cerfa._id,
-      });
+      res.json(results);
     })
   );
 
@@ -69,6 +75,32 @@ module.exports = (components) => {
       const saved = await dossiers.saveDossier(params.id);
 
       return res.json(saved);
+    })
+  );
+
+  router.put(
+    "/entity/:id/mode",
+    permissionsDossierMiddleware(components, ["dossier/publication"]),
+    tryCatch(async ({ body, params, user }, res) => {
+      const { mode } = await Joi.object({
+        mode: Joi.string()
+          .valid("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE", "NOUVEAU_CONTRAT_SIGNATURE_PAPIER")
+          .required(),
+      })
+        .unknown()
+        .validateAsync(body, { abortEarly: false });
+
+      if (mode === "NOUVEAU_CONTRAT_SIGNATURE_PAPIER") {
+        await dossiers.updateEtatDossier(params.id, "DOSSIER_TERMINE_SANS_SIGNATURE");
+      } else {
+        await dossiers.updateEtatDossier(params.id, "EN_ATTENTE_DECLENCHEMENT_SIGNATURES");
+      }
+
+      const updatedDossier = await dossiers.updateModeDossier(params.id, mode);
+
+      const result = await buildDossierResult(updatedDossier._doc, user);
+
+      return res.json(result);
     })
   );
 

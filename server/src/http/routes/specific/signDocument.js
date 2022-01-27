@@ -142,15 +142,6 @@ module.exports = (components) => {
             ],
           },
           webhook: {
-            "procedure.finished": [
-              {
-                url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
-                method: "POST",
-                // headers: {
-                //   "X-Custom-Header": "Yousign Webhook - Test value",
-                // },
-              },
-            ],
             "member.finished": [
               {
                 url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
@@ -166,7 +157,7 @@ module.exports = (components) => {
       console.log(`${config.publicUrl}/api/v1/sign_document/${dossierId}`);
 
       await dossiers.updateEtatDossier(dossierId, "EN_ATTENTE_SIGNATURES");
-      await dossiers.updateSignatures(dossierId, resultProcedures);
+      await dossiers.updateSignatures(dossierId, { procedure: resultProcedures });
 
       return res.json({ success: true });
     })
@@ -187,30 +178,25 @@ module.exports = (components) => {
       if (!dossier) {
         throw Boom.notFound("Doesn't exist");
       }
-      const dossierId = params.id;
-      const yousignFile = dossier.signatures?.files
-        ? dossier.signatures?.files[0]
-        : dossier.signatures.procedure?.files[0];
 
-      await dossiers.updateSignatures(params.id, body);
+      const { procedure } = await dossiers.updateSignatures(params.id, body);
+      const dossierId = params.id;
+      const yousignFile = procedure.files[0];
 
       let { hashStream, getHash } = crypto.checksum();
       let filename = yousignFile.name;
       let path = `contrats/${dossierId}/${filename}`;
-
       const documents = await dossiers.getDocuments(dossierId);
       const contratDocument = find(documents, { typeDocument: "CONTRAT" });
       if (contratDocument) {
         await deleteFromStorage(path);
       }
-
       await oleoduc(
         await apiYousign.getFile(yousignFile.id.replace("/files/", "")),
         hashStream,
         crypto.isCipherAvailable() ? crypto.cipher(dossierId) : noop(),
         test ? noop() : await uploadToStorage(path, { contentType: "application/pdf" })
       );
-
       if (!contratDocument) {
         let hash = await getHash();
         await dossiers.addDocument(dossierId, {
@@ -223,12 +209,8 @@ module.exports = (components) => {
         });
       }
 
-      const doneMembers = body.procedure.members.filter(({ status }) => status === "done");
-
-      if (
-        body.eventName === "procedure.finished" ||
-        (doneMembers && doneMembers.length === body.procedure.members.length)
-      ) {
+      const doneMembers = procedure.members.filter(({ status }) => status === "done");
+      if (body.eventName === "procedure.finished" || (doneMembers && doneMembers.length === procedure.members.length)) {
         await dossiers.updateEtatDossier(params.id, "DOSSIER_TERMINE_AVEC_SIGNATURE");
       } else {
         await dossiers.updateEtatDossier(params.id, "SIGNATURES_EN_COURS");

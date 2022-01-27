@@ -310,7 +310,6 @@ export default () => {
           <DossierFooterControls
             activeStep={activeStep}
             steps={steps}
-            dossier={dossier}
             onClickPrevStep={onClickPrevStep}
             onClickNextStep={onClickNextStep}
             finalizeModalDisclosure={finalizeModalDisclosure}

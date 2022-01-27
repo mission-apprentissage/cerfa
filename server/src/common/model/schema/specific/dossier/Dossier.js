@@ -19,10 +19,6 @@ const dossierSchema = {
       return !this.draft;
     },
   },
-  signatures: {
-    type: {},
-    default: null,
-  },
   dreets: {
     type: Number,
     description: "DREETS destinataire du contrat - code région d'exécution du contrat",
@@ -58,8 +54,9 @@ const dossierSchema = {
     enum: [
       "BROUILLON", // 0
 
-      "DOSSIER_FINALISE", // 1
+      "DOSSIER_FINALISE_EN_ATTENTE_ACTION", // 1
 
+      "EN_ATTENTE_DECLENCHEMENT_SIGNATURES",
       "EN_ATTENTE_SIGNATURES", // 2
       "SIGNATURES_EN_COURS", // 2
       "DOSSIER_TERMINE_AVEC_SIGNATURE", // 3
@@ -86,6 +83,12 @@ const dossierSchema = {
     nullable: true,
     description:
       "**Etat du contrat** :\r\n<br />TRANSMIS\r\n<br />EN_COURS_INSTRUCTION\r\n<br />ENGAGE\r\n<br />ANNULE\r\n<br />REFUSE\r\n<br />RUPTURE\r\n<br />SOLDE",
+  },
+  mode: {
+    enum: ["NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE", "NOUVEAU_CONTRAT_SIGNATURE_PAPIER", null],
+    type: String,
+    default: null,
+    nullable: true,
   },
   draft: {
     type: Boolean,
@@ -120,6 +123,10 @@ const dossierSchema = {
     ref: "workspace",
     required: true,
     description: "Workspace id",
+  },
+  signatures: {
+    type: {},
+    default: null,
   },
 };
 module.exports = dossierSchema;

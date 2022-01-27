@@ -259,7 +259,11 @@ module.exports = async () => {
         throw Boom.notFound("Doesn't exist");
       }
 
-      return await Dossier.findOneAndUpdate({ _id: id }, { draft: false, etat: "DOSSIER_FINALISE" }, { new: true });
+      return await Dossier.findOneAndUpdate(
+        { _id: id },
+        { draft: false, etat: "DOSSIER_FINALISE_EN_ATTENTE_ACTION" },
+        { new: true }
+      );
     },
     unpublishDossier: async (id) => {
       const found = await Dossier.findById(id).lean();
@@ -269,6 +273,15 @@ module.exports = async () => {
       }
 
       return await Dossier.findOneAndUpdate({ _id: id }, { draft: true }, { new: true });
+    },
+    updateModeDossier: async (id, mode) => {
+      const found = await Dossier.findById(id).lean();
+
+      if (!found) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      return await Dossier.findOneAndUpdate({ _id: id }, { mode }, { new: true });
     },
     updateEtatDossier: async (id, etat) => {
       const found = await Dossier.findById(id).lean();
