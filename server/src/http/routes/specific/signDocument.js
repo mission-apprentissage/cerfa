@@ -180,7 +180,8 @@ module.exports = (components) => {
         throw Boom.notFound("Doesn't exist");
       }
 
-      const { procedure } = await dossiers.updateSignatures(params.id, body);
+      const { _doc } = await dossiers.updateSignatures(params.id, body);
+      const { procedure } = _doc;
       const dossierId = params.id;
       const yousignFile = procedure.files[0];
 
