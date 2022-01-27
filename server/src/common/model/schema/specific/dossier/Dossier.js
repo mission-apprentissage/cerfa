@@ -111,6 +111,11 @@ const dossierSchema = {
     default: [],
     description: "Contributeurs du dossier",
   },
+  signataires: {
+    type: {},
+    default: null,
+    description: "Signataires du dossier",
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",

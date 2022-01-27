@@ -11,6 +11,10 @@ export const DOSSIER_STATUS = {
     priority: 2,
     text: "En attente d'action",
   },
+  EN_ATTENTE_SIGNATURE: {
+    priority: 2,
+    text: "En attente de signature",
+  },
   EN_ATTENTE_SIGNATURES: {
     priority: 2,
     text: "En attente de signatures",

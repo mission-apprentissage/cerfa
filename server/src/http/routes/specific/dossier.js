@@ -17,8 +17,70 @@ module.exports = (components) => {
     }
     const cerfa = await cerfas.findCerfaByDossierId(dossier._id);
 
+    const contributors = await dossiers.getContributeurs(dossier._id, components);
+
+    // TODO CLEAN THIS
+    let apprentiStatus = "EN_ATTENTE_SIGNATURE";
+    let employeurStatus = "EN_ATTENTE_SIGNATURE";
+    let cfaStatus = "EN_ATTENTE_SIGNATURE";
+
+    let signataires = {
+      employeur: null,
+      apprenti: {
+        firstname: cerfa.apprenti.prenom,
+        lastname: cerfa.apprenti.nom,
+        email: cerfa.apprenti.courriel,
+        phone: cerfa.apprenti.telephone,
+        status: apprentiStatus,
+      },
+      legal: null,
+      cfa: null,
+    };
+    for (let index = 0; index < contributors.length; index++) {
+      const contributor = contributors[index];
+      if (contributor.permission.name === "dossier.signataire") {
+        if (contributor.user.type === "entreprise") {
+          signataires.employeur = {
+            firstname: contributor.user.prenom,
+            lastname: contributor.user.nom,
+            email: contributor.user.email,
+            phone: contributor.user.telephone,
+            status: employeurStatus,
+          };
+        } else if (contributor.user.type === "cfa") {
+          signataires.cfa = {
+            firstname: contributor.user.prenom,
+            lastname: contributor.user.nom,
+            email: contributor.user.email,
+            phone: contributor.user.telephone,
+            status: cfaStatus,
+          };
+        }
+      }
+    }
+
+    if (dossiers.signatures) {
+      const { procedure } = dossiers.signatures;
+      const doneMembers = procedure.members.filter(({ status }) => status === "done");
+      for (let index = 0; index < doneMembers.length; index++) {
+        const doneMember = doneMembers[index];
+        if (doneMember.email === signataires.apprenti.email && doneMember.phone === signataires.apprenti.phone) {
+          signataires.apprenti.status = "SIGNE";
+        } else if (
+          doneMember.email === signataires.employeur.email &&
+          doneMember.phone === signataires.employeur.phone
+        ) {
+          signataires.employeur.status = "SIGNE";
+        } else if (doneMember.email === signataires.cfa.email && doneMember.phone === signataires.cfa.phone) {
+          signataires.cfa.status = "SIGNE";
+        }
+      }
+    }
+
     return {
       ...dossier,
+      contributeurs: contributors,
+      signataires,
       acl: user.currentPermissionAcl,
       owner: {
         ...owner,

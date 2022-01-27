@@ -13,7 +13,9 @@ import {
   SkeletonText,
   Link,
   Stack,
-  Skeleton,
+  Avatar,
+  Flex,
+  Divider,
 } from "@chakra-ui/react";
 import { useRecoilValueLoadable, useRecoilValue, useSetRecoilState } from "recoil";
 import { NavLink } from "react-router-dom";
@@ -41,6 +43,8 @@ import {
   cerfaPartContratCompletionAtom,
   cerfaContratDateDebutContratAtom,
 } from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+
+import { StatusBadge } from "../../../common/components/StatusBadge";
 
 const DdetsContainer = () => {
   const { cerfa } = useCerfa();
@@ -154,6 +158,61 @@ const ContratPdf = () => {
         )}
       </Center>
     </Box>
+  );
+};
+
+const Signataires = () => {
+  const dossier = useRecoilValue(dossierAtom);
+  const { apprenti, employeur, cfa } = dossier.signataires;
+
+  return (
+    <Stack>
+      {cfa && (
+        <>
+          <Flex>
+            <HStack flexGrow={1}>
+              <Avatar size="sm" name={`${cfa.firstname} ${cfa.lastname}`} />
+              <Text>{`${cfa.firstname} ${cfa.lastname}`}</Text>
+              <Text fontWeight="bold">{`(cfa)`}</Text>
+            </HStack>
+            <Flex>
+              <StatusBadge status={cfa.status} h="28px" />
+            </Flex>
+          </Flex>
+          <Divider />
+        </>
+      )}
+      {employeur && (
+        <>
+          <Flex>
+            <HStack flexGrow={1}>
+              <Avatar size="sm" name={`${employeur.firstname} ${employeur.lastname}`} />
+              <Text>{`${employeur.firstname} ${employeur.lastname}`}</Text>
+              <Text fontWeight="bold">{`(Employeur)`}</Text>
+            </HStack>
+            <Flex>
+              <StatusBadge status={employeur.status} h="28px" />
+            </Flex>
+          </Flex>
+          <Divider />
+        </>
+      )}
+      {apprenti && (
+        <>
+          <Flex>
+            <HStack flexGrow={1}>
+              <Avatar size="sm" name={`${apprenti.firstname} ${apprenti.lastname}`} />
+              <Text>{`${apprenti.firstname} ${apprenti.lastname}`}</Text>
+              <Text fontWeight="bold">{`(Apprenti(e))`}</Text>
+            </HStack>
+            <Flex>
+              <StatusBadge status={apprenti.status} h="28px" />
+            </Flex>
+          </Flex>
+          <Divider />
+        </>
+      )}
+    </Stack>
   );
 };
 
@@ -304,13 +363,11 @@ export default () => {
     return <ContratPdf />;
   }
 
+  if (dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION") return <></>;
+
   return (
     <Box mt="5rem">
-      <Stack>
-        <Skeleton height="20px" />
-        <Skeleton height="20px" />
-        <Skeleton height="20px" />
-      </Stack>
+      <Signataires />
     </Box>
   );
 };

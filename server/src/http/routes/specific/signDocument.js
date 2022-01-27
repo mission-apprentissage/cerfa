@@ -29,10 +29,11 @@ module.exports = (components) => {
     pageAccessMiddleware(["signature_beta"]),
     permissionsDossierMiddleware(components, ["dossier/page_signatures/signer"]),
     tryCatch(async (req, res) => {
-      let { cerfaId, dossierId } = await Joi.object({
+      let { cerfaId, dossierId, signataires } = await Joi.object({
         test: Joi.boolean(),
         dossierId: Joi.string().required(),
         cerfaId: Joi.string().required(),
+        signataires: Joi.object({}).unknown(), // TODO
       })
         .unknown()
         .validateAsync(req.body, { abortEarly: false });
@@ -72,29 +73,29 @@ module.exports = (components) => {
         page: 2,
       };
 
-      const resultProcedures = await apiYousign.postProcedures({
+      const dataToSend = {
         name: `Signature du dossier ${dossier.nom}`,
         description: `Le contrat en apprentissage de ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} pour ${cerfa.employeur.denomination}`,
         start: true,
         members: [
-          // {
-          //   firstname: "Employeur",
-          //   lastname: "Bigard",
-          //   email: "antoine.bigard+testEmployeur@beta.gouv.fr",
-          //   phone: "+33612647513",
-          //   ...operationDetails,
-          //   fileObjects: [
-          //     {
-          //       ...constantFile,
-          //       position: positions.employeur,
-          //     },
-          //   ],
-          // },
           {
-            firstname: "Apprenti",
-            lastname: "Bigard",
-            email: "antoine.bigard@beta.gouv.fr", // +testApprenti
-            phone: "+33612647513",
+            firstname: signataires.employeur.firstname,
+            lastname: signataires.employeur.lastname,
+            email: signataires.employeur.email,
+            phone: signataires.employeur.phone,
+            ...operationDetails,
+            fileObjects: [
+              {
+                ...constantFile,
+                position: positions.employeur,
+              },
+            ],
+          },
+          {
+            firstname: signataires.apprenti.firstname,
+            lastname: signataires.apprenti.lastname,
+            email: signataires.apprenti.email,
+            phone: signataires.apprenti.phone,
             ...operationDetails,
             fileObjects: [
               {
@@ -116,19 +117,19 @@ module.exports = (components) => {
           //     },
           //   ],
           // },
-          {
-            firstname: "Cfa",
-            lastname: "Bigard",
-            email: "antoine.bigard@beta.gouv.fr", // +testCfa
-            phone: "+33612647513",
-            ...operationDetails,
-            fileObjects: [
-              {
-                ...constantFile,
-                position: positions.cfa,
-              },
-            ],
-          },
+          // {
+          //   firstname: signataires.cfa.firstname,
+          //   lastname: signataires.cfa.lastname,
+          //   email: signataires.cfa.email,
+          //   phone: signataires.cfa.phone,
+          //   ...operationDetails,
+          //   fileObjects: [
+          //     {
+          //       ...constantFile,
+          //       position: positions.cfa,
+          //     },
+          //   ],
+          // },
         ],
         config: {
           email: {
@@ -153,8 +154,8 @@ module.exports = (components) => {
             ],
           },
         },
-      });
-      console.log(`${config.publicUrl}/api/v1/sign_document/${dossierId}`);
+      };
+      const resultProcedures = await apiYousign.postProcedures(dataToSend);
 
       await dossiers.updateEtatDossier(dossierId, "EN_ATTENTE_SIGNATURES");
       await dossiers.updateSignatures(dossierId, { procedure: resultProcedures });
