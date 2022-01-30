@@ -144,7 +144,7 @@ module.exports = (components) => {
           siret: userinfo.attributes.siret,
           nom: userinfo.attributes.name,
           prenom: userinfo.attributes.given_name,
-          telephone: userinfo.attributes.phone_number,
+          telephone: "+33" + userinfo.attributes.phone_number.substr(1, 9),
           civility: userinfo.attributes.civility,
           account_status: "FORCE_COMPLETE_PROFILE",
           confirmed: true,
