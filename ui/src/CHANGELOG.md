@@ -1,3 +1,10 @@
+# [1.17.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.17.0-beta.2...v1.17.0-beta.3) (2022-01-30)
+
+
+### Bug Fixes
+
+* reparation signature + retour d'inscription pds ([#227](https://github.com/mission-apprentissage/cerfa/issues/227)) ([3663fe1](https://github.com/mission-apprentissage/cerfa/commit/3663fe171a0fc9253339f516c515086bcfa791ba))
+
 # [1.17.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.17.0-beta.1...v1.17.0-beta.2) (2022-01-27)
 
 
