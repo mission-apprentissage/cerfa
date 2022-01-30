@@ -119,11 +119,7 @@ export default ({
                 finalizeModalDisclosure.onOpen();
               }}
               variant="primary"
-              isDisabled={
-                !dossierComplete ||
-                employeurPrivePublic?.contents?.value === "Employeur privé" ||
-                !signaturesPdfLoaded?.contents
-              }
+              isDisabled={!dossierComplete || employeurPrivePublic?.contents?.value === "Employeur privé"}
               bg="greenmedium.600"
               _hover={{ bg: "greenmedium.500" }}
             >
