@@ -1,3 +1,30 @@
+# [1.17.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.17.0-beta.2...v1.17.0-beta.3) (2022-01-30)
+
+
+### Bug Fixes
+
+* reparation signature + retour d'inscription pds ([#227](https://github.com/mission-apprentissage/cerfa/issues/227)) ([3663fe1](https://github.com/mission-apprentissage/cerfa/commit/3663fe171a0fc9253339f516c515086bcfa791ba))
+
+# [1.17.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.17.0-beta.1...v1.17.0-beta.2) (2022-01-27)
+
+
+### Features
+
+* signature electronique **ultra fast dev** ([#222](https://github.com/mission-apprentissage/cerfa/issues/222)) ([660fac2](https://github.com/mission-apprentissage/cerfa/commit/660fac212152a3ead5668df036b59af58aad2013))
+
+# [1.17.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.16.0...v1.17.0-beta.1) (2022-01-26)
+
+
+### Bug Fixes
+
+* date de début de contrat dans la rémunération ([efb8ee3](https://github.com/mission-apprentissage/cerfa/commit/efb8ee31e79d9683c7598cae91da00d2db44c4c9))
+
+
+### Features
+
+* base parcours signature électronique + tests ([91e4e1c](https://github.com/mission-apprentissage/cerfa/commit/91e4e1c69e0daf571d4911089b2de28d7d8af737))
+* wip ([9753c54](https://github.com/mission-apprentissage/cerfa/commit/9753c543296c54c3048484978bbbc84d2b6a67e8))
+
 # [1.16.0](https://github.com/mission-apprentissage/cerfa/compare/v1.15.0...v1.16.0) (2022-01-26)
 
 

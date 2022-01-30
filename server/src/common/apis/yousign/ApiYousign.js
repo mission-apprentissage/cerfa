@@ -45,30 +45,30 @@ class ApiYousign {
       }
     });
   }
-  postProcedures({ name, description, members }) {
+  postProcedures(data) {
     return executeWithRateLimiting(async (client) => {
       try {
         logger.debug(`[Yousign API] Create procedures...`);
-        let response = await client.post(`procedures`, {
-          name,
-          description,
-          members,
-        });
+        let response = await client.post(`procedures`, data);
         return response.data;
       } catch (e) {
         throw new ApiError("Api Yousign", `${e.message}`, e.code || e.response.status);
       }
     });
   }
-  startProcedures(proceduresId) {
+  getFile(id, alt = true) {
     return executeWithRateLimiting(async (client) => {
       try {
-        logger.debug(`[Yousign API] Start procedures...`);
-        let response = await client.put(proceduresId, {
-          start: true,
-        });
+        logger.debug(`[Yousign API] Download files...`);
+        let response = null;
+        if (alt) {
+          response = await client.get(`files/${id}/download?alt=media`, { responseType: "stream" });
+        } else {
+          response = await client.get(`files/${id}/download`);
+        }
         return response.data;
       } catch (e) {
+        console.log(e);
         throw new ApiError("Api Yousign", `${e.message}`, e.code || e.response.status);
       }
     });

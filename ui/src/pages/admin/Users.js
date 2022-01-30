@@ -169,6 +169,7 @@ const UserLine = ({ user, roles }) => {
   return (
     <form onSubmit={handleSubmit}>
       <Text>Compte créé sur: {user?.orign_register}</Text>
+      <Text>Statuts : {user?.account_status}</Text>
       <FormControl py={2}>
         <FormLabel>Nom</FormLabel>
         <Input type="text" id="newNom" name="newNom" value={values.newNom} onChange={handleChange} />

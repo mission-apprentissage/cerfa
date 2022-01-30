@@ -12,6 +12,10 @@ import {
   ListItem,
   SkeletonText,
   Link,
+  Stack,
+  Avatar,
+  Flex,
+  Divider,
 } from "@chakra-ui/react";
 import { useRecoilValueLoadable, useRecoilValue, useSetRecoilState } from "recoil";
 import { NavLink } from "react-router-dom";
@@ -39,6 +43,8 @@ import {
   cerfaPartContratCompletionAtom,
   cerfaContratDateDebutContratAtom,
 } from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+
+import { StatusBadge } from "../../../common/components/StatusBadge";
 
 const DdetsContainer = () => {
   const { cerfa } = useCerfa();
@@ -110,14 +116,16 @@ const ContratPdf = () => {
   const { isLoading, cerfa } = useCerfa();
   const dossier = useRecoilValue(dossierAtom);
 
-  const showDdets = dossier.etat === "DOSSIER_TERMINE" || dossier.etat === "DOSSIER_TERMINE_EN_ATTENTE_TRANSMISSION";
+  const showDdets =
+    dossier.etat === "DOSSIER_TERMINE" ||
+    dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
+    dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE";
 
   useEffect(() => {
     const run = async () => {
       try {
         if (dossier._id && cerfa?.id) {
           const { pdfBase64 } = await _post(`/api/v1/cerfa/pdf/${cerfa.id}`, {
-            workspaceId: auth.workspaceId,
             dossierId: dossier._id,
           });
           setPdfBase64(pdfBase64);
@@ -134,13 +142,13 @@ const ContratPdf = () => {
     <Box mt={8} minH="30vh">
       {showDdets && <DdetsContainer />}
       <Heading as="h3" fontSize="1.4rem">
-        Votre contrat généré:
+        Votre contrat généré (non signé):
       </Heading>
       <Center mt={5}>
         {(isLoading || !pdfBase64) && <Spinner />}
         {!isLoading && pdfBase64 && (
           <PdfViewer
-            url={`/api/v1/cerfa/pdf/${cerfa.id}/?workspaceId=${auth.workspaceId}&dossierId=${dossier._id}`}
+            url={`/api/v1/cerfa/pdf/${cerfa.id}/?dossierId=${dossier._id}`}
             pdfBase64={pdfBase64}
             showDownload={false}
             documentLoaded={() => {
@@ -153,7 +161,63 @@ const ContratPdf = () => {
   );
 };
 
-export default ({ dossierId }) => {
+const Signataires = () => {
+  const dossier = useRecoilValue(dossierAtom);
+  const { apprenti, employeur, cfa } = dossier.signataires;
+
+  return (
+    <Stack>
+      {cfa && (
+        <>
+          <Flex>
+            <HStack flexGrow={1}>
+              <Avatar size="sm" name={`${cfa.firstname} ${cfa.lastname}`} />
+              <Text>{`${cfa.firstname} ${cfa.lastname}`}</Text>
+              <Text fontWeight="bold">{`(cfa)`}</Text>
+            </HStack>
+            <Flex>
+              <StatusBadge status={cfa.status} h="28px" />
+            </Flex>
+          </Flex>
+          <Divider />
+        </>
+      )}
+      {employeur && (
+        <>
+          <Flex>
+            <HStack flexGrow={1}>
+              <Avatar size="sm" name={`${employeur.firstname} ${employeur.lastname}`} />
+              <Text>{`${employeur.firstname} ${employeur.lastname}`}</Text>
+              <Text fontWeight="bold">{`(Employeur)`}</Text>
+            </HStack>
+            <Flex>
+              <StatusBadge status={employeur.status} h="28px" />
+            </Flex>
+          </Flex>
+          <Divider />
+        </>
+      )}
+      {apprenti && (
+        <>
+          <Flex>
+            <HStack flexGrow={1}>
+              <Avatar size="sm" name={`${apprenti.firstname} ${apprenti.lastname}`} />
+              <Text>{`${apprenti.firstname} ${apprenti.lastname}`}</Text>
+              <Text fontWeight="bold">{`(Apprenti(e))`}</Text>
+            </HStack>
+            <Flex>
+              <StatusBadge status={apprenti.status} h="28px" />
+            </Flex>
+          </Flex>
+          <Divider />
+        </>
+      )}
+    </Stack>
+  );
+};
+
+export default () => {
+  const dossier = useRecoilValue(dossierAtom);
   useCerfa();
   const {
     sca: signaturesCompletion,
@@ -280,5 +344,30 @@ export default ({ dossierId }) => {
     );
   }
 
-  return <ContratPdf dossierId={dossierId} />;
+  if (
+    !dossier.signatures &&
+    (dossier.etat === "BROUILLON" ||
+      // dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION" ||
+      dossier.etat === "DOSSIER_TERMINE" || // TODO MIGRATION
+      dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
+      dossier.etat === "TRANSMIS" ||
+      dossier.etat === "EN_COURS_INSTRUCTION" ||
+      dossier.etat === "INCOMPLET" ||
+      dossier.etat === "DEPOSE" ||
+      dossier.etat === "REFUSE" ||
+      dossier.etat === "ENGAGE" ||
+      dossier.etat === "ANNULE" ||
+      dossier.etat === "RUTPURE" ||
+      dossier.etat === "SOLDE")
+  ) {
+    return <ContratPdf />;
+  }
+
+  if (dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION") return <></>;
+
+  return (
+    <Box mt="5rem">
+      <Signataires />
+    </Box>
+  );
 };

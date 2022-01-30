@@ -2,14 +2,24 @@ import React from "react";
 import { Text } from "@chakra-ui/react";
 import { _post } from "../../../common/httpClient";
 import PromptModal from "../../../common/components/Modals/PromptModal";
+import {
+  useRecoilValue,
+  // useSetRecoilState
+} from "recoil";
 
-export default ({ dossier, ...modal }) => {
+import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
+
+export default ({ ...modal }) => {
+  const dossier = useRecoilValue(dossierAtom);
+  // const setDossier = useSetRecoilState(dossierAtom);
   const onSignClicked = async () => {
-    const reponse = await _post(`/api/v1/sign_document`, {
+    await _post(`/api/v1/sign_document`, {
       dossierId: dossier._id,
       cerfaId: dossier.cerfaId,
+      signataires: dossier.signataires,
     });
-    console.log(reponse);
+    window.location.reload();
+    // setDossier(reponse);
   };
 
   return (

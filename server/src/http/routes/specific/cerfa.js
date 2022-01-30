@@ -1,18 +1,21 @@
 const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
-const { cloneDeep, mergeWith } = require("lodash");
+const { cloneDeep, mergeWith, find } = require("lodash");
 const merge = require("deepmerge");
 const { Cerfa } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 const cerfaSchema = require("../../../common/model/schema/specific/dossier/cerfa/Cerfa");
 const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfaController");
+const { getFromStorage } = require("../../../common/utils/ovhUtils");
+const { oleoduc, writeData } = require("oleoduc");
+const { PassThrough } = require("stream");
 
 module.exports = (components) => {
   const router = express.Router();
 
-  const { cerfas } = components;
+  const { cerfas, dossiers, crypto } = components;
 
   const buildCerfaResult = (cerfa) => {
     function customizer(objValue, srcValue) {
@@ -382,18 +385,33 @@ module.exports = (components) => {
   router.get(
     "/pdf/:id",
     permissionsDossierMiddleware(components, ["dossier/voir_contrat_pdf/telecharger"]),
-    tryCatch(async ({ params }, res) => {
-      const cerfa = await Cerfa.findOne({ _id: params.id }).lean();
+    tryCatch(async ({ params, query }, res) => {
+      let { dossierId } = await Joi.object({
+        dossierId: Joi.string().required(),
+      }).validateAsync(query, { abortEarly: false });
 
-      if (!cerfa) {
-        throw Boom.notFound("Doesn't exist");
+      let pdfBuffer = null;
+      const documents = await dossiers.getDocuments(dossierId);
+      const contratDocument = find(documents, { typeDocument: "CONTRAT" });
+      if (contratDocument) {
+        const _buf = [];
+        await oleoduc(
+          await getFromStorage(contratDocument.cheminFichier),
+          crypto.isCipherAvailable() ? crypto.decipher(dossierId) : new PassThrough(),
+          writeData((chunk) => _buf.push(chunk))
+        );
+        pdfBuffer = Buffer.concat(_buf);
+      } else {
+        const cerfa = await Cerfa.findOne({ _id: params.id }).lean();
+        if (!cerfa) {
+          throw Boom.notFound("Doesn't exist");
+        }
+        const pdfBytes = await pdfCerfaController.createPdfCerfa(cerfa);
+
+        pdfBuffer = Buffer.from(pdfBytes.buffer, "binary");
       }
 
-      const pdfBytes = await pdfCerfaController.createPdfCerfa(cerfa);
-
-      const pdfBuffer = Buffer.from(pdfBytes.buffer, "binary");
       res.header("Content-Type", "application/pdf");
-      // res.header("Content-Disposition", `attachment; filename=contrat_${params.id}.pdf`);
       res.header("Content-Length", pdfBuffer.length);
       res.status(200);
       res.type("pdf");
@@ -405,16 +423,34 @@ module.exports = (components) => {
   router.post(
     "/pdf/:id",
     permissionsDossierMiddleware(components, ["dossier/voir_contrat_pdf"]),
-    tryCatch(async ({ params }, res) => {
-      const cerfa = await Cerfa.findOne({ _id: params.id }).lean();
+    // eslint-disable-next-line no-unused-vars
+    tryCatch(async ({ params, body }, res) => {
+      // let { dossierId } = await Joi.object({
+      //   dossierId: Joi.string().required(),
+      // }).validateAsync(body, { abortEarly: false });
 
+      let finalBuffer = null;
+      // const documents = await dossiers.getDocuments(dossierId);
+      // const contratDocument = find(documents, { typeDocument: "CONTRAT" });
+      // if (contratDocument) {
+      //   const _buf = [];
+      //   await oleoduc(
+      //     await getFromStorage(contratDocument.cheminFichier),
+      //     crypto.isCipherAvailable() ? crypto.decipher(dossierId) : new PassThrough(),
+      //     writeData((chunk) => _buf.push(chunk))
+      //   );
+      //   finalBuffer = Buffer.concat(_buf);
+      // } else {
+      const cerfa = await Cerfa.findOne({ _id: params.id }).lean();
       if (!cerfa) {
         throw Boom.notFound("Doesn't exist");
       }
 
       const pdfBytes = await pdfCerfaController.createPdfCerfa(cerfa);
 
-      res.json({ pdfBase64: Buffer.from(pdfBytes).toString("base64") });
+      finalBuffer = Buffer.from(pdfBytes);
+      // }
+      res.json({ pdfBase64: finalBuffer.toString("base64") });
     })
   );
 

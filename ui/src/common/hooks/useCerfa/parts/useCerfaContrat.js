@@ -671,6 +671,7 @@ export function useCerfaContrat() {
           let shouldSaveInDb = false;
           if (!forcedTriggered) {
             if (contratDateDebutContrat.value !== newV.contrat.dateDebutContrat.value) {
+              setContratDateDebutContrat(newV.contrat.dateDebutContrat);
               if (contratDateFinContrat.value !== "")
                 setContratDateFinContrat({ ...contratDateFinContrat, triggerValidation: true });
 
@@ -686,7 +687,6 @@ export function useCerfaContrat() {
               });
               setContratTypeDerogation({ ...typeDerog });
 
-              setContratDateDebutContrat(newV.contrat.dateDebutContrat);
               seContratDureeContrat(newV.contrat.dureeContrat);
 
               shouldSaveInDb = true;
@@ -826,10 +826,10 @@ export function useCerfaContrat() {
           let shouldSaveInDb = false;
           if (!forcedTriggered) {
             if (contratDateFinContrat.value !== newV.contrat.dateFinContrat.value) {
+              setContratDateFinContrat(newV.contrat.dateFinContrat);
               if (contratDateDebutContrat.value !== "")
                 setContratDateDebutContrat({ ...contratDateDebutContrat, triggerValidation: true });
 
-              setContratDateFinContrat(newV.contrat.dateFinContrat);
               seContratDureeContrat(newV.contrat.dureeContrat);
 
               shouldSaveInDb = true;
