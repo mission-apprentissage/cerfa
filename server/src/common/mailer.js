@@ -55,7 +55,7 @@ module.exports = (transporter = createTransporter({ ...config.smtp, secure: fals
         data,
       });
       const emailTemplateContent = await renderFile(layoutPath, {
-        data: { content: buffer, title: emailTemplate.title },
+        data: { content: buffer, title: emailTemplate.title, publicUrl: config.publicUrl },
       });
 
       return transporter.sendMail({

@@ -152,6 +152,15 @@ module.exports = (components) => {
                 // }
               },
             ],
+            "procedure.finished": [
+              {
+                url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
+                method: "POST",
+                // "headers": {
+                //   "X-Custom-Header": "Yousign Webhook - Test value"
+                // }
+              },
+            ],
           },
         },
       };

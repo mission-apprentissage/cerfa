@@ -96,6 +96,7 @@ module.exports = (components) => {
             commune: cerfa.employeur.adresse.commune,
           },
           attestationPieces: cerfa.employeur.attestationPieces,
+          attestationEligibilite: cerfa.employeur.attestationEligibilite,
         },
         alternant: {
           nom: cerfa.apprenti.nom,

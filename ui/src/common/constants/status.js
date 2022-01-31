@@ -27,11 +27,6 @@ export const DOSSIER_STATUS = {
     priority: 2,
     text: "Signé",
   },
-  DOSSIER_TERMINE: {
-    // TODO MIGRATION SCRIPT
-    priority: 3,
-    text: "Dossier terminé",
-  },
   DOSSIER_TERMINE_AVEC_SIGNATURE: {
     priority: 3,
     text: "Dossier terminé",

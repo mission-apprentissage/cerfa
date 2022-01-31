@@ -71,8 +71,7 @@ export default ({
     if (
       dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION" ||
       dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
-      dossier.etat === "EN_ATTENTE_SIGNATURES" ||
-      dossier.etat === "DOSSIER_TERMINE" // TODO MIGRATION SCRIPT
+      dossier.etat === "EN_ATTENTE_SIGNATURES"
     )
       return "Télécharger le contrat non signé";
     if (dossier.etat === "SIGNATURES_EN_COURS") return "Télécharger le contrat en cours de signature";
@@ -191,7 +190,6 @@ export default ({
         <Flex width="100%" justify="flex-start" mt={8} mb={10}>
           <Center w="full">
             {(dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
-              dossier.etat === "DOSSIER_TERMINE" ||
               dossier.etat === "EN_ATTENTE_SIGNATURES" ||
               dossier.etat === "SIGNATURES_EN_COURS" ||
               dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE") && (
@@ -230,8 +228,7 @@ export default ({
               )}
             {hasPageAccessTo(auth, "send_agecap") &&
               (dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
-                dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE" ||
-                dossier.etat === "DOSSIER_TERMINE") && ( // TODO MIGRATION SCRIPT
+                dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE") && (
                 <Button
                   size="md"
                   onClick={onSendToAgecap}

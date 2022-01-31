@@ -62,7 +62,6 @@ const dossierSchema = {
       "DOSSIER_TERMINE_AVEC_SIGNATURE", // 3
 
       "DOSSIER_TERMINE_SANS_SIGNATURE", // 3
-      "DOSSIER_TERMINE", // 3  // TODO MIGRATION
 
       "TRANSMIS", // 4
 
