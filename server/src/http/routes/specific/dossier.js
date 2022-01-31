@@ -212,7 +212,7 @@ module.exports = (components) => {
         { dossierId: 1, workspaceId: 1, _id: 0 }
       );
       if (!permDossierIds.length) {
-        res.json([]);
+        return res.json([]);
       }
 
       let results = [];
@@ -241,7 +241,7 @@ module.exports = (components) => {
         }
       }
 
-      res.json(results);
+      return res.json(results);
     })
   );
 
