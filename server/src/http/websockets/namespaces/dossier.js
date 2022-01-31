@@ -40,10 +40,13 @@ module.exports = async ({ namespace, socket, components }) => {
 
   socket.on("disconnecting", async (reason) => {
     console.log(reason);
-    const { dossierId } = await connectionsDossiers.disconnect({
+    const deletedConnection = await connectionsDossiers.disconnect({
       connectionId: socket.id,
     });
-    await sendLatestConnectedUsers(dossierId.toString());
+    if (deletedConnection) {
+      const { dossierId } = deletedConnection;
+      await sendLatestConnectedUsers(dossierId.toString());
+    }
   });
 
   socket.on("disconnect", async (reason) => {
