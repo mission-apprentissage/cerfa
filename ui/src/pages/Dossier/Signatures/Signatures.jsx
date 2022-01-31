@@ -117,9 +117,7 @@ const ContratPdf = () => {
   const dossier = useRecoilValue(dossierAtom);
 
   const showDdets =
-    dossier.etat === "DOSSIER_TERMINE" ||
-    dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
-    dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE";
+    dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" || dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE";
 
   useEffect(() => {
     const run = async () => {
@@ -348,7 +346,6 @@ export default () => {
     !dossier.signatures &&
     (dossier.etat === "BROUILLON" ||
       // dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION" ||
-      dossier.etat === "DOSSIER_TERMINE" || // TODO MIGRATION
       dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
       dossier.etat === "TRANSMIS" ||
       dossier.etat === "EN_COURS_INSTRUCTION" ||

@@ -32,7 +32,6 @@ export const StatusBadge = ({ status, text, withIcon = false, ...badgeProps }) =
     EN_ATTENTE_SIGNATURES: "waitingSignature",
     SIGNATURES_EN_COURS: "waitingSignature",
     SIGNE: "sign",
-    DOSSIER_TERMINE: "termine", // TODO MIGRATION SCRIPT
     DOSSIER_TERMINE_AVEC_SIGNATURE: "termine",
     DOSSIER_TERMINE_SANS_SIGNATURE: "termine",
     TRANSMIS: "waitingSignature",
