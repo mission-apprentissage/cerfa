@@ -1,3 +1,10 @@
+# [1.18.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.17.0...v1.18.0-beta.1) (2022-01-31)
+
+
+### Features
+
+* adaptation agecap 4.0.7 + logins temporaires retiré + footer email ([#229](https://github.com/mission-apprentissage/cerfa/issues/229)) ([5817827](https://github.com/mission-apprentissage/cerfa/commit/5817827b8472d464727c15cec8be95a2e8968d97))
+
 # [1.17.0](https://github.com/mission-apprentissage/cerfa/compare/v1.16.0...v1.17.0) (2022-01-30)
 
 
