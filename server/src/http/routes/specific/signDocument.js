@@ -122,7 +122,7 @@ module.exports = (components) => {
               },
             ],
           },
-          ...(signataires.legal
+          ...(signataires.legal !== undefined
             ? {
                 firstname: signataires.legal.firstname,
                 lastname: signataires.legal.lastname,

@@ -47,10 +47,10 @@ export default ({ ...modal }) => {
         <UnorderedList ml="30px !important" mt={3}>
           >
           <ListItem>
-            Afin de recevoir le lien de signature, <strong>chaque courriel doivent être correctes</strong>
+            Afin de recevoir le lien de signature, <strong>tous les courriels doivent être correctes</strong>
           </ListItem>
           <ListItem>
-            Afin de recevoir les codes de signatures par sms, les télephones doivent être
+            Afin de recevoir les codes de signatures par <strong>SMS</strong>, les télephones doivent être
             <strong> des numéros de télephone mobile</strong>
           </ListItem>
         </UnorderedList>
