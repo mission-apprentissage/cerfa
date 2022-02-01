@@ -11,7 +11,11 @@ module.exports = () => {
   router.get(
     "/content/:id",
     tryCatch(async ({ params }, res) => {
-      if (params.id !== "6e373f15a9b94a87a5cabde3fa2af0bc" && params.id !== "8b83c43d387f4fc7b7872957807b8c66") {
+      if (
+        params.id !== "6e373f15a9b94a87a5cabde3fa2af0bc" &&
+        params.id !== "8b83c43d387f4fc7b7872957807b8c66" &&
+        params.id !== "b1216d0f333e430aa588d0017c948713"
+      ) {
         throw new Error("Something went wrong");
       }
 

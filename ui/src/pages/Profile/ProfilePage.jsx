@@ -24,7 +24,7 @@ export default () => {
             </Heading>
           </Box>
         </Box>
-        <Box w="100%" pt={[4, 8]}>
+        <Box w="100%" pt={[4, 8]} mb={5}>
           <ProfileInformation />
         </Box>
       </Flex>

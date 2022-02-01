@@ -245,8 +245,8 @@ const Finalize = () => {
             <Flex flexGrow={1} alignItems="end">
               <Text mt={8} fontSize="1rem">
                 Vous rencontrez des difficultés à passer cette étape ?
-                <Link to="/support" as={NavLink} color="bluefrance" ml={3}>
-                  Contacter le support
+                <Link to="/assistance" as={NavLink} color="bluefrance" ml={3}>
+                  Contacter l'assistance
                 </Link>
               </Text>
             </Flex>

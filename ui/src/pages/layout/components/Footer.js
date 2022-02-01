@@ -96,13 +96,10 @@ const Footer = () => {
                   Statistiques
                 </Link>
               </ListItem>
-              <ListItem _after={{ content: "''", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
-                <Link as={NavLink} to={"/support"}>
-                  Support
+              <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
+                <Link as={NavLink} to={"/assistance"}>
+                  Assistance
                 </Link>
-              </ListItem>
-              <ListItem w="10px" _after={{ content: "''", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
-                &nbsp;
               </ListItem>
               <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
                 <Link

@@ -172,8 +172,8 @@ export default () => {
                   <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
 
                   <Route exact path="/stats" component={StatsPage} />
-                  <Route exact path="/support" component={Support} />
-                  <Route exact path="/support/:id" component={Support} />
+                  <Route exact path="/assistance" component={Support} />
+                  <Route exact path="/assistance/:id" component={Support} />
                   <Route exact path="/cookies" component={Cookies} />
                   <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
                   <Route exact path="/mentions-legales" component={MentionsLegalesPage} />
