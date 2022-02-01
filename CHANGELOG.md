@@ -1,3 +1,10 @@
+# [1.18.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.18.0-beta.2...v1.18.0-beta.3) (2022-02-01)
+
+
+### Bug Fixes
+
+* missing saving ([72a8399](https://github.com/mission-apprentissage/cerfa/commit/72a839910dfd8248aedd1c787d0b3e07556c8ec4))
+
 # [1.18.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.18.0-beta.1...v1.18.0-beta.2) (2022-02-01)
 
 
