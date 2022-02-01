@@ -1,3 +1,21 @@
+# [1.18.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.18.0-beta.1...v1.18.0-beta.2) (2022-02-01)
+
+
+### Bug Fixes
+
+* front test ([527554f](https://github.com/mission-apprentissage/cerfa/commit/527554f41e355a4a3cfefb60499719f1cee83017))
+* handle deleted connection empty ([425e680](https://github.com/mission-apprentissage/cerfa/commit/425e680629da747299c5a2bd99f4e2b49e05b499))
+* pds phone ([786e9cd](https://github.com/mission-apprentissage/cerfa/commit/786e9cd8f054e041ac111446707494aac233fe51))
+* sharewithme page response without exit ([5870391](https://github.com/mission-apprentissage/cerfa/commit/5870391ac838fcf38621f8e29a34ffcd58bf2db5))
+* when reset password then account confirmed ([7508784](https://github.com/mission-apprentissage/cerfa/commit/75087843bfae0419b6cf8b30c8cd952f09e5964e))
+
+
+### Features
+
+* ajout table des signataires ([a2dfc6e](https://github.com/mission-apprentissage/cerfa/commit/a2dfc6eeb87710e1b01dade24b91b4d1308f95cf))
+* design signature ([66e711a](https://github.com/mission-apprentissage/cerfa/commit/66e711ab279109bb0715bd5ee8a45c4e96a485ee))
+* mise à jour pages assistance ([32e2b3a](https://github.com/mission-apprentissage/cerfa/commit/32e2b3ab9d5ade98d00087d7199c54819c17edbf))
+
 # [1.18.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.17.0...v1.18.0-beta.1) (2022-01-31)
 
 
