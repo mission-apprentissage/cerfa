@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "@chakra-ui/react";
+import { Text, Flex, UnorderedList, ListItem } from "@chakra-ui/react";
 import { _post } from "../../../common/httpClient";
 import PromptModal from "../../../common/components/Modals/PromptModal";
 import {
@@ -9,6 +9,8 @@ import {
 
 import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
 
+import { Warning } from "../../../theme/components/icons";
+
 export default ({ ...modal }) => {
   const dossier = useRecoilValue(dossierAtom);
   // const setDossier = useSetRecoilState(dossierAtom);
@@ -16,7 +18,6 @@ export default ({ ...modal }) => {
     await _post(`/api/v1/sign_document`, {
       dossierId: dossier._id,
       cerfaId: dossier.cerfaId,
-      signataires: dossier.signataires,
     });
     window.location.reload();
     // setDossier(reponse);
@@ -37,9 +38,26 @@ export default ({ ...modal }) => {
         }}
         bgOverlay="rgba(0, 0, 0, 0.28)"
         okText={"Déclencher"}
-        koText={"Abandonner"}
+        koText={"Revenir"}
       >
-        <Text mb={1}>La signature électronique sera réalisé via l'outil Yousgin.</Text>
+        <Flex>
+          <Warning boxSize="6" mr={2} />
+          <Text>Veuillez vérifier attentivement les informations renseignés pour les signataires</Text>
+        </Flex>
+        <UnorderedList ml="30px !important" mt={3}>
+          >
+          <ListItem>
+            Afin de recevoir le lien de signature, <strong>chaque courriel doivent être correctes</strong>
+          </ListItem>
+          <ListItem>
+            Afin de recevoir les codes de signatures par sms, les télephones doivent être
+            <strong> des numéros de télephone mobile</strong>
+          </ListItem>
+        </UnorderedList>
+        <Text mb={1} mt={5}>
+          La signature électronique est réalisé via l'outil Yousgin. <br />
+          Une fois la procedure de signature déclencher, vous pourrez plus changer les informations des signataires.
+        </Text>
       </PromptModal>
     </>
   );

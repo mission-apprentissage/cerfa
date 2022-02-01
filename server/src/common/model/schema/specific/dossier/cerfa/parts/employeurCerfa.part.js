@@ -180,6 +180,14 @@ const employeurCerfaSchema = {
       message: (props) => `${props.value} n'est pas un courriel valide`,
     },
     example: "energie3000.pro@gmail.com",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
   },
   adresse: {
     ...adresseSchema,

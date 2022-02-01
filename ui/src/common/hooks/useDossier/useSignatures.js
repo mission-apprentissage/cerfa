@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DateTime } from "luxon";
 
 import { saveCerfa } from "../useCerfa/useCerfa";
@@ -13,6 +13,7 @@ import {
 import { signaturesCompletionAtom, signaturesIsLoadedAtom } from "./signaturesAtoms";
 
 import { convertDateToValue, convertValueToDate } from "../../utils/formUtils";
+import { _put } from "../../httpClient";
 
 const setSignaturesCompletions = (lieuSignatureContrat, dateConclusion) => {
   let countFields = 1;
@@ -50,6 +51,7 @@ const doAsyncActionsDate = async (value, data) => {
 export function useSignatures() {
   const cerfa = useRecoilValue(cerfaAtom);
   const dossier = useRecoilValue(dossierAtom);
+  const setDossier = useSetRecoilState(dossierAtom);
 
   const [isLoaded, setIsLoaded] = useRecoilState(signaturesIsLoadedAtom);
 
@@ -61,76 +63,47 @@ export function useSignatures() {
   const [contratDateConclusion, setContratDateConclusion] = useRecoilState(cerfaContratDateConclusionAtom);
   const [contratDateDebutContrat, setContratDateDebutContrat] = useRecoilState(cerfaContratDateDebutContratAtom);
 
-  // const onSubmittedContratLieuSignatureContrat = useCallback(
-  //   async (path, data) => {
-  //     try {
-  //       if (path === "contrat.lieuSignatureContrat") {
-  //         const newV = {
-  //           contrat: {
-  //             lieuSignatureContrat: {
-  //               ...contratLieuSignatureContrat,
-  //               value: data,
-  //             },
-  //           },
-  //         };
-  //         if (contratLieuSignatureContrat.value !== newV.contrat.lieuSignatureContrat.value) {
-  //           setContratLieuSignatureContrat(newV.contrat.lieuSignatureContrat);
+  const onSubmittedSignataireDetails = useCallback(
+    async (path, data) => {
+      try {
+        const [, type, detail] = path.match(/^signataire\.(.+)\.(.+)$/);
 
-  //           const res = await saveCerfa(dossier?._id, cerfa?.id, {
-  //             contrat: {
-  //               lieuSignatureContrat: newV.contrat.lieuSignatureContrat.value,
-  //             },
-  //           });
-  //           const percent = setSignaturesCompletions(res.contrat.lieuSignatureContrat, contratDateConclusion);
-  //           setSignaturesCompletionInternal(percent);
-  //           setScA(percent);
-  //         }
-  //       }
-  //     } catch (e) {
-  //       console.error(e);
-  //     }
-  //   },
-  //   [
-  //     contratLieuSignatureContrat,
-  //     setContratLieuSignatureContrat,
-  //     dossier?._id,
-  //     cerfa?.id,
-  //     contratDateConclusion,
-  //     setScA,
-  //   ]
-  // );
+        let signataires = {
+          employeur: {
+            ...dossier.signataires.employeur,
+          },
+          apprenti: {
+            ...dossier.signataires.apprenti,
+          },
+          cfa: {
+            ...dossier.signataires.cfa,
+          },
+          ...(dossier.signataires.legal
+            ? {
+                legal: {
+                  ...dossier.signataires.legal,
+                },
+              }
+            : {}),
+        };
+        if (detail === "phone") {
+          signataires[type][detail] = data !== "" ? `+${data}` : "";
+        } else {
+          signataires[type][detail] = data;
+        }
 
-  // const onSubmittedContratDateConclusion = useCallback(
-  //   async (path, data) => {
-  //     try {
-  //       if (path === "contrat.dateConclusion") {
-  //         const newV = {
-  //           contrat: {
-  //             dateConclusion: {
-  //               ...contratDateConclusion,
-  //               value: data,
-  //             },
-  //           },
-  //         };
-  //         if (contratDateConclusion.value !== newV.contrat.dateConclusion.value) {
-  //           setContratDateConclusion(newV.contrat.dateConclusion);
+        const newDossier = await _put(`/api/v1/dossier/entity/${dossier._id}/signataires`, {
+          dossierId: dossier._id,
+          signataires,
+        });
 
-  //           const res = await saveCerfa(dossier?._id, cerfa?.id, {
-  //             contrat: {
-  //               dateConclusion: convertDateToValue(newV.contrat.dateConclusion),
-  //             },
-  //           });
-  //           const percent = setSignaturesCompletions(contratLieuSignatureContrat, res.contrat.dateConclusion);
-  //           setSignaturesCompletionInternal(percent);
-  //           setScA(percent);
-  //         }
-  //       }
-  //     } catch (e) {
-  //       console.error(e);
-  //     }
-  //   },
-  //   [contratDateConclusion, setContratDateConclusion, dossier?._id, cerfa?.id, contratLieuSignatureContrat, setScA]
-  // );
+        setDossier(newDossier);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [dossier, setDossier]
+  );
 
   const onSubmitted = useCallback(
     async (lieu, date) => {
@@ -223,9 +196,8 @@ export function useSignatures() {
     signaturesCompletion,
     sca,
     contratLieuSignatureContrat,
-    // onSubmittedContratLieuSignatureContrat,
     contratDateConclusion,
-    // onSubmittedContratDateConclusion,
+    onSubmittedSignataireDetails,
     onSubmitted,
     isLoaded,
   };

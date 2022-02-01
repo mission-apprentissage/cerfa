@@ -3,7 +3,7 @@ const Boom = require("boom");
 const Joi = require("joi");
 const permissions = require("./permissions");
 const moment = require("moment");
-const { findIndex, find } = require("lodash");
+const { findIndex, find, countBy } = require("lodash");
 moment.locale("fr-FR");
 const { mongoose } = require("../../common/mongodb");
 
@@ -118,6 +118,103 @@ module.exports = async () => {
         },
         { new: true }
       );
+    },
+    initializeSignatairesDossier: async (id, cerfa, contributors) => {
+      const found = await Dossier.findById(id).lean();
+
+      if (!found) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      let signataires = {
+        employeur: {
+          firstname: "",
+          lastname: "",
+          email: cerfa.employeur.courriel,
+          phone: cerfa.employeur.telephone,
+          status: "EN_ATTENTE_SIGNATURE",
+        },
+        apprenti: {
+          firstname: cerfa.apprenti.prenom,
+          lastname: cerfa.apprenti.nom,
+          email: cerfa.apprenti.courriel,
+          phone: cerfa.apprenti.telephone,
+          status: "EN_ATTENTE_SIGNATURE",
+        },
+        cfa: {
+          firstname: "",
+          lastname: "",
+          email: "",
+          phone: "",
+          status: "EN_ATTENTE_SIGNATURE",
+        },
+        ...(cerfa.apprenti.apprentiMineurNonEmancipe
+          ? {
+              legal: {
+                firstname: cerfa.apprenti.responsableLegal.nom,
+                lastname: cerfa.apprenti.responsableLegal.prenom,
+                email: "",
+                phone: "",
+                status: "EN_ATTENTE_SIGNATURE",
+              },
+            }
+          : {}),
+        complete: false,
+      };
+
+      const countContributorsType = countBy(contributors, (contributor) => contributor.user.type);
+
+      if (countContributorsType.entreprise === 1) {
+        const employeurContributors = find(contributors, (contributor) => contributor.user.type === "entreprise");
+        signataires.employeur = {
+          firstname: employeurContributors.user.prenom,
+          lastname: employeurContributors.user.nom,
+          email: employeurContributors.user.email,
+          phone: employeurContributors.user.telephone,
+          status: "EN_ATTENTE_SIGNATURE",
+        };
+      }
+
+      if (countContributorsType.cfa === 1) {
+        const cfaContributors = find(contributors, (contributor) => contributor.user.type === "cfa");
+        signataires.cfa = {
+          firstname: cfaContributors.user.prenom,
+          lastname: cfaContributors.user.nom,
+          email: cfaContributors.user.email,
+          phone: cfaContributors.user.telephone,
+          status: "EN_ATTENTE_SIGNATURE",
+        };
+      }
+
+      return await Dossier.findOneAndUpdate(
+        { _id: id },
+        {
+          signataires,
+        },
+        { new: true }
+      );
+    },
+    updateSignatairesDossier: async (id, signataires) => {
+      const found = await Dossier.findById(id).lean();
+
+      if (!found) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      if (!signataires.complete) {
+        let tmpComplete = true;
+        const keys = Object.keys(signataires);
+        for (let index = 0; index < keys.length; index++) {
+          const element = signataires[keys[index]];
+          if (element.firstname === "" || element.lastname === "" || element.email === "" || element.phone === "") {
+            tmpComplete = false;
+            break;
+          }
+        }
+        signataires.complete = tmpComplete;
+      }
+
+      return await Dossier.findOneAndUpdate({ _id: id }, { signataires }, { new: true });
     },
     getDocuments: async (id) => {
       const found = await Dossier.findById(id).lean();

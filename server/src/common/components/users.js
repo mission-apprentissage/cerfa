@@ -146,6 +146,7 @@ module.exports = async () => {
 
       if (user.account_status === "FORCE_RESET_PASSWORD") {
         user.account_status = "CONFIRMED";
+        user.confirmed = true;
       }
 
       user.password = sha512Utils.hash(newPassword);
