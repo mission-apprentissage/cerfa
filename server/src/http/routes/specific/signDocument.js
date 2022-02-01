@@ -78,66 +78,67 @@ module.exports = (components) => {
         page: 2,
       };
 
+      const members = [
+        {
+          firstname: signataires.employeur.firstname,
+          lastname: signataires.employeur.lastname,
+          email: signataires.employeur.email,
+          phone: signataires.employeur.phone,
+          ...operationDetails,
+          fileObjects: [
+            {
+              ...constantFile,
+              position: positions.employeur,
+            },
+          ],
+        },
+        {
+          firstname: signataires.apprenti.firstname,
+          lastname: signataires.apprenti.lastname,
+          email: signataires.apprenti.email,
+          phone: signataires.apprenti.phone,
+          ...operationDetails,
+          fileObjects: [
+            {
+              ...constantFile,
+              position: positions.apprenti,
+            },
+          ],
+        },
+        {
+          firstname: signataires.cfa.firstname,
+          lastname: signataires.cfa.lastname,
+          email: signataires.cfa.email,
+          phone: signataires.cfa.phone,
+          ...operationDetails,
+          fileObjects: [
+            {
+              ...constantFile,
+              position: positions.cfa,
+            },
+          ],
+        },
+      ];
+      if (signataires.legal) {
+        members.push({
+          firstname: signataires.legal.firstname,
+          lastname: signataires.legal.lastname,
+          email: signataires.legal.email,
+          phone: signataires.legal.phone,
+          ...operationDetails,
+          fileObjects: [
+            {
+              ...constantFile,
+              position: positions.legal,
+            },
+          ],
+        });
+      }
       const dataToSend = {
         name: `Signature du dossier ${dossier.nom}`,
         description: `Le contrat en apprentissage de ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} pour ${cerfa.employeur.denomination}`,
         start: true,
-        members: [
-          {
-            firstname: signataires.employeur.firstname,
-            lastname: signataires.employeur.lastname,
-            email: signataires.employeur.email,
-            phone: signataires.employeur.phone,
-            ...operationDetails,
-            fileObjects: [
-              {
-                ...constantFile,
-                position: positions.employeur,
-              },
-            ],
-          },
-          {
-            firstname: signataires.apprenti.firstname,
-            lastname: signataires.apprenti.lastname,
-            email: signataires.apprenti.email,
-            phone: signataires.apprenti.phone,
-            ...operationDetails,
-            fileObjects: [
-              {
-                ...constantFile,
-                position: positions.apprenti,
-              },
-            ],
-          },
-          {
-            firstname: signataires.cfa.firstname,
-            lastname: signataires.cfa.lastname,
-            email: signataires.cfa.email,
-            phone: signataires.cfa.phone,
-            ...operationDetails,
-            fileObjects: [
-              {
-                ...constantFile,
-                position: positions.cfa,
-              },
-            ],
-          },
-          ...(signataires.legal !== undefined
-            ? {
-                firstname: signataires.legal.firstname,
-                lastname: signataires.legal.lastname,
-                email: signataires.legal.email,
-                phone: signataires.legal.phone,
-                ...operationDetails,
-                fileObjects: [
-                  {
-                    ...constantFile,
-                    position: positions.legal,
-                  },
-                ],
-              }
-            : {}),
-        ],
+        members,
         config: {
           email: {
             "procedure.started": [
