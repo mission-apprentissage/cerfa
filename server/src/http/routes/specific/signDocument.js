@@ -246,6 +246,8 @@ module.exports = (components) => {
         }
       }
 
+      await dossiers.updateSignatairesDossier(dossierId, signataires);
+
       if (body.eventName === "procedure.finished" || (doneMembers && doneMembers.length === procedure.members.length)) {
         await dossiers.updateEtatDossier(params.id, "DOSSIER_TERMINE_AVEC_SIGNATURE");
       } else {
