@@ -29,11 +29,10 @@ module.exports = (components) => {
     pageAccessMiddleware(["signature_beta"]),
     permissionsDossierMiddleware(components, ["dossier/page_signatures/signer"]),
     tryCatch(async (req, res) => {
-      let { cerfaId, dossierId, signataires } = await Joi.object({
+      let { cerfaId, dossierId } = await Joi.object({
         test: Joi.boolean(),
         dossierId: Joi.string().required(),
         cerfaId: Joi.string().required(),
-        signataires: Joi.object({}).unknown(), // TODO
       })
         .unknown()
         .validateAsync(req.body, { abortEarly: false });
@@ -41,6 +40,12 @@ module.exports = (components) => {
       const dossier = await Dossier.findById(dossierId).lean();
       if (!dossier) {
         throw Boom.notFound("Dossier Doesn't exist");
+      }
+
+      const signataires = dossier.signataires;
+
+      if (!signataires.complete) {
+        throw Boom.badRequest("Something went wrong");
       }
 
       const cerfa = await Cerfa.findOne({ _id: cerfaId }).lean();
@@ -104,32 +109,34 @@ module.exports = (components) => {
               },
             ],
           },
-          // {
-          //   firstname: "Legal",
-          //   lastname: "Bigard",
-          //   email: "antoine.bigard+testLegal@beta.gouv.fr",
-          //   phone: "+33612647513",
-          //   ...operationDetails,
-          //   fileObjects: [
-          //     {
-          //       ...constantFile,
-          //       position: positions.legal,
-          //     },
-          //   ],
-          // },
-          // {
-          //   firstname: signataires.cfa.firstname,
-          //   lastname: signataires.cfa.lastname,
-          //   email: signataires.cfa.email,
-          //   phone: signataires.cfa.phone,
-          //   ...operationDetails,
-          //   fileObjects: [
-          //     {
-          //       ...constantFile,
-          //       position: positions.cfa,
-          //     },
-          //   ],
-          // },
+          {
+            firstname: signataires.cfa.firstname,
+            lastname: signataires.cfa.lastname,
+            email: signataires.cfa.email,
+            phone: signataires.cfa.phone,
+            ...operationDetails,
+            fileObjects: [
+              {
+                ...constantFile,
+                position: positions.cfa,
+              },
+            ],
+          },
+          ...(signataires.legal
+            ? {
+                firstname: signataires.legal.firstname,
+                lastname: signataires.legal.lastname,
+                email: signataires.legal.email,
+                phone: signataires.legal.phone,
+                ...operationDetails,
+                fileObjects: [
+                  {
+                    ...constantFile,
+                    position: positions.legal,
+                  },
+                ],
+              }
+            : {}),
         ],
         config: {
           email: {
@@ -191,6 +198,7 @@ module.exports = (components) => {
 
       const { _doc } = await dossiers.updateSignatures(params.id, body);
       const { procedure } = _doc.signatures;
+      const signataires = _doc.signataires;
       const dossierId = params.id;
       const yousignFile = procedure.files[0];
 
@@ -221,6 +229,22 @@ module.exports = (components) => {
       }
 
       const doneMembers = procedure.members.filter(({ status }) => status === "done");
+      for (let index = 0; index < doneMembers.length; index++) {
+        const doneMember = doneMembers[index];
+        if (doneMember.email === signataires.apprenti.email && doneMember.phone === signataires.apprenti.phone) {
+          signataires.apprenti.status = "SIGNE";
+        } else if (
+          doneMember.email === signataires.employeur.email &&
+          doneMember.phone === signataires.employeur.phone
+        ) {
+          signataires.employeur.status = "SIGNE";
+        } else if (doneMember.email === signataires.cfa.email && doneMember.phone === signataires.cfa.phone) {
+          signataires.cfa.status = "SIGNE";
+        } else if (doneMember.email === signataires.legal.email && doneMember.phone === signataires.legal.phone) {
+          signataires.legal.status = "SIGNE";
+        }
+      }
+
       if (body.eventName === "procedure.finished" || (doneMembers && doneMembers.length === procedure.members.length)) {
         await dossiers.updateEtatDossier(params.id, "DOSSIER_TERMINE_AVEC_SIGNATURE");
       } else {

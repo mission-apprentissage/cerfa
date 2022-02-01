@@ -162,7 +162,6 @@ const ContratPdf = () => {
 const Signataires = () => {
   const dossier = useRecoilValue(dossierAtom);
   const { apprenti, employeur, cfa } = dossier.signataires;
-
   return (
     <Stack>
       {cfa && (
@@ -214,15 +213,135 @@ const Signataires = () => {
   );
 };
 
+const SignataireLineForm = ({ signataire, type }) => {
+  const { onSubmittedSignataireDetails } = useSignatures();
+  return (
+    <HStack spacing={3}>
+      <InputCerfa
+        path={`signataire.${type}.lastname`}
+        field={{
+          description: "Nom du signataire.",
+          label: "Nom",
+          value: signataire.lastname || "",
+          mask: "C",
+          maskBlocks: [
+            {
+              name: "C",
+              mask: "Pattern",
+              pattern: "^\\D*$",
+            },
+          ],
+        }}
+        type="text"
+        hasInfo={false}
+        mt={0}
+        w="20%"
+        onSubmittedField={onSubmittedSignataireDetails}
+      />
+      <InputCerfa
+        path={`signataire.${type}.firstname`}
+        field={{
+          description: "Prénom du signataire.",
+          label: "Prénom",
+          value: signataire.firstname || "",
+          mask: "C",
+          maskBlocks: [
+            {
+              name: "C",
+              mask: "Pattern",
+              pattern: "^\\D*$",
+            },
+          ],
+        }}
+        type="text"
+        hasInfo={false}
+        mt={0}
+        w="20%"
+        onSubmittedField={onSubmittedSignataireDetails}
+      />
+      <InputCerfa
+        path={`signataire.${type}.email`}
+        field={{
+          description: "Courriel du signataire.",
+          label: "Courriel",
+          value: signataire.email,
+          mask: "C",
+          maskBlocks: [
+            {
+              name: "C",
+              mask: "Pattern",
+              pattern: "^.*$",
+            },
+          ],
+        }}
+        type="email"
+        hasInfo={false}
+        w="40%"
+        onSubmittedField={onSubmittedSignataireDetails}
+      />
+      <InputCerfa
+        path={`signataire.${type}.phone`}
+        field={{
+          description: "Numéro de télephone du signataire.",
+          label: "Télephone mobile",
+          value: signataire.phone?.replace("+", "") || "",
+        }}
+        type="phone"
+        hasInfo={false}
+        w="20%"
+        onSubmittedField={onSubmittedSignataireDetails}
+      />
+    </HStack>
+  );
+};
+
+const SignatairesForm = () => {
+  const dossier = useRecoilValue(dossierAtom);
+  const { apprenti, employeur, cfa, legal } = dossier.signataires;
+
+  return (
+    <>
+      <Text mb={5}>Coordonnées des signataires du contrat :</Text>
+      <Flex flexDirection="column">
+        {employeur && (
+          <Stack mb={5}>
+            <Text fontWeight="bold">Employeur :</Text>
+            <SignataireLineForm signataire={employeur} type="employeur" />
+          </Stack>
+        )}
+        <Divider />
+        {cfa && (
+          <Stack mb={5} mt={6}>
+            <Text fontWeight="bold">CFA :</Text>
+            <SignataireLineForm signataire={cfa} type="cfa" />
+          </Stack>
+        )}
+        <Divider />
+        {apprenti && (
+          <Stack mb={5} mt={6}>
+            <Text fontWeight="bold">Pour l'apprenti(e) :</Text>
+            <SignataireLineForm signataire={apprenti} type="apprenti" />
+          </Stack>
+        )}
+        <Divider />
+        {legal && (
+          <Stack mt={8}>
+            <Text fontWeight="bold">Pour le représentant légal de l'apprenti(e) :</Text>
+            <SignataireLineForm signataire={legal} type="legal" />
+          </Stack>
+        )}
+      </Flex>
+    </>
+  );
+};
+
 export default () => {
   const dossier = useRecoilValue(dossierAtom);
   useCerfa();
   const {
     sca: signaturesCompletion,
     contratLieuSignatureContrat,
-    // onSubmittedContratLieuSignatureContrat,
     contratDateConclusion,
-    // onSubmittedContratDateConclusion,
     isLoaded,
     onSubmitted,
   } = useSignatures();
@@ -361,6 +480,13 @@ export default () => {
   }
 
   if (dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION") return <></>;
+
+  if (dossier.etat === "EN_ATTENTE_DECLENCHEMENT_SIGNATURES")
+    return (
+      <Box mt="5rem">
+        <SignatairesForm />
+      </Box>
+    );
 
   return (
     <Box mt="5rem">

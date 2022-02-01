@@ -236,6 +236,7 @@ export default ({
                   _hover={{ bg: "pinksoft.500" }}
                   px={8}
                   mt={16}
+                  isDisabled={!dossier.signataires.complete}
                 >
                   <BallPenFill boxSize="5" mr={"0.5rem"} />
                   Démarrer la procédure de signature électronique
