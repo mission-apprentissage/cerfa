@@ -69,7 +69,7 @@ const AlertMessage = () => {
       {messagesAlert.length > 0 && (
         <Alert status="error">
           <AlertIcon />
-          <AlertTitle mr={2}>Alert : </AlertTitle>
+          <AlertTitle mr={2}>Alerte : </AlertTitle>
           <AlertDescription>
             {messagesAlert.map((element) => {
               if (!element.enabled) return null;
