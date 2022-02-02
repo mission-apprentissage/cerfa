@@ -1,3 +1,10 @@
+# [1.18.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.18.0-beta.3...v1.18.0-beta.4) (2022-02-02)
+
+
+### Features
+
+* amélioration bandeau d'alert ([7d5ec7d](https://github.com/mission-apprentissage/cerfa/commit/7d5ec7d39a318d3cb0ddb18b1d65675a756fabef))
+
 # [1.18.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.18.0-beta.2...v1.18.0-beta.3) (2022-02-01)
 
 
