@@ -351,6 +351,7 @@ export default React.memo(
     const [fromInternal, setFromInternal] = useState(false);
     const [countryCode, setCountryCode] = useState("fr");
     const [success, setSuccess] = useState({});
+    const [warning, setWarning] = useState({});
 
     const prevOnAsyncDataRef = useRef();
     const prevFieldValueRef = useRef("");
@@ -489,7 +490,7 @@ export default React.memo(
         }
 
         setIsLoading(true);
-        const { successed, data, message } = await field?.doAsyncActions(val, onAsyncData);
+        const { successed, warning, data, message } = await field?.doAsyncActions(val, onAsyncData);
         setIsLoading(false);
 
         // console.log({ successed, data, message });
@@ -497,13 +498,21 @@ export default React.memo(
         if (successed) setSuccess({ [name]: message });
         else setSuccess({});
 
+        if (warning) setWarning({ [name]: message });
+        else setWarning({});
+
         setErrors({ [name]: message });
+
         if (data) {
           return await onSubmittedField(path, data);
         }
+
         if (successed) {
           setIsErrored(false);
           setValidated(true);
+        } else if (warning) {
+          setIsErrored(false);
+          setValidated(false);
         } else {
           setValidated(false);
           setIsErrored(true);
@@ -865,8 +874,9 @@ export default React.memo(
             </Box>
           )}
         </HStack>
-        {errors[name] && !success[name] && <FormErrorMessage>{errors[name]}</FormErrorMessage>}
+        {errors[name] && !success[name] && !warning[name] && <FormErrorMessage>{errors[name]}</FormErrorMessage>}
         {success[name] && <FormErrorMessage color="green.500">{success[name]}</FormErrorMessage>}
+        {warning[name] && <FormErrorMessage color="flatwarm">{warning[name]}</FormErrorMessage>}
       </FormControl>
     );
   }

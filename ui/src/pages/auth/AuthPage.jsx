@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Box, Flex, Container, HStack, Heading, Text, forwardRef, chakra, Button, Link } from "@chakra-ui/react";
+import React from "react";
+import { Box, Flex, Container, Heading, Text, forwardRef, chakra } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
-import { _get } from "../../common/httpClient";
-import { ExternalLinkLine } from "../../theme/components/icons";
+
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -50,15 +49,6 @@ const FormBoxMotion = ({ children, isOpen, ...rest }) => {
 
 const AuthPage = () => {
   let { slug } = useParams();
-  const [linkToPds, setLinkToPds] = useState(null);
-
-  useEffect(() => {
-    const run = async () => {
-      const data = await _get(`/api/v1/pds/getUrl`);
-      setLinkToPds(data.authorizationUrl);
-    };
-    run();
-  }, []);
 
   const title = "Connexion";
   setTitle(title);
@@ -74,7 +64,13 @@ const AuthPage = () => {
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
         </Container>
       </Box>
-      <Box w="100%" py={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E" minH="55vh">
+      <Box
+        w="100%"
+        py={[4, 8]}
+        px={[1, 1, 12, 24]}
+        color="#1E1E1E"
+        // minH="55vh"
+      >
         <Container maxW="xl">
           {slug === "confirmation" && <Confirmed />}
           {slug === "finalize" && (
@@ -83,13 +79,14 @@ const AuthPage = () => {
             </Box>
           )}
           {(slug === "connexion" || slug === "inscription") && (
-            <HStack w="full" spacing={10} minH="55vh" maxW="xl" alignItems="baseline">
+            <Flex w="full" minH="67vh" maxW="xl">
               <Flex
                 flexDirection="column"
                 bg="bluefrance"
                 color="white"
-                w="50%"
-                h="55vh"
+                flexGrow={1}
+                flexShrink={1}
+                flexBasis="50%"
                 py={[4, 12]}
                 px={[1, 1, 8, 10]}
                 zIndex={1}
@@ -97,22 +94,15 @@ const AuthPage = () => {
                 <Heading as="h2" fontSize="1.8rem" lineHeight="1.5">
                   Vous êtes
                   <br />
-                  une Entreprise ou un CFA ?
+                  un Employeur ou un CFA ?
                 </Heading>
                 <Text mt={8}>
                   {slug === "connexion" ? "Connectez-vous" : "Inscrivez-vous"} pour accéder au service de contrat
                   d'apprentissage dématérialisé.
                 </Text>
-                <Button variant="secondary" type="submit" mt={20} as={Link} href={linkToPds} isExternal>
-                  S'identifier via Portail de service{" "}
-                  <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} ml={"0.25rem"} mt={"0.125rem"} />
-                </Button>
               </Flex>
-              <Box w="50%" h="55vh">
-                <Box position="absolute" ml="-30px" mt="305px">
-                  <strong>Ou</strong>
-                </Box>
-                <FormBoxMotion isOpen={slug === "inscription"}>
+              <Box flexGrow={1} flexShrink={1} flexBasis="50%" ml={10}>
+                <FormBoxMotion isOpen={slug === "inscription"} display={slug === "connexion" ? "none" : "flex"}>
                   <Heading as="h1" fontSize="1.8rem" lineHeight="1.5">
                     Inscription
                   </Heading>
@@ -120,7 +110,11 @@ const AuthPage = () => {
                     <Register />
                   </Box>
                 </FormBoxMotion>
-                <FormBoxMotion isOpen={slug === "connexion"} top="-100%" position="relative">
+                <FormBoxMotion
+                  isOpen={slug === "connexion"}
+                  top="-100%"
+                  display={slug === "inscription" ? "none" : "flex"}
+                >
                   <Heading as="h1" fontSize="1.8rem" lineHeight="1.5" mb={4}>
                     Connexion
                   </Heading>
@@ -129,7 +123,7 @@ const AuthPage = () => {
                   </Box>
                 </FormBoxMotion>
               </Box>
-            </HStack>
+            </Flex>
           )}
         </Container>
       </Box>
