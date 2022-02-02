@@ -45,6 +45,15 @@ class EntrepriseApiData {
             api_entreprise: `Le Siret ${siret} existe`,
           },
         };
+      } else if (/^5[0-9]{2}/.test(`${e.reason}`)) {
+        return {
+          result: {
+            api_entreprise: "KO",
+          },
+          messages: {
+            api_entreprise: `Le service de récupération des informations Siret est momentanément indisponible`,
+          },
+        };
       }
       return {
         result: {},

@@ -189,18 +189,22 @@ const Message = () => {
                     Message: {
                       Header: "Message",
                       value: m.msg,
+                      width: 300,
                     },
                     Type: {
                       Header: "Type",
                       value: m.type,
+                      width: 40,
                     },
                     Actif: {
                       Header: "Actif",
                       value: m.enabled,
+                      width: 50,
                     },
                     Supprimer: {
                       Header: "Supprimer",
                       value: null,
+                      width: 20,
                     },
                   }))}
                   components={{

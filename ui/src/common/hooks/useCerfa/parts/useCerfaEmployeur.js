@@ -72,14 +72,25 @@ export const CerfaEmployeurController = async (dossier) => {
           //   when: Date.now(),
           //   who: "Antoine Bigard", // TODO Get user
           // });
+          const resultLength = Object.keys(response.result).length;
 
-          if (Object.keys(response.result).length === 0) {
+          if (resultLength === 0) {
             return {
               successed: false,
               data: null,
               message: response.messages.error,
             };
           }
+
+          if (response.result.api_entreprise === "KO") {
+            // TODO WARNING
+            return {
+              successed: true,
+              data: response.result,
+              message: response.messages.api_entreprise,
+            };
+          }
+
           if (response.result.ferme) {
             return {
               successed: false,
