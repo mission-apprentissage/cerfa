@@ -1,3 +1,15 @@
+# [1.18.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.18.0-beta.4...v1.18.0-beta.5) (2022-02-02)
+
+
+### Bug Fixes
+
+* indisponibilité de l'api entreprise + amélioration visuel login ([46768da](https://github.com/mission-apprentissage/cerfa/commit/46768da8d6f0a93062c3ccae4f893a70ab11018f))
+
+
+### Features
+
+* ajout numero de télétransmission sous le titre du dossier ([26abc36](https://github.com/mission-apprentissage/cerfa/commit/26abc36c9a83679846d6068f3da2efd148f52fe5))
+
 # [1.18.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.18.0-beta.3...v1.18.0-beta.4) (2022-02-02)
 
 
