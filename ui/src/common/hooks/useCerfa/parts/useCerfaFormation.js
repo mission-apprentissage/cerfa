@@ -301,6 +301,7 @@ export const CerfaFormationController = async (dossier) => {
           //   when: Date.now(),
           //   who: "Antoine Bigard", // TODO Get user
           // });
+
           if (Object.keys(response.result).length === 0) {
             return {
               successed: false,
@@ -308,6 +309,15 @@ export const CerfaFormationController = async (dossier) => {
               message: response.messages.error,
             };
           }
+
+          if (response.result.api_entreprise === "KO") {
+            return {
+              warning: true,
+              data: response.result,
+              message: `Le service de récupération des informations Siret est momentanément indisponible. Nous ne pouvons pas pre-remplir tous les champs reliées.`,
+            };
+          }
+
           if (response.result.ferme) {
             return {
               successed: false,
@@ -444,8 +454,7 @@ export function useCerfaFormation() {
               },
               uaiCfa: {
                 ...organismeFormationUaiCfa,
-                value: data.uai || "", // If organismeFormationUaiCfa.value !=== "" && data.uai === "" => do not change it
-                forceUpdate: organismeFormationUaiCfa.value === data.uai,
+                value: data.uai || "",
                 locked: false,
               },
               adresse: {
@@ -477,7 +486,6 @@ export function useCerfaFormation() {
             },
           };
 
-          // if (organismeFormationSiret.value !== newV.organismeFormation.siret.value) {
           setOrganismeFormationSiret(newV.organismeFormation.siret);
           setOrganismeFormationDenomination(newV.organismeFormation.denomination);
           setOrganismeFormationUaiCfa(newV.organismeFormation.uaiCfa);
@@ -494,10 +502,10 @@ export function useCerfaFormation() {
               uaiCfa: newV.organismeFormation.uaiCfa.value || null,
               adresse: {
                 numero: normalizeInputNumberForDb(newV.organismeFormation.adresse.numero.value),
-                voie: newV.organismeFormation.adresse.voie.value,
-                complement: newV.organismeFormation.adresse.complement.value,
-                codePostal: newV.organismeFormation.adresse.codePostal.value,
-                commune: newV.organismeFormation.adresse.commune.value,
+                voie: newV.organismeFormation.adresse.voie.value.trim(),
+                complement: newV.organismeFormation.adresse.complement.value.trim(),
+                codePostal: newV.organismeFormation.adresse.codePostal.value.trim(),
+                commune: newV.organismeFormation.adresse.commune.value.trim(),
               },
             },
             isLockedField: {
@@ -515,7 +523,6 @@ export function useCerfaFormation() {
             },
           });
           setPartFormationCompletionAtom(cerfaFormationCompletion(res));
-          // }
         }
       } catch (e) {
         console.error(e);

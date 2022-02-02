@@ -83,11 +83,10 @@ export const CerfaEmployeurController = async (dossier) => {
           }
 
           if (response.result.api_entreprise === "KO") {
-            // TODO WARNING
             return {
-              successed: true,
+              warning: true,
               data: response.result,
-              message: response.messages.api_entreprise,
+              message: `Le service de récupération des informations Siret est momentanément indisponible. Nous ne pouvons pas pre-remplir le formulaire.`,
             };
           }
 

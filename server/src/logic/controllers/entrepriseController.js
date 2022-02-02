@@ -48,6 +48,18 @@ class EntrepriseApiData {
       } else if (/^5[0-9]{2}/.test(`${e.reason}`)) {
         return {
           result: {
+            siret: siret,
+            siren: siret.substring(0, 9),
+            enseigne: "",
+            entreprise_raison_sociale: "",
+            numero_voie: "",
+            type_voie: "",
+            nom_voie: "",
+            code_postal: "",
+            localite: "",
+            commune_implantation_nom: "",
+            naf_code: "",
+            conventionCollective: { idcc: "", titre: "" },
             api_entreprise: "KO",
           },
           messages: {

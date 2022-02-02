@@ -14,15 +14,18 @@ import {
   Radio,
   Spinner,
   Center,
+  Divider,
 } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import generator from "generate-password-browser";
 import * as Yup from "yup";
 
-import { _post } from "../../../common/httpClient";
+import { _post, _get } from "../../../common/httpClient";
+
+import { ExternalLinkLine } from "../../../theme/components/icons";
 
 const validate = async (validationSchema, obj) => {
   let isValid = false;
@@ -41,6 +44,16 @@ const Register = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [entrepriseData, setEntrepriseData] = useState(null);
   const [succeeded, setSucceeded] = useState(false);
+
+  const [linkToPds, setLinkToPds] = useState(null);
+
+  useEffect(() => {
+    const run = async () => {
+      const data = await _get(`/api/v1/pds/getUrl`);
+      setLinkToPds(data.authorizationUrl);
+    };
+    run();
+  }, []);
 
   const { values, handleChange, handleSubmit, errors, touched, setFieldValue, setErrors } = useFormik({
     initialValues: {
@@ -136,9 +149,9 @@ const Register = () => {
   };
 
   return (
-    <Flex w="full" flexDirection="column" h="full" mt={4}>
+    <Flex w="full" flexDirection="column">
       <Box>
-        <Box marginBottom="2w">
+        <Box>
           {step === 0 && (
             <FormControl py={2} isRequired isInvalid={errors.compte && touched.compte}>
               <FormLabel>Je représente :</FormLabel>
@@ -152,7 +165,7 @@ const Register = () => {
                     }}
                     size="lg"
                   >
-                    une entreprise
+                    un employeur
                   </Radio>
                   <Radio
                     value="cfa"
@@ -327,7 +340,7 @@ const Register = () => {
           </HStack>
         )}
       </Box>
-      <Flex flexGrow={1} alignItems="end">
+      <Flex flexGrow={1}>
         <Text mt={8} fontSize="1rem">
           Vous avez déjà un compte ?
           <Link to="/auth/connexion" as={NavLink} color="bluefrance" ml={3}>
@@ -335,6 +348,14 @@ const Register = () => {
           </Link>
         </Text>
       </Flex>
+      <HStack spacing={3} my={8}>
+        <Divider />
+        <Text>Ou</Text>
+        <Divider />
+      </HStack>
+      <Button variant="secondary" type="submit" as={Link} href={linkToPds} isExternal>
+        S'inscire via Portail de service <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} ml={"0.25rem"} mt={"0.125rem"} />
+      </Button>
     </Flex>
   );
 };
