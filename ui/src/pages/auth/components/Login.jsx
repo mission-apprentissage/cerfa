@@ -48,7 +48,7 @@ const Login = () => {
         if (!user.confirmed) {
           history.push(`/en-attente-confirmation`);
         } else {
-          history.push("/mon-espace/mes-dossiers");
+          history.push("/mes-dossiers/mon-espace");
         }
       }
     } catch (e) {

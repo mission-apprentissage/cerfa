@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Flex,
+  // Flex,
   Box,
   Button,
   Modal,
@@ -16,9 +16,9 @@ import {
   Tab,
   TabPanel,
   Input,
-  Container,
-  Switch,
-  Divider,
+  // Container,
+  // Switch,
+  // Divider,
   FormControl,
   FormLabel,
   FormErrorMessage,
@@ -27,7 +27,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { ArrowRightLine, Close } from "../../../theme/components/icons";
 
-export default ({ isOpen, onClose }) => {
+export default ({ isOpen, onClose, title = "Paramètres" }) => {
   const { values, handleChange, handleSubmit, errors, touched } = useFormik({
     initialValues: {
       spaceName: "",
@@ -65,14 +65,14 @@ export default ({ isOpen, onClose }) => {
         <ModalHeader>
           <ArrowRightLine mt="-0.5rem" />
           <Text as="span" ml="1rem" textStyle={"h4"}>
-            Paramètres
+            {title}
           </Text>
         </ModalHeader>
         <ModalBody pb={6}>
           <Tabs variant="search">
             <TabList mb="1em" bg="white">
               <Tab pr="10rem">Général</Tab>
-              <Tab pr="10rem">Notifications</Tab>
+              {/* <Tab pr="10rem">Notifications</Tab> */}
             </TabList>
             <TabPanels>
               <TabPanel>
@@ -89,7 +89,7 @@ export default ({ isOpen, onClose }) => {
                   </FormControl>
                 </Box>
               </TabPanel>
-              <TabPanel>
+              {/* <TabPanel>
                 <Box w="100%" color="#1E1E1E">
                   <Container maxW="xl">
                     <Box mt={5}>
@@ -124,7 +124,7 @@ export default ({ isOpen, onClose }) => {
                     </Box>
                   </Container>
                 </Box>
-              </TabPanel>
+              </TabPanel> */}
             </TabPanels>
           </Tabs>
         </ModalBody>

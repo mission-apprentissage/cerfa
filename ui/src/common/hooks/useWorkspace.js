@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { workspacePathsAtom, workspaceTitlesAtom, workspaceTitleAtom, workspaceAtom } from "./workspaceAtoms";
 import { setTitle as setTitlePage } from "../utils/pageUtils";
@@ -21,10 +21,10 @@ const hydrate = async (workspaceId) => {
   }
 };
 
-export function useWorkspace(path) {
+export function useWorkspace() {
   const { pathname } = useLocation();
   let [auth] = useAuth();
-  let { workspaceId } = useParams();
+  let workspaceId = pathname.match(/^\/mes-dossiers\/espaces-partages\/([a-f0-9]{24})\//)?.[1];
   const [isloaded, setIsLoaded] = useState(false);
   const [isReloaded, setIsReloaded] = useState(false);
   const [error, setError] = useState(null);
@@ -42,29 +42,37 @@ export function useWorkspace(path) {
     hydrate(workspaceId || auth.workspaceId)
       .then(({ workspace }) => {
         if (!abortController.signal.aborted) {
-          const pathTo = workspaceId ? path.replace(":workspaceId", workspaceId) : path;
+          const pathTo = workspaceId ? `/mes-dossiers/espaces-partages/${workspaceId}` : `/mes-dossiers`;
           const paths = !workspaceId
             ? {
                 base: pathTo,
-                dossiers: `${pathTo}/mes-dossiers`,
+                dossiers: `${pathTo}/mon-espace`,
+                mesDossiers: `/mes-dossiers/mon-espace`,
                 parametresUtilisateurs: `${pathTo}/parametres/utilisateurs`,
                 parametresNotifications: `${pathTo}/parametres/notifications`,
-                dossier: `${pathTo}/mes-dossiers/:id/:step`,
-                nouveauDossier: `${pathTo}/mes-dossiers/nouveau-dossier`,
+                dossier: `${pathTo}/mon-espace/:id/:step`,
+                nouveauDossier: `${pathTo}/mon-espace/nouveau-dossier`,
+                sharedDossiers: `/mes-dossiers/dossiers-partages`,
               }
             : {
                 base: pathTo,
                 dossiers: `${pathTo}/dossiers`,
+                mesDossiers: `/mes-dossiers/mon-espace`,
                 parametresUtilisateurs: `${pathTo}/parametres/utilisateurs`,
                 parametresNotifications: `${pathTo}/parametres/notifications`,
                 dossier: `${pathTo}/dossiers/:id/:step`,
                 nouveauDossier: `${pathTo}/dossiers/nouveau-dossier`,
+                sharedDossiers: `/mes-dossiers/dossiers-partages`,
               };
 
           const titles = !workspaceId
             ? {
                 base: "Mes dossiers",
+                mesDossiers: "Mes dossiers",
                 workspace: "Mon espace",
+                myWorkspace: "Mon espace",
+                sharedWorkspaces: "Espaces partagés avec moi",
+                sharedDossiers: "Dossiers partagés avec moi",
                 dossiers: "Mes dossiers",
                 parametres: "Paramètres",
                 utilisateurs: "Utilisateurs",
@@ -76,8 +84,12 @@ export function useWorkspace(path) {
               }
             : {
                 base: "Dossiers",
+                mesDossiers: "Mes dossiers",
                 workspace: `${workspace?.nom}`,
-                dossiers: "Dossiers",
+                myWorkspace: "Mon espace",
+                sharedWorkspaces: "Espaces partagés avec moi",
+                sharedDossiers: "Dossiers partagés avec moi",
+                dossiers: "Espaces partagés avec moi",
                 parametres: "Paramètres",
                 utilisateurs: "Utilisateurs",
                 notifications: "Notifications",
@@ -88,7 +100,7 @@ export function useWorkspace(path) {
               };
 
           let bcDetails = [{ title: titles.base }];
-          const baseBc = workspaceId ? [{ title: "Partagés avec moi", to: "/partages-avec-moi" }] : [];
+          const baseBc = workspaceId ? [{ title: "Mes dossiers", to: "/mes-dossiers/mon-espace" }] : [];
           switch (pathname) {
             case paths.parametresUtilisateurs:
               setTitlePage(titles.parametresUtilisateurs);
@@ -110,20 +122,24 @@ export function useWorkspace(path) {
               break;
             case paths.dossiers:
               setTitlePage(titles.dossiers);
-              bcDetails = [...baseBc, { title: titles.workspace }, { title: titles.dossiers }];
+              bcDetails = [...baseBc, { title: titles.dossiers }, { title: titles.workspace }];
+              break;
+            case paths.sharedDossiers:
+              setTitlePage(titles.sharedDossiers);
+              bcDetails = [...baseBc, { title: titles.dossiers, to: paths.dossiers }, { title: titles.sharedDossiers }];
               break;
             case paths.nouveauDossier:
               setTitlePage(titles.commencerNouveauDossier);
               bcDetails = [
                 ...baseBc,
-                { title: titles.workspace, to: paths.dossiers },
                 { title: titles.dossiers, to: paths.dossiers },
+                { title: titles.workspace, to: paths.dossiers },
                 { title: titles.nouveauDossier },
               ];
               break;
             default:
               setTitlePage(titles.dossiers);
-              bcDetails = [...baseBc, { title: titles.workspace }, { title: titles.dossiers }];
+              bcDetails = [...baseBc, { title: titles.dossiers }, { title: titles.workspace }];
               break;
           }
 
@@ -133,8 +149,8 @@ export function useWorkspace(path) {
             setTitlePage(title);
             bcDetails = [
               ...baseBc,
-              { title: titles.workspace, to: paths.dossiers },
               { title: titles.dossiers, to: paths.dossiers },
+              { title: titles.workspace, to: paths.dossiers },
               { title: title },
             ];
           }
@@ -156,7 +172,7 @@ export function useWorkspace(path) {
     return () => {
       abortController.abort();
     };
-  }, [auth.workspaceId, path, pathname, setPaths, setTitles, setWorkspace, title, workspaceId]);
+  }, [auth.workspaceId, pathname, setPaths, setTitles, setWorkspace, title, workspaceId]);
 
   if (error !== null) {
     throw error;

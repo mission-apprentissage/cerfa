@@ -20,7 +20,6 @@ const ForgottenPasswordPage = lazy(() => import("./pages/auth/ForgottenPasswordP
 const ProfilePage = lazy(() => import("./pages/Profile/ProfilePage"));
 const WorkspacePage = lazy(() => import("./pages/Workspace/WorkspacePage"));
 const DossierPage = lazy(() => import("./pages/Dossier/DossierPage"));
-const SharedPage = lazy(() => import("./pages/SharedPage"));
 const StatsPage = lazy(() => import("./pages/StatsPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const Users = lazy(() => import("./pages/admin/Users"));
@@ -185,21 +184,18 @@ export default () => {
                     path={[
                       "/admin",
                       "/mon-compte",
-                      "/mon-espace",
+                      "/mes-dossiers",
                       "/partages-avec-moi",
                       "/partages-avec-moi/dossiers/:id/:step",
-                      "/partages-avec-moi/espaces/:workspaceId",
                     ]}
                   >
                     <ForceCompleteProfile>
                       <PrivateRoute path="/mon-compte" component={ProfilePage} />
 
                       {/* Mon espaces pages */}
-                      <PrivateRoute path="/mon-espace" component={WorkspacePage} />
+                      <PrivateRoute path="/mes-dossiers" component={WorkspacePage} />
                       {/*  Espace partagé  pages */}
-                      <PrivateRoute exact path="/partages-avec-moi" component={SharedPage} />
                       <PrivateRoute exact path="/partages-avec-moi/dossiers/:id/:step" component={DossierPage} />
-                      <PrivateRoute path="/partages-avec-moi/espaces/:workspaceId" component={WorkspacePage} />
 
                       {/* PRIVATE ADMIN PAGES */}
                       {auth && hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
