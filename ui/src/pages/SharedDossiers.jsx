@@ -2,8 +2,6 @@ import React from "react";
 import { Flex, Box, Heading } from "@chakra-ui/react";
 import { _get } from "../common/httpClient";
 import { useQuery } from "react-query";
-import { useRecoilValue } from "recoil";
-import { workspacePathsAtom } from "../common/hooks/workspaceAtoms";
 import TableDossiers from "./Workspace/components/TableDossiers";
 
 function useSharedWithMe() {
@@ -42,14 +40,17 @@ export const Header = () => {
 
 export const Content = () => {
   const { isLoading, sharedWithMeDossiers } = useSharedWithMe();
-  const paths = useRecoilValue(workspacePathsAtom);
 
   if (isLoading) return null;
 
   return (
     <Box mt={8}>
       {sharedWithMeDossiers.length > 0 && (
-        <TableDossiers dossiers={sharedWithMeDossiers} withDeleteAction={false} baseUrl={paths.dossiers} />
+        <TableDossiers
+          dossiers={sharedWithMeDossiers}
+          withDeleteAction={false}
+          baseUrl="/mes-dossiers/dossiers-partages"
+        />
       )}
     </Box>
   );

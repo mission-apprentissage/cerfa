@@ -25,6 +25,7 @@ export function useWorkspace() {
   const { pathname } = useLocation();
   let [auth] = useAuth();
   let workspaceId = pathname.match(/^\/mes-dossiers\/espaces-partages\/([a-f0-9]{24})\//)?.[1];
+  let dossierId = pathname.match(/^\/mes-dossiers\/dossiers-partages\/([a-f0-9]{24})\//)?.[1];
   const [isloaded, setIsLoaded] = useState(false);
   const [isReloaded, setIsReloaded] = useState(false);
   const [error, setError] = useState(null);
@@ -36,36 +37,64 @@ export function useWorkspace() {
   const [titles, setTitles] = useRecoilState(workspaceTitlesAtom);
   const [title] = useRecoilState(workspaceTitleAtom);
 
+  // TODO REFACTOR THE SHIT BELLOW
   useEffect(() => {
     const abortController = new AbortController();
     setIsReloaded(false);
     hydrate(workspaceId || auth.workspaceId)
       .then(({ workspace }) => {
         if (!abortController.signal.aborted) {
-          const pathTo = workspaceId ? `/mes-dossiers/espaces-partages/${workspaceId}` : `/mes-dossiers`;
-          const paths = !workspaceId
+          const pathTo = workspaceId
+            ? `/mes-dossiers/espaces-partages/${workspaceId}`
+            : dossierId
+            ? `/mes-dossiers/dossiers-partages`
+            : `/mes-dossiers`;
+          const commonPaths = {
+            base: pathTo,
+            mesDossiers: `/mes-dossiers/mon-espace`,
+            sharedDossiers: `/mes-dossiers/dossiers-partages`,
+            parametresUtilisateurs: `${pathTo}/parametres/utilisateurs`,
+            parametresNotifications: `${pathTo}/parametres/notifications`,
+          };
+          const paths = dossierId
             ? {
-                base: pathTo,
+                ...commonPaths,
+                dossiers: `${pathTo}`,
+                dossier: `${pathTo}/:id/:step`,
+                nouveauDossier: `/mes-dossiers/mon-espace/nouveau-dossier`,
+              }
+            : !workspaceId
+            ? {
+                ...commonPaths,
                 dossiers: `${pathTo}/mon-espace`,
-                mesDossiers: `/mes-dossiers/mon-espace`,
-                parametresUtilisateurs: `${pathTo}/parametres/utilisateurs`,
-                parametresNotifications: `${pathTo}/parametres/notifications`,
                 dossier: `${pathTo}/mon-espace/:id/:step`,
                 nouveauDossier: `${pathTo}/mon-espace/nouveau-dossier`,
-                sharedDossiers: `/mes-dossiers/dossiers-partages`,
               }
             : {
-                base: pathTo,
+                ...commonPaths,
                 dossiers: `${pathTo}/dossiers`,
-                mesDossiers: `/mes-dossiers/mon-espace`,
-                parametresUtilisateurs: `${pathTo}/parametres/utilisateurs`,
-                parametresNotifications: `${pathTo}/parametres/notifications`,
                 dossier: `${pathTo}/dossiers/:id/:step`,
                 nouveauDossier: `${pathTo}/dossiers/nouveau-dossier`,
-                sharedDossiers: `/mes-dossiers/dossiers-partages`,
               };
 
-          const titles = !workspaceId
+          const titles = dossierId
+            ? {
+                base: "Dossiers",
+                mesDossiers: "Mes dossiers",
+                workspace: `${workspace?.nom}`,
+                myWorkspace: "Mon espace",
+                sharedWorkspaces: "Espaces partagés avec moi",
+                sharedDossiers: "Dossiers partagés avec moi",
+                dossiers: "Dossiers partagés avec moi",
+                parametres: "Paramètres",
+                utilisateurs: "Utilisateurs",
+                notifications: "Notifications",
+                nouveauDossier: "Nouveau dossier",
+                parametresUtilisateurs: "Paramètres Utilisateurs",
+                parametresNotifications: "Paramètres Notifications",
+                commencerNouveauDossier: "Commencer un nouveau dossier",
+              }
+            : !workspaceId
             ? {
                 base: "Mes dossiers",
                 mesDossiers: "Mes dossiers",
@@ -98,9 +127,8 @@ export function useWorkspace() {
                 parametresNotifications: "Paramètres Notifications",
                 commencerNouveauDossier: "Commencer un nouveau dossier",
               };
-
           let bcDetails = [{ title: titles.base }];
-          const baseBc = workspaceId ? [{ title: "Mes dossiers", to: "/mes-dossiers/mon-espace" }] : [];
+          const baseBc = workspaceId || dossierId ? [{ title: "Mes dossiers", to: "/mes-dossiers/mon-espace" }] : [];
           switch (pathname) {
             case paths.parametresUtilisateurs:
               setTitlePage(titles.parametresUtilisateurs);
@@ -150,7 +178,7 @@ export function useWorkspace() {
             bcDetails = [
               ...baseBc,
               { title: titles.dossiers, to: paths.dossiers },
-              { title: titles.workspace, to: paths.dossiers },
+              ...(!dossierId ? [{ title: titles.workspace, to: paths.dossiers }] : []),
               { title: title },
             ];
           }
@@ -172,7 +200,7 @@ export function useWorkspace() {
     return () => {
       abortController.abort();
     };
-  }, [auth.workspaceId, pathname, setPaths, setTitles, setWorkspace, title, workspaceId]);
+  }, [auth.workspaceId, dossierId, pathname, setPaths, setTitles, setWorkspace, title, workspaceId]);
 
   if (error !== null) {
     throw error;

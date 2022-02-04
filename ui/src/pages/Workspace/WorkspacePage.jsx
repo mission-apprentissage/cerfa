@@ -75,6 +75,9 @@ export default () => {
           {hasContextAccessTo(workspace, "wks/page_espace/page_dossiers") && (
             <PrivateRoute exact path={paths.dossier} component={() => <Dossier />} />
           )}
+
+          <PrivateRoute exact path="/mes-dossiers/dossiers-partages/:id/:step" component={() => <Dossier />} />
+
           {hasContextAccessTo(workspace, "wks/page_espace/page_dossiers/ajouter_nouveau_dossier") && (
             <PrivateRoute exact path={paths.nouveauDossier} component={NouveauDossier} />
           )}

@@ -89,6 +89,7 @@ export default ({ dossiers, withDeleteAction = true, onDeleteClicked, baseUrl = 
           return <Center>{value}</Center>;
         },
         Actions: (value, i) => {
+          if (!withDeleteAction) return null;
           return (
             <Menu>
               <MenuButton as={Button} variant="unstyled" width="auto" height="full">
