@@ -76,8 +76,14 @@ module.exports = (components) => {
   router.post(
     "/dossier",
     permissionsWorkspaceMiddleware(components, ["wks/page_espace/page_dossiers/ajouter_nouveau_dossier"]),
-    tryCatch(async ({ user }, res) => {
-      const result = await dossiers.createDossier(user);
+    tryCatch(async ({ body, user }, res) => {
+      const { workspaceId } = await Joi.object({
+        workspaceId: Joi.string().required(),
+      })
+        .unknown()
+        .validateAsync(body, { abortEarly: false });
+
+      const result = await dossiers.createDossier(user, { nom: null, saved: false }, workspaceId);
       await cerfas.createCerfa({ dossierId: result._id.toString() });
 
       return res.json(result);

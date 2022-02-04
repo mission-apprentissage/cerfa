@@ -46,7 +46,7 @@ module.exports = async () => {
   };
 
   return {
-    createDossier: async (user, option = { nom: null, saved: false }) => {
+    createDossier: async (user, option = { nom: null, saved: false }, workspaceId = null) => {
       const userDb = await User.findOne({ email: user.sub });
       if (!userDb) {
         throw new Error("User doesn't exist");
@@ -62,7 +62,7 @@ module.exports = async () => {
         result = await Dossier.create({
           nom: option.nom || `Dossier ${moment(new Date()).add(1, "hour").format("DD MMM YYYY à HH:mm")}`,
           draft: true,
-          workspaceId: wks._id,
+          workspaceId: workspaceId || wks._id,
           owner: userDb._id,
           saved: option.saved,
         });
@@ -77,7 +77,7 @@ module.exports = async () => {
 
       const { createPermission } = await permissions();
       await createPermission({
-        workspaceId: wks._id.toString(),
+        workspaceId: workspaceId || wks._id.toString(),
         dossierId: result._id.toString(),
         userEmail: userDb.email,
         role: "dossier.admin",
