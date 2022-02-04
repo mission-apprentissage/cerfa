@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { Flex, Box, Heading, Button, useDisclosure, Text } from "@chakra-ui/react";
 import { _get, _delete } from "../../common/httpClient";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useRecoilValue } from "recoil";
 import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 import { workspacePathsAtom, workspaceTitlesAtom, workspaceAtom } from "../../common/hooks/workspaceAtoms";
@@ -13,6 +13,15 @@ import { InviteModal } from "./components/InviteModal";
 
 function useWorkspaceDossiers() {
   const workspace = useRecoilValue(workspaceAtom);
+  const queryClient = useQueryClient();
+  const prevWorkspaceId = useRef(null);
+
+  useEffect(() => {
+    if (prevWorkspaceId.current !== workspace._id) {
+      prevWorkspaceId.current = workspace._id;
+      queryClient.resetQueries("workspaceDossiers", { exact: true });
+    }
+  }, [queryClient, workspace._id]);
 
   const {
     data: workspaceDossiers,
