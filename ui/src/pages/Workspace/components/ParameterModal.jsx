@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   // Flex,
   Box,
@@ -15,32 +15,43 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Input,
+
   // Container,
   // Switch,
   // Divider,
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
 } from "@chakra-ui/react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { ArrowRightLine, Close } from "../../../theme/components/icons";
+import { workspaceAtom } from "../../../common/hooks/workspaceAtoms";
+import { _put } from "../../../common/httpClient";
+import InputCerfa from "../../Dossier/Cerfa/components/Input";
 
 export default ({ isOpen, onClose, title = "Paramètres" }) => {
-  const { values, handleChange, handleSubmit, errors, touched } = useFormik({
-    initialValues: {
-      spaceName: "",
-      siret: "",
-    },
-    validationSchema: Yup.object().shape({
-      spaceName: Yup.string(),
-      siret: Yup.string(),
-    }),
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
-  });
+  const workspace = useRecoilValue(workspaceAtom);
+  const setWorkspace = useSetRecoilState(workspaceAtom);
+  const [wksNom, setWksNom] = useState(workspace?.nom || "");
+
+  useEffect(() => {
+    setWksNom(workspace?.nom || "");
+  }, [workspace?.nom]);
+
+  // TODO TextArea for description field
+
+  const onSaveParametres = useCallback(async () => {
+    try {
+      const upwks = await _put(`/api/v1/workspace/entity/${workspace._id}/info`, {
+        workspaceId: workspace._id,
+        nom: wksNom,
+      });
+      setWorkspace({
+        ...workspace,
+        nom: upwks.nom,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, [setWorkspace, wksNom, workspace]);
+
   return (
     <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} size={"4xl"}>
       <ModalOverlay />
@@ -77,16 +88,35 @@ export default ({ isOpen, onClose, title = "Paramètres" }) => {
             <TabPanels>
               <TabPanel>
                 <Box>
-                  <FormControl isRequired mt={2} isInvalid={errors.spaceName}>
-                    <FormLabel>Nom de l'espace</FormLabel>
-                    <Input type="text" name="spaceName" value={values.spaceName} onChange={handleChange} required />
-                    {errors.spaceName && touched.spaceName && <FormErrorMessage>{errors.spaceName}</FormErrorMessage>}
-                  </FormControl>
-                  <FormControl isRequired mt={2} isInvalid={errors.siret}>
+                  <InputCerfa
+                    path={`wks.parametres.nom`}
+                    field={{
+                      description: "Nom de l'espace.",
+                      label: "Nom de l'espace :",
+                      value: wksNom,
+                      maxLength: 36,
+                      mask: "C",
+                      maskBlocks: [
+                        {
+                          name: "C",
+                          mask: "Pattern",
+                          pattern: "^.*$",
+                        },
+                      ],
+                    }}
+                    type="text"
+                    hasInfo={false}
+                    mt={0}
+                    onSubmittedField={(path, data) => {
+                      setWksNom(data);
+                    }}
+                  />
+
+                  {/* <FormControl isRequired mt={2} isInvalid={errors.siret}>
                     <FormLabel>Siret</FormLabel>
                     <Input type="text" name="siret" value={values.siret} onChange={handleChange} required />
                     {errors.siret && touched.siret && <FormErrorMessage>{errors.siret}</FormErrorMessage>}
-                  </FormControl>
+                  </FormControl> */}
                 </Box>
               </TabPanel>
               {/* <TabPanel>
@@ -129,7 +159,7 @@ export default ({ isOpen, onClose, title = "Paramètres" }) => {
           </Tabs>
         </ModalBody>
         <ModalFooter>
-          <Button variant="primary" onClick={handleSubmit} type="submit">
+          <Button variant="primary" onClick={onSaveParametres} type="submit">
             Enregistrer
           </Button>
         </ModalFooter>

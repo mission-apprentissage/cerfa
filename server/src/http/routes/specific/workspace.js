@@ -37,6 +37,24 @@ module.exports = (components) => {
     })
   );
 
+  router.put(
+    "/entity/:id/info",
+    permissionsWorkspaceMiddleware(components, ["wks/page_espace/page_parametres"]),
+    tryCatch(async ({ body, params }, res) => {
+      const { nom } = await Joi.object({
+        nom: Joi.string().required(),
+      })
+        .unknown()
+        .validateAsync(body, { abortEarly: false });
+
+      const workspaceId = params.id;
+
+      const updateWks = await workspaces.updateWorkspaceInfo(workspaceId, nom);
+
+      return res.json(updateWks);
+    })
+  );
+
   router.get(
     "/dossiers",
     permissionsWorkspaceMiddleware(components, ["wks/page_espace/page_dossiers/voir_liste_dossiers"]),

@@ -79,6 +79,20 @@ module.exports = async () => {
     },
     getUserWorkspace: async (user, select = {}) => await Workspace.findOne({ owner: user._id }, select),
     findWorkspaceById: async (id, select = {}) => await Workspace.findById(id, select).lean(),
+    updateWorkspaceInfo: async (workspaceId, nom) => {
+      const wksDb = await Workspace.findById(workspaceId);
+      if (!wksDb) {
+        throw new Error("wks doesn't exist");
+      }
+
+      return await Workspace.findOneAndUpdate(
+        { _id: wksDb._id },
+        {
+          nom,
+        },
+        { new: true }
+      );
+    },
     addContributeur: async (workspaceId, userEmail, as, acl = []) => {
       const wksDb = await Workspace.findById(workspaceId);
       if (!wksDb) {
