@@ -1155,7 +1155,6 @@ export function useCerfaFormation() {
               formationInterne: {
                 ...organismeFormationFormationInterne,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
