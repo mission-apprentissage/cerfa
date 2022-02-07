@@ -1,3 +1,10 @@
+## [1.18.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.18.0...v1.18.1-beta.1) (2022-02-07)
+
+
+### Bug Fixes
+
+* test slack bot chan contrat-suivi ([0f6ec2a](https://github.com/mission-apprentissage/cerfa/commit/0f6ec2a4a2d1f10ae794c2a708a93d686cd7a097))
+
 # [1.18.0](https://github.com/mission-apprentissage/cerfa/compare/v1.17.0...v1.18.0) (2022-02-07)
 
 
