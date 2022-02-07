@@ -1,3 +1,34 @@
+# [1.18.0](https://github.com/mission-apprentissage/cerfa/compare/v1.17.0...v1.18.0) (2022-02-07)
+
+
+### Bug Fixes
+
+* espace de rattachement à un nouveau dossier ([06a8d7d](https://github.com/mission-apprentissage/cerfa/commit/06a8d7df9f503791bfb8552ae0ac443f96573ce0))
+* front test ([527554f](https://github.com/mission-apprentissage/cerfa/commit/527554f41e355a4a3cfefb60499719f1cee83017))
+* handle deleted connection empty ([425e680](https://github.com/mission-apprentissage/cerfa/commit/425e680629da747299c5a2bd99f4e2b49e05b499))
+* indisponibilité de l'api entreprise + amélioration visuel login ([46768da](https://github.com/mission-apprentissage/cerfa/commit/46768da8d6f0a93062c3ccae4f893a70ab11018f))
+* missing saving ([72a8399](https://github.com/mission-apprentissage/cerfa/commit/72a839910dfd8248aedd1c787d0b3e07556c8ec4))
+* pds phone ([786e9cd](https://github.com/mission-apprentissage/cerfa/commit/786e9cd8f054e041ac111446707494aac233fe51))
+* rafraîchissant page dossiers d'espaces ([2c5987e](https://github.com/mission-apprentissage/cerfa/commit/2c5987e6d6360e61902ad9cf176399136bda52bc))
+* sharewithme page response without exit ([5870391](https://github.com/mission-apprentissage/cerfa/commit/5870391ac838fcf38621f8e29a34ffcd58bf2db5))
+* when reset password then account confirmed ([7508784](https://github.com/mission-apprentissage/cerfa/commit/75087843bfae0419b6cf8b30c8cd952f09e5964e))
+
+
+### Features
+
+* adaptation agecap 4.0.7 + logins temporaires retiré + footer email ([#229](https://github.com/mission-apprentissage/cerfa/issues/229)) ([5817827](https://github.com/mission-apprentissage/cerfa/commit/5817827b8472d464727c15cec8be95a2e8968d97))
+* ajout du champ mineur ([c055f39](https://github.com/mission-apprentissage/cerfa/commit/c055f3921d5637ea9b5e22314db21d2b02a25d80))
+* ajout numero de télétransmission sous le titre du dossier ([26abc36](https://github.com/mission-apprentissage/cerfa/commit/26abc36c9a83679846d6068f3da2efd148f52fe5))
+* ajout table des signataires ([a2dfc6e](https://github.com/mission-apprentissage/cerfa/commit/a2dfc6eeb87710e1b01dade24b91b4d1308f95cf))
+* amélioration bandeau d'alert ([7d5ec7d](https://github.com/mission-apprentissage/cerfa/commit/7d5ec7d39a318d3cb0ddb18b1d65675a756fabef))
+* design signature ([66e711a](https://github.com/mission-apprentissage/cerfa/commit/66e711ab279109bb0715bd5ee8a45c4e96a485ee))
+* edition du nom d'espace ([1f7c953](https://github.com/mission-apprentissage/cerfa/commit/1f7c953c0420f2a4688027e959a895553e6d6394))
+* mise à jour pages assistance ([32e2b3a](https://github.com/mission-apprentissage/cerfa/commit/32e2b3ab9d5ade98d00087d7199c54819c17edbf))
+* page dossier partagé unique ([f844149](https://github.com/mission-apprentissage/cerfa/commit/f844149987385805172675ca1c47319ff3f7e8bc))
+* pris en compte des minutes dans le calcul des heures de travail ([823c212](https://github.com/mission-apprentissage/cerfa/commit/823c21250724a8b2dc6568df0645af55a639dc1c))
+* rationalisation des pages d'espaces partagées ([8f3e85e](https://github.com/mission-apprentissage/cerfa/commit/8f3e85e563ab408cd71522f498e268a56306d901))
+* réactiver le champ cfa d'entreprise ([cdf632d](https://github.com/mission-apprentissage/cerfa/commit/cdf632dd3156a47ebcf1d7c77d4f32ac658339c0))
+
 # [1.18.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.18.0-beta.5...v1.18.0-beta.6) (2022-02-07)
 
 
