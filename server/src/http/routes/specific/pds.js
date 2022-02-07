@@ -122,7 +122,7 @@ module.exports = (components) => {
             secure: !IS_OFFLINE,
           })
           .status(200)
-          .redirect("/mon-espace/mes-dossiers");
+          .redirect("/mes-dossiers/mon-espace");
       } else {
         // Register
 
@@ -144,7 +144,7 @@ module.exports = (components) => {
           siret: userinfo.attributes.siret,
           nom: userinfo.attributes.name,
           prenom: userinfo.attributes.given_name,
-          telephone: "+33" + userinfo.attributes.phone_number.substr(1, 9),
+          telephone: userinfo.attributes.phone_number ? "+33" + userinfo.attributes.phone_number.substr(1, 9) : null,
           civility: userinfo.attributes.civility,
           account_status: "FORCE_COMPLETE_PROFILE",
           confirmed: true,

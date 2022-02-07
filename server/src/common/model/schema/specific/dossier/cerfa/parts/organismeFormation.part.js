@@ -35,7 +35,6 @@ const organismeFormationSchema = {
       {
         label: "Oui",
         value: true,
-        locked: true,
       },
       {
         label: "Non",

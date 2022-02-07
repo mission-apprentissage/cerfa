@@ -230,7 +230,7 @@ export default () => {
   // TODO not Authorize handler
 
   return (
-    <Box w="100%" px={[1, 1, 6, 6]}>
+    <Box w="100%" px={[1, 1, 6, 6]} mb={10}>
       {hasPageAccessTo(auth, "signature_beta") && <AskBetaTestModal />}
       {finalizeModalDisclosure.isOpen && <FinalizeModal {...finalizeModalDisclosure} dossier={dossier} />}
       {eSignatureModalDisclosure.isOpen && <ESignatureModal {...eSignatureModalDisclosure} />}

@@ -1,6 +1,41 @@
 import React, { useState, useEffect } from "react";
-import { Box, Alert, AlertIcon, AlertTitle, AlertDescription, Text } from "@chakra-ui/react";
+import { Box, Alert, AlertIcon, AlertTitle, AlertDescription, Text, Link } from "@chakra-ui/react";
 import { _get } from "../../../common/httpClient";
+
+const replaceLinks = (str: string) => {
+  const regex = /(\[(.*?)\])(\((.*?)\))/gim;
+  let m = regex.exec(str);
+
+  if (!m) {
+    return [str];
+  }
+  try {
+    const parseResults = [];
+    let currentPos = 0;
+    while (m !== null) {
+      // This is necessary to avoid infinite loops with zero-width matches
+      if (m.index === regex.lastIndex) {
+        // eslint-disable-next-line no-plusplus
+        regex.lastIndex++;
+      }
+
+      parseResults.push(str.substring(currentPos, m.index));
+      parseResults.push({
+        linkText: m[2],
+        href: m[4],
+      });
+      currentPos = m.index + m[0].length;
+
+      m = regex.exec(str);
+    }
+    if (currentPos < str.length) {
+      parseResults.push(str.substring(currentPos, str.length));
+    }
+    return parseResults;
+  } catch (error) {
+    return [str];
+  }
+};
 
 const AlertMessage = () => {
   const [messagesInfo, setMessagesInfo] = useState([]);
@@ -34,9 +69,26 @@ const AlertMessage = () => {
       {messagesAlert.length > 0 && (
         <Alert status="error">
           <AlertIcon />
-          <AlertTitle mr={2}>Alert : </AlertTitle>
+          <AlertTitle mr={2}>Alerte : </AlertTitle>
           <AlertDescription>
-            {messagesAlert.map((element) => element.enabled && <Text key={element._id}>{element.msg}</Text>)}
+            {messagesAlert.map((element) => {
+              if (!element.enabled) return null;
+              return (
+                <Text key={element._id}>
+                  {replaceLinks(element.msg).map((part, i) => {
+                    return typeof part === "string" ? (
+                      <Text as="span" key={i}>
+                        {part}
+                      </Text>
+                    ) : (
+                      <Link href={part.href} fontSize="md" key={i} textDecoration={"underline"} isExternal>
+                        {part.linkText}
+                      </Link>
+                    );
+                  })}
+                </Text>
+              );
+            })}
           </AlertDescription>
         </Alert>
       )}
@@ -45,7 +97,24 @@ const AlertMessage = () => {
           <AlertIcon />
           <AlertTitle mr={2}>Info : </AlertTitle>
           <AlertDescription>
-            {messagesInfo.map((element) => element.enabled && <Text key={element._id}>{element.msg}</Text>)}
+            {messagesInfo.map((element) => {
+              if (!element.enabled) return null;
+              return (
+                <Text key={element._id}>
+                  {replaceLinks(element.msg).map((part, i) => {
+                    return typeof part === "string" ? (
+                      <Text as="span" key={i}>
+                        {part}
+                      </Text>
+                    ) : (
+                      <Link href={part.href} fontSize="md" key={i} textDecoration={"underline"} isExternal>
+                        {part.linkText}
+                      </Link>
+                    );
+                  })}
+                </Text>
+              );
+            })}
           </AlertDescription>
         </Alert>
       )}

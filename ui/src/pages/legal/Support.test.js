@@ -4,6 +4,16 @@ import { RecoilRoot } from "recoil";
 import Contact from "./Support";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
+Object.defineProperty(window, "matchMedia", {
+  value: () => {
+    return {
+      matches: false,
+      addListener: () => {},
+      removeListener: () => {},
+    };
+  },
+});
+
 test("should display support", () => {
   const { queryByText } = render(
     <Router>

@@ -19,68 +19,9 @@ module.exports = (components) => {
 
     const contributors = await dossiers.getContributeurs(dossier._id, components);
 
-    // TODO CLEAN THIS
-    let apprentiStatus = "EN_ATTENTE_SIGNATURE";
-    let employeurStatus = "EN_ATTENTE_SIGNATURE";
-    let cfaStatus = "EN_ATTENTE_SIGNATURE";
-
-    let signataires = {
-      employeur: null,
-      apprenti: {
-        firstname: cerfa.apprenti.prenom,
-        lastname: cerfa.apprenti.nom,
-        email: cerfa.apprenti.courriel,
-        phone: cerfa.apprenti.telephone,
-        status: apprentiStatus,
-      },
-      legal: null,
-      cfa: null,
-    };
-    for (let index = 0; index < contributors.length; index++) {
-      const contributor = contributors[index];
-      if (contributor.permission.name === "dossier.signataire") {
-        if (contributor.user.type === "entreprise") {
-          signataires.employeur = {
-            firstname: contributor.user.prenom,
-            lastname: contributor.user.nom,
-            email: contributor.user.email,
-            phone: contributor.user.telephone,
-            status: employeurStatus,
-          };
-        } else if (contributor.user.type === "cfa") {
-          signataires.cfa = {
-            firstname: contributor.user.prenom,
-            lastname: contributor.user.nom,
-            email: contributor.user.email,
-            phone: contributor.user.telephone,
-            status: cfaStatus,
-          };
-        }
-      }
-    }
-
-    if (dossier.signatures) {
-      const { procedure } = dossier.signatures;
-      const doneMembers = procedure.members.filter(({ status }) => status === "done");
-      for (let index = 0; index < doneMembers.length; index++) {
-        const doneMember = doneMembers[index];
-        if (doneMember.email === signataires.apprenti.email && doneMember.phone === signataires.apprenti.phone) {
-          signataires.apprenti.status = "SIGNE";
-        } else if (
-          doneMember.email === signataires.employeur?.email &&
-          doneMember.phone === signataires.employeur?.phone
-        ) {
-          signataires.employeur.status = "SIGNE";
-        } else if (doneMember.email === signataires.cfa?.email && doneMember.phone === signataires.cfa?.phone) {
-          signataires.cfa.status = "SIGNE";
-        }
-      }
-    }
-
     return {
       ...dossier,
       contributeurs: contributors,
-      signataires,
       acl: user.currentPermissionAcl,
       owner: {
         ...owner,
@@ -167,6 +108,24 @@ module.exports = (components) => {
   );
 
   router.put(
+    "/entity/:id/signataires",
+    permissionsDossierMiddleware(components, ["dossier/page_signatures"]),
+    tryCatch(async ({ body, params, user }, res) => {
+      const { signataires } = await Joi.object({
+        signataires: Joi.object({}).unknown().required(),
+      })
+        .unknown()
+        .validateAsync(body, { abortEarly: false });
+
+      const updatedDossier = await dossiers.updateSignatairesDossier(params.id, signataires);
+
+      const result = await buildDossierResult(updatedDossier._doc, user);
+
+      return res.json(result);
+    })
+  );
+
+  router.put(
     "/entity/:id/publish",
     permissionsDossierMiddleware(components, ["dossier/publication"]),
     tryCatch(async ({ params }, res) => {
@@ -177,6 +136,9 @@ module.exports = (components) => {
         parseInt(cerfa.employeur.adresse.region),
         cerfa.employeur.adresse.departement
       );
+
+      const contributors = await dossiers.getContributeurs(params.id, components);
+      await dossiers.initializeSignatairesDossier(params.id, cerfa, contributors);
 
       await cerfas.publishCerfa(cerfa._id);
       const dossier = await dossiers.publishDossier(params.id);
@@ -212,36 +174,28 @@ module.exports = (components) => {
         { dossierId: 1, workspaceId: 1, _id: 0 }
       );
       if (!permDossierIds.length) {
-        res.json([]);
+        return res.json([]);
       }
 
       let results = [];
       for (let index = 0; index < permDossierIds.length; index++) {
         const permDossierId = permDossierIds[index].dossierId;
-        const dossier = await dossiers.findDossierById(permDossierId, {
-          nom: 1,
-          owner: 1,
-          _id: 1,
-          workspaceId: 1,
-        });
+        const dossier = await dossiers.findDossierById(permDossierId);
         if (!dossier) {
           throw Boom.badRequest("Something went wrong");
         }
+
+        const result = await buildDossierResult(dossier, user);
         const owner = await users.getUserById(dossier.owner, { email: 1, nom: 1, prenom: 1, _id: 0 });
         if (!owner) {
           throw Boom.badRequest("Something went wrong");
         }
         if (owner.email !== user.email) {
-          results.push({
-            ...dossier,
-            owner: {
-              ...owner,
-            },
-          });
+          results.push(result);
         }
       }
 
-      res.json(results);
+      return res.json(results);
     })
   );
 

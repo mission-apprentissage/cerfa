@@ -214,23 +214,6 @@ const FormFormation = React.memo((props) => {
           </Flex>
         </Box>
       </Flex>
-      {/* <Box>
-        <FormControl isRequired mt={2} isInvalid={errors.checkEmployer}>
-          <Flex>
-            <Checkbox type="checkbox" value="oui" name="checkEmployer" onChange={handleChange} required />
-            <FormLabel ml={3} mt={2} fontWeight={700} textStyle="sm" fontStyle="italic">
-              L’employeur atteste disposer de l’ensemble des pièces justificatives nécessaires au dépôt du contrat
-            </FormLabel>
-          </Flex>
-          {errors.checkEmployer && touched.checkEmployer && <FormErrorMessage>{errors.checkEmployer}</FormErrorMessage>}
-        </FormControl>
-        <FormControl isRequired mt={2} isInvalid={errors.madeIn}>
-          <FormLabel>Fait à :</FormLabel>
-          <Input type="text" name="madeIn" onChange={handleChange} value={values.madeIn} required />
-          {errors.madeIn && touched.madeIn && <FormErrorMessage>{errors.madeIn}</FormErrorMessage>}
-        </FormControl>
-      </Box>
-*/}
     </Box>
   );
 });

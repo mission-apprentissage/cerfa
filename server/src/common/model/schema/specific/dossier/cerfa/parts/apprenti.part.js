@@ -101,7 +101,7 @@ const apprentiSchema = {
   },
   dateNaissance: {
     type: Date,
-    description: "Date de naissance de l'apprenti",
+    description: "Date de naissance de l'apprenti(e)",
     label: "Date de naissance :",
     requiredMessage: "La date de naissance de l'apprenti(e) est obligatoire",
     example: "2001-01-01T00:00:00+0000",
@@ -112,7 +112,7 @@ const apprentiSchema = {
   },
   age: {
     type: Number,
-    description: "Âge de l'apprenti(e) [donnée calculée]",
+    description: "Âge de l'apprenti(e) à la date de début de contrat [donnée calculée]",
     nullable: true,
     default: null,
     example: 17,
@@ -419,6 +419,14 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
   },
   adresse: {
     ...adresseSchema,
@@ -438,15 +446,37 @@ const apprentiSchema = {
       })),
     },
   },
-  apprentiMineurNonEmancipe: {
+  apprentiMineur: {
     type: Boolean,
-    description: "l'apprenti(e) est mineur non emancipé",
+    description: "À la date de signature de ce contrat, l'apprenti(e) sera-t-il(elle) mineur(e) ?",
     example: false,
     default: null,
     required: function () {
       return !this.draft;
     },
-    label: "l'apprenti(e) est mineur non emancipé",
+    label: "À la date de signature de ce contrat, l'apprenti(e) sera-t-il(elle) mineur(e) ?",
+    requiredMessage: "l'apprenti(e) sera-t-il(elle) mineur(e) à la date de signature de ce contrat ?",
+    options: [
+      {
+        label: "Oui",
+        value: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
+  },
+  apprentiMineurNonEmancipe: {
+    type: Boolean,
+    description: "l'apprenti(e) est mineur(e) non emancipé(e)",
+    example: false,
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
+    label: "l'apprenti(e) est mineur(e) non emancipé(e)",
+    requiredMessage: "Merci de renseigner si l'apprenti(e) mineur(e) est emancipé(e) ou non",
     options: [
       {
         label: "Oui",
@@ -528,8 +558,8 @@ const apprentiSchema = {
       adresse: {
         ...adresseSchema,
         pays: {
-          enum: [null, ...paysEnum.map(({ value }) => value)],
-          default: null,
+          enum: [null, ...paysEnum.map(({ code }) => code)],
+          default: "FR",
           type: String,
           description: "Pays",
           label: "Pays :",
@@ -537,9 +567,9 @@ const apprentiSchema = {
           required: function () {
             return !this.draft;
           },
-          options: paysEnum.map(({ label, value }) => ({
+          options: paysEnum.map(({ label, code }) => ({
             label: capitalize(label),
-            value,
+            value: code,
           })),
         },
       },

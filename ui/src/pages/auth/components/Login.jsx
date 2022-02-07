@@ -9,21 +9,34 @@ import {
   Input,
   Link,
   Text,
+  Divider,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import jwt from "jsonwebtoken";
 
 import useAuth from "../../../common/hooks/useAuth";
 import useToken from "../../../common/hooks/useToken";
-import { _post } from "../../../common/httpClient";
+import { _post, _get } from "../../../common/httpClient";
+
+import { ExternalLinkLine } from "../../../theme/components/icons";
 
 const Login = () => {
   const [, setAuth] = useAuth();
   const [, setToken] = useToken();
   const history = useHistory();
+
+  const [linkToPds, setLinkToPds] = useState(null);
+
+  useEffect(() => {
+    const run = async () => {
+      const data = await _get(`/api/v1/pds/getUrl`);
+      setLinkToPds(data.authorizationUrl);
+    };
+    run();
+  }, []);
 
   const login = async (values, { setStatus }) => {
     try {
@@ -35,7 +48,7 @@ const Login = () => {
         if (!user.confirmed) {
           history.push(`/en-attente-confirmation`);
         } else {
-          history.push("/mon-espace/mes-dossiers");
+          history.push("/mes-dossiers/mon-espace");
         }
       }
     } catch (e) {
@@ -49,7 +62,11 @@ const Login = () => {
   };
 
   return (
-    <Flex w="full" flexDirection="column" h="full">
+    <Flex
+      w="full"
+      flexDirection="column"
+      // h="full"
+    >
       <Box>
         <Formik
           initialValues={{ username: "", password: "" }}
@@ -110,6 +127,15 @@ const Login = () => {
           </Link>
         </Text>
       </Box>
+      <HStack spacing={3} my={8}>
+        <Divider />
+        <Text>Ou</Text>
+        <Divider />
+      </HStack>
+      <Button variant="secondary" type="submit" as={Link} href={linkToPds} isExternal>
+        S'identifier via Portail de service{" "}
+        <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} ml={"0.25rem"} mt={"0.125rem"} />
+      </Button>
     </Flex>
   );
 };

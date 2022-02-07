@@ -72,14 +72,24 @@ export const CerfaEmployeurController = async (dossier) => {
           //   when: Date.now(),
           //   who: "Antoine Bigard", // TODO Get user
           // });
+          const resultLength = Object.keys(response.result).length;
 
-          if (Object.keys(response.result).length === 0) {
+          if (resultLength === 0) {
             return {
               successed: false,
               data: null,
               message: response.messages.error,
             };
           }
+
+          if (response.result.api_entreprise === "KO") {
+            return {
+              warning: true,
+              data: response.result,
+              message: `Le service de récupération des informations Siret est momentanément indisponible. Nous ne pouvons pas pre-remplir le formulaire.`,
+            };
+          }
+
           if (response.result.ferme) {
             return {
               successed: false,
@@ -267,7 +277,7 @@ export const CerfaEmployeurController = async (dossier) => {
       naf: {
         doAsyncActions: async (value, data) => {
           try {
-            console.log(value);
+            // console.log(value);
             const insert = (str, index, value) => {
               return str.substr(0, index) + value + str.substr(index);
             };

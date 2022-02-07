@@ -26,8 +26,6 @@ const FormLearner = React.memo(() => {
         sexe,
         nationalite,
         dateNaissance,
-        age,
-        majeur,
         departementNaissance,
         communeNaissance,
         // nir,
@@ -41,6 +39,7 @@ const FormLearner = React.memo(() => {
         telephone,
         courriel,
         adresse: { numero, voie, complement, codePostal, commune, pays },
+        apprentiMineur: apprentiApprentiMineur,
         apprentiMineurNonEmancipe: apprentiApprentiMineurNonEmancipe,
         responsableLegal: {
           nom: responsableLegalNom,
@@ -84,6 +83,7 @@ const FormLearner = React.memo(() => {
           commune: onSubmittedApprentiAdresseCommune,
           pays: onSubmittedApprentiAdressePays,
         },
+        apprentiMineur: onSubmittedApprentiApprentiMineur,
         apprentiMineurNonEmancipe: onSubmittedApprentiApprentiMineurNonEmancipe,
         responsableLegal: {
           nom: onSubmittedApprentiResponsableLegalNom,
@@ -189,97 +189,104 @@ const FormLearner = React.memo(() => {
             onSubmittedField={onSubmittedApprentiCourriel}
           />
 
-          {!majeur && dateNaissance.value !== "" && age.value && age.value !== "" && (
-            <Box mt={5}>
-              <Text>L'apprenti(e) est mineur, merci de compléter les informations suivantes</Text>
+          <Box mt={5}>
+            <InputCerfa
+              path="apprenti.apprentiMineur"
+              field={apprentiApprentiMineur}
+              type="radio"
+              mt="2"
+              onSubmittedField={onSubmittedApprentiApprentiMineur}
+            />
+            <InputCerfa
+              path="apprenti.apprentiMineurNonEmancipe"
+              field={apprentiApprentiMineurNonEmancipe}
+              type="radio"
+              mt="2"
+              onSubmittedField={onSubmittedApprentiApprentiMineurNonEmancipe}
+            />
+          </Box>
+
+          <Box mt={5}>
+            <Collapse in={apprentiApprentiMineurNonEmancipe.value === "Oui"} animateOpacity>
+              <Text fontWeight="bold" my={3}>
+                Représentant légal
+              </Text>
               <InputCerfa
-                path="apprenti.apprentiMineurNonEmancipe"
-                field={apprentiApprentiMineurNonEmancipe}
+                path="apprenti.responsableLegal.nom"
+                field={responsableLegalNom}
+                type="text"
+                mt="2"
+                onSubmittedField={onSubmittedApprentiResponsableLegalNom}
+              />
+              <InputCerfa
+                path="apprenti.responsableLegal.prenom"
+                field={responsableLegalPrenom}
+                type="text"
+                mt="2"
+                onSubmittedField={onSubmittedApprentiResponsableLegalPrenom}
+              />
+              <Text fontWeight="bold" my={3}>
+                Adresse du représentant légal :
+              </Text>
+              <InputCerfa
+                path="apprenti.responsableLegal.memeAdresse"
+                field={responsableLegalMemeAdresse}
                 type="radio"
                 mt="2"
-                onSubmittedField={onSubmittedApprentiApprentiMineurNonEmancipe}
+                onSubmittedField={onSubmittedApprentiResponsableLegalMemeAdresse}
               />
-              <Collapse in={apprentiApprentiMineurNonEmancipe.value === "Oui"} animateOpacity>
-                <Text fontWeight="bold" my={3}>
-                  Représentant légal
-                </Text>
+              <Collapse in={responsableLegalMemeAdresse.value === "Non"} animateOpacity>
                 <InputCerfa
-                  path="apprenti.responsableLegal.nom"
-                  field={responsableLegalNom}
+                  path="apprenti.responsableLegal.adresse.numero"
+                  field={responsableLegalAdresseNumero}
+                  type="number"
+                  precision={0}
+                  mt="2"
+                  onSubmittedField={onSubmittedApprentiResponsableLegalAdresseNumero}
+                  hasInfo={false}
+                />
+                <InputCerfa
+                  path="apprenti.responsableLegal.adresse.voie"
+                  field={responsableLegalAdresseVoie}
                   type="text"
                   mt="2"
-                  onSubmittedField={onSubmittedApprentiResponsableLegalNom}
+                  onSubmittedField={onSubmittedApprentiResponsableLegalAdresseVoie}
+                  hasInfo={false}
                 />
                 <InputCerfa
-                  path="apprenti.responsableLegal.prenom"
-                  field={responsableLegalPrenom}
+                  path="apprenti.responsableLegal.adresse.complement"
+                  field={responsableLegalAdresseComplement}
                   type="text"
                   mt="2"
-                  onSubmittedField={onSubmittedApprentiResponsableLegalPrenom}
+                  onSubmittedField={onSubmittedApprentiResponsableLegalAdresseComplement}
+                  hasInfo={false}
                 />
-                <Text fontWeight="bold" my={3}>
-                  Adresse du représentant légal :
-                </Text>
                 <InputCerfa
-                  path="apprenti.responsableLegal.memeAdresse"
-                  field={responsableLegalMemeAdresse}
-                  type="radio"
+                  path="apprenti.responsableLegal.adresse.codePostal"
+                  field={responsableLegalAdresseCodePostal}
+                  type="text"
                   mt="2"
-                  onSubmittedField={onSubmittedApprentiResponsableLegalMemeAdresse}
+                  onSubmittedField={onSubmittedApprentiResponsableLegalAdresseCodePostal}
+                  hasInfo={false}
                 />
-                <Collapse in={responsableLegalMemeAdresse.value === "Non"} animateOpacity>
-                  <InputCerfa
-                    path="apprenti.responsableLegal.adresse.numero"
-                    field={responsableLegalAdresseNumero}
-                    type="number"
-                    precision={0}
-                    mt="2"
-                    onSubmittedField={onSubmittedApprentiResponsableLegalAdresseNumero}
-                    hasInfo={false}
-                  />
-                  <InputCerfa
-                    path="apprenti.responsableLegal.adresse.voie"
-                    field={responsableLegalAdresseVoie}
-                    type="text"
-                    mt="2"
-                    onSubmittedField={onSubmittedApprentiResponsableLegalAdresseVoie}
-                    hasInfo={false}
-                  />
-                  <InputCerfa
-                    path="apprenti.responsableLegal.adresse.complement"
-                    field={responsableLegalAdresseComplement}
-                    type="text"
-                    mt="2"
-                    onSubmittedField={onSubmittedApprentiResponsableLegalAdresseComplement}
-                    hasInfo={false}
-                  />
-                  <InputCerfa
-                    path="apprenti.responsableLegal.adresse.codePostal"
-                    field={responsableLegalAdresseCodePostal}
-                    type="text"
-                    mt="2"
-                    onSubmittedField={onSubmittedApprentiResponsableLegalAdresseCodePostal}
-                    hasInfo={false}
-                  />
-                  <InputCerfa
-                    path="apprenti.responsableLegal.adresse.commune"
-                    field={responsableLegalAdresseCommune}
-                    type="text"
-                    mt="2"
-                    onSubmittedField={onSubmittedApprentiResponsableLegalAdresseCommune}
-                    hasInfo={false}
-                  />
-                  <InputCerfa
-                    path="apprenti.responsableLegal.adresse.pays"
-                    field={responsableLegalAdressePays}
-                    type="select"
-                    mt="2"
-                    onSubmittedField={onSubmittedApprentiResponsableLegalAdressePays}
-                  />
-                </Collapse>
+                <InputCerfa
+                  path="apprenti.responsableLegal.adresse.commune"
+                  field={responsableLegalAdresseCommune}
+                  type="text"
+                  mt="2"
+                  onSubmittedField={onSubmittedApprentiResponsableLegalAdresseCommune}
+                  hasInfo={false}
+                />
+                <InputCerfa
+                  path="apprenti.responsableLegal.adresse.pays"
+                  field={responsableLegalAdressePays}
+                  type="select"
+                  mt="2"
+                  onSubmittedField={onSubmittedApprentiResponsableLegalAdressePays}
+                />
               </Collapse>
-            </Box>
-          )}
+            </Collapse>
+          </Box>
         </Box>
         <Box w="45%" ml="5w">
           <InputCerfa
@@ -293,6 +300,7 @@ const FormLearner = React.memo(() => {
               remunerationsAnnuelles: remunerationsAnnuelles,
               dateFinContrat: dateFinContrat?.value,
               employeurAdresseDepartement: employeurAdresseDepartement?.value,
+              apprentiApprentiMineur: apprentiApprentiMineur?.value,
             }}
           />
           <InputCerfa

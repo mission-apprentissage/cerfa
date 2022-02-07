@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { Flex, Center, Button, Link, Text, HStack } from "@chakra-ui/react";
+import { Flex, Center, Button, Link, Text, HStack, Heading, OrderedList, ListItem } from "@chakra-ui/react";
 
 import { _post, _put } from "../../../common/httpClient";
 import useAuth from "../../../common/hooks/useAuth";
@@ -8,7 +8,7 @@ import { DownloadLine, SentPaperPlane, BallPenFill } from "../../../theme/compon
 
 import { hasPageAccessTo } from "../../../common/utils/rolesUtils";
 
-import InfoTooltip from "../../../common/components/InfoTooltip";
+// import InfoTooltip from "../../../common/components/InfoTooltip";
 
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
@@ -70,9 +70,9 @@ export default ({
   const buttonTextProp = useMemo(() => {
     if (
       dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION" ||
+      dossier.etat === "EN_ATTENTE_DECLENCHEMENT_SIGNATURES" ||
       dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
-      dossier.etat === "EN_ATTENTE_SIGNATURES" ||
-      dossier.etat === "DOSSIER_TERMINE" // TODO MIGRATION SCRIPT
+      dossier.etat === "EN_ATTENTE_SIGNATURES"
     )
       return "Télécharger le contrat non signé";
     if (dossier.etat === "SIGNATURES_EN_COURS") return "Télécharger le contrat en cours de signature";
@@ -138,52 +138,65 @@ export default ({
             </HStack>
             <HStack spacing={16} justifyContent="center" mt={10}>
               {isBetaTester && hasPageAccessTo(auth, "signature_beta") && (
-                <HStack>
+                <Flex flexDirection="column" borderWidth="1px" borderColor="bluefrance" p={10} w="50%">
+                  <Flex flexDirection="column" alignItems="flex-start" p={0}>
+                    <Heading as="h4" fontSize="1.5rem" mb={4}>
+                      Signature en ligne
+                    </Heading>
+                    <Heading as="h5" fontSize="1rem" mb={4}>
+                      Processus automatique sécurisé & gratuit
+                    </Heading>
+                  </Flex>
+                  <OrderedList>
+                    <ListItem>Ajoutez les signataires</ListItem>
+                    <ListItem>Ils seront invités par courriel à signer via Yousign</ListItem>
+                    <ListItem>Suivez l'évolution en temps réel</ListItem>
+                    <ListItem>Transmission automatique à votre DEETS</ListItem>
+                  </OrderedList>
+                  <Center mt={16}>
+                    <Button
+                      onClick={() => {
+                        onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
+                      }}
+                      size={"md"}
+                      variant={"primary"}
+                    >
+                      <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
+                      Signatures électronique
+                    </Button>
+                  </Center>
+                </Flex>
+              )}
+
+              <Flex flexDirection="column" bg="galt" p={10} w="50%">
+                <Flex flexDirection="column" alignItems="flex-start" p={0}>
+                  <Heading as="h4" fontSize="1.5rem" mb={4}>
+                    Signature papier
+                  </Heading>
+                  <Heading as="h5" fontSize="1rem" mb={4}>
+                    Processus manuel
+                  </Heading>
+                </Flex>
+                <OrderedList>
+                  <ListItem>Téléchargez le document complété</ListItem>
+                  <ListItem>Imprimez le contrat</ListItem>
+                  <ListItem>Recueillez les différentes signatures</ListItem>
+                  <ListItem>Transmission automatique à votre DEETS</ListItem>
+                </OrderedList>
+                <Center mt={16}>
                   <Button
                     onClick={() => {
-                      onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
+                      onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_PAPIER");
                     }}
                     size={"md"}
-                    variant={"primary"}
+                    variant={"secondary"}
+                    bg="galt"
                   >
                     <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
-                    Signatures électronique
+                    Signatures papier
                   </Button>
-                  <InfoTooltip
-                    w="400px"
-                    description={`<strong>Prise en charge rapide et simplifiée</strong>
-                <ul style="margin-top: 0.5rem;">
-          <li style="margin-bottom: 0.5rem;">- Ajoutez les signataires <br></li>
-          <li style="margin-bottom: 0.5rem;">- Dès que tous les signataires auront signés,<br> le dossier sera envoyé automatiquement<br></li>
-          </ul>
-          <strong><i>La signature électronique est gratuite.</i></strong>
-          `}
-                  />
-                </HStack>
-              )}
-              <HStack>
-                <Button
-                  onClick={() => {
-                    onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_PAPIER");
-                  }}
-                  size={"md"}
-                  variant={"primary"}
-                >
-                  <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
-                  Signatures papier
-                </Button>
-                <InfoTooltip
-                  w="400px"
-                  description={`<strong>Prise en charge au fil de l'eau, les délais de traitement peuvent être long.</strong>
-                <ul style="margin-top: 0.5rem;">
-          <li style="margin-bottom: 0.5rem;">- Téléchargez et imprimez le contrat généré vide<br></li>
-          <li style="margin-bottom: 0.5rem;">- Faites le signer par chacun des signataires<br></li>
-          <li style="margin-bottom: 0.5rem;">- Envoyez le à la ddets en charge de votre dossier<br></li>
-          </ul>
-          <strong><i>Cette méthode vous fera partiellement sortir de la plateforme</i></strong>
-          `}
-                />
-              </HStack>
+                </Center>
+              </Flex>
             </HStack>
           </Flex>
         )}
@@ -191,7 +204,7 @@ export default ({
         <Flex width="100%" justify="flex-start" mt={8} mb={10}>
           <Center w="full">
             {(dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
-              dossier.etat === "DOSSIER_TERMINE" ||
+              dossier.etat === "EN_ATTENTE_DECLENCHEMENT_SIGNATURES" ||
               dossier.etat === "EN_ATTENTE_SIGNATURES" ||
               dossier.etat === "SIGNATURES_EN_COURS" ||
               dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE") && (
@@ -223,6 +236,7 @@ export default ({
                   _hover={{ bg: "pinksoft.500" }}
                   px={8}
                   mt={16}
+                  isDisabled={!dossier.signataires.complete}
                 >
                   <BallPenFill boxSize="5" mr={"0.5rem"} />
                   Démarrer la procédure de signature électronique
@@ -230,8 +244,7 @@ export default ({
               )}
             {hasPageAccessTo(auth, "send_agecap") &&
               (dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
-                dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE" ||
-                dossier.etat === "DOSSIER_TERMINE") && ( // TODO MIGRATION SCRIPT
+                dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE") && (
                 <Button
                   size="md"
                   onClick={onSendToAgecap}

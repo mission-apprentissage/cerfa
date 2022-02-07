@@ -19,7 +19,7 @@ import { isUserAdmin, hasPageAccessTo } from "../../../common/utils/rolesUtils";
 import { MenuFill, Close, AccountFill, LockFill, Parametre } from "../../../theme/components/icons";
 import { _get } from "../../../common/httpClient";
 
-const NavigationMenu = ({ isMyWorkspace, isSharedWithMe, ...props }) => {
+const NavigationMenu = ({ isMyWorkspace, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
@@ -27,7 +27,7 @@ const NavigationMenu = ({ isMyWorkspace, isSharedWithMe, ...props }) => {
   return (
     <NavBarContainer {...props}>
       <NavToggle toggle={toggle} isOpen={isOpen} />
-      <NavLinks isOpen={isOpen} isMyWorkspace={isMyWorkspace} isSharedWithMe={isSharedWithMe} />
+      <NavLinks isOpen={isOpen} isMyWorkspace={isMyWorkspace} />
       <UserMenu />
     </NavBarContainer>
   );
@@ -110,7 +110,7 @@ const NavToggle = ({ toggle, isOpen }) => {
   );
 };
 
-const NavItem = ({ children, to = "/", isMyWorkspace, isSharedWithMe, ...rest }) => {
+const NavItem = ({ children, to = "/", isMyWorkspace, ...rest }) => {
   const { pathname } = useLocation();
   const isActive = pathname === to;
 
@@ -119,10 +119,10 @@ const NavItem = ({ children, to = "/", isMyWorkspace, isSharedWithMe, ...rest })
       p={4}
       as={NavLink}
       to={to}
-      color={isActive || isMyWorkspace || isSharedWithMe ? "bluefrance" : "grey.800"}
+      color={isActive || isMyWorkspace ? "bluefrance" : "grey.800"}
       _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
       borderBottom="3px solid"
-      borderColor={isActive || isMyWorkspace || isSharedWithMe ? "bluefrance" : "transparent"}
+      borderColor={isActive || isMyWorkspace ? "bluefrance" : "transparent"}
       bg={"transparent"}
     >
       <Text display="block" {...rest}>
@@ -132,7 +132,7 @@ const NavItem = ({ children, to = "/", isMyWorkspace, isSharedWithMe, ...rest })
   );
 };
 
-const NavLinks = ({ isMyWorkspace, isSharedWithMe, isOpen }) => {
+const NavLinks = ({ isMyWorkspace, isOpen }) => {
   let [auth] = useAuth();
   return (
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
@@ -147,11 +147,8 @@ const NavLinks = ({ isMyWorkspace, isSharedWithMe, isOpen }) => {
         {auth?.sub !== "anonymous" && (
           <>
             {" "}
-            <NavItem to="/mon-espace/mes-dossiers" isMyWorkspace={isMyWorkspace}>
-              Mon espace
-            </NavItem>
-            <NavItem to="/partages-avec-moi" isSharedWithMe={isSharedWithMe}>
-              Partagés avec moi
+            <NavItem to="/mes-dossiers/mon-espace" isMyWorkspace={isMyWorkspace}>
+              Mes dossiers
             </NavItem>
           </>
         )}

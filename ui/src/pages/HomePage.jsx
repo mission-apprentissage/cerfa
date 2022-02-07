@@ -50,7 +50,7 @@ export default () => {
           <Flex justifyContent="end" w="full">
             <Button
               as={NavLink}
-              to={"/mon-espace/mes-dossiers"}
+              to={"/mes-dossiers/mon-espace"}
               fontSize={{ base: "md", md: "lg" }}
               p={{ base: 4, md: 6 }}
               h={{ base: 8, md: 10 }}

@@ -416,8 +416,16 @@ export const CerfaContratController = async (dossier) => {
         },
       },
       dureeTravailHebdoMinutes: {
-        doAsyncActions: async (value, data) => {
+        doAsyncActions: async (value, { dureeTravailHebdoHeures }) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
+
+          if (parseInt(dureeTravailHebdoHeures) === 40) {
+            return {
+              successed: false,
+              data: null,
+              message: "la durée de travail hebdomadaire en heures ne peut excéder 40h",
+            };
+          }
 
           if (parseInt(value) > 59) {
             return {
