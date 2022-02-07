@@ -9,7 +9,7 @@ import { useRecoilValue } from "recoil";
 import { hasContextAccessTo } from "../../../common/utils/rolesUtils";
 import { workspaceAtom } from "../../../common/hooks/workspaceAtoms";
 
-export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers" }) => {
+export default ({ dossiers, withDeleteAction = true, onDeleteClicked, baseUrl = "/mes-dossiers/mon-espace" }) => {
   const workspace = useRecoilValue(workspaceAtom);
   return (
     <Table
@@ -89,13 +89,14 @@ export default ({ dossiers, onDeleteClicked, baseUrl = "/mon-espace/mes-dossiers
           return <Center>{value}</Center>;
         },
         Actions: (value, i) => {
+          if (!withDeleteAction) return null;
           return (
             <Menu>
               <MenuButton as={Button} variant="unstyled" width="auto" height="full">
                 <Parametre width={"2rem"} height={"1.2rem"} color="bluefrance" />
               </MenuButton>
               <MenuList>
-                {hasContextAccessTo(workspace, "wks/page_espace/page_dossiers/supprimer_dossier") && (
+                {hasContextAccessTo(workspace, "wks/page_espace/page_dossiers/supprimer_dossier") && withDeleteAction && (
                   <MenuItem
                     color="redmarianne"
                     onClick={async () => {

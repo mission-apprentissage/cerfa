@@ -287,6 +287,9 @@ const FormContract = React.memo(() => {
               type="number"
               onSubmittedField={onSubmittedContratDureeTravailHebdoMinutes}
               precision={0}
+              onAsyncData={{
+                dureeTravailHebdoHeures: dureeTravailHebdoHeures?.value,
+              }}
             />
           </Flex>
         </Box>

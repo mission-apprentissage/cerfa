@@ -228,6 +228,7 @@ export function useCerfa() {
       setPartMaitresCompletion(cerfaMaitresCompletion(res));
       setPartContratCompletion(cerfaContratCompletion(res));
 
+      // TODO Can bo done better with proper useeffect reset fntKey
       if (shouldBeReset) {
         resetDocuments();
         resetSignatures();

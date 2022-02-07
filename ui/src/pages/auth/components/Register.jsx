@@ -315,7 +315,7 @@ const Register = () => {
           )}
         </Box>
         {step > 0 && (
-          <HStack spacing="4w">
+          <HStack spacing="4w" mt={5}>
             {!succeeded && (
               <Link onClick={() => setStep(step - 1)} color="grey.600">
                 {"< Précedent"}
@@ -348,14 +348,19 @@ const Register = () => {
           </Link>
         </Text>
       </Flex>
-      <HStack spacing={3} my={8}>
-        <Divider />
-        <Text>Ou</Text>
-        <Divider />
-      </HStack>
-      <Button variant="secondary" type="submit" as={Link} href={linkToPds} isExternal>
-        S'inscire via Portail de service <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} ml={"0.25rem"} mt={"0.125rem"} />
-      </Button>
+      {step === 0 && (
+        <>
+          <HStack spacing={3} my={8}>
+            <Divider />
+            <Text>Ou</Text>
+            <Divider />
+          </HStack>
+          <Button variant="secondary" type="submit" as={Link} href={linkToPds} isExternal>
+            S'inscrire via Portail de service{" "}
+            <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} ml={"0.25rem"} mt={"0.125rem"} />
+          </Button>
+        </>
+      )}
     </Flex>
   );
 };

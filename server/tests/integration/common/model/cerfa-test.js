@@ -64,6 +64,7 @@ describe("Cerfa", () => {
           pays: "FR",
         },
         apprentiMineurNonEmancipe: true,
+        apprentiMineur: true,
         responsableLegal: {
           nom: "Honore",
           prenom: "Robert",

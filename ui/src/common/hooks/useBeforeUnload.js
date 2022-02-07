@@ -58,7 +58,7 @@ export const useUnloadEffect = () => {
 
     return async () => {
       if (isListening) {
-        const contratPath = new RegExp("^/mon-espace/mes-dossiers/[0-9A-Fa-f]{24}/[a-z]+$");
+        const contratPath = new RegExp("^/mes-dossiers/mon-espace/[0-9A-Fa-f]{24}/[a-z]+$");
         if (contratPath.test(pathname)) {
           window.manuallyTriggered = true;
           window.dispatchEvent(new Event("beforeunload"));

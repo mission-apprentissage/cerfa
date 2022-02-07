@@ -180,26 +180,18 @@ module.exports = (components) => {
       let results = [];
       for (let index = 0; index < permDossierIds.length; index++) {
         const permDossierId = permDossierIds[index].dossierId;
-        const dossier = await dossiers.findDossierById(permDossierId, {
-          nom: 1,
-          owner: 1,
-          _id: 1,
-          workspaceId: 1,
-        });
+        const dossier = await dossiers.findDossierById(permDossierId);
         if (!dossier) {
           throw Boom.badRequest("Something went wrong");
         }
+
+        const result = await buildDossierResult(dossier, user);
         const owner = await users.getUserById(dossier.owner, { email: 1, nom: 1, prenom: 1, _id: 0 });
         if (!owner) {
           throw Boom.badRequest("Something went wrong");
         }
         if (owner.email !== user.email) {
-          results.push({
-            ...dossier,
-            owner: {
-              ...owner,
-            },
-          });
+          results.push(result);
         }
       }
 
