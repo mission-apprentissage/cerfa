@@ -107,6 +107,10 @@ export const cerfaApprentiAdressePaysAtom = atom({
   default: null,
 });
 
+export const cerfaApprentiapprentiMineurAtom = atom({
+  key: "cerfa/apprenti/apprentiMineur",
+  default: null,
+});
 export const cerfaApprentiApprentiMineurNonEmancipeAtom = atom({
   key: "cerfa/apprenti/apprentiMineurNonEmancipe",
   default: null,

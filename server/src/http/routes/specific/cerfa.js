@@ -234,6 +234,7 @@ module.exports = (components) => {
             commune: Joi.string(),
             pays: Joi.string(),
           }),
+          apprentiMineur: Joi.boolean().allow(null),
           apprentiMineurNonEmancipe: Joi.boolean().allow(null),
           responsableLegal: Joi.object({
             nom: Joi.string().allow(null),
