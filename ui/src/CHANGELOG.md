@@ -1,3 +1,21 @@
+# [1.18.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.18.0-beta.5...v1.18.0-beta.6) (2022-02-07)
+
+
+### Bug Fixes
+
+* espace de rattachement à un nouveau dossier ([06a8d7d](https://github.com/mission-apprentissage/cerfa/commit/06a8d7df9f503791bfb8552ae0ac443f96573ce0))
+* rafraîchissant page dossiers d'espaces ([2c5987e](https://github.com/mission-apprentissage/cerfa/commit/2c5987e6d6360e61902ad9cf176399136bda52bc))
+
+
+### Features
+
+* ajout du champ mineur ([c055f39](https://github.com/mission-apprentissage/cerfa/commit/c055f3921d5637ea9b5e22314db21d2b02a25d80))
+* edition du nom d'espace ([1f7c953](https://github.com/mission-apprentissage/cerfa/commit/1f7c953c0420f2a4688027e959a895553e6d6394))
+* page dossier partagé unique ([f844149](https://github.com/mission-apprentissage/cerfa/commit/f844149987385805172675ca1c47319ff3f7e8bc))
+* pris en compte des minutes dans le calcul des heures de travail ([823c212](https://github.com/mission-apprentissage/cerfa/commit/823c21250724a8b2dc6568df0645af55a639dc1c))
+* rationalisation des pages d'espaces partagées ([8f3e85e](https://github.com/mission-apprentissage/cerfa/commit/8f3e85e563ab408cd71522f498e268a56306d901))
+* réactiver le champ cfa d'entreprise ([cdf632d](https://github.com/mission-apprentissage/cerfa/commit/cdf632dd3156a47ebcf1d7c77d4f32ac658339c0))
+
 # [1.18.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.18.0-beta.4...v1.18.0-beta.5) (2022-02-02)
 
 
