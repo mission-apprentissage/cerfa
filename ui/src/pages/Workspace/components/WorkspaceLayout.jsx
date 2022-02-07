@@ -15,10 +15,18 @@ import {
 } from "@chakra-ui/react";
 import { NavLink, useLocation, useRouteMatch } from "react-router-dom";
 
+import { useQuery } from "react-query";
+import { _get } from "../../../common/httpClient";
+
 import { useRecoilValue } from "recoil";
-import { workspacePathsAtom, workspaceTitlesAtom, workspaceAtom } from "../../../common/hooks/workspaceAtoms";
-import { hasContextAccessTo } from "../../../common/utils/rolesUtils";
-import { MenuFill, IoArrowBackward, Parametre, Folder, ArrowDownLine } from "../../../theme/components/icons";
+import { workspacePathsAtom, workspaceTitlesAtom } from "../../../common/hooks/workspaceAtoms";
+import {
+  MenuFill,
+  IoArrowBackward,
+  // Parametre,
+  // Folder,
+  ArrowDownLine,
+} from "../../../theme/components/icons";
 
 const AsLink = ({ children, ...rest }) => (
   <Link as={NavLink} display="inline-block" {...rest}>
@@ -66,15 +74,30 @@ const NavItem = ({ icon, children, to, shoudBeActive, isSubItem, ...rest }) => {
   );
 };
 
+function useSharedWithMe() {
+  const {
+    data: sharedWithMeWorkspaces,
+    isLoading: isLoadingSharedWks,
+    isFetching: isFetchingSharedwks,
+  } = useQuery("sharedWorkspaceDossiers", () => _get(`/api/v1/workspace/sharedwithme`), {
+    refetchOnWindowFocus: false,
+  });
+
+  return {
+    sharedWithMeWorkspaces,
+    isLoading: isLoadingSharedWks,
+    isFetching: isFetchingSharedwks,
+  };
+}
+
 export default ({ header, content }) => {
   const paths = useRecoilValue(workspacePathsAtom);
   const titles = useRecoilValue(workspaceTitlesAtom);
-  const workspace = useRecoilValue(workspaceAtom);
   let { path } = useRouteMatch();
-  const isParametresPages = path.includes(`${paths.base}/parametres`);
+  const isSharedWorkspacesPages = path.includes(`/mes-dossiers/espaces-partages`);
   const sidebarMobile = useDisclosure();
   const sidebar = useDisclosure({ defaultIsOpen: true });
-  const parametres = useDisclosure({ defaultIsOpen: isParametresPages });
+  const sharedWorkspaces = useDisclosure({ defaultIsOpen: isSharedWorkspacesPages });
 
   // TODO to decide with business - Auto closing
   // useEffect(() => {
@@ -87,49 +110,62 @@ export default ({ header, content }) => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, []);
 
-  const SidebarContent = React.memo((props) => (
-    <Flex direction="column" as="nav" fontSize="sm" color="gray.600" aria-label="Sub Navigation" {...props}>
-      <Flex alignItems="flex-start" px="4" pl="2" py="3" w="full" fontSize="md">
+  const SidebarContent = React.memo((props) => {
+    const { sharedWithMeWorkspaces } = useSharedWithMe();
+
+    return (
+      <Flex direction="column" as="nav" fontSize="sm" color="gray.600" aria-label="Sub Navigation" {...props}>
+        {/* <Flex alignItems="flex-start" px="4" pl="2" py="3" w="full" fontSize="md">
         {titles.workspace}
-      </Flex>
-      <NavItem icon={() => <Folder w={"1rem"} h={"1rem"} mb={"0.125rem"} mr={2} />} to={paths.dossiers}>
-        {titles.dossiers}
-      </NavItem>
-      {hasContextAccessTo(workspace, "wks/page_espace/page_parametres") && (
+      </Flex> */}
         <NavItem
-          icon={() => <Parametre w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr={2} />}
-          onClick={parametres.onToggle}
-          shoudBeActive={isParametresPages}
+          // icon={() => <Folder w={"1rem"} h={"1rem"} mb={"0.125rem"} mr={2} />}
+          to={paths.mesDossiers}
+        >
+          {titles.myWorkspace}
+        </NavItem>
+        <NavItem
+          // icon={() => <Parametre w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr={2} />}
+          onClick={sharedWorkspaces.onToggle}
+          shoudBeActive={isSharedWorkspacesPages}
         >
           <Center w="full" mb={"0.125rem"}>
-            <Text flexGrow={1}>{titles.parametres}</Text>
+            <Text flexGrow={1}>{titles.sharedWorkspaces}</Text>
             <Icon
               as={() => (
                 <ArrowDownLine
                   w={"0.75rem"}
                   h={"0.75rem"}
                   mt={"0.125rem"}
-                  transform={parametres.isOpen && "rotate(180deg)"}
+                  transform={sharedWorkspaces.isOpen && "rotate(180deg)"}
                 />
               )}
             />
           </Center>
         </NavItem>
-      )}
-      <Collapse in={parametres.isOpen}>
-        {hasContextAccessTo(workspace, "wks/page_espace/page_parametres/gestion_acces") && (
-          <NavItem pl="8" to={paths.parametresUtilisateurs} isSubItem={true}>
-            {titles.utilisateurs}
-          </NavItem>
-        )}
-        {/* {hasContextAccessTo(workspace, "wks/page_espace/page_parametres/gestion_notifications") && (
-          <NavItem pl="8" to={paths.parametresNotifications} isSubItem={true}>
-            {titles.notifications}
-          </NavItem>
-        )} */}
-      </Collapse>
-    </Flex>
-  ));
+        <Collapse in={sharedWorkspaces.isOpen}>
+          {sharedWithMeWorkspaces?.map((sharedWithMeWorkspace) => {
+            return (
+              <NavItem
+                key={sharedWithMeWorkspace._id}
+                pl="8"
+                to={`/mes-dossiers/espaces-partages/${sharedWithMeWorkspace._id}/dossiers`}
+                isSubItem={true}
+              >
+                {sharedWithMeWorkspace.nom}
+              </NavItem>
+            );
+          })}
+        </Collapse>
+        <NavItem
+          // icon={() => <Folder w={"1rem"} h={"1rem"} mb={"0.125rem"} mr={2} />}
+          to={"/mes-dossiers/dossiers-partages"}
+        >
+          {titles.sharedDossiers}
+        </NavItem>
+      </Flex>
+    );
+  });
 
   return (
     <Flex as="section" minH="50vh" overflowX="hidden">

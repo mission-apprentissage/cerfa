@@ -37,6 +37,24 @@ module.exports = (components) => {
     })
   );
 
+  router.put(
+    "/entity/:id/info",
+    permissionsWorkspaceMiddleware(components, ["wks/page_espace/page_parametres"]),
+    tryCatch(async ({ body, params }, res) => {
+      const { nom } = await Joi.object({
+        nom: Joi.string().required(),
+      })
+        .unknown()
+        .validateAsync(body, { abortEarly: false });
+
+      const workspaceId = params.id;
+
+      const updateWks = await workspaces.updateWorkspaceInfo(workspaceId, nom);
+
+      return res.json(updateWks);
+    })
+  );
+
   router.get(
     "/dossiers",
     permissionsWorkspaceMiddleware(components, ["wks/page_espace/page_dossiers/voir_liste_dossiers"]),
@@ -58,8 +76,14 @@ module.exports = (components) => {
   router.post(
     "/dossier",
     permissionsWorkspaceMiddleware(components, ["wks/page_espace/page_dossiers/ajouter_nouveau_dossier"]),
-    tryCatch(async ({ user }, res) => {
-      const result = await dossiers.createDossier(user);
+    tryCatch(async ({ body, user }, res) => {
+      const { workspaceId } = await Joi.object({
+        workspaceId: Joi.string().required(),
+      })
+        .unknown()
+        .validateAsync(body, { abortEarly: false });
+
+      const result = await dossiers.createDossier(user, { nom: null, saved: false }, workspaceId);
       await cerfas.createCerfa({ dossierId: result._id.toString() });
 
       return res.json(result);

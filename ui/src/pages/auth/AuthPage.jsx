@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Flex, Container, Heading, Text, forwardRef, chakra } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
-import { Breadcrumb } from "../../common/components/Breadcrumb";
+// import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 
 import { useParams } from "react-router-dom";
@@ -38,7 +38,8 @@ const FormBoxMotion = ({ children, isOpen, ...rest }) => {
       flexDirection="column"
       w="100%"
       h="100%"
-      py={[4, 12]}
+      pt={[4, 12]}
+      pb={[4, 10]}
       px={[1, 1, 8, 10]}
       {...rest}
     >
@@ -59,11 +60,11 @@ const AuthPage = () => {
 
   return (
     <Layout>
-      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
+      {/* <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
         <Container maxW="xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
         </Container>
-      </Box>
+      </Box> */}
       <Box
         w="100%"
         py={[4, 8]}

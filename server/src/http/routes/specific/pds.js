@@ -122,7 +122,7 @@ module.exports = (components) => {
             secure: !IS_OFFLINE,
           })
           .status(200)
-          .redirect("/mon-espace/mes-dossiers");
+          .redirect("/mes-dossiers/mon-espace");
       } else {
         // Register
 
