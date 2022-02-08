@@ -3,7 +3,6 @@ const adresseSchema = {
     type: Number,
     description: "N° de la voie",
     label: "N° :",
-    requiredMessage: "le N° de la voie est obligatoire",
     isNotRequiredForm: true,
     nullable: true,
     example: 13,

@@ -46,6 +46,39 @@ export const cerfaOrganismeFormationAdresseCommuneAtom = atom({
   default: null,
 });
 
+export const cerfaEtablissementFormationSiretAtom = atom({
+  key: "cerfa/etablissementFormation/siret",
+  default: null,
+});
+export const cerfaEtablissementFormationDenominationAtom = atom({
+  key: "cerfa/etablissementFormation/denomination",
+  default: null,
+});
+export const cerfaEtablissementFormationUaiCfaAtom = atom({
+  key: "cerfa/etablissementFormation/uaicfa",
+  default: null,
+});
+export const cerfaEtablissementFormationAdresseNumeroAtom = atom({
+  key: "cerfa/etablissementFormation/adresse/numero",
+  default: null,
+});
+export const cerfaEtablissementFormationAdresseVoieAtom = atom({
+  key: "cerfa/etablissementFormation/adresse/voie",
+  default: null,
+});
+export const cerfaEtablissementFormationAdresseComplementAtom = atom({
+  key: "cerfa/etablissementFormation/adresse/complement",
+  default: null,
+});
+export const cerfaEtablissementFormationAdresseCodePostalAtom = atom({
+  key: "cerfa/etablissementFormation/adresse/codePostal",
+  default: null,
+});
+export const cerfaEtablissementFormationAdresseCommuneAtom = atom({
+  key: "cerfa/etablissementFormation/adresse/commune",
+  default: null,
+});
+
 export const cerfaFormationRncpAtom = atom({
   key: "cerfa/formation/rncp",
   default: null,
