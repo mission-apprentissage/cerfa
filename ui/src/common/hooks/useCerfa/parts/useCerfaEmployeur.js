@@ -277,11 +277,13 @@ export const CerfaEmployeurController = async (dossier) => {
       naf: {
         doAsyncActions: async (value, data) => {
           try {
-            // console.log(value);
             const insert = (str, index, value) => {
               return str.substr(0, index) + value + str.substr(index);
             };
-            let formattedNaf = value.length > 2 ? insert(value, 2, ".") : value;
+            let formattedNaf = value;
+            if (!value.includes(".") && value.length > 2) {
+              formattedNaf = insert(value, 2, ".");
+            }
 
             const response = await _post(`/api/v1/naf/`, {
               naf: formattedNaf,
