@@ -437,7 +437,7 @@ const FormContract = React.memo(() => {
                             }
                           />
                           <Box w="100%" position="relative" fontStyle="italic" color="disablegrey" pl={2}>
-                            soit {remunerationsAnnuelle.salaireBrut.value.toFixed(2)} € / mois. <br />
+                            soit {remunerationsAnnuelle.salaireBrut.value} € / mois. <br />
                             Seuil minimal légal {remunerationsAnnuelle.tauxMinimal.value} %
                           </Box>
                           {/* <Box mt="1.7rem !important">%</Box>

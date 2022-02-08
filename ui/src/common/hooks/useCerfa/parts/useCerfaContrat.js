@@ -1444,11 +1444,13 @@ export function useCerfaContrat() {
     async (path, data, part) => {
       try {
         if (path === `contrat.remunerationsAnnuelles.${part}.taux`) {
+          const ceilUp = (x) => Math.ceil(x * 100) / 100;
           let newRemunerationsAnnuellesTauxPart = { ...contratRemunerationsAnnuelles[part].taux };
           newRemunerationsAnnuellesTauxPart.value = parseInt(data);
           let newRemunerationsAnnuellesSalaireBrutPart = { ...contratRemunerationsAnnuelles[part].salaireBrut };
-          newRemunerationsAnnuellesSalaireBrutPart.value =
-            (contratSmic?.selectedSmic * newRemunerationsAnnuellesTauxPart.value) / 100;
+          newRemunerationsAnnuellesSalaireBrutPart.value = ceilUp(
+            (contratSmic?.selectedSmic * newRemunerationsAnnuellesTauxPart.value) / 100
+          );
 
           const newRemunerationsAnnuellesFormValue = {
             ...contratRemunerationsAnnuelles,
