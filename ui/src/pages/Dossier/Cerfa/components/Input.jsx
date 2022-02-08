@@ -78,7 +78,7 @@ const buildValidationSchema = (field, name, type, isRequiredInternal, countryCod
 
 const MInput = IMaskMixin(({ inputRef, ...props }) => <ChackraInput {...props} ref={inputRef} />);
 
-const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, ...props }) => {
+const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, unmask, ...props }) => {
   const [internalValue, setInternalValue] = useState(`${value}`);
   const [focused, setFocused] = useState(null);
   const inputRef = useRef(null);
@@ -152,7 +152,7 @@ const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, 
     <MInput
       {...props}
       mask={mask}
-      unmask={true}
+      unmask={unmask}
       lazy={false}
       placeholderChar="_"
       autofix={true}
@@ -374,8 +374,9 @@ export default React.memo(
         : {
             mask: field?.mask,
             maskblocks: field?.maskBlocks,
+            unmask: field?.unmask !== undefined ? field?.unmask : true,
           };
-    }, [field?.mask, field?.maskBlocks]);
+    }, [field?.mask, field?.maskBlocks, field?.unmask]);
 
     const styleProps = useMemo(
       () => ({
