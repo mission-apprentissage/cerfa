@@ -46,6 +46,11 @@ export const cerfaOrganismeFormationAdresseCommuneAtom = atom({
   default: null,
 });
 
+export const cerfaEtablissementFormationMemeResponsableAtom = atom({
+  key: "cerfa/etablissementFormation/memeResponsable",
+  default: null,
+});
+
 export const cerfaEtablissementFormationSiretAtom = atom({
   key: "cerfa/etablissementFormation/siret",
   default: null,

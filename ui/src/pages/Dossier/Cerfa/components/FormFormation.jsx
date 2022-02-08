@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, FormLabel, Flex, Center, Spinner } from "@chakra-ui/react";
+import { Box, FormLabel, Flex, Center, Spinner, Text, Collapse } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
 import { useCerfaFormation } from "../../../../common/hooks/useCerfa/parts/useCerfaFormation";
@@ -23,6 +23,7 @@ const FormFormation = React.memo((props) => {
         adresse: { numero, voie, complement, codePostal, commune },
       },
       etablissementFormation: {
+        memeResponsable,
         siret: etablissementFormationSiret,
         denomination: etablissementFormationDenomination,
         uaiCfa: etablissementFormationUaiCfa,
@@ -59,6 +60,7 @@ const FormFormation = React.memo((props) => {
         },
       },
       etablissementFormation: {
+        memeResponsable: onSubmittedEtablissementFormationMemeResponsable,
         siret: onSubmittedEtablissementFormationSiret,
         denomination: onSubmittedEtablissementFormationDenomination,
         uaiCfa: onSubmittedEtablissementFormationUaiCfa,
@@ -241,76 +243,88 @@ const FormFormation = React.memo((props) => {
         </Flex>
       </Box>
       <Box>
+        <Text fontWeight="bold" my={3}>
+          Le lieu de formation :
+        </Text>
         <InputCerfa
-          path="etablissementFormation.siret"
-          field={etablissementFormationSiret}
-          type="text"
-          mb="2"
-          // hasComments
-          onSubmittedField={onSubmittedEtablissementFormationSiret}
+          path="etablissementFormation.memeResponsable"
+          field={memeResponsable}
+          type="radio"
+          mt="2"
+          onSubmittedField={onSubmittedEtablissementFormationMemeResponsable}
         />
-        <Flex>
-          <Box w="55%" flex="1">
-            <InputCerfa
-              path="etablissementFormation.denomination"
-              field={etablissementFormationDenomination}
-              type="text"
-              mt="2"
-              onSubmittedField={onSubmittedEtablissementFormationDenomination}
-            />
-            <InputCerfa
-              path="etablissementFormation.uaiCfa"
-              field={etablissementFormationUaiCfa}
-              type="text"
-              mt="2"
-              onSubmittedField={onSubmittedEtablissementFormationUaiCfa}
-            />
-            <FormLabel fontWeight={700} my={3}>
-              Adresse du lieu de formation :{" "}
-            </FormLabel>
-            <InputCerfa
-              path="etablissementFormation.adresse.numero"
-              field={etablissementFormationAdresseNumero}
-              type="number"
-              precision={0}
-              mt="2"
-              onSubmittedField={onSubmittedEtablissementFormationAdresseNumero}
-              hasInfo={false}
-            />
-            <InputCerfa
-              path="etablissementFormation.adresse.voie"
-              field={etablissementFormationAdresseVoie}
-              type="text"
-              mt="2"
-              onSubmittedField={onSubmittedEtablissementFormationAdresseVoie}
-              hasInfo={false}
-            />
-            <InputCerfa
-              path="etablissementFormation.adresse.complement"
-              field={etablissementFormationAdresseComplement}
-              type="text"
-              mt="2"
-              onSubmittedField={onSubmittedEtablissementFormationAdresseComplement}
-              hasInfo={false}
-            />
-            <InputCerfa
-              path="etablissementFormation.adresse.codePostal"
-              field={etablissementFormationAdresseCodePostal}
-              type="text"
-              mt="2"
-              onSubmittedField={onSubmittedEtablissementFormationAdresseCodePostal}
-              hasInfo={false}
-            />
-            <InputCerfa
-              path="etablissementFormation.adresse.commune"
-              field={etablissementFormationAdresseCommune}
-              type="text"
-              mt="2"
-              onSubmittedField={onSubmittedEtablissementFormationAdresseCommune}
-              hasInfo={false}
-            />
-          </Box>
-        </Flex>
+        <Collapse in={memeResponsable.value === "Non"} animateOpacity>
+          <InputCerfa
+            path="etablissementFormation.siret"
+            field={etablissementFormationSiret}
+            type="text"
+            mb="2"
+            // hasComments
+            onSubmittedField={onSubmittedEtablissementFormationSiret}
+          />
+          <Flex>
+            <Box w="55%" flex="1">
+              <InputCerfa
+                path="etablissementFormation.denomination"
+                field={etablissementFormationDenomination}
+                type="text"
+                mt="2"
+                onSubmittedField={onSubmittedEtablissementFormationDenomination}
+              />
+              <InputCerfa
+                path="etablissementFormation.uaiCfa"
+                field={etablissementFormationUaiCfa}
+                type="text"
+                mt="2"
+                onSubmittedField={onSubmittedEtablissementFormationUaiCfa}
+              />
+              <FormLabel fontWeight={700} my={3}>
+                Adresse du lieu de formation :{" "}
+              </FormLabel>
+              <InputCerfa
+                path="etablissementFormation.adresse.numero"
+                field={etablissementFormationAdresseNumero}
+                type="number"
+                precision={0}
+                mt="2"
+                onSubmittedField={onSubmittedEtablissementFormationAdresseNumero}
+                hasInfo={false}
+              />
+              <InputCerfa
+                path="etablissementFormation.adresse.voie"
+                field={etablissementFormationAdresseVoie}
+                type="text"
+                mt="2"
+                onSubmittedField={onSubmittedEtablissementFormationAdresseVoie}
+                hasInfo={false}
+              />
+              <InputCerfa
+                path="etablissementFormation.adresse.complement"
+                field={etablissementFormationAdresseComplement}
+                type="text"
+                mt="2"
+                onSubmittedField={onSubmittedEtablissementFormationAdresseComplement}
+                hasInfo={false}
+              />
+              <InputCerfa
+                path="etablissementFormation.adresse.codePostal"
+                field={etablissementFormationAdresseCodePostal}
+                type="text"
+                mt="2"
+                onSubmittedField={onSubmittedEtablissementFormationAdresseCodePostal}
+                hasInfo={false}
+              />
+              <InputCerfa
+                path="etablissementFormation.adresse.commune"
+                field={etablissementFormationAdresseCommune}
+                type="text"
+                mt="2"
+                onSubmittedField={onSubmittedEtablissementFormationAdresseCommune}
+                hasInfo={false}
+              />
+            </Box>
+          </Flex>
+        </Collapse>
       </Box>
     </>
   );

@@ -1,6 +1,26 @@
 const adresseSchema = require("./adresse.part");
 
 const etablissementFormationSchema = {
+  memeResponsable: {
+    type: Boolean,
+    description: "Le lieu de formation est le même que l'organisme responsable",
+    example: false,
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
+    label: "Le lieu de formation est le même que l'organisme responsable",
+    options: [
+      {
+        label: "Oui",
+        value: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
+  },
   denomination: {
     // maxLength: 80,
     type: String,

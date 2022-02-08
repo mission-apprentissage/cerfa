@@ -492,6 +492,10 @@ export function useCerfaFormation() {
     formationAtoms.cerfaOrganismeFormationAdresseCommuneAtom
   );
 
+  const [etablissementFormationMemeResponsable, setEtablissementFormationMemeResponsable] = useRecoilState(
+    formationAtoms.cerfaEtablissementFormationMemeResponsableAtom
+  );
+
   const [etablissementFormationSiret, setEtablissementFormationSiret] = useRecoilState(
     formationAtoms.cerfaEtablissementFormationSiretAtom
   );
@@ -644,123 +648,6 @@ export function useCerfaFormation() {
       setOrganismeFormationAdresseComplement,
       setOrganismeFormationAdresseCodePostal,
       setOrganismeFormationAdresseCommune,
-      dossier?._id,
-      cerfa?.id,
-      setPartFormationCompletionAtom,
-    ]
-  );
-  const onSubmittedEtablissementFormationSiret = useCallback(
-    async (path, data) => {
-      try {
-        if (path === "etablissementFormation.siret") {
-          const newV = {
-            etablissementFormation: {
-              siret: {
-                ...etablissementFormationSiret,
-                value: data.siret,
-              },
-              denomination: {
-                ...etablissementFormationDenomination,
-                value: data.enseigne || data.entreprise_raison_sociale,
-                locked: false,
-              },
-              uaiCfa: {
-                ...etablissementFormationUaiCfa,
-                value: data.uai || "",
-                locked: false,
-              },
-              adresse: {
-                numero: {
-                  ...etablissementFormationAdresseNumero,
-                  value: data.numero_voie || "", //parseInt(data.numero_voie),
-                  locked: false,
-                },
-                voie: {
-                  ...etablissementFormationAdresseVoie,
-                  value:
-                    data.type_voie || data.nom_voie
-                      ? `${data.type_voie ? `${data.type_voie} ` : ""}${data.nom_voie}`
-                      : "",
-                  locked: false,
-                },
-                complement: {
-                  ...etablissementFormationAdresseComplement,
-                  value: data.complement_adresse || "",
-                  locked: false,
-                },
-                codePostal: {
-                  ...etablissementFormationAdresseCodePostal,
-                  value: data.code_postal || "",
-                  locked: false,
-                },
-                commune: {
-                  ...etablissementFormationAdresseCommune,
-                  value: data.commune_implantation_nom || "",
-                  locked: false,
-                },
-              },
-            },
-          };
-
-          setEtablissementFormationSiret(newV.etablissementFormation.siret);
-          setEtablissementFormationDenomination(newV.etablissementFormation.denomination);
-          setEtablissementFormationUaiCfa(newV.etablissementFormation.uaiCfa);
-          setEtablissementFormationAdresseNumero(newV.etablissementFormation.adresse.numero);
-          setEtablissementFormationAdresseVoie(newV.etablissementFormation.adresse.voie);
-          setEtablissementFormationAdresseComplement(newV.etablissementFormation.adresse.complement);
-          setEtablissementFormationAdresseCodePostal(newV.etablissementFormation.adresse.codePostal);
-          setEtablissementFormationAdresseCommune(newV.etablissementFormation.adresse.commune);
-
-          const res = await saveCerfa(dossier?._id, cerfa?.id, {
-            etablissementFormation: {
-              siret: newV.etablissementFormation.siret.value,
-              denomination: newV.etablissementFormation.denomination.value,
-              uaiCfa: newV.etablissementFormation.uaiCfa.value || null,
-              adresse: {
-                numero: normalizeInputNumberForDb(newV.etablissementFormation.adresse.numero.value),
-                voie: newV.etablissementFormation.adresse.voie.value.trim(),
-                complement: newV.etablissementFormation.adresse.complement.value.trim(),
-                codePostal: newV.etablissementFormation.adresse.codePostal.value.trim(),
-                commune: newV.etablissementFormation.adresse.commune.value.trim(),
-              },
-            },
-            isLockedField: {
-              etablissementFormation: {
-                denomination: false,
-                uaiCfa: false,
-                adresse: {
-                  numero: false,
-                  voie: false,
-                  complement: false,
-                  codePostal: false,
-                  commune: false,
-                },
-              },
-            },
-          });
-          setPartFormationCompletionAtom(cerfaFormationCompletion(res));
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [
-      etablissementFormationSiret,
-      etablissementFormationDenomination,
-      etablissementFormationUaiCfa,
-      etablissementFormationAdresseNumero,
-      etablissementFormationAdresseVoie,
-      etablissementFormationAdresseComplement,
-      etablissementFormationAdresseCodePostal,
-      etablissementFormationAdresseCommune,
-      setEtablissementFormationSiret,
-      setEtablissementFormationDenomination,
-      setEtablissementFormationUaiCfa,
-      setEtablissementFormationAdresseNumero,
-      setEtablissementFormationAdresseVoie,
-      setEtablissementFormationAdresseComplement,
-      setEtablissementFormationAdresseCodePostal,
-      setEtablissementFormationAdresseCommune,
       dossier?._id,
       cerfa?.id,
       setPartFormationCompletionAtom,
@@ -1040,6 +927,190 @@ export function useCerfaFormation() {
       }
     },
     [cerfa?.id, dossier?._id, organismeFormationUaiCfa, setOrganismeFormationUaiCfa, setPartFormationCompletionAtom]
+  );
+
+  const onSubmittedEtablissementFormationMemeResponsable = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "etablissementFormation.memeResponsable") {
+          const newV = {
+            etablissementFormation: {
+              memeResponsable: {
+                ...etablissementFormationMemeResponsable,
+                value: data,
+              },
+            },
+          };
+          if (etablissementFormationMemeResponsable.value !== newV.etablissementFormation.memeResponsable.value) {
+            setEtablissementFormationMemeResponsable(newV.etablissementFormation.memeResponsable);
+            const memeResponsable = convertOptionToValue(newV.etablissementFormation.memeResponsable);
+
+            if (memeResponsable) {
+              // setApprentiResponsableLegalAdresseNumero(apprentiAdresseNumero);
+              // setApprentiResponsableLegalAdresseVoie(apprentiAdresseVoie);
+              // setApprentiResponsableLegalAdresseComplement(apprentiAdresseComplement);
+              // setApprentiResponsableLegalAdresseCodePostal(apprentiAdresseCodePostal);
+              // setApprentiResponsableLegalAdresseCommune(apprentiAdresseCommune);
+              // setApprentiResponsableLegalAdressePays(apprentiAdressePays);
+              // const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              //   apprenti: {
+              //     responsableLegal: {
+              //       memeAdresse,
+              //       adresse: {
+              //         numero: normalizeInputNumberForDb(apprentiAdresseNumero.value),
+              //         voie: apprentiAdresseVoie.value || null,
+              //         complement: apprentiAdresseComplement.value || "",
+              //         codePostal: apprentiAdresseCodePostal.value || null,
+              //         commune: apprentiAdresseCommune.value || null,
+              //         pays: apprentiAdressePays.value || null,
+              //       },
+              //     },
+              //   },
+              // });
+              // setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            } else {
+              // const res = await saveCerfa(dossier?._id, cerfa?.id, {
+              //   apprenti: {
+              //     responsableLegal: {
+              //       memeAdresse,
+              //       adresse: {
+              //         numero: normalizeInputNumberForDb(apprentiResponsableLegalAdresseNumero?.value),
+              //         voie: apprentiResponsableLegalAdresseVoie?.value || null,
+              //         complement: apprentiResponsableLegalAdresseComplement?.value || "",
+              //         codePostal: apprentiResponsableLegalAdresseCodePostal?.value || null,
+              //         commune: apprentiResponsableLegalAdresseCommune?.value || null,
+              //         pays: convertOptionToValue(apprentiResponsableLegalAdressePays) || null,
+              //       },
+              //     },
+              //   },
+              // });
+              // setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            }
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [etablissementFormationMemeResponsable, setEtablissementFormationMemeResponsable]
+  );
+
+  const onSubmittedEtablissementFormationSiret = useCallback(
+    async (path, data) => {
+      try {
+        if (path === "etablissementFormation.siret") {
+          const newV = {
+            etablissementFormation: {
+              siret: {
+                ...etablissementFormationSiret,
+                value: data.siret,
+              },
+              denomination: {
+                ...etablissementFormationDenomination,
+                value: data.enseigne || data.entreprise_raison_sociale,
+                locked: false,
+              },
+              uaiCfa: {
+                ...etablissementFormationUaiCfa,
+                value: data.uai || "",
+                locked: false,
+              },
+              adresse: {
+                numero: {
+                  ...etablissementFormationAdresseNumero,
+                  value: data.numero_voie || "", //parseInt(data.numero_voie),
+                  locked: false,
+                },
+                voie: {
+                  ...etablissementFormationAdresseVoie,
+                  value:
+                    data.type_voie || data.nom_voie
+                      ? `${data.type_voie ? `${data.type_voie} ` : ""}${data.nom_voie}`
+                      : "",
+                  locked: false,
+                },
+                complement: {
+                  ...etablissementFormationAdresseComplement,
+                  value: data.complement_adresse || "",
+                  locked: false,
+                },
+                codePostal: {
+                  ...etablissementFormationAdresseCodePostal,
+                  value: data.code_postal || "",
+                  locked: false,
+                },
+                commune: {
+                  ...etablissementFormationAdresseCommune,
+                  value: data.commune_implantation_nom || "",
+                  locked: false,
+                },
+              },
+            },
+          };
+
+          setEtablissementFormationSiret(newV.etablissementFormation.siret);
+          setEtablissementFormationDenomination(newV.etablissementFormation.denomination);
+          setEtablissementFormationUaiCfa(newV.etablissementFormation.uaiCfa);
+          setEtablissementFormationAdresseNumero(newV.etablissementFormation.adresse.numero);
+          setEtablissementFormationAdresseVoie(newV.etablissementFormation.adresse.voie);
+          setEtablissementFormationAdresseComplement(newV.etablissementFormation.adresse.complement);
+          setEtablissementFormationAdresseCodePostal(newV.etablissementFormation.adresse.codePostal);
+          setEtablissementFormationAdresseCommune(newV.etablissementFormation.adresse.commune);
+
+          const res = await saveCerfa(dossier?._id, cerfa?.id, {
+            etablissementFormation: {
+              siret: newV.etablissementFormation.siret.value,
+              denomination: newV.etablissementFormation.denomination.value,
+              uaiCfa: newV.etablissementFormation.uaiCfa.value || null,
+              adresse: {
+                numero: normalizeInputNumberForDb(newV.etablissementFormation.adresse.numero.value),
+                voie: newV.etablissementFormation.adresse.voie.value.trim(),
+                complement: newV.etablissementFormation.adresse.complement.value.trim(),
+                codePostal: newV.etablissementFormation.adresse.codePostal.value.trim(),
+                commune: newV.etablissementFormation.adresse.commune.value.trim(),
+              },
+            },
+            isLockedField: {
+              etablissementFormation: {
+                denomination: false,
+                uaiCfa: false,
+                adresse: {
+                  numero: false,
+                  voie: false,
+                  complement: false,
+                  codePostal: false,
+                  commune: false,
+                },
+              },
+            },
+          });
+          setPartFormationCompletionAtom(cerfaFormationCompletion(res));
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [
+      etablissementFormationSiret,
+      etablissementFormationDenomination,
+      etablissementFormationUaiCfa,
+      etablissementFormationAdresseNumero,
+      etablissementFormationAdresseVoie,
+      etablissementFormationAdresseComplement,
+      etablissementFormationAdresseCodePostal,
+      etablissementFormationAdresseCommune,
+      setEtablissementFormationSiret,
+      setEtablissementFormationDenomination,
+      setEtablissementFormationUaiCfa,
+      setEtablissementFormationAdresseNumero,
+      setEtablissementFormationAdresseVoie,
+      setEtablissementFormationAdresseComplement,
+      setEtablissementFormationAdresseCodePostal,
+      setEtablissementFormationAdresseCommune,
+      dossier?._id,
+      cerfa?.id,
+      setPartFormationCompletionAtom,
+    ]
   );
 
   const onSubmittedEtablissementFormationDenomination = useCallback(
@@ -1691,6 +1762,7 @@ export function useCerfaFormation() {
       setOrganismeFormationAdresseCodePostal(res.organismeFormation.adresse.codePostal);
       setOrganismeFormationAdresseCommune(res.organismeFormation.adresse.commune);
 
+      setEtablissementFormationMemeResponsable(convertValueToOption(res.etablissementFormation.memeResponsable));
       setEtablissementFormationSiret(res.etablissementFormation.siret);
       setEtablissementFormationDenomination(res.etablissementFormation.denomination);
       setEtablissementFormationUaiCfa(res.etablissementFormation.uaiCfa);
@@ -1718,6 +1790,7 @@ export function useCerfaFormation() {
       setEtablissementFormationAdresseNumero,
       setEtablissementFormationAdresseVoie,
       setEtablissementFormationDenomination,
+      setEtablissementFormationMemeResponsable,
       setEtablissementFormationSiret,
       setEtablissementFormationUaiCfa,
       setFormationCodeDiplome,
@@ -1766,6 +1839,7 @@ export function useCerfaFormation() {
         },
       },
       etablissementFormation: {
+        memeResponsable: etablissementFormationMemeResponsable,
         siret: etablissementFormationSiret,
         denomination: etablissementFormationDenomination,
         uaiCfa: etablissementFormationUaiCfa,
@@ -1804,6 +1878,7 @@ export function useCerfaFormation() {
         },
       },
       etablissementFormation: {
+        memeResponsable: onSubmittedEtablissementFormationMemeResponsable,
         siret: onSubmittedEtablissementFormationSiret,
         denomination: onSubmittedEtablissementFormationDenomination,
         uaiCfa: onSubmittedEtablissementFormationUaiCfa,
