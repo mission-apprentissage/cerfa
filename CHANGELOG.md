@@ -1,3 +1,12 @@
+# [1.19.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.18.1-beta.1...v1.19.0-beta.1) (2022-02-08)
+
+
+### Features
+
+* **NAF:** masque plus souple + remplacement des placeholders ([9cc2472](https://github.com/mission-apprentissage/cerfa/commit/9cc24725cb15332c20f23e119a2beef80474ef07))
+* **rémunération:** arrondi centime supérieur ([e357665](https://github.com/mission-apprentissage/cerfa/commit/e3576659c644a0db0c33e0c0800775b53a505ede))
+* **rncp:** ajout du masque sur le champ ([a69b75d](https://github.com/mission-apprentissage/cerfa/commit/a69b75d4329aebc3a587f65560233e05b314952d))
+
 ## [1.18.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.18.0...v1.18.1-beta.1) (2022-02-07)
 
 
