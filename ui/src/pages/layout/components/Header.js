@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Box, Container, Flex, Heading, Link } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Link, Tag } from "@chakra-ui/react";
 
 import { Logo } from "./Logo";
 import AlertMessage from "./AlertMessage";
@@ -19,7 +19,10 @@ const Header = () => {
 
             <Box p={[1, 6]} flex="1">
               <Heading as="h6" textStyle="h6" fontSize="xl">
-                Contrat d'apprentissage dématérialisé pour les employeurs publics
+                Contrat d'apprentissage dématérialisé pour les employeurs publics{" "}
+                <Tag marginBottom="1w" backgroundColor="bluefrance" color="white">
+                  beta
+                </Tag>
               </Heading>
             </Box>
           </Flex>
