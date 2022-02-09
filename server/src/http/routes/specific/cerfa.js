@@ -342,8 +342,9 @@ module.exports = (components) => {
           }),
         }),
         etablissementFormation: Joi.object({
+          memeResponsable: Joi.boolean().allow(null),
           denomination: Joi.string().allow(""),
-          siret: Joi.string(),
+          siret: Joi.string().allow(""),
           uaiCfa: Joi.string().allow(null),
           adresse: Joi.object({
             numero: Joi.number().allow(null),
