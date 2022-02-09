@@ -218,6 +218,7 @@ const apprentiSchema = {
       return !this.draft;
     },
     label: "Déclare bénéficier de la reconnaissance travailleur handicapé :",
+    requiredMessage: "La déclaration de reconnaissance travailleur handicapé est obligatoire",
     options: [
       {
         label: "Oui",
@@ -593,6 +594,7 @@ const apprentiSchema = {
     description:
       "Déclare être inscrit sur la liste des sportifs, entraîneurs, arbitres et juges sportifs de haut niveau",
     label: "Déclare être inscrit sur la liste des sportifs, entraîneurs, arbitres et juges sportifs de haut niveau :",
+    requiredMessage: "Cette déclaration est obligatoire",
     example: true,
     default: null,
     required: function () {

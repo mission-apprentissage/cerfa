@@ -631,6 +631,16 @@ export default React.memo(
               }
             } else if (!field?.triggerValidation && triggerRef.current === 1) {
               triggerRef.current = 0;
+            } else if (field?.validate) {
+              const { isValid: isValidValue, error: errorValue } = await validate(validationSchema, {
+                [name]: values[name],
+              });
+              if (!isValidValue) {
+                setErrors({ [name]: errorValue.message });
+                setIsErrored(true);
+                setValidated(false);
+                field.setFieldsErrored((errors) => [...errors, { name, label: label || field?.label, type }]);
+              }
             }
           }
         }
@@ -654,6 +664,7 @@ export default React.memo(
       countryCode,
       eventHandler,
       isRequiredInternal,
+      label,
     ]);
 
     const prevOnAsyncData = prevOnAsyncDataRef.current;
@@ -673,7 +684,7 @@ export default React.memo(
     if (!field) return null;
 
     return (
-      <FormControl isRequired={isRequiredInternal} mt={2} isInvalid={errors[name]} {...props}>
+      <FormControl isRequired={isRequiredInternal} mt={2} isInvalid={errors[name]} {...props} id={`${name}_section`}>
         {(type === "text" ||
           type === "email" ||
           type === "number" ||

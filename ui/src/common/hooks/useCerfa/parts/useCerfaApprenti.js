@@ -187,6 +187,7 @@ export function useCerfaApprenti() {
     apprentiAtoms.cerfaPartApprentiCompletionAtom
   );
   const [isLoading, setIsLoading] = useRecoilState(apprentiAtoms.cerfaPartApprentiIsLoadingAtom);
+  const [fieldsErrored, setFieldsErrored] = useRecoilState(apprentiAtoms.cerfaPartApprentiFieldsErroredAtom);
 
   const [apprentiNom, setApprentiNom] = useRecoilState(apprentiAtoms.cerfaApprentiNomAtom);
   const [apprentiPrenom, setApprentiPrenom] = useRecoilState(apprentiAtoms.cerfaApprentiPrenomAtom);
@@ -353,6 +354,7 @@ export function useCerfaApprenti() {
               nom: {
                 ...apprentiNom,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -383,6 +385,7 @@ export function useCerfaApprenti() {
               prenom: {
                 ...apprentiPrenom,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -413,6 +416,7 @@ export function useCerfaApprenti() {
               dateNaissance: {
                 ...apprentiDateNaissance,
                 value: data.dateNaissance,
+                validate: false,
               },
               age: {
                 ...apprentiAge,
@@ -562,6 +566,7 @@ export function useCerfaApprenti() {
                 voie: {
                   ...apprentiAdresseVoie,
                   value: data,
+                  validate: false,
                 },
               },
             },
@@ -674,10 +679,12 @@ export function useCerfaApprenti() {
                 codePostal: {
                   ...apprentiAdresseCodePostal,
                   value: data.codePostal,
+                  validate: false,
                 },
                 commune: {
                   ...apprentiAdresseCommune,
                   value: data.commune,
+                  validate: false,
                 },
               },
             },
@@ -739,6 +746,7 @@ export function useCerfaApprenti() {
                 commune: {
                   ...apprentiAdresseCommune,
                   value: data,
+                  validate: false,
                 },
               },
             },
@@ -794,6 +802,7 @@ export function useCerfaApprenti() {
                 pays: {
                   ...apprentiAdressePays,
                   value: data,
+                  validate: false,
                 },
               },
             },
@@ -879,7 +888,7 @@ export function useCerfaApprenti() {
               courriel: {
                 ...apprentiCourriel,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
+                validate: false,
               },
             },
           };
@@ -910,6 +919,7 @@ export function useCerfaApprenti() {
               departementNaissance: {
                 ...apprentiDepartementNaissance,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -940,6 +950,7 @@ export function useCerfaApprenti() {
               communeNaissance: {
                 ...apprentiCommuneNaissance,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -970,6 +981,7 @@ export function useCerfaApprenti() {
               diplome: {
                 ...apprentiDiplome,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -1000,6 +1012,7 @@ export function useCerfaApprenti() {
               diplomePrepare: {
                 ...apprentiDiplomePrepare,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -1030,6 +1043,7 @@ export function useCerfaApprenti() {
               situationAvantContrat: {
                 ...apprentiSituationAvantContrat,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -1066,6 +1080,7 @@ export function useCerfaApprenti() {
               sexe: {
                 ...apprentiSexe,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -1096,6 +1111,7 @@ export function useCerfaApprenti() {
               nationalite: {
                 ...apprentiNationalite,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -1126,6 +1142,7 @@ export function useCerfaApprenti() {
               regimeSocial: {
                 ...apprentiRegimeSocial,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -1156,6 +1173,7 @@ export function useCerfaApprenti() {
               derniereClasse: {
                 ...apprentiDerniereClasse,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -1186,6 +1204,7 @@ export function useCerfaApprenti() {
               intituleDiplomePrepare: {
                 ...apprentiIntituleDiplomePrepare,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -1222,6 +1241,7 @@ export function useCerfaApprenti() {
               inscriptionSportifDeHautNiveau: {
                 ...apprentiInscriptionSportifDeHautNiveau,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -1258,6 +1278,7 @@ export function useCerfaApprenti() {
               handicap: {
                 ...apprentiHandicap,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -1288,6 +1309,7 @@ export function useCerfaApprenti() {
               apprentiMineur: {
                 ...apprentiApprentiMineur,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -1357,6 +1379,7 @@ export function useCerfaApprenti() {
               apprentiMineurNonEmancipe: {
                 ...apprentiApprentiMineurNonEmancipe,
                 value: data,
+                validate: false,
               },
             },
           };
@@ -1838,43 +1861,56 @@ export function useCerfaApprenti() {
 
   const setAll = useCallback(
     (res) => {
-      setApprentiNom(res.apprenti.nom);
-      setApprentiPrenom(res.apprenti.prenom);
-      setApprentiSexe(convertValueToOption(res.apprenti.sexe));
-      setApprentiNationalite(convertValueToOption(res.apprenti.nationalite));
-      setApprentiDateNaissance(convertValueToDate(res.apprenti.dateNaissance));
+      setApprentiNom({ ...res.apprenti.nom, setFieldsErrored });
+      setApprentiPrenom({ ...res.apprenti.prenom, setFieldsErrored });
+      setApprentiSexe({ ...convertValueToOption(res.apprenti.sexe), setFieldsErrored });
+      setApprentiNationalite({ ...convertValueToOption(res.apprenti.nationalite), setFieldsErrored });
+      setApprentiDateNaissance({ ...convertValueToDate(res.apprenti.dateNaissance), setFieldsErrored });
       setApprentiAge(res.apprenti.age);
-      setApprentiDepartementNaissance(res.apprenti.departementNaissance);
-      setApprentiCommuneNaissance(res.apprenti.communeNaissance);
+      setApprentiDepartementNaissance({ ...res.apprenti.departementNaissance, setFieldsErrored });
+      setApprentiCommuneNaissance({ ...res.apprenti.communeNaissance, setFieldsErrored });
       setApprentiNir(res.apprenti.nir);
-      setApprentiRegimeSocial(convertValueToOption(res.apprenti.regimeSocial));
-      setApprentiHandicap(convertValueToOption(res.apprenti.handicap));
-      setApprentiSituationAvantContrat(convertValueToOption(res.apprenti.situationAvantContrat));
+      setApprentiRegimeSocial({ ...convertValueToOption(res.apprenti.regimeSocial), setFieldsErrored });
+      setApprentiHandicap({ ...convertValueToOption(res.apprenti.handicap), setFieldsErrored });
+      setApprentiSituationAvantContrat({
+        ...convertValueToOption(res.apprenti.situationAvantContrat),
+        setFieldsErrored,
+      });
 
-      setApprentiDiplome(convertValueToMultipleSelectOption(res.apprenti.diplome));
-      setApprentiDerniereClasse(convertValueToOption(res.apprenti.derniereClasse));
-      setApprentiDiplomePrepare(convertValueToMultipleSelectOption(res.apprenti.diplomePrepare));
+      setApprentiDiplome({ ...convertValueToMultipleSelectOption(res.apprenti.diplome), setFieldsErrored });
+      setApprentiDerniereClasse({ ...convertValueToOption(res.apprenti.derniereClasse), setFieldsErrored });
+      setApprentiDiplomePrepare({
+        ...convertValueToMultipleSelectOption(res.apprenti.diplomePrepare),
+        setFieldsErrored,
+      });
 
-      setApprentiIntituleDiplomePrepare(res.apprenti.intituleDiplomePrepare);
-      setApprentiTelephone({ ...res.apprenti.telephone, value: res.apprenti.telephone.value.replace("+", "") });
-      setApprentiCourriel(res.apprenti.courriel);
+      setApprentiIntituleDiplomePrepare({ ...res.apprenti.intituleDiplomePrepare, setFieldsErrored });
+      setApprentiTelephone({
+        ...res.apprenti.telephone,
+        value: res.apprenti.telephone.value.replace("+", ""),
+        setFieldsErrored,
+      });
+      setApprentiCourriel({ ...res.apprenti.courriel, setFieldsErrored });
       setApprentiAdresseNumero(res.apprenti.adresse.numero);
-      setApprentiAdresseVoie(res.apprenti.adresse.voie);
+      setApprentiAdresseVoie({ ...res.apprenti.adresse.voie, setFieldsErrored });
       setApprentiAdresseComplement(res.apprenti.adresse.complement);
-      setApprentiAdresseCodePostal(res.apprenti.adresse.codePostal);
-      setApprentiAdresseCommune(res.apprenti.adresse.commune);
-      setApprentiAdressePays(convertValueToOption(res.apprenti.adresse.pays));
-      setApprentiInscriptionSportifDeHautNiveau(convertValueToOption(res.apprenti.inscriptionSportifDeHautNiveau));
+      setApprentiAdresseCodePostal({ ...res.apprenti.adresse.codePostal, setFieldsErrored });
+      setApprentiAdresseCommune({ ...res.apprenti.adresse.commune, setFieldsErrored });
+      setApprentiAdressePays({ ...convertValueToOption(res.apprenti.adresse.pays), setFieldsErrored });
+      setApprentiInscriptionSportifDeHautNiveau({
+        ...convertValueToOption(res.apprenti.inscriptionSportifDeHautNiveau),
+        setFieldsErrored,
+      });
 
-      setApprentiApprentiMineur(convertValueToOption(res.apprenti.apprentiMineur));
+      setApprentiApprentiMineur({ ...convertValueToOption(res.apprenti.apprentiMineur), setFieldsErrored });
 
       let apprentiMineurNonEmancipeShouldBeLocked = false;
       if (res.apprenti.apprentiMineur.value === false) {
         apprentiMineurNonEmancipeShouldBeLocked = true;
       }
 
-      setApprentiApprentiMineurNonEmancipe(
-        convertValueToOption({
+      setApprentiApprentiMineurNonEmancipe({
+        ...convertValueToOption({
           ...res.apprenti.apprentiMineurNonEmancipe,
           options: [
             {
@@ -1887,8 +1923,9 @@ export function useCerfaApprenti() {
               value: false,
             },
           ],
-        })
-      );
+        }),
+        setFieldsErrored,
+      });
 
       setApprentiResponsableLegalNom(res.apprenti.responsableLegal.nom);
       setApprentiResponsableLegalPrenom(res.apprenti.responsableLegal.prenom);
@@ -1903,6 +1940,7 @@ export function useCerfaApprenti() {
       setPartApprentiCompletion(cerfaApprentiCompletion(res));
     },
     [
+      setFieldsErrored,
       setApprentiNom,
       setApprentiPrenom,
       setApprentiSexe,
@@ -1940,6 +1978,84 @@ export function useCerfaApprenti() {
       setApprentiResponsableLegalAdresseCommune,
       setApprentiResponsableLegalAdressePays,
       setPartApprentiCompletion,
+    ]
+  );
+
+  const validate = useCallback(
+    (res) => {
+      setFieldsErrored([]);
+      setApprentiNom({ ...apprentiNom, validate: true });
+      setApprentiPrenom({ ...apprentiPrenom, validate: true });
+      setApprentiSexe({ ...apprentiSexe, validate: true });
+      setApprentiNationalite({ ...apprentiNationalite, validate: true });
+      // setApprentiDateNaissance({ ...apprentiDateNaissance, validate: true });
+      setApprentiDepartementNaissance({ ...apprentiDepartementNaissance, validate: true });
+
+      setApprentiCommuneNaissance({ ...apprentiCommuneNaissance, validate: true });
+      setApprentiRegimeSocial({ ...apprentiRegimeSocial, validate: true });
+      setApprentiHandicap({ ...apprentiHandicap, validate: true });
+      setApprentiSituationAvantContrat({ ...apprentiSituationAvantContrat, validate: true });
+      setApprentiDiplome({ ...apprentiDiplome, validate: true });
+      setApprentiDerniereClasse({ ...apprentiDerniereClasse, validate: true });
+      setApprentiDiplomePrepare({ ...apprentiDiplomePrepare, validate: true });
+      setApprentiIntituleDiplomePrepare({ ...apprentiIntituleDiplomePrepare, validate: true });
+      setApprentiTelephone({ ...apprentiTelephone, validate: true });
+      setApprentiCourriel({ ...apprentiCourriel, validate: true });
+      setApprentiInscriptionSportifDeHautNiveau({ ...apprentiInscriptionSportifDeHautNiveau, validate: true });
+      setApprentiApprentiMineur({ ...apprentiApprentiMineur, validate: true });
+      setApprentiApprentiMineurNonEmancipe({ ...apprentiApprentiMineurNonEmancipe, validate: true });
+
+      setApprentiAdresseVoie({ ...apprentiAdresseVoie, validate: true });
+      setApprentiAdresseCodePostal({ ...apprentiAdresseCodePostal, validate: true });
+      setApprentiAdresseCommune({ ...apprentiAdresseCommune, validate: true });
+      setApprentiAdressePays({ ...apprentiAdressePays, validate: true });
+    },
+    [
+      apprentiAdresseCodePostal,
+      apprentiAdresseCommune,
+      apprentiAdressePays,
+      apprentiAdresseVoie,
+      apprentiApprentiMineur,
+      apprentiApprentiMineurNonEmancipe,
+      apprentiCommuneNaissance,
+      apprentiCourriel,
+      apprentiDepartementNaissance,
+      apprentiDerniereClasse,
+      apprentiDiplome,
+      apprentiDiplomePrepare,
+      apprentiHandicap,
+      apprentiInscriptionSportifDeHautNiveau,
+      apprentiIntituleDiplomePrepare,
+      apprentiNationalite,
+      apprentiNom,
+      apprentiPrenom,
+      apprentiRegimeSocial,
+      apprentiSexe,
+      apprentiSituationAvantContrat,
+      apprentiTelephone,
+      setApprentiAdresseCodePostal,
+      setApprentiAdresseCommune,
+      setApprentiAdressePays,
+      setApprentiAdresseVoie,
+      setApprentiApprentiMineur,
+      setApprentiApprentiMineurNonEmancipe,
+      setApprentiCommuneNaissance,
+      setApprentiCourriel,
+      setApprentiDepartementNaissance,
+      setApprentiDerniereClasse,
+      setApprentiDiplome,
+      setApprentiDiplomePrepare,
+      setApprentiHandicap,
+      setApprentiInscriptionSportifDeHautNiveau,
+      setApprentiIntituleDiplomePrepare,
+      setApprentiNationalite,
+      setApprentiNom,
+      setApprentiPrenom,
+      setApprentiRegimeSocial,
+      setApprentiSexe,
+      setApprentiSituationAvantContrat,
+      setApprentiTelephone,
+      setFieldsErrored,
     ]
   );
 
@@ -1999,6 +2115,8 @@ export function useCerfaApprenti() {
       },
     },
     setAll,
+    validate,
+    fieldsErrored,
     onSubmit: {
       apprenti: {
         nom: onSubmittedApprentiNom,
