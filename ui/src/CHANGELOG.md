@@ -1,3 +1,10 @@
+# [1.19.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.8...v1.19.0-beta.9) (2022-02-09)
+
+
+### Features
+
+* **ui:** faire apparaître la mention sur la conservation des données ([#315](https://github.com/mission-apprentissage/cerfa/issues/315)) ([2111ffd](https://github.com/mission-apprentissage/cerfa/commit/2111ffde866d4b70cf1f6cb8ce0c0b0259c7056c))
+
 # [1.19.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.7...v1.19.0-beta.8) (2022-02-09)
 
 
