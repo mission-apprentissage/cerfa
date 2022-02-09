@@ -1,3 +1,3 @@
 export const setTitle = (title) => {
-  document.title = `Contrat Apprentissage fonction publique - ${title}`;
+  document.title = `Contrat apprentissage employeur public - ${title}`;
 };
