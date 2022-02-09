@@ -174,7 +174,7 @@ export default ({ title, onUploadSuccessed, typeDocument }) => {
                 <>
                   <DownloadLine boxSize="4" color="bluefrance" mb={4} />
                   <Text color="mgalt">
-                    Glisser le fichier dans cette zone ou cliquez sur le bouton pour ajouter un document depuis votre
+                    Glissez le fichier dans cette zone ou cliquez sur le bouton pour ajouter un document depuis votre
                     disque dur
                   </Text>
                   <Text color="mgalt">(pdf uniquement, maximum 10mb)</Text>
