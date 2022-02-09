@@ -91,7 +91,7 @@ const DdetsContainer = () => {
             </OrderedList>
 
             <Text>
-              Pour toute question, consultez
+              Pour toute question, consultez{" "}
               <Link as={NavLink} to={"/assistance"} color="bluefrance">
                 la page "Assistance"
               </Link>

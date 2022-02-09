@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { Flex, Center, Button, Link, Text, HStack, Heading, OrderedList, ListItem } from "@chakra-ui/react";
+import { Flex, Center, Button, Link, Text, HStack, Heading, OrderedList, ListItem, useToast } from "@chakra-ui/react";
 
 import { _post, _put } from "../../../common/httpClient";
 import useAuth from "../../../common/hooks/useAuth";
@@ -25,19 +25,41 @@ export default ({
   signaturesPdfLoaded,
 }) => {
   let [auth] = useAuth();
+  const toast = useToast();
   const setDossier = useSetRecoilState(dossierAtom);
   const dossier = useRecoilValue(dossierAtom);
 
   let onSendToAgecap = useCallback(async () => {
     try {
-      const response = await _post(`/api/v1/agecap/`, {
+      await _post(`/api/v1/agecap/`, {
         dossierId: dossier._id,
       });
-      console.log(response);
+      window.location.reload();
     } catch (error) {
-      console.log(error);
+      console.log({ error });
+      let details = "";
+      if (error.messages.details?.reason?.objectFieldErrors) {
+        details = " : ";
+        const fieldErrors = error.messages.details?.reason?.objectFieldErrors;
+        const fieldKeys = Object.keys(fieldErrors);
+        for (let index = 0; index < fieldKeys.length; index++) {
+          const field = fieldErrors[fieldKeys[index]];
+          const subFieldKeys = Object.keys(field);
+          for (let j = 0; j < subFieldKeys.length; j++) {
+            const element = field[subFieldKeys[j]];
+            details += `${element.join(" ")}`;
+            // details += `${fieldKeys[index]} > ${subFieldKeys[j]} > ${element.join(" ")}`;
+          }
+        }
+      }
+      toast({
+        title: `Une erreur est survenue lors de la transmission${details}`,
+        status: "error",
+        duration: null,
+        isClosable: true,
+      });
     }
-  }, [dossier?._id]);
+  }, [dossier._id, toast]);
 
   const buttonDownloadStyleProps = useMemo(
     () => ({
@@ -72,6 +94,7 @@ export default ({
       dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION" ||
       dossier.etat === "EN_ATTENTE_DECLENCHEMENT_SIGNATURES" ||
       dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
+      dossier.etat === "TRANSMIS" ||
       dossier.etat === "EN_ATTENTE_SIGNATURES"
     )
       return "Télécharger le contrat non signé";
@@ -207,6 +230,7 @@ export default ({
               dossier.etat === "EN_ATTENTE_DECLENCHEMENT_SIGNATURES" ||
               dossier.etat === "EN_ATTENTE_SIGNATURES" ||
               dossier.etat === "SIGNATURES_EN_COURS" ||
+              dossier.etat === "TRANSMIS" ||
               dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE") && (
               <Button
                 as={Link}
