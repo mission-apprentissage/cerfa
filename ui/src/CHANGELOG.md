@@ -1,3 +1,10 @@
+# [1.19.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.3...v1.19.0-beta.4) (2022-02-09)
+
+
+### Features
+
+* **ui:** remplacer le libellé des onglets ([#311](https://github.com/mission-apprentissage/cerfa/issues/311)) ([793be1c](https://github.com/mission-apprentissage/cerfa/commit/793be1c2fa993dbbbd37e70903407a0401a6b509))
+
 # [1.19.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.2...v1.19.0-beta.3) (2022-02-09)
 
 
