@@ -381,22 +381,22 @@ const FormContract = React.memo(() => {
                 <Box key={ite}>
                   {ite === 0 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold">
-                      1 re année, du
+                      1ère année, du
                     </Box>
                   )}
                   {ite === 2 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold" mt={2}>
-                      2 eme année, du
+                      2ème année, du
                     </Box>
                   )}
                   {ite === 4 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold" mt={2}>
-                      3 eme année, du
+                      3ème année, du
                     </Box>
                   )}
                   {ite === 6 && !emptyLine && (
                     <Box fontSize="1.1rem" fontWeight="bold" mt={2}>
-                      4 eme année, du
+                      4ème année, du
                     </Box>
                   )}
                   <Box>
