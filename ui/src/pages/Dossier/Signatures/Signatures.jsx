@@ -91,9 +91,9 @@ const DdetsContainer = () => {
             </OrderedList>
 
             <Text>
-              Pour toute question, vous pouvez contacter votre DEETS au {ddets["Telephone"]} ou{" "}
-              <Link as={NavLink} to={"/assistance"}>
-                l'assistance
+              Pour toute question, consultez
+              <Link as={NavLink} to={"/assistance"} color="bluefrance">
+                la page "Assistance"
               </Link>
             </Text>
             {ddets["Informations_complementaires"] && (
