@@ -1,3 +1,10 @@
+# [1.19.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.6...v1.19.0-beta.7) (2022-02-09)
+
+
+### Bug Fixes
+
+* ouverture lieu de formation vide ([83f4e17](https://github.com/mission-apprentissage/cerfa/commit/83f4e17ed8369848773b473b35558f611212812e))
+
 # [1.19.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.5...v1.19.0-beta.6) (2022-02-09)
 
 
