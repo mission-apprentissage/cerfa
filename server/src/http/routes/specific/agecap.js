@@ -267,7 +267,7 @@ module.exports = (components) => {
             });
           }
         });
-        if (hasError) throw Boom.badRequest("Doesn't exist", sendDocumentResponses);
+        if (hasError) throw Boom.badRequest("Transmission error", sendDocumentResponses);
       }
 
       await dossiers.updateEtatDossier(dossierId, "TRANSMIS");
