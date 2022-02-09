@@ -220,6 +220,7 @@ module.exports = (components) => {
           },
         },
         etablissementFormation: {
+          // etablissementFormation
           denomination: cerfa.organismeFormation.denomination,
           // siret: cerfa.organismeFormation.siret,
           // uaiSite: cerfa.organismeFormation.uaiCfa,

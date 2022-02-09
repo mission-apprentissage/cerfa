@@ -1,12 +1,32 @@
 const adresseSchema = require("./adresse.part");
 
-const organismeFormationSchema = {
+const etablissementFormationSchema = {
+  memeResponsable: {
+    type: Boolean,
+    description: "Le lieu de formation est le même que l'organisme responsable",
+    example: false,
+    default: null,
+    required: function () {
+      return !this.draft;
+    },
+    label: "Le lieu de formation est le même que l'organisme responsable",
+    options: [
+      {
+        label: "Oui",
+        value: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
+  },
   denomination: {
     // maxLength: 80,
     type: String,
-    description: "Nom de l'organisme de formation responsable",
-    label: "Dénomination du CFA responsable :",
-    requiredMessage: "la dénomination du CFA responsable est obligatoire",
+    description: "Nom du lieu de formation",
+    label: "Dénomination du lieu de formation :",
+    requiredMessage: "la dénomination du du lieu de formation est obligatoire",
     example: "CFA",
     default: null,
     required: function () {
@@ -21,27 +41,6 @@ const organismeFormationSchema = {
       },
     ],
   },
-  formationInterne: {
-    type: Boolean,
-    description: "Est un service de formation en interne (CFA d'entreprise)",
-    default: false,
-    required: function () {
-      return !this.draft;
-    },
-    label: "Le centre de formation est-il un CFA d'entreprise ?",
-    requiredMessage: "Merci de préciser s'il sagit d'un CFA d'entreprise",
-    example: "Non",
-    options: [
-      {
-        label: "Oui",
-        value: true,
-      },
-      {
-        label: "Non",
-        value: false,
-      },
-    ],
-  },
   siret: {
     maxLength: 14,
     minLength: 14,
@@ -53,17 +52,14 @@ const organismeFormationSchema = {
       message: (props) => `${props.value} n'est pas un siret valide`,
     },
     type: String,
-    description: "N° SIRET de l'organisme de formation responsable",
+    description: "N° SIRET du lieu de formation",
     default: null,
-    required: function () {
-      return !this.draft;
-    },
     nullable: function () {
       return this.draft;
     },
+    isNotRequiredForm: true,
     example: "98765432400019",
-    label: "N° SIRET du CFA responsable :",
-    requiredMessage: "Le siret est obligatoire",
+    label: "N° SIRET du lieu de formation :",
     validateMessage: `n'est pas un siret valide`,
     pattern: "^([0-9]{14})$",
     mask: "C",
@@ -86,28 +82,20 @@ const organismeFormationSchema = {
       message: (props) => `${props.value} n'est pas un UAI valide`,
     },
     type: String,
-    description: "N° UAI de l'organisme de formation responsable",
+    isNotRequiredForm: true,
+    description: "N° UAI du lieu de formation",
     example: "0561910X",
     label: "N° UAI du CFA :",
-    requiredMessage: "Le N° UAI de l'organisme est obligatoire",
     validateMessage: `n'est pas un uai valide`,
     pattern: "^[0-9]{7}[a-zA-Z]$",
     default: null,
     nullable: function () {
       return this.draft;
     },
-    required: function () {
-      return !this.draft;
-    },
-  },
-  visaCfa: {
-    type: Boolean,
-    description: "Est visé par l'organisme de formation responsable",
-    nullable: true,
   },
 
   adresse: {
     ...adresseSchema,
   },
 };
-module.exports = organismeFormationSchema;
+module.exports = etablissementFormationSchema;

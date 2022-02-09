@@ -175,6 +175,21 @@ const hydrate = async (dossier) => {
           },
         },
       },
+      etablissementFormation: {
+        ...cerfa.etablissementFormation,
+        siret: {
+          ...cerfa.etablissementFormation.siret,
+          ...cerfaFormationController.etablissementFormation.siret,
+        },
+        adresse: {
+          ...cerfa.etablissementFormation.adresse,
+          ...cerfaFormationController.etablissementFormation.adresse,
+          codePostal: {
+            ...cerfa.etablissementFormation.adresse.codePostal,
+            ...cerfaFormationController.etablissementFormation.adresse.codePostal,
+          },
+        },
+      },
     };
   } catch (e) {
     console.log(e);

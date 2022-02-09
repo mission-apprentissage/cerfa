@@ -144,6 +144,20 @@ describe("Cerfa", () => {
           commune: "PARIS",
         },
       },
+      etablissementFormation: {
+        memeResponsable: true,
+        siret: "12345678901234",
+        denomination: "string",
+        uaiCfa: "0123456A",
+        adresse: {
+          numero: 14,
+          voie: "Boulevard de la liberté",
+          complement: "Etage 6 - Appartement 654",
+          label: "14 Boulevard de la liberté",
+          codePostal: "75000",
+          commune: "PARIS",
+        },
+      },
       dossierId: mongoose.Types.ObjectId(),
     });
 
