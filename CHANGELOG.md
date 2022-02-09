@@ -1,3 +1,10 @@
+# [1.19.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.5...v1.19.0-beta.6) (2022-02-09)
+
+
+### Features
+
+* **ui:** add tag beta ([#312](https://github.com/mission-apprentissage/cerfa/issues/312)) ([a4a4629](https://github.com/mission-apprentissage/cerfa/commit/a4a46291b1816f8f6230f6285129171883924e3f))
+
 # [1.19.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.4...v1.19.0-beta.5) (2022-02-09)
 
 
