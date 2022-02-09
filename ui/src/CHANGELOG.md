@@ -1,3 +1,12 @@
+# [1.19.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.1...v1.19.0-beta.2) (2022-02-09)
+
+
+### Features
+
+* ajout etablissementFormation ([d194682](https://github.com/mission-apprentissage/cerfa/commit/d19468219d3749ce0cb7571c03e5ed052d2134b1))
+* ajout radio lieu de formation est le responsable ([d7d1397](https://github.com/mission-apprentissage/cerfa/commit/d7d13977817122a1d0496d137ed1c7ca73b9a524))
+* **etablissementFormation:** sauvegarde des données ([bc43724](https://github.com/mission-apprentissage/cerfa/commit/bc4372407a6fdf5bdecfc25affc681ed0e435cf8))
+
 # [1.19.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.18.1-beta.1...v1.19.0-beta.1) (2022-02-08)
 
 
