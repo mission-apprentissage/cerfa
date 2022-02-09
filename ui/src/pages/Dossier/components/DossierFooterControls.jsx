@@ -151,7 +151,7 @@ export default ({
                     <ListItem>Ajoutez les signataires</ListItem>
                     <ListItem>Ils seront invités par courriel à signer via Yousign</ListItem>
                     <ListItem>Suivez l'évolution en temps réel</ListItem>
-                    <ListItem>Transmission automatique à votre DEETS</ListItem>
+                    <ListItem>Transmission automatique au service en charge de l'instruction du dossier</ListItem>
                   </OrderedList>
                   <Center mt={16}>
                     <Button
@@ -162,7 +162,7 @@ export default ({
                       variant={"primary"}
                     >
                       <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
-                      Signatures électronique
+                      Signatures électroniques
                     </Button>
                   </Center>
                 </Flex>
