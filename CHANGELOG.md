@@ -1,3 +1,10 @@
+# [1.19.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.4...v1.19.0-beta.5) (2022-02-09)
+
+
+### Bug Fixes
+
+* **ui:** replace text signature ([#314](https://github.com/mission-apprentissage/cerfa/issues/314)) ([f34d287](https://github.com/mission-apprentissage/cerfa/commit/f34d287f937e03f0a11f6f155f44c52fe84a889a))
+
 # [1.19.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.3...v1.19.0-beta.4) (2022-02-09)
 
 
