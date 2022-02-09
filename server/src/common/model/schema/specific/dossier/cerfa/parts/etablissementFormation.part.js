@@ -32,6 +32,7 @@ const etablissementFormationSchema = {
     required: function () {
       return !this.draft;
     },
+    nullable: true,
     mask: "C",
     maskBlocks: [
       {
