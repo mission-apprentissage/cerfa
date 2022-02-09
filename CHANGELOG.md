@@ -1,3 +1,11 @@
+# [1.19.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.2...v1.19.0-beta.3) (2022-02-09)
+
+
+### Features
+
+* **agecap:** envoi des informations du lieu de formation dynamiquement ([#313](https://github.com/mission-apprentissage/cerfa/issues/313)) ([a5e65dc](https://github.com/mission-apprentissage/cerfa/commit/a5e65dc3cc5ec91921f86d5230bd0ce10e5a9f9d))
+* **ui:** plusieurs correctifs d'orthographe et coquilles ([#309](https://github.com/mission-apprentissage/cerfa/issues/309)) ([52eaff7](https://github.com/mission-apprentissage/cerfa/commit/52eaff7582be9073d73826b65e73fae8f4e4d0e1))
+
 # [1.19.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.1...v1.19.0-beta.2) (2022-02-09)
 
 
