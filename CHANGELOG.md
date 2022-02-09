@@ -1,3 +1,10 @@
+# [1.19.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.7...v1.19.0-beta.8) (2022-02-09)
+
+
+### Features
+
+* affichage des messages d'erreur agecap ([#316](https://github.com/mission-apprentissage/cerfa/issues/316)) ([89c509b](https://github.com/mission-apprentissage/cerfa/commit/89c509b6cbb5d1d91e2a03ca31fec0372291b87b))
+
 # [1.19.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.6...v1.19.0-beta.7) (2022-02-09)
 
 
