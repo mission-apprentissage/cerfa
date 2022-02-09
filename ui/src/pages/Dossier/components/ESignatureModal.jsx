@@ -26,7 +26,7 @@ export default ({ ...modal }) => {
   return (
     <>
       <PromptModal
-        title="Signatures électronique"
+        title="Signatures électroniques"
         isOpen={modal.isOpen}
         onClose={modal.onClose}
         onOk={() => {
@@ -42,12 +42,11 @@ export default ({ ...modal }) => {
       >
         <Flex>
           <Warning boxSize="6" mr={2} />
-          <Text>Veuillez vérifier attentivement les informations renseignés pour les signataires</Text>
+          <Text>Veuillez vérifier attentivement les informations renseignées pour les signataires</Text>
         </Flex>
         <UnorderedList ml="30px !important" mt={3}>
-          >
           <ListItem>
-            Afin de recevoir le lien de signature, <strong>tous les courriels doivent être correctes</strong>
+            Afin de recevoir le lien de signature, <strong>tous les courriels doivent être corrects</strong>
           </ListItem>
           <ListItem>
             Afin de recevoir les codes de signatures par <strong>SMS</strong>, les télephones doivent être
@@ -55,8 +54,8 @@ export default ({ ...modal }) => {
           </ListItem>
         </UnorderedList>
         <Text mb={1} mt={5}>
-          La signature électronique est réalisé via l'outil Yousgin. <br />
-          Une fois la procedure de signature déclencher, vous pourrez plus changer les informations des signataires.
+          La signature électronique est réalisée via l'outil Yousgin. <br />
+          Une fois la procedure de signature déclenchée, vous ne pourrez plus changer les informations des signataires.
         </Text>
       </PromptModal>
     </>
