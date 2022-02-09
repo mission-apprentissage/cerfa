@@ -392,8 +392,8 @@ export default () => {
         <Center>
           <Tooltip variant="alert">
             <Text>
-              Les pièces justificatives doivnt être complétées à 100% avant de commencer la procédure de finalisation du
-              dossier.
+              Les pièces justificatives doivent être complétées à 100% avant de commencer la procédure de finalisation
+              du dossier.
             </Text>
           </Tooltip>
         </Center>
