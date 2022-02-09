@@ -1,3 +1,10 @@
+# [1.19.0-beta.10](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.9...v1.19.0-beta.10) (2022-02-09)
+
+
+### Bug Fixes
+
+* réparation des liens d'email d'invitation ([#317](https://github.com/mission-apprentissage/cerfa/issues/317)) ([c42eefb](https://github.com/mission-apprentissage/cerfa/commit/c42eefbd50d9e0f9eaae70ea9d642a8bc2b21deb))
+
 # [1.19.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.8...v1.19.0-beta.9) (2022-02-09)
 
 
