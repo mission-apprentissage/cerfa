@@ -100,7 +100,7 @@ const ForceAcceptCGU = ({ children }) => {
           <Box mb={3}>
             {!auth.cgu && (
               <Text fontSize="1.1rem" fontWeight="bold">
-                Merci de lire attentivement les conditions générale d'utilisation avant de les accepter.
+                Merci de lire attentivement les conditions générales d'utilisation avant de les accepter.
               </Text>
             )}
             {auth.cgu && (
