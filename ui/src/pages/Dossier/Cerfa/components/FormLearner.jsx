@@ -1,18 +1,5 @@
-import React, { useState } from "react";
-import {
-  Box,
-  FormLabel,
-  Text,
-  Flex,
-  Collapse,
-  Center,
-  Spinner,
-  Button,
-  List,
-  ListItem,
-  ListIcon,
-  Link,
-} from "@chakra-ui/react";
+import React from "react";
+import { Box, FormLabel, Text, Flex, Collapse, Center, Spinner } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
 import { useCerfaApprenti } from "../../../../common/hooks/useCerfa/parts/useCerfaApprenti";
@@ -24,71 +11,7 @@ import {
 import { cerfaEmployeurAdresseDepartementAtom } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 
 import InputCerfa from "./Input";
-
-// import { NavLink } from "react-router-dom";
-import Tooltip from "../../../../common/components/Tooltip";
-import { ArrowRightLine } from "../../../../theme/components/icons";
-
-const CheckFieldsCompletion = () => {
-  const { validate, fieldsErrored } = useCerfaApprenti();
-  const [triggered, setTriggered] = useState(false);
-  console.log(fieldsErrored);
-  return (
-    <Box mt={10}>
-      <Button
-        mr={4}
-        size="md"
-        variant="secondary"
-        onClick={() => {
-          setTriggered(true);
-          validate();
-        }}
-      >
-        Est-ce que tous mes champs sont remplis ?
-      </Button>
-      <Collapse in={fieldsErrored.length > 0 && triggered} animateOpacity>
-        <Tooltip variant="alert" mt={5}>
-          <Text>{fieldsErrored.length} champ(s) non remplis :</Text>
-          <List spacing={3} mt={3}>
-            {fieldsErrored.map(({ type, name, label }) => {
-              let anchor = `${name}_section-label`;
-              if (
-                type === "text" ||
-                type === "select" ||
-                type === "radio" ||
-                type === "phone" ||
-                type === "email" ||
-                type === "date"
-              ) {
-                anchor = `${name}_section-label`;
-              }
-              return (
-                <ListItem key={name}>
-                  <ListIcon as={ArrowRightLine} color="flatwarm" />
-                  {/*
-            TODO SHOULD BE LIKE THIS
-             <Link as={NavLink} to={"#apprenti_departementNaissance_section-label"}>
-          Département de naissance
-        </Link> */}
-                  <Link
-                    onClick={() => {
-                      const element = document.getElementById(anchor);
-                      if (element) {
-                        element.scrollIntoView({ behavior: "smooth" });
-                      }
-                    }}
-                  >
-                    {label.replace(":", "")}
-                  </Link>
-                </ListItem>
-              );
-            })}
-          </List>
-        </Tooltip>
-      </Collapse>
-    </Box>
-  );
-};
+import CheckEmptyFields from "./CheckEmptyFields";
 
 const FormLearner = React.memo(() => {
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
@@ -98,6 +21,8 @@ const FormLearner = React.memo(() => {
 
   const {
     isLoading,
+    validate,
+    fieldsErrored,
     get: {
       apprenti: {
         nom,
@@ -480,7 +405,7 @@ const FormLearner = React.memo(() => {
           />
         </Box>
       </Flex>
-      <CheckFieldsCompletion />
+      <CheckEmptyFields validate={validate} fieldsErrored={fieldsErrored} />
     </Box>
   );
 });
