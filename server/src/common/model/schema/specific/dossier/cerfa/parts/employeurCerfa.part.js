@@ -100,6 +100,8 @@ const employeurCerfaSchema = {
     requiredMessage: "Effectif salarié de l'entreprise est obligatoire",
     example: 123,
     mask: "C",
+    infoText:
+      "L'effectif salarié rempli automatiquement correspond à l'estimation de la base Entreprises de l'INSEE. <br/>L'effectif renseigné est celui de l’entreprise dans sa globalité (et non seulement l’effectif de l’établissement d’exécution du contrat).",
     maskBlocks: [
       {
         name: "C",
@@ -175,6 +177,7 @@ const employeurCerfaSchema = {
     },
     description: "Courriel de l'employeur",
     label: "Courriel de l'employeur :",
+    infoText: "Ce courriel sera utilisé pour l'envoi des notifications pour le suivi du dossier.",
     requiredMessage: "Le courriel de l'employeur est obligatoire",
     validate: {
       validator: function (v) {
