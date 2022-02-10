@@ -546,6 +546,7 @@ const apprentiSchema = {
           return !this.draft;
         },
         label: "l'apprenti(e) vit à la même adresse que son responsable légal",
+        requiredMessage: "L'adresse du représentant légal est obligatoire",
         options: [
           {
             label: "Oui",

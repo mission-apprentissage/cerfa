@@ -228,7 +228,6 @@ const DateInput = ({ onChange, value, type, ...props }) => {
         unmask={true}
         lazy={false}
         placeholderChar="_"
-        // overwrite={true}
         autofix={true}
         blocks={{
           d: { mask: IMask.MaskedRange, placeholderChar: "j", from: 1, to: 31, maxLength: 2 },
@@ -631,7 +630,7 @@ export default React.memo(
               }
             } else if (!field?.triggerValidation && triggerRef.current === 1) {
               triggerRef.current = 0;
-            } else if (field?.validate) {
+            } else if (field?.validateField) {
               const { isValid: isValidValue, error: errorValue } = await validate(validationSchema, {
                 [name]: values[name],
               });
@@ -639,7 +638,17 @@ export default React.memo(
                 setErrors({ [name]: errorValue.message });
                 setIsErrored(true);
                 setValidated(false);
-                field.setFieldsErrored((errors) => [...errors, { name, label: label || field?.label, type }]);
+                if (field?.setFieldsErrored) {
+                  field?.setFieldsErrored((errors) => {
+                    // TODO should reset validateField on first Onchange
+                    const filtered = errors.filter((e) => e.name !== name);
+                    return [...filtered, { name, label: label || field?.label, type }];
+                  });
+                }
+                // TODO dirty for date field
+                if (field?.setSt) {
+                  field?.setSt({ ...field, validateField: false });
+                }
               }
             }
           }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   FormLabel,
@@ -31,13 +31,22 @@ import { ArrowRightLine } from "../../../../theme/components/icons";
 
 const CheckFieldsCompletion = () => {
   const { validate, fieldsErrored } = useCerfaApprenti();
+  const [triggered, setTriggered] = useState(false);
   console.log(fieldsErrored);
   return (
     <>
-      <Button mr={4} size="md" variant="secondary" onClick={validate}>
+      <Button
+        mr={4}
+        size="md"
+        variant="secondary"
+        onClick={() => {
+          setTriggered(true);
+          validate();
+        }}
+      >
         Est-ce que tous mes champs sont remplis ?
       </Button>
-      <Collapse in={fieldsErrored.length > 0} animateOpacity>
+      <Collapse in={fieldsErrored.length > 0 && triggered} animateOpacity>
         <Tooltip variant="alert" mt={5}>
           <Text>{fieldsErrored.length} champ(s) non remplis :</Text>
           <List spacing={3} mt={3}>
@@ -47,7 +56,7 @@ const CheckFieldsCompletion = () => {
                 anchor = `${name}_section-label`;
               }
               return (
-                <ListItem>
+                <ListItem key={name}>
                   <ListIcon as={ArrowRightLine} color="flatwarm" />
                   {/*
             TODO SHOULD BE LIKE THIS
@@ -61,7 +70,6 @@ const CheckFieldsCompletion = () => {
                         element.scrollIntoView({ behavior: "smooth" });
                       }
                     }}
-                    key={name}
                   >
                     {label.replace(":", "")}
                   </Link>
