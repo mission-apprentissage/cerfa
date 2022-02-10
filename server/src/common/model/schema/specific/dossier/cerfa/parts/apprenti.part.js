@@ -105,6 +105,8 @@ const apprentiSchema = {
     label: "Date de naissance :",
     requiredMessage: "La date de naissance de l'apprenti(e) est obligatoire",
     example: "2001-01-01T00:00:00+0000",
+    infoText:
+      "La date de naissance combinée à la date d'exécution du contrat définira si l'apprenti(e) est mineur(e) ou majeur(e) et est bien âgé de 15 ans ou plus. <br/> Si l'apprenti(e) est mineur(e) à la date de signature du contrat, vous devrez renseigner le cas d'émancipation ou les informations relatives au représentant légal.",
     default: null,
     required: function () {
       return !this.draft;
