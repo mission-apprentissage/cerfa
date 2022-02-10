@@ -139,6 +139,7 @@ const apprentiSchema = {
     pattern: "^([0-9][0-9]|2[AB]|9[012345]|97[12346])$",
     requiredMessage: "le département de naissance est obligatoire",
     validateMessage: ` n'est pas un département valide`,
+    infoText: `Pour les personnes nées à l'étranger, indiquez 99. <br/> Pour les départements à 1 chiffre, faites précéder le chiffre par un "0".`,
     default: null,
     nullable: true,
     required: function () {
