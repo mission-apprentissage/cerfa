@@ -34,7 +34,7 @@ const CheckFieldsCompletion = () => {
   const [triggered, setTriggered] = useState(false);
   console.log(fieldsErrored);
   return (
-    <>
+    <Box mt={10}>
       <Button
         mr={4}
         size="md"
@@ -51,8 +51,15 @@ const CheckFieldsCompletion = () => {
           <Text>{fieldsErrored.length} champ(s) non remplis :</Text>
           <List spacing={3} mt={3}>
             {fieldsErrored.map(({ type, name, label }) => {
-              let anchor = name;
-              if (type === "text" || type === "select" || type === "radio" || type === "phone" || type === "email") {
+              let anchor = `${name}_section-label`;
+              if (
+                type === "text" ||
+                type === "select" ||
+                type === "radio" ||
+                type === "phone" ||
+                type === "email" ||
+                type === "date"
+              ) {
                 anchor = `${name}_section-label`;
               }
               return (
@@ -79,7 +86,7 @@ const CheckFieldsCompletion = () => {
           </List>
         </Tooltip>
       </Collapse>
-    </>
+    </Box>
   );
 };
 
