@@ -50,6 +50,8 @@ const employeurCerfaSchema = {
       return !this.draft;
     },
     example: "98765432400019",
+    infoText:
+      "Vous devez renseigner le siret correspondant à l'établissement du lieu d'exécution du contrat (il ne correspond pas forcément au siège). Le siret comporte 14 chiffres. <br/> Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).",
     label: "N° SIRET de l'employeur :",
     requiredMessage: "Le siret est obligatoire",
     validateMessage: `n'est pas un siret valide`,
