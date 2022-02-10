@@ -15,8 +15,9 @@ const Footer = () => {
           </Link>
           <Box alignSelf="center" flex="1">
             <Text>
-              Mandatée par les ministres en charge de l’éducation nationale, de l’enseignement supérieur, du travail et
-              de la transformation publique, la{" "}
+              Mandatée par le Ministère du Travail, de l'Emploi et de l'Insertion, le Ministère de la Transformation et
+              de la Fonction publiques, le Ministère de l'Education Nationale, de la Jeunesse et des Sports, le
+              Ministère de la Recherche, de l'Enseignement Supérieur et de l'Innovation, la{" "}
               <Link
                 href={"https://beta.gouv.fr/startups/?incubateur=mission-apprentissage"}
                 textDecoration={"underline"}
