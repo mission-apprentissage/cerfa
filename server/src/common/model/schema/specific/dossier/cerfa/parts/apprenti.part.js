@@ -399,6 +399,7 @@ const apprentiSchema = {
     },
     description: "Téléphone de l'apprenti",
     label: "Téléphone de l'apprenti(e) :",
+    infoText: `Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le "0" car l'indicateur pays est pré-renseigné.`,
     example: "0102030405",
   },
   courriel: {

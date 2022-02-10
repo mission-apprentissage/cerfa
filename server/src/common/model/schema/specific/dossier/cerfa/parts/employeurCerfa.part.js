@@ -161,6 +161,7 @@ const employeurCerfaSchema = {
     description: "Téléphone de l'employeur",
     label: "Téléphone de l'employeur :",
     requiredMessage: "Le téléphone de l'employeur est obligatoire",
+    infoText: `Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le "0" car l'indicateur pays est pré-renseigné.`,
     example: "0908070605",
     // pattern: "^([+])?((d)[.-]?)?[s]?(?(d{3}))?[.-]?[s]?(d{3})[.-]?[s]?(d{4,})$",
   },
