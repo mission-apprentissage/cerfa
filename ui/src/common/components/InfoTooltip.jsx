@@ -42,8 +42,8 @@ const InfoTooltip = ({ description, descriptionComponent, infoText, example, his
           <Stack>
             {description && <Text dangerouslySetInnerHTML={{ __html: description }} />}
             {descriptionComponent}
-            {infoText && <Text>{infoText}</Text>}
-            {example && <Text as="samp">Exemple: {example}</Text>}
+            {infoText && <Text dangerouslySetInnerHTML={{ __html: infoText }} />}
+            {infoText ? "" : example && <Text as="samp">Exemple: {example}</Text>}
           </Stack>
         </PopoverBody>
         {history && !noHistory && (
