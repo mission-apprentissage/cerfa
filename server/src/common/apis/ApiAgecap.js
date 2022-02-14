@@ -35,7 +35,7 @@ const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
     baseURL: "https://ws.agecap.alternance.pp.emploi.gouv.fr/agecap-api",
     timeout: 5000,
     headers: { Authorization: `Basic ${config.agecap.key}` },
-    // httpsAgent,
+    httpsAgent,
   }),
 });
 
