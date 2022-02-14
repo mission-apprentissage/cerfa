@@ -20,7 +20,8 @@ module.exports = (components) => {
         .validateAsync(body, { abortEarly: false });
 
       const dreets = await dreetsDdets.findDreets(code_region);
-      const ddets = await dreetsDdets.findDdets(code_dpt);
+      const departement_code = code_dpt === "2A" || code_dpt === "2B" ? code_dpt.padStart(3, "0") : code_dpt;
+      const ddets = await dreetsDdets.findDdets(departement_code);
 
       return res.json({ dreets, ddets });
     })
