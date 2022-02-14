@@ -31,7 +31,7 @@ const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
   nbRequests: 2,
   durationInSeconds: 1,
   client: axios.create({
-    baseURL: "https://sia-refonte-api-agecap-rec-ext.rct01.kleegroup.com/agecap-api",
+    baseURL: "https://ws.agecap.alternance.pp.emploi.gouv.fr/agecap-api",
     timeout: 5000,
     httpsAgent,
   }),
@@ -56,6 +56,7 @@ class ApiAgecap {
         this.auth = true;
         return true;
       } catch (e) {
+        console.log(e);
         throw new ApiError("Api Agecap", `${e.message}`, e.code || e.response.status);
       }
     });
