@@ -23,6 +23,7 @@ try {
 } catch (e) {
   console.log(e);
 }
+// eslint-disable-next-line no-unused-vars
 const httpsAgent = new https.Agent(optAgent);
 
 // Cf Documentation : Api Agecap
@@ -33,7 +34,8 @@ const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
   client: axios.create({
     baseURL: "https://ws.agecap.alternance.pp.emploi.gouv.fr/agecap-api",
     timeout: 5000,
-    httpsAgent,
+    headers: { Authorization: `Basic ${config.agecap.key}` },
+    // httpsAgent,
   }),
 });
 
