@@ -103,21 +103,6 @@ module.exports = {
       "dossier/page_statut",
     ],
   },
-  "dossier.signataire": {
-    name: "dossier.signataire",
-    type: "permission",
-    title: "Signataire",
-    description: "Permission de signataire dossier",
-    acl: [
-      "dossier",
-      "dossier/page_documents",
-      "dossier/voir_contrat_pdf",
-      "dossier/voir_contrat_pdf/telecharger",
-      "dossier/page_signatures",
-      "dossier/page_signatures/signer",
-      "dossier/page_statut",
-    ],
-  },
   support: {
     name: "support",
     type: "user",
