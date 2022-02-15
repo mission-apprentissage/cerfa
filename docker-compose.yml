@@ -44,7 +44,7 @@ services:
       - CERFA_CLAMAV_URI=clamav:3310
 
   mongodb:
-    image: mongo:5.0.5-focal
+    image: mongo:5.0.6-focal
     container_name: cerfa_mongodb
     mem_limit: 1g
     restart: unless-stopped
