@@ -28,7 +28,7 @@ const TooltipIcon = (props) => (
   </Icon>
 );
 
-const InfoTooltip = ({ description, descriptionComponent, infoText, example, history, noHistory = true, ...rest }) => {
+const InfoTooltip = ({ description, descriptionComponent, example, label, history, noHistory = true, ...rest }) => {
   return (
     <Popover placement="bottom">
       <PopoverTrigger>
@@ -37,13 +37,11 @@ const InfoTooltip = ({ description, descriptionComponent, infoText, example, his
       <PopoverContent {...rest}>
         <PopoverArrow />
         <PopoverCloseButton />
-        <PopoverHeader fontWeight="bold">Description</PopoverHeader>
+        <PopoverHeader fontWeight="bold">{label}</PopoverHeader>
         <PopoverBody>
           <Stack>
             {description && <Text dangerouslySetInnerHTML={{ __html: description }} />}
             {descriptionComponent}
-            {infoText && <Text dangerouslySetInnerHTML={{ __html: infoText }} />}
-            {infoText ? "" : example && <Text as="samp">Exemple: {example}</Text>}
           </Stack>
         </PopoverBody>
         {history && !noHistory && (

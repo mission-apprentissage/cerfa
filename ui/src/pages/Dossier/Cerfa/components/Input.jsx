@@ -427,7 +427,6 @@ export default React.memo(
         name,
         value: values[name],
         pattern: field?.pattern,
-        infoText: field?.infoText,
         placeholder: field?.example ? `Exemple : ${field?.example}` : field?.description,
         variant: validated ? "valid" : "outline",
         id: `${name}_input`,
@@ -439,7 +438,6 @@ export default React.memo(
       }),
       [
         field?.description,
-        field?.infoText,
         field?.example,
         field?.maxLength,
         field?.pattern,
@@ -866,7 +864,7 @@ export default React.memo(
               <InfoTooltip
                 description={field?.description}
                 example={field?.example}
-                infoText={field?.infoText}
+                label={field?.label}
                 history={field?.history}
                 noHistory={noHistory}
               />
