@@ -11,6 +11,7 @@ import {
   ListItem,
   Center,
   Spinner,
+  Link,
 } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
@@ -34,6 +35,8 @@ import {
   cerfaEmployeurSiretAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import InputCerfa from "./Input";
+import Ribbons from "../../../../common/components/Ribbons";
+import { ExternalLinkLine } from "../../../../theme/components/icons";
 
 const FormContract = React.memo(() => {
   const maitre1DateNaissance = useRecoilValue(cerfaMaitre1DateNaissanceAtom);
@@ -306,7 +309,39 @@ const FormContract = React.memo(() => {
         <FormLabel fontWeight={700} fontSize="1.3rem">
           Rémunération
         </FormLabel>
-        <Box mt={6} borderColor={"dgalt"} borderWidth={2} px={4} py={3} borderStyle="dashed" rounded="md">
+        <Ribbons variant="info_clear" marginTop="1rem">
+          <Text color="grey.800">
+            Le calcul de la rémunération est généré automatiquement à partir des informations <br />
+            que vous avez remplies. <br />
+            <strong>
+              Le calcul indique la rémunération minimale légale, l'employeur pouvant décider d'attribuer
+              <br /> une rémunération plus avantageuse.
+            </strong>
+          </Text>
+        </Ribbons>
+        <Ribbons variant="alert_clear" marginTop="0.5rem">
+          <Text color="grey.800">
+            <strong>Attention : Ne tient pas encore compte de situations spécifiques</strong>
+            <br />
+            <Text as="span" textStyle="xs" fontStyle="italic">
+              Exemples : rémunération du contrat d'apprentissage préparant à une licence professionnelle, majorations{" "}
+              <br />
+            </Text>
+            <Text as="span" textStyle="xs">
+              En savoir plus sur les situations spécifiques sur le
+              <Link
+                color="bluefrance"
+                textDecoration="underline"
+                isExternal
+                href="https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/contrat-apprentissage#salaire"
+              >
+                <ExternalLinkLine w={"0.55rem"} h={"0.55rem"} mb={"0.125rem"} ml={1} /> site du Ministère du Travail, de
+                l'Emploi et de l'Insertion{" "}
+              </Link>
+            </Text>
+          </Text>
+        </Ribbons>
+        <Box mt="0.75rem" borderColor={"dgalt"} borderWidth={2} px={4} py={3} borderStyle="dashed" rounded="md">
           {(dateDebutContrat.value === "" ||
             dateFinContrat.value === "" ||
             apprentiDateNaissance.value === "" ||
