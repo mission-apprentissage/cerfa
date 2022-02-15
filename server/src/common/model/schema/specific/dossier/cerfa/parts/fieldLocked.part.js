@@ -415,6 +415,42 @@ const fieldLockedSchema = {
       },
     },
   },
+  etablissementFormation: {
+    siret: {
+      type: Boolean,
+      default: false,
+    },
+    denomination: {
+      type: Boolean,
+      default: false,
+    },
+    uaiCfa: {
+      type: Boolean,
+      default: false,
+    },
+    adresse: {
+      numero: {
+        type: Boolean,
+        default: false,
+      },
+      voie: {
+        type: Boolean,
+        default: false,
+      },
+      complement: {
+        type: Boolean,
+        default: false,
+      },
+      codePostal: {
+        type: Boolean,
+        default: false,
+      },
+      commune: {
+        type: Boolean,
+        default: false,
+      },
+    },
+  },
 };
 
 module.exports = fieldLockedSchema;

@@ -44,11 +44,11 @@ export const cerfaEmployeurCodeIdcSpecialAtom = atom({
     example: "Sans convention collective",
     options: [
       {
-        label: "Sans convention collective",
+        label: "9999 - Sans convention collective",
         value: "9999",
       },
       {
-        label: "Convention non encore en vigueur",
+        label: "9998 - Convention non encore en vigueur",
         value: "9998",
       },
     ],

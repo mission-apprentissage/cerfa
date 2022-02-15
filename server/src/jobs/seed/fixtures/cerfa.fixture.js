@@ -148,4 +148,17 @@ module.exports = {
       commune: "SONGEONS",
     },
   },
+  etablissementFormation: {
+    siret: "30291412200015",
+    denomination: "ASS DES MAISONS FAMILIALES",
+    uaiCfa: "0123456A",
+    adresse: {
+      numero: 5,
+      voie: "PL DU GENERAL DE GAULLE",
+      complement: "Etage 6 - Appartement 654",
+      label: "5 PL DU GENERAL DE GAULLE",
+      codePostal: "60380",
+      commune: "SONGEONS",
+    },
+  },
 };

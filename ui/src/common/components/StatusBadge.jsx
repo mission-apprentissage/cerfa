@@ -42,7 +42,7 @@ export const StatusBadge = ({ status, text, withIcon = false, ...badgeProps }) =
     ENGAGE: "conforme",
     ANNULE: "unknown",
     RUTPURE: "unknown",
-    SOLDE: "unknown",
+    SOLDE: "termine",
   };
 
   const variant = variantsMap[status] ?? defaultVariant;

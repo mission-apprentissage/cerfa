@@ -187,7 +187,7 @@ module.exports = (components) => {
             organismeDDETS: dossier.ddets.startsWith("97") ? "99" : dossier.ddets,
             nomContact: user.nom,
             prenomContact: user.prenom,
-            // telephoneContact: user.telephone.replace("+33", "0"),
+            telephoneContact: user.telephone ? user.telephone.replace("+33", "0") : undefined,
             courrielContact: user.email,
             // commentaireTransmission
             // lien: "",
@@ -220,17 +220,17 @@ module.exports = (components) => {
           },
         },
         etablissementFormation: {
-          denomination: cerfa.organismeFormation.denomination,
-          // siret: cerfa.organismeFormation.siret,
-          // uaiSite: cerfa.organismeFormation.uaiCfa,
+          denomination: cerfa.etablissementFormation.denomination,
+          siret: cerfa.etablissementFormation.siret || undefined,
+          uaiSite: cerfa.etablissementFormation.uaiCfa || undefined,
           adresse: {
-            // numero: cerfa.organismeFormation.adresse.numero || undefined,
-            // repetitionVoie: cerfa.organismeFormation.adresse.
-            // typeVoie: cerfa.organismeFormation.adresse.
-            voie: cerfa.organismeFormation.adresse.voie,
-            // complement: cerfa.organismeFormation.adresse.complement, // ""
-            codePostal: cerfa.organismeFormation.adresse.codePostal,
-            commune: cerfa.organismeFormation.adresse.commune,
+            numero: cerfa.etablissementFormation.adresse.numero || undefined,
+            // repetitionVoie: cerfa.etablissementFormation.adresse.
+            // typeVoie: cerfa.etablissementFormation.adresse.
+            voie: cerfa.etablissementFormation.adresse.voie,
+            complement: cerfa.etablissementFormation.adresse.complement || undefined,
+            codePostal: cerfa.etablissementFormation.adresse.codePostal,
+            commune: cerfa.etablissementFormation.adresse.commune,
           },
         },
       };
@@ -267,7 +267,7 @@ module.exports = (components) => {
             });
           }
         });
-        if (hasError) throw Boom.badRequest("Doesn't exist", sendDocumentResponses);
+        if (hasError) throw Boom.badRequest("Transmission error", sendDocumentResponses);
       }
 
       await dossiers.updateEtatDossier(dossierId, "TRANSMIS");
@@ -309,6 +309,7 @@ module.exports = (components) => {
             commune: "Bordeaux",
           },
           attestationPieces: true,
+          attestationEligibilite: true,
         },
         alternant: {
           nom: "Hanry",
@@ -420,7 +421,7 @@ module.exports = (components) => {
           await apiAgecap.sendContrat(fakeContratAgecap);
           return "ok";
         } catch (error) {
-          console.log(error.reason.globalErrors);
+          console.log(error.reason.globalErrors, error.reason.objectFieldErrors);
           const globErrors = error.reason && error.reason.globalErrors.length ? error.reason.globalErrors[0] : null;
           if (globErrors && globErrors !== "Le numéro de télétransmission du contrat doit être unique.") {
             return globErrors;

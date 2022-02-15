@@ -39,12 +39,13 @@ export default () => {
               <br />
             </Text>
             <UnorderedList ml="30px !important">
-              <ListItem>Le pré-remplissage d'un maximum des éléments attendus ;</ListItem>
-              <ListItem>Un contrôle de cohérence et de réglementation de la donnée saisie ;</ListItem>
+              <ListItem>le pré-remplissage d'un maximum des éléments attendus ;</ListItem>
+              <ListItem>un contrôle de cohérence et de réglementation de la donnée saisie ;</ListItem>
               <ListItem>
-                La collaboration entre contributeurs (employeurs ou Centre de Formation des Apprentis) pour compléter le
-                document.
+                la collaboration entre contributeurs (employeurs ou Centre de Formation des Apprentis) pour compléter le
+                document ;
               </ListItem>
+              <ListItem>la télétransmission du contrat à la place des envois par email ou courrier.</ListItem>
             </UnorderedList>
           </Box>
           <Flex justifyContent="end" w="full">

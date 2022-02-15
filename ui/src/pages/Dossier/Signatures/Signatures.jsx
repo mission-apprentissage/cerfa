@@ -91,9 +91,9 @@ const DdetsContainer = () => {
             </OrderedList>
 
             <Text>
-              Pour toute question, vous pouvez contacter votre DEETS au {ddets["Telephone"]} ou{" "}
-              <Link as={NavLink} to={"/assistance"}>
-                l'assistance
+              Pour toute question, consultez{" "}
+              <Link as={NavLink} to={"/assistance"} color="bluefrance">
+                la page "Assistance"
               </Link>
             </Text>
             {ddets["Informations_complementaires"] && (
@@ -392,8 +392,8 @@ export default () => {
         <Center>
           <Tooltip variant="alert">
             <Text>
-              Les pièces justificatives doivnt être complétées à 100% avant de commencer la procédure de finalisation du
-              dossier.
+              Les pièces justificatives doivent être complétées à 100% avant de commencer la procédure de finalisation
+              du dossier.
             </Text>
           </Tooltip>
         </Center>

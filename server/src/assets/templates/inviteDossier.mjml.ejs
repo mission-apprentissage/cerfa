@@ -1,12 +1,21 @@
 <mj-section padding-bottom="10px" padding-top="10px" background-color="#ffffff">
-    <mj-column>
-        <mj-text font-size="28px" font-weight="700">Vous êtes invité à contribuer à un dossier</mj-text>
-        <mj-text font-size="16px" line-height="24px" color="#000000">Bonjour <%= data.civility %>,
-            <div>
-                <br> Vous êtes invité par <span class="bluefrance"><strong><%= data.username %></strong></span>
-                à participer au dossier <span class="bluefrance"><strong><%= data.dossiernom %></strong></span>. 
-            </div>
-          </mj-text>
-        <mj-button font-size="16px" background-color="#000091" border-radius="4px" href="<%= data.publicUrl %>/<%= data.tospaceUrl %>">Cliquez ici  pour acceder au dossier</mj-button>
-    </mj-column>
+  <mj-column>
+    <mj-text font-size="28px" font-weight="700">Vous êtes invité à contribuer à un dossier</mj-text>
+    <mj-text font-size="16px" line-height="24px" color="#000000"
+      >Bonjour <%= data.civility %>,
+      <div>
+        <br />
+        Vous êtes invité par <span class="bluefrance"><strong><%= data.username %></strong></span> à participer au
+        dossier <span class="bluefrance"><strong><%= data.dossiernom %></strong></span
+        >.
+      </div>
+    </mj-text>
+    <mj-button
+      font-size="16px"
+      background-color="#000091"
+      border-radius="4px"
+      href="<%= data.publicUrl %>/<%= data.tospaceUrl %>"
+      >Cliquez ici pour accéder au dossier</mj-button
+    >
+  </mj-column>
 </mj-section>

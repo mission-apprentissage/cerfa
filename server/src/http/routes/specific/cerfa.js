@@ -128,6 +128,24 @@ module.exports = (components) => {
           ),
         },
       },
+      etablissementFormation: {
+        ...mergeWith(
+          mergeWith(cloneDeep(cerfaSchema.etablissementFormation), cerfa.etablissementFormation, customizer),
+          cerfa.isLockedField.etablissementFormation,
+          customizerLock
+        ),
+        adresse: {
+          ...mergeWith(
+            mergeWith(
+              cloneDeep(cerfaSchema.etablissementFormation.adresse),
+              cerfa.etablissementFormation.adresse,
+              customizer
+            ),
+            cerfa.isLockedField.etablissementFormation.adresse,
+            customizerLock
+          ),
+        },
+      },
       id: cerfa._id.toString(),
       draft: cerfa.draft,
     };
@@ -321,6 +339,20 @@ module.exports = (components) => {
             label: Joi.string().allow(""),
             codePostal: Joi.string().allow(""),
             commune: Joi.string().allow(""),
+          }),
+        }),
+        etablissementFormation: Joi.object({
+          memeResponsable: Joi.boolean().allow(null),
+          denomination: Joi.string().allow("").allow(null),
+          siret: Joi.string().allow("").allow(null),
+          uaiCfa: Joi.string().allow(null),
+          adresse: Joi.object({
+            numero: Joi.number().allow(null),
+            voie: Joi.string().allow("").allow(null),
+            complement: Joi.string().allow(""),
+            label: Joi.string().allow(""),
+            codePostal: Joi.string().allow("").allow(null),
+            commune: Joi.string().allow("").allow(null),
           }),
         }),
         isLockedField: Joi.object({}).unknown(),

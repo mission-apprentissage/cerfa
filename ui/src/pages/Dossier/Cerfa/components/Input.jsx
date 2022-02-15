@@ -78,7 +78,7 @@ const buildValidationSchema = (field, name, type, isRequiredInternal, countryCod
 
 const MInput = IMaskMixin(({ inputRef, ...props }) => <ChackraInput {...props} ref={inputRef} />);
 
-const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, ...props }) => {
+const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, unmask, ...props }) => {
   const [internalValue, setInternalValue] = useState(`${value}`);
   const [focused, setFocused] = useState(null);
   const inputRef = useRef(null);
@@ -89,7 +89,7 @@ const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, 
       if (item.mask === "MaskedRange")
         acc[item.name] = {
           mask: IMask.MaskedRange,
-          placeholderChar: item.placeholderChar,
+          ...(item.placeholderChar ? { placeholderChar: item.placeholderChar } : {}),
           from: item.from,
           to: item.to,
           maxLength: item.maxLength,
@@ -99,7 +99,7 @@ const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, 
       else if (item.mask === "MaskedEnum")
         acc[item.name] = {
           mask: IMask.MaskedEnum,
-          placeholderChar: item.placeholderChar,
+          ...(item.placeholderChar ? { placeholderChar: item.placeholderChar } : {}),
           enum: item.enum,
           maxLength: item.maxLength,
         };
@@ -121,7 +121,7 @@ const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, 
       else
         acc[item.name] = {
           mask: item.mask,
-          placeholderChar: item.placeholderChar,
+          ...(item.placeholderChar ? { placeholderChar: item.placeholderChar } : {}),
         };
       return acc;
     }, {});
@@ -152,10 +152,9 @@ const MaskedInput = ({ value, type, precision, min, onChange, mask, maskblocks, 
     <MInput
       {...props}
       mask={mask}
-      unmask={true}
+      unmask={unmask}
       lazy={false}
       placeholderChar="_"
-      // overwrite={true}
       autofix={true}
       blocks={blocks}
       onAccept={(currentValue, mask) => {
@@ -375,8 +374,9 @@ export default React.memo(
         : {
             mask: field?.mask,
             maskblocks: field?.maskBlocks,
+            unmask: field?.unmask !== undefined ? field?.unmask : true,
           };
-    }, [field?.mask, field?.maskBlocks]);
+    }, [field?.mask, field?.maskBlocks, field?.unmask]);
 
     const styleProps = useMemo(
       () => ({
@@ -427,7 +427,7 @@ export default React.memo(
         name,
         value: values[name],
         pattern: field?.pattern,
-        placeholder: field?.description,
+        placeholder: field?.example ? `Exemple : ${field?.example}` : field?.description,
         variant: validated ? "valid" : "outline",
         id: `${name}_input`,
         isInvalid: isErrored,
@@ -438,6 +438,7 @@ export default React.memo(
       }),
       [
         field?.description,
+        field?.example,
         field?.maxLength,
         field?.pattern,
         isErrored,

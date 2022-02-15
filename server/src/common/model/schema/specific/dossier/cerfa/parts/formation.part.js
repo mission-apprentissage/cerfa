@@ -21,6 +21,15 @@ const formationSchema = {
     required: function () {
       return !this.draft;
     },
+    mask: "RNCPX",
+    unmask: false,
+    maskBlocks: [
+      {
+        name: "X",
+        mask: "Pattern",
+        pattern: "^\\d*$",
+      },
+    ],
   },
   codeDiplome: {
     maxLength: 8,

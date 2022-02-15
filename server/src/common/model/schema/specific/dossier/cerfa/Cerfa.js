@@ -5,6 +5,7 @@ const maitreApprentissageSchema = require("./parts/maitreApprentissage.part");
 const formationSchema = require("./parts/formation.part");
 const contratSchema = require("./parts/contrat.part");
 const organismeFormationSchema = require("./parts/organismeFormation.part");
+const etablissementFormationSchema = require("./parts/etablissementFormation.part");
 const fieldLockedSchema = require("./parts/fieldLocked.part");
 
 const cerfaSchema = {
@@ -42,6 +43,9 @@ const cerfaSchema = {
   },
   organismeFormation: {
     ...organismeFormationSchema,
+  },
+  etablissementFormation: {
+    ...etablissementFormationSchema,
   },
   isLockedField: {
     ...fieldLockedSchema,

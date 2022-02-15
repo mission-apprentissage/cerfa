@@ -95,6 +95,8 @@ const findSmicAtDate = (lookupDate) => {
   return smicObjResult;
 };
 
+const ceilUp = (x) => Math.ceil(x * 100) / 100;
+
 export const buildRemunerationsDbValue = (remunerationsAnnuellesFormValue) => {
   const remunerationsAnnuellesDbValue = [];
   const remKeys = Object.keys(remunerationsAnnuellesFormValue);
@@ -108,7 +110,7 @@ export const buildRemunerationsDbValue = (remunerationsAnnuellesFormValue) => {
         taux: remPart.taux.value,
         tauxMinimal: remPart.tauxMinimal.value,
         typeSalaire: remPart.typeSalaire.value,
-        salaireBrut: remPart.salaireBrut.value.toFixed(2),
+        salaireBrut: ceilUp(remPart.salaireBrut.value),
         ordre: `${remKey[0]}.${remKey[1]}`,
       });
     }
@@ -116,7 +118,7 @@ export const buildRemunerationsDbValue = (remunerationsAnnuellesFormValue) => {
 
   return {
     remunerationsAnnuellesDbValue,
-    salaireEmbauche: remunerationsAnnuellesFormValue["11"].salaireBrut.value,
+    salaireEmbauche: ceilUp(remunerationsAnnuellesFormValue["11"].salaireBrut.value),
   };
 };
 
@@ -231,7 +233,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(11, taux11),
           tauxMinimal: taux11,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux11) / 100,
+          salaireBrut: ceilUp((SMIC * taux11) / 100),
         },
         12: emptyLineObj,
       };
@@ -244,7 +246,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(11, taux11),
           tauxMinimal: taux11,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux11) / 100,
+          salaireBrut: ceilUp((SMIC * taux11) / 100),
         },
         12: {
           dateDebut: dateDebut12.toFormat("yyyy-MM-dd"),
@@ -252,7 +254,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(12, taux12),
           tauxMinimal: taux12,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux12) / 100,
+          salaireBrut: ceilUp((SMIC * taux12) / 100),
         },
       };
     } else {
@@ -263,7 +265,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(11, taux11),
           tauxMinimal: taux11,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux11) / 100,
+          salaireBrut: ceilUp((SMIC * taux11) / 100),
         },
         12: {
           dateDebut: dateDebut12.toFormat("yyyy-MM-dd"),
@@ -271,7 +273,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(12, taux12),
           tauxMinimal: taux12,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux12) / 100,
+          salaireBrut: ceilUp((SMIC * taux12) / 100),
         },
       };
     }
@@ -286,7 +288,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(11, taux11),
           tauxMinimal: taux11,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux11) / 100,
+          salaireBrut: ceilUp((SMIC * taux11) / 100),
         },
         12: emptyLineObj,
       };
@@ -298,7 +300,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(11, taux11),
           tauxMinimal: taux11,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux11) / 100,
+          salaireBrut: ceilUp((SMIC * taux11) / 100),
         },
         12: emptyLineObj,
       };
@@ -324,7 +326,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(21, taux21),
           tauxMinimal: taux21,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux21) / 100,
+          salaireBrut: ceilUp((SMIC * taux21) / 100),
         },
         22: emptyLineObj,
       };
@@ -337,7 +339,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(21, taux21),
           tauxMinimal: taux21,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux21) / 100,
+          salaireBrut: ceilUp((SMIC * taux21) / 100),
         },
         22: {
           dateDebut: dateDebut22.toFormat("yyyy-MM-dd"),
@@ -345,7 +347,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(22, taux22),
           tauxMinimal: taux22,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux22) / 100,
+          salaireBrut: ceilUp((SMIC * taux22) / 100),
         },
       };
     } else {
@@ -356,7 +358,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(21, taux21),
           tauxMinimal: taux21,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux21) / 100,
+          salaireBrut: ceilUp((SMIC * taux21) / 100),
         },
         22: {
           dateDebut: dateDebut22.toFormat("yyyy-MM-dd"),
@@ -364,7 +366,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(22, taux22),
           tauxMinimal: taux22,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux22) / 100,
+          salaireBrut: ceilUp((SMIC * taux22) / 100),
         },
       };
     }
@@ -380,7 +382,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(21, taux21),
           tauxMinimal: taux21,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux21) / 100,
+          salaireBrut: ceilUp((SMIC * taux21) / 100),
         },
         22: emptyLineObj,
       };
@@ -392,7 +394,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(21, taux21),
           tauxMinimal: taux21,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux21) / 100,
+          salaireBrut: ceilUp((SMIC * taux21) / 100),
         },
         22: emptyLineObj,
       };
@@ -418,7 +420,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(31, taux31),
           tauxMinimal: taux31,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux31) / 100,
+          salaireBrut: ceilUp((SMIC * taux31) / 100),
         },
         32: emptyLineObj,
       };
@@ -431,7 +433,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(31, taux31),
           tauxMinimal: taux31,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux31) / 100,
+          salaireBrut: ceilUp((SMIC * taux31) / 100),
         },
         32: {
           dateDebut: dateDebut32.toFormat("yyyy-MM-dd"),
@@ -439,7 +441,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(32, taux32),
           tauxMinimal: taux32,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux32) / 100,
+          salaireBrut: ceilUp((SMIC * taux32) / 100),
         },
       };
     } else {
@@ -450,7 +452,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(31, taux31),
           tauxMinimal: taux31,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux31) / 100,
+          salaireBrut: ceilUp((SMIC * taux31) / 100),
         },
         32: {
           dateDebut: dateDebut32.toFormat("yyyy-MM-dd"),
@@ -458,7 +460,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(32, taux32),
           tauxMinimal: taux32,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux32) / 100,
+          salaireBrut: ceilUp((SMIC * taux32) / 100),
         },
       };
     }
@@ -474,7 +476,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(31, taux31),
           tauxMinimal: taux31,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux31) / 100,
+          salaireBrut: ceilUp((SMIC * taux31) / 100),
         },
         32: emptyLineObj,
       };
@@ -486,7 +488,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(31, taux31),
           tauxMinimal: taux31,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux31) / 100,
+          salaireBrut: ceilUp((SMIC * taux31) / 100),
         },
         32: emptyLineObj,
       };
@@ -512,7 +514,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(41, taux41),
           tauxMinimal: taux41,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux41) / 100,
+          salaireBrut: ceilUp((SMIC * taux41) / 100),
         },
         42: emptyLineObj,
       };
@@ -524,7 +526,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(41, taux41),
           tauxMinimal: taux41,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux41) / 100,
+          salaireBrut: ceilUp((SMIC * taux41) / 100),
         },
         42: {
           dateDebut: dateDebut42.toFormat("yyyy-MM-dd"),
@@ -532,7 +534,7 @@ export const buildRemunerations = (data) => {
           taux: getTaux(42, taux42),
           tauxMinimal: taux42,
           typeSalaire: "SMIC",
-          salaireBrut: (SMIC * taux42) / 100,
+          salaireBrut: ceilUp((SMIC * taux42) / 100),
         },
       };
     }
@@ -545,7 +547,7 @@ export const buildRemunerations = (data) => {
         taux: getTaux(41, taux41),
         tauxMinimal: taux41,
         typeSalaire: "SMIC",
-        salaireBrut: (SMIC * taux41) / 100,
+        salaireBrut: ceilUp((SMIC * taux41) / 100),
       },
       42: emptyLineObj,
     };

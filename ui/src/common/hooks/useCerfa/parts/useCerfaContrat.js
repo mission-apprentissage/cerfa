@@ -458,25 +458,33 @@ export const CerfaContratController = async (dossier) => {
 
           if (ENV !== "production") {
             if (!(typeContratAppDbValue === 21 || typeContratAppDbValue === 22 || typeContratAppDbValue === 23)) {
-              const response = await _post(`/api/v1/agecap/verifNumeroContratPrecedent`, {
-                numeroContratPrecedent: value,
-                employeurSiret,
-                dossierId: dossier._id,
-              });
+              try {
+                const response = await _post(`/api/v1/agecap/verifNumeroContratPrecedent`, {
+                  numeroContratPrecedent: value,
+                  employeurSiret,
+                  dossierId: dossier._id,
+                });
 
-              if (response.message.includes("Impossible de retrouver un dossier unique pour le contrat")) {
+                if (response.message.includes("Impossible de retrouver un dossier unique pour le contrat")) {
+                  return {
+                    successed: false,
+                    data: null,
+                    message: `Impossible de retrouver un dossier dans AGECAP pour le contrat n°${value} et le siret ${employeurSiret}`,
+                  };
+                }
+
+                if (response.message !== "ok") {
+                  return {
+                    successed: false,
+                    data: null,
+                    message: response.message,
+                  };
+                }
+              } catch (error) {
                 return {
                   successed: false,
                   data: null,
-                  message: `Impossible de retrouver un dossier dans AGECAP pour le contrat n°${value} et le siret ${employeurSiret}`,
-                };
-              }
-
-              if (response.message !== "ok") {
-                return {
-                  successed: false,
-                  data: null,
-                  message: response.message,
+                  message: "Une erreur technique est survenue, merci de contacter l'assistance",
                 };
               }
             }
@@ -1444,11 +1452,13 @@ export function useCerfaContrat() {
     async (path, data, part) => {
       try {
         if (path === `contrat.remunerationsAnnuelles.${part}.taux`) {
+          const ceilUp = (x) => Math.ceil(x * 100) / 100;
           let newRemunerationsAnnuellesTauxPart = { ...contratRemunerationsAnnuelles[part].taux };
           newRemunerationsAnnuellesTauxPart.value = parseInt(data);
           let newRemunerationsAnnuellesSalaireBrutPart = { ...contratRemunerationsAnnuelles[part].salaireBrut };
-          newRemunerationsAnnuellesSalaireBrutPart.value =
-            (contratSmic?.selectedSmic * newRemunerationsAnnuellesTauxPart.value) / 100;
+          newRemunerationsAnnuellesSalaireBrutPart.value = ceilUp(
+            (contratSmic?.selectedSmic * newRemunerationsAnnuellesTauxPart.value) / 100
+          );
 
           const newRemunerationsAnnuellesFormValue = {
             ...contratRemunerationsAnnuelles,

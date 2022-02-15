@@ -225,6 +225,18 @@ module.exports = async () => {
               formationInterne: true,
               uaiCfa: true,
             },
+            etablissementFormation: {
+              adresse: {
+                numero: true,
+                voie: true,
+                complement: true,
+                codePostal: true,
+                commune: true,
+              },
+              siret: true,
+              denomination: true,
+              uaiCfa: true,
+            },
           },
         },
         { new: true }
