@@ -1,3 +1,10 @@
+## [1.19.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0...v1.19.1-beta.1) (2022-02-15)
+
+
+### Bug Fixes
+
+* champ adresse.voie accepter les chiffres ([db68047](https://github.com/mission-apprentissage/cerfa/commit/db6804777dadc8550490284832b5376f8a5d9b55))
+
 # [1.19.0](https://github.com/mission-apprentissage/cerfa/compare/v1.18.0...v1.19.0) (2022-02-15)
 
 
