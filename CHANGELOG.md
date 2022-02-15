@@ -1,3 +1,32 @@
+# [1.19.0](https://github.com/mission-apprentissage/cerfa/compare/v1.18.0...v1.19.0) (2022-02-15)
+
+
+### Bug Fixes
+
+* ouverture lieu de formation vide ([83f4e17](https://github.com/mission-apprentissage/cerfa/commit/83f4e17ed8369848773b473b35558f611212812e))
+* réparation des liens d'email d'invitation ([#317](https://github.com/mission-apprentissage/cerfa/issues/317)) ([c42eefb](https://github.com/mission-apprentissage/cerfa/commit/c42eefbd50d9e0f9eaae70ea9d642a8bc2b21deb))
+* test slack bot chan contrat-suivi ([0f6ec2a](https://github.com/mission-apprentissage/cerfa/commit/0f6ec2a4a2d1f10ae794c2a708a93d686cd7a097))
+* **ui:** replace text signature ([#314](https://github.com/mission-apprentissage/cerfa/issues/314)) ([f34d287](https://github.com/mission-apprentissage/cerfa/commit/f34d287f937e03f0a11f6f155f44c52fe84a889a))
+
+
+### Features
+
+* affichage des messages d'erreur agecap ([#316](https://github.com/mission-apprentissage/cerfa/issues/316)) ([89c509b](https://github.com/mission-apprentissage/cerfa/commit/89c509b6cbb5d1d91e2a03ca31fec0372291b87b))
+* **agecap:** envoi des informations du lieu de formation dynamiquement ([#313](https://github.com/mission-apprentissage/cerfa/issues/313)) ([a5e65dc](https://github.com/mission-apprentissage/cerfa/commit/a5e65dc3cc5ec91921f86d5230bd0ce10e5a9f9d))
+* ajout etablissementFormation ([d194682](https://github.com/mission-apprentissage/cerfa/commit/d19468219d3749ce0cb7571c03e5ed052d2134b1))
+* ajout radio lieu de formation est le responsable ([d7d1397](https://github.com/mission-apprentissage/cerfa/commit/d7d13977817122a1d0496d137ed1c7ca73b9a524))
+* **etablissementFormation:** sauvegarde des données ([bc43724](https://github.com/mission-apprentissage/cerfa/commit/bc4372407a6fdf5bdecfc25affc681ed0e435cf8))
+* **NAF:** masque plus souple + remplacement des placeholders ([9cc2472](https://github.com/mission-apprentissage/cerfa/commit/9cc24725cb15332c20f23e119a2beef80474ef07))
+* **rémunération:** arrondi centime supérieur ([e357665](https://github.com/mission-apprentissage/cerfa/commit/e3576659c644a0db0c33e0c0800775b53a505ede))
+* **rncp:** ajout du masque sur le champ ([a69b75d](https://github.com/mission-apprentissage/cerfa/commit/a69b75d4329aebc3a587f65560233e05b314952d))
+* **u:**  ajout d une nouvelle puce et modification de la ponctuation ([#345](https://github.com/mission-apprentissage/cerfa/issues/345)) ([62d51c8](https://github.com/mission-apprentissage/cerfa/commit/62d51c89271395802663aba10ecd49661338f3f7))
+* **ui:** add tag beta ([#312](https://github.com/mission-apprentissage/cerfa/issues/312)) ([a4a4629](https://github.com/mission-apprentissage/cerfa/commit/a4a46291b1816f8f6230f6285129171883924e3f))
+* **ui:** ajout puce page cree nouveau dossier ([#347](https://github.com/mission-apprentissage/cerfa/issues/347)) ([b4256dc](https://github.com/mission-apprentissage/cerfa/commit/b4256dcdcf42480e861976b447d319bdaa05409e))
+* **ui:** faire apparaître la mention sur la conservation des données ([#315](https://github.com/mission-apprentissage/cerfa/issues/315)) ([2111ffd](https://github.com/mission-apprentissage/cerfa/commit/2111ffde866d4b70cf1f6cb8ce0c0b0259c7056c))
+* **ui:** modification des noms des Ministères sur la page d'accueil ([#346](https://github.com/mission-apprentissage/cerfa/issues/346)) ([c665cf0](https://github.com/mission-apprentissage/cerfa/commit/c665cf05b38a4d779a29cb53c7329ea521ebd0c8))
+* **ui:** plusieurs correctifs d'orthographe et coquilles ([#309](https://github.com/mission-apprentissage/cerfa/issues/309)) ([52eaff7](https://github.com/mission-apprentissage/cerfa/commit/52eaff7582be9073d73826b65e73fae8f4e4d0e1))
+* **ui:** remplacer le libellé des onglets ([#311](https://github.com/mission-apprentissage/cerfa/issues/311)) ([793be1c](https://github.com/mission-apprentissage/cerfa/commit/793be1c2fa993dbbbd37e70903407a0401a6b509))
+
 # [1.19.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.10...v1.19.0-beta.11) (2022-02-15)
 
 
