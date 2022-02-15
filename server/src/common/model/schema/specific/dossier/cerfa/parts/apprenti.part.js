@@ -101,11 +101,10 @@ const apprentiSchema = {
   },
   dateNaissance: {
     type: Date,
-    description: "Date de naissance de l'apprenti(e)",
     label: "Date de naissance :",
     requiredMessage: "La date de naissance de l'apprenti(e) est obligatoire",
     example: "2001-01-01T00:00:00+0000",
-    infoText:
+    description:
       "La date de naissance combinée à la date d'exécution du contrat définira si l'apprenti(e) est mineur(e) ou majeur(e) et est bien âgé de 15 ans ou plus. <br/> Si l'apprenti(e) est mineur(e) à la date de signature du contrat, vous devrez renseigner le cas d'émancipation ou les informations relatives au représentant légal.",
     default: null,
     required: function () {
@@ -135,13 +134,12 @@ const apprentiSchema = {
       message: (props) => `${props.value} n'est pas un departement valide`,
     },
     type: String,
-    description: "Département de naissance de l'apprenti",
     label: "Département de naissance :",
     example: "1 Ain, 99 Étranger",
     pattern: "^([0-9][0-9]|2[AB]|9[012345]|97[12346])$",
     requiredMessage: "le département de naissance est obligatoire",
     validateMessage: ` n'est pas un département valide`,
-    infoText: `Pour les personnes nées à l'étranger, indiquez 99. <br/> Pour les départements à 1 chiffre, faites précéder le chiffre par un "0".`,
+    description: `Pour les personnes nées à l'étranger, indiquez 99. <br/> Pour les départements à 1 chiffre, faites précéder le chiffre par un "0".`,
     default: null,
     nullable: true,
     required: function () {
@@ -400,9 +398,8 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
-    description: "Téléphone de l'apprenti",
     label: "Téléphone de l'apprenti(e) :",
-    infoText: `Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le "0" car l'indicateur pays est pré-renseigné.`,
+    description: `Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le "0" car l'indicateur pays est pré-renseigné.`,
     example: "0102030405",
   },
   courriel: {
@@ -473,14 +470,13 @@ const apprentiSchema = {
   },
   apprentiMineurNonEmancipe: {
     type: Boolean,
-    description: "l'apprenti(e) est mineur(e) non emancipé(e)",
     example: false,
     default: null,
     required: function () {
       return !this.draft;
     },
     label: "l'apprenti(e) est mineur(e) non emancipé(e)",
-    infoText: `Vous devez indiquer "oui" si l'apprenti est mineur non émancipé à la date de signature du contrat. Dans ce cas, le représentant légal devra également signer le contrat.`,
+    description: `Vous devez indiquer "oui" si l'apprenti est mineur non émancipé à la date de signature du contrat. Dans ce cas, le représentant légal devra également signer le contrat.`,
     requiredMessage: "Merci de renseigner si l'apprenti(e) mineur(e) est emancipé(e) ou non",
     options: [
       {

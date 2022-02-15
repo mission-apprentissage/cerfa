@@ -6,9 +6,8 @@ const employeurCerfaSchema = {
   denomination: {
     // maxLength: 80,
     type: String,
-    description: "Dénomination de l'employeur",
     label: "Dénomination :",
-    infoText: "La dénomination sociale doit être celle de l'établissement dans lequel le contrat s'exécute.",
+    description: "La dénomination sociale doit être celle de l'établissement dans lequel le contrat s'exécute.",
     requiredMessage: "La dénomination de l'employeur est obligatoire",
     example: "ENERGIE 3000",
     default: null,
@@ -42,7 +41,8 @@ const employeurCerfaSchema = {
       message: (props) => `${props.value} n'est pas un siret valide`,
     },
     type: String,
-    description: "N° SIRET de l'employeur",
+    description:
+      "Vous devez renseigner le siret correspondant à l'établissement du lieu d'exécution du contrat (il ne correspond pas forcément au siège). Le siret comporte 14 chiffres. <br/> Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).",
     default: null,
     nullable: function () {
       return this.draft;
@@ -51,8 +51,6 @@ const employeurCerfaSchema = {
       return !this.draft;
     },
     example: "98765432400019",
-    infoText:
-      "Vous devez renseigner le siret correspondant à l'établissement du lieu d'exécution du contrat (il ne correspond pas forcément au siège). Le siret comporte 14 chiffres. <br/> Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).",
     label: "N° SIRET de l'employeur :",
     requiredMessage: "Le siret est obligatoire",
     validateMessage: `n'est pas un siret valide`,
@@ -95,13 +93,11 @@ const employeurCerfaSchema = {
     },
     default: null,
     description:
-      "L'effectif renseigné est celui de l'entreprise dans sa globalité, au sens de l'article L. 130-1.-I du code de la sécurité sociale et non seulement l'effectif de l'établissement d'exécution du contrat.",
+      "L'effectif salarié rempli automatiquement correspond à l'estimation de la base Entreprises de l'INSEE. <br/>L'effectif renseigné est celui de l’entreprise dans sa globalité (et non seulement l’effectif de l’établissement d’exécution du contrat).",
     label: "Effectif salarié de l'entreprise :",
     requiredMessage: "Effectif salarié de l'entreprise est obligatoire",
     example: 123,
     mask: "C",
-    infoText:
-      "L'effectif salarié rempli automatiquement correspond à l'estimation de la base Entreprises de l'INSEE. <br/>L'effectif renseigné est celui de l’entreprise dans sa globalité (et non seulement l’effectif de l’établissement d’exécution du contrat).",
     maskBlocks: [
       {
         name: "C",
@@ -161,10 +157,9 @@ const employeurCerfaSchema = {
       return !this.draft;
     },
     type: String,
-    description: "Téléphone de l'employeur",
+    description: `Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le "0" car l'indicateur pays est pré-renseigné.`,
     label: "Téléphone de l'employeur :",
     requiredMessage: "Le téléphone de l'employeur est obligatoire",
-    infoText: `Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le "0" car l'indicateur pays est pré-renseigné.`,
     example: "0908070605",
     // pattern: "^([+])?((d)[.-]?)?[s]?(?(d{3}))?[.-]?[s]?(d{3})[.-]?[s]?(d{4,})$",
   },
@@ -175,9 +170,8 @@ const employeurCerfaSchema = {
     required: function () {
       return !this.draft;
     },
-    description: "Courriel de l'employeur",
+    description: "Ce courriel sera utilisé pour l'envoi des notifications pour le suivi du dossier.",
     label: "Courriel de l'employeur :",
-    infoText: "Ce courriel sera utilisé pour l'envoi des notifications pour le suivi du dossier.",
     requiredMessage: "Le courriel de l'employeur est obligatoire",
     validate: {
       validator: function (v) {
