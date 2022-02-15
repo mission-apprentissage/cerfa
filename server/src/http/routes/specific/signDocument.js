@@ -9,19 +9,22 @@ const apiYousign = require("../../../common/apis/yousign/ApiYousign");
 const config = require("../../../config");
 const authMiddleware = require("../../middlewares/authMiddleware");
 const pageAccessMiddleware = require("../../middlewares/pageAccessMiddleware");
-const { uploadToStorage, deleteFromStorage } = require("../../../common/utils/ovhUtils");
-const { oleoduc } = require("oleoduc");
-const { PassThrough } = require("stream");
-const { find } = require("lodash");
+// const { uploadToStorage, deleteFromStorage } = require("../../../common/utils/ovhUtils");
+// const { oleoduc } = require("oleoduc");
+// const { PassThrough } = require("stream");
+// const { find } = require("lodash");
 
-function noop() {
-  return new PassThrough();
-}
+// function noop() {
+//   return new PassThrough();
+// }
 
 module.exports = (components) => {
   const router = express.Router();
 
-  const { dossiers, crypto } = components;
+  const {
+    dossiers,
+    // crypto
+  } = components;
 
   router.post(
     "/",
@@ -182,81 +185,81 @@ module.exports = (components) => {
   );
 
   // TODO SECURE IT
-  router.post(
-    "/:id",
-    // eslint-disable-next-line no-unused-vars
-    tryCatch(async ({ body, params, user }, res) => {
-      let { test } = await Joi.object({
-        test: Joi.boolean(),
-      })
-        .unknown()
-        .validateAsync(body, { abortEarly: false });
+  // router.post(
+  //   "/:id",
+  //   // eslint-disable-next-line no-unused-vars
+  //   tryCatch(async ({ body, params, user }, res) => {
+  //     let { test } = await Joi.object({
+  //       test: Joi.boolean(),
+  //     })
+  //       .unknown()
+  //       .validateAsync(body, { abortEarly: false });
 
-      const dossier = await dossiers.findDossierById(params.id);
-      if (!dossier) {
-        throw Boom.notFound("Doesn't exist");
-      }
+  //     const dossier = await dossiers.findDossierById(params.id);
+  //     if (!dossier) {
+  //       throw Boom.notFound("Doesn't exist");
+  //     }
 
-      const { _doc } = await dossiers.updateSignatures(params.id, body);
-      const { procedure } = _doc.signatures;
-      const signataires = _doc.signataires;
-      const dossierId = params.id;
-      const yousignFile = procedure.files[0];
+  //     const { _doc } = await dossiers.updateSignatures(params.id, body);
+  //     const { procedure } = _doc.signatures;
+  //     const signataires = _doc.signataires;
+  //     const dossierId = params.id;
+  //     const yousignFile = procedure.files[0];
 
-      let { hashStream, getHash } = crypto.checksum();
-      let filename = yousignFile.name;
-      let path = `contrats/${dossierId}/${filename}`;
-      const documents = await dossiers.getDocuments(dossierId);
-      const contratDocument = find(documents, { typeDocument: "CONTRAT" });
-      if (contratDocument) {
-        await deleteFromStorage(path);
-      }
-      await oleoduc(
-        await apiYousign.getFile(yousignFile.id.replace("/files/", "")),
-        hashStream,
-        crypto.isCipherAvailable() ? crypto.cipher(dossierId) : noop(),
-        test ? noop() : await uploadToStorage(path, { contentType: "application/pdf" })
-      );
-      if (!contratDocument) {
-        let hash = await getHash();
-        await dossiers.addDocument(dossierId, {
-          typeDocument: "CONTRAT",
-          hash,
-          nomFichier: filename,
-          cheminFichier: path,
-          tailleFichier: 0,
-          userEmail: "yousign@hooks.fr", // user.email,
-        });
-      }
+  //     let { hashStream, getHash } = crypto.checksum();
+  //     let filename = yousignFile.name;
+  //     let path = `contrats/${dossierId}/${filename}`;
+  //     const documents = await dossiers.getDocuments(dossierId);
+  //     const contratDocument = find(documents, { typeDocument: "CONTRAT" });
+  //     if (contratDocument) {
+  //       await deleteFromStorage(path);
+  //     }
+  //     await oleoduc(
+  //       await apiYousign.getFile(yousignFile.id.replace("/files/", "")),
+  //       hashStream,
+  //       crypto.isCipherAvailable() ? crypto.cipher(dossierId) : noop(),
+  //       test ? noop() : await uploadToStorage(path, { contentType: "application/pdf" })
+  //     );
+  //     if (!contratDocument) {
+  //       let hash = await getHash();
+  //       await dossiers.addDocument(dossierId, {
+  //         typeDocument: "CONTRAT",
+  //         hash,
+  //         nomFichier: filename,
+  //         cheminFichier: path,
+  //         tailleFichier: 0,
+  //         userEmail: "yousign@hooks.fr", // user.email,
+  //       });
+  //     }
 
-      const doneMembers = procedure.members.filter(({ status }) => status === "done");
-      for (let index = 0; index < doneMembers.length; index++) {
-        const doneMember = doneMembers[index];
-        if (doneMember.email === signataires.apprenti.email && doneMember.phone === signataires.apprenti.phone) {
-          signataires.apprenti.status = "SIGNE";
-        } else if (
-          doneMember.email === signataires.employeur.email &&
-          doneMember.phone === signataires.employeur.phone
-        ) {
-          signataires.employeur.status = "SIGNE";
-        } else if (doneMember.email === signataires.cfa.email && doneMember.phone === signataires.cfa.phone) {
-          signataires.cfa.status = "SIGNE";
-        } else if (doneMember.email === signataires.legal.email && doneMember.phone === signataires.legal.phone) {
-          signataires.legal.status = "SIGNE";
-        }
-      }
+  //     const doneMembers = procedure.members.filter(({ status }) => status === "done");
+  //     for (let index = 0; index < doneMembers.length; index++) {
+  //       const doneMember = doneMembers[index];
+  //       if (doneMember.email === signataires.apprenti.email && doneMember.phone === signataires.apprenti.phone) {
+  //         signataires.apprenti.status = "SIGNE";
+  //       } else if (
+  //         doneMember.email === signataires.employeur.email &&
+  //         doneMember.phone === signataires.employeur.phone
+  //       ) {
+  //         signataires.employeur.status = "SIGNE";
+  //       } else if (doneMember.email === signataires.cfa.email && doneMember.phone === signataires.cfa.phone) {
+  //         signataires.cfa.status = "SIGNE";
+  //       } else if (doneMember.email === signataires.legal.email && doneMember.phone === signataires.legal.phone) {
+  //         signataires.legal.status = "SIGNE";
+  //       }
+  //     }
 
-      await dossiers.updateSignatairesDossier(dossierId, signataires);
+  //     await dossiers.updateSignatairesDossier(dossierId, signataires);
 
-      if (body.eventName === "procedure.finished" || (doneMembers && doneMembers.length === procedure.members.length)) {
-        await dossiers.updateEtatDossier(params.id, "DOSSIER_TERMINE_AVEC_SIGNATURE");
-      } else {
-        await dossiers.updateEtatDossier(params.id, "SIGNATURES_EN_COURS");
-      }
+  //     if (body.eventName === "procedure.finished" || (doneMembers && doneMembers.length === procedure.members.length)) {
+  //       await dossiers.updateEtatDossier(params.id, "DOSSIER_TERMINE_AVEC_SIGNATURE");
+  //     } else {
+  //       await dossiers.updateEtatDossier(params.id, "SIGNATURES_EN_COURS");
+  //     }
 
-      res.json({});
-    })
-  );
+  //     res.json({});
+  //   })
+  // );
 
   return router;
 };
