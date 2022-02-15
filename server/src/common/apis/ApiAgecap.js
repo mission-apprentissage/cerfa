@@ -33,7 +33,7 @@ const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
   nbRequests: 2,
   durationInSeconds: 1,
   client: axios.create({
-    baseURL: config.agecap.url, // "https://ws.agecap.alternance.pp.emploi.gouv.fr/agecap-api",
+    baseURL: config.agecap.url,
     timeout: 5000,
     headers: { Authorization: `Basic ${config.agecap.key}` },
     // httpsAgent,
@@ -59,7 +59,7 @@ class ApiAgecap {
         this.auth = true;
         return true;
       } catch (e) {
-        // console.log(e);
+        console.log(e);
         throw Boom.badRequest("Api Agecap: Something went wrong", `${e.message}, ${e.code || e.response.status}`);
       }
     });

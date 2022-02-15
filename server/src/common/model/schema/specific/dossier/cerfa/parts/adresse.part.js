@@ -34,7 +34,7 @@ const adresseSchema = {
       {
         name: "C",
         mask: "Pattern",
-        pattern: "^\\D*$",
+        pattern: "^.*$",
       },
     ],
   },
