@@ -59,7 +59,7 @@ class ApiAgecap {
         this.auth = true;
         return true;
       } catch (e) {
-        // console.log(e);
+        console.log(e);
         throw Boom.badRequest("Api Agecap: Something went wrong", `${e.message}, ${e.code || e.response.status}`);
       }
     });
