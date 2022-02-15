@@ -9,6 +9,7 @@ const FormData = require("form-data");
 const { getFromStorage } = require("../utils/ovhUtils");
 const { oleoduc, writeData } = require("oleoduc");
 const { PassThrough } = require("stream");
+const Boom = require("boom");
 
 const CERT_PATH = "/data/agecap";
 
@@ -23,6 +24,7 @@ try {
 } catch (e) {
   console.log(e);
 }
+// eslint-disable-next-line no-unused-vars
 const httpsAgent = new https.Agent(optAgent);
 
 // Cf Documentation : Api Agecap
@@ -31,9 +33,10 @@ const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
   nbRequests: 2,
   durationInSeconds: 1,
   client: axios.create({
-    baseURL: "https://sia-refonte-api-agecap-rec-ext.rct01.kleegroup.com/agecap-api",
+    baseURL: config.agecap.url, // "https://ws.agecap.alternance.pp.emploi.gouv.fr/agecap-api",
     timeout: 5000,
-    httpsAgent,
+    headers: { Authorization: `Basic ${config.agecap.key}` },
+    // httpsAgent,
   }),
 });
 
@@ -56,7 +59,8 @@ class ApiAgecap {
         this.auth = true;
         return true;
       } catch (e) {
-        throw new ApiError("Api Agecap", `${e.message}`, e.code || e.response.status);
+        // console.log(e);
+        throw Boom.badRequest("Api Agecap: Something went wrong", `${e.message}, ${e.code || e.response.status}`);
       }
     });
   }
