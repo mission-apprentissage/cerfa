@@ -9,6 +9,7 @@ const colors = {
   warning: "#fa5c00",
   info: "#3a55d1",
   galt: "#f9f8f6",
+  galt2: "#F6F6F6",
   mgalt: "#666666",
   dgalt: "#E5E5E5",
   disablegrey: "#929292",
@@ -16,6 +17,8 @@ const colors = {
   flatwarm: "#B34000",
   plaininfo: "#0063CB",
   greensoftc: "#22967E",
+  flatsuccess: "#18753C",
+  flaterror: "#CE0500",
   grey: {
     800: "#1e1e1e",
     750: "#2a2a2a",

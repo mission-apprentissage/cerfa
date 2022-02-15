@@ -300,6 +300,7 @@ const FormContract = React.memo(() => {
           mt="2"
           mb="6"
           onSubmittedField={onSubmittedContratTravailRisque}
+          hasInfo={false}
         />
 
         <FormLabel fontWeight={700} fontSize="1.3rem">
@@ -466,6 +467,7 @@ const FormContract = React.memo(() => {
                   precision={2}
                   mt="2"
                   // onSubmittedField={onSubmittedContratSalaireEmbauche}
+                  hasInfo={false}
                 />
               </Box>
             </Flex>
@@ -520,6 +522,7 @@ const FormContract = React.memo(() => {
                   min={1}
                   mt="2"
                   onSubmittedField={onSubmittedContratAvantageNourriture}
+                  hasInfo={false}
                 />
               </Box>
               <Box ml={5}>
@@ -530,6 +533,7 @@ const FormContract = React.memo(() => {
                   min={1}
                   mt="2"
                   onSubmittedField={onSubmittedContratAvantageLogement}
+                  hasInfo={false}
                 />
               </Box>
             </Flex>
@@ -540,6 +544,7 @@ const FormContract = React.memo(() => {
                 type="consent"
                 mt="2"
                 onSubmittedField={onSubmittedContratAutreAvantageEnNature}
+                hasInfo={false}
               />
             </Box>
           </Collapse>

@@ -864,6 +864,7 @@ export default React.memo(
               <InfoTooltip
                 description={field?.description}
                 example={field?.example}
+                label={field?.label}
                 history={field?.history}
                 noHistory={noHistory}
               />

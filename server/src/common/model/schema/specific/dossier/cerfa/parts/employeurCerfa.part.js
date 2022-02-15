@@ -6,8 +6,8 @@ const employeurCerfaSchema = {
   denomination: {
     // maxLength: 80,
     type: String,
-    description: "Dénomination de l'employeur",
     label: "Dénomination :",
+    description: "La dénomination sociale doit être celle de l'établissement dans lequel le contrat s'exécute.",
     requiredMessage: "La dénomination de l'employeur est obligatoire",
     example: "ENERGIE 3000",
     default: null,
@@ -41,7 +41,8 @@ const employeurCerfaSchema = {
       message: (props) => `${props.value} n'est pas un siret valide`,
     },
     type: String,
-    description: "N° SIRET de l'employeur",
+    description:
+      "Vous devez renseigner le siret correspondant à l'établissement du lieu d'exécution du contrat (il ne correspond pas forcément au siège). Le siret comporte 14 chiffres. <br/> Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).",
     default: null,
     nullable: function () {
       return this.draft;
@@ -92,7 +93,7 @@ const employeurCerfaSchema = {
     },
     default: null,
     description:
-      "L'effectif renseigné est celui de l'entreprise dans sa globalité, au sens de l'article L. 130-1.-I du code de la sécurité sociale et non seulement l'effectif de l'établissement d'exécution du contrat.",
+      "L'effectif salarié rempli automatiquement correspond à l'estimation de la base Entreprises de l'INSEE. <br/>L'effectif renseigné est celui de l’entreprise dans sa globalité (et non seulement l’effectif de l’établissement d’exécution du contrat).",
     label: "Effectif salarié de l'entreprise :",
     requiredMessage: "Effectif salarié de l'entreprise est obligatoire",
     example: 123,
@@ -156,7 +157,7 @@ const employeurCerfaSchema = {
       return !this.draft;
     },
     type: String,
-    description: "Téléphone de l'employeur",
+    description: `Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le "0" car l'indicateur pays est pré-renseigné.`,
     label: "Téléphone de l'employeur :",
     requiredMessage: "Le téléphone de l'employeur est obligatoire",
     example: "0908070605",
@@ -169,7 +170,7 @@ const employeurCerfaSchema = {
     required: function () {
       return !this.draft;
     },
-    description: "Courriel de l'employeur",
+    description: "Ce courriel sera utilisé pour l'envoi des notifications pour le suivi du dossier.",
     label: "Courriel de l'employeur :",
     requiredMessage: "Le courriel de l'employeur est obligatoire",
     validate: {
@@ -265,8 +266,7 @@ const employeurCerfaSchema = {
     default: null,
     label: "Type d'employeur :",
     requiredMessage: "le type d'employeur est obligatoire",
-    description:
-      "**Type d'mployeur** :\r\n<br /> *Privé*\r\n<br /> 11 : Entreprise inscrite au répertoire des métiers ou au registre des entreprises pour l’Alsace-Moselle\r\n<br /> 12 : Entreprise inscrite uniquement au registre du commerce et des sociétés\r\n<br /> 13 : Entreprises dont les salariés relèvent de la mutualité sociale agricole\r\n<br /> 14 : Profession libérale\r\n<br /> 15 : Association\r\n<br /> 16 : Autre employeur privé\r\n<br /> *Public*\r\n<br /> 21 : Service de l’Etat (administrations centrales et leurs services déconcentrés de la fonction publique d’Etat)\r\n<br /> 22 : Commune\r\n<br /> 23 : Département\r\n<br /> 24 : Région\r\n<br /> 25 : Etablissement public hospitalier\r\n<br /> 26 : Etablissement public local d’enseignement\r\n<br /> 27 : Etablissement public administratif de l’Etat\r\n<br /> 28 : Etablissement public administratif local(y compris établissement public de coopération intercommunale EPCI)\r\n<br /> 29 : Autre employeur public",
+    description: "Le type d'employeur doit être en adéquation avec son statut juridique.",
 
     options: [
       // {
