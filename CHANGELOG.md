@@ -1,3 +1,12 @@
+# [1.19.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.10...v1.19.0-beta.11) (2022-02-15)
+
+
+### Features
+
+* **u:**  ajout d une nouvelle puce et modification de la ponctuation ([#345](https://github.com/mission-apprentissage/cerfa/issues/345)) ([62d51c8](https://github.com/mission-apprentissage/cerfa/commit/62d51c89271395802663aba10ecd49661338f3f7))
+* **ui:** ajout puce page cree nouveau dossier ([#347](https://github.com/mission-apprentissage/cerfa/issues/347)) ([b4256dc](https://github.com/mission-apprentissage/cerfa/commit/b4256dcdcf42480e861976b447d319bdaa05409e))
+* **ui:** modification des noms des Ministères sur la page d'accueil ([#346](https://github.com/mission-apprentissage/cerfa/issues/346)) ([c665cf0](https://github.com/mission-apprentissage/cerfa/commit/c665cf05b38a4d779a29cb53c7329ea521ebd0c8))
+
 # [1.19.0-beta.10](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0-beta.9...v1.19.0-beta.10) (2022-02-09)
 
 
