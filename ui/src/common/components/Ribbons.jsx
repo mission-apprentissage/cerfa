@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon as CIcon, Flex, Box } from "@chakra-ui/react";
+import { Icon as CIcon, Flex, Box, Spinner } from "@chakra-ui/react";
 import { ErrorIcon, ValidateIcon } from "../../theme/components/icons/index";
 
 const RibbonsIconInfo = (props) => (
@@ -25,6 +25,7 @@ const colorsMap = {
   error: "flaterror",
   warning: "flatwarm",
   info: "plaininfo",
+  unstyled: "grey.600",
 };
 
 const Icon = ({ variant, ...rest }) => {
@@ -37,18 +38,22 @@ const Icon = ({ variant, ...rest }) => {
       return <RibbonsIconAlert {...rest} />;
     case "info":
       return <RibbonsIconInfo {...rest} />;
+    case "unstyled":
+      return <Spinner {...rest} />;
     default:
       return <RibbonsIconInfo {...rest} />;
   }
 };
 
-const Ribbons = ({ variant = "info", children, ...rest }) => {
+const Ribbons = ({ variant = "info", oneLiner = true, children, ...rest }) => {
   return (
     <Box {...rest}>
       <Flex borderColor={colorsMap[variant]} borderLeftWidth={"4px"} borderStyle={"solid"} bg="galt2" py={3}>
-        <Flex px={4} alignItems="center">
-          <Icon variant={variant} mx="auto" boxSize="4" color={colorsMap[variant]} mt="0.125rem" />
-        </Flex>
+        {oneLiner && (
+          <Flex px={4} alignItems="center">
+            <Icon variant={variant} mx="auto" boxSize="4" color={colorsMap[variant]} mt="0.125rem" />
+          </Flex>
+        )}
         <Flex color={colorsMap[variant]} alignItems="center" justifyContent="center" flexDirection="column">
           {children}
         </Flex>
