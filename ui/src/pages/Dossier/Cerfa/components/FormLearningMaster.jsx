@@ -48,6 +48,7 @@ const FormLearningMaster = React.memo(() => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedMaitre1Nom}
+            hasInfo={false}
           />
           <InputCerfa
             path="maitre1.prenom"
@@ -55,6 +56,7 @@ const FormLearningMaster = React.memo(() => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedMaitre1Prenom}
+            hasInfo={false}
           />
           <InputCerfa
             path="maitre1.dateNaissance"
@@ -75,6 +77,7 @@ const FormLearningMaster = React.memo(() => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedMaitre2Nom}
+            hasInfo={false}
           />
           <InputCerfa
             path="maitre2.prenom"
@@ -82,6 +85,7 @@ const FormLearningMaster = React.memo(() => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedMaitre2Prenom}
+            hasInfo={false}
           />
           <InputCerfa
             path="maitre2.dateNaissance"

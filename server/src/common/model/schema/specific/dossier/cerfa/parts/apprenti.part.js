@@ -101,10 +101,11 @@ const apprentiSchema = {
   },
   dateNaissance: {
     type: Date,
-    description: "Date de naissance de l'apprenti(e)",
     label: "Date de naissance :",
     requiredMessage: "La date de naissance de l'apprenti(e) est obligatoire",
     example: "2001-01-01T00:00:00+0000",
+    description:
+      "La date de naissance combinée à la date d'exécution du contrat définira si l'apprenti(e) est mineur(e) ou majeur(e) et est bien âgé de 15 ans ou plus. <br/> Si l'apprenti(e) est mineur(e) à la date de signature du contrat, vous devrez renseigner le cas d'émancipation ou les informations relatives au représentant légal.",
     default: null,
     required: function () {
       return !this.draft;
@@ -133,12 +134,12 @@ const apprentiSchema = {
       message: (props) => `${props.value} n'est pas un departement valide`,
     },
     type: String,
-    description: "Département de naissance de l'apprenti",
     label: "Département de naissance :",
     example: "1 Ain, 99 Étranger",
     pattern: "^([0-9][0-9]|2[AB]|9[012345]|97[12346])$",
     requiredMessage: "le département de naissance est obligatoire",
     validateMessage: ` n'est pas un département valide`,
+    description: `Pour les personnes nées à l'étranger, indiquez 99. <br/> Pour les départements à 1 chiffre, faites précéder le chiffre par un "0".`,
     default: null,
     nullable: true,
     required: function () {
@@ -311,7 +312,7 @@ const apprentiSchema = {
     label: "Dernière classe / année suivie :",
     requiredMessage: "la dernière classe / année suivie par l'apprenti(e) est obligatoire",
     description:
-      "**Dernière année ou classe suivie par l'apprenti** :\r\n<br /> 1 : l'apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre\r\n<br /> 11 : l’apprenti a suivi la 1ère année du cycle et l’a validée (examens réussis mais année non diplômante)\r\n<br /> 12 : l’apprenti a suivi la 1ère année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 21 : l’apprenti a suivi la 2è année du cycle et l’a validée (examens réussis mais année non diplômante)\r\n<br /> 22 : l’apprenti a suivi la 2è année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 31 : l’apprenti a suivi la 3è année du cycle et l’a validée (examens réussis mais année non diplômante, cycle adapté)\r\n<br /> 32 : l’apprenti a suivi la 3è année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 40 : l’apprenti a achevé le 1er cycle de l’enseignement secondaire (collège)\r\n<br /> 41 : l’apprenti a interrompu ses études en classe de 3è\r\n<br /> 42 : l’apprenti a interrompu ses études en classe de 4è",
+      "Il faut sélectionner la situation qui précède l'entrée en contrat d'apprentissage. <br/> Par exemple, si le diplôme préparé avant était une 1ère année de BTS et que cette dernière a été validée, il faut sélectionner 11 - l'apprenti a suivi la première année du cycle et l'a validée ( examens réussis mais année non diplômante).",
     options: [
       {
         label: "01: l'apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre",
@@ -397,8 +398,8 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
-    description: "Téléphone de l'apprenti",
     label: "Téléphone de l'apprenti(e) :",
+    description: `Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le "0" car l'indicateur pays est pré-renseigné.`,
     example: "0102030405",
   },
   courriel: {
@@ -469,13 +470,13 @@ const apprentiSchema = {
   },
   apprentiMineurNonEmancipe: {
     type: Boolean,
-    description: "l'apprenti(e) est mineur(e) non emancipé(e)",
     example: false,
     default: null,
     required: function () {
       return !this.draft;
     },
     label: "l'apprenti(e) est mineur(e) non emancipé(e)",
+    description: `Vous devez indiquer "oui" si l'apprenti est mineur non émancipé à la date de signature du contrat. Dans ce cas, le représentant légal devra également signer le contrat.`,
     requiredMessage: "Merci de renseigner si l'apprenti(e) mineur(e) est emancipé(e) ou non",
     options: [
       {
