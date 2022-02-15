@@ -9,6 +9,7 @@ const FormData = require("form-data");
 const { getFromStorage } = require("../utils/ovhUtils");
 const { oleoduc, writeData } = require("oleoduc");
 const { PassThrough } = require("stream");
+const Boom = require("boom");
 
 const CERT_PATH = "/data/agecap";
 
@@ -32,10 +33,10 @@ const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
   nbRequests: 2,
   durationInSeconds: 1,
   client: axios.create({
-    baseURL: "https://ws.agecap.alternance.pp.emploi.gouv.fr/agecap-api",
+    baseURL: config.agecap.url, // "https://ws.agecap.alternance.pp.emploi.gouv.fr/agecap-api",
     timeout: 5000,
     headers: { Authorization: `Basic ${config.agecap.key}` },
-    httpsAgent,
+    // httpsAgent,
   }),
 });
 
@@ -58,8 +59,8 @@ class ApiAgecap {
         this.auth = true;
         return true;
       } catch (e) {
-        console.log(e);
-        throw new ApiError("Api Agecap", `${e.message}`, e.code || e.response.status);
+        // console.log(e);
+        throw Boom.badRequest("Api Agecap: Something went wrong", `${e.message}, ${e.code || e.response.status}`);
       }
     });
   }
