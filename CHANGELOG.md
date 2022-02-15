@@ -1,3 +1,29 @@
+# [1.20.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.19.1...v1.20.0-beta.1) (2022-02-15)
+
+
+### Bug Fixes
+
+* **ui:** modification des textes de description ([c448998](https://github.com/mission-apprentissage/cerfa/commit/c4489988685953807f06a2ab923d4a1e3e9a5522))
+* **ui:** suppression du infoText ([6ed5ac0](https://github.com/mission-apprentissage/cerfa/commit/6ed5ac0957dffd41cef02acfe689fa837ecb63c3))
+
+
+### Features
+
+* ajout du rubans d'alertes, informations, attention ([#374](https://github.com/mission-apprentissage/cerfa/issues/374)) ([84d4a1e](https://github.com/mission-apprentissage/cerfa/commit/84d4a1ef373f39b771b8d846c709aa390e39e3d7))
+* **cerfa:** blocs d'informations inutile retirés ([c6c9115](https://github.com/mission-apprentissage/cerfa/commit/c6c911555b81380eabcefe9c31a6165f66553064))
+* **ui:** ajout du champ infoText sur infoTooltip ([732bc63](https://github.com/mission-apprentissage/cerfa/commit/732bc632ad1ee6d50136a4fc55f403afc484370c))
+* **ui:** ajout du champ infoText sur infoTooltip ([12b427a](https://github.com/mission-apprentissage/cerfa/commit/12b427adfa4f6ef1eee53b9fbd4c0cd7ba159976))
+* **ui:** modification du bloc info date de naissance ([862b599](https://github.com/mission-apprentissage/cerfa/commit/862b5996e860a25cd639ed3240a5fc8d64cf665c))
+* **ui:** modification du bloc info denomination ([056c7cd](https://github.com/mission-apprentissage/cerfa/commit/056c7cdfad7e5493d53fa627125474416f4a446c))
+* **ui:** modification du bloc info departement de naissance ([466bf18](https://github.com/mission-apprentissage/cerfa/commit/466bf18eebb980a7796274971ee8272e77f1c152))
+* **ui:** modification du bloc info derniere classe ([b3b5b79](https://github.com/mission-apprentissage/cerfa/commit/b3b5b7905e3d45aef7a1ca74f8bf07bc24595438))
+* **ui:** modification du bloc info diplome prepare ([f6d3da1](https://github.com/mission-apprentissage/cerfa/commit/f6d3da11c1f50d3c1c2a176d3d7bf27600673591))
+* **ui:** modification du bloc info effectif ([0e54ab2](https://github.com/mission-apprentissage/cerfa/commit/0e54ab265492c4b228f5cdf4eb7c0ef4f94c9093))
+* **ui:** modification du bloc info mineur non emancipe ([1005998](https://github.com/mission-apprentissage/cerfa/commit/10059984753d441d959e407e2e58ebad4c2a215d))
+* **ui:** modification du bloc info siret ([1f7239c](https://github.com/mission-apprentissage/cerfa/commit/1f7239cc8bd5178a9719ebdf6df218ede89db020))
+* **ui:** modification du bloc info telephone ([f993d9b](https://github.com/mission-apprentissage/cerfa/commit/f993d9bbb842fb6366cc0596e19c38b7f3e131cf))
+* **ui:** modification du bloc info type employeur ([545039a](https://github.com/mission-apprentissage/cerfa/commit/545039a0acd091fa31b7b506cc5f8ae6a74a4629))
+
 ## [1.19.1](https://github.com/mission-apprentissage/cerfa/compare/v1.19.0...v1.19.1) (2022-02-15)
 
 
