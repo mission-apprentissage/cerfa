@@ -93,6 +93,10 @@ export default () => {
             <ListItem fontStyle="italic" my={2}>
               <strong>Pour le contrat :</strong> les dates de début et de fin, le n° du contrat initial si avenant
             </ListItem>
+            <ListItem fontStyle="italic" my={2}>
+              <strong>Pour les pièces justificatives :</strong> la convention de formation (seulement si le type de
+              contrat - initial ou succession- la rend obligatoire).
+            </ListItem>
           </UnorderedList>
           <Flex width="100%" justifyContent="flex-end" mt={9}>
             <Button
