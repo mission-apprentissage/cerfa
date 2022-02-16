@@ -14,6 +14,7 @@ export * from "./Parametre";
 export * from "./Map-pin-2-fill";
 export * from "./Edit-2-fill";
 export * from "./ValidateIcon";
+export * from "./Alert";
 export * from "./RejectIcon";
 export * from "./DoubleArrows";
 export * from "./ErrorIcon";
