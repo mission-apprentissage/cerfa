@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon as CIcon, Flex, Box, Spinner } from "@chakra-ui/react";
+import { Flex, Box, Spinner } from "@chakra-ui/react";
 import { ErrorIcon, ValidateIcon, Alert, InfoCircle } from "../../theme/components/icons/index";
 
 const colorsMap = {

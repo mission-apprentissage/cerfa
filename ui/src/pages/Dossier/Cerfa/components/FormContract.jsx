@@ -335,8 +335,9 @@ const FormContract = React.memo(() => {
                 isExternal
                 href="https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/contrat-apprentissage#salaire"
               >
-                <ExternalLinkLine w={"0.55rem"} h={"0.55rem"} mb={"0.125rem"} ml={1} /> site du Ministère du Travail, de
-                l'Emploi et de l'Insertion{" "}
+                {" "}
+                site du Ministère du Travail, de l'Emploi et de l'Insertion
+                <ExternalLinkLine w={"0.55rem"} h={"0.55rem"} mb={"0.125rem"} ml={1} />
               </Link>
             </Text>
           </Text>
