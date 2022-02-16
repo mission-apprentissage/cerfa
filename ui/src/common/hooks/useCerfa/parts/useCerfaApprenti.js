@@ -2095,6 +2095,7 @@ export function useCerfaApprenti() {
       setApprentiPrenom({ ...apprentiPrenom, validateField: true });
       setApprentiSexe({ ...apprentiSexe, validateField: true });
       setApprentiNationalite({ ...apprentiNationalite, validateField: true });
+      // TODO DIRTY WAY
       setApprentiDateNaissance({ ...apprentiDateNaissance, validateField: true, setSt: setApprentiDateNaissance });
       setApprentiDepartementNaissance({ ...apprentiDepartementNaissance, validateField: true });
 

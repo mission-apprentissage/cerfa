@@ -390,6 +390,7 @@ const employeurCerfaSchema = {
     type: Boolean,
     description: "Adhère au régime spécifique d'assurance-chômage",
     label: "Adhésion de l'apprenti au régime spécifique d'assurance chômage : ",
+    requiredMessage: "Cette déclaration est obligatoire",
     default: null,
     nullable: true,
     example: "Non",
