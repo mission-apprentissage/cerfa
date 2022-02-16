@@ -351,7 +351,7 @@ const contratSchema = {
     type: Number,
     default: 0,
     isNotRequiredForm: true,
-    description: "**Majoration de la rémunération** :\r\n<br />Aucune\r\n<br />10%\r\n<br />20%",
+    description: `**Majoration de la rémunération** :\r\n  Aucune\r\n  10%\r\n  20%`,
     label: "L'employeur souhaite appliquer un majoration à la rémunération :",
     options: [
       {
