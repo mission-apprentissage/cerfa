@@ -4,7 +4,7 @@ const formationSchema = {
   rncp: {
     maxLength: 9,
     type: String,
-    description: "Qualification public visée numéro RNCP du diplôme ou titre visé par l'Alternant",
+    description: `Le code RNCP peut être recherché sur [le site France compétences.](https://www.francecompetences.fr/recherche_certificationprofessionnelle/) Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez renseigner un code diplôme pour déduire le code RNCP correspondant.`,
     label: "Code RNCP : ",
     example: "RNCP15516",
     requiredMessage: "Le code RNCP est obligatoire",
@@ -35,7 +35,7 @@ const formationSchema = {
     maxLength: 8,
     type: String,
     default: null,
-    description: "Code du diplôme ou titre visé par l'Alternant, basé sur le référentiel France Compétences",
+    description: `Ce code à 8 caractères permet d'identifier un titre ou diplôme préparés par la voir de l'apprentissage, plus d'informations sur [le site du ministère de l'Education Nationale.](https://www.education.gouv.fr/codification-des-formations-et-des-diplomes-11270) Le code diplôme peut être recherché sur [le catalogue des formations en apprentissage.](https://catalogue.apprentissage.beta.gouv.fr/) Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez renseigner un code diplôme pour déduire le code RNCP correspondant.`,
     label: "Code diplôme (Éducation Nationale) : ",
     example: "32322111",
     requiredMessage: "Le code diplôme est obligatoire",
@@ -78,7 +78,7 @@ const formationSchema = {
   },
   dateDebutFormation: {
     type: Date,
-    description: "Date de début du cycle de formation",
+    description: `Il faut renseigner la date effective à laquelle l'apprenti débute sa formation, même si l'apprenti a démarré la formation sous le statut "stagiaire de la formation professionnelle".`,
     label: "Date de début du cycle de formation : ",
     example: "05/11/2021",
     requiredMessage: "la date de début de cycle est obligatoire",
@@ -90,7 +90,8 @@ const formationSchema = {
   },
   dateFinFormation: {
     type: Date,
-    description: "Date de fin du cycle de formation",
+    description:
+      "Lorsque la date précise n'est pas connue, il est possible de renseigner une date prévisionnelle avec une marge de 2 mois maximum.",
     label: "Date prévue de fin des épreuves ou examens : ",
     example: "18/11/2021",
     requiredMessage: "la date de fin de cycle est obligatoire",
@@ -107,7 +108,8 @@ const formationSchema = {
   },
   dureeFormation: {
     type: Number,
-    description: "Durée de formation (heures)",
+    description:
+      "La quotité de formation théorique du contrat d’apprentissage ne peut pas être inférieure à 25% de la durée globale du contrat (cette quotité de formation est calculée sur la base de la durée légale annuelle de travail, soit 1 607 heures, sauf aménagements spécifiques en cas de pratique du sport à haut niveau ou reconnaissance de handicap).",
     label: "Durée de la formation en heures :",
     example: "400",
     requiredMessage: "Le nombre d'heures de la formation est obligatoire",

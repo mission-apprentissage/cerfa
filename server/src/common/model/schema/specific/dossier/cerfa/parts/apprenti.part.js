@@ -86,7 +86,7 @@ const apprentiSchema = {
     },
     label: "Nationalité :",
     requiredMessage: "la nationalité de l'apprenti(e) est obligatoire",
-    description: `**Nationalité** :\r\n  1 : Française\r\n  2 : Union Européenne\r\n  3 : Etranger hors Union Européenne`,
+    description: `Le salarié étranger, non citoyen européen, doit disposer d'un titre de séjour valable l'autorisant à travailler en France et d'une autorisation de travail au début du contrat. Les demandes de titres et d'autorisation de travail peuvent être réalisées sur [le site Etrangers en France.](https://administration-etrangers-en-france.interieur.gouv.fr/particuliers/#/)`,
     options: [
       {
         label: "1: Française",

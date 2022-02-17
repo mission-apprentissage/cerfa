@@ -1,7 +1,7 @@
 const typeContratSchema = {
   enum: [11, 21, 22, 23, 31, 32, 33, 34, 35, 36, 37],
   type: Number,
-  description: `**Type de contrat** :\r\n *Contrat initial*\r\n 11 : Premier contrat d'apprentissage de l’apprenti\r\n *Succession de contrats*\r\n 21 : Nouveau contrat avec un apprenti qui a terminé son précédent contrat auprès d’un même employeur\r\n 22 : Nouveau contrat avec un apprenti qui a terminé son précédent contrat auprès d’un autre employeur\r\n 23 : Nouveau contrat avec un apprenti dont le précédent contrat auprès d’un autre employeur a été rompu\r\n *Avenant : modification des conditions du contrat*\r\n 31 : Modification de la situation juridique de l’employeur\r\n 32 : Changement d’employeur dans le cadre d’un contrat saisonnier\r\n 33 : Prolongation du contrat suite à un échec à l’examen de l’apprenti\r\n 34 : Prolongation du contrat suite à la reconnaissance de l’apprenti comme travailleur handicapé\r\n 35 : Modification du diplôme préparé par l’apprenti\r\n 36 : Autres changements : changement de maître d’apprentissage, de durée de travail hebdomadaire, réduction de durée, etc.\r\n 37 : Modification du lieu d’exécution du contrat`,
+  description: `Le type de contrat ou avenant doit correspondre à la situation du contrat (premier contrat, succession de contrats, avenants).`,
   options: [
     {
       name: "Contrat initial",

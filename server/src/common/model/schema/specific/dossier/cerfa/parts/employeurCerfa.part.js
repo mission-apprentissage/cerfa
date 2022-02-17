@@ -120,7 +120,7 @@ const employeurCerfaSchema = {
     required: function () {
       return !this.draft;
     },
-    description: "Code IDCC de la convention collective appliquée",
+    description: `Identifiant de la convention collective de branche appliquée par l’établissement. [le site du Ministère du travail.](https://www.elections-professionnelles.travail.gouv.fr/web/guest/recherche-idcc)`,
     label: "Code IDCC de la convention collective appliquée : ",
     requiredMessage: "le code idcc est obligatoire",
     example: "9999",
@@ -445,7 +445,8 @@ const employeurCerfaSchema = {
   attestationEligibilite: {
     path: "employeur.attestationEligibilite",
     type: Boolean,
-    description: "Atteste de l'éligibilité du tuteur / maître d'apprentissage",
+    description:
+      "Le maître d'apprentissage doit notamment justifier d'une formation et d'une expérience professionnelle minimales (code du travail, [art. R6223-22](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000037813428/)). Le changement de maître d'apprentissage en cours de contrat implique de conclure un avenant au contrat initial, sauf si le contrat initial indique un second maître d'apprentissage.",
     label:
       "L'employeur atteste sur l'honneur que le(s) maître(s) d'apprentissage répond à l'ensemble des critères d'éligibilité à cette fonction.",
     requiredMessage:

@@ -86,7 +86,8 @@ const contratSchema = {
   numeroContratPrecedent: {
     path: "contrat.numeroContratPrecedent",
     type: String,
-    description: "N° du contrat précédent (suite de contrat)",
+    description:
+      "Succession (n° du contrat précédent) : s'il ne s'agit pas du tout premier contrat de l'apprenti, renseignez le numéro de son contrat précédent, même s'il a été conclu avec un autre employeur. Avenant (n° du contrat sur lequel porte l'avenant ) : indiquez le n° de dépôt du contrat initial qui fait l'objet de la modification.",
     label: "Numéro du contrat précédent ou du contrat sur lequel porte l'avenant :",
     labelAvenant: "Numéro de contrat sur lequel porte l'avenant :",
     labelSuccession: "Numéro du contrat précédent :",
@@ -112,7 +113,8 @@ const contratSchema = {
   dateDebutContrat: {
     path: "contrat.dateDebutContrat",
     type: Date,
-    description: "Date de début d'éxécution du contrat",
+    description:
+      "Indiquez la date du 1er jour où débute effectivement le contrat (chez l'employeur ou dans le centre de formation). La date de début d'exécution du contrat est liée à la date de naissance de l'apprenti pour le calcul des périodes de rémunération.",
     label: "Date de début d'exécution du contrat :",
     requiredMessage: "la date de début d'exécution de contrat est obligatoire",
     example: "2021-02-01T00:00:00+0000",
@@ -124,7 +126,8 @@ const contratSchema = {
   dateFinContrat: {
     path: "contrat.dateFinContrat",
     type: Date,
-    description: "Date de fin du contrat prévue",
+    description:
+      "La période de contrat doit englober la date du dernier examen qui sanctionne l'obtention du diplôme. Si celle-ci n'est pas connue au moment de la conclusion du contrat, vous pouvez renseigner une date située maximum 2 mois au-delà de la date de fin prévisionnelle des examens.",
     label: "Date de fin du contrat ou de la période d'apprentissage :",
     requiredMessage: "la date de fin de contrat est obligatoire",
     example: "2021-02-28T00:00:00+0000",
@@ -145,7 +148,7 @@ const contratSchema = {
   dateEffetAvenant: {
     path: "contrat.dateEffetAvenant",
     type: Date,
-    description: "Date d'effet d'avenant",
+    description: "Date à laquelle l'avenant va prendre effet.",
     label: "Date d'effet d'avenant :",
     requiredMessage: "S'agissant d'un avenant sa date d'effet est obligatoire ",
     nullable: true,
@@ -192,7 +195,7 @@ const contratSchema = {
   dureeTravailHebdoHeures: {
     path: "contrat.dureeTravailHebdoHeures",
     type: Number,
-    description: "Durée hebdomadaire du travail (heures)",
+    description: `La durée légale du travail effectif est fixée à 35h par semaine. Dans certains secteurs, quand l'organisation du travail le justifie, elle peut être portée à 40h. Le temps de formation en CFA est du temps de travail effectif et compte dans l'horaire de travail. En savoir plus sur les horaires sur [le site du Service public.](https://www.service-public.fr/particuliers/vosdroits/F2918), rubrique "Temps de travail".`,
     requiredMessage: "la durée hebdomadaire de travail est obligatoire",
     label: "Heures:",
     example: 37,
@@ -249,7 +252,7 @@ const contratSchema = {
     required: function () {
       return !this.draft;
     },
-    description: "L'apprenti(e) bénéficie d'avantages en nature",
+    description: `Une déduction du montant des avantages peut être pratiquée sur la rémunération de l'apprenti sous certaines conditions (code du travail, [art. D6222-33](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000041770368)).`,
     label: "L'apprenti(e) bénéficie d'avantages en nature",
     example: "Oui",
     options: [

@@ -3,7 +3,7 @@ const typeDerogationSchema = {
   default: null,
   type: Number,
   description:
-    "**Type de dérogation** :\r\n<br />11 : Age de l'apprenti inférieur à 16 ans\r\n<br />12 : Age supérieur à 29 ans : cas spécifiques prévus dans le code du travail\r\n<br />21 : Réduction de la durée du contrat ou de la période d’apprentissage\r\n<br />22 : Allongement de la durée du contrat ou de la période d’apprentissage\r\n<br />50 : Cumul de dérogations\r\n<br />60 : Autre dérogation",
+    "A renseigner si une dérogation existe pour ce contrat (exemple : l'apprentissage commence à partir de 16 ans mais par dérogation, les jeunes âgés d'au moins 15 ans et un jour peuvent conclure un contrat d'apprentissage s'ils ont terminé la scolarité du 1er cycle de l'enseignement secondaire (collège).",
   options: [
     {
       label: "11 Age de l'apprenti inférieur à 16 ans",
