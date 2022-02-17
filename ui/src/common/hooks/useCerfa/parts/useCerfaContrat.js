@@ -1144,8 +1144,16 @@ export function useCerfaContrat() {
               setFieldsErrored((errors) => errors.filter((e) => e.path !== "contrat.numeroContratPrecedent"));
               setContratNumeroContratPrecedent({
                 ...contratNumeroContratPrecedent,
-                triggerValidation: true,
+                validateField: true,
                 isNotRequiredForm: true,
+                value: "",
+              });
+            } else if (!contratInitial) {
+              setContratNumeroContratPrecedent({
+                ...contratNumeroContratPrecedent,
+                validateField: true,
+                isNotRequiredForm: false,
+                value: "",
               });
             }
           }
@@ -1601,16 +1609,6 @@ export function useCerfaContrat() {
       ) {
         fields = [...fields, contratNumeroContratPrecedent, contratDateEffetAvenant];
         setterFields = [...setterFields, setContratNumeroContratPrecedent, setContratDateEffetAvenant];
-      }
-      if (
-        (contratTypeContratApp?.valueDb === 11 ||
-          contratTypeContratApp?.valueDb === 21 ||
-          contratTypeContratApp?.valueDb === 22 ||
-          contratTypeContratApp?.valueDb === 23) &&
-        contratNumeroContratPrecedent.errored
-      ) {
-        console.log(contratNumeroContratPrecedent);
-        //errored: true,
       }
 
       if (contratAvantageNature.value === "Oui") {
