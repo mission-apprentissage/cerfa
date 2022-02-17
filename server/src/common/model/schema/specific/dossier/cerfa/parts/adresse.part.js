@@ -46,7 +46,7 @@ const adresseSchema = {
     nullable: true,
     default: null,
     isNotRequiredForm: true,
-    example: "Etage 6 - Appartement 654",
+    example: "Hôtel de ville ; Entrée ; Bâtiment ; Etage ; Service ; BP",
   },
   // label: {
   //   maxLength: 50,
