@@ -6,6 +6,7 @@ const { capitalize } = require("lodash");
 
 const apprentiSchema = {
   nom: {
+    path: "apprenti.nom",
     maxLength: 80,
     type: String,
     description: "Nom (Nom de naissance/ patronymique) de l'apprenti",
@@ -33,6 +34,7 @@ const apprentiSchema = {
   //   example: "DUPONT",
   // },
   prenom: {
+    path: "apprenti.prenom",
     maxLength: 80,
     type: String,
     description: "Prénom de l'apprenti",
@@ -53,6 +55,7 @@ const apprentiSchema = {
     ],
   },
   sexe: {
+    path: "apprenti.sexe",
     enum: ["M", "F", null],
     default: null,
     required: function () {
@@ -74,6 +77,7 @@ const apprentiSchema = {
     ],
   },
   nationalite: {
+    path: "apprenti.nationalite",
     enum: [1, 2, 3],
     type: Number,
     default: null,
@@ -100,6 +104,7 @@ const apprentiSchema = {
     ],
   },
   dateNaissance: {
+    path: "apprenti.dateNaissance",
     type: Date,
     label: "Date de naissance :",
     requiredMessage: "La date de naissance de l'apprenti(e) est obligatoire",
@@ -112,6 +117,7 @@ const apprentiSchema = {
     },
   },
   age: {
+    path: "apprenti.age",
     type: Number,
     description: "Âge de l'apprenti(e) à la date de début de contrat [donnée calculée]",
     nullable: true,
@@ -122,8 +128,8 @@ const apprentiSchema = {
     },
   },
   departementNaissance: {
+    path: "apprenti.departementNaissance",
     enum: [null, ...departementEnum.map((d) => d.replace(/^(0){1}/, ""))],
-
     maxLength: 3,
     minLength: 1,
     validate: {
@@ -147,6 +153,7 @@ const apprentiSchema = {
     },
   },
   communeNaissance: {
+    path: "apprenti.communeNaissance",
     maxLength: 80,
     type: String,
     description: "Commune de naissance de l'apprenti",
@@ -167,6 +174,7 @@ const apprentiSchema = {
     ],
   },
   nir: {
+    path: "apprenti.nir",
     maxLength: 15,
     minLength: 13,
     validate: {
@@ -189,6 +197,7 @@ const apprentiSchema = {
     // },
   },
   regimeSocial: {
+    path: "apprenti.regimeSocial",
     enum: [0, 1, 2],
     type: Number,
     default: null,
@@ -210,6 +219,7 @@ const apprentiSchema = {
     ],
   },
   handicap: {
+    path: "apprenti.handicap",
     type: Boolean,
     description: "Est reconnu travailleur handicapé (RQTH)",
     example: false,
@@ -231,6 +241,7 @@ const apprentiSchema = {
     ],
   },
   situationAvantContrat: {
+    path: "apprenti.situationAvantContrat",
     enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     type: Number,
     default: null,
@@ -295,6 +306,7 @@ const apprentiSchema = {
       "**Situation de l'apprenti avant le contrat**\r\n<br />1 : Scolaire\r\n<br />2 : Prépa apprentissage\r\n<br />3 : Etudiant\r\n<br />4 : Contrat d’apprentissage\r\n<br />5 : Contrat de professionnalisation\r\n<br />6 : Contrat aidé\r\n<br />7 : En formation au CFA avant signature d’un contrat d’apprentissage (L6222-12-1 du code du travail)\r\n<br />8 : En formation, au CFA, sans contrat, suite à rupture (5° de L6231-2 du code du travail)\r\n<br />9 : Stagiaire de la formation professionnelle\r\n<br />10 : Salarié\r\n<br />11 : Personne à la recherche d’un emploi (inscrite ou non au Pôle Emploi)\r\n<br />12 : Inactif",
   },
   diplome: {
+    path: "apprenti.diplome",
     ...diplomeSchema,
     label: "Diplôme ou titre le plus élevé obtenu :",
     requiredMessage: "le diplôme ou titre le plus élevé obtenu par l'apprenti(e) est obligatoire",
@@ -304,6 +316,7 @@ const apprentiSchema = {
     },
   },
   derniereClasse: {
+    path: "apprenti.derniereClasse",
     enum: [1, 11, 12, 21, 22, 31, 32, 40, 41, 42],
     type: Number,
     default: null,
@@ -364,6 +377,7 @@ const apprentiSchema = {
     ],
   },
   diplomePrepare: {
+    path: "apprenti.diplomePrepare",
     ...diplomeSchema,
     label: "Dernier diplôme ou titre préparé :",
     requiredMessage: "le dernier diplôme ou titre préparé par l'apprenti(e) est obligatoire",
@@ -373,6 +387,7 @@ const apprentiSchema = {
     },
   },
   intituleDiplomePrepare: {
+    path: "apprenti.intituleDiplomePrepare",
     maxLength: 255,
     type: String,
     description: "Intitulé précis du dernier diplôme ou titre préparé par l'apprenti(e)",
@@ -385,6 +400,7 @@ const apprentiSchema = {
     },
   },
   telephone: {
+    path: "apprenti.telephone",
     maxLength: 13,
     minLength: 10,
     validate: {
@@ -404,6 +420,7 @@ const apprentiSchema = {
     example: "0102030405",
   },
   courriel: {
+    path: "apprenti.courriel",
     maxLength: 80,
     type: String,
     description: "Courriel de l'apprenti",
@@ -432,7 +449,28 @@ const apprentiSchema = {
   },
   adresse: {
     ...adresseSchema,
+    numero: {
+      path: "apprenti.adresse.numero",
+      ...adresseSchema.numero,
+    },
+    voie: {
+      path: "apprenti.adresse.voie",
+      ...adresseSchema.voie,
+    },
+    complement: {
+      path: "apprenti.adresse.complement",
+      ...adresseSchema.complement,
+    },
+    codePostal: {
+      path: "apprenti.adresse.codePostal",
+      ...adresseSchema.codePostal,
+    },
+    commune: {
+      path: "apprenti.adresse.commune",
+      ...adresseSchema.commune,
+    },
     pays: {
+      path: "apprenti.adresse.pays",
       enum: [null, ...paysEnum.map(({ code }) => code)],
       default: "FR",
       type: String,
@@ -449,6 +487,7 @@ const apprentiSchema = {
     },
   },
   apprentiMineur: {
+    path: "apprenti.apprentiMineur",
     type: Boolean,
     description: "À la date de signature de ce contrat, l'apprenti(e) sera-t-il(elle) mineur(e) ?",
     example: false,
@@ -470,6 +509,7 @@ const apprentiSchema = {
     ],
   },
   apprentiMineurNonEmancipe: {
+    path: "apprenti.apprentiMineurNonEmancipe",
     type: Boolean,
     example: false,
     default: null,
@@ -498,6 +538,7 @@ const apprentiSchema = {
     },
     type: {
       nom: {
+        path: "apprenti.responsableLegal.nom",
         maxLength: 80,
         type: String,
         default: null,
@@ -518,6 +559,7 @@ const apprentiSchema = {
         ],
       },
       prenom: {
+        path: "apprenti.responsableLegal.prenom",
         maxLength: 80,
         type: String,
         default: null,
@@ -538,6 +580,7 @@ const apprentiSchema = {
         ],
       },
       memeAdresse: {
+        path: "apprenti.responsableLegal.memeAdresse",
         type: Boolean,
         description: "l'apprenti(e) vit à la même adresse que son responsable légal",
         example: false,
@@ -560,7 +603,28 @@ const apprentiSchema = {
       },
       adresse: {
         ...adresseSchema,
+        numero: {
+          path: "apprenti.responsableLegal.adresse.numero",
+          ...adresseSchema.numero,
+        },
+        voie: {
+          path: "apprenti.responsableLegal.adresse.voie",
+          ...adresseSchema.voie,
+        },
+        complement: {
+          path: "apprenti.responsableLegal.adresse.complement",
+          ...adresseSchema.complement,
+        },
+        codePostal: {
+          path: "apprenti.responsableLegal.adresse.codePostal",
+          ...adresseSchema.codePostal,
+        },
+        commune: {
+          path: "apprenti.responsableLegal.adresse.commune",
+          ...adresseSchema.commune,
+        },
         pays: {
+          path: "apprenti.responsableLegal.adresse.pays",
           enum: [null, ...paysEnum.map(({ code }) => code)],
           default: "FR",
           type: String,
@@ -591,6 +655,7 @@ const apprentiSchema = {
     },
   },
   inscriptionSportifDeHautNiveau: {
+    path: "apprenti.inscriptionSportifDeHautNiveau",
     type: Boolean,
     description:
       "Déclare être inscrit sur la liste des sportifs, entraîneurs, arbitres et juges sportifs de haut niveau",

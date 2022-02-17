@@ -356,6 +356,7 @@ export default React.memo(
     const prevFieldLockRef = useRef(false);
     const initRef = useRef(0);
     const triggerRef = useRef(0);
+    const triggerValidationRef = useRef(0);
 
     const borderBottomColor = useMemo(
       () => (validated ? "green.500" : isErrored ? "error" : "grey.600"),
@@ -510,6 +511,9 @@ export default React.memo(
         if (successed) {
           setIsErrored(false);
           setValidated(true);
+          if (field?.setField) {
+            field?.setField({ ...field, errored: false, path });
+          }
         } else if (warning) {
           setIsErrored(false);
           setValidated(false);
@@ -559,6 +563,9 @@ export default React.memo(
                   setFieldValue(name, fieldValue);
                   setIsErrored(false);
                   setValidated(true);
+                  if (field?.setField) {
+                    field?.setField({ ...field, errored: false, path });
+                  }
                 } else {
                   setShouldBeDisabled(false);
                   setFieldValue(name, fieldValue);
@@ -622,6 +629,9 @@ export default React.memo(
                   if (successed) {
                     setIsErrored(false);
                     setValidated(true);
+                    if (field?.setField) {
+                      field?.setField({ ...field, errored: false, path, triggerValidation: false });
+                    }
                   } else {
                     setValidated(false);
                     setIsErrored(true);
@@ -631,25 +641,26 @@ export default React.memo(
             } else if (!field?.triggerValidation && triggerRef.current === 1) {
               triggerRef.current = 0;
             } else if (field?.validateField) {
-              const { isValid: isValidValue, error: errorValue } = await validate(validationSchema, {
-                [name]: values[name],
-              });
-              if (!isValidValue) {
-                setErrors({ [name]: errorValue.message });
-                setIsErrored(true);
-                setValidated(false);
-                if (field?.setFieldsErrored) {
-                  field?.setFieldsErrored((errors) => {
-                    // TODO should reset validateField on first Onchange
-                    const filtered = errors.filter((e) => e.name !== name);
-                    return [...filtered, { name, label: label || field?.label, type }];
-                  });
+              if (triggerValidationRef.current === 0) {
+                triggerValidationRef.current = 1;
+                const { isValid: isValidValue, error: errorValue } = await validate(validationSchema, {
+                  [name]: values[name],
+                });
+                let errored = false;
+                if (!isValidValue) {
+                  setErrors({ [name]: errorValue.message });
+                  setIsErrored(true);
+                  setValidated(false);
+                  errored = true;
                 }
-                // TODO dirty for date field
-                if (field?.setSt) {
-                  field?.setSt({ ...field, validateField: false });
+                if (field?.setField) {
+                  field?.setField({ ...field, validateField: false, errored, path });
                 }
+              } else {
+                triggerValidationRef.current = 0;
               }
+            } else if (!field?.validateField && triggerValidationRef.current === 1) {
+              triggerValidationRef.current = 0;
             }
           }
         }

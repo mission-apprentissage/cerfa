@@ -35,6 +35,8 @@ import {
   cerfaEmployeurSiretAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import InputCerfa from "./Input";
+import CheckEmptyFields from "./CheckEmptyFields";
+
 import Ribbons from "../../../../common/components/Ribbons";
 import { ExternalLinkLine } from "../../../../theme/components/icons";
 
@@ -50,6 +52,12 @@ const FormContract = React.memo(() => {
 
   const {
     isLoading,
+    //
+    validation,
+    resetCheckFields,
+    fieldsErrored,
+    missingFieldAvantages,
+    //
     get: {
       contrat: {
         // modeContractuel: contratModeContractuel,
@@ -546,46 +554,58 @@ const FormContract = React.memo(() => {
             onSubmittedField={onSubmittedContratAvantageNature}
           />
           <Collapse in={avantageNature.value === "Oui"} animateOpacity>
-            <FormLabel my={4} fontWeight={700}>
+            <FormLabel my={4} fontWeight={700} id={`avantageNature_bloc_section-label`}>
               Avantages en nature, le cas échéant :
             </FormLabel>
-            <Flex>
-              <Box flex="1">
+            {missingFieldAvantages && (
+              <Text color="flaterror">
+                Si l'apprenti(e) bénéficie d'avantages en nature, veuillez saisir au moins un des champs ci-dessous.
+              </Text>
+            )}
+            <Box
+              borderWidth={missingFieldAvantages ? "1px" : "none"}
+              borderColor="flaterror"
+              padding={missingFieldAvantages ? "2" : "0"}
+            >
+              <Flex>
+                <Box flex="1">
+                  <InputCerfa
+                    path="contrat.avantageNourriture"
+                    field={avantageNourriture}
+                    type="number"
+                    min={1}
+                    mt="2"
+                    onSubmittedField={onSubmittedContratAvantageNourriture}
+                    hasInfo={false}
+                  />
+                </Box>
+                <Box ml={5}>
+                  <InputCerfa
+                    path="contrat.avantageLogement"
+                    field={avantageLogement}
+                    type="number"
+                    min={1}
+                    mt="2"
+                    onSubmittedField={onSubmittedContratAvantageLogement}
+                    hasInfo={false}
+                  />
+                </Box>
+              </Flex>
+              <Box>
                 <InputCerfa
-                  path="contrat.avantageNourriture"
-                  field={avantageNourriture}
-                  type="number"
-                  min={1}
+                  path="contrat.autreAvantageEnNature"
+                  field={autreAvantageEnNature}
+                  type="consent"
                   mt="2"
-                  onSubmittedField={onSubmittedContratAvantageNourriture}
+                  onSubmittedField={onSubmittedContratAutreAvantageEnNature}
                   hasInfo={false}
                 />
               </Box>
-              <Box ml={5}>
-                <InputCerfa
-                  path="contrat.avantageLogement"
-                  field={avantageLogement}
-                  type="number"
-                  min={1}
-                  mt="2"
-                  onSubmittedField={onSubmittedContratAvantageLogement}
-                  hasInfo={false}
-                />
-              </Box>
-            </Flex>
-            <Box>
-              <InputCerfa
-                path="contrat.autreAvantageEnNature"
-                field={autreAvantageEnNature}
-                type="consent"
-                mt="2"
-                onSubmittedField={onSubmittedContratAutreAvantageEnNature}
-                hasInfo={false}
-              />
             </Box>
           </Collapse>
         </Box>
       </Box>
+      <CheckEmptyFields fieldsErrored={fieldsErrored} validation={validation} resetCheckFields={resetCheckFields} />
     </Box>
   );
 });

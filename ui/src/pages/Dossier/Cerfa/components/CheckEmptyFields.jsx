@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, Collapse, Text, List, ListItem, ListIcon, Link, Flex } from "@chakra-ui/react";
 import Ribbons from "../../../../common/components/Ribbons";
 import { ArrowRightLine, ErrorIcon } from "../../../../theme/components/icons";
-// import { NavLink } from "react-router-dom";
 
-const CheckEmptyFields = ({ validate, fieldsErrored }) => {
-  const [triggered, setTriggered] = useState(false);
+const CheckEmptyFields = React.memo(({ validation, fieldsErrored, resetCheckFields }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [hasBeenReset, setHasBeenReset] = resetCheckFields;
+
+  useEffect(() => {
+    if (fieldsErrored.length === 0 && hasBeenReset) {
+      setHasBeenReset(false);
+      // TODO IF I HAVE TO DO THIS SOMETHING IS TERRIBLY WRONG (ALL INPUT AT THE SAME TIME)
+      setTimeout(() => {
+        validation("trigger");
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 200);
+      }, 400);
+    }
+  }, [fieldsErrored, hasBeenReset, isLoading, isOpen, setHasBeenReset, validation]);
 
   return (
     <Box mt={10}>
@@ -15,18 +29,14 @@ const CheckEmptyFields = ({ validate, fieldsErrored }) => {
         size="md"
         variant="secondary"
         onClick={() => {
-          setTriggered(true);
           setIsLoading(true);
-
-          setTimeout(() => {
-            validate();
-            setIsLoading(false);
-          }, 220);
+          setIsOpen(true);
+          validation("reset");
         }}
       >
         Est-ce que tous mes champs sont remplis ?
       </Button>
-      <Collapse in={triggered} animateOpacity>
+      <Collapse in={isOpen} animateOpacity>
         <Ribbons
           variant={isLoading ? "unstyled" : fieldsErrored.length === 0 ? "success" : "error"}
           mt={5}
@@ -43,29 +53,15 @@ const CheckEmptyFields = ({ validate, fieldsErrored }) => {
                 </Text>
               </Flex>
               <List spacing={3} mt={3} ml={5}>
-                {fieldsErrored.map(({ type, name, label }) => {
-                  let anchor = `${name}_section-label`;
-                  if (
-                    type === "text" ||
-                    type === "select" ||
-                    type === "radio" ||
-                    type === "phone" ||
-                    type === "email" ||
-                    type === "date"
-                  ) {
-                    anchor = `${name}_section-label`;
-                  }
+                {fieldsErrored.map(({ path, label }) => {
+                  const name = path.replaceAll(".", "_");
                   return (
                     <ListItem key={name}>
                       <ListIcon as={ArrowRightLine} color="flaterror" />
-                      {/*
-              TODO SHOULD BE LIKE THIS OR add archor dynanicly with react router
-               <Link as={NavLink} to={"#apprenti_departementNaissance_section-label"}>
-            Département de naissance
-          </Link> */}
+
                       <Link
                         onClick={() => {
-                          const element = document.getElementById(anchor);
+                          const element = document.getElementById(`${name}_section-label`);
                           if (element) {
                             element.scrollIntoView({ behavior: "smooth" });
                           }
@@ -84,6 +80,6 @@ const CheckEmptyFields = ({ validate, fieldsErrored }) => {
       </Collapse>
     </Box>
   );
-};
+});
 
 export default CheckEmptyFields;

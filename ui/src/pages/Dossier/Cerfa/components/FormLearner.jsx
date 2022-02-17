@@ -21,8 +21,11 @@ const FormLearner = React.memo(() => {
 
   const {
     isLoading,
-    validate,
+    //
+    validation,
+    resetCheckFields,
     fieldsErrored,
+    //
     get: {
       apprenti: {
         nom,
@@ -405,7 +408,7 @@ const FormLearner = React.memo(() => {
           />
         </Box>
       </Flex>
-      <CheckEmptyFields validate={validate} fieldsErrored={fieldsErrored} />
+      <CheckEmptyFields fieldsErrored={fieldsErrored} validation={validation} resetCheckFields={resetCheckFields} />
     </Box>
   );
 });

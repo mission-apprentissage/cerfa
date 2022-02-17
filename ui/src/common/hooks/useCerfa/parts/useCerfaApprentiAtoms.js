@@ -8,8 +8,21 @@ export const cerfaPartApprentiIsLoadingAtom = atom({
   key: "cerfa/part/apprenti/isLoading",
   default: true,
 });
+
+export const cerfaPartApprentiIsValidatigngAtom = atom({
+  key: "cerfa/part/apprenti/isValidating",
+  default: false,
+});
+export const cerfaPartApprentiHasBeenResetAtom = atom({
+  key: "cerfa/part/apprenti/hasBeenReset",
+  default: false,
+});
 export const cerfaPartApprentiFieldsErroredAtom = atom({
   key: "cerfa/part/apprenti/fields/errored",
+  default: [],
+});
+export const cerfaPartApprentiFieldsVaidedAtom = atom({
+  key: "cerfa/part/apprenti/fields/valided",
   default: [],
 });
 
