@@ -513,8 +513,8 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
-    label: "l'apprenti(e) est mineur(e) non emancipé(e)",
-    description: `Vous devez indiquer "oui" si l'apprenti est mineur non émancipé à la date de signature du contrat. Dans ce cas, le représentant légal devra également signer le contrat.`,
+    label: "L'apprenti est sous la responsabilité d'un représentant légal (non émancipé)",
+    description: `Un mineur émancipé peut accomplir seul les actes nécessitant la majorité légale. Plus d'informations à propos de l'émancipation sur [le site du Service public.](https://www.service-public.fr/particuliers/vosdroits/F1194) `,
     requiredMessage: "Merci de renseigner si l'apprenti(e) mineur(e) est emancipé(e) ou non",
     options: [
       {
