@@ -16,10 +16,10 @@ import {
   Text,
   Badge,
   Stack,
+  Link,
 } from "@chakra-ui/react";
 import { prettyPrintDate } from "../utils/dateUtils";
 import { replaceLinks } from "../utils/markdownUtils";
-import { Link } from "react-router-dom";
 import { ExternalLinkLine } from "../../theme/components/icons";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import ReactMarkdown from "react-markdown";

@@ -1,7 +1,9 @@
 import React from "react";
-import { Box, Container, Flex, Image, Link, List, ListItem, Text } from "@chakra-ui/react";
+import { Box, Container, Flex, Link, List, ListItem, Text } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { ExternalLinkLine } from "../../../theme/components/icons";
+import { Logo } from "./Logo";
+
 const APP_VERSION = process.env.REACT_APP_VERSION;
 
 const Footer = () => {
@@ -10,11 +12,7 @@ const Footer = () => {
       <Container maxW="xl">
         <Flex flexDirection={["column", "column", "row"]}>
           <Link as={NavLink} to="/" py={4} w={["100%", "100%", "50%"]}>
-            <Image
-              w="400px"
-              h="200px"
-              src="https://www.economie.gouv.fr/files/files/directions_services/plan-de-relance/etiquette_France_Relance_UE.png"
-            />
+            <Logo size={"xl"} />
           </Link>
           <Box alignSelf="center" flex="1">
             <Text>
