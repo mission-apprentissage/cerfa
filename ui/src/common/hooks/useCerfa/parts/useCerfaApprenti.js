@@ -21,6 +21,7 @@ import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
 import * as apprentiAtoms from "./useCerfaApprentiAtoms";
 import { buildRemunerations } from "../../../utils/form/remunerationsUtils";
+import { fieldsChecker } from "../../../utils/form/fieldsCheckUtils";
 import { useCerfaContrat } from "../parts/useCerfaContrat";
 import { DateTime } from "luxon";
 
@@ -187,6 +188,11 @@ export function useCerfaApprenti() {
     apprentiAtoms.cerfaPartApprentiCompletionAtom
   );
   const [isLoading, setIsLoading] = useRecoilState(apprentiAtoms.cerfaPartApprentiIsLoadingAtom);
+
+  const [isValidating, setIsValidating] = useRecoilState(apprentiAtoms.cerfaPartApprentiIsValidatigngAtom);
+  const resetCheckFields = useRecoilState(apprentiAtoms.cerfaPartApprentiHasBeenResetAtom);
+  const [fieldsErrored, setFieldsErrored] = useRecoilState(apprentiAtoms.cerfaPartApprentiFieldsErroredAtom);
+  const [fieldsValided, setFieldsValided] = useRecoilState(apprentiAtoms.cerfaPartApprentiFieldsVaidedAtom);
 
   const [apprentiNom, setApprentiNom] = useRecoilState(apprentiAtoms.cerfaApprentiNomAtom);
   const [apprentiPrenom, setApprentiPrenom] = useRecoilState(apprentiAtoms.cerfaApprentiPrenomAtom);
@@ -365,13 +371,14 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [apprentiNom, setApprentiNom, dossier?._id, cerfa?.id, setPartApprentiCompletion]
+    [apprentiNom, setApprentiNom, dossier?._id, cerfa?.id, setPartApprentiCompletion, setFieldsErrored]
   );
 
   const onSubmittedApprentiPrenom = useCallback(
@@ -395,13 +402,14 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [apprentiPrenom, setApprentiPrenom, dossier?._id, cerfa?.id, setPartApprentiCompletion]
+    [apprentiPrenom, setApprentiPrenom, dossier?._id, cerfa?.id, setPartApprentiCompletion, setFieldsErrored]
   );
 
   const onSubmittedApprentiDateNaissance = useCallback(
@@ -474,6 +482,7 @@ export function useCerfaApprenti() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
@@ -491,6 +500,7 @@ export function useCerfaApprenti() {
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,
+      setFieldsErrored,
       setRemunerations,
     ]
   );
@@ -592,6 +602,7 @@ export function useCerfaApprenti() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
@@ -605,6 +616,7 @@ export function useCerfaApprenti() {
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,
+      setFieldsErrored,
     ]
   );
 
@@ -711,6 +723,8 @@ export function useCerfaApprenti() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== "apprenti.adresse.commune"));
           }
         }
       } catch (e) {
@@ -726,6 +740,7 @@ export function useCerfaApprenti() {
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,
+      setFieldsErrored,
     ]
   );
 
@@ -768,6 +783,7 @@ export function useCerfaApprenti() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
@@ -781,6 +797,7 @@ export function useCerfaApprenti() {
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,
+      setFieldsErrored,
     ]
   );
 
@@ -824,6 +841,7 @@ export function useCerfaApprenti() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
@@ -837,6 +855,7 @@ export function useCerfaApprenti() {
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,
+      setFieldsErrored,
     ]
   );
 
@@ -861,13 +880,14 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [apprentiTelephone, setApprentiTelephone, dossier?._id, cerfa?.id, setPartApprentiCompletion]
+    [apprentiTelephone, setApprentiTelephone, dossier?._id, cerfa?.id, setPartApprentiCompletion, setFieldsErrored]
   );
 
   const onSubmittedApprentiCourriel = useCallback(
@@ -879,7 +899,6 @@ export function useCerfaApprenti() {
               courriel: {
                 ...apprentiCourriel,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -892,13 +911,14 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [apprentiCourriel, setApprentiCourriel, dossier?._id, cerfa?.id, setPartApprentiCompletion]
+    [apprentiCourriel, setApprentiCourriel, dossier?._id, cerfa?.id, setPartApprentiCompletion, setFieldsErrored]
   );
 
   const onSubmittedApprentiDepartementNaissance = useCallback(
@@ -922,13 +942,21 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [apprentiDepartementNaissance, setApprentiDepartementNaissance, dossier?._id, cerfa?.id, setPartApprentiCompletion]
+    [
+      apprentiDepartementNaissance,
+      setApprentiDepartementNaissance,
+      dossier?._id,
+      cerfa?.id,
+      setPartApprentiCompletion,
+      setFieldsErrored,
+    ]
   );
 
   const onSubmittedApprentiCommuneNaissance = useCallback(
@@ -952,13 +980,21 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [apprentiCommuneNaissance, setApprentiCommuneNaissance, dossier?._id, cerfa?.id, setPartApprentiCompletion]
+    [
+      apprentiCommuneNaissance,
+      setApprentiCommuneNaissance,
+      dossier?._id,
+      cerfa?.id,
+      setPartApprentiCompletion,
+      setFieldsErrored,
+    ]
   );
 
   const onSubmittedApprentiDiplome = useCallback(
@@ -982,13 +1018,14 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [apprentiDiplome, setApprentiDiplome, dossier?._id, cerfa?.id, setPartApprentiCompletion]
+    [apprentiDiplome, setApprentiDiplome, dossier?._id, cerfa?.id, setPartApprentiCompletion, setFieldsErrored]
   );
 
   const onSubmittedApprentiDiplomePrepare = useCallback(
@@ -1012,13 +1049,21 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [apprentiDiplomePrepare, setApprentiDiplomePrepare, dossier?._id, cerfa?.id, setPartApprentiCompletion]
+    [
+      apprentiDiplomePrepare,
+      setApprentiDiplomePrepare,
+      dossier?._id,
+      cerfa?.id,
+      setPartApprentiCompletion,
+      setFieldsErrored,
+    ]
   );
 
   const onSubmittedApprentiSituationAvantContrat = useCallback(
@@ -1042,6 +1087,7 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
@@ -1054,6 +1100,7 @@ export function useCerfaApprenti() {
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,
+      setFieldsErrored,
     ]
   );
 
@@ -1078,13 +1125,14 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [apprentiSexe, setApprentiSexe, dossier?._id, cerfa?.id, setPartApprentiCompletion]
+    [apprentiSexe, setApprentiSexe, dossier?._id, cerfa?.id, setPartApprentiCompletion, setFieldsErrored]
   );
 
   const onSubmittedApprentiNationalite = useCallback(
@@ -1108,13 +1156,14 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [apprentiNationalite, setApprentiNationalite, dossier?._id, cerfa?.id, setPartApprentiCompletion]
+    [apprentiNationalite, setApprentiNationalite, dossier?._id, cerfa?.id, setPartApprentiCompletion, setFieldsErrored]
   );
 
   const onSubmittedApprentiRegimeSocial = useCallback(
@@ -1138,13 +1187,21 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [apprentiRegimeSocial, setApprentiRegimeSocial, dossier?._id, cerfa?.id, setPartApprentiCompletion]
+    [
+      apprentiRegimeSocial,
+      setApprentiRegimeSocial,
+      dossier?._id,
+      cerfa?.id,
+      setPartApprentiCompletion,
+      setFieldsErrored,
+    ]
   );
 
   const onSubmittedApprentiDerniereClasse = useCallback(
@@ -1168,13 +1225,21 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [apprentiDerniereClasse, setApprentiDerniereClasse, dossier?._id, cerfa?.id, setPartApprentiCompletion]
+    [
+      apprentiDerniereClasse,
+      setApprentiDerniereClasse,
+      dossier?._id,
+      cerfa?.id,
+      setPartApprentiCompletion,
+      setFieldsErrored,
+    ]
   );
 
   const onSubmittedApprentiIntituleDiplomePrepare = useCallback(
@@ -1198,6 +1263,7 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
@@ -1210,6 +1276,7 @@ export function useCerfaApprenti() {
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,
+      setFieldsErrored,
     ]
   );
 
@@ -1234,6 +1301,7 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
@@ -1246,6 +1314,7 @@ export function useCerfaApprenti() {
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,
+      setFieldsErrored,
     ]
   );
 
@@ -1270,13 +1339,14 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [apprentiHandicap, setApprentiHandicap, dossier?._id, cerfa?.id, setPartApprentiCompletion]
+    [apprentiHandicap, setApprentiHandicap, dossier?._id, cerfa?.id, setPartApprentiCompletion, setFieldsErrored]
   );
 
   const onSubmittedApprentiApprentiMineur = useCallback(
@@ -1330,6 +1400,11 @@ export function useCerfaApprenti() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
+            if (apprentiMineurNonEmancipeDbValue === false) {
+              setFieldsErrored((errors) => errors.filter((e) => e.path !== "apprenti.apprentiMineurNonEmancipe"));
+            }
           }
         }
       } catch (e) {
@@ -1345,6 +1420,7 @@ export function useCerfaApprenti() {
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,
+      setFieldsErrored,
     ]
   );
 
@@ -1377,6 +1453,8 @@ export function useCerfaApprenti() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
@@ -1390,6 +1468,7 @@ export function useCerfaApprenti() {
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,
+      setFieldsErrored,
     ]
   );
 
@@ -1418,13 +1497,21 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [apprentiResponsableLegalNom, setApprentiResponsableLegalNom, dossier?._id, cerfa?.id, setPartApprentiCompletion]
+    [
+      apprentiResponsableLegalNom,
+      setApprentiResponsableLegalNom,
+      dossier?._id,
+      cerfa?.id,
+      setPartApprentiCompletion,
+      setFieldsErrored,
+    ]
   );
 
   const onSubmittedApprentiResponsableLegalPrenom = useCallback(
@@ -1452,6 +1539,7 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
@@ -1464,6 +1552,7 @@ export function useCerfaApprenti() {
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,
+      setFieldsErrored,
     ]
   );
 
@@ -1526,6 +1615,7 @@ export function useCerfaApprenti() {
                 },
               });
               setPartApprentiCompletion(cerfaApprentiCompletion(res));
+              setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
             }
           }
         }
@@ -1557,6 +1647,7 @@ export function useCerfaApprenti() {
       apprentiResponsableLegalAdresseCodePostal?.value,
       apprentiResponsableLegalAdresseCommune?.value,
       apprentiResponsableLegalAdressePays,
+      setFieldsErrored,
     ]
   );
 
@@ -1633,6 +1724,7 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
@@ -1645,6 +1737,7 @@ export function useCerfaApprenti() {
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,
+      setFieldsErrored,
     ]
   );
 
@@ -1731,6 +1824,8 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== "apprenti.responsableLegal.adresse.commune"));
           }
         }
       } catch (e) {
@@ -1745,6 +1840,7 @@ export function useCerfaApprenti() {
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,
+      setFieldsErrored,
     ]
   );
 
@@ -1777,6 +1873,7 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
@@ -1789,6 +1886,7 @@ export function useCerfaApprenti() {
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,
+      setFieldsErrored,
     ]
   );
 
@@ -1821,6 +1919,7 @@ export function useCerfaApprenti() {
               },
             });
             setPartApprentiCompletion(cerfaApprentiCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
@@ -1833,49 +1932,290 @@ export function useCerfaApprenti() {
       dossier?._id,
       cerfa?.id,
       setPartApprentiCompletion,
+      setFieldsErrored,
+    ]
+  );
+
+  const validation = useCallback(
+    (action) => {
+      let fields = [
+        apprentiNom,
+        apprentiPrenom,
+        apprentiSexe,
+        apprentiNationalite,
+        apprentiDateNaissance,
+        apprentiDepartementNaissance,
+        apprentiCommuneNaissance,
+        apprentiRegimeSocial,
+        apprentiHandicap,
+        apprentiSituationAvantContrat,
+        apprentiDiplome,
+        apprentiDerniereClasse,
+        apprentiDiplomePrepare,
+        apprentiIntituleDiplomePrepare,
+        apprentiTelephone,
+        apprentiCourriel,
+        apprentiInscriptionSportifDeHautNiveau,
+        apprentiApprentiMineur,
+        apprentiApprentiMineurNonEmancipe,
+        apprentiAdresseVoie,
+        apprentiAdresseCodePostal,
+        apprentiAdresseCommune,
+        apprentiAdressePays,
+      ];
+
+      let setterFields = [
+        setApprentiAdresseCodePostal,
+        setApprentiAdresseCommune,
+        setApprentiAdressePays,
+        setApprentiAdresseVoie,
+        setApprentiApprentiMineur,
+        setApprentiApprentiMineurNonEmancipe,
+        setApprentiCommuneNaissance,
+        setApprentiCourriel,
+        setApprentiDateNaissance,
+        setApprentiDepartementNaissance,
+        setApprentiDerniereClasse,
+        setApprentiDiplome,
+        setApprentiDiplomePrepare,
+        setApprentiHandicap,
+        setApprentiInscriptionSportifDeHautNiveau,
+        setApprentiIntituleDiplomePrepare,
+        setApprentiNationalite,
+        setApprentiNom,
+        setApprentiPrenom,
+        setApprentiRegimeSocial,
+        setApprentiSexe,
+        setApprentiSituationAvantContrat,
+        setApprentiTelephone,
+      ];
+
+      // TODO dbValue instead
+      if (apprentiApprentiMineurNonEmancipe.value === "Oui") {
+        fields = [
+          ...fields,
+          apprentiResponsableLegalNom,
+          apprentiResponsableLegalPrenom,
+          apprentiResponsableLegalMemeAdresse,
+        ];
+        setterFields = [
+          ...setterFields,
+          setApprentiResponsableLegalNom,
+          setApprentiResponsableLegalPrenom,
+          setApprentiResponsableLegalMemeAdresse,
+        ];
+
+        // TODO dbValue instead
+        if (apprentiResponsableLegalMemeAdresse.value === "Non") {
+          fields = [
+            ...fields,
+            apprentiResponsableLegalAdresseVoie,
+            apprentiResponsableLegalAdresseCodePostal,
+            apprentiResponsableLegalAdresseCommune,
+            apprentiResponsableLegalAdressePays,
+          ];
+          setterFields = [
+            ...setterFields,
+            setApprentiResponsableLegalAdresseVoie,
+            setApprentiResponsableLegalAdresseCodePostal,
+            setApprentiResponsableLegalAdresseCommune,
+            setApprentiResponsableLegalAdressePays,
+          ];
+        }
+      }
+
+      fieldsChecker({
+        action,
+        fields,
+        setterFields,
+        setFieldsErrored,
+        setIsValidating,
+        resetCheckFields,
+        fieldsValided,
+        setFieldsValided,
+        fieldsErrored,
+      });
+    },
+    [
+      apprentiAdresseCodePostal,
+      apprentiAdresseCommune,
+      apprentiAdressePays,
+      apprentiAdresseVoie,
+      apprentiApprentiMineur,
+      apprentiApprentiMineurNonEmancipe,
+      apprentiCommuneNaissance,
+      apprentiCourriel,
+      apprentiDateNaissance,
+      apprentiDepartementNaissance,
+      apprentiDerniereClasse,
+      apprentiDiplome,
+      apprentiDiplomePrepare,
+      apprentiHandicap,
+      apprentiInscriptionSportifDeHautNiveau,
+      apprentiIntituleDiplomePrepare,
+      apprentiNationalite,
+      apprentiNom,
+      apprentiPrenom,
+      apprentiRegimeSocial,
+      apprentiResponsableLegalAdresseCodePostal,
+      apprentiResponsableLegalAdresseCommune,
+      apprentiResponsableLegalAdressePays,
+      apprentiResponsableLegalAdresseVoie,
+      apprentiResponsableLegalMemeAdresse,
+      apprentiResponsableLegalNom,
+      apprentiResponsableLegalPrenom,
+      apprentiSexe,
+      apprentiSituationAvantContrat,
+      apprentiTelephone,
+      fieldsErrored,
+      fieldsValided,
+      resetCheckFields,
+      setApprentiAdresseCodePostal,
+      setApprentiAdresseCommune,
+      setApprentiAdressePays,
+      setApprentiAdresseVoie,
+      setApprentiApprentiMineur,
+      setApprentiApprentiMineurNonEmancipe,
+      setApprentiCommuneNaissance,
+      setApprentiCourriel,
+      setApprentiDateNaissance,
+      setApprentiDepartementNaissance,
+      setApprentiDerniereClasse,
+      setApprentiDiplome,
+      setApprentiDiplomePrepare,
+      setApprentiHandicap,
+      setApprentiInscriptionSportifDeHautNiveau,
+      setApprentiIntituleDiplomePrepare,
+      setApprentiNationalite,
+      setApprentiNom,
+      setApprentiPrenom,
+      setApprentiRegimeSocial,
+      setApprentiResponsableLegalAdresseCodePostal,
+      setApprentiResponsableLegalAdresseCommune,
+      setApprentiResponsableLegalAdressePays,
+      setApprentiResponsableLegalAdresseVoie,
+      setApprentiResponsableLegalMemeAdresse,
+      setApprentiResponsableLegalNom,
+      setApprentiResponsableLegalPrenom,
+      setApprentiSexe,
+      setApprentiSituationAvantContrat,
+      setApprentiTelephone,
+      setFieldsErrored,
+      setFieldsValided,
+      setIsValidating,
     ]
   );
 
   const setAll = useCallback(
     (res) => {
-      setApprentiNom(res.apprenti.nom);
-      setApprentiPrenom(res.apprenti.prenom);
-      setApprentiSexe(convertValueToOption(res.apprenti.sexe));
-      setApprentiNationalite(convertValueToOption(res.apprenti.nationalite));
-      setApprentiDateNaissance(convertValueToDate(res.apprenti.dateNaissance));
-      setApprentiAge(res.apprenti.age);
-      setApprentiDepartementNaissance(res.apprenti.departementNaissance);
-      setApprentiCommuneNaissance(res.apprenti.communeNaissance);
-      setApprentiNir(res.apprenti.nir);
-      setApprentiRegimeSocial(convertValueToOption(res.apprenti.regimeSocial));
-      setApprentiHandicap(convertValueToOption(res.apprenti.handicap));
-      setApprentiSituationAvantContrat(convertValueToOption(res.apprenti.situationAvantContrat));
+      const { apprenti } = res;
+      setApprentiNom({ ...apprenti.nom, setField: setApprentiNom, errored: null });
+      setApprentiPrenom({ ...apprenti.prenom, setField: setApprentiPrenom, errored: null });
+      setApprentiSexe({ ...convertValueToOption(apprenti.sexe), setField: setApprentiSexe, errored: null });
+      setApprentiNationalite({
+        ...convertValueToOption(apprenti.nationalite),
+        setField: setApprentiNationalite,
+        errored: null,
+      });
+      setApprentiDateNaissance({
+        ...convertValueToDate(apprenti.dateNaissance),
+        setField: setApprentiDateNaissance,
+        errored: null,
+      });
+      setApprentiAge(apprenti.age);
+      setApprentiDepartementNaissance({
+        ...apprenti.departementNaissance,
+        setField: setApprentiDepartementNaissance,
+        errored: null,
+      });
+      setApprentiCommuneNaissance({
+        ...apprenti.communeNaissance,
+        setField: setApprentiCommuneNaissance,
+        errored: null,
+      });
+      setApprentiNir(apprenti.nir);
+      setApprentiRegimeSocial({
+        ...convertValueToOption(apprenti.regimeSocial),
+        setField: setApprentiRegimeSocial,
+        errored: null,
+      });
+      setApprentiHandicap({
+        ...convertValueToOption(apprenti.handicap),
+        setField: setApprentiHandicap,
+        errored: null,
+      });
+      setApprentiSituationAvantContrat({
+        ...convertValueToOption(apprenti.situationAvantContrat),
+        setField: setApprentiSituationAvantContrat,
+        errored: null,
+      });
 
-      setApprentiDiplome(convertValueToMultipleSelectOption(res.apprenti.diplome));
-      setApprentiDerniereClasse(convertValueToOption(res.apprenti.derniereClasse));
-      setApprentiDiplomePrepare(convertValueToMultipleSelectOption(res.apprenti.diplomePrepare));
+      setApprentiDiplome({
+        ...convertValueToMultipleSelectOption(apprenti.diplome),
+        setField: setApprentiDiplome,
+        errored: null,
+      });
+      setApprentiDerniereClasse({
+        ...convertValueToOption(apprenti.derniereClasse),
+        setField: setApprentiDerniereClasse,
+        errored: null,
+      });
+      setApprentiDiplomePrepare({
+        ...convertValueToMultipleSelectOption(apprenti.diplomePrepare),
+        setField: setApprentiDiplomePrepare,
+        errored: null,
+      });
 
-      setApprentiIntituleDiplomePrepare(res.apprenti.intituleDiplomePrepare);
-      setApprentiTelephone({ ...res.apprenti.telephone, value: res.apprenti.telephone.value.replace("+", "") });
-      setApprentiCourriel(res.apprenti.courriel);
-      setApprentiAdresseNumero(res.apprenti.adresse.numero);
-      setApprentiAdresseVoie(res.apprenti.adresse.voie);
-      setApprentiAdresseComplement(res.apprenti.adresse.complement);
-      setApprentiAdresseCodePostal(res.apprenti.adresse.codePostal);
-      setApprentiAdresseCommune(res.apprenti.adresse.commune);
-      setApprentiAdressePays(convertValueToOption(res.apprenti.adresse.pays));
-      setApprentiInscriptionSportifDeHautNiveau(convertValueToOption(res.apprenti.inscriptionSportifDeHautNiveau));
+      setApprentiIntituleDiplomePrepare({
+        ...apprenti.intituleDiplomePrepare,
+        setField: setApprentiIntituleDiplomePrepare,
+        errored: null,
+      });
+      setApprentiTelephone({
+        ...apprenti.telephone,
+        value: apprenti.telephone.value.replace("+", ""),
+        setField: setApprentiTelephone,
+        errored: null,
+      });
+      setApprentiCourriel({ ...apprenti.courriel, setField: setApprentiCourriel, errored: null });
+      setApprentiAdresseNumero(apprenti.adresse.numero);
+      setApprentiAdresseVoie({ ...apprenti.adresse.voie, setField: setApprentiAdresseVoie, errored: null });
+      setApprentiAdresseComplement(apprenti.adresse.complement);
+      setApprentiAdresseCodePostal({
+        ...apprenti.adresse.codePostal,
+        setField: setApprentiAdresseCodePostal,
+        errored: null,
+      });
+      setApprentiAdresseCommune({
+        ...apprenti.adresse.commune,
+        setField: setApprentiAdresseCommune,
+        errored: null,
+      });
+      setApprentiAdressePays({
+        ...convertValueToOption(apprenti.adresse.pays),
+        setField: setApprentiAdressePays,
+        errored: null,
+      });
+      setApprentiInscriptionSportifDeHautNiveau({
+        ...convertValueToOption(apprenti.inscriptionSportifDeHautNiveau),
+        setField: setApprentiInscriptionSportifDeHautNiveau,
+        errored: null,
+      });
 
-      setApprentiApprentiMineur(convertValueToOption(res.apprenti.apprentiMineur));
+      setApprentiApprentiMineur({
+        ...convertValueToOption(apprenti.apprentiMineur),
+        setField: setApprentiApprentiMineur,
+        errored: null,
+      });
 
       let apprentiMineurNonEmancipeShouldBeLocked = false;
-      if (res.apprenti.apprentiMineur.value === false) {
+      if (apprenti.apprentiMineur.value === false) {
         apprentiMineurNonEmancipeShouldBeLocked = true;
       }
 
-      setApprentiApprentiMineurNonEmancipe(
-        convertValueToOption({
-          ...res.apprenti.apprentiMineurNonEmancipe,
+      setApprentiApprentiMineurNonEmancipe({
+        ...convertValueToOption({
+          ...apprenti.apprentiMineurNonEmancipe,
           options: [
             {
               label: "Oui",
@@ -1887,18 +2227,36 @@ export function useCerfaApprenti() {
               value: false,
             },
           ],
-        })
-      );
+        }),
+        setField: setApprentiApprentiMineurNonEmancipe,
+        errored: null,
+      });
 
-      setApprentiResponsableLegalNom(res.apprenti.responsableLegal.nom);
-      setApprentiResponsableLegalPrenom(res.apprenti.responsableLegal.prenom);
-      setApprentiResponsableLegalMemeAdresse(convertValueToOption(res.apprenti.responsableLegal.memeAdresse));
-      setApprentiResponsableLegalAdresseNumero(res.apprenti.responsableLegal.adresse.numero);
-      setApprentiResponsableLegalAdresseVoie(res.apprenti.responsableLegal.adresse.voie);
-      setApprentiResponsableLegalAdresseComplement(res.apprenti.responsableLegal.adresse.complement);
-      setApprentiResponsableLegalAdresseCodePostal(res.apprenti.responsableLegal.adresse.codePostal);
-      setApprentiResponsableLegalAdresseCommune(res.apprenti.responsableLegal.adresse.commune);
-      setApprentiResponsableLegalAdressePays(convertValueToOption(res.apprenti.responsableLegal.adresse.pays));
+      setApprentiResponsableLegalNom({
+        ...apprenti.responsableLegal.nom,
+        setField: setApprentiResponsableLegalNom,
+        errored: null,
+      });
+      setApprentiResponsableLegalPrenom({
+        ...apprenti.responsableLegal.prenom,
+        setField: setApprentiResponsableLegalPrenom,
+        errored: null,
+      });
+      setApprentiResponsableLegalMemeAdresse({
+        ...convertValueToOption(apprenti.responsableLegal.memeAdresse),
+        setField: setApprentiResponsableLegalMemeAdresse,
+        errored: null,
+      });
+      setApprentiResponsableLegalAdresseNumero(apprenti.responsableLegal.adresse.numero);
+      setApprentiResponsableLegalAdresseVoie({
+        ...apprenti.responsableLegal.adresse.voie,
+        setField: setApprentiResponsableLegalAdresseVoie,
+        errored: null,
+      });
+      setApprentiResponsableLegalAdresseComplement(apprenti.responsableLegal.adresse.complement);
+      setApprentiResponsableLegalAdresseCodePostal(apprenti.responsableLegal.adresse.codePostal);
+      setApprentiResponsableLegalAdresseCommune(apprenti.responsableLegal.adresse.commune);
+      setApprentiResponsableLegalAdressePays(convertValueToOption(apprenti.responsableLegal.adresse.pays));
 
       setPartApprentiCompletion(cerfaApprentiCompletion(res));
     },
@@ -1948,10 +2306,18 @@ export function useCerfaApprenti() {
       setAll(cerfa);
       setIsLoading(false);
     }
-  }, [cerfa, isLoading, setAll, setIsLoading]);
+    if (isValidating) {
+      validation("check");
+    }
+  }, [cerfa, isLoading, isValidating, setAll, setIsLoading, validation]);
 
   return {
     isLoading,
+    //
+    validation,
+    resetCheckFields,
+    fieldsErrored,
+    //
     completion: partApprentiCompletion,
     get: {
       apprenti: {

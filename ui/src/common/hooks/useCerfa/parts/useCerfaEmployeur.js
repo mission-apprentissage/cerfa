@@ -20,6 +20,7 @@ import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
 import * as employeurAtoms from "./useCerfaEmployeurAtoms";
 import { buildRemunerations } from "../../../utils/form/remunerationsUtils";
+import { fieldsChecker } from "../../../utils/form/fieldsCheckUtils";
 import { useCerfaContrat } from "../parts/useCerfaContrat";
 
 export const cerfaEmployeurCompletion = (res) => {
@@ -328,6 +329,11 @@ export function useCerfaEmployeur() {
   );
   const [isLoading, setIsLoading] = useRecoilState(employeurAtoms.cerfaPartEmployeurIsLoadingAtom);
 
+  const [isValidating, setIsValidating] = useRecoilState(employeurAtoms.cerfaPartEmployeurIsValidatigngAtom);
+  const resetCheckFields = useRecoilState(employeurAtoms.cerfaPartEmployeurHasBeenResetAtom);
+  const [fieldsValided, setFieldsValided] = useRecoilState(employeurAtoms.cerfaPartEmployeurFieldsVaidedAtom);
+  const [fieldsErrored, setFieldsErrored] = useRecoilState(employeurAtoms.cerfaPartEmployeurFieldsErroredAtom);
+
   const [employeurSiret, setEmployeurSiret] = useRecoilState(employeurAtoms.cerfaEmployeurSiretAtom);
   const [employeurDenomination, setEmployeurDenomination] = useRecoilState(
     employeurAtoms.cerfaEmployeurDenominationAtom
@@ -407,7 +413,7 @@ export function useCerfaEmployeur() {
               adresse: {
                 numero: {
                   ...employeurAdresseNumero,
-                  value: data.numero_voie || "", //parseInt(data.numero_voie),
+                  value: data.numero_voie || "",
                   locked: false,
                 },
                 voie: {
@@ -419,10 +425,26 @@ export function useCerfaEmployeur() {
                   locked: false,
                 },
                 complement: { ...employeurAdresseComplement, value: data.complement_adresse || "", locked: false },
-                codePostal: { ...employeurAdresseCodePostal, value: data.code_postal || "", locked: false },
-                commune: { ...employeurAdresseCommune, value: data.commune_implantation_nom || "", locked: false },
-                departement: { ...employeurAdresseDepartement, value: data.num_departement || "", locked: false },
-                region: { ...employeurAdresseRegion, value: data.num_region || "", locked: false },
+                codePostal: {
+                  ...employeurAdresseCodePostal,
+                  value: data.code_postal || "",
+                  locked: false,
+                },
+                commune: {
+                  ...employeurAdresseCommune,
+                  value: data.commune_implantation_nom || "",
+                  locked: false,
+                },
+                departement: {
+                  ...employeurAdresseDepartement,
+                  value: data.num_departement || "",
+                  locked: false,
+                },
+                region: {
+                  ...employeurAdresseRegion,
+                  value: data.num_region || "",
+                  locked: false,
+                },
               },
               privePublic: {
                 ...employeurPrivePublic,
@@ -436,7 +458,6 @@ export function useCerfaEmployeur() {
               libelleIdcc: {
                 ...employeurLibelleIdcc,
                 value: data.conventionCollective?.titre || "",
-                // locked: false,
               },
               nombreDeSalaries: {
                 ...employeurNombreDeSalaries,
@@ -531,6 +552,24 @@ export function useCerfaEmployeur() {
 
           const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
           setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+          setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
+          if (newV.employeur.denomination.value)
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== "employeur.denomination"));
+          if (newV.employeur.naf.value) setFieldsErrored((errors) => errors.filter((e) => e.path !== "employeur.naf"));
+          if (newV.employeur.codeIdcc.value)
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== "employeur.codeIdcc"));
+          if (newV.employeur.nombreDeSalaries.value)
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== "employeur.nombreDeSalaries"));
+          if (newV.employeur.adresse.voie.value)
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== "employeur.adresse.voie"));
+          if (newV.employeur.adresse.codePostal.value)
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== "employeur.adresse.codePostal"));
+          if (newV.employeur.adresse.commune.value)
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== "employeur.adresse.commune"));
+          if (newV.employeur.adresse.departement.value)
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== "employeur.adresse.departement"));
+          if (newV.employeur.adresse.region.value)
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== "employeur.adresse.region"));
         }
       } catch (e) {
         console.error(e);
@@ -569,6 +608,7 @@ export function useCerfaEmployeur() {
       setEmployeurNombreDeSalaries,
       setEmployeurPrivePublic,
       setEmployeurSiret,
+      setFieldsErrored,
       setPartEmployeurCompletionAtom,
       setRemunerations,
     ]
@@ -595,13 +635,21 @@ export function useCerfaEmployeur() {
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [cerfa?.id, dossier?._id, employeurDenomination, setEmployeurDenomination, setPartEmployeurCompletionAtom]
+    [
+      cerfa?.id,
+      dossier?._id,
+      employeurDenomination,
+      setEmployeurDenomination,
+      setFieldsErrored,
+      setPartEmployeurCompletionAtom,
+    ]
   );
 
   const onSubmittedEmployeurNaf = useCallback(
@@ -625,13 +673,14 @@ export function useCerfaEmployeur() {
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [cerfa?.id, dossier?._id, employeurNaf, setEmployeurNaf, setPartEmployeurCompletionAtom]
+    [cerfa?.id, dossier?._id, employeurNaf, setEmployeurNaf, setFieldsErrored, setPartEmployeurCompletionAtom]
   );
 
   const onSubmittedEmployeurCodeIdcc = useCallback(
@@ -672,6 +721,7 @@ export function useCerfaEmployeur() {
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
@@ -687,6 +737,7 @@ export function useCerfaEmployeur() {
       setEmployeurCodeIdcc,
       setEmployeurCodeIdccSpecial,
       setEmployeurLibelleIdcc,
+      setFieldsErrored,
       setPartEmployeurCompletionAtom,
     ]
   );
@@ -718,6 +769,7 @@ export function useCerfaEmployeur() {
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== "employeur.codeIdcc"));
           }
         }
       } catch (e) {
@@ -733,6 +785,7 @@ export function useCerfaEmployeur() {
       setEmployeurCodeIdcc,
       setEmployeurCodeIdccSpecial,
       setEmployeurLibelleIdcc,
+      setFieldsErrored,
       setPartEmployeurCompletionAtom,
     ]
   );
@@ -781,7 +834,6 @@ export function useCerfaEmployeur() {
                 voie: {
                   ...employeurAdresseVoie,
                   value: data,
-                  // forceUpdate: false, // IF data = "" true
                 },
               },
             },
@@ -797,13 +849,21 @@ export function useCerfaEmployeur() {
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [employeurAdresseVoie, setEmployeurAdresseVoie, dossier?._id, cerfa?.id, setPartEmployeurCompletionAtom]
+    [
+      employeurAdresseVoie,
+      setEmployeurAdresseVoie,
+      dossier?._id,
+      cerfa?.id,
+      setPartEmployeurCompletionAtom,
+      setFieldsErrored,
+    ]
   );
 
   const onSubmittedEmployeurAdresseComplement = useCallback(
@@ -816,7 +876,6 @@ export function useCerfaEmployeur() {
                 complement: {
                   ...employeurAdresseComplement,
                   value: data,
-                  // forceUpdate: false, // IF data = "" true
                 },
               },
             },
@@ -897,6 +956,14 @@ export function useCerfaEmployeur() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
+
+            if (newV.employeur.adresse.commune.value)
+              setFieldsErrored((errors) => errors.filter((e) => e.path !== "employeur.adresse.commune"));
+            if (newV.employeur.adresse.departement.value)
+              setFieldsErrored((errors) => errors.filter((e) => e.path !== "employeur.adresse.departement"));
+            if (newV.employeur.adresse.region.value)
+              setFieldsErrored((errors) => errors.filter((e) => e.path !== "employeur.adresse.region"));
           }
         }
       } catch (e) {
@@ -915,6 +982,7 @@ export function useCerfaEmployeur() {
       dossier?._id,
       cerfa?.id,
       setPartEmployeurCompletionAtom,
+      setFieldsErrored,
       setRemunerations,
     ]
   );
@@ -944,13 +1012,21 @@ export function useCerfaEmployeur() {
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [employeurAdresseCommune, setEmployeurAdresseCommune, dossier?._id, cerfa?.id, setPartEmployeurCompletionAtom]
+    [
+      employeurAdresseCommune,
+      setEmployeurAdresseCommune,
+      dossier?._id,
+      cerfa?.id,
+      setPartEmployeurCompletionAtom,
+      setFieldsErrored,
+    ]
   );
   const onSubmittedEmployeurAdresseDepartement = useCallback(
     async (path, data) => {
@@ -990,6 +1066,7 @@ export function useCerfaEmployeur() {
 
             const res = await saveCerfa(dossier?._id, cerfa?.id, dataToSave);
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
@@ -1002,6 +1079,7 @@ export function useCerfaEmployeur() {
       dossier?._id,
       cerfa?.id,
       setPartEmployeurCompletionAtom,
+      setFieldsErrored,
       setRemunerations,
     ]
   );
@@ -1031,13 +1109,21 @@ export function useCerfaEmployeur() {
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [employeurAdresseRegion, setEmployeurAdresseRegion, dossier?._id, cerfa?.id, setPartEmployeurCompletionAtom]
+    [
+      employeurAdresseRegion,
+      setEmployeurAdresseRegion,
+      dossier?._id,
+      cerfa?.id,
+      setPartEmployeurCompletionAtom,
+      setFieldsErrored,
+    ]
   );
 
   const onSubmittedEmployeurTypeEmployeur = useCallback(
@@ -1049,7 +1135,6 @@ export function useCerfaEmployeur() {
               typeEmployeur: {
                 ...employeurTypeEmployeur,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -1063,13 +1148,21 @@ export function useCerfaEmployeur() {
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [cerfa?.id, dossier?._id, employeurTypeEmployeur, setEmployeurTypeEmployeur, setPartEmployeurCompletionAtom]
+    [
+      cerfa?.id,
+      dossier?._id,
+      employeurTypeEmployeur,
+      setEmployeurTypeEmployeur,
+      setFieldsErrored,
+      setPartEmployeurCompletionAtom,
+    ]
   );
 
   const onSubmittedEmployeurEmployeurSpecifique = useCallback(
@@ -1131,13 +1224,21 @@ export function useCerfaEmployeur() {
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [cerfa?.id, dossier?._id, employeurNombreDeSalaries, setEmployeurNombreDeSalaries, setPartEmployeurCompletionAtom]
+    [
+      cerfa?.id,
+      dossier?._id,
+      employeurNombreDeSalaries,
+      setEmployeurNombreDeSalaries,
+      setFieldsErrored,
+      setPartEmployeurCompletionAtom,
+    ]
   );
 
   const onSubmittedEmployeurLibelleIdcc = useCallback(
@@ -1227,13 +1328,21 @@ export function useCerfaEmployeur() {
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [cerfa?.id, dossier?._id, employeurTelephone, setEmployeurTelephone, setPartEmployeurCompletionAtom]
+    [
+      cerfa?.id,
+      dossier?._id,
+      employeurTelephone,
+      setEmployeurTelephone,
+      setFieldsErrored,
+      setPartEmployeurCompletionAtom,
+    ]
   );
 
   const onSubmittedEmployeurCourriel = useCallback(
@@ -1245,7 +1354,6 @@ export function useCerfaEmployeur() {
               courriel: {
                 ...employeurCourriel,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -1258,13 +1366,14 @@ export function useCerfaEmployeur() {
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [cerfa?.id, dossier?._id, employeurCourriel, setEmployeurCourriel, setPartEmployeurCompletionAtom]
+    [cerfa?.id, dossier?._id, employeurCourriel, setEmployeurCourriel, setFieldsErrored, setPartEmployeurCompletionAtom]
   );
 
   const onSubmittedEmployeurRegimeSpecifique = useCallback(
@@ -1276,7 +1385,6 @@ export function useCerfaEmployeur() {
               regimeSpecifique: {
                 ...employeurRegimeSpecifique,
                 value: data,
-                // forceUpdate: false, // IF data = "" true
               },
             },
           };
@@ -1289,50 +1397,208 @@ export function useCerfaEmployeur() {
               },
             });
             setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
+            setFieldsErrored((errors) => errors.filter((e) => e.path !== path));
           }
         }
       } catch (e) {
         console.error(e);
       }
     },
-    [cerfa?.id, dossier?._id, employeurRegimeSpecifique, setEmployeurRegimeSpecifique, setPartEmployeurCompletionAtom]
+    [
+      cerfa?.id,
+      dossier?._id,
+      employeurRegimeSpecifique,
+      setEmployeurRegimeSpecifique,
+      setFieldsErrored,
+      setPartEmployeurCompletionAtom,
+    ]
+  );
+
+  const validation = useCallback(
+    (action) => {
+      const fields = [
+        employeurSiret,
+        employeurDenomination,
+        employeurNaf,
+        employeurNombreDeSalaries,
+        employeurCodeIdcc,
+        employeurCourriel,
+        employeurTelephone,
+        employeurAdresseVoie,
+        employeurAdresseCodePostal,
+        employeurAdresseCommune,
+        employeurAdresseDepartement,
+        employeurAdresseRegion,
+        employeurTypeEmployeur,
+        employeurRegimeSpecifique,
+      ];
+
+      const setterFields = [
+        setEmployeurSiret,
+        setEmployeurDenomination,
+        setEmployeurNaf,
+        setEmployeurNombreDeSalaries,
+        setEmployeurCodeIdcc,
+        setEmployeurTelephone,
+        setEmployeurCourriel,
+        setEmployeurAdresseVoie,
+        setEmployeurAdresseCodePostal,
+        setEmployeurAdresseCommune,
+        setEmployeurAdresseDepartement,
+        setEmployeurAdresseRegion,
+        setEmployeurTypeEmployeur,
+        setEmployeurRegimeSpecifique,
+      ];
+
+      fieldsChecker({
+        action,
+        fields,
+        setterFields,
+        setFieldsErrored,
+        setIsValidating,
+        resetCheckFields,
+        fieldsValided,
+        setFieldsValided,
+        fieldsErrored,
+      });
+    },
+    [
+      employeurAdresseCodePostal,
+      employeurAdresseCommune,
+      employeurAdresseDepartement,
+      employeurAdresseRegion,
+      employeurAdresseVoie,
+      employeurCodeIdcc,
+      employeurCourriel,
+      employeurDenomination,
+      employeurNaf,
+      employeurNombreDeSalaries,
+      employeurRegimeSpecifique,
+      employeurSiret,
+      employeurTelephone,
+      employeurTypeEmployeur,
+      fieldsErrored,
+      fieldsValided,
+      resetCheckFields,
+      setEmployeurAdresseCodePostal,
+      setEmployeurAdresseCommune,
+      setEmployeurAdresseDepartement,
+      setEmployeurAdresseRegion,
+      setEmployeurAdresseVoie,
+      setEmployeurCodeIdcc,
+      setEmployeurCourriel,
+      setEmployeurDenomination,
+      setEmployeurNaf,
+      setEmployeurNombreDeSalaries,
+      setEmployeurRegimeSpecifique,
+      setEmployeurSiret,
+      setEmployeurTelephone,
+      setEmployeurTypeEmployeur,
+      setFieldsErrored,
+      setFieldsValided,
+      setIsValidating,
+    ]
   );
 
   const setAll = useCallback(
     (res) => {
-      setEmployeurSiret(res.employeur.siret);
-      setEmployeurDenomination(res.employeur.denomination);
-      setEmployeurRaisonSociale(res.employeur.raison_sociale);
-      setEmployeurNaf(res.employeur.naf);
-      setEmployeurNombreDeSalaries(res.employeur.nombreDeSalaries);
+      const {
+        employeur: {
+          siret,
+          denomination,
+          raison_sociale,
+          naf,
+          nombreDeSalaries,
+          codeIdcc,
+          libelleIdcc,
+          telephone,
+          courriel,
+          adresse,
+          nom,
+          prenom,
+          typeEmployeur,
+          employeurSpecifique,
+          caisseComplementaire,
+          regimeSpecifique,
+          attestationPieces,
+          privePublic,
+        },
+      } = res;
+      setEmployeurSiret({ ...siret, setField: setEmployeurSiret, errored: null });
+      setEmployeurDenomination({
+        ...denomination,
+        setField: setEmployeurDenomination,
+        errored: null,
+      });
+      setEmployeurRaisonSociale(raison_sociale);
+      setEmployeurNaf({ ...naf, setField: setEmployeurNaf, errored: null });
+      setEmployeurNombreDeSalaries({
+        ...nombreDeSalaries,
+        setField: setEmployeurNombreDeSalaries,
+        errored: null,
+      });
+      setEmployeurCodeIdcc({ ...codeIdcc, setField: setEmployeurCodeIdcc, errored: null });
 
-      setEmployeurCodeIdcc(res.employeur.codeIdcc);
       const codeIdccSpecial = convertValueToOption({
         ...employeurCodeIdccSpecial,
-        value: `${res.employeur.codeIdcc.value}`,
+        value: `${codeIdcc.value}`,
       });
-      setEmployeurCodeIdccSpecial({ ...codeIdccSpecial, locked: res.employeur.siret.value === "" });
+      setEmployeurCodeIdccSpecial({ ...codeIdccSpecial, locked: siret.value === "" });
 
-      setEmployeurLibelleIdcc(res.employeur.libelleIdcc);
-      setEmployeurTelephone({ ...res.employeur.telephone, value: res.employeur.telephone.value.replace("+", "") });
-      setEmployeurCourriel(res.employeur.courriel);
-      setEmployeurAdresseNumero(res.employeur.adresse.numero);
-      setEmployeurAdresseVoie(res.employeur.adresse.voie);
-      setEmployeurAdresseComplement(res.employeur.adresse.complement);
-      setEmployeurAdresseCodePostal(res.employeur.adresse.codePostal);
-      setEmployeurAdresseCommune(res.employeur.adresse.commune);
-      setEmployeurAdresseDepartement(res.employeur.adresse.departement);
-      setEmployeurAdresseRegion(res.employeur.adresse.region);
+      setEmployeurLibelleIdcc(libelleIdcc);
+      setEmployeurTelephone({
+        ...telephone,
+        value: telephone.value.replace("+", ""),
+        setField: setEmployeurTelephone,
+        errored: null,
+      });
+      setEmployeurCourriel({ ...courriel, setField: setEmployeurCourriel, errored: null });
 
-      setEmployeurNom(res.employeur.nom);
-      setEmployeurPrenom(res.employeur.prenom);
-      setEmployeurTypeEmployeur(convertValueToMultipleSelectOption(res.employeur.typeEmployeur));
-      setEmployeurEmployeurSpecifique(convertValueToOption(res.employeur.employeurSpecifique));
-      setEmployeurCaisseComplementaire(res.employeur.caisseComplementaire);
-      setEmployeurRegimeSpecifique(convertValueToOption(res.employeur.regimeSpecifique));
-      setEmployeurAttestationPieces(convertValueToOption(res.employeur.attestationPieces));
+      setEmployeurAdresseNumero(adresse.numero);
+      setEmployeurAdresseVoie({
+        ...adresse.voie,
+        setField: setEmployeurAdresseVoie,
+        errored: null,
+      });
+      setEmployeurAdresseComplement(adresse.complement);
+      setEmployeurAdresseCodePostal({
+        ...adresse.codePostal,
+        setField: setEmployeurAdresseCodePostal,
+        errored: null,
+      });
+      setEmployeurAdresseCommune({
+        ...adresse.commune,
+        setField: setEmployeurAdresseCommune,
+        errored: null,
+      });
+      setEmployeurAdresseDepartement({
+        ...adresse.departement,
+        setField: setEmployeurAdresseDepartement,
+        errored: null,
+      });
+      setEmployeurAdresseRegion({
+        ...adresse.region,
+        setField: setEmployeurAdresseRegion,
+        errored: null,
+      });
 
-      setEmployeurPrivePublic(convertValueToOption(res.employeur.privePublic));
+      setEmployeurNom(nom);
+      setEmployeurPrenom(prenom);
+      setEmployeurTypeEmployeur({
+        ...convertValueToMultipleSelectOption(typeEmployeur),
+        setField: setEmployeurTypeEmployeur,
+        errored: null,
+      });
+      setEmployeurEmployeurSpecifique(convertValueToOption(employeurSpecifique));
+      setEmployeurCaisseComplementaire(caisseComplementaire);
+      setEmployeurRegimeSpecifique({
+        ...convertValueToOption(regimeSpecifique),
+        setField: setEmployeurRegimeSpecifique,
+        errored: null,
+      });
+      setEmployeurAttestationPieces(convertValueToOption(attestationPieces));
+
+      setEmployeurPrivePublic(convertValueToOption(privePublic));
 
       setPartEmployeurCompletionAtom(cerfaEmployeurCompletion(res));
     },
@@ -1372,10 +1638,18 @@ export function useCerfaEmployeur() {
       setAll(cerfa);
       setIsLoading(false);
     }
-  }, [cerfa, isLoading, setAll, setIsLoading]);
+    if (isValidating) {
+      validation("check");
+    }
+  }, [cerfa, isLoading, isValidating, setAll, validation, setIsLoading]);
 
   return {
     isLoading,
+    //
+    validation,
+    resetCheckFields,
+    fieldsErrored,
+    //
     completion: partEmployeurCompletion,
     get: {
       employeur: {

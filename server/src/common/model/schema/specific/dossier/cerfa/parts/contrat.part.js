@@ -67,12 +67,14 @@ const numContratChecks = {
 
 const contratSchema = {
   modeContractuel: {
+    path: "contrat.modeContractuel",
     ...modeContractuelSchema,
     default: null,
     label: "Mode contratctuel",
     requiredMessage: "le mode de contrat est obligatoire",
   },
   typeContratApp: {
+    path: "contrat.typeContratApp",
     ...typeContratSchema,
     default: null,
     required: function () {
@@ -82,6 +84,7 @@ const contratSchema = {
     requiredMessage: "le type de contrat ou d'avenant est obligatoire",
   },
   numeroContratPrecedent: {
+    path: "contrat.numeroContratPrecedent",
     type: String,
     description: "N° du contrat précédent (suite de contrat)",
     label: "Numéro du contrat précédent ou du contrat sur lequel porte l'avenant :",
@@ -93,18 +96,21 @@ const contratSchema = {
     ...numContratChecks,
   },
   noContrat: {
+    path: "contrat.noContrat",
     type: String,
     description: "Numéro DECA de contrat",
     nullable: true,
     ...numContratChecks,
   },
   noAvenant: {
+    path: "contrat.noAvenant",
     type: String,
     description: "Numéro d'Avenant",
     nullable: true,
     ...numContratChecks,
   },
   dateDebutContrat: {
+    path: "contrat.dateDebutContrat",
     type: Date,
     description: "Date de début d'éxécution du contrat",
     label: "Date de début d'exécution du contrat :",
@@ -116,6 +122,7 @@ const contratSchema = {
     },
   },
   dateFinContrat: {
+    path: "contrat.dateFinContrat",
     type: Date,
     description: "Date de fin du contrat prévue",
     label: "Date de fin du contrat ou de la période d'apprentissage :",
@@ -127,6 +134,7 @@ const contratSchema = {
     },
   },
   dureeContrat: {
+    path: "contrat.dureeContrat",
     type: Number,
     default: null,
     required: function () {
@@ -135,6 +143,7 @@ const contratSchema = {
     description: "Durée du contrat en mois [calculé]",
   },
   dateEffetAvenant: {
+    path: "contrat.dateEffetAvenant",
     type: Date,
     description: "Date d'effet d'avenant",
     label: "Date d'effet d'avenant :",
@@ -144,6 +153,7 @@ const contratSchema = {
     example: "2021-03-01T00:00:00+0000",
   },
   dateConclusion: {
+    path: "contrat.dateConclusion",
     type: Date,
     description: "Date de conclusion du contrat. (Date de signature du présent contrat)",
     label: "Date de conclusion du contrat :",
@@ -155,12 +165,14 @@ const contratSchema = {
     },
   },
   dateRupture: {
+    path: "contrat.dateRupture",
     type: Date,
     description: "Date de rupture du contrat",
     nullable: true,
     example: "2021-02-28T00:00:00+0000",
   },
   lieuSignatureContrat: {
+    path: "contrat.lieuSignatureContrat",
     type: String,
     description: "Lieu de signature du contrat",
     label: "Lieu de signature du contrat:",
@@ -172,11 +184,13 @@ const contratSchema = {
     },
   },
   typeDerogation: {
+    path: "contrat.typeDerogation",
     ...typeDerogationSchema,
     label: "Type de dérogation (optionnel)",
     isNotRequiredForm: true,
   },
   dureeTravailHebdoHeures: {
+    path: "contrat.dureeTravailHebdoHeures",
     type: Number,
     description: "Durée hebdomadaire du travail (heures)",
     requiredMessage: "la durée hebdomadaire de travail est obligatoire",
@@ -188,6 +202,7 @@ const contratSchema = {
     },
   },
   dureeTravailHebdoMinutes: {
+    path: "contrat.dureeTravailHebdoMinutes",
     type: Number,
     description: "Durée hebdomadaire du travail (minutes)",
     label: "Minutes:",
@@ -196,8 +211,10 @@ const contratSchema = {
     isNotRequiredForm: true,
   },
   travailRisque: {
+    path: "contrat.travailRisque",
     type: Boolean,
     description: "Travaille sur machines dangereuses ou exposition à des risques particuliers",
+    requiredMessage: "Cette déclaration est obligatoire",
     default: null,
     required: function () {
       return !this.draft;
@@ -216,6 +233,7 @@ const contratSchema = {
     ],
   },
   caisseRetraiteComplementaire: {
+    path: "contrat.caisseRetraiteComplementaire",
     type: String,
     description: "Caisse de retraite complémentaire",
     label: "Caisse de retraite complémentaire :",
@@ -224,6 +242,8 @@ const contratSchema = {
     isNotRequiredForm: true,
   },
   avantageNature: {
+    path: "contrat.avantageNature",
+    requiredMessage: "Cette déclaration est obligatoire",
     type: Boolean,
     default: null,
     required: function () {
@@ -244,6 +264,7 @@ const contratSchema = {
     ],
   },
   avantageNourriture: {
+    path: "contrat.avantageNourriture",
     type: Number,
     description: "Nourriture €/repas",
     label: "Nourriture:",
@@ -251,8 +272,9 @@ const contratSchema = {
     default: null,
     example: 3,
     // required: function () {
-    //   return this.contrat.avantageNature;
+    //   return this.contrat.avantageNature && (!this.contrat.avantageLogement || !this.contrat.autreAvantageEnNature);
     // },
+    requiredMessage: "Cette déclaration est obligatoire",
     isNotRequiredForm: true,
     mask: "X € / rep\\as",
     maskBlocks: [
@@ -266,6 +288,7 @@ const contratSchema = {
     ],
   },
   avantageLogement: {
+    path: "contrat.avantageLogement",
     type: Number,
     description: "Logement €/mois",
     label: "Logement:",
@@ -288,6 +311,7 @@ const contratSchema = {
     ],
   },
   autreAvantageEnNature: {
+    path: "contrat.autreAvantageEnNature",
     type: Boolean,
     description: "Autre avantage en nature",
     label: "Autres avantages",
@@ -306,6 +330,7 @@ const contratSchema = {
     isNotRequiredForm: true,
   },
   salaireEmbauche: {
+    path: "contrat.salaireEmbauche",
     type: Number,
     description: "Salaire brut à l'embauche",
     label: "Salaire brut mensuel à l'embauche:",
@@ -321,6 +346,7 @@ const contratSchema = {
     default: null,
   },
   remunerationMajoration: {
+    path: "contrat.remunerationMajoration",
     enum: [0, 10, 20],
     type: Number,
     default: 0,

@@ -9,7 +9,9 @@ import {
   cerfaContratRemunerationsAnnuellesAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 import { cerfaEmployeurAdresseDepartementAtom } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+
 import InputCerfa from "./Input";
+import CheckEmptyFields from "./CheckEmptyFields";
 
 const FormLearner = React.memo(() => {
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
@@ -19,6 +21,11 @@ const FormLearner = React.memo(() => {
 
   const {
     isLoading,
+    //
+    validation,
+    resetCheckFields,
+    fieldsErrored,
+    //
     get: {
       apprenti: {
         nom,
@@ -401,6 +408,7 @@ const FormLearner = React.memo(() => {
           />
         </Box>
       </Flex>
+      <CheckEmptyFields fieldsErrored={fieldsErrored} validation={validation} resetCheckFields={resetCheckFields} />
     </Box>
   );
 });

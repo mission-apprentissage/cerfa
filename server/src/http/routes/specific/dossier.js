@@ -248,7 +248,7 @@ module.exports = (components) => {
           dossiernom: dossier.nom,
           user2role: newUserRole.title,
           publicUrl: config.publicUrl,
-          tospaceUrl: ` mes-dossiers/dossiers-partages/${dossier._id}/cerfa`,
+          tospaceUrl: `mes-dossiers/dossiers-partages/${dossier._id}/cerfa`,
         }
       );
 

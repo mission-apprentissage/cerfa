@@ -9,6 +9,27 @@ export const cerfaPartContratIsLoadingAtom = atom({
   default: true,
 });
 
+export const cerfaPartContratIsValidatigngAtom = atom({
+  key: "cerfa/part/contrat/isValidating",
+  default: false,
+});
+export const cerfaPartContratHasBeenResetAtom = atom({
+  key: "cerfa/part/contrat/hasBeenReset",
+  default: false,
+});
+export const cerfaPartContratFieldsErroredAtom = atom({
+  key: "cerfa/part/contrat/fields/errored",
+  default: [],
+});
+export const cerfaPartContratFieldsVaidedAtom = atom({
+  key: "cerfa/part/contrat/fields/valided",
+  default: [],
+});
+export const cerfaPartContratMissingFieldAvantagesAtom = atom({
+  key: "cerfa/part/contrat/missingFieldAvantages",
+  default: false,
+});
+
 export const cerfaContratModeContractuelAtom = atom({
   key: "cerfa/contrat/modeContractuel",
   default: null,

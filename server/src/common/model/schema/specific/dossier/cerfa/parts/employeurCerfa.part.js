@@ -4,6 +4,7 @@ const departementEnum = require("./departements.part");
 
 const employeurCerfaSchema = {
   denomination: {
+    path: "employeur.denomination",
     // maxLength: 80,
     type: String,
     label: "Dénomination :",
@@ -24,6 +25,7 @@ const employeurCerfaSchema = {
     ],
   },
   raison_sociale: {
+    path: "employeur.raison_sociale",
     type: String,
     default: null,
     example: "OCTO-TECHNOLOGY",
@@ -31,6 +33,7 @@ const employeurCerfaSchema = {
     label: "Raison sociale de l'employeur :",
   },
   siret: {
+    path: "employeur.siret",
     maxLength: 14,
     minLength: 14,
     validate: {
@@ -65,6 +68,7 @@ const employeurCerfaSchema = {
     ],
   },
   naf: {
+    path: "employeur.naf",
     maxLength: 6,
     type: String,
     default: null,
@@ -87,6 +91,7 @@ const employeurCerfaSchema = {
     ],
   },
   nombreDeSalaries: {
+    path: "employeur.nombreDeSalaries",
     type: Number,
     required: function () {
       return !this.draft;
@@ -107,6 +112,7 @@ const employeurCerfaSchema = {
     ],
   },
   codeIdcc: {
+    path: "employeur.codeIdcc",
     enum: [null, ...idccEnum.map(({ code }) => code)],
     maxLength: 4,
     type: String,
@@ -130,6 +136,7 @@ const employeurCerfaSchema = {
     ],
   },
   libelleIdcc: {
+    path: "employeur.libelleIdcc",
     enum: [null, ...idccEnum.map(({ libelle }) => libelle)],
     maxLength: 500,
     default: null,
@@ -143,6 +150,7 @@ const employeurCerfaSchema = {
       "Convention collective nationale des entreprises de commission, de courtage et de commerce intracommunautaire et d'importation-exportation de France métropolitaine",
   },
   telephone: {
+    path: "employeur.telephone",
     maxLength: 13,
     minLength: 10,
     validate: {
@@ -164,6 +172,7 @@ const employeurCerfaSchema = {
     // pattern: "^([+])?((d)[.-]?)?[s]?(?(d{3}))?[.-]?[s]?(d{3})[.-]?[s]?(d{4,})$",
   },
   courriel: {
+    path: "employeur.courriel",
     maxLength: 80,
     type: String,
     default: null,
@@ -192,7 +201,28 @@ const employeurCerfaSchema = {
   },
   adresse: {
     ...adresseSchema,
+    numero: {
+      path: "employeur.adresse.numero",
+      ...adresseSchema.numero,
+    },
+    voie: {
+      path: "employeur.adresse.voie",
+      ...adresseSchema.voie,
+    },
+    complement: {
+      path: "employeur.adresse.complement",
+      ...adresseSchema.complement,
+    },
+    codePostal: {
+      path: "employeur.adresse.codePostal",
+      ...adresseSchema.codePostal,
+    },
+    commune: {
+      path: "employeur.adresse.commune",
+      ...adresseSchema.commune,
+    },
     departement: {
+      path: "employeur.adresse.departement",
       enum: [null, ...departementEnum.map((d) => d.replace(/^(0){1}/, ""))],
       maxLength: 3,
       minLength: 1,
@@ -217,6 +247,7 @@ const employeurCerfaSchema = {
       },
     },
     region: {
+      path: "employeur.adresse.region",
       type: Number,
       description: "Région de l'employeur",
       label: "Région de l'employeur :",
@@ -239,6 +270,7 @@ const employeurCerfaSchema = {
     },
   },
   nom: {
+    path: "employeur.nom",
     maxLength: 200,
     type: String,
     default: null,
@@ -248,6 +280,7 @@ const employeurCerfaSchema = {
     example: "LEFEVBRE",
   },
   prenom: {
+    path: "employeur.prenom",
     maxLength: 50,
     type: String,
     description: "Prénom de l'employeur",
@@ -257,6 +290,7 @@ const employeurCerfaSchema = {
     example: "MARTINE",
   },
   typeEmployeur: {
+    path: "employeur.typeEmployeur",
     required: function () {
       return !this.draft;
     },
@@ -346,6 +380,7 @@ const employeurCerfaSchema = {
     ],
   },
   employeurSpecifique: {
+    path: "employeur.employeurSpecifique",
     enum: [0, 1, 2, 3, 4],
     type: Number,
     nullable: true,
@@ -378,6 +413,7 @@ const employeurCerfaSchema = {
     ],
   },
   caisseComplementaire: {
+    path: "employeur.caisseComplementaire",
     maxLength: 80,
     type: String,
     default: null,
@@ -387,9 +423,11 @@ const employeurCerfaSchema = {
     example: "AGIRC-ARRCO",
   },
   regimeSpecifique: {
+    path: "employeur.regimeSpecifique",
     type: Boolean,
     description: "Adhère au régime spécifique d'assurance-chômage",
     label: "Adhésion de l'apprenti au régime spécifique d'assurance chômage : ",
+    requiredMessage: "Cette déclaration est obligatoire",
     default: null,
     nullable: true,
     example: "Non",
@@ -405,6 +443,7 @@ const employeurCerfaSchema = {
     ],
   },
   attestationEligibilite: {
+    path: "employeur.attestationEligibilite",
     type: Boolean,
     description: "Atteste de l'éligibilité du tuteur / maître d'apprentissage",
     label:
@@ -423,6 +462,7 @@ const employeurCerfaSchema = {
     ],
   },
   attestationPieces: {
+    path: "employeur.attestationPieces",
     type: Boolean,
     description: "Atteste de disposer des pièces justificatives",
     label: "L'employeur atteste de disposer des pièces justificatives",
@@ -439,6 +479,7 @@ const employeurCerfaSchema = {
     ],
   },
   privePublic: {
+    path: "employeur.privePublic",
     type: Boolean,
     default: true,
     required: function () {

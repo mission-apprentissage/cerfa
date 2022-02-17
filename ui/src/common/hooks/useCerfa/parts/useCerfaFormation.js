@@ -1082,14 +1082,14 @@ export function useCerfaFormation() {
             const memeResponsable = convertOptionToValue(newV.etablissementFormation.memeResponsable);
 
             if (memeResponsable) {
-              setEtablissementFormationSiret({ ...organismeFormationSiret, isNotRequiredForm: true });
-              setEtablissementFormationDenomination(organismeFormationDenomination);
-              setEtablissementFormationUaiCfa({ ...organismeFormationUaiCfa, isNotRequiredForm: true });
-              setEtablissementFormationAdresseNumero(organismeFormationAdresseNumero);
-              setEtablissementFormationAdresseVoie(organismeFormationAdresseVoie);
-              setEtablissementFormationAdresseComplement(organismeFormationAdresseComplement);
-              setEtablissementFormationAdresseCodePostal(organismeFormationAdresseCodePostal);
-              setEtablissementFormationAdresseCommune(organismeFormationAdresseCommune);
+              setEtablissementFormationSiret({ ...organismeFormationSiret, isNotRequiredForm: true, locked: false });
+              setEtablissementFormationDenomination({ ...organismeFormationDenomination, locked: false });
+              setEtablissementFormationUaiCfa({ ...organismeFormationUaiCfa, isNotRequiredForm: true, locked: false });
+              setEtablissementFormationAdresseNumero({ ...organismeFormationAdresseNumero, locked: false });
+              setEtablissementFormationAdresseVoie({ ...organismeFormationAdresseVoie, locked: false });
+              setEtablissementFormationAdresseComplement({ ...organismeFormationAdresseComplement, locked: false });
+              setEtablissementFormationAdresseCodePostal({ ...organismeFormationAdresseCodePostal, locked: false });
+              setEtablissementFormationAdresseCommune({ ...organismeFormationAdresseCommune, locked: false });
 
               const res = await saveCerfa(dossier?._id, cerfa?.id, {
                 etablissementFormation: {
