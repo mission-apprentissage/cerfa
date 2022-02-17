@@ -108,7 +108,7 @@ const formationSchema = {
   dureeFormation: {
     type: Number,
     description: "Durée de formation (heures)",
-    label: "Durée de la formation :",
+    label: "Durée de la formation en heures :",
     example: "400",
     requiredMessage: "Le nombre d'heures de la formation est obligatoire",
     validateMessage: ` n'est pas un nombre d'heures valide`,
