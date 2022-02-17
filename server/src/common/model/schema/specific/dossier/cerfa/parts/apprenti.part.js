@@ -375,7 +375,7 @@ const apprentiSchema = {
     maxLength: 255,
     type: String,
     description: "Intitulé précis du dernier diplôme ou titre préparé par l'apprenti(e)",
-    example: "Master en sciences de l'éducation",
+    example: "BTS comptabilité gestion",
     label: "Intitulé précis du dernier diplôme ou titre préparé :",
     requiredMessage: "l'intitulé du dernier diplôme ou titre préparé par l'apprenti(e) est obligatoire",
     default: null,
