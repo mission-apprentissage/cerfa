@@ -44,8 +44,7 @@ const employeurCerfaSchema = {
       message: (props) => `${props.value} n'est pas un siret valide`,
     },
     type: String,
-    description:
-      "Vous devez renseigner le siret correspondant à l'établissement du lieu d'exécution du contrat (il ne correspond pas forcément au siège). Le siret comporte 14 chiffres. <br/> Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).",
+    description: `Vous devez renseigner le siret correspondant à l'établissement du lieu d'exécution du contrat (il ne correspond pas forcément au siège). Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).`,
     default: null,
     nullable: function () {
       return this.draft;
@@ -75,7 +74,8 @@ const employeurCerfaSchema = {
     required: function () {
       return !this.draft;
     },
-    description: "Code NAF de l'employeur",
+    description:
+      "Le Code NAF est composé de 4 chiffres et 1 lettre. Il est délivré par l'INSEE.[Informations sur le Code NAF.](https://www.economie.gouv.fr/entreprises/activite-entreprise-code-ape-code-naf)",
     label: "Code NAF de l'employeur :",
     requiredMessage: "le code NAF est obligatoire",
     example: "1031Z",
@@ -120,7 +120,7 @@ const employeurCerfaSchema = {
     required: function () {
       return !this.draft;
     },
-    description: "Code IDCC de la convention collective appliquée",
+    description: `Identifiant de la convention collective de branche appliquée par l’établissement. [le site du Ministère du travail.](https://www.elections-professionnelles.travail.gouv.fr/web/guest/recherche-idcc)`,
     label: "Code IDCC de la convention collective appliquée : ",
     requiredMessage: "le code idcc est obligatoire",
     example: "9999",
@@ -445,7 +445,8 @@ const employeurCerfaSchema = {
   attestationEligibilite: {
     path: "employeur.attestationEligibilite",
     type: Boolean,
-    description: "Atteste de l'éligibilité du tuteur / maître d'apprentissage",
+    description:
+      "Le maître d'apprentissage doit notamment justifier d'une formation et d'une expérience professionnelle minimales (code du travail, [art. R6223-22](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000037813428/)). Le changement de maître d'apprentissage en cours de contrat implique de conclure un avenant au contrat initial, sauf si le contrat initial indique un second maître d'apprentissage.",
     label:
       "L'employeur atteste sur l'honneur que le(s) maître(s) d'apprentissage répond à l'ensemble des critères d'éligibilité à cette fonction.",
     requiredMessage:

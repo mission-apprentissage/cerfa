@@ -23,7 +23,8 @@ const organismeFormationSchema = {
   },
   formationInterne: {
     type: Boolean,
-    description: "Est un service de formation en interne (CFA d'entreprise)",
+    description:
+      "Un CFA d'entreprise est interne à l’entreprise ou constitué par plusieurs entreprises partageant des perspectives communes d’évolution des métiers ou qui interviennent dans des secteurs d’activité complémentaires.",
     default: false,
     required: function () {
       return !this.draft;
@@ -53,7 +54,8 @@ const organismeFormationSchema = {
       message: (props) => `${props.value} n'est pas un siret valide`,
     },
     type: String,
-    description: "N° SIRET de l'organisme de formation responsable",
+    description:
+      "Vous devez renseigner le siret du CFA responsable. Le lieu principal de formation sera quant-à lui précisé dans la convention de formation. Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).",
     default: null,
     required: function () {
       return !this.draft;
@@ -86,7 +88,7 @@ const organismeFormationSchema = {
       message: (props) => `${props.value} n'est pas un UAI valide`,
     },
     type: String,
-    description: "N° UAI de l'organisme de formation responsable",
+    description: `Le numéro UAI est autocomplété ; il peut être recherché sur [le catalogue des formations en apprentissage.](https://catalogue.apprentissage.beta.gouv.fr/)`,
     example: "0561910X",
     label: "N° UAI du CFA :",
     requiredMessage: "Le N° UAI de l'organisme est obligatoire",

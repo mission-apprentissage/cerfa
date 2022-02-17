@@ -49,8 +49,7 @@ const remunerationAnnuelleSchema = {
     required: function () {
       return !this.draft;
     },
-    description:
-      "**Type de salaire** :\r\n<br />SMIC = salaire minimum de croissance\r\n<br />SMC = salaire minimum conventionnel",
+    description: `**Type de salaire** :\r\n  SMIC = salaire minimum de croissance\r\n  SMC = salaire minimum conventionnel`,
     label: "SMIC ou SMC",
     options: [
       {

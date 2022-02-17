@@ -9,7 +9,8 @@ const apprentiSchema = {
     path: "apprenti.nom",
     maxLength: 80,
     type: String,
-    description: "Nom (Nom de naissance/ patronymique) de l'apprenti",
+    description:
+      "Le nom et le prénom doivent strictement correspondre à l'identité officielle du salarié (attention aux inversions).",
     label: "Nom de naissance de l'apprenti(e) :",
     requiredMessage: "Le nom de l'apprenti(e) est obligatoire",
     example: "MARTIN",
@@ -37,7 +38,8 @@ const apprentiSchema = {
     path: "apprenti.prenom",
     maxLength: 80,
     type: String,
-    description: "Prénom de l'apprenti",
+    description:
+      "Le nom et le prénom doivent strictement correspondre à l'identité officielle du salarié (attention aux inversions).",
     label: "Prénom de l'apprenti(e) :",
     requiredMessage: "Le prénom de l'apprenti(e) est obligatoire",
     example: "Jean-François",
@@ -63,7 +65,7 @@ const apprentiSchema = {
     },
     type: String,
     label: "Sexe :",
-    description: "**Sexe de l'apprenti**\r\n<br />M : Homme\r\n<br />F : Femme",
+    description: `**Sexe de l'apprenti**\r\n  M : Homme\r\n  F : Femme`,
     requiredMessage: "le sexe de l'apprenti(e) est obligatoire",
     options: [
       {
@@ -86,8 +88,7 @@ const apprentiSchema = {
     },
     label: "Nationalité :",
     requiredMessage: "la nationalité de l'apprenti(e) est obligatoire",
-    description:
-      "**Nationalité** :\r\n<br />1 : Française\r\n<br />2 : Union Européenne\r\n<br />3 : Etranger hors Union Européenne",
+    description: `Le salarié étranger, non citoyen européen, doit disposer d'un titre de séjour valable l'autorisant à travailler en France et d'une autorisation de travail au début du contrat. Les demandes de titres et d'autorisation de travail peuvent être réalisées sur [le site Etrangers en France.](https://administration-etrangers-en-france.interieur.gouv.fr/particuliers/#/)`,
     options: [
       {
         label: "1: Française",
@@ -145,7 +146,7 @@ const apprentiSchema = {
     pattern: "^([0-9][0-9]|2[AB]|9[012345]|97[12346])$",
     requiredMessage: "le département de naissance est obligatoire",
     validateMessage: ` n'est pas un département valide`,
-    description: `Pour les personnes nées à l'étranger, indiquez 99. <br/> Pour les départements à 1 chiffre, faites précéder le chiffre par un "0".`,
+    description: `Pour les personnes nées à l'étranger, indiquez 99. Pour les départements à 1 chiffre, faites précéder le chiffre par un "0".`,
     default: null,
     nullable: true,
     required: function () {
@@ -204,7 +205,7 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
-    description: "**Régime social** :\r\n<br />1 : MSA\r\n<br />2 : URSSAF",
+    description: `**Régime social** :\r\n  1 : MSA\r\n  2 : URSSAF`,
     label: "Régime social :",
     requiredMessage: "le régime social de l'apprenti(e) est obligatoire",
     options: [
@@ -302,8 +303,7 @@ const apprentiSchema = {
         value: 12,
       },
     ],
-    description:
-      "**Situation de l'apprenti avant le contrat**\r\n<br />1 : Scolaire\r\n<br />2 : Prépa apprentissage\r\n<br />3 : Etudiant\r\n<br />4 : Contrat d’apprentissage\r\n<br />5 : Contrat de professionnalisation\r\n<br />6 : Contrat aidé\r\n<br />7 : En formation au CFA avant signature d’un contrat d’apprentissage (L6222-12-1 du code du travail)\r\n<br />8 : En formation, au CFA, sans contrat, suite à rupture (5° de L6231-2 du code du travail)\r\n<br />9 : Stagiaire de la formation professionnelle\r\n<br />10 : Salarié\r\n<br />11 : Personne à la recherche d’un emploi (inscrite ou non au Pôle Emploi)\r\n<br />12 : Inactif",
+    description: `**Situation de l'apprenti avant le contrat**\r\n  1 : Scolaire\r\n  2 : Prépa apprentissage\r\n  3 : Etudiant\r\n  4 : Contrat d’apprentissage\r\n  5 : Contrat de professionnalisation\r\n  6 : Contrat aidé\r\n  7 : En formation au CFA avant signature d’un contrat d’apprentissage (L6222-12-1 du code du travail)\r\n  8 : En formation, au CFA, sans contrat, suite à rupture (5° de L6231-2 du code du travail)\r\n  9 : Stagiaire de la formation professionnelle\r\n  10 : Salarié\r\n  11 : Personne à la recherche d’un emploi (inscrite ou non au Pôle Emploi)\r\n  12 : Inactif`,
   },
   diplome: {
     path: "apprenti.diplome",
@@ -325,8 +325,7 @@ const apprentiSchema = {
     },
     label: "Dernière classe / année suivie :",
     requiredMessage: "la dernière classe / année suivie par l'apprenti(e) est obligatoire",
-    description:
-      "Il faut sélectionner la situation qui précède l'entrée en contrat d'apprentissage. <br/> Par exemple, si le diplôme préparé avant était une 1ère année de BTS et que cette dernière a été validée, il faut sélectionner 11 - l'apprenti a suivi la première année du cycle et l'a validée ( examens réussis mais année non diplômante).",
+    description: `Il faut sélectionner la situation qui précède l'entrée en contrat d'apprentissage. Par exemple, si le diplôme préparé avant était une 1ère année de BTS et que cette dernière a été validée, il faut sélectionner 11 - l'apprenti a suivi la première année du cycle et l'a validée ( examens réussis mais année non diplômante).`,
     options: [
       {
         label: "01: l'apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre",
@@ -516,8 +515,8 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
-    label: "l'apprenti(e) est mineur(e) non emancipé(e)",
-    description: `Vous devez indiquer "oui" si l'apprenti est mineur non émancipé à la date de signature du contrat. Dans ce cas, le représentant légal devra également signer le contrat.`,
+    label: "L'apprenti est sous la responsabilité d'un représentant légal (non émancipé)",
+    description: `Un mineur émancipé peut accomplir seul les actes nécessitant la majorité légale. Plus d'informations à propos de l'émancipation sur [le site du Service public.](https://www.service-public.fr/particuliers/vosdroits/F1194) `,
     requiredMessage: "Merci de renseigner si l'apprenti(e) mineur(e) est emancipé(e) ou non",
     options: [
       {
