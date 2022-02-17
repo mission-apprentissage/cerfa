@@ -2,7 +2,8 @@ const maitreApprentissageSchema = {
   nom: {
     maxLength: 80,
     type: String,
-    description: "Nom (Nom de naissance/ patronymique) du maître d'apprentissage",
+    description:
+      "Le nom et le prénom doivent strictement correspondre à l'identité officielle du salarié (attention aux inversions).",
     label: "Nom de naissance:",
     requiredMessage: "le nom du maître d'apprentissage est obligatoire",
     example: "Dupont",
@@ -14,7 +15,8 @@ const maitreApprentissageSchema = {
   prenom: {
     maxLength: 80,
     type: String,
-    description: "Prénom du maitre d'apprentissage",
+    description:
+      "Le nom et le prénom doivent strictement correspondre à l'identité officielle du salarié (attention aux inversions).",
     label: "Prénom:",
     requiredMessage: "le prénom du maître d'apprentissage est obligatoire",
     example: "Claire",

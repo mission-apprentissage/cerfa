@@ -9,7 +9,8 @@ const apprentiSchema = {
     path: "apprenti.nom",
     maxLength: 80,
     type: String,
-    description: "Nom (Nom de naissance/ patronymique) de l'apprenti",
+    description:
+      "Le nom et le prénom doivent strictement correspondre à l'identité officielle du salarié (attention aux inversions).",
     label: "Nom de naissance de l'apprenti(e) :",
     requiredMessage: "Le nom de l'apprenti(e) est obligatoire",
     example: "MARTIN",
@@ -37,7 +38,8 @@ const apprentiSchema = {
     path: "apprenti.prenom",
     maxLength: 80,
     type: String,
-    description: "Prénom de l'apprenti",
+    description:
+      "Le nom et le prénom doivent strictement correspondre à l'identité officielle du salarié (attention aux inversions).",
     label: "Prénom de l'apprenti(e) :",
     requiredMessage: "Le prénom de l'apprenti(e) est obligatoire",
     example: "Jean-François",
