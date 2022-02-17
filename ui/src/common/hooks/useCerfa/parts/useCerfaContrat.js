@@ -144,7 +144,7 @@ export const CerfaContratController = async (dossier) => {
               return {
                 successed: false,
                 data: null,
-                message: "La durée du contrat de peut pas être inférieure à 6 mois",
+                message: "La durée du contrat ne peut pas être inférieure à 6 mois",
               };
             }
           }
@@ -154,7 +154,7 @@ export const CerfaContratController = async (dossier) => {
               return {
                 successed: false,
                 data: null,
-                message: "La durée du contrat de peut pas être suprérieure à 4 ans et 6 mois",
+                message: "La durée du contrat ne peut pas être supérieure à 4 ans et 6 mois",
               };
             }
           }
@@ -276,7 +276,7 @@ export const CerfaContratController = async (dossier) => {
               return {
                 successed: false,
                 data: null,
-                message: "La durée du contrat de peut pas être inférieure à 6 mois",
+                message: "La durée du contrat ne peut pas être inférieure à 6 mois",
               };
             }
           }
@@ -286,7 +286,7 @@ export const CerfaContratController = async (dossier) => {
               return {
                 successed: false,
                 data: null,
-                message: "La durée du contrat de peut pas être suprérieure à 4 ans et 6 mois",
+                message: "La durée du contrat ne peut pas être supérieure à 4 ans et 6 mois",
               };
             }
           }
