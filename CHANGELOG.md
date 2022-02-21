@@ -1,3 +1,10 @@
+# [1.20.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v1.20.0-beta.4...v1.20.0-beta.5) (2022-02-21)
+
+
+### Features
+
+* **ui:** signature electronique bientot disponible ([#415](https://github.com/mission-apprentissage/cerfa/issues/415)) ([a60c03b](https://github.com/mission-apprentissage/cerfa/commit/a60c03b36ffe38e088c99e50c9f33bde9cb60a78))
+
 # [1.20.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.20.0-beta.3...v1.20.0-beta.4) (2022-02-21)
 
 
