@@ -51,5 +51,6 @@ export * from "./FourIcon";
 export * from "./FiveIcon";
 export * from "./TickBubble";
 export * from "./Check";
+export * from "./Question";
 export * from "./BallPenFill";
 export * from "./Warning";
