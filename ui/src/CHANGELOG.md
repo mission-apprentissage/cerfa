@@ -1,3 +1,28 @@
+# [1.20.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.20.0-beta.1...v1.20.0-beta.2) (2022-02-21)
+
+
+### Bug Fixes
+
+* extension ([a8dd0ea](https://github.com/mission-apprentissage/cerfa/commit/a8dd0ea4019885f055793d54930088e0fbd4dba2))
+* logo header versus logo footer ([9640821](https://github.com/mission-apprentissage/cerfa/commit/96408218cdab62e09435a860541691c3bbefc28f))
+* marges de la fenêtre d'invitation d'espace ([e29c1e1](https://github.com/mission-apprentissage/cerfa/commit/e29c1e1c06ca5d966ecc2d561afa6c0015297ac0))
+* **ui:** coquille message erreur date fin de contrate ([e393dbd](https://github.com/mission-apprentissage/cerfa/commit/e393dbdfeeb34093e2159dbdea0d29f346e328d7))
+* **ui:** external icon a droite + mise en propre du code ([cef5bc1](https://github.com/mission-apprentissage/cerfa/commit/cef5bc1b900420abbfc853a54764322087b3c388))
+* **ui:** modification du labal duree de formation ([88f7d37](https://github.com/mission-apprentissage/cerfa/commit/88f7d37bcbffddb78df8462869cfc13baf41366b))
+
+
+### Features
+
+* [#369](https://github.com/mission-apprentissage/cerfa/issues/369) ([d6b71aa](https://github.com/mission-apprentissage/cerfa/commit/d6b71aafbc0b5b7d309b21a502e2fc6c6227bb58))
+* ajout ancres et base bouton **Est-ce que tous mes champs sont remplis ?** ([#408](https://github.com/mission-apprentissage/cerfa/issues/408)) ([b3b02e6](https://github.com/mission-apprentissage/cerfa/commit/b3b02e6af1d570e4266cab5c501b8e46fd271805))
+* modification de plusieurs blocs d'information ([#401](https://github.com/mission-apprentissage/cerfa/issues/401)) ([cd78638](https://github.com/mission-apprentissage/cerfa/commit/cd786387df047a1188af914b24eb8297ac2724d1))
+* **pdf:** changement de couleur en bleu ([#413](https://github.com/mission-apprentissage/cerfa/issues/413)) ([a170786](https://github.com/mission-apprentissage/cerfa/commit/a170786c21f68e037df48844552a25d4b2be5b2f))
+* **ui:** ajout du logo plan de relance ([18fae7a](https://github.com/mission-apprentissage/cerfa/commit/18fae7ae20f173e4d8fa36dab8dc6a729fa98708))
+* **ui:** ajout lien vers faq popin ([d67d33a](https://github.com/mission-apprentissage/cerfa/commit/d67d33a16c1d47891fdcae7ee2a60d38b539ebdb))
+* **ui:** modification du placeholder complement adresse ([e1548c5](https://github.com/mission-apprentissage/cerfa/commit/e1548c57c46bce154362a329cafa39c4ef6a4dd1))
+* **ui:** modification du placeholder intitule diplome ([42085f7](https://github.com/mission-apprentissage/cerfa/commit/42085f7a86a8945896a78b284622488aee8c8d22))
+* **ui:** modification du ruban et ajout texte sur le bloc remuneration ([16283d4](https://github.com/mission-apprentissage/cerfa/commit/16283d452e2a1b4e2b4a3c251fb2d65a3728256c))
+
 # [1.20.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.19.1...v1.20.0-beta.1) (2022-02-15)
 
 
