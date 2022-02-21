@@ -191,7 +191,7 @@ const InviteModal = ({ title, size = "md", isOpen, onClose, onInvite, defaultRol
                   FAQ
                 </Link>
               </Text>
-              <Flex flexDirection="column" mb={5}>
+              <Flex flexDirection="column" py={5}>
                 <HStack spacing={3}>
                   <Input
                     size={size}
