@@ -121,7 +121,7 @@ export default ({
       {dossier.etat === "BROUILLON" && (
         <Flex width="100%" justify="flex-start" mt={8} mb={10}>
           {activeStep <= steps.length - 1 && dossier.draft && (
-            <Button mr={4} size="md" variant="secondary" onClick={onClickPrevStep} isDisabled={activeStep === 0}>
+            <Button mr={8} size="md" variant="secondary" onClick={onClickPrevStep} isDisabled={activeStep === 0}>
               Revenir
             </Button>
           )}
