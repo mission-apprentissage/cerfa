@@ -1,3 +1,15 @@
+# [1.20.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.20.0-beta.2...v1.20.0-beta.3) (2022-02-21)
+
+
+### Bug Fixes
+
+* **pdf:** arobase position ([0b7ef6c](https://github.com/mission-apprentissage/cerfa/commit/0b7ef6ca621e684447353dfc692295040f4d5fec))
+
+
+### Features
+
+* **ui:** modification espace ([#414](https://github.com/mission-apprentissage/cerfa/issues/414)) ([23ed010](https://github.com/mission-apprentissage/cerfa/commit/23ed010ea9b9a7b059b2cf20e79093def00c85b0))
+
 # [1.20.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.20.0-beta.1...v1.20.0-beta.2) (2022-02-21)
 
 
