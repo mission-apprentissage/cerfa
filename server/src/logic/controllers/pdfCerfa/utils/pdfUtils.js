@@ -1001,7 +1001,7 @@ const buildFieldDraw = async (value, fieldDefinition, options = {}) => {
       title,
     x: isFunction(fieldDefinition.x) ? await fieldDefinition.x(value, options) : fieldDefinition.x,
     y: fieldDefinition.y,
-    defaultColor: rgb(0.05, 0.51, 0.49), // rgb(0.13, 0.59, 0.49), //rgb(0.9, 0.4, 0.3),
+    defaultColor: rgb(0.0, 0.38824, 0.79608), // rgb(0.13, 0.59, 0.49), //rgb(0.9, 0.4, 0.3),
     defaultSize: fieldDefinition.defaultSize ? fieldDefinition.defaultSize : 10,
   };
 
