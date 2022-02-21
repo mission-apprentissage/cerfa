@@ -84,7 +84,8 @@ const DdetsContainer = () => {
             <OrderedList ml="30px !important" my={2}>
               <ListItem>Imprimez le document pour signatures</ListItem>
               <ListItem>
-                Envoyez le document signé à l'adresse suivante {ddets.DDETS} <strong>{ddets["Mail_depot"]}</strong>
+                Cliquez sur Télétransmettre ; le contrat et ses éventuelles pièces jointes seront transmis à{" "}
+                {ddets.DDETS}
               </ListItem>
 
               <ListItem>Suivez l'avancement de votre dossier depuis votre espace</ListItem>
