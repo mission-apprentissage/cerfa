@@ -11,6 +11,7 @@ import {
   ListItem,
   Center,
   Spinner,
+  Link,
 } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
@@ -34,6 +35,10 @@ import {
   cerfaEmployeurSiretAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import InputCerfa from "./Input";
+import CheckEmptyFields from "./CheckEmptyFields";
+
+import Ribbons from "../../../../common/components/Ribbons";
+import { ExternalLinkLine } from "../../../../theme/components/icons";
 
 const FormContract = React.memo(() => {
   const maitre1DateNaissance = useRecoilValue(cerfaMaitre1DateNaissanceAtom);
@@ -47,6 +52,12 @@ const FormContract = React.memo(() => {
 
   const {
     isLoading,
+    //
+    validation,
+    resetCheckFields,
+    fieldsErrored,
+    missingFieldAvantages,
+    //
     get: {
       contrat: {
         // modeContractuel: contratModeContractuel,
@@ -306,7 +317,40 @@ const FormContract = React.memo(() => {
         <FormLabel fontWeight={700} fontSize="1.3rem">
           Rémunération
         </FormLabel>
-        <Box mt={6} borderColor={"dgalt"} borderWidth={2} px={4} py={3} borderStyle="dashed" rounded="md">
+        <Ribbons variant="info_clear" marginTop="1rem">
+          <Text color="grey.800">
+            Le calcul de la rémunération est généré automatiquement à partir des informations <br />
+            que vous avez remplies. <br />
+            <strong>
+              Le calcul indique la rémunération minimale légale, l'employeur pouvant décider d'attribuer
+              <br /> une rémunération plus avantageuse.
+            </strong>
+          </Text>
+        </Ribbons>
+        <Ribbons variant="alert_clear" marginTop="0.5rem">
+          <Text color="grey.800">
+            <strong>Attention : Ne tient pas encore compte de situations spécifiques</strong>
+            <br />
+            <Text as="span" textStyle="xs" fontStyle="italic">
+              Exemples : rémunération du contrat d'apprentissage préparant à une licence professionnelle, majorations{" "}
+              <br />
+            </Text>
+            <Text as="span" textStyle="xs">
+              En savoir plus sur les situations spécifiques sur le
+              <Link
+                color="bluefrance"
+                textDecoration="underline"
+                isExternal
+                href="https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/contrat-apprentissage#salaire"
+              >
+                {" "}
+                site du Ministère du Travail, de l'Emploi et de l'Insertion
+                <ExternalLinkLine w={"0.55rem"} h={"0.55rem"} mb={"0.125rem"} ml={1} />
+              </Link>
+            </Text>
+          </Text>
+        </Ribbons>
+        <Box mt="0.75rem" borderColor={"dgalt"} borderWidth={2} px={4} py={3} borderStyle="dashed" rounded="md">
           {(dateDebutContrat.value === "" ||
             dateFinContrat.value === "" ||
             apprentiDateNaissance.value === "" ||
@@ -510,46 +554,58 @@ const FormContract = React.memo(() => {
             onSubmittedField={onSubmittedContratAvantageNature}
           />
           <Collapse in={avantageNature.value === "Oui"} animateOpacity>
-            <FormLabel my={4} fontWeight={700}>
+            <FormLabel my={4} fontWeight={700} id={`avantageNature_bloc_section-label`}>
               Avantages en nature, le cas échéant :
             </FormLabel>
-            <Flex>
-              <Box flex="1">
+            {missingFieldAvantages && (
+              <Text color="flaterror">
+                Si l'apprenti(e) bénéficie d'avantages en nature, veuillez saisir au moins un des champs ci-dessous.
+              </Text>
+            )}
+            <Box
+              borderWidth={missingFieldAvantages ? "1px" : "none"}
+              borderColor="flaterror"
+              padding={missingFieldAvantages ? "2" : "0"}
+            >
+              <Flex>
+                <Box flex="1">
+                  <InputCerfa
+                    path="contrat.avantageNourriture"
+                    field={avantageNourriture}
+                    type="number"
+                    min={1}
+                    mt="2"
+                    onSubmittedField={onSubmittedContratAvantageNourriture}
+                    hasInfo={false}
+                  />
+                </Box>
+                <Box ml={5}>
+                  <InputCerfa
+                    path="contrat.avantageLogement"
+                    field={avantageLogement}
+                    type="number"
+                    min={1}
+                    mt="2"
+                    onSubmittedField={onSubmittedContratAvantageLogement}
+                    hasInfo={false}
+                  />
+                </Box>
+              </Flex>
+              <Box>
                 <InputCerfa
-                  path="contrat.avantageNourriture"
-                  field={avantageNourriture}
-                  type="number"
-                  min={1}
+                  path="contrat.autreAvantageEnNature"
+                  field={autreAvantageEnNature}
+                  type="consent"
                   mt="2"
-                  onSubmittedField={onSubmittedContratAvantageNourriture}
+                  onSubmittedField={onSubmittedContratAutreAvantageEnNature}
                   hasInfo={false}
                 />
               </Box>
-              <Box ml={5}>
-                <InputCerfa
-                  path="contrat.avantageLogement"
-                  field={avantageLogement}
-                  type="number"
-                  min={1}
-                  mt="2"
-                  onSubmittedField={onSubmittedContratAvantageLogement}
-                  hasInfo={false}
-                />
-              </Box>
-            </Flex>
-            <Box>
-              <InputCerfa
-                path="contrat.autreAvantageEnNature"
-                field={autreAvantageEnNature}
-                type="consent"
-                mt="2"
-                onSubmittedField={onSubmittedContratAutreAvantageEnNature}
-                hasInfo={false}
-              />
             </Box>
           </Collapse>
         </Box>
       </Box>
+      <CheckEmptyFields fieldsErrored={fieldsErrored} validation={validation} resetCheckFields={resetCheckFields} />
     </Box>
   );
 });

@@ -10,6 +10,23 @@ export const cerfaPartEmployeurIsLoadingAtom = atom({
   default: true,
 });
 
+export const cerfaPartEmployeurIsValidatigngAtom = atom({
+  key: "cerfa/part/employeur/isValidating",
+  default: false,
+});
+export const cerfaPartEmployeurHasBeenResetAtom = atom({
+  key: "cerfa/part/employeur/hasBeenReset",
+  default: false,
+});
+export const cerfaPartEmployeurFieldsErroredAtom = atom({
+  key: "cerfa/part/employeur/fields/errored",
+  default: [],
+});
+export const cerfaPartEmployeurFieldsVaidedAtom = atom({
+  key: "cerfa/part/employeur/fields/valided",
+  default: [],
+});
+
 export const cerfaEmployeurSiretAtom = atom({
   key: "cerfa/employeur/siret",
   default: null,

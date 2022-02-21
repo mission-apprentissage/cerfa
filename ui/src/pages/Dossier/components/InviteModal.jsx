@@ -7,6 +7,7 @@ import {
   Modal,
   ModalBody,
   ModalContent,
+  Link,
   ModalHeader,
   ModalOverlay,
   Text,
@@ -21,11 +22,12 @@ import { CloseIcon } from "@chakra-ui/icons";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRecoilValue } from "recoil";
-import { ArrowRightLine, Close } from "../../../theme/components/icons";
+import { ArrowRightLine, Close, Question } from "../../../theme/components/icons";
 import { useQueries, useQueryClient, useMutation } from "react-query";
 import { _get, _post, _put, _delete } from "../../../common/httpClient";
 import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
 import { Table } from "../../../common/components/Table";
+import { NavLink } from "react-router-dom";
 
 function useDossiersAcces() {
   const dossier = useRecoilValue(dossierAtom);
@@ -177,7 +179,18 @@ const InviteModal = ({ title, size = "md", isOpen, onClose, onInvite, defaultRol
           {isLoading && <Spinner />}
           {!isLoading && (
             <Box px={[4, 8]} mb={5}>
-              <Flex flexDirection="column">
+              <Text textStyle="xs">
+                <Question w="10px" h="10px" mt="-0.2rem" /> Une question sur un rôle ? Consulter la{" "}
+                <Link
+                  color="bluefrance"
+                  as={NavLink}
+                  to={"/assistance/faq#31d725e0aa704c11b7b3e02534b2c971"}
+                  isExternal
+                >
+                  FAQ
+                </Link>
+              </Text>
+              <Flex flexDirection="column" py={5}>
                 <HStack spacing={3}>
                   <Input
                     size={size}

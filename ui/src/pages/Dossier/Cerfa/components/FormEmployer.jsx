@@ -13,6 +13,7 @@ import {
   cerfaApprentiAgeAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
 import InputCerfa from "./Input";
+import CheckEmptyFields from "./CheckEmptyFields";
 
 const FormEmployer = React.memo(({ onFetched }) => {
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
@@ -22,6 +23,11 @@ const FormEmployer = React.memo(({ onFetched }) => {
   const apprentiAge = useRecoilValue(cerfaApprentiAgeAtom);
   const {
     isLoading,
+    //
+    validation,
+    resetCheckFields,
+    fieldsErrored,
+    //
     get: {
       employeur: {
         siret,
@@ -262,10 +268,9 @@ const FormEmployer = React.memo(({ onFetched }) => {
             onSubmittedField={onSubmittedEmployeurRegimeSpecifique}
             hasInfo={false}
           />
-          {/* <InputCerfa path="employeur.attestationEligibilite" field={attestationEligibilite} type="text" mt="2" /> */}
-          {/* attestationPieces */}
         </Box>
       </Flex>
+      <CheckEmptyFields fieldsErrored={fieldsErrored} validation={validation} resetCheckFields={resetCheckFields} />
     </Box>
   );
 });
