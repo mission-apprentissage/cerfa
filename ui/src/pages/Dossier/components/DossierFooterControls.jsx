@@ -183,6 +183,7 @@ export default ({
                       }}
                       size={"md"}
                       variant={"primary"}
+                      isDisabled={true}
                     >
                       <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
                       Signatures électroniques
@@ -285,7 +286,7 @@ export default ({
                   mt={16}
                 >
                   <SentPaperPlane boxSize="4" mr="0.5rem" />
-                  Télétransmettre vers Agecap
+                  Télétransmettre
                 </Button>
               )}
           </Center>
