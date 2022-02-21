@@ -293,6 +293,7 @@ const FormContract = React.memo(() => {
               min={1}
             />
             <InputCerfa
+              ml={"5"}
               path="contrat.dureeTravailHebdoMinutes"
               field={dureeTravailHebdoMinutes}
               type="number"
