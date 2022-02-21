@@ -4,7 +4,7 @@ import { Flex, Center, Button, Link, Text, HStack, Heading, OrderedList, ListIte
 import { _post, _put } from "../../../common/httpClient";
 import useAuth from "../../../common/hooks/useAuth";
 
-import { DownloadLine, SentPaperPlane, BallPenFill } from "../../../theme/components/icons";
+import { DownloadLine, SentPaperPlane, BallPenFill, InfoCircle } from "../../../theme/components/icons";
 
 import { hasPageAccessTo } from "../../../common/utils/rolesUtils";
 
@@ -121,7 +121,7 @@ export default ({
       {dossier.etat === "BROUILLON" && (
         <Flex width="100%" justify="flex-start" mt={8} mb={10}>
           {activeStep <= steps.length - 1 && dossier.draft && (
-            <Button mr={4} size="md" variant="secondary" onClick={onClickPrevStep} isDisabled={activeStep === 0}>
+            <Button mr={8} size="md" variant="secondary" onClick={onClickPrevStep} isDisabled={activeStep === 0}>
               Revenir
             </Button>
           )}
@@ -176,8 +176,12 @@ export default ({
                     <ListItem>Suivez l'évolution en temps réel</ListItem>
                     <ListItem>Transmission automatique au service en charge de l'instruction du dossier</ListItem>
                   </OrderedList>
+                  <Text color="bluefrance" mb={5}>
+                    <InfoCircle mt={"-0.2rem"} w="20px" h="20px" /> Vous serez avertis lorsque cette fonctionnalité sera
+                    disponible.
+                  </Text>
                   <Center mt={16}>
-                    <Button
+                    {/* <Button
                       onClick={() => {
                         onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
                       }}
@@ -187,6 +191,18 @@ export default ({
                     >
                       <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
                       Signatures électroniques
+                    </Button> */}
+                    <Button
+                      onClick={() => {
+                        onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
+                      }}
+                      size={"md"}
+                      color="grey.600"
+                      variant={"primary"}
+                      isDisabled={true}
+                    >
+                      <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
+                      Bientôt disponible
                     </Button>
                   </Center>
                 </Flex>
