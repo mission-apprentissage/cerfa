@@ -2,7 +2,8 @@ import React from "react";
 import { Box, Container, Flex, Link, List, ListItem, Text } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { ExternalLinkLine } from "../../../theme/components/icons";
-import { Logo } from "./Logo";
+import { Logo } from "./LogoFooter";
+
 const APP_VERSION = process.env.REACT_APP_VERSION;
 
 const Footer = () => {

@@ -45,7 +45,7 @@ const dossierSchema = {
   },
   numeroDeca: {
     type: String,
-    description: "Numéro DECA du dossier\r\n<br />Obsolète : Ce champ est redondant avec le champ contrat.noContrat",
+    description: `Numéro DECA du dossier\r\n Obsolète : Ce champ est redondant avec le champ contrat.noContrat`,
     nullable: true,
     default: null,
     example: "222222222222",
@@ -80,8 +80,7 @@ const dossierSchema = {
     type: String,
     default: "BROUILLON",
     nullable: true,
-    description:
-      "**Etat du contrat** :\r\n<br />TRANSMIS\r\n<br />EN_COURS_INSTRUCTION\r\n<br />ENGAGE\r\n<br />ANNULE\r\n<br />REFUSE\r\n<br />RUPTURE\r\n<br />SOLDE",
+    description: `**Etat du contrat** :\r\n  TRANSMIS\r\n  EN_COURS_INSTRUCTION\r\n  ENGAGE\r\n  ANNULE\r\n  REFUSE\r\n  RUPTURE\r\n  SOLDE`,
   },
   mode: {
     enum: ["NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE", "NOUVEAU_CONTRAT_SIGNATURE_PAPIER", null],

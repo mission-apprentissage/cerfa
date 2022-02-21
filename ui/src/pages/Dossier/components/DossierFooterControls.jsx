@@ -1,10 +1,22 @@
 import React, { useCallback, useMemo } from "react";
-import { Flex, Center, Button, Link, Text, HStack, Heading, OrderedList, ListItem, useToast } from "@chakra-ui/react";
+import {
+  Flex,
+  Center,
+  Button,
+  Link,
+  Text,
+  HStack,
+  Heading,
+  OrderedList,
+  ListItem,
+  useToast,
+  Box,
+} from "@chakra-ui/react";
 
 import { _post, _put } from "../../../common/httpClient";
 import useAuth from "../../../common/hooks/useAuth";
 
-import { DownloadLine, SentPaperPlane, BallPenFill } from "../../../theme/components/icons";
+import { DownloadLine, SentPaperPlane, BallPenFill, InfoCircle } from "../../../theme/components/icons";
 
 import { hasPageAccessTo } from "../../../common/utils/rolesUtils";
 
@@ -121,7 +133,7 @@ export default ({
       {dossier.etat === "BROUILLON" && (
         <Flex width="100%" justify="flex-start" mt={8} mb={10}>
           {activeStep <= steps.length - 1 && dossier.draft && (
-            <Button mr={4} size="md" variant="secondary" onClick={onClickPrevStep} isDisabled={activeStep === 0}>
+            <Button mr={8} size="md" variant="secondary" onClick={onClickPrevStep} isDisabled={activeStep === 0}>
               Revenir
             </Button>
           )}
@@ -161,52 +173,73 @@ export default ({
             </HStack>
             <HStack spacing={16} justifyContent="center" mt={10}>
               {isBetaTester && hasPageAccessTo(auth, "signature_beta") && (
-                <Flex flexDirection="column" borderWidth="1px" borderColor="bluefrance" p={10} w="50%">
-                  <Flex flexDirection="column" alignItems="flex-start" p={0}>
-                    <Heading as="h4" fontSize="1.5rem" mb={4}>
-                      Signature en ligne
-                    </Heading>
-                    <Heading as="h5" fontSize="1rem" mb={4}>
-                      Processus automatique sécurisé & gratuit
-                    </Heading>
-                  </Flex>
-                  <OrderedList>
-                    <ListItem>Ajoutez les signataires</ListItem>
-                    <ListItem>Ils seront invités par courriel à signer via Yousign</ListItem>
-                    <ListItem>Suivez l'évolution en temps réel</ListItem>
-                    <ListItem>Transmission automatique au service en charge de l'instruction du dossier</ListItem>
-                  </OrderedList>
-                  <Center mt={16}>
-                    <Button
+                <Flex flexDirection="column" borderWidth="1px" borderColor="bluefrance" p={10} w="55%" h="50vh">
+                  <Box flexGrow="1">
+                    <Flex flexDirection="column" alignItems="flex-start" p={0}>
+                      <Heading as="h4" fontSize="1.5rem" mb={4}>
+                        Signature en ligne
+                      </Heading>
+                      <Heading as="h5" fontSize="1rem" mb={4}>
+                        Processus automatique sécurisé & gratuit
+                      </Heading>
+                    </Flex>
+                    <OrderedList>
+                      <ListItem>Ajoutez les signataires</ListItem>
+                      <ListItem>Ils seront invités par courriel à signer via Yousign</ListItem>
+                      <ListItem>Suivez l'évolution en temps réel</ListItem>
+                      <ListItem>Transmission automatique au service en charge de l'instruction du dossier</ListItem>
+                    </OrderedList>
+                    <Text color="bluefrance" py={5}>
+                      <InfoCircle mt={"-0.2rem"} w="20px" h="20px" /> Vous serez avertis lorsque cette fonctionnalité
+                      sera disponible.
+                    </Text>
+                  </Box>
+                  <Center h="25%">
+                    {/* <Button
                       onClick={() => {
                         onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
                       }}
                       size={"md"}
                       variant={"primary"}
+                      isDisabled={true}
                     >
                       <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
                       Signatures électroniques
+                    </Button> */}
+                    <Button
+                      onClick={() => {
+                        onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
+                      }}
+                      size={"md"}
+                      color="grey.600"
+                      variant={"secondary"}
+                      borderColor="grey.600"
+                      isDisabled={true}
+                    >
+                      Bientôt disponible !
                     </Button>
                   </Center>
                 </Flex>
               )}
 
-              <Flex flexDirection="column" bg="galt" p={10} w="50%">
-                <Flex flexDirection="column" alignItems="flex-start" p={0}>
-                  <Heading as="h4" fontSize="1.5rem" mb={4}>
-                    Signature papier
-                  </Heading>
-                  <Heading as="h5" fontSize="1rem" mb={4}>
-                    Processus manuel
-                  </Heading>
-                </Flex>
-                <OrderedList>
-                  <ListItem>Téléchargez le document complété</ListItem>
-                  <ListItem>Imprimez le contrat</ListItem>
-                  <ListItem>Recueillez les différentes signatures</ListItem>
-                  <ListItem>Transmission automatique à votre DEETS</ListItem>
-                </OrderedList>
-                <Center mt={16}>
+              <Flex flexDirection="column" bg="galt" p={10} w="45%" h="50vh">
+                <Box flexGrow="1">
+                  <Flex flexDirection="column" alignItems="flex-start" p={0}>
+                    <Heading as="h4" fontSize="1.5rem" mb={4}>
+                      Signature papier
+                    </Heading>
+                    <Heading as="h5" fontSize="1rem" mb={4}>
+                      Processus manuel
+                    </Heading>
+                  </Flex>
+                  <OrderedList>
+                    <ListItem>Téléchargez le document complété</ListItem>
+                    <ListItem>Imprimez le contrat</ListItem>
+                    <ListItem>Recueillez les différentes signatures</ListItem>
+                    <ListItem>Transmission automatique à votre DEETS</ListItem>
+                  </OrderedList>
+                </Box>
+                <Center h="25%">
                   <Button
                     onClick={() => {
                       onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_PAPIER");
@@ -285,7 +318,7 @@ export default ({
                   mt={16}
                 >
                   <SentPaperPlane boxSize="4" mr="0.5rem" />
-                  Télétransmettre vers Agecap
+                  Télétransmettre
                 </Button>
               )}
           </Center>

@@ -6,9 +6,11 @@ const { capitalize } = require("lodash");
 
 const apprentiSchema = {
   nom: {
+    path: "apprenti.nom",
     maxLength: 80,
     type: String,
-    description: "Nom (Nom de naissance/ patronymique) de l'apprenti",
+    description:
+      "Le nom et le prénom doivent strictement correspondre à l'identité officielle du salarié (attention aux inversions).",
     label: "Nom de naissance de l'apprenti(e) :",
     requiredMessage: "Le nom de l'apprenti(e) est obligatoire",
     example: "MARTIN",
@@ -33,9 +35,11 @@ const apprentiSchema = {
   //   example: "DUPONT",
   // },
   prenom: {
+    path: "apprenti.prenom",
     maxLength: 80,
     type: String,
-    description: "Prénom de l'apprenti",
+    description:
+      "Le nom et le prénom doivent strictement correspondre à l'identité officielle du salarié (attention aux inversions).",
     label: "Prénom de l'apprenti(e) :",
     requiredMessage: "Le prénom de l'apprenti(e) est obligatoire",
     example: "Jean-François",
@@ -53,6 +57,7 @@ const apprentiSchema = {
     ],
   },
   sexe: {
+    path: "apprenti.sexe",
     enum: ["M", "F", null],
     default: null,
     required: function () {
@@ -60,7 +65,7 @@ const apprentiSchema = {
     },
     type: String,
     label: "Sexe :",
-    description: "**Sexe de l'apprenti**\r\n<br />M : Homme\r\n<br />F : Femme",
+    description: `**Sexe de l'apprenti**\r\n  M : Homme\r\n  F : Femme`,
     requiredMessage: "le sexe de l'apprenti(e) est obligatoire",
     options: [
       {
@@ -74,6 +79,7 @@ const apprentiSchema = {
     ],
   },
   nationalite: {
+    path: "apprenti.nationalite",
     enum: [1, 2, 3],
     type: Number,
     default: null,
@@ -82,8 +88,7 @@ const apprentiSchema = {
     },
     label: "Nationalité :",
     requiredMessage: "la nationalité de l'apprenti(e) est obligatoire",
-    description:
-      "**Nationalité** :\r\n<br />1 : Française\r\n<br />2 : Union Européenne\r\n<br />3 : Etranger hors Union Européenne",
+    description: `Le salarié étranger, non citoyen européen, doit disposer d'un titre de séjour valable l'autorisant à travailler en France et d'une autorisation de travail au début du contrat. Les demandes de titres et d'autorisation de travail peuvent être réalisées sur [le site Etrangers en France.](https://administration-etrangers-en-france.interieur.gouv.fr/particuliers/#/)`,
     options: [
       {
         label: "1: Française",
@@ -100,17 +105,20 @@ const apprentiSchema = {
     ],
   },
   dateNaissance: {
+    path: "apprenti.dateNaissance",
     type: Date,
-    description: "Date de naissance de l'apprenti(e)",
     label: "Date de naissance :",
     requiredMessage: "La date de naissance de l'apprenti(e) est obligatoire",
     example: "2001-01-01T00:00:00+0000",
+    description:
+      "La date de naissance combinée à la date d'exécution du contrat définira si l'apprenti(e) est mineur(e) ou majeur(e) et est bien âgé de 15 ans ou plus. <br/> Si l'apprenti(e) est mineur(e) à la date de signature du contrat, vous devrez renseigner le cas d'émancipation ou les informations relatives au représentant légal.",
     default: null,
     required: function () {
       return !this.draft;
     },
   },
   age: {
+    path: "apprenti.age",
     type: Number,
     description: "Âge de l'apprenti(e) à la date de début de contrat [donnée calculée]",
     nullable: true,
@@ -121,8 +129,8 @@ const apprentiSchema = {
     },
   },
   departementNaissance: {
+    path: "apprenti.departementNaissance",
     enum: [null, ...departementEnum.map((d) => d.replace(/^(0){1}/, ""))],
-
     maxLength: 3,
     minLength: 1,
     validate: {
@@ -133,12 +141,12 @@ const apprentiSchema = {
       message: (props) => `${props.value} n'est pas un departement valide`,
     },
     type: String,
-    description: "Département de naissance de l'apprenti",
     label: "Département de naissance :",
     example: "1 Ain, 99 Étranger",
     pattern: "^([0-9][0-9]|2[AB]|9[012345]|97[12346])$",
     requiredMessage: "le département de naissance est obligatoire",
     validateMessage: ` n'est pas un département valide`,
+    description: `Pour les personnes nées à l'étranger, indiquez 99. Pour les départements à 1 chiffre, faites précéder le chiffre par un "0".`,
     default: null,
     nullable: true,
     required: function () {
@@ -146,6 +154,7 @@ const apprentiSchema = {
     },
   },
   communeNaissance: {
+    path: "apprenti.communeNaissance",
     maxLength: 80,
     type: String,
     description: "Commune de naissance de l'apprenti",
@@ -166,6 +175,7 @@ const apprentiSchema = {
     ],
   },
   nir: {
+    path: "apprenti.nir",
     maxLength: 15,
     minLength: 13,
     validate: {
@@ -188,13 +198,14 @@ const apprentiSchema = {
     // },
   },
   regimeSocial: {
+    path: "apprenti.regimeSocial",
     enum: [0, 1, 2],
     type: Number,
     default: null,
     required: function () {
       return !this.draft;
     },
-    description: "**Régime social** :\r\n<br />1 : MSA\r\n<br />2 : URSSAF",
+    description: `**Régime social** :\r\n  1 : MSA\r\n  2 : URSSAF`,
     label: "Régime social :",
     requiredMessage: "le régime social de l'apprenti(e) est obligatoire",
     options: [
@@ -209,6 +220,7 @@ const apprentiSchema = {
     ],
   },
   handicap: {
+    path: "apprenti.handicap",
     type: Boolean,
     description: "Est reconnu travailleur handicapé (RQTH)",
     example: false,
@@ -217,6 +229,7 @@ const apprentiSchema = {
       return !this.draft;
     },
     label: "Déclare bénéficier de la reconnaissance travailleur handicapé :",
+    requiredMessage: "La déclaration de reconnaissance travailleur handicapé est obligatoire",
     options: [
       {
         label: "Oui",
@@ -229,6 +242,7 @@ const apprentiSchema = {
     ],
   },
   situationAvantContrat: {
+    path: "apprenti.situationAvantContrat",
     enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     type: Number,
     default: null,
@@ -289,10 +303,10 @@ const apprentiSchema = {
         value: 12,
       },
     ],
-    description:
-      "**Situation de l'apprenti avant le contrat**\r\n<br />1 : Scolaire\r\n<br />2 : Prépa apprentissage\r\n<br />3 : Etudiant\r\n<br />4 : Contrat d’apprentissage\r\n<br />5 : Contrat de professionnalisation\r\n<br />6 : Contrat aidé\r\n<br />7 : En formation au CFA avant signature d’un contrat d’apprentissage (L6222-12-1 du code du travail)\r\n<br />8 : En formation, au CFA, sans contrat, suite à rupture (5° de L6231-2 du code du travail)\r\n<br />9 : Stagiaire de la formation professionnelle\r\n<br />10 : Salarié\r\n<br />11 : Personne à la recherche d’un emploi (inscrite ou non au Pôle Emploi)\r\n<br />12 : Inactif",
+    description: `**Situation de l'apprenti avant le contrat**\r\n  1 : Scolaire\r\n  2 : Prépa apprentissage\r\n  3 : Etudiant\r\n  4 : Contrat d’apprentissage\r\n  5 : Contrat de professionnalisation\r\n  6 : Contrat aidé\r\n  7 : En formation au CFA avant signature d’un contrat d’apprentissage (L6222-12-1 du code du travail)\r\n  8 : En formation, au CFA, sans contrat, suite à rupture (5° de L6231-2 du code du travail)\r\n  9 : Stagiaire de la formation professionnelle\r\n  10 : Salarié\r\n  11 : Personne à la recherche d’un emploi (inscrite ou non au Pôle Emploi)\r\n  12 : Inactif`,
   },
   diplome: {
+    path: "apprenti.diplome",
     ...diplomeSchema,
     label: "Diplôme ou titre le plus élevé obtenu :",
     requiredMessage: "le diplôme ou titre le plus élevé obtenu par l'apprenti(e) est obligatoire",
@@ -302,6 +316,7 @@ const apprentiSchema = {
     },
   },
   derniereClasse: {
+    path: "apprenti.derniereClasse",
     enum: [1, 11, 12, 21, 22, 31, 32, 40, 41, 42],
     type: Number,
     default: null,
@@ -310,8 +325,7 @@ const apprentiSchema = {
     },
     label: "Dernière classe / année suivie :",
     requiredMessage: "la dernière classe / année suivie par l'apprenti(e) est obligatoire",
-    description:
-      "**Dernière année ou classe suivie par l'apprenti** :\r\n<br /> 1 : l'apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre\r\n<br /> 11 : l’apprenti a suivi la 1ère année du cycle et l’a validée (examens réussis mais année non diplômante)\r\n<br /> 12 : l’apprenti a suivi la 1ère année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 21 : l’apprenti a suivi la 2è année du cycle et l’a validée (examens réussis mais année non diplômante)\r\n<br /> 22 : l’apprenti a suivi la 2è année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 31 : l’apprenti a suivi la 3è année du cycle et l’a validée (examens réussis mais année non diplômante, cycle adapté)\r\n<br /> 32 : l’apprenti a suivi la 3è année du cycle mais ne l’a pas validée (échec aux examens, interruption ou abandon de formation)\r\n<br /> 40 : l’apprenti a achevé le 1er cycle de l’enseignement secondaire (collège)\r\n<br /> 41 : l’apprenti a interrompu ses études en classe de 3è\r\n<br /> 42 : l’apprenti a interrompu ses études en classe de 4è",
+    description: `Il faut sélectionner la situation qui précède l'entrée en contrat d'apprentissage. Par exemple, si le diplôme préparé avant était une 1ère année de BTS et que cette dernière a été validée, il faut sélectionner 11 - l'apprenti a suivi la première année du cycle et l'a validée ( examens réussis mais année non diplômante).`,
     options: [
       {
         label: "01: l'apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre",
@@ -362,6 +376,7 @@ const apprentiSchema = {
     ],
   },
   diplomePrepare: {
+    path: "apprenti.diplomePrepare",
     ...diplomeSchema,
     label: "Dernier diplôme ou titre préparé :",
     requiredMessage: "le dernier diplôme ou titre préparé par l'apprenti(e) est obligatoire",
@@ -371,10 +386,11 @@ const apprentiSchema = {
     },
   },
   intituleDiplomePrepare: {
+    path: "apprenti.intituleDiplomePrepare",
     maxLength: 255,
     type: String,
     description: "Intitulé précis du dernier diplôme ou titre préparé par l'apprenti(e)",
-    example: "Master en sciences de l'éducation",
+    example: "BTS comptabilité gestion",
     label: "Intitulé précis du dernier diplôme ou titre préparé :",
     requiredMessage: "l'intitulé du dernier diplôme ou titre préparé par l'apprenti(e) est obligatoire",
     default: null,
@@ -383,6 +399,7 @@ const apprentiSchema = {
     },
   },
   telephone: {
+    path: "apprenti.telephone",
     maxLength: 13,
     minLength: 10,
     validate: {
@@ -397,11 +414,12 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
-    description: "Téléphone de l'apprenti",
     label: "Téléphone de l'apprenti(e) :",
+    description: `Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le "0" car l'indicateur pays est pré-renseigné.`,
     example: "0102030405",
   },
   courriel: {
+    path: "apprenti.courriel",
     maxLength: 80,
     type: String,
     description: "Courriel de l'apprenti",
@@ -430,7 +448,28 @@ const apprentiSchema = {
   },
   adresse: {
     ...adresseSchema,
+    numero: {
+      path: "apprenti.adresse.numero",
+      ...adresseSchema.numero,
+    },
+    voie: {
+      path: "apprenti.adresse.voie",
+      ...adresseSchema.voie,
+    },
+    complement: {
+      path: "apprenti.adresse.complement",
+      ...adresseSchema.complement,
+    },
+    codePostal: {
+      path: "apprenti.adresse.codePostal",
+      ...adresseSchema.codePostal,
+    },
+    commune: {
+      path: "apprenti.adresse.commune",
+      ...adresseSchema.commune,
+    },
     pays: {
+      path: "apprenti.adresse.pays",
       enum: [null, ...paysEnum.map(({ code }) => code)],
       default: "FR",
       type: String,
@@ -447,6 +486,7 @@ const apprentiSchema = {
     },
   },
   apprentiMineur: {
+    path: "apprenti.apprentiMineur",
     type: Boolean,
     description: "À la date de signature de ce contrat, l'apprenti(e) sera-t-il(elle) mineur(e) ?",
     example: false,
@@ -468,14 +508,15 @@ const apprentiSchema = {
     ],
   },
   apprentiMineurNonEmancipe: {
+    path: "apprenti.apprentiMineurNonEmancipe",
     type: Boolean,
-    description: "l'apprenti(e) est mineur(e) non emancipé(e)",
     example: false,
     default: null,
     required: function () {
       return !this.draft;
     },
-    label: "l'apprenti(e) est mineur(e) non emancipé(e)",
+    label: "L'apprenti est sous la responsabilité d'un représentant légal (non émancipé)",
+    description: `Un mineur émancipé peut accomplir seul les actes nécessitant la majorité légale. Plus d'informations à propos de l'émancipation sur [le site du Service public.](https://www.service-public.fr/particuliers/vosdroits/F1194) `,
     requiredMessage: "Merci de renseigner si l'apprenti(e) mineur(e) est emancipé(e) ou non",
     options: [
       {
@@ -496,6 +537,7 @@ const apprentiSchema = {
     },
     type: {
       nom: {
+        path: "apprenti.responsableLegal.nom",
         maxLength: 80,
         type: String,
         default: null,
@@ -516,6 +558,7 @@ const apprentiSchema = {
         ],
       },
       prenom: {
+        path: "apprenti.responsableLegal.prenom",
         maxLength: 80,
         type: String,
         default: null,
@@ -536,6 +579,7 @@ const apprentiSchema = {
         ],
       },
       memeAdresse: {
+        path: "apprenti.responsableLegal.memeAdresse",
         type: Boolean,
         description: "l'apprenti(e) vit à la même adresse que son responsable légal",
         example: false,
@@ -544,6 +588,7 @@ const apprentiSchema = {
           return !this.draft;
         },
         label: "l'apprenti(e) vit à la même adresse que son responsable légal",
+        requiredMessage: "L'adresse du représentant légal est obligatoire",
         options: [
           {
             label: "Oui",
@@ -557,7 +602,28 @@ const apprentiSchema = {
       },
       adresse: {
         ...adresseSchema,
+        numero: {
+          path: "apprenti.responsableLegal.adresse.numero",
+          ...adresseSchema.numero,
+        },
+        voie: {
+          path: "apprenti.responsableLegal.adresse.voie",
+          ...adresseSchema.voie,
+        },
+        complement: {
+          path: "apprenti.responsableLegal.adresse.complement",
+          ...adresseSchema.complement,
+        },
+        codePostal: {
+          path: "apprenti.responsableLegal.adresse.codePostal",
+          ...adresseSchema.codePostal,
+        },
+        commune: {
+          path: "apprenti.responsableLegal.adresse.commune",
+          ...adresseSchema.commune,
+        },
         pays: {
+          path: "apprenti.responsableLegal.adresse.pays",
           enum: [null, ...paysEnum.map(({ code }) => code)],
           default: "FR",
           type: String,
@@ -588,10 +654,12 @@ const apprentiSchema = {
     },
   },
   inscriptionSportifDeHautNiveau: {
+    path: "apprenti.inscriptionSportifDeHautNiveau",
     type: Boolean,
     description:
       "Déclare être inscrit sur la liste des sportifs, entraîneurs, arbitres et juges sportifs de haut niveau",
     label: "Déclare être inscrit sur la liste des sportifs, entraîneurs, arbitres et juges sportifs de haut niveau :",
+    requiredMessage: "Cette déclaration est obligatoire",
     example: true,
     default: null,
     required: function () {

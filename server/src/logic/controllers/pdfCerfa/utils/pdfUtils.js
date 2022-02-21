@@ -125,11 +125,10 @@ const fieldsPositions = {
       maxLength: 50,
       title: async (value, options) => {
         let [user, domain] = value.split("@");
-        const helveticaFont = await options.pdfDoc.embedFont(StandardFonts.Helvetica);
         return [
           { text: user },
-          { text: "@", options: { color: rgb(0, 0, 0), x: 30 + helveticaFont.widthOfTextAtSize(user, 11) } },
-          { text: domain, options: { x: 30 + helveticaFont.widthOfTextAtSize(user + "@", 11) } },
+          { text: "@", options: { color: rgb(0, 0, 0), x: 25 + options.writtingFont.widthOfTextAtSize(user, 11) } },
+          { text: domain, options: { x: 25 + options.writtingFont.widthOfTextAtSize(user + "@", 11) } },
         ];
       },
     },
@@ -303,11 +302,10 @@ const fieldsPositions = {
       maxLength: 50,
       title: async (value, options) => {
         let [user, domain] = value.split("@");
-        const helveticaFont = await options.pdfDoc.embedFont(StandardFonts.Helvetica);
         return [
           { text: user },
-          { text: "@", options: { color: rgb(0, 0, 0), x: 30 + helveticaFont.widthOfTextAtSize(user, 11) } },
-          { text: domain, options: { x: 30 + helveticaFont.widthOfTextAtSize(user + "@", 11) } },
+          { text: "@", options: { color: rgb(0, 0, 0), x: 25 + options.writtingFont.widthOfTextAtSize(user, 11) } },
+          { text: domain, options: { x: 25 + options.writtingFont.widthOfTextAtSize(user + "@", 11) } },
         ];
       },
     },
@@ -317,10 +315,12 @@ const fieldsPositions = {
         y: 242,
         maxLength: 47,
         title: async (value, options) => {
-          const helveticaFont = await options.pdfDoc.embedFont(StandardFonts.Helvetica);
           return [
             { text: value || "" },
-            { text: options.prenom || "", options: { x: 35 + helveticaFont.widthOfTextAtSize(value || "", 11) } },
+            {
+              text: options.prenom || "",
+              options: { x: 35 + options.writtingFont.widthOfTextAtSize(value || "", 11) },
+            },
           ];
         },
       },
@@ -1001,7 +1001,7 @@ const buildFieldDraw = async (value, fieldDefinition, options = {}) => {
       title,
     x: isFunction(fieldDefinition.x) ? await fieldDefinition.x(value, options) : fieldDefinition.x,
     y: fieldDefinition.y,
-    defaultColor: rgb(0.05, 0.51, 0.49), // rgb(0.13, 0.59, 0.49), //rgb(0.9, 0.4, 0.3),
+    defaultColor: rgb(0.0, 0.38824, 0.79608), // rgb(0.13, 0.59, 0.49), //rgb(0.9, 0.4, 0.3),
     defaultSize: fieldDefinition.defaultSize ? fieldDefinition.defaultSize : 10,
   };
 
@@ -1055,8 +1055,8 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
       await buildFieldDraw(cerfa.employeur.adresse.codePostal, fieldsPositions.employeur.adresse.codePostal),
       await buildFieldDraw(cerfa.employeur.adresse.commune, fieldsPositions.employeur.adresse.commune),
       await buildFieldDraw(cerfa.employeur.telephone, fieldsPositions.employeur.telephone),
-      await buildFieldDraw(cerfa.employeur.courriel, fieldsPositions.employeur.courriel, { pdfDoc }),
-      await buildFieldDraw(cerfa.employeur.siret, fieldsPositions.employeur.siret, { pdfDoc }),
+      await buildFieldDraw(cerfa.employeur.courriel, fieldsPositions.employeur.courriel, { writtingFont }),
+      await buildFieldDraw(cerfa.employeur.siret, fieldsPositions.employeur.siret),
       await buildFieldDraw(cerfa.employeur.typeEmployeur, fieldsPositions.employeur.typeEmployeur),
       await buildFieldDraw(cerfa.employeur.employeurSpecifique, fieldsPositions.employeur.employeurSpecifique),
       await buildFieldDraw(cerfa.employeur.naf, fieldsPositions.employeur.naf),
@@ -1075,10 +1075,10 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
       await buildFieldDraw(cerfa.apprenti.adresse.codePostal, fieldsPositions.apprenti.adresse.codePostal),
       await buildFieldDraw(cerfa.apprenti.adresse.commune, fieldsPositions.apprenti.adresse.commune),
       await buildFieldDraw(cerfa.apprenti.telephone, fieldsPositions.apprenti.telephone),
-      await buildFieldDraw(cerfa.apprenti.courriel, fieldsPositions.apprenti.courriel, { pdfDoc }),
+      await buildFieldDraw(cerfa.apprenti.courriel, fieldsPositions.apprenti.courriel, { writtingFont }),
       await buildFieldDraw(cerfa.apprenti.responsableLegal.nom, fieldsPositions.apprenti.responsableLegal.nom, {
         prenom: cerfa.apprenti.responsableLegal.prenom,
-        pdfDoc,
+        writtingFont,
       }),
       await buildFieldDraw(
         cerfa.apprenti.responsableLegal.adresse.numero,

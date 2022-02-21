@@ -228,7 +228,6 @@ const DateInput = ({ onChange, value, type, ...props }) => {
         unmask={true}
         lazy={false}
         placeholderChar="_"
-        // overwrite={true}
         autofix={true}
         blocks={{
           d: { mask: IMask.MaskedRange, placeholderChar: "j", from: 1, to: 31, maxLength: 2 },
@@ -357,6 +356,7 @@ export default React.memo(
     const prevFieldLockRef = useRef(false);
     const initRef = useRef(0);
     const triggerRef = useRef(0);
+    const triggerValidationRef = useRef(0);
 
     const borderBottomColor = useMemo(
       () => (validated ? "green.500" : isErrored ? "error" : "grey.600"),
@@ -511,6 +511,9 @@ export default React.memo(
         if (successed) {
           setIsErrored(false);
           setValidated(true);
+          if (field?.setField) {
+            field?.setField({ ...field, errored: false, path });
+          }
         } else if (warning) {
           setIsErrored(false);
           setValidated(false);
@@ -560,6 +563,9 @@ export default React.memo(
                   setFieldValue(name, fieldValue);
                   setIsErrored(false);
                   setValidated(true);
+                  if (field?.setField) {
+                    field?.setField({ ...field, errored: false, path });
+                  }
                 } else {
                   setShouldBeDisabled(false);
                   setFieldValue(name, fieldValue);
@@ -623,6 +629,9 @@ export default React.memo(
                   if (successed) {
                     setIsErrored(false);
                     setValidated(true);
+                    if (field?.setField) {
+                      field?.setField({ ...field, errored: false, path, triggerValidation: false });
+                    }
                   } else {
                     setValidated(false);
                     setIsErrored(true);
@@ -631,6 +640,27 @@ export default React.memo(
               }
             } else if (!field?.triggerValidation && triggerRef.current === 1) {
               triggerRef.current = 0;
+            } else if (field?.validateField) {
+              if (triggerValidationRef.current === 0) {
+                triggerValidationRef.current = 1;
+                const { isValid: isValidValue, error: errorValue } = await validate(validationSchema, {
+                  [name]: values[name],
+                });
+                let errored = false;
+                if (!isValidValue) {
+                  setErrors({ [name]: errorValue.message });
+                  setIsErrored(true);
+                  setValidated(false);
+                  errored = true;
+                }
+                if (field?.setField) {
+                  field?.setField({ ...field, validateField: false, errored, path });
+                }
+              } else {
+                triggerValidationRef.current = 0;
+              }
+            } else if (!field?.validateField && triggerValidationRef.current === 1) {
+              triggerValidationRef.current = 0;
             }
           }
         }
@@ -654,6 +684,7 @@ export default React.memo(
       countryCode,
       eventHandler,
       isRequiredInternal,
+      label,
     ]);
 
     const prevOnAsyncData = prevOnAsyncDataRef.current;
@@ -673,7 +704,7 @@ export default React.memo(
     if (!field) return null;
 
     return (
-      <FormControl isRequired={isRequiredInternal} mt={2} isInvalid={errors[name]} {...props}>
+      <FormControl isRequired={isRequiredInternal} mt={2} isInvalid={errors[name]} {...props} id={`${name}_section`}>
         {(type === "text" ||
           type === "email" ||
           type === "number" ||
@@ -864,6 +895,7 @@ export default React.memo(
               <InfoTooltip
                 description={field?.description}
                 example={field?.example}
+                label={field?.label}
                 history={field?.history}
                 noHistory={noHistory}
               />

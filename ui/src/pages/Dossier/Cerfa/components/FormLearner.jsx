@@ -9,7 +9,9 @@ import {
   cerfaContratRemunerationsAnnuellesAtom,
 } from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 import { cerfaEmployeurAdresseDepartementAtom } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+
 import InputCerfa from "./Input";
+import CheckEmptyFields from "./CheckEmptyFields";
 
 const FormLearner = React.memo(() => {
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
@@ -19,6 +21,11 @@ const FormLearner = React.memo(() => {
 
   const {
     isLoading,
+    //
+    validation,
+    resetCheckFields,
+    fieldsErrored,
+    //
     get: {
       apprenti: {
         nom,
@@ -173,6 +180,7 @@ const FormLearner = React.memo(() => {
             type="select"
             mt="2"
             onSubmittedField={onSubmittedApprentiAdressePays}
+            hasInfo={false}
           />
           <InputCerfa
             path="apprenti.telephone"
@@ -187,6 +195,7 @@ const FormLearner = React.memo(() => {
             type="email"
             mt="2"
             onSubmittedField={onSubmittedApprentiCourriel}
+            hasInfo={false}
           />
 
           <Box mt={5}>
@@ -196,6 +205,7 @@ const FormLearner = React.memo(() => {
               type="radio"
               mt="2"
               onSubmittedField={onSubmittedApprentiApprentiMineur}
+              hasInfo={false}
             />
             <InputCerfa
               path="apprenti.apprentiMineurNonEmancipe"
@@ -283,6 +293,7 @@ const FormLearner = React.memo(() => {
                   type="select"
                   mt="2"
                   onSubmittedField={onSubmittedApprentiResponsableLegalAdressePays}
+                  hasInfo={false}
                 />
               </Collapse>
             </Collapse>
@@ -309,6 +320,7 @@ const FormLearner = React.memo(() => {
             type="select"
             mt="2"
             onSubmittedField={onSubmittedApprentiSexe}
+            hasInfo={false}
           />
           <InputCerfa
             path="apprenti.departementNaissance"
@@ -324,6 +336,7 @@ const FormLearner = React.memo(() => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedApprentiCommuneNaissance}
+            hasInfo={false}
           />
           <InputCerfa
             path="apprenti.nationalite"
@@ -338,6 +351,7 @@ const FormLearner = React.memo(() => {
             type="select"
             mt="2"
             onSubmittedField={onSubmittedApprentiRegimeSocial}
+            hasInfo={false}
           />
           <InputCerfa
             path="apprenti.inscriptionSportifDeHautNiveau"
@@ -345,6 +359,7 @@ const FormLearner = React.memo(() => {
             type="radio"
             mt="2"
             onSubmittedField={onSubmittedApprentiInscriptionSportifDeHautNiveau}
+            hasInfo={false}
           />
           <InputCerfa
             path="apprenti.handicap"
@@ -352,6 +367,7 @@ const FormLearner = React.memo(() => {
             type="radio"
             mt="2"
             onSubmittedField={onSubmittedApprentiHandicap}
+            hasInfo={false}
           />
           <InputCerfa
             path="apprenti.situationAvantContrat"
@@ -359,6 +375,7 @@ const FormLearner = React.memo(() => {
             type="select"
             mt="2"
             onSubmittedField={onSubmittedApprentiSituationAvantContrat}
+            hasInfo={false}
           />
           <InputCerfa
             path="apprenti.diplomePrepare"
@@ -380,6 +397,7 @@ const FormLearner = React.memo(() => {
             type="text"
             mt="2"
             onSubmittedField={onSubmittedApprentiIntituleDiplomePrepare}
+            hasInfo={false}
           />
           <InputCerfa
             path="apprenti.diplome"
@@ -390,6 +408,7 @@ const FormLearner = React.memo(() => {
           />
         </Box>
       </Flex>
+      <CheckEmptyFields fieldsErrored={fieldsErrored} validation={validation} resetCheckFields={resetCheckFields} />
     </Box>
   );
 });

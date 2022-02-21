@@ -16,8 +16,13 @@ import {
   Text,
   Badge,
   Stack,
+  Link,
 } from "@chakra-ui/react";
 import { prettyPrintDate } from "../utils/dateUtils";
+import { replaceLinks } from "../utils/markdownUtils";
+import { ExternalLinkLine } from "../../theme/components/icons";
+import ChakraUIRenderer from "chakra-ui-markdown-renderer";
+import ReactMarkdown from "react-markdown";
 
 const TooltipIcon = (props) => (
   <Icon viewBox="0 0 24 24" w="24px" h="24px" {...props}>
@@ -28,7 +33,7 @@ const TooltipIcon = (props) => (
   </Icon>
 );
 
-const InfoTooltip = ({ description, descriptionComponent, example, history, noHistory = true, ...rest }) => {
+const InfoTooltip = ({ description, descriptionComponent, example, label, history, noHistory = true, ...rest }) => {
   return (
     <Popover placement="bottom">
       <PopoverTrigger>
@@ -37,12 +42,22 @@ const InfoTooltip = ({ description, descriptionComponent, example, history, noHi
       <PopoverContent {...rest}>
         <PopoverArrow />
         <PopoverCloseButton />
-        <PopoverHeader fontWeight="bold">Description</PopoverHeader>
+        <PopoverHeader fontWeight="bold">{label}</PopoverHeader>
         <PopoverBody>
           <Stack>
-            {description && <Text dangerouslySetInnerHTML={{ __html: description }} />}
             {descriptionComponent}
-            {example && <Text as="samp">Exemple: {example}</Text>}
+            {!descriptionComponent &&
+              replaceLinks(description).map((part, i) => {
+                return typeof part === "string" ? (
+                  <Text as="span" key={i}>
+                    <ReactMarkdown components={ChakraUIRenderer()} children={part} skipHtml />
+                  </Text>
+                ) : (
+                  <Link href={part.href} fontSize="md" key={i} textDecoration={"underline"} isExternal>
+                    {part.linkText} <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} ml={"0.125rem"} />
+                  </Link>
+                );
+              })}
           </Stack>
         </PopoverBody>
         {history && !noHistory && (

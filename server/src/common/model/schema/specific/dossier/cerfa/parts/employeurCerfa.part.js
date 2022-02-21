@@ -4,10 +4,11 @@ const departementEnum = require("./departements.part");
 
 const employeurCerfaSchema = {
   denomination: {
+    path: "employeur.denomination",
     // maxLength: 80,
     type: String,
-    description: "Dénomination de l'employeur",
     label: "Dénomination :",
+    description: "La dénomination sociale doit être celle de l'établissement dans lequel le contrat s'exécute.",
     requiredMessage: "La dénomination de l'employeur est obligatoire",
     example: "ENERGIE 3000",
     default: null,
@@ -24,6 +25,7 @@ const employeurCerfaSchema = {
     ],
   },
   raison_sociale: {
+    path: "employeur.raison_sociale",
     type: String,
     default: null,
     example: "OCTO-TECHNOLOGY",
@@ -31,6 +33,7 @@ const employeurCerfaSchema = {
     label: "Raison sociale de l'employeur :",
   },
   siret: {
+    path: "employeur.siret",
     maxLength: 14,
     minLength: 14,
     validate: {
@@ -41,7 +44,7 @@ const employeurCerfaSchema = {
       message: (props) => `${props.value} n'est pas un siret valide`,
     },
     type: String,
-    description: "N° SIRET de l'employeur",
+    description: `Vous devez renseigner le siret correspondant à l'établissement du lieu d'exécution du contrat (il ne correspond pas forcément au siège). Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).`,
     default: null,
     nullable: function () {
       return this.draft;
@@ -64,13 +67,15 @@ const employeurCerfaSchema = {
     ],
   },
   naf: {
+    path: "employeur.naf",
     maxLength: 6,
     type: String,
     default: null,
     required: function () {
       return !this.draft;
     },
-    description: "Code NAF de l'employeur",
+    description:
+      "Le Code NAF est composé de 4 chiffres et 1 lettre. Il est délivré par l'INSEE.[Informations sur le Code NAF.](https://www.economie.gouv.fr/entreprises/activite-entreprise-code-ape-code-naf)",
     label: "Code NAF de l'employeur :",
     requiredMessage: "le code NAF est obligatoire",
     example: "1031Z",
@@ -86,13 +91,14 @@ const employeurCerfaSchema = {
     ],
   },
   nombreDeSalaries: {
+    path: "employeur.nombreDeSalaries",
     type: Number,
     required: function () {
       return !this.draft;
     },
     default: null,
     description:
-      "L'effectif renseigné est celui de l'entreprise dans sa globalité, au sens de l'article L. 130-1.-I du code de la sécurité sociale et non seulement l'effectif de l'établissement d'exécution du contrat.",
+      "L'effectif salarié rempli automatiquement correspond à l'estimation de la base Entreprises de l'INSEE. <br/>L'effectif renseigné est celui de l’entreprise dans sa globalité (et non seulement l’effectif de l’établissement d’exécution du contrat).",
     label: "Effectif salarié de l'entreprise :",
     requiredMessage: "Effectif salarié de l'entreprise est obligatoire",
     example: 123,
@@ -106,6 +112,7 @@ const employeurCerfaSchema = {
     ],
   },
   codeIdcc: {
+    path: "employeur.codeIdcc",
     enum: [null, ...idccEnum.map(({ code }) => code)],
     maxLength: 4,
     type: String,
@@ -113,7 +120,7 @@ const employeurCerfaSchema = {
     required: function () {
       return !this.draft;
     },
-    description: "Code IDCC de la convention collective appliquée",
+    description: `Identifiant de la convention collective de branche appliquée par l’établissement. [le site du Ministère du travail.](https://www.elections-professionnelles.travail.gouv.fr/web/guest/recherche-idcc)`,
     label: "Code IDCC de la convention collective appliquée : ",
     requiredMessage: "le code idcc est obligatoire",
     example: "9999",
@@ -129,6 +136,7 @@ const employeurCerfaSchema = {
     ],
   },
   libelleIdcc: {
+    path: "employeur.libelleIdcc",
     enum: [null, ...idccEnum.map(({ libelle }) => libelle)],
     maxLength: 500,
     default: null,
@@ -142,6 +150,7 @@ const employeurCerfaSchema = {
       "Convention collective nationale des entreprises de commission, de courtage et de commerce intracommunautaire et d'importation-exportation de France métropolitaine",
   },
   telephone: {
+    path: "employeur.telephone",
     maxLength: 13,
     minLength: 10,
     validate: {
@@ -156,20 +165,21 @@ const employeurCerfaSchema = {
       return !this.draft;
     },
     type: String,
-    description: "Téléphone de l'employeur",
+    description: `Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le "0" car l'indicateur pays est pré-renseigné.`,
     label: "Téléphone de l'employeur :",
     requiredMessage: "Le téléphone de l'employeur est obligatoire",
     example: "0908070605",
     // pattern: "^([+])?((d)[.-]?)?[s]?(?(d{3}))?[.-]?[s]?(d{3})[.-]?[s]?(d{4,})$",
   },
   courriel: {
+    path: "employeur.courriel",
     maxLength: 80,
     type: String,
     default: null,
     required: function () {
       return !this.draft;
     },
-    description: "Courriel de l'employeur",
+    description: "Ce courriel sera utilisé pour l'envoi des notifications pour le suivi du dossier.",
     label: "Courriel de l'employeur :",
     requiredMessage: "Le courriel de l'employeur est obligatoire",
     validate: {
@@ -191,7 +201,28 @@ const employeurCerfaSchema = {
   },
   adresse: {
     ...adresseSchema,
+    numero: {
+      path: "employeur.adresse.numero",
+      ...adresseSchema.numero,
+    },
+    voie: {
+      path: "employeur.adresse.voie",
+      ...adresseSchema.voie,
+    },
+    complement: {
+      path: "employeur.adresse.complement",
+      ...adresseSchema.complement,
+    },
+    codePostal: {
+      path: "employeur.adresse.codePostal",
+      ...adresseSchema.codePostal,
+    },
+    commune: {
+      path: "employeur.adresse.commune",
+      ...adresseSchema.commune,
+    },
     departement: {
+      path: "employeur.adresse.departement",
       enum: [null, ...departementEnum.map((d) => d.replace(/^(0){1}/, ""))],
       maxLength: 3,
       minLength: 1,
@@ -216,6 +247,7 @@ const employeurCerfaSchema = {
       },
     },
     region: {
+      path: "employeur.adresse.region",
       type: Number,
       description: "Région de l'employeur",
       label: "Région de l'employeur :",
@@ -238,6 +270,7 @@ const employeurCerfaSchema = {
     },
   },
   nom: {
+    path: "employeur.nom",
     maxLength: 200,
     type: String,
     default: null,
@@ -247,6 +280,7 @@ const employeurCerfaSchema = {
     example: "LEFEVBRE",
   },
   prenom: {
+    path: "employeur.prenom",
     maxLength: 50,
     type: String,
     description: "Prénom de l'employeur",
@@ -256,6 +290,7 @@ const employeurCerfaSchema = {
     example: "MARTINE",
   },
   typeEmployeur: {
+    path: "employeur.typeEmployeur",
     required: function () {
       return !this.draft;
     },
@@ -265,8 +300,7 @@ const employeurCerfaSchema = {
     default: null,
     label: "Type d'employeur :",
     requiredMessage: "le type d'employeur est obligatoire",
-    description:
-      "**Type d'mployeur** :\r\n<br /> *Privé*\r\n<br /> 11 : Entreprise inscrite au répertoire des métiers ou au registre des entreprises pour l’Alsace-Moselle\r\n<br /> 12 : Entreprise inscrite uniquement au registre du commerce et des sociétés\r\n<br /> 13 : Entreprises dont les salariés relèvent de la mutualité sociale agricole\r\n<br /> 14 : Profession libérale\r\n<br /> 15 : Association\r\n<br /> 16 : Autre employeur privé\r\n<br /> *Public*\r\n<br /> 21 : Service de l’Etat (administrations centrales et leurs services déconcentrés de la fonction publique d’Etat)\r\n<br /> 22 : Commune\r\n<br /> 23 : Département\r\n<br /> 24 : Région\r\n<br /> 25 : Etablissement public hospitalier\r\n<br /> 26 : Etablissement public local d’enseignement\r\n<br /> 27 : Etablissement public administratif de l’Etat\r\n<br /> 28 : Etablissement public administratif local(y compris établissement public de coopération intercommunale EPCI)\r\n<br /> 29 : Autre employeur public",
+    description: "Le type d'employeur doit être en adéquation avec son statut juridique.",
 
     options: [
       // {
@@ -346,6 +380,7 @@ const employeurCerfaSchema = {
     ],
   },
   employeurSpecifique: {
+    path: "employeur.employeurSpecifique",
     enum: [0, 1, 2, 3, 4],
     type: Number,
     nullable: true,
@@ -378,6 +413,7 @@ const employeurCerfaSchema = {
     ],
   },
   caisseComplementaire: {
+    path: "employeur.caisseComplementaire",
     maxLength: 80,
     type: String,
     default: null,
@@ -387,9 +423,11 @@ const employeurCerfaSchema = {
     example: "AGIRC-ARRCO",
   },
   regimeSpecifique: {
+    path: "employeur.regimeSpecifique",
     type: Boolean,
     description: "Adhère au régime spécifique d'assurance-chômage",
     label: "Adhésion de l'apprenti au régime spécifique d'assurance chômage : ",
+    requiredMessage: "Cette déclaration est obligatoire",
     default: null,
     nullable: true,
     example: "Non",
@@ -405,8 +443,10 @@ const employeurCerfaSchema = {
     ],
   },
   attestationEligibilite: {
+    path: "employeur.attestationEligibilite",
     type: Boolean,
-    description: "Atteste de l'éligibilité du tuteur / maître d'apprentissage",
+    description:
+      "Le maître d'apprentissage doit notamment justifier d'une formation et d'une expérience professionnelle minimales (code du travail, [art. R6223-22](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000037813428/)). Le changement de maître d'apprentissage en cours de contrat implique de conclure un avenant au contrat initial, sauf si le contrat initial indique un second maître d'apprentissage.",
     label:
       "L'employeur atteste sur l'honneur que le(s) maître(s) d'apprentissage répond à l'ensemble des critères d'éligibilité à cette fonction.",
     requiredMessage:
@@ -423,6 +463,7 @@ const employeurCerfaSchema = {
     ],
   },
   attestationPieces: {
+    path: "employeur.attestationPieces",
     type: Boolean,
     description: "Atteste de disposer des pièces justificatives",
     label: "L'employeur atteste de disposer des pièces justificatives",
@@ -439,6 +480,7 @@ const employeurCerfaSchema = {
     ],
   },
   privePublic: {
+    path: "employeur.privePublic",
     type: Boolean,
     default: true,
     required: function () {

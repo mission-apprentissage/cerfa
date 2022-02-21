@@ -1,6 +1,7 @@
+import { useEffect } from "react";
 import { _get, _put } from "../../httpClient";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { dossierAtom } from "../useDossier/dossierAtom";
 import { cerfaAtom } from "./cerfaAtom";
 import { CerfaFormationController, cerfaFormationCompletion, useCerfaFormation } from "./parts/useCerfaFormation";
@@ -212,6 +213,7 @@ export const saveCerfa = async (dossierId, cerfaId, data) => {
 export function useCerfa() {
   const dossier = useRecoilValue(dossierAtom);
   const [cerfa, setCerfa] = useRecoilState(cerfaAtom);
+  const queryClient = useQueryClient();
 
   const setPartFormationCompletionAtom = useSetRecoilState(cerfaPartFormationCompletionAtom);
   const setPartEmployeurCompletionAtom = useSetRecoilState(cerfaPartEmployeurCompletionAtom);
@@ -229,6 +231,20 @@ export function useCerfa() {
   const { reset: resetSignatures } = useSignatures();
 
   const shouldBeReset = cerfa?.id !== dossier?.cerfaId;
+
+  // TODO MEM LEAK
+  useEffect(() => {
+    return async () => {
+      // queryClient.resetQueries("cerfa", { exact: true });
+      await queryClient.cancelQueries("cerfa", { exact: true });
+    };
+  }, [queryClient]);
+  // useEffect(() => {
+  //   if (prevWorkspaceId.current !== workspace._id) {
+  //     prevWorkspaceId.current = workspace._id;
+  //     queryClient.resetQueries("workspaceDossiers", { exact: true });
+  //   }
+  // }, [queryClient, workspace._id]);
 
   // eslint-disable-next-line no-unused-vars
   const { data, isLoading, isFetching } = useQuery(
