@@ -1,3 +1,10 @@
+# [1.20.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.20.0-beta.3...v1.20.0-beta.4) (2022-02-21)
+
+
+### Features
+
+* **ui:** modification espace entre heure et minute ([#416](https://github.com/mission-apprentissage/cerfa/issues/416)) ([93eab05](https://github.com/mission-apprentissage/cerfa/commit/93eab05acfb3cb58e68ce88a049c5497d1a0111e))
+
 # [1.20.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.20.0-beta.2...v1.20.0-beta.3) (2022-02-21)
 
 
