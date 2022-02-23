@@ -18,7 +18,7 @@ import useAuth from "../../../common/hooks/useAuth";
 
 import { DownloadLine, SentPaperPlane, BallPenFill, InfoCircle } from "../../../theme/components/icons";
 
-import { hasPageAccessTo } from "../../../common/utils/rolesUtils";
+import { hasPageAccessTo, hasContextAccessTo } from "../../../common/utils/rolesUtils";
 
 // import InfoTooltip from "../../../common/components/InfoTooltip";
 
@@ -299,7 +299,8 @@ export default ({
                   Démarrer la procédure de signature électronique
                 </Button>
               )}
-            {hasPageAccessTo(auth, "send_agecap") &&
+
+            {hasContextAccessTo(dossier, "send_agecap") &&
               (dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
                 dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE") && (
                 <Button
