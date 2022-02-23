@@ -250,7 +250,7 @@ const apprentiSchema = {
       return !this.draft;
     },
     label: "Situation avant ce contrat :",
-    requiredMessage: "la situation social avant ce contrat de l'apprenti(e) est obligatoire",
+    requiredMessage: "la situation de l'apprenti(e) avant ce contrat est obligatoire",
     options: [
       {
         label: "1 Scolaire",
