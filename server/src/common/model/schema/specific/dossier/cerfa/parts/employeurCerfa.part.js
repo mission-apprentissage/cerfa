@@ -10,7 +10,7 @@ const employeurCerfaSchema = {
     label: "Dénomination :",
     description: "La dénomination sociale doit être celle de l'établissement dans lequel le contrat s'exécute.",
     requiredMessage: "La dénomination de l'employeur est obligatoire",
-    example: "ENERGIE 3000",
+    example: "Mairie",
     default: null,
     required: function () {
       return !this.draft;
