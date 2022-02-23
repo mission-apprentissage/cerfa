@@ -3,7 +3,7 @@ const adresseSchema = require("./adresse.part");
 const etablissementFormationSchema = {
   memeResponsable: {
     type: Boolean,
-    description: "Le lieu de formation est le même que l'organisme responsable",
+    description: "",
     example: false,
     default: null,
     required: function () {
