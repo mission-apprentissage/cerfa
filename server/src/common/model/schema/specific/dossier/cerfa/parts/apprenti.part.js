@@ -416,7 +416,7 @@ const apprentiSchema = {
     },
     label: "Téléphone de l'apprenti(e) :",
     description: `Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le "0" car l'indicateur pays est pré-renseigné.`,
-    example: "0102030405",
+    example: "Exemple : 0102030405",
   },
   courriel: {
     path: "apprenti.courriel",
