@@ -212,6 +212,7 @@ const employeurCerfaSchema = {
     complement: {
       path: "employeur.adresse.complement",
       ...adresseSchema.complement,
+      example: "Hôtel de ville ; Entrée ; Bâtiment ; Etage ; Service ; BP",
     },
     codePostal: {
       path: "employeur.adresse.codePostal",

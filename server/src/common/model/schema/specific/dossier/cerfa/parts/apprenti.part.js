@@ -459,6 +459,7 @@ const apprentiSchema = {
     complement: {
       path: "apprenti.adresse.complement",
       ...adresseSchema.complement,
+      example: "Bâtiment ; Résidence ; Entrée ; Appartement ; Escalier ; Etage",
     },
     codePostal: {
       path: "apprenti.adresse.codePostal",
