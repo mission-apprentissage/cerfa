@@ -838,6 +838,7 @@ export default React.memo(
             {type === "phone" && (
               <PhoneInput
                 name={name}
+                placeholder={`Exemple : ${field?.example}`}
                 value={values[name]}
                 country={"fr"}
                 masks={{
