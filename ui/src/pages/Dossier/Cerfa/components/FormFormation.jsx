@@ -127,7 +127,6 @@ const FormFormation = React.memo((props) => {
               type="text"
               mt="2"
               onSubmittedField={onSubmittedOrganismeFormationUaiCfa}
-              hasInfo={false}
             />
             <FormLabel fontWeight={700} my={3}>
               Adresse du CFA responsable :{" "}
@@ -280,7 +279,6 @@ const FormFormation = React.memo((props) => {
                 type="text"
                 mt="2"
                 onSubmittedField={onSubmittedEtablissementFormationUaiCfa}
-                hasInfo={false}
               />
               <FormLabel fontWeight={700} my={3}>
                 Adresse du lieu de formation :{" "}
