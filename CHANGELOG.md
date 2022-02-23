@@ -1,3 +1,10 @@
+## [1.20.1](https://github.com/mission-apprentissage/cerfa/compare/v1.20.0...v1.20.1) (2022-02-23)
+
+
+### Bug Fixes
+
+* redirection après finalisation d'inscription + bouton transmettre ([b74e08d](https://github.com/mission-apprentissage/cerfa/commit/b74e08df13bf358a140086ea6b8261a5c43f7c76))
+
 ## [1.20.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.20.0...v1.20.1-beta.1) (2022-02-23)
 
 
