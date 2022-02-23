@@ -239,7 +239,6 @@ const FormFormation = React.memo((props) => {
                 precision={0}
                 min={1}
                 onSubmittedField={onSubmittedFormationDureeFormation}
-                hasInfo={false}
               />
             </Flex>
           </Box>
