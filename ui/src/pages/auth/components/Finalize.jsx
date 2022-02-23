@@ -68,7 +68,7 @@ const Finalize = () => {
             const user = jwt.decode(result.token);
             setAuth(user);
             setToken(result.token);
-            history.push("/mon-espace/mes-dossiers");
+            history.push("/mes-dossiers/mon-espace");
           }
         } catch (e) {
           console.error(e);
