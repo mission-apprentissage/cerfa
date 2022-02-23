@@ -20,6 +20,7 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   IconButton,
+  RequiredIndicator,
 } from "@chakra-ui/react";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import PhoneInput from "react-phone-input-2";
@@ -403,7 +404,6 @@ export default React.memo(
           borderBottomColor: borderBottomColor,
         },
         _disabled: {
-          fontStyle: "italic",
           cursor: "not-allowed",
           opacity: 1,
           borderBottomColor: "#E5E5E5",
@@ -796,7 +796,10 @@ export default React.memo(
               <HStack>
                 {label ||
                   (field?.label && (
-                    <FormLabel color={shouldBeDisabled ? "disablegrey" : "labelgrey"}>
+                    <FormLabel
+                      color={shouldBeDisabled ? "disablegrey" : "labelgrey"}
+                      requiredIndicator={<RequiredIndicator color="redmarianne" ml={1} />}
+                    >
                       {label || field?.label}
                     </FormLabel>
                   ))}
