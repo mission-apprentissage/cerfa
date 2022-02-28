@@ -27,8 +27,6 @@ module.exports = (components) => {
         dossierId: Joi.string().required(),
       }).validateAsync(body, { abortEarly: false });
 
-      console.log("IS HERE");
-
       const dossier = await dossiers.findDossierById(dossierId);
       const cerfa = await cerfas.findCerfaByDossierId(dossierId);
 
