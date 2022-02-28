@@ -21,7 +21,7 @@ module.exports = (components) => {
 
   router.post(
     "/",
-    permissionsDossierMiddleware(components, ["dossier/publication"]),
+    permissionsDossierMiddleware(components, ["dossier/publication"]), // send_agecap
     tryCatch(async ({ body, user }, res) => {
       const { dossierId } = await Joi.object({
         dossierId: Joi.string().required(),
