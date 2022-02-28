@@ -21,13 +21,11 @@ module.exports = (components) => {
 
   router.post(
     "/",
-    permissionsDossierMiddleware(components, ["dossier/publication"]),
+    permissionsDossierMiddleware(components, ["dossier/publication"]), // send_agecap
     tryCatch(async ({ body, user }, res) => {
       const { dossierId } = await Joi.object({
         dossierId: Joi.string().required(),
       }).validateAsync(body, { abortEarly: false });
-
-      console.log("IS HERE");
 
       const dossier = await dossiers.findDossierById(dossierId);
       const cerfa = await cerfas.findCerfaByDossierId(dossierId);
