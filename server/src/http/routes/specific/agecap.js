@@ -246,7 +246,7 @@ module.exports = (components) => {
         sendContratResponse = await apiAgecap.sendContrat(contratAgecap);
       } catch (error) {
         console.log(error);
-        throw Boom.badRequest("Doesn't exist", error);
+        throw Boom.badRequest("Send contrat error", error);
       }
 
       if (contratAgecap.detailsContrat.infoTransmission.pj.length > 0 && sendContratResponse.status === 201) {
@@ -267,7 +267,7 @@ module.exports = (components) => {
             });
           }
         });
-        if (hasError) throw Boom.badRequest("Transmission error", sendDocumentResponses);
+        if (hasError) throw Boom.badRequest("Transmission document error", sendDocumentResponses);
       }
 
       await dossiers.updateEtatDossier(dossierId, "TRANSMIS");
