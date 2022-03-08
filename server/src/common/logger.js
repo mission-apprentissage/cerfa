@@ -45,7 +45,12 @@ const createStreams = () => {
               url: record.request.url.relative,
               statusCode: record.response.statusCode,
               ...(record.error
-                ? { message: record.error.message, data: record.error.data, reason: record.error.data.reason }
+                ? {
+                    message: record.error.message,
+                    data: record.error.data,
+                    reason: record.error.data.reason,
+                    str: JSON.stringify(record.error.data.reason),
+                  }
                 : {}),
             };
           }
