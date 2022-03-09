@@ -1,3 +1,10 @@
+## [1.20.2-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.20.1...v1.20.2-beta.1) (2022-03-09)
+
+
+### Bug Fixes
+
+* vérrouillage champ région ([60133ad](https://github.com/mission-apprentissage/cerfa/commit/60133adb1515df0ba628429ef0a045f7d917d911))
+
 ## [1.20.1](https://github.com/mission-apprentissage/cerfa/compare/v1.20.0...v1.20.1) (2022-02-23)
 
 
