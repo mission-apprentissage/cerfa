@@ -443,7 +443,7 @@ export function useCerfaEmployeur() {
                 region: {
                   ...employeurAdresseRegion,
                   value: data.num_region || "",
-                  locked: false,
+                  locked: true,
                 },
               },
               privePublic: {
@@ -533,7 +533,7 @@ export function useCerfaEmployeur() {
                   codePostal: false,
                   commune: false,
                   departement: false,
-                  region: false,
+                  region: true,
                 },
               },
             },
