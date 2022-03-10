@@ -337,23 +337,20 @@ export default ({
                 </Button>
               )}
 
-            {auth &&
-              hasPageAccessTo(auth, "admin/dossier_depublier") &&
-              (dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
-                dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE") && (
-                <Button
-                  size="md"
-                  onClick={unpublishClicked}
-                  variant="primary"
-                  ml={12}
-                  bg="redmarianne"
-                  _hover={{ bg: "redmarianne" }}
-                  px={8}
-                  mt={16}
-                >
-                  Dépublier
-                </Button>
-              )}
+            {auth && hasPageAccessTo(auth, "admin/dossier_depublier") && (
+              <Button
+                size="md"
+                onClick={unpublishClicked}
+                variant="primary"
+                ml={12}
+                bg="redmarianne"
+                _hover={{ bg: "redmarianne" }}
+                px={8}
+                mt={16}
+              >
+                Dépublier
+              </Button>
+            )}
           </Center>
         </Flex>
       )}
