@@ -132,11 +132,11 @@ module.exports = (components) => {
     tryCatch(async ({ params }, res) => {
       const cerfa = await cerfas.findCerfaByDossierId(params.id);
 
-      await dossiers.updateDreetsDdets(
-        params.id,
-        parseInt(cerfa.employeur.adresse.region),
-        cerfa.employeur.adresse.departement
-      );
+      const departement_code =
+        cerfa.employeur.adresse.departement === "2A" || cerfa.employeur.adresse.departement === "2B"
+          ? cerfa.employeur.adresse.departement.padStart(3, "0")
+          : cerfa.employeur.adresse.departement;
+      await dossiers.updateDreetsDdets(params.id, parseInt(cerfa.employeur.adresse.region), departement_code);
 
       const contributors = await dossiers.getContributeurs(params.id, components);
       await dossiers.initializeSignatairesDossier(params.id, cerfa, contributors);
