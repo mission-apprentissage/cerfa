@@ -262,7 +262,7 @@ module.exports = async () => {
                 codePostal: false,
                 commune: false,
                 departement: false,
-                region: true,
+                region: false,
               },
               siret: false,
               denomination: false,
