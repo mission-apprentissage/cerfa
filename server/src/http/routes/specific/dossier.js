@@ -5,6 +5,7 @@ const config = require("../../../config");
 const { Dossier } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
+const pageAccessMiddleware = require("../../middlewares/pageAccessMiddleware");
 
 module.exports = (components) => {
   const router = express.Router();
@@ -149,8 +150,12 @@ module.exports = (components) => {
 
   router.put(
     "/entity/:id/unpublish",
+    pageAccessMiddleware(["admin/dossier_depublier"]),
     permissionsDossierMiddleware(components, ["dossier/publication"]),
     tryCatch(async ({ params }, res) => {
+      const cerfa = await cerfas.findCerfaByDossierId(params.id);
+
+      await cerfas.unpublishCerfa(cerfa._id);
       await dossiers.unpublishDossier(params.id);
 
       return res.json({ publish: false });
