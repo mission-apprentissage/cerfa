@@ -73,6 +73,20 @@ export default ({
     }
   }, [dossier._id, toast]);
 
+  let unpublishClicked = useCallback(
+    async (answer) => {
+      try {
+        await _put(`/api/v1/dossier/entity/${dossier._id}/unpublish`, {
+          dossierId: dossier._id,
+        });
+        window.location.reload();
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [dossier._id]
+  );
+
   const buttonDownloadStyleProps = useMemo(
     () => ({
       isExternal: true,
@@ -320,6 +334,24 @@ export default ({
                 >
                   <SentPaperPlane boxSize="4" mr="0.5rem" />
                   Télétransmettre
+                </Button>
+              )}
+
+            {auth &&
+              hasPageAccessTo(auth, "admin/dossier_depublier") &&
+              (dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
+                dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE") && (
+                <Button
+                  size="md"
+                  onClick={unpublishClicked}
+                  variant="primary"
+                  ml={12}
+                  bg="redmarianne"
+                  _hover={{ bg: "redmarianne" }}
+                  px={8}
+                  mt={16}
+                >
+                  Dépublier
                 </Button>
               )}
           </Center>

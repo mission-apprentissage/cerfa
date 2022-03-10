@@ -19,6 +19,10 @@ export default [
         feature: "Upload de fichiers source",
         ref: "admin/page_upload",
       },
+      {
+        feature: "Dépublier un dossier",
+        ref: "admin/dossier_depublier",
+      },
     ],
   },
   {

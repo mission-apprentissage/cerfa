@@ -91,7 +91,7 @@ module.exports = (components) => {
             // repetitionVoie: cerfa.employeur.adresse.
             // typeVoie: cerfa.employeur.adresse.
             voie: cerfa.employeur.adresse.voie,
-            complement: cerfa.employeur.adresse.complement, // ""
+            complement: cerfa.employeur.adresse.complement.replace(/[\W_]/g, " "), // ""
             codePostal: cerfa.employeur.adresse.codePostal,
             commune: cerfa.employeur.adresse.commune,
           },
@@ -122,7 +122,7 @@ module.exports = (components) => {
             // repetitionVoie: cerfa.apprenti.adresse.
             // typeVoie: cerfa.apprenti.adresse.
             voie: cerfa.apprenti.adresse.voie,
-            complement: cerfa.apprenti.adresse.complement, // ""
+            complement: cerfa.apprenti.adresse.complement.replace(/[\W_]/g, " "), // ""
             codePostal: cerfa.apprenti.adresse.codePostal,
             commune: cerfa.apprenti.adresse.commune,
             pays: cerfa.apprenti.adresse.pays,
@@ -137,7 +137,7 @@ module.exports = (components) => {
                     // repetitionVoie: cerfa.apprenti.responsableLegal.adresse.
                     // typeVoie: cerfa.apprenti.responsableLegal.adresse.
                     voie: cerfa.apprenti.responsableLegal.adresse.voie,
-                    complement: cerfa.apprenti.responsableLegal.adresse.complement, // ""
+                    complement: cerfa.apprenti.responsableLegal.adresse.complement.replace(/[\W_]/g, " "), // ""
                     codePostal: cerfa.apprenti.responsableLegal.adresse.codePostal,
                     commune: cerfa.apprenti.responsableLegal.adresse.commune,
                     pays: cerfa.apprenti.responsableLegal.adresse.pays, // TO CHECK
@@ -214,7 +214,7 @@ module.exports = (components) => {
             // repetitionVoie: cerfa.organismeFormation.adresse.
             // typeVoie: cerfa.organismeFormation.adresse.
             voie: cerfa.organismeFormation.adresse.voie,
-            complement: cerfa.organismeFormation.adresse.complement, // ""
+            complement: cerfa.organismeFormation.adresse.complement.replace(/[\W_]/g, " "), // ""
             codePostal: cerfa.organismeFormation.adresse.codePostal,
             commune: cerfa.organismeFormation.adresse.commune,
           },
@@ -228,7 +228,7 @@ module.exports = (components) => {
             // repetitionVoie: cerfa.etablissementFormation.adresse.
             // typeVoie: cerfa.etablissementFormation.adresse.
             voie: cerfa.etablissementFormation.adresse.voie,
-            complement: cerfa.etablissementFormation.adresse.complement || undefined,
+            complement: cerfa.etablissementFormation.adresse.complement.replace(/[\W_]/g, " ") || undefined,
             codePostal: cerfa.etablissementFormation.adresse.codePostal,
             commune: cerfa.etablissementFormation.adresse.commune,
           },
