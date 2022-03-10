@@ -1,3 +1,16 @@
+# [1.21.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.20.2...v1.21.0-beta.1) (2022-03-10)
+
+
+### Bug Fixes
+
+* suppression des caractères spéciaux à l’envoi agecap ([ce51507](https://github.com/mission-apprentissage/cerfa/commit/ce51507be3c20b07a03a7ae4be72347cd56724e0))
+
+
+### Features
+
+* ajout dépublication dossier - admin only ([7588f4d](https://github.com/mission-apprentissage/cerfa/commit/7588f4d964acee4aad4b16b01b5b41cfd1e9a632))
+* ajout mécanisme d'ajout admin sur un dossier - temporaire ([a94c936](https://github.com/mission-apprentissage/cerfa/commit/a94c936543ab525d1768e93ae3ee4f00bd2d4dd1))
+
 ## [1.20.2](https://github.com/mission-apprentissage/cerfa/compare/v1.20.1...v1.20.2) (2022-03-09)
 
 
