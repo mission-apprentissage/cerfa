@@ -1,3 +1,10 @@
+# [1.22.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.21.0...v1.22.0-beta.1) (2022-03-14)
+
+
+### Features
+
+* force téléchargement des pièces justificatives ([6b632e7](https://github.com/mission-apprentissage/cerfa/commit/6b632e7a128f5339d82dcb37b64b3bab03386aa3))
+
 # [1.21.0](https://github.com/mission-apprentissage/cerfa/compare/v1.20.2...v1.21.0) (2022-03-10)
 
 
