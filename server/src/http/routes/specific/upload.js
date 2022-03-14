@@ -149,6 +149,7 @@ module.exports = (components) => {
       const stream = await getFromStorage(document.cheminFichier);
 
       res.header("Content-Type", "application/pdf");
+      res.header("Content-Disposition", `attachment; filename=${document.nomFichier}`);
       res.header("Content-Length", document.tailleFichier);
       res.status(200);
       res.type("pdf");
