@@ -1,3 +1,10 @@
+## [1.22.1-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.22.1-beta.1...v1.22.1-beta.2) (2022-03-14)
+
+
+### Bug Fixes
+
+* ddets de 01 à 09 à 1 à 9 ([5812f03](https://github.com/mission-apprentissage/cerfa/commit/5812f03a64c9b158d1be2515074b2c222377cc0c))
+
 ## [1.22.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.22.0...v1.22.1-beta.1) (2022-03-14)
 
 
