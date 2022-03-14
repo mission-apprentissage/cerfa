@@ -135,7 +135,7 @@ module.exports = (components) => {
       const departement_code =
         cerfa.employeur.adresse.departement === "2A" || cerfa.employeur.adresse.departement === "2B"
           ? cerfa.employeur.adresse.departement.padStart(3, "0")
-          : cerfa.employeur.adresse.departement;
+          : parseInt(cerfa.employeur.adresse.departement);
       await dossiers.updateDreetsDdets(params.id, parseInt(cerfa.employeur.adresse.region), departement_code);
 
       const contributors = await dossiers.getContributeurs(params.id, components);
