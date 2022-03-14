@@ -1,3 +1,10 @@
+## [1.22.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.22.0...v1.22.1-beta.1) (2022-03-14)
+
+
+### Bug Fixes
+
+* calcul de dates fin de période bloc rémunération ([f31b8aa](https://github.com/mission-apprentissage/cerfa/commit/f31b8aa2afae9913e1105d3c68bf403ca617003d))
+
 # [1.22.0](https://github.com/mission-apprentissage/cerfa/compare/v1.21.0...v1.22.0) (2022-03-14)
 
 
