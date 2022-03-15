@@ -217,7 +217,7 @@ export const CerfaEmployeurController = async (dossier) => {
                     dateDebutContrat: data.dateDebutContrat,
                     dateFinContrat: data.dateFinContrat,
                     remunerationsAnnuelles: data.remunerationsAnnuelles,
-                    employeurAdresseDepartement: result.departement,
+                    employeurAdresseDepartement: result.data.departement,
                   });
 
                 return {
