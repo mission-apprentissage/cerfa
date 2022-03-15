@@ -1,3 +1,10 @@
+## [1.22.2-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.22.1...v1.22.2-beta.1) (2022-03-15)
+
+
+### Bug Fixes
+
+* copie valeur pays responsable legal ([166a201](https://github.com/mission-apprentissage/cerfa/commit/166a2015c27e81d3c8c597741664d03f30aed6e7))
+
 ## [1.22.1](https://github.com/mission-apprentissage/cerfa/compare/v1.22.0...v1.22.1) (2022-03-15)
 
 
