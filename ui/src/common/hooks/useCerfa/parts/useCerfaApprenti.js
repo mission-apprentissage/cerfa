@@ -1592,7 +1592,7 @@ export function useCerfaApprenti() {
                       complement: apprentiAdresseComplement.value || "",
                       codePostal: apprentiAdresseCodePostal.value || null,
                       commune: apprentiAdresseCommune.value || null,
-                      pays: apprentiAdressePays.value || null,
+                      pays: convertOptionToValue(apprentiAdressePays) || null,
                     },
                   },
                 },
