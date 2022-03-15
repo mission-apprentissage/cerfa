@@ -1,3 +1,13 @@
+## [1.22.1](https://github.com/mission-apprentissage/cerfa/compare/v1.22.0...v1.22.1) (2022-03-15)
+
+
+### Bug Fixes
+
+*  doublon ligne rémunération sur même période PLATDIG-48 ([2ffd4ac](https://github.com/mission-apprentissage/cerfa/commit/2ffd4ac16153c18946b06ec5d10d4cda5c268660))
+* calcul de dates fin de période bloc rémunération ([f31b8aa](https://github.com/mission-apprentissage/cerfa/commit/f31b8aa2afae9913e1105d3c68bf403ca617003d))
+* calcul rémunération lors de la mise à jour code postal ([fe91cd8](https://github.com/mission-apprentissage/cerfa/commit/fe91cd8170adacae797b96e058f9be183f81ab0d))
+* ddets de 01 à 09 à 1 à 9 ([5812f03](https://github.com/mission-apprentissage/cerfa/commit/5812f03a64c9b158d1be2515074b2c222377cc0c))
+
 ## [1.22.1-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.22.1-beta.3...v1.22.1-beta.4) (2022-03-15)
 
 
