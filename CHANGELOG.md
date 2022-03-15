@@ -1,3 +1,10 @@
+## [1.22.1-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.22.1-beta.3...v1.22.1-beta.4) (2022-03-15)
+
+
+### Bug Fixes
+
+*  doublon ligne rémunération sur même période PLATDIG-48 ([2ffd4ac](https://github.com/mission-apprentissage/cerfa/commit/2ffd4ac16153c18946b06ec5d10d4cda5c268660))
+
 ## [1.22.1-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.22.1-beta.2...v1.22.1-beta.3) (2022-03-15)
 
 
