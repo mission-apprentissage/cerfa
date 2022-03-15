@@ -127,6 +127,7 @@ export const buildRemunerations = (data) => {
   const dateDebutContrat = DateTime.fromISO(data.dateDebutContrat).setLocale("fr-FR");
   const dateFinContrat = DateTime.fromISO(data.dateFinContrat).setLocale("fr-FR");
   const apprentiDateNaissance = DateTime.fromISO(data.apprentiDateNaissance).setLocale("fr-FR");
+  const isAnniversaireInLastMonth = dateFinContrat.get("month") === apprentiDateNaissance.get("month");
 
   const dateFinA1 = dateDebutContrat.plus({ years: 1 }).minus({ days: 1 });
   const dateDebutA2 = dateDebutContrat.plus({ years: 1 });
@@ -218,9 +219,9 @@ export const buildRemunerations = (data) => {
     11: emptyLineObj,
     12: emptyLineObj,
   };
-  if (isChangingTaux(ageA1, ageA2)) {
-    const dateFin11 = anniversaireA1.minus({ days: anniversaireA1.toObject().day }).plus({ months: 1 });
-    const dateDebut12 = dateFin11.plus({ days: 1 });
+  if (isChangingTaux(ageA1, ageA2) && !isAnniversaireInLastMonth) {
+    const dateDebut12 = anniversaireA1.set({ day: 1, month: anniversaireA1.get("month") + 1 });
+    const dateFin11 = dateDebut12.minus({ days: 1 });
     const taux11 = taux.a1[getSeuils(ageA1)];
     const taux12 = taux.a1[getSeuils(ageA2)];
 
@@ -311,9 +312,9 @@ export const buildRemunerations = (data) => {
     21: emptyLineObj,
     22: emptyLineObj,
   };
-  if (isChangingTaux(ageA2, ageA3) && !finRemuneration) {
-    const dateFin21 = anniversaireA2.minus({ days: anniversaireA2.toObject().day }).plus({ months: 1 });
-    const dateDebut22 = dateFin21.plus({ days: 1 });
+  if (isChangingTaux(ageA2, ageA3) && !finRemuneration && !isAnniversaireInLastMonth) {
+    const dateDebut22 = anniversaireA2.set({ day: 1, month: anniversaireA2.get("month") + 1 });
+    const dateFin21 = dateDebut22.minus({ days: 1 });
     const taux21 = taux.a2[getSeuils(ageA2)];
     const taux22 = taux.a2[getSeuils(ageA3)];
 
@@ -405,9 +406,9 @@ export const buildRemunerations = (data) => {
     31: emptyLineObj,
     32: emptyLineObj,
   };
-  if (isChangingTaux(ageA3, ageA4) && !finRemuneration) {
-    const dateFin31 = anniversaireA3.minus({ days: anniversaireA3.toObject().day }).plus({ months: 1 });
-    const dateDebut32 = dateFin31.plus({ days: 1 });
+  if (isChangingTaux(ageA3, ageA4) && !finRemuneration && !isAnniversaireInLastMonth) {
+    const dateDebut32 = anniversaireA3.set({ day: 1, month: anniversaireA3.get("month") + 1 });
+    const dateFin31 = dateDebut32.minus({ days: 1 });
     const taux31 = taux.a3[getSeuils(ageA3)];
     const taux32 = taux.a3[getSeuils(ageA4)];
 
@@ -499,9 +500,9 @@ export const buildRemunerations = (data) => {
     41: emptyLineObj,
     42: emptyLineObj,
   };
-  if (isChangingTaux(ageA4, ageA5) && !finRemuneration) {
-    const dateFin41 = anniversaireA4.minus({ days: anniversaireA4.toObject().day }).plus({ months: 1 });
-    const dateDebut42 = dateFin41.plus({ days: 1 });
+  if (isChangingTaux(ageA4, ageA5) && !finRemuneration && !isAnniversaireInLastMonth) {
+    const dateDebut42 = anniversaireA4.set({ day: 1, month: anniversaireA4.get("month") + 1 });
+    const dateFin41 = dateDebut42.minus({ days: 1 });
     const taux41 = taux.a4[getSeuils(ageA4)];
     const taux42 = taux.a4[getSeuils(ageA5)];
 
