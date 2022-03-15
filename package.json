@@ -2,7 +2,7 @@
   "name": "mna-cerfa",
   "description": "[MNA] Générateur de Cerfa publique",
   "repository": "https://github.com/mission-apprentissage/cerfa.git",
-  "version": "1.22.1-beta.2",
+  "version": "1.22.1-beta.3",
   "author": "MNA",
   "license": "MIT",
   "private": true,

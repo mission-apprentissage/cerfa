@@ -1,3 +1,10 @@
+## [1.22.1-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.22.1-beta.2...v1.22.1-beta.3) (2022-03-15)
+
+
+### Bug Fixes
+
+* calcul rémunération lors de la mise à jour code postal ([fe91cd8](https://github.com/mission-apprentissage/cerfa/commit/fe91cd8170adacae797b96e058f9be183f81ab0d))
+
 ## [1.22.1-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.22.1-beta.1...v1.22.1-beta.2) (2022-03-14)
 
 
