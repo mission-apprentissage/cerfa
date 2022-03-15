@@ -26,7 +26,7 @@ import { dossierAtom } from "../../useDossier/dossierAtom";
 import { cerfaApprentiAgeAtom, cerfaApprentiDateNaissanceAtom } from "./useCerfaApprentiAtoms";
 import * as contratAtoms from "./useCerfaContratAtoms";
 
-const ENV = process.env.REACT_APP_ENV;
+// const ENV = process.env.REACT_APP_ENV;
 
 export const cerfaContratCompletion = (res) => {
   let fieldsToKeep = {
@@ -457,39 +457,39 @@ export const CerfaContratController = async (dossier) => {
             };
           }
 
-          if (ENV !== "production") {
-            if (!(typeContratAppDbValue === 21 || typeContratAppDbValue === 22 || typeContratAppDbValue === 23)) {
-              try {
-                const response = await _post(`/api/v1/agecap/verifNumeroContratPrecedent`, {
-                  numeroContratPrecedent: value,
-                  employeurSiret,
-                  dossierId: dossier._id,
-                });
+          // if (ENV !== "production") {
+          if (!(typeContratAppDbValue === 21 || typeContratAppDbValue === 22 || typeContratAppDbValue === 23)) {
+            try {
+              const response = await _post(`/api/v1/agecap/verifNumeroContratPrecedent`, {
+                numeroContratPrecedent: value,
+                employeurSiret,
+                dossierId: dossier._id,
+              });
 
-                if (response.message.includes("Impossible de retrouver un dossier unique pour le contrat")) {
-                  return {
-                    successed: false,
-                    data: null,
-                    message: `Impossible de retrouver un dossier dans AGECAP pour le contrat n°${value} et le siret ${employeurSiret}`,
-                  };
-                }
-
-                if (response.message !== "ok") {
-                  return {
-                    successed: false,
-                    data: null,
-                    message: response.message,
-                  };
-                }
-              } catch (error) {
+              if (response.message.includes("Impossible de retrouver un dossier unique pour le contrat")) {
                 return {
                   successed: false,
                   data: null,
-                  message: "Une erreur technique est survenue, merci de contacter l'assistance",
+                  message: `Impossible de retrouver un dossier dans AGECAP pour le contrat n°${value} et le siret ${employeurSiret}`,
                 };
               }
+
+              if (response.message !== "ok") {
+                return {
+                  successed: false,
+                  data: null,
+                  message: response.message,
+                };
+              }
+            } catch (error) {
+              return {
+                successed: false,
+                data: null,
+                message: "Une erreur technique est survenue, merci de contacter l'assistance",
+              };
             }
           }
+          // }
 
           return {
             successed: true,
