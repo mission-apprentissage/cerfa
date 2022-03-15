@@ -105,12 +105,12 @@ module.exports = (components) => {
 
       const userinfo = await client.userinfo(tokenSet.access_token);
 
-      const user = await users.getUser(userinfo.sub);
+      const user = await users.getUser(userinfo.sub.toLowerCase());
       if (user) {
         // Login
         const payload = await users.structureUser(user);
 
-        await users.loggedInUser(payload.email);
+        await users.loggedInUser(payload.email.toLowerCase());
 
         const token = createUserToken({ payload });
         await sessions.addJwt(token);
@@ -126,7 +126,7 @@ module.exports = (components) => {
       } else {
         // Register
 
-        const alreadyExists = await users.getUser(userinfo.sub);
+        const alreadyExists = await users.getUser(userinfo.sub.toLowerCase());
         if (alreadyExists) {
           throw Boom.conflict(`Unable to create`, {
             message: `Ce courriel est déjà utilisé. Merci de vous connecter directement sur la plateforme`,
@@ -140,7 +140,7 @@ module.exports = (components) => {
           uppercase: true,
           strict: true,
         });
-        const user = await users.createUser(userinfo.sub, tmpPassword, {
+        const user = await users.createUser(userinfo.sub.toLowerCase(), tmpPassword, {
           siret: userinfo.attributes.siret,
           nom: userinfo.attributes.name,
           prenom: userinfo.attributes.given_name,
@@ -166,7 +166,7 @@ module.exports = (components) => {
 
         const payload = await users.structureUser(user);
 
-        await users.loggedInUser(payload.email);
+        await users.loggedInUser(payload.email.toLowerCase());
 
         const token = createUserToken({ payload });
         await sessions.addJwt(token);
@@ -193,7 +193,7 @@ module.exports = (components) => {
         siret: Joi.string().required(),
       }).validateAsync(body, { abortEarly: false });
 
-      const userDb = await users.getUser(user.email);
+      const userDb = await users.getUser(user.email.toLowerCase());
       if (!userDb) {
         throw Boom.conflict(`Unable to retrieve user`);
       }
@@ -214,7 +214,7 @@ module.exports = (components) => {
 
       const payload = await users.structureUser(updateUser);
 
-      await users.loggedInUser(payload.email);
+      await users.loggedInUser(payload.email.toLowerCase());
 
       const token = createUserToken({ payload });
 

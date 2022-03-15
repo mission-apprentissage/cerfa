@@ -165,8 +165,8 @@ module.exports = async () => {
 
       const structure = {
         permissions,
-        sub: user.email,
-        email: user.email,
+        sub: user.email.toLowerCase(),
+        email: user.email.toLowerCase(),
         username: user.username,
         nom: user.nom,
         prenom: user.prenom,
