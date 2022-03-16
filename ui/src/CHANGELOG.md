@@ -1,3 +1,10 @@
+## [1.22.3-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.22.2...v1.22.3-beta.1) (2022-03-16)
+
+
+### Bug Fixes
+
+* doublons email en minuscule / majuscule ([#486](https://github.com/mission-apprentissage/cerfa/issues/486)) ([9bbd465](https://github.com/mission-apprentissage/cerfa/commit/9bbd46570d6b81523fa1a98b592ac5151fd32d13))
+
 ## [1.22.2](https://github.com/mission-apprentissage/cerfa/compare/v1.22.1...v1.22.2) (2022-03-15)
 
 
