@@ -72,7 +72,7 @@ const Login = () => {
           initialValues={{ username: "", password: "" }}
           validationSchema={Yup.object().shape({
             username: Yup.string().required("Requis"),
-            // TODO email only
+            // TODO email only (username login removed 16/03/22)
             password: Yup.string().required("Requis"),
           })}
           onSubmit={login}
