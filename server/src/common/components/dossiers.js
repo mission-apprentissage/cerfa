@@ -487,7 +487,9 @@ module.exports = async () => {
       const { removePermission } = await permissions();
       await removePermission(permId);
 
-      dossierDb.contributeurs = dossierDb.contributeurs.filter((contributeur) => contributeur !== userEmail);
+      dossierDb.contributeurs = dossierDb.contributeurs.filter(
+        (contributeur) => contributeur !== userEmail.toLowerCase()
+      );
 
       await dossierDb.save();
       return dossierDb.contributeurs;

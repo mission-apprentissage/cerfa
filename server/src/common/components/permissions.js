@@ -33,9 +33,9 @@ module.exports = async () => {
     },
     findPermissions: async (query, select = {}) => await Permission.find(query, select).lean(),
     hasPermission: async ({ workspaceId, dossierId, userEmail }, select = {}) =>
-      await Permission.findOne({ workspaceId, dossierId, userEmail }, select).lean(),
+      await Permission.findOne({ workspaceId, dossierId, userEmail: userEmail.toLowerCase() }, select).lean(),
     updatePermission: async ({ workspaceId, dossierId, userEmail, roleId, acl = [] }) => {
-      const found = await Permission.findOne({ workspaceId, dossierId, userEmail });
+      const found = await Permission.findOne({ workspaceId, dossierId, userEmail: userEmail.toLowerCase() });
 
       if (!found) {
         throw new Error("Role doesn't exist");

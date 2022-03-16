@@ -142,7 +142,7 @@ module.exports = async () => {
       const { removePermission } = await permissions();
       await removePermission(permId);
 
-      wksDb.contributeurs = wksDb.contributeurs.filter((contributeur) => contributeur !== userEmail);
+      wksDb.contributeurs = wksDb.contributeurs.filter((contributeur) => contributeur !== userEmail.toLowerCase());
 
       await wksDb.save();
       return wksDb.contributeurs;

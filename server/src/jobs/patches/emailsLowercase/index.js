@@ -25,7 +25,6 @@ const emailsToLowerCase = async () => {
       ...document,
       quiMiseAJour: document.quiMiseAJour.toLowerCase(),
     }));
-    console.log(documentsLowerCase);
     await Dossier.findOneAndUpdate(
       { _id },
       { $set: { contributeurs: contributeursLowerCase, documents: documentsLowerCase } }
