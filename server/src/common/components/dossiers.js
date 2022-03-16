@@ -277,7 +277,7 @@ module.exports = async () => {
         tailleFichier,
         dateAjout: Date.now(),
         dateMiseAJour: Date.now(),
-        quiMiseAJour: userEmail,
+        quiMiseAJour: userEmail.toLowerCase(),
         hash,
       };
 
@@ -442,12 +442,12 @@ module.exports = async () => {
       await createPermission({
         workspaceId: dossierDb.workspaceId.toString(),
         dossierId: dossierDb._id.toString(),
-        userEmail,
+        userEmail: userEmail.toLowerCase(),
         role: as,
         acl,
       });
 
-      dossierDb.contributeurs = [...dossierDb.contributeurs, userEmail];
+      dossierDb.contributeurs = [...dossierDb.contributeurs, userEmail.toLowerCase()];
       await dossierDb.save();
       return dossierDb.contributeurs;
     },
@@ -487,7 +487,9 @@ module.exports = async () => {
       const { removePermission } = await permissions();
       await removePermission(permId);
 
-      dossierDb.contributeurs = dossierDb.contributeurs.filter((contributeur) => contributeur !== userEmail);
+      dossierDb.contributeurs = dossierDb.contributeurs.filter(
+        (contributeur) => contributeur !== userEmail.toLowerCase()
+      );
 
       await dossierDb.save();
       return dossierDb.contributeurs;

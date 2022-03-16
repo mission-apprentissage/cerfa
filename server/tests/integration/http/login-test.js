@@ -66,7 +66,7 @@ describe("[Routes] Login", () => {
     const { httpClient } = await startServer();
 
     const response = await httpClient.post("/api/v1/auth/login", {
-      email: "h@ck.me",
+      username: "h@ck.me",
       password: "INVALID",
     });
 

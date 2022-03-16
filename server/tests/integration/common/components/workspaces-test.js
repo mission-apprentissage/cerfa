@@ -33,7 +33,7 @@ describe("Workspace component", () => {
     });
     assert.strictEqual(found.owner.toString(), testUser._id.toString());
     assert.strictEqual(found.contributeurs.length === 1, true);
-    assert.strictEqual(found.contributeurs[0], "test.Entreprise@beta.gouv.fr");
+    assert.strictEqual(found.contributeurs[0], "test.entreprise@beta.gouv.fr");
   });
 
   it("Permet de retirer un contributeur à l'espace", async () => {

@@ -103,12 +103,12 @@ module.exports = async () => {
       await createPermission({
         workspaceId: wksDb._id.toString(),
         dossierId: null,
-        userEmail,
+        userEmail: userEmail.toLowerCase(),
         role: as,
         acl,
       });
 
-      wksDb.contributeurs = [...wksDb.contributeurs, userEmail];
+      wksDb.contributeurs = [...wksDb.contributeurs, userEmail.toLowerCase()];
       await wksDb.save();
       return wksDb.contributeurs;
     },
@@ -142,7 +142,7 @@ module.exports = async () => {
       const { removePermission } = await permissions();
       await removePermission(permId);
 
-      wksDb.contributeurs = wksDb.contributeurs.filter((contributeur) => contributeur !== userEmail);
+      wksDb.contributeurs = wksDb.contributeurs.filter((contributeur) => contributeur !== userEmail.toLowerCase());
 
       await wksDb.save();
       return wksDb.contributeurs;
