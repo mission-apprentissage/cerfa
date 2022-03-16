@@ -1,7 +1,7 @@
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
 
-const emailsToLowerCase = require("./emailLowercase");
+const emailsToLowerCase = require("./emailsLowercase");
 
 const patchesList = [
   {

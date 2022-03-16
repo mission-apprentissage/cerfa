@@ -140,7 +140,7 @@ module.exports = (components) => {
           uppercase: true,
           strict: true,
         });
-        const user = await users.createUser(userinfo.sub.toLowerCase(), tmpPassword, {
+        const user = await users.createUser(userinfo.sub, tmpPassword, {
           siret: userinfo.attributes.siret,
           nom: userinfo.attributes.name,
           prenom: userinfo.attributes.given_name,
@@ -166,7 +166,7 @@ module.exports = (components) => {
 
         const payload = await users.structureUser(user);
 
-        await users.loggedInUser(payload.email.toLowerCase());
+        await users.loggedInUser(payload.email);
 
         const token = createUserToken({ payload });
         await sessions.addJwt(token);
@@ -214,7 +214,7 @@ module.exports = (components) => {
 
       const payload = await users.structureUser(updateUser);
 
-      await users.loggedInUser(payload.email.toLowerCase());
+      await users.loggedInUser(payload.email);
 
       const token = createUserToken({ payload });
 
