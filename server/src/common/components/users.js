@@ -54,7 +54,7 @@ module.exports = async () => {
         username,
         password: hash,
         isAdmin: !!permissions.isAdmin,
-        email: userEmail,
+        email: userEmail.toLowerCase(),
         nom: options.nom,
         prenom: options.prenom,
         telephone: options.telephone || null,
@@ -69,7 +69,7 @@ module.exports = async () => {
 
       const { createWorkspace } = await workspaces();
       await createWorkspace({
-        email: userEmail,
+        email: userEmail.toLowerCase(),
         nom: `Espace - ${options.prenom} ${options.nom}`,
         description: `L'espace de travail de ${options.prenom} ${options.nom}`,
       });
@@ -165,8 +165,8 @@ module.exports = async () => {
 
       const structure = {
         permissions,
-        sub: user.email.toLowerCase(),
-        email: user.email.toLowerCase(),
+        sub: user.email,
+        email: user.email,
         username: user.username,
         nom: user.nom,
         prenom: user.prenom,

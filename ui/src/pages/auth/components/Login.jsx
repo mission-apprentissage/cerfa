@@ -72,6 +72,7 @@ const Login = () => {
           initialValues={{ username: "", password: "" }}
           validationSchema={Yup.object().shape({
             username: Yup.string().required("Requis"),
+            // TODO email only
             password: Yup.string().required("Requis"),
           })}
           onSubmit={login}
@@ -84,7 +85,7 @@ const Login = () => {
                     {({ field, meta }) => (
                       <FormControl isRequired isInvalid={meta.error && meta.touched} mb={5}>
                         <FormLabel>Identifiant</FormLabel>
-                        <Input {...field} id={field.name} placeholder="Votre email ou identifiant..." />
+                        <Input {...field} id={field.name} placeholder="Votre email..." />
                         <FormErrorMessage>{meta.error}</FormErrorMessage>
                       </FormControl>
                     )}

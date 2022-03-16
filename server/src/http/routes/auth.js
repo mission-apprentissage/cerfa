@@ -41,7 +41,7 @@ module.exports = ({ users, mailer, sessions }) => {
     "/login",
     tryCatch(async (req, res) => {
       const { username, password } = req.body;
-      const user = (await users.getUser(username.toLowerCase())) ?? (await users.getUserByUsername(username));
+      const user = await users.getUser(username.toLowerCase());
       if (!user) {
         return res.status(401).json({ message: "Utilisateur non trouvé" });
       }
@@ -50,13 +50,13 @@ module.exports = ({ users, mailer, sessions }) => {
         throw Boom.conflict(`Wrong connection method`, { message: `pds login` });
       }
 
-      const auth = await users.authenticate(user.email.toLowerCase(), password);
+      const auth = await users.authenticate(user.email, password);
 
       if (!auth) return res.status(401).json({ message: "Utilisateur non trouvé" });
 
       const payload = await users.structureUser(user);
 
-      await users.loggedInUser(payload.email.toLowerCase());
+      await users.loggedInUser(payload.email);
 
       const token = createUserToken({ payload });
 
@@ -98,7 +98,7 @@ module.exports = ({ users, mailer, sessions }) => {
         throw Boom.conflict(`Unable to create`, { message: `email already in use` });
       }
 
-      const user = await users.createUser(email.toLowerCase(), password, {
+      const user = await users.createUser(email, password, {
         siret,
         nom,
         prenom,
@@ -115,7 +115,7 @@ module.exports = ({ users, mailer, sessions }) => {
         civility: user.civility,
         tmpPwd: password,
         publicUrl: config.publicUrl,
-        activationToken: createActivationToken(email.toLowerCase(), { payload: { tmpPwd: password } }),
+        activationToken: createActivationToken(user.email, { payload: { tmpPwd: password } }),
       });
 
       return res.json({ succeeded: true });
@@ -140,7 +140,7 @@ module.exports = ({ users, mailer, sessions }) => {
 
       const payload = await users.structureUser(updatedUser);
 
-      await users.loggedInUser(payload.email.toLowerCase());
+      await users.loggedInUser(payload.email);
 
       const token = createUserToken({ payload });
       await sessions.addJwt(token);

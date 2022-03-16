@@ -25,6 +25,7 @@
     "imports:jurid": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/importers/index.js --catJurid",
     "imports:dreets": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/importers/index.js --ddetsDreets",
     "add:contributor": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/addContributor/index.js",
+    "patch": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/patches/index.js",
     "zipStorage": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/zipStorage.js"
   },
   "dependencies": {

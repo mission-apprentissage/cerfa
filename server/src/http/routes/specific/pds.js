@@ -110,7 +110,7 @@ module.exports = (components) => {
         // Login
         const payload = await users.structureUser(user);
 
-        await users.loggedInUser(payload.email.toLowerCase());
+        await users.loggedInUser(payload.email);
 
         const token = createUserToken({ payload });
         await sessions.addJwt(token);
