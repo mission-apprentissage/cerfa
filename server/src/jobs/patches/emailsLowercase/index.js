@@ -18,10 +18,18 @@ const emailsToLowerCase = async () => {
     await Workspace.findOneAndUpdate({ _id }, { $set: { contributeurs: contributeursLowerCase } });
   });
 
-  const allDossiers = await Dossier.find({});
-  await asyncForEach(allDossiers, async ({ _id, contributeurs }) => {
+  const allDossiers = await Dossier.find({}).lean();
+  await asyncForEach(allDossiers, async ({ _id, contributeurs, documents }) => {
     const contributeursLowerCase = contributeurs.map((email) => email.toLowerCase());
-    await Dossier.findOneAndUpdate({ _id }, { $set: { contributeurs: contributeursLowerCase } });
+    const documentsLowerCase = documents.map((document) => ({
+      ...document,
+      quiMiseAJour: document.quiMiseAJour.toLowerCase(),
+    }));
+    console.log(documentsLowerCase);
+    await Dossier.findOneAndUpdate(
+      { _id },
+      { $set: { contributeurs: contributeursLowerCase, documents: documentsLowerCase } }
+    );
   });
 };
 

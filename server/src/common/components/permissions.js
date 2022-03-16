@@ -22,7 +22,7 @@ module.exports = async () => {
         result = await Permission.create({
           workspaceId,
           dossierId,
-          userEmail,
+          userEmail: userEmail.toLowerCase(),
           role: roleDb._id,
           acl,
         });
