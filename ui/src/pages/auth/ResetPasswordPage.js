@@ -13,11 +13,13 @@ import { _post } from "../../common/httpClient";
 import { setTitle } from "../../common/utils/pageUtils";
 
 const ResetPasswordPage = () => {
-  const [, setAuth] = useAuth();
+  const [auth, setAuth] = useAuth();
   const [, setToken] = useToken();
   const history = useHistory();
   const location = useLocation();
   const { passwordToken } = queryString.parse(location.search);
+
+  const minLength = auth.permissions.isAdmin ? 20 : 12;
 
   const [conditions, setConditions] = useState({
     min: "unknown",
@@ -54,8 +56,8 @@ const ResetPasswordPage = () => {
       newPassword: Yup.string()
         .required("Veuillez saisir un mot de passe")
         .matches(
-          "^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\\w\\d\\s:])([^\\s]){12,}$",
-          "Le mot de passe doit contenir au moins 12 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)"
+          `^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\\w\\d\\s:])([^\\s]){${minLength},}$`,
+          `Le mot de passe doit contenir au moins ${minLength} caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)`
         ),
     }),
     onSubmit: async (values) => {
@@ -86,14 +88,11 @@ const ResetPasswordPage = () => {
   const onChange = async (e) => {
     handleChange(e);
     const val = e.target.value;
-    const min = Yup.string().min(12, "Le mot de passe doit contenir au moins 12 caractères");
+    const min = Yup.string().min(minLength, `Le mot de passe doit contenir au moins ${minLength} caractères`);
     const lowerCase = Yup.string().matches(/[a-z]/, "Le mot de passe doit contenir au moins une lettre minuscule");
     const upperCase = Yup.string().matches(/[A-Z]/, "Le mot de passe doit contenir au moins une lettre majuscule");
     const number = Yup.string().matches(/[0-9]/, "Le mot de passe doit contenir au moins un nombre");
-    const special = Yup.string().matches(
-      /[!@#$%^&*(),.?":{}|<>]/,
-      "Le mot de passe doit contenir au moins un caractère spécial"
-    );
+    const special = Yup.string().matches(/[^\w\d\s:]/, "Le mot de passe doit contenir au moins un caractère spécial");
     setConditions({
       min: (await min.isValid(val)) ? "success" : "error",
       lowerCase: (await lowerCase.isValid(val)) ? "success" : "error",
@@ -122,7 +121,7 @@ const ResetPasswordPage = () => {
           <List mb={5}>
             <ListItem color={variant[conditions.min].color}>
               <ListIcon as={variant[conditions.min].icon} color={variant[conditions.min].color} />
-              Le mot de passe doit contenir <strong>au moins 12 caractères</strong>
+              Le mot de passe doit contenir <strong>au moins {minLength} caractères</strong>
             </ListItem>
             <ListItem color={variant[conditions.lowerCase].color}>
               <ListIcon as={variant[conditions.lowerCase].icon} color={variant[conditions.lowerCase].color} />
