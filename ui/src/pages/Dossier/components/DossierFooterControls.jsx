@@ -209,29 +209,29 @@ export default ({
                     </Text>
                   </Box>
                   <Center h="25%">
-                    {/* <Button
-                      onClick={() => {
-                        onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
-                      }}
-                      size={"md"}
-                      variant={"primary"}
-                      isDisabled={true}
-                    >
-                      <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
-                      Signatures électroniques
-                    </Button> */}
-                    <Button
-                      onClick={() => {
-                        onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
-                      }}
-                      size={"md"}
-                      color="grey.600"
-                      variant={"secondary"}
-                      borderColor="grey.600"
-                      isDisabled={true}
-                    >
-                      Bientôt disponible !
-                    </Button>
+                    {auth && hasPageAccessTo(auth) && (
+                      <Button
+                        onClick={() => {
+                          onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
+                        }}
+                        size={"md"}
+                        variant={"primary"}
+                      >
+                        <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
+                        Signatures électroniques
+                      </Button>
+                    )}
+                    {auth && !hasPageAccessTo(auth) && (
+                      <Button
+                        size={"md"}
+                        color="grey.600"
+                        variant={"secondary"}
+                        borderColor="grey.600"
+                        isDisabled={true}
+                      >
+                        Bientôt disponible !
+                      </Button>
+                    )}
                   </Center>
                 </Flex>
               )}
