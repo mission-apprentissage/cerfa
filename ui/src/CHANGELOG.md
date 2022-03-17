@@ -1,3 +1,10 @@
+# [1.23.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.22.3-beta.1...v1.23.0-beta.1) (2022-03-17)
+
+
+### Features
+
+* durcissement politique de mot de passe ([#491](https://github.com/mission-apprentissage/cerfa/issues/491)) ([b1c99bc](https://github.com/mission-apprentissage/cerfa/commit/b1c99bcaa8d006188d2d2e605e21d6fdd34c5e09))
+
 ## [1.22.3-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.22.2...v1.22.3-beta.1) (2022-03-16)
 
 
