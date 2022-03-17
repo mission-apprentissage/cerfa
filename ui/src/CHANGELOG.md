@@ -1,3 +1,10 @@
+# [1.23.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.23.0-beta.2...v1.23.0-beta.3) (2022-03-17)
+
+
+### Features
+
+* ajout applat pdf pour yousign ([#496](https://github.com/mission-apprentissage/cerfa/issues/496)) ([1fdf01b](https://github.com/mission-apprentissage/cerfa/commit/1fdf01bfb02132cf4e3421cab2d456fc9c96a243))
+
 # [1.23.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.23.0-beta.1...v1.23.0-beta.2) (2022-03-17)
 
 
