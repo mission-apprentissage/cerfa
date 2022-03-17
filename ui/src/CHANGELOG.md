@@ -1,3 +1,10 @@
+# [1.23.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v1.23.0-beta.1...v1.23.0-beta.2) (2022-03-17)
+
+
+### Features
+
+* mise à jour des smics jusqu'a 2018 ([#493](https://github.com/mission-apprentissage/cerfa/issues/493)) ([ed5f1f4](https://github.com/mission-apprentissage/cerfa/commit/ed5f1f418d973e30e4507c4b4d189ca1fed2af2c))
+
 # [1.23.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.22.3-beta.1...v1.23.0-beta.1) (2022-03-17)
 
 
