@@ -81,7 +81,7 @@ module.exports = ({ users, sessions, mailer }) => {
       const user = req.user;
       const { newPassword } = await Joi.object({
         passwordToken: Joi.string().required(),
-        newPassword: validators.password().required(),
+        newPassword: validators.password(user.isAdmin ? 20 : 12).required(),
       }).validateAsync(req.body, { abortEarly: false });
 
       const updatedUser = await users.changePassword(user.email, newPassword);
