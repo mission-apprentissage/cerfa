@@ -69,6 +69,78 @@ const SMICs = {
       },
     ],
   },
+  2020: {
+    smics: [
+      {
+        annee: 2020,
+        mensuel: 1539.42,
+        horaire: 10.15,
+        heuresHebdomadaires: 35,
+        minimumGaranti: 3.65,
+        dateEntreeEnVigueur: "01/01/2020",
+        dateEntreeEnVigueurObj: DateTime.fromISO("01/01/2020").setLocale("fr-FR"),
+        dateParutionJo: "19/12/2019",
+        dateParutionJoObj: DateTime.fromISO("19/12/2019").setLocale("fr-FR"),
+        exceptions: {
+          976: {
+            departement: 976,
+            nomDepartement: "Mayotte",
+            mensuel: 1161.77,
+            horaire: 7.66,
+            heuresHebdomadaires: 35,
+          },
+        },
+      },
+    ],
+  },
+  2019: {
+    smics: [
+      {
+        annee: 2019,
+        mensuel: 1521.22,
+        horaire: 10.03,
+        heuresHebdomadaires: 35,
+        minimumGaranti: 3.62,
+        dateEntreeEnVigueur: "01/01/2019",
+        dateEntreeEnVigueurObj: DateTime.fromISO("01/01/2019").setLocale("fr-FR"),
+        dateParutionJo: "20/12/2018",
+        dateParutionJoObj: DateTime.fromISO("20/12/2018").setLocale("fr-FR"),
+        exceptions: {
+          976: {
+            departement: 976,
+            nomDepartement: "Mayotte",
+            mensuel: 1148.12,
+            horaire: 7.57,
+            heuresHebdomadaires: 35,
+          },
+        },
+      },
+    ],
+  },
+  2018: {
+    smics: [
+      {
+        annee: 2018,
+        mensuel: 1498.47,
+        horaire: 9.88,
+        heuresHebdomadaires: 35,
+        minimumGaranti: 3.57,
+        dateEntreeEnVigueur: "01/01/2018",
+        dateEntreeEnVigueurObj: DateTime.fromISO("01/01/2018").setLocale("fr-FR"),
+        dateParutionJo: "21/12/2017",
+        dateParutionJoObj: DateTime.fromISO("21/12/2017").setLocale("fr-FR"),
+        exceptions: {
+          976: {
+            departement: 976,
+            nomDepartement: "Mayotte",
+            mensuel: 1131.43, //  1260.74
+            horaire: 7.46,
+            heuresHebdomadaires: 35, // 39
+          },
+        },
+      },
+    ],
+  },
 };
 
 const findSmicAtDate = (lookupDate) => {
