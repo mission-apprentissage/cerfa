@@ -78,7 +78,7 @@ module.exports = (components) => {
           typeEmployeur: cerfa.employeur.typeEmployeur,
           employeurSpecifique: cerfa.employeur.employeurSpecifique,
           siret: cerfa.employeur.siret,
-          naf: cerfa.employeur.naf,
+          naf: cerfa.employeur.naf.toUpperCase(),
           nombreDeSalaries: cerfa.employeur.nombreDeSalaries,
           caisseComplementaire: "NA",
           regimeSpecifique: cerfa.employeur.regimeSpecifique,
