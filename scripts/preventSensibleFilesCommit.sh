@@ -10,7 +10,7 @@ exception="$exception|dataDepartements.json"
 exception="$exception|CATEG-JURID-v1.csv"
 exception="$exception|DDETS-latest.csv"
 exception="$exception|DRIEETS-latest.csv"
-exception="$exception|eslintrc.json|app.json"
+exception="$exception|eslintrc.json|app.json|jsconfig.json"
 exception="$exception)$"
 
 files=$(git diff --cached --name-only | grep -v -E "$exception" | grep -E "$sensible_files_pattern")
