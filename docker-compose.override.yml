@@ -4,6 +4,9 @@ services:
   reverse_proxy:
     volumes:
       - cerfa_nginx_data:/data
+    build:
+      args:
+        - CERFA_ENV=dev
 
   ui:
     command: yarn start
@@ -11,7 +14,8 @@ services:
     stdin_open: true
     volumes:
       - ./ui:/app #Allows source folders to be watched
-      # - /app/node_modules/
+      - /app/.next/
+      - /app/node_modules/
     build:
       args:
         - REACT_APP_ENV=dev
