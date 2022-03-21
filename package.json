@@ -15,9 +15,10 @@
     "docker:stop": "docker-compose stop",
     "docker:down": "docker-compose down",
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",
-    "lint": "eslint --cache ./server --ext .js,.jsx",
-    "prettier:fix": "prettier --write ./server",
-    "prettier:check": "prettier --check ./server",
+    "lint": "eslint --cache ./server --ext .js,.jsx && yarn --cwd ui lint",
+    "lint:staged:": "lint-staged",
+    "prettier:fix": "prettier --write ./ui ./server",
+    "prettier:check": "prettier --check ./ui ./server",
     "npm:release": "semantic-release",
     "npm:release:local": "CI=true LOCAL_RELEASE=true semantic-release"
   },
@@ -57,8 +58,10 @@
   },
   "lint-staged": {
     "*.{js,jsx}": [
-      "prettier --write ./server"
+      "eslint --cache --fix ./server",
+      "yarn --cwd ui lint --fix",
+      "prettier --write ./ui ./server"
     ],
-    "*.{md,json,html}": "prettier --write ./server"
+    "*.{md,json,html}": "prettier --write ./ui ./server"
   }
 }
