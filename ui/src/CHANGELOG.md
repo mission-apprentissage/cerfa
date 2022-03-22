@@ -1,3 +1,10 @@
+# [1.23.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.23.0-beta.3...v1.23.0-beta.4) (2022-03-22)
+
+
+### Bug Fixes
+
+* corriger le contrôle date de conclusion < date d'effet de l'avenant ([8ca3898](https://github.com/mission-apprentissage/cerfa/commit/8ca389890d15b5ce5c9abaa925794140788a7b75))
+
 # [1.23.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v1.23.0-beta.2...v1.23.0-beta.3) (2022-03-17)
 
 
