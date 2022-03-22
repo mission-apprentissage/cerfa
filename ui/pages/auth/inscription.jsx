@@ -333,7 +333,7 @@ const Register = () => {
       <Flex flexGrow={1}>
         <Text mt={8} fontSize="1rem">
           Vous avez déjà un compte ?
-          <Link href="/auth/signin" as={NavLink} color="bluefrance" ml={3}>
+          <Link href="/auth/connexion" as={NavLink} color="bluefrance" ml={3}>
             Connexion
           </Link>
         </Text>

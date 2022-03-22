@@ -7,9 +7,9 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "REACT_APP_VERSION=$npm_package_version next dev",
-    "build": "REACT_APP_VERSION=$npm_package_version next build",
-    "start": "ls -la /app/.next && ls -la /site && REACT_APP_VERSION=$npm_package_version next start",
+    "dev": "NEXT_PUBLIC_VERSION=$npm_package_version next dev",
+    "build": "NEXT_PUBLIC_VERSION=$npm_package_version next build",
+    "start": "ls -la /app/.next && ls -la /site && NEXT_PUBLIC_VERSION=$npm_package_version next start",
     "lint": "next lint"
   },
   "dependencies": {

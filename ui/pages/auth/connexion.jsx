@@ -18,8 +18,8 @@ import jwt from "jsonwebtoken";
 import { useRouter } from "next/router";
 import NavLink from "next/link";
 
-import useAuth from "../../common/hooks/useAuth";
-import useToken from "../../common/hooks/useToken";
+import useAuth from "../../hooks/useAuth";
+import useToken from "../../hooks/useToken";
 import { _post, _get } from "../../common/httpClient";
 
 import { ExternalLinkLine } from "../../theme/components/icons";
@@ -110,7 +110,7 @@ const Login = () => {
       <Box mt={12}>
         <Text fontSize="1rem">
           Vous n&apos;avez pas encore de compte ?
-          <Link href="/auth/signup" as={NavLink} color="bluefrance" ml={3}>
+          <Link href="/auth/inscription" as={NavLink} color="bluefrance" ml={3}>
             Créer un compte
           </Link>
         </Text>

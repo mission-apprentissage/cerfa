@@ -2,19 +2,19 @@ import React from "react";
 import { Box, Container, Flex, Link, List, ListItem, Text } from "@chakra-ui/react";
 import NavLink from "next/link";
 import { ExternalLinkLine } from "../../../theme/components/icons";
-// import { Logo } from "./LogoFooter";
+import LogoFooter from "./LogoFooter";
 
-const APP_VERSION = process.env.REACT_APP_VERSION;
+const APP_VERSION = process.env.NEXT_PUBLIC_VERSION;
 
 const Footer = () => {
   return (
     <Box borderTop="1px solid" borderColor="bluefrance" color="#1E1E1E" fontSize="zeta" w="full">
       <Container maxW="xl">
         <Flex flexDirection={["column", "column", "row"]}>
-          <Link as={NavLink} href="/" py={4} w={["100%", "100%", "50%"]}>
-            {/* <Logo size={"xl"} /> */}
-            Logo
-          </Link>
+          {/* <Link as={NavLink} href="/" py={4} w={["100%", "100%", "50%"]}> */}
+          <Box py={4} w={["100%", "100%", "50%"]}>
+            <LogoFooter size={"xl"} />
+          </Box>
           <Box alignSelf="center" flex="1">
             <Text>
               Mandatée par le Ministère du Travail, de l&apos;Emploi et de l&apos;Insertion, le Ministère de la

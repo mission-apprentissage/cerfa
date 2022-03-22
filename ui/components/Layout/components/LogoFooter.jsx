@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Text } from "@chakra-ui/react";
 
-export const Logo = ({ size = "sm" }) => {
+const LogoFooter = ({ size = "sm" }) => {
   let fontSize = "0.7875rem";
   let beforeWidth = "2.0625rem";
   let beforeHeight = "0.75rem";
@@ -48,3 +48,5 @@ export const Logo = ({ size = "sm" }) => {
     </Box>
   );
 };
+
+export default LogoFooter;
