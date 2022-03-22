@@ -11,6 +11,7 @@ const ForgottenPasswordPage = () => {
 
   const resetPassword = async (values, { setStatus }) => {
     try {
+      // TODO email only (username login removed 21/03/22)
       await _post("/api/v1/password/forgotten-password", { ...values });
       setStatus({ message: "Un email vous a été envoyé." });
       setTimeout(() => history.push("/"), 1500);
@@ -34,7 +35,7 @@ const ForgottenPasswordPage = () => {
             username: "",
           }}
           validationSchema={Yup.object().shape({
-            username: Yup.string().required("Veuillez saisir un identifiant"),
+            username: Yup.string().required("Veuillez saisir un email"),
           })}
           onSubmit={resetPassword}
         >
@@ -46,7 +47,7 @@ const ForgottenPasswordPage = () => {
                     return (
                       <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
                         <FormLabel>Identifiant</FormLabel>
-                        <Input {...field} id={field.name} placeholder="Votre email ou identifiant..." />
+                        <Input {...field} id={field.name} placeholder="Votre email" />
                         <FormErrorMessage>{meta.error}</FormErrorMessage>
                       </FormControl>
                     );

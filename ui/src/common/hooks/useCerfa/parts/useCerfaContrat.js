@@ -457,7 +457,7 @@ export const CerfaContratController = async (dossier) => {
             };
           }
 
-          if (ENV !== "production") {
+          if (ENV !== "production" && ENV !== "dev") {
             if (!(typeContratAppDbValue === 21 || typeContratAppDbValue === 22 || typeContratAppDbValue === 23)) {
               try {
                 const response = await _post(`/api/v1/agecap/verifNumeroContratPrecedent`, {

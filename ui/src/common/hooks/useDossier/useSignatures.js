@@ -31,13 +31,30 @@ const doAsyncActionsDate = async (value, data) => {
   await new Promise((resolve) => setTimeout(resolve, 100));
 
   const dateDebutContrat = DateTime.fromISO(data.dateDebutContrat).setLocale("fr-FR");
+  const dateEffetAvenant = DateTime.fromISO(data.dateEffetAvenant).setLocale("fr-FR");
   const dateConclusionContrat = DateTime.fromISO(value).setLocale("fr-FR");
 
-  if (dateConclusionContrat > dateDebutContrat) {
+  const contratInitial = data.typeContratApp === 11;
+  const avenant =
+    data.typeContratApp === 31 ||
+    data.typeContratApp === 32 ||
+    data.typeContratApp === 33 ||
+    data.typeContratApp === 34 ||
+    data.typeContratApp === 35 ||
+    data.typeContratApp === 36 ||
+    data.typeContratApp === 37;
+
+  if (contratInitial && dateConclusionContrat > dateDebutContrat) {
     return {
       successed: false,
       data: null,
       message: "Date de signature de contrat ne peut pas être après la date de début de contrat",
+    };
+  } else if (avenant && dateConclusionContrat > dateEffetAvenant) {
+    return {
+      successed: false,
+      data: null,
+      message: "Date de signature de contrat ne peut pas être après la date d'effet de l'avenant",
     };
   }
 
