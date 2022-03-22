@@ -6,8 +6,8 @@ import * as Yup from "yup";
 import jwt from "jsonwebtoken";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 
-import useAuth from "../../common/hooks/useAuth";
-import useToken from "../../common/hooks/useToken";
+import useAuth from "../../hooks/useAuth";
+import useToken from "../../hooks/useToken";
 import { _post } from "../../common/httpClient";
 import { setTitle } from "../../common/utils/pageUtils";
 

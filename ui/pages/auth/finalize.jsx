@@ -23,8 +23,8 @@ import * as Yup from "yup";
 
 import jwt from "jsonwebtoken";
 
-import useToken from "../../common/hooks/useToken";
-import useAuth from "../../common/hooks/useAuth";
+import useToken from "../../hooks/useToken";
+import useAuth from "../../hooks/useAuth";
 import { _post } from "../../common/httpClient";
 
 const validate = async (validationSchema, obj) => {
