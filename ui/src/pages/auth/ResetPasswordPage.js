@@ -108,6 +108,10 @@ const ResetPasswordPage = () => {
         <Heading fontFamily="Marianne" fontWeight="700" marginBottom="2w">
           Une mise à jour de votre mot de passe est obligatoire
         </Heading>
+        <Text>
+          Cette mise à jour est réalisée dans le cadre d'un renforcement de sécurité de la plateforme, merci de votre
+          compréhension.
+        </Text>
         <form onSubmit={handleSubmit}>
           <Input
             id="newPassword"
