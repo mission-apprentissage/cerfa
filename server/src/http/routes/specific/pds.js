@@ -105,7 +105,7 @@ module.exports = (components) => {
 
       const userinfo = await client.userinfo(tokenSet.access_token);
 
-      const user = await users.getUser(userinfo.sub);
+      const user = await users.getUser(userinfo.sub.toLowerCase());
       if (user) {
         // Login
         const payload = await users.structureUser(user);
@@ -126,7 +126,7 @@ module.exports = (components) => {
       } else {
         // Register
 
-        const alreadyExists = await users.getUser(userinfo.sub);
+        const alreadyExists = await users.getUser(userinfo.sub.toLowerCase());
         if (alreadyExists) {
           throw Boom.conflict(`Unable to create`, {
             message: `Ce courriel est déjà utilisé. Merci de vous connecter directement sur la plateforme`,
@@ -193,7 +193,7 @@ module.exports = (components) => {
         siret: Joi.string().required(),
       }).validateAsync(body, { abortEarly: false });
 
-      const userDb = await users.getUser(user.email);
+      const userDb = await users.getUser(user.email.toLowerCase());
       if (!userDb) {
         throw Boom.conflict(`Unable to retrieve user`);
       }

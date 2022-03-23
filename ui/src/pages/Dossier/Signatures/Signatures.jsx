@@ -42,6 +42,8 @@ import { cerfaPartApprentiCompletionAtom } from "../../../common/hooks/useCerfa/
 import {
   cerfaPartContratCompletionAtom,
   cerfaContratDateDebutContratAtom,
+  cerfaContratDateEffetAvenantAtom,
+  cerfaContratTypeContratAppAtom,
 } from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 
 import { StatusBadge } from "../../../common/components/StatusBadge";
@@ -356,6 +358,8 @@ export default () => {
   const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
 
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
+  const dateEffetAvenant = useRecoilValue(cerfaContratDateEffetAvenantAtom);
+  const typeContratApp = useRecoilValue(cerfaContratTypeContratAppAtom);
 
   const [valueLieu, setValueLieu] = useState(contratLieuSignatureContrat?.value);
   const [valueDate, setValueDate] = useState(contratDateConclusion?.value);
@@ -439,6 +443,8 @@ export default () => {
               onSubmittedField={(path, data) => setValueDate(data)}
               onAsyncData={{
                 dateDebutContrat: dateDebutContrat?.value,
+                dateEffetAvenant: dateEffetAvenant?.value,
+                typeContratApp: typeContratApp?.valueDb,
               }}
             />
             <Text textStyle="sm">&nbsp;</Text>

@@ -64,7 +64,7 @@ describe("[Routes] Password", () => {
 
     const response = await httpClient.post("/api/v1/password/reset-password", {
       passwordToken: createPasswordToken("h@ck.me"),
-      newPassword: "Password!123456",
+      newPassword: "SuperPassword!123456789",
     });
 
     assert.strictEqual(response.status, 200);
@@ -95,7 +95,7 @@ describe("[Routes] Password", () => {
       details: [
         {
           message:
-            '"newPassword" with value "invalid" fails to match the required pattern: /^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\\w\\d\\s:])([^\\s]){8,}$/',
+            '"newPassword" with value "invalid" fails to match the required pattern: /^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\\w\\d\\s:])([^\\s]){20,}$/',
           path: ["newPassword"],
           type: "string.pattern.base",
           context: { regex: {}, value: "invalid", label: "newPassword", key: "newPassword" },

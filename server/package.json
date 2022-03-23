@@ -1,6 +1,6 @@
 {
   "name": "mna-cerfa-server",
-  "version": "1.22.2",
+  "version": "1.23.0-beta.4",
   "description": "[MNA] Générateur Cerfa Serveer",
   "repository": "https://github.com/mission-apprentissage/cerfa.git",
   "private": true,
@@ -25,6 +25,7 @@
     "imports:jurid": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/importers/index.js --catJurid",
     "imports:dreets": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/importers/index.js --ddetsDreets",
     "add:contributor": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/addContributor/index.js",
+    "patch": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/patches/index.js",
     "zipStorage": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/zipStorage.js"
   },
   "dependencies": {
@@ -77,6 +78,7 @@
     "passport-http": "0.3.0",
     "passport-jwt": "4.0.0",
     "passport-local": "1.0.0",
+    "pdf-flatten": "0.1.3",
     "pdf-lib": "1.17.1",
     "query-string": "6.13.8",
     "rate-limiter-flexible": "2.3.6",

@@ -41,7 +41,7 @@ module.exports = ({ users, mailer, sessions }) => {
     "/login",
     tryCatch(async (req, res) => {
       const { username, password } = req.body;
-      const user = (await users.getUser(username)) ?? (await users.getUserByUsername(username));
+      const user = await users.getUser(username.toLowerCase());
       if (!user) {
         return res.status(401).json({ message: "Utilisateur non trouvé" });
       }
@@ -93,7 +93,7 @@ module.exports = ({ users, mailer, sessions }) => {
         civility: Joi.string().required(),
       }).validateAsync(body, { abortEarly: false });
 
-      const alreadyExists = await users.getUser(email);
+      const alreadyExists = await users.getUser(email.toLowerCase());
       if (alreadyExists) {
         throw Boom.conflict(`Unable to create`, { message: `email already in use` });
       }
@@ -115,7 +115,7 @@ module.exports = ({ users, mailer, sessions }) => {
         civility: user.civility,
         tmpPwd: password,
         publicUrl: config.publicUrl,
-        activationToken: createActivationToken(email, { payload: { tmpPwd: password } }),
+        activationToken: createActivationToken(user.email, { payload: { tmpPwd: password } }),
       });
 
       return res.json({ succeeded: true });
@@ -130,13 +130,13 @@ module.exports = ({ users, mailer, sessions }) => {
         activationToken: Joi.string().required(),
       }).validateAsync(body, { abortEarly: false });
 
-      const auth = await users.authenticate(user.email, user.tmpPwd);
+      const auth = await users.authenticate(user.email.toLowerCase(), user.tmpPwd);
 
       if (!auth) {
         throw Boom.unauthorized("Accès non autorisé");
       }
 
-      const updatedUser = await users.activate(user.email);
+      const updatedUser = await users.activate(user.email.toLowerCase());
 
       const payload = await users.structureUser(updatedUser);
 
