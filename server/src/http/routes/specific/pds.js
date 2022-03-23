@@ -107,8 +107,13 @@ module.exports = (components) => {
 
       const user = await users.getUser(userinfo.sub.toLowerCase());
       if (user) {
+        // TODO FIX du 23/03/2022 suite à une erreur de manipulation ABD - A supprimer en Juin/2022
+        const updatedUser = await users.updateUser(user._id, {
+          orign_register: "PDS",
+        });
+
         // Login
-        const payload = await users.structureUser(user);
+        const payload = await users.structureUser(updatedUser);
 
         await users.loggedInUser(payload.email);
 
