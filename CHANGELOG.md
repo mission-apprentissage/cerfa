@@ -1,3 +1,10 @@
+## [1.23.2](https://github.com/mission-apprentissage/cerfa/compare/v1.23.1...v1.23.2) (2022-03-23)
+
+
+### Bug Fixes
+
+* origine d'enregistrement forcé à PDS ([6418a1e](https://github.com/mission-apprentissage/cerfa/commit/6418a1e607f19a649a8fbf5fab94113389481016))
+
 ## [1.23.1](https://github.com/mission-apprentissage/cerfa/compare/v1.23.0...v1.23.1) (2022-03-23)
 
 
