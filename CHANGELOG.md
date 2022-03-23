@@ -1,3 +1,18 @@
+# [1.23.0](https://github.com/mission-apprentissage/cerfa/compare/v1.22.2...v1.23.0) (2022-03-23)
+
+
+### Bug Fixes
+
+* corriger le contrôle date de conclusion < date d'effet de l'avenant ([8ca3898](https://github.com/mission-apprentissage/cerfa/commit/8ca389890d15b5ce5c9abaa925794140788a7b75))
+* doublons email en minuscule / majuscule ([#486](https://github.com/mission-apprentissage/cerfa/issues/486)) ([9bbd465](https://github.com/mission-apprentissage/cerfa/commit/9bbd46570d6b81523fa1a98b592ac5151fd32d13))
+
+
+### Features
+
+* ajout applat pdf pour yousign ([#496](https://github.com/mission-apprentissage/cerfa/issues/496)) ([1fdf01b](https://github.com/mission-apprentissage/cerfa/commit/1fdf01bfb02132cf4e3421cab2d456fc9c96a243))
+* durcissement politique de mot de passe ([#491](https://github.com/mission-apprentissage/cerfa/issues/491)) ([b1c99bc](https://github.com/mission-apprentissage/cerfa/commit/b1c99bcaa8d006188d2d2e605e21d6fdd34c5e09))
+* mise à jour des smics jusqu'a 2018 ([#493](https://github.com/mission-apprentissage/cerfa/issues/493)) ([ed5f1f4](https://github.com/mission-apprentissage/cerfa/commit/ed5f1f418d973e30e4507c4b4d189ca1fed2af2c))
+
 # [1.23.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v1.23.0-beta.3...v1.23.0-beta.4) (2022-03-22)
 
 
