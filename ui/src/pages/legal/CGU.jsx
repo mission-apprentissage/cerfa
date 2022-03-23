@@ -578,7 +578,7 @@ export const Cgu = ({ onLoad = () => {} }) => {
 };
 
 export const CguPage = () => {
-  const title = "CONDITIONS GÉNÉRALES D'UTILISATION PLATEFORME DIGITALISATION";
+  const title = "CONDITIONS GÉNÉRALES D'UTILISATION DE LA PLATEFORME";
   setTitle(title);
 
   return (
