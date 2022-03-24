@@ -70,7 +70,7 @@ function Home({ data }) {
 
 export async function getServerSideProps() {
   // Fetch data from external API TEST
-  const res = await fetch(`https://dog-facts-api.herokuapp.com/api/v1/resources/dogs?number=1`);
+  const res = await fetch(`https://zoo-animal-api.herokuapp.com/animals/rand`);
   const data = await res.json();
 
   // Pass data to the page via props
