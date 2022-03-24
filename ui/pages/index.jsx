@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Box, Container, Heading, Text, UnorderedList, ListItem, Button, Flex } from "@chakra-ui/react";
+import { Box, Container, Heading, Text, UnorderedList, ListItem, Button, Flex, Link } from "@chakra-ui/react";
 import { Page } from "../components/Page/Page";
 import { Breadcrumb } from "../components/Breadcrumb/Breadcrumb";
 import NavLink from "next/link";
@@ -10,7 +10,7 @@ function Home({ data }) {
   return (
     <Page>
       <Head>
-        <title>Create Next App</title>
+        <title>Contrat apprentissage employeur public dématérialisé pour la fonction publique</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
@@ -51,16 +51,17 @@ function Home({ data }) {
             </UnorderedList>
           </Box>
           <Flex justifyContent="end" w="full">
-            {/* <Button
-              as={NavLink}
-              href={"/mes-dossiers/mon-espace"}
-              fontSize={{ base: "md", md: "lg" }}
-              p={{ base: 4, md: 6 }}
-              h={{ base: 8, md: 10 }}
-              variant="primary"
-            >
-              Accéder maintenant
-            </Button> */}
+            <NavLink href={"/mes-dossiers/mon-espace"} passHref>
+              <Button
+                as={Link}
+                fontSize={{ base: "md", md: "lg" }}
+                p={{ base: 4, md: 6 }}
+                h={{ base: 8, md: 10 }}
+                variant="primary"
+              >
+                Accéder maintenant
+              </Button>
+            </NavLink>
           </Flex>
         </Container>
       </Box>

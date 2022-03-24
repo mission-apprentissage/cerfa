@@ -1,9 +1,9 @@
 import React from "react";
-import NavLink from "next/link";
-import { Box, Container, Flex, Heading, Link, Tag } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Tag } from "@chakra-ui/react";
 
 import { Logo } from "./Logo";
 import AlertMessage from "./AlertMessage";
+import Link from "../../../components/Link";
 
 const Header = () => {
   return (
@@ -13,10 +13,9 @@ const Header = () => {
         <Container maxW="xl" py={[0, 2]} px={[0, 4]}>
           <Flex alignItems="center" color="grey.800">
             {/* Logo */}
-            {/* <Link as={NavLink} href="/" p={[4, 0]}> */}
-            <Box p={[4, 0]}>
+            <Link href="/" p={[4, 0]}>
               <Logo />
-            </Box>
+            </Link>
 
             <Box p={[1, 6]} flex="1">
               <Heading as="h6" textStyle="h6" fontSize="xl">

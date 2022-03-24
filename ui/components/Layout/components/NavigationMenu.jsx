@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import NavLink from "next/link";
 import {
   Box,
   Container,
   Flex,
-  Link,
   Text,
   Menu,
   MenuButton,
@@ -19,6 +17,7 @@ import useAuth from "../../../hooks/useAuth";
 import { isUserAdmin, hasPageAccessTo } from "../../../common/utils/rolesUtils";
 import { MenuFill, Close, AccountFill, LockFill, Parametre } from "../../../theme/components/icons";
 import { _get } from "../../../common/httpClient";
+import Link from "../../../components/Link";
 
 const NavigationMenu = ({ isMyWorkspace, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,8 +49,8 @@ const UserMenu = () => {
     <>
       {auth?.sub === "anonymous" && (
         <Box>
-          <Link as={NavLink} href="/auth/connexion" variant="pill">
-            {/* <LockFill boxSize={3} mb={1} mr={2} /> */}
+          <Link href="/auth/connexion" variant="pill">
+            <LockFill boxSize={3} mb={1} mr={2} />
             Connexion
           </Link>
         </Box>

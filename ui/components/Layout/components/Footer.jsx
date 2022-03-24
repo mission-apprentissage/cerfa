@@ -1,8 +1,8 @@
 import React from "react";
-import { Box, Container, Flex, Link, List, ListItem, Text } from "@chakra-ui/react";
-import NavLink from "next/link";
+import { Box, Container, Flex, List, ListItem, Text } from "@chakra-ui/react";
 import { ExternalLinkLine } from "../../../theme/components/icons";
 import LogoFooter from "./LogoFooter";
+import Link from "../../../components/Link";
 
 const APP_VERSION = process.env.NEXT_PUBLIC_VERSION;
 
@@ -11,10 +11,10 @@ const Footer = () => {
     <Box borderTop="1px solid" borderColor="bluefrance" color="#1E1E1E" fontSize="zeta" w="full">
       <Container maxW="xl">
         <Flex flexDirection={["column", "column", "row"]}>
-          {/* <Link as={NavLink} href="/" py={4} w={["100%", "100%", "50%"]}> */}
-          <Box py={4} w={["100%", "100%", "50%"]}>
+          <Link href="/" py={4} w={["100%", "100%", "50%"]}>
             <LogoFooter size={"xl"} />
-          </Box>
+          </Link>
+
           <Box alignSelf="center" flex="1">
             <Text>
               Mandatée par le Ministère du Travail, de l&apos;Emploi et de l&apos;Insertion, le Ministère de la
@@ -67,42 +67,28 @@ const Footer = () => {
               // css={{ "li:not(:last-child):after": { content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" } }}
             >
               <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
-                <Link href={`${process.env.PUBLIC_URL}/sitemap.xml`}>Plan du site</Link>
+                <Link href={`/sitemap.xml`}>Plan du site</Link>
               </ListItem>
               <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
-                <Link as={NavLink} href={"/accessibilite"}>
-                  Accessibilité : Non conforme
-                </Link>
+                <Link href={"/accessibilite"}>Accessibilité : Non conforme</Link>
               </ListItem>
               <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
-                <Link as={NavLink} href={"/mentions-legales"}>
-                  Mentions légales
-                </Link>
+                <Link href={"/mentions-legales"}>Mentions légales</Link>
               </ListItem>
               <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
-                <Link as={NavLink} href={"/cgu"}>
-                  Conditions générales d&apos;utilisation
-                </Link>
+                <Link href={"/cgu"}>Conditions générales d&apos;utilisation</Link>
               </ListItem>
               <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
-                <Link as={NavLink} href={"/donnees-personnelles"}>
-                  Données personnelles
-                </Link>
+                <Link href={"/donnees-personnelles"}>Données personnelles</Link>
               </ListItem>
               <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
-                <Link as={NavLink} href={"/cookies"}>
-                  Gestion des cookies
-                </Link>
+                <Link href={"/cookies"}>Gestion des cookies</Link>
               </ListItem>
               <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
-                <Link as={NavLink} href={"/stats"}>
-                  Statistiques
-                </Link>
+                <Link href={"/stats"}>Statistiques</Link>
               </ListItem>
               <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
-                <Link as={NavLink} href={"/assistance"}>
-                  Assistance
-                </Link>
+                <Link href={"/assistance"}>Assistance</Link>
               </ListItem>
               <ListItem _after={{ content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" }}>
                 <Link
