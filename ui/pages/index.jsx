@@ -59,7 +59,7 @@ function Home({ data }) {
                 h={{ base: 8, md: 10 }}
                 variant="primary"
               >
-                Accéder maintenant
+                Accéder maintenant !
               </Button>
             </NavLink>
           </Flex>
