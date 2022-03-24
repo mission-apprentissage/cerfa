@@ -5,7 +5,7 @@ import { Breadcrumb } from "../components/Breadcrumb/Breadcrumb";
 import NavLink from "next/link";
 
 function Home({ data }) {
-  console.log(data);
+  // console.log(data);
   const title = "Accueil";
   return (
     <Page>

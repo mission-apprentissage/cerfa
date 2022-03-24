@@ -6,10 +6,10 @@ import {
   Flex,
   Text,
   Menu,
+  MenuItem as ChakraMenuItem,
   MenuButton,
   MenuDivider,
   MenuGroup,
-  MenuItem,
   MenuList,
   Button,
 } from "@chakra-ui/react";
@@ -18,6 +18,7 @@ import { isUserAdmin, hasPageAccessTo } from "../../../common/utils/rolesUtils";
 import { MenuFill, Close, AccountFill, LockFill, Parametre } from "../../../theme/components/icons";
 import { _get } from "../../../common/httpClient";
 import Link from "../../../components/Link";
+import MenuItem from "../../../components/MenuItem";
 
 const NavigationMenu = ({ isMyWorkspace, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -71,30 +72,30 @@ const UserMenu = () => {
             </Flex>
           </MenuButton>
           <MenuList>
-            <MenuItem as={NavLink} href="/mon-compte" icon={<AccountFill boxSize={4} color={"bluefrance"} />}>
+            <MenuItem href="/mon-compte" icon={<AccountFill boxSize={4} color={"bluefrance"} />}>
               Mon compte
             </MenuItem>
             {hasPageAccessTo(auth, "admin") && (
               <MenuGroup title="Administration">
                 {hasPageAccessTo(auth, "admin/page_gestion_utilisateurs") && (
-                  <MenuItem as={NavLink} href="/admin/users" icon={<Parametre boxSize={4} />}>
+                  <MenuItem href="/admin/users" icon={<Parametre boxSize={4} />}>
                     Gestion des utilisateurs
                   </MenuItem>
                 )}
                 {hasPageAccessTo(auth, "admin/page_gestion_roles") && (
-                  <MenuItem as={NavLink} href="/admin/roles" icon={<Parametre boxSize={4} />}>
+                  <MenuItem href="/admin/roles" icon={<Parametre boxSize={4} />}>
                     Gestion des rôles
                   </MenuItem>
                 )}
                 {hasPageAccessTo(auth, "admin/page_message_maintenance") && (
-                  <MenuItem as={NavLink} href="/admin/maintenance" icon={<Parametre boxSize={4} />}>
+                  <MenuItem href="/admin/maintenance" icon={<Parametre boxSize={4} />}>
                     Message de maintenance
                   </MenuItem>
                 )}
               </MenuGroup>
             )}
             <MenuDivider />
-            <MenuItem onClick={logout}>Déconnexion</MenuItem>
+            <ChakraMenuItem onClick={logout}>Déconnexion</ChakraMenuItem>
           </MenuList>
         </Menu>
       )}

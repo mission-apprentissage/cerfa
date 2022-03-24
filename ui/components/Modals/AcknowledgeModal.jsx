@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, Text } from "@chakra-ui/react";
-import { ArrowRightLine, Close } from "../../../theme/components/icons";
+import { ArrowRightLine, Close } from "../../theme/components/icons";
 
 // eslint-disable-next-line react/display-name
 export default ({
