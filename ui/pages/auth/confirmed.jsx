@@ -2,9 +2,8 @@ import { Box, Flex, Heading, HStack, Spinner } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { _post } from "../../../common/httpClient";
-import decodeJWT from "../../../common/utils/decodeJWT";
-import { setTitle } from "../../../common/utils/pageUtils";
+import { _post } from "../../common/httpClient";
+import decodeJWT from "../../common/utils/decodeJWT";
 
 const Confirmed = () => {
   const router = useRouter();
