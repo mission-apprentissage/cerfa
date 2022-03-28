@@ -1,3 +1,10 @@
+## [1.23.3](https://github.com/mission-apprentissage/cerfa/compare/v1.23.2...v1.23.3) (2022-03-28)
+
+
+### Bug Fixes
+
+* la connexion depuis PDS ne remet pas à zero le mot de passe ([f0f3673](https://github.com/mission-apprentissage/cerfa/commit/f0f36735dcb1ab5ce6f7d937fc3c9c02a1b68b3d))
+
 ## [1.23.2](https://github.com/mission-apprentissage/cerfa/compare/v1.23.1...v1.23.2) (2022-03-23)
 
 
