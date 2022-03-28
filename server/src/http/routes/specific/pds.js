@@ -108,8 +108,13 @@ module.exports = (components) => {
       const user = await users.getUser(userinfo.sub.toLowerCase());
       if (user) {
         // TODO FIX du 23/03/2022 suite à une erreur de manipulation ABD - A supprimer en Juin/2022
+        let account_status = user.account_status;
+        if (user.account_status === "FORCE_RESET_PASSWORD") {
+          account_status = "CONFIRMED";
+        }
         const updatedUser = await users.updateUser(user._id, {
           orign_register: "PDS",
+          account_status,
         });
 
         // Login
