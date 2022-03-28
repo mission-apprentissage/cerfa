@@ -39,5 +39,5 @@ ENV PORT 3000
 CMD if [[ "$REACT_APP_ENV" == "dev" ]] ; then \
       yarn dev ; \
     else \
-       cp -rf /site/* /app/.next && yarn start ; \
+       mkdir /app/.next && cp -rf /site/* /app/.next && yarn start ; \
     fi
