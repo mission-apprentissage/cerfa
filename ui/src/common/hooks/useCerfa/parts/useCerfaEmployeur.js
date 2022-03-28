@@ -922,6 +922,7 @@ export function useCerfaEmployeur() {
                 region: {
                   ...employeurAdresseRegion,
                   value: data.region,
+                  locked: true,
                 },
               },
             },
@@ -938,7 +939,7 @@ export function useCerfaEmployeur() {
                   codePostal: newV.employeur.adresse.codePostal.value.trim(),
                   commune: newV.employeur.adresse.commune.value.trim(),
                   departement: newV.employeur.adresse.departement.value.trim(),
-                  region: newV.employeur.adresse.departement.value.trim(),
+                  region: newV.employeur.adresse.region.value.trim(),
                 },
               },
             };
