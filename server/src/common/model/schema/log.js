@@ -1,3 +1,7 @@
+// @ts-check
+
+/** @typedef {import("./log").LogSchema} Log */
+
 const logSchema = {
   msg: {
     type: String,

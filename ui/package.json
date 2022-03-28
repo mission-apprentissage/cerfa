@@ -6,26 +6,29 @@
   "author": "MNA",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "dev": "NEXT_PUBLIC_VERSION=$npm_package_version next dev",
+    "build": "NEXT_PUBLIC_VERSION=$npm_package_version next build",
+    "start": "ls -la /app/.next && ls -la /site && NEXT_PUBLIC_VERSION=$npm_package_version next start",
+    "lint": "next lint",
+    "test": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
   "dependencies": {
-    "@chakra-ui/icons": "1.1.1",
-    "@chakra-ui/react": "1.7.3",
-    "@chakra-ui/theme": "1.12.2",
+    "@chakra-ui/icons": "1.1.7",
+    "@chakra-ui/react": "1.8.6",
+    "@chakra-ui/theme": "1.14.0",
     "@emotion/react": "11.7.1",
     "@emotion/styled": "11.6.0",
-    "chakra-ui-markdown-renderer": "4.0.0",
-    "chakra-ui-steps-rework-mna": "1.5.0-beta.5",
-    "date-fns": "2.28.0",
     "formik": "2.2.9",
-    "framer-motion": "4.1.17",
+    "framer-motion": "^6",
     "generate-password-browser": "1.1.0",
     "jsonwebtoken": "8.5.1",
-    "lodash.debounce": "4.0.8",
-    "lodash.range": "3.2.0",
-    "lodash.throttle": "4.1.1",
-    "luxon": "2.2.0",
-    "query-string": "7.0.1",
+    "luxon": "2.3.1",
+    "next": "12.1.0",
+    "next-seo": "5.1.0",
     "react": "17.0.2",
-    "react-datepicker": "4.6.0",
+    "react-datepicker": "4.7.0",
     "react-dom": "17.0.2",
     "react-dropzone": "11.4.2",
     "react-focus-lock": "2.7.1",
@@ -35,13 +38,10 @@
     "react-notion-x": "4.12.0",
     "react-pdf": "5.6.0",
     "react-phone-input-2": "2.14.0",
-    "react-query": "3.34.5",
-    "react-router-dom": "5.2.0",
-    "react-scripts": "4.0.3",
+    "react-query": "3.34.16",
     "react-table": "7.7.0",
-    "recoil": "0.5.2",
-    "socket.io-client": "4.4.0",
-    "styled-components": "5.3.3",
+    "recoil": "0.6.1",
+    "socket.io-client": "4.4.1",
     "whatwg-fetch": "3.6.2",
     "yup": "0.32.11"
   },
@@ -51,33 +51,16 @@
     "@testing-library/react": "11.2.6",
     "@testing-library/react-hooks": "7.0.2",
     "@testing-library/user-event": "13.3.0",
-    "eslint-config-prettier": "8.3.0",
+    "cypress": "9.5.2",
+    "eslint": "8.11.0",
+    "eslint-config-next": "12.1.0",
+    "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.0.0",
-    "lodash": "4.17.21",
     "prettier": "2.5.1"
-  },
-  "scripts": {
-    "start": "REACT_APP_VERSION=$npm_package_version react-scripts start",
-    "build": "REACT_APP_VERSION=$npm_package_version react-scripts build",
-    "test": "react-scripts test",
-    "test:coverage": "react-scripts test --watchAll=false --coverage",
-    "eject": "react-scripts eject"
   },
   "prettier": {
     "printWidth": 120,
     "bracketSpacing": true,
     "trailingComma": "es5"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   }
 }

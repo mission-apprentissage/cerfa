@@ -1,11 +1,13 @@
+# Install dependencies only when needed
+# TODO Should be FROM node:16.14.0-stretch
 FROM node:14.18.2-stretch
 
 WORKDIR /app
 
-# Install dependencies
 COPY package.json yarn.lock /app/
-RUN yarn install --frozen-lockfile && \
-    yarn global add local-web-server
+
+# RUN yarn install --frozen-lockfile
+RUN yarn install --force
 
 # Map arguments to react-scripts env variables
 ARG REACT_APP_ENV
@@ -19,14 +21,23 @@ ENV REACT_APP_BASE_HOST=$REACT_APP_BASE_HOST
 ENV REACT_APP_METABASE_URL=$REACT_APP_METABASE_URL
 ENV REACT_APP_METABASE_SECRET_KEY=$REACT_APP_METABASE_SECRET_KEY
 
-# Build site
-SHELL ["bash", "-c"]
 COPY . ./
+
+SHELL ["bash", "-c"]
 RUN if [[ "$REACT_APP_ENV" == "dev" ]] ; then \
       echo "[WARNING] Site has not been built. You must start this container with command 'yarn start'" ; \
     else \
-      INLINE_RUNTIME_CHUNK=false yarn build && mv /app/build /site ; \
+      yarn build && mv /app/.next /site ; \
     fi
 
+# ENV NODE_ENV production
+
 EXPOSE 3000
-CMD ws --port 3000 -d /site --log.format dev --spa index.html
+
+ENV PORT 3000
+
+CMD if [[ "$REACT_APP_ENV" == "dev" ]] ; then \
+      yarn dev ; \
+    else \
+       mkdir /app/.next && cp -rf /site/* /app/.next && yarn start ; \
+    fi
