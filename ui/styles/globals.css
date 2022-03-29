@@ -1,8 +1,11 @@
-
+.notion-page-icon-wrapper {
+  display: none !important;
+}
 
 .notion-viewport {
   pointer-events: none;
 }
+
 .phone-form-input {
   width: 100% !important;
   min-width: 0px;
