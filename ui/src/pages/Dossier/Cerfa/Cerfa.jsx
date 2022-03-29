@@ -41,6 +41,7 @@ import FormLearner from "./components/FormLearner";
 import FormLearningMaster from "./components/FormLearningMaster";
 import FormContract from "./components/FormContract";
 import FormFormation from "./components/FormFormation";
+import { CerfaForm } from "../cerfaForm/CerfaForm";
 
 const useOpenAccordionToLocation = () => {
   const scrolledRef = useRef(false);
@@ -165,54 +166,57 @@ export default React.memo(() => {
     );
 
   return (
-    <Accordion
-      allowMultiple
-      allowToggle
-      mt={12}
-      minH="25vh"
-      index={accordionIndex}
-      onChange={(expandedIndex) => {
-        setAccordionIndex(expandedIndex);
-      }}
-    >
-      {[
-        {
-          id: "employeur",
-          title: "Employeur",
-          Component: FormEmployer,
-          completion: employeurCompletionAtom?.contents,
-        },
-        {
-          id: "apprenti",
-          title: "Apprenti(e)",
-          Component: FormLearner,
-          completion: apprentiCompletionAtom?.contents,
-        },
-        {
-          id: "maitres",
-          title: "Maître d'apprentissage",
-          Component: FormLearningMaster,
-          completion: maitresCompletionAtom?.contents,
-        },
-        {
-          id: "contrat",
-          title: "Contrat",
-          Component: FormContract,
-          completion: contratCompletionAtom?.contents,
-        },
-        {
-          id: "formation",
-          title: "Formation",
-          Component: FormFormation,
-          completion: formationCompletion?.contents,
-        },
-      ].map(({ id, ...rest }, key) => {
-        return (
-          <AccordionItem border="none" key={key} id={`accordion_${id}`}>
-            {({ isExpanded }) => <AccordionItemChild isExpanded={isExpanded} {...rest} />}
-          </AccordionItem>
-        );
-      })}
-    </Accordion>
+    <>
+      <CerfaForm />
+      <Accordion
+        allowMultiple
+        allowToggle
+        mt={12}
+        minH="25vh"
+        index={accordionIndex}
+        onChange={(expandedIndex) => {
+          setAccordionIndex(expandedIndex);
+        }}
+      >
+        {[
+          {
+            id: "employeur",
+            title: "Employeur",
+            Component: FormEmployer,
+            completion: employeurCompletionAtom?.contents,
+          },
+          {
+            id: "apprenti",
+            title: "Apprenti(e)",
+            Component: FormLearner,
+            completion: apprentiCompletionAtom?.contents,
+          },
+          {
+            id: "maitres",
+            title: "Maître d'apprentissage",
+            Component: FormLearningMaster,
+            completion: maitresCompletionAtom?.contents,
+          },
+          {
+            id: "contrat",
+            title: "Contrat",
+            Component: FormContract,
+            completion: contratCompletionAtom?.contents,
+          },
+          {
+            id: "formation",
+            title: "Formation",
+            Component: FormFormation,
+            completion: formationCompletion?.contents,
+          },
+        ].map(({ id, ...rest }, key) => {
+          return (
+            <AccordionItem border="none" key={key} id={`accordion_${id}`}>
+              {({ isExpanded }) => <AccordionItemChild isExpanded={isExpanded} {...rest} />}
+            </AccordionItem>
+          );
+        })}
+      </Accordion>
+    </>
   );
 });

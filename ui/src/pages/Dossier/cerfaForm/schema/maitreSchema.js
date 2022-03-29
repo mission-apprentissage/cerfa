@@ -1,4 +1,6 @@
-export const SCHEMA = {
+import { requiredLabel } from "./validationUtils";
+
+export const maitreSchema = {
   "maitre1.nom": {
     defaultState: {
       value: "",
@@ -17,12 +19,19 @@ export const SCHEMA = {
     },
     validate: ({ value }) => value || { error: requiredLabel },
   },
+  "maitre2.nom": {
+    defaultState: {
+      value: "",
+    },
+  },
+  "maitre2.prenom": {
+    defaultState: {
+      value: "",
+    },
+  },
+  "maitre2.dateNaissance": {
+    defaultState: {
+      value: "",
+    },
+  },
 };
-
-export const defaultValues = Object.fromEntries(
-  Object.entries(SCHEMA).map(([name, { defaultValue }]) => [name, defaultValue])
-);
-
-export const fieldKeys = Object.keys(SCHEMA);
-
-const requiredLabel = "Cette information est nécessaire";

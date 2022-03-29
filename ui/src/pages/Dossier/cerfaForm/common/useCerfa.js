@@ -1,62 +1,44 @@
-import { selector, useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil";
-import { cerfaAtom, cerfaSetter } from "./atoms";
+import { useRecoilCallback, useRecoilState, useSetRecoilState } from "recoil";
+import { cerfaAtom, cerfaSetter, valuesSelector } from "./atoms";
 import { validField } from "./utils/validField";
-import { cleanGlobalRules } from "./utils/cleanGlobalRules";
 import { validGlobalRules } from "./utils/validGlobalRules";
 import { useMemo } from "react";
-import { SCHEMA } from "./schema/SCHEMA";
 import { getValues } from "./utils/getValues";
+import { dossierAtom } from "../../../../common/hooks/useDossier/dossierAtom";
 
-const globalRules = [
-  {
-    deps: ["siret", "name"],
-    validate: ({ cerfa }) => {
-      return { error: "shit" };
-    },
-  },
-];
-
-const glosel = selector({
-  key: "glosel",
-  get: () => undefined,
-  set: ({ get }) => {
-    console.log(get(cerfaAtom));
-  },
-});
-
-export const useCerfaController = ({ schema } = {}) => {
+export const useCerfaController = ({ schema, dossier } = {}) => {
   const [fields, setCerfa] = useRecoilState(cerfaAtom);
   const patchFields = useSetRecoilState(cerfaSetter);
-  const computeGlobalErrors = useSetRecoilState(glosel);
 
-  const setGlobalErrors = useRecoilCallback(
+  const processGlobalErrors = useRecoilCallback(
     ({ snapshot, set }) =>
       async ({ name }) => {
         let fields = await snapshot.getPromise(cerfaAtom);
-        fields = cleanGlobalRules({ fields, name, rules: globalRules });
+        // fields = cleanGlobalRules({ fields, name, rules: globalRules });
         const error = await validGlobalRules({
           name,
-          fields,
-          rules: globalRules,
+          values: getValues(fields),
+          rules: schema.coherenceRules,
         });
+
         if (error) {
-          set(cerfaAtom, { ...fields, [name]: { ...fields[name], error } });
+          // set(cerfaAtom, { ...fields, [name]: { ...fields[name], error } });
         }
       },
-    []
+    [schema]
   );
 
-  const controller = useMemo(
-    () => ({
-      setField: async (name, value) => {
-        patchFields({
-          [name]: { value, loading: true, error: undefined, success: false },
-        });
+  const processField = useRecoilCallback(
+    ({ snapshot }) =>
+      async ({ name, value }) => {
+        const dossier = await snapshot.getPromise(dossierAtom);
+        const values = await snapshot.getPromise(valuesSelector);
 
         let { result } = validField({
           value,
-          name,
-          validate: schema[name]?.validate,
+          validate: schema.fields[name]?.validate,
+          dossier,
+          values,
         });
 
         let { error, cascade } = await result;
@@ -71,25 +53,31 @@ export const useCerfaController = ({ schema } = {}) => {
           patchFields(cascade);
         }
 
-        if (!error) {
-          computeGlobalErrors();
-          await setGlobalErrors({ name });
-        }
+        await processGlobalErrors({ name });
 
+        patchFields({ [name]: { loading: false, error, success: !error } });
+      },
+    []
+  );
+
+  const controller = useMemo(
+    () => ({
+      dossier,
+      setField: async (name, value) => {
         patchFields({
-          [name]: { loading: false, error, success: !error },
+          [name]: { value, loading: true, error: undefined, success: false },
         });
+        await processField({ name, value });
       },
       setValues: (values) => {
         let fields = {};
-        Object.keys(schema).forEach((key) => {
-          fields = { ...fields, [key]: { ...schema[key].defaultState, value: values[key] } };
+        Object.keys(schema.fields).forEach((name) => {
+          fields = { ...fields, [name]: { ...schema.fields[name].defaultState, value: values[name] } };
         });
-        console.log(fields);
         setCerfa(fields);
       },
     }),
-    [computeGlobalErrors, patchFields, schema, setGlobalErrors]
+    [dossier, patchFields, processField, schema, setCerfa]
   );
   return { controller, values: getValues(fields) };
 };

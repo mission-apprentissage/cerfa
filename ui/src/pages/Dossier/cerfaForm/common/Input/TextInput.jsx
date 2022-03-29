@@ -29,14 +29,14 @@ export const TextInput = (props) => {
 };
 
 const CommonInput = ({ name, error, success, loading = false, locked, children, label = "", isRequired = false }) => (
-  <FormControl isRequired={isRequired} isInvalid={!!error}>
+  <FormControl isRequired={isRequired} isInvalid={!!error} mt={2}>
     <FormLabel color={locked ? "disablegrey" : "labelgrey"}>{label}</FormLabel>
     <HStack>
       <InputGroup id={`${name}_group_input`}>
         {children}
         <InputRightElement
           children={
-            <Center bg="grey.200" w="40px" h="40px" ml={"0 !important"} borderBottom="2px solid">
+            <Center w="40px" h="40px" ml={"0 !important"}>
               {loading && <Spinner />}
               {locked && <LockFill color={"disablegrey"} boxSize="4" />}
             </Center>

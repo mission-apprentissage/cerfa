@@ -1,7 +1,4 @@
-import { getValues } from "./getValues";
-
-export const validGlobalRules = async ({ name, fields, rules }) => {
-  const values = getValues(fields);
+export const validGlobalRules = async ({ name, values, rules }) => {
   let keepedError;
 
   rules

@@ -1,13 +1,9 @@
 import { atom, selector, selectorFamily } from "recoil";
+import { getValues } from "./utils/getValues";
 
 export const cerfaAtom = atom({
   key: "cerfaAtom",
-  default: {
-    siret: { value: "" },
-    name: { value: "" },
-    start: { value: "" },
-    end: { value: "" },
-  },
+  default: {},
 });
 
 export const cerfaSetter = selector({
@@ -30,6 +26,8 @@ export const valueSelector = selectorFamily({
     ({ get }) =>
       get(cerfaAtom)[name]?.value,
 });
+
+export const valuesSelector = selector({ key: "", get: ({ get }) => getValues(get(cerfaAtom)) });
 
 export const fieldSelector = selectorFamily({
   key: "fieldSelector",

@@ -20,6 +20,9 @@ export const CerfaMaitre = ({ controller }) => {
         </Box>
         <Box w="55%" flex="1" ml={5}>
           <FormLabel fontWeight={700}>Maître d'apprentissage n°2 (Optionnel)</FormLabel>
+          <InputController label="Nom de naissance" name={"maitre2.nom"} controller={controller} />
+          <InputController label="Prénom" name={"maitre2.prenom"} controller={controller} />
+          <InputController label="Date de naissance" name={"maitre2.dateNaissance"} controller={controller} />
         </Box>
       </Flex>
     </Box>

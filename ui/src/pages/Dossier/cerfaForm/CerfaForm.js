@@ -1,43 +1,42 @@
-import { useRecoilValue } from "recoil";
 import { useCerfaController } from "./common/useCerfa";
-import { defaultValues, SCHEMA } from "./common/schema/SCHEMA";
-import React, { useEffect, useState } from "react";
+import { defaultValues, cerfaSchema } from "./schema";
+import React, { useEffect, useRef, useState } from "react";
 import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box, HStack, Text } from "@chakra-ui/react";
 import { AddFill, StepComplete, StepWip, SubtractLine } from "../../../theme/components/icons";
 import { CerfaMaitre } from "./maitre/CerfaMaitre";
-import { cerfaAtom } from "./common/atoms";
+import { CerfaEmployer } from "./employer/CerfaEmployer";
+import { useRecoilValue } from "recoil";
+import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
 
 export const CerfaForm = () => {
+  const dossier = useRecoilValue(dossierAtom);
+
   const { controller: cerfaController, values } = useCerfaController({
-    schema: SCHEMA,
+    schema: cerfaSchema,
+    dossier,
   });
 
-  const [ready, setReady] = useState(false);
+  const readyRef = useRef(false);
   useEffect(() => {
     cerfaController.setValues(defaultValues);
-    setReady(true);
+    readyRef.current = true;
   }, []);
-
-  const cerfa = useRecoilValue(cerfaAtom);
-  console.log("cerfa", cerfa, values);
 
   const [accordionIndex, setAccordionIndex] = useState(0);
   return (
     <div>
-      {ready && (
-        <Accordion
-          allowMultiple
-          allowToggle
-          mt={12}
-          minH="25vh"
-          index={accordionIndex}
-          onChange={(expandedIndex) => {
-            setAccordionIndex(expandedIndex);
-          }}
-        >
-          <AccordionItem border="none" id={`accordion_1`}>
+      {readyRef.current && (
+        <Accordion allowMultiple allowToggle mt={12} minH="25vh" index={accordionIndex} onChange={setAccordionIndex}>
+          <AccordionItem border="none" id={`employeur`}>
             {({ isExpanded }) => (
-              <AccordionItemChild isExpanded={isExpanded} title={"Maitre"} completion={10}>
+              <AccordionItemChild isExpanded={isExpanded} title={"Employeur"} completion={10}>
+                <CerfaEmployer controller={cerfaController} />
+              </AccordionItemChild>
+            )}
+          </AccordionItem>
+          <AccordionItem border="none" id={`maitre`}>
+            {({ isExpanded }) => (
+              <AccordionItemChild isExpanded={isExpanded} title={"Maître d'apprentissage"} completion={10}>
                 <CerfaMaitre controller={cerfaController} />
               </AccordionItemChild>
             )}
