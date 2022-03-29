@@ -9,10 +9,9 @@ import {
   Input,
   Link,
   Text,
-  Divider,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import * as Yup from "yup";
 import jwt from "jsonwebtoken";
 import { useRouter } from "next/router";
@@ -20,9 +19,7 @@ import NavLink from "next/link";
 
 import useAuth from "../../hooks/useAuth";
 import useToken from "../../hooks/useToken";
-import { _post, _get } from "../../common/httpClient";
-
-import { ExternalLinkLine } from "../../theme/components/icons";
+import { _post } from "../../common/httpClient";
 
 const Login = () => {
   const [, setAuth] = useAuth();

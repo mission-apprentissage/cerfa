@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, Heading, Link, Text } from "@chakra-ui/react";
+import { Box, Link, Text } from "@chakra-ui/react";
 import { ExternalLinkLine } from "../../theme/components/icons";
 
 const Cookies = () => {

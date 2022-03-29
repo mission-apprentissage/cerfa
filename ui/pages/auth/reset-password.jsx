@@ -9,7 +9,6 @@ import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import useAuth from "../../hooks/useAuth";
 import useToken from "../../hooks/useToken";
 import { _post } from "../../common/httpClient";
-import { setTitle } from "../../common/utils/pageUtils";
 
 const ResetPasswordPage = () => {
   const [auth, setAuth] = useAuth();
@@ -43,7 +42,7 @@ const ResetPasswordPage = () => {
     },
   };
 
-  const title = `Changement du mot de passe`;
+  // const title = `Changement du mot de passe`;
   // setTitle(title);
 
   const { values, handleSubmit, handleChange } = useFormik({

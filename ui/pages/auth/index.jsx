@@ -46,7 +46,7 @@ const FormBoxMotion = ({ children, isOpen, ...rest }) => {
 };
 
 const AuthPage = () => {
-  const title = "Connexion";
+  // const title = "Connexion";
   // setTitle(title);
 
   return (

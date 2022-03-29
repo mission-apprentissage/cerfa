@@ -13,7 +13,6 @@ import {
   Text,
   Divider,
   Heading,
-  Center,
   VStack,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
@@ -29,7 +28,7 @@ import useAuth from "../../hooks/useAuth";
 import useToken from "../../hooks/useToken";
 import { _post, _get } from "../../common/httpClient";
 
-import { ExternalLinkLine, ShowPassword } from "../../theme/components/icons";
+import { ShowPassword } from "../../theme/components/icons";
 
 const Login = (props) => {
   const [, setAuth] = useAuth();
@@ -84,7 +83,7 @@ const Login = (props) => {
                   {({ field, meta }) => (
                     <FormControl isRequired isInvalid={meta.error && meta.touched} mb={5}>
                       <FormLabel>Identifiant</FormLabel>
-                      <Input {...field} id={field.name} placeholder="Ex : prenom.nom@mail.com" />
+                      <Input {...field} id={field.name} placeholder="Exemple : prenom.nom@mail.com" />
                       <FormErrorMessage>{meta.error}</FormErrorMessage>
                     </FormControl>
                   )}
@@ -130,9 +129,8 @@ const Login = (props) => {
       </Formik>
       <Box mt={12}>
         <Text fontSize="1rem">
-          Vous n&apos;avez pas encore de compte ?{" "}
           <Link href="/auth/inscription" as={NavLink} color="bluefrance" ml={3}>
-            Créer un compte
+            &gt; Je n&apos;ai pas encore de compte
           </Link>
         </Text>
       </Box>
@@ -176,7 +174,7 @@ const ConnexionPage = () => {
             </Heading>
             <Button variant="secondary" type="submit" as={Link} href={linkToPds} isExternal>
               Se connecter avec le Portail de Services
-              <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} ml={"0.25rem"} mt={"0.125rem"} />
+              {/* <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} ml={"0.25rem"} mt={"0.125rem"} /> */}
             </Button>
             <Box mt={6}>
               <Text fontSize="1rem" color="mgalt" fontStyle="italic">

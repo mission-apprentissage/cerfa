@@ -74,6 +74,7 @@ const ForceAcceptCGU = ({ children }) => {
           <Box borderColor={"dgalt"} borderWidth={1} overflowY="scroll" px={8} py={4} h="30vh" ref={cguContainer}>
             <Cgu
               onLoad={async () => {
+                // eslint-disable-next-line no-undef
                 await new Promise((resolve) => setTimeout(resolve, 500));
                 cguContainer.current?.scrollTo(0, 0);
               }}
@@ -86,8 +87,8 @@ const ForceAcceptCGU = ({ children }) => {
   );
 };
 
-const UserWrapper = ({ children, ...rest }) => {
-  let [auth, setAuth] = useAuth();
+const UserWrapper = ({ children }) => {
+  let [, setAuth] = useAuth();
 
   const [isLoading, setIsLoading] = useState(true);
 

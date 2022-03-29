@@ -4,7 +4,6 @@ import React from "react";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { _post } from "../../common/httpClient";
-import { setTitle } from "../../common/utils/pageUtils";
 
 const ForgottenPasswordPage = () => {
   const router = useRouter();

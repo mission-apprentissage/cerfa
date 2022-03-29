@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Head from "next/head";
-import { Box, Container, Heading, Text, Link } from "@chakra-ui/react";
+import { Box, Container, Heading } from "@chakra-ui/react";
 import { Page } from "../components/Page/Page";
 import { Breadcrumb } from "../components/Breadcrumb/Breadcrumb";
-import { Cgu, cguVersion } from "../components/legal/Cgu";
+import { Cgu } from "../components/legal/Cgu";
 
 const CguPage = () => {
   const title = "CONDITIONS GÉNÉRALES D'UTILISATION DE LA PLATEFORME";

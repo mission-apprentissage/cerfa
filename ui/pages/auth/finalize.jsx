@@ -64,6 +64,7 @@ const Finalize = () => {
         .required("Le siret est obligatoire"),
     }),
     onSubmit: (values) => {
+      // eslint-disable-next-line no-undef
       return new Promise(async (resolve) => {
         try {
           const result = await _post("/api/v1/pds/finalize", values);

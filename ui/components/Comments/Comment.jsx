@@ -64,6 +64,7 @@ const Form = ({ firstFieldRef, onSubmitted, onCancel, feed }) => {
       notify: [],
     },
     onSubmit: ({ comment, notify }) => {
+      // eslint-disable-next-line no-undef
       return new Promise(async (resolve) => {
         await onSubmitted({
           comment,

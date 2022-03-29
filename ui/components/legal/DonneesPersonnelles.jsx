@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, Heading, Text, UnorderedList, ListItem, OrderedList, Flex } from "@chakra-ui/react";
+import { Box, Heading, Text, UnorderedList, ListItem, OrderedList, Flex } from "@chakra-ui/react";
 
 const DonneesPersonnelles = () => {
   return (

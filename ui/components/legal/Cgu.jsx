@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, Container, Heading, Text, Link } from "@chakra-ui/react";
+import { Box, Heading, Text, Link } from "@chakra-ui/react";
 import { ExternalLinkLine } from "../../theme/components/icons";
 
 export const cguVersion = () => {

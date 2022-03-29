@@ -33,7 +33,7 @@ const Icon = ({ variant, ...rest }) => {
   }
 };
 
-const Ribbons = ({ variant = "info", bg = "galt2", oneLiner = true, children, ...rest }) => {
+const Ribbons = ({ variant = "info", oneLiner = true, children, ...rest }) => {
   return (
     <Box {...rest}>
       <Flex

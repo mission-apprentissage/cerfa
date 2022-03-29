@@ -3,7 +3,7 @@ import React from "react";
 // import { setTitle } from "../../common/utils/pageUtils";
 
 const WaitingConfirmationPage = () => {
-  const title = `En attente de confirmation votre compte utilisateur`;
+  // const title = `En attente de confirmation votre compte utilisateur`;
   // setTitle(title);
 
   return (

@@ -33,7 +33,7 @@ const TooltipIcon = (props) => (
   </Icon>
 );
 
-const InfoTooltip = ({ description, descriptionComponent, example, label, history, noHistory = true, ...rest }) => {
+const InfoTooltip = ({ description, descriptionComponent, label, history, noHistory = true, ...rest }) => {
   return (
     <Popover placement="bottom">
       <PopoverTrigger>

@@ -3,7 +3,7 @@ import { ArrowDropRightLine } from "../../theme/components/icons";
 import { BreadcrumbItem, BreadcrumbLink, Breadcrumb as ChakraBreadcrumb } from "@chakra-ui/react";
 import NavLink from "next/link";
 
-const Breadcrumb = ({ pages, loading = false }) => {
+const Breadcrumb = ({ pages }) => {
   return (
     <ChakraBreadcrumb
       separator={<ArrowDropRightLine color="grey.600" boxSize={3} mb={1} />}

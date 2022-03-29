@@ -1,11 +1,10 @@
 import Head from "next/head";
-import { Box, Container, Heading, Text, UnorderedList, ListItem, Button, Flex, Link } from "@chakra-ui/react";
+import { Box, Heading, Text, UnorderedList, ListItem, Button, Flex, Link } from "@chakra-ui/react";
 import { Page } from "../components/Page/Page";
 import { Breadcrumb } from "../components/Breadcrumb/Breadcrumb";
 import NavLink from "next/link";
 
-function Home({ data }) {
-  // console.log(data);
+function Home() {
   const title = "Accueil";
   return (
     <Page>

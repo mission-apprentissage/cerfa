@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import useAuth from "../../../hooks/useAuth";
 import { isUserAdmin, hasPageAccessTo } from "../../../common/utils/rolesUtils";
-import { MenuFill, Close, AccountFill, AccountUnfill, LockFill, Parametre } from "../../../theme/components/icons";
+import { MenuFill, Close, AccountFill, AccountUnfill, Parametre } from "../../../theme/components/icons";
 import { _get } from "../../../common/httpClient";
 import Link from "../../../components/Link";
 import MenuItem from "../../../components/MenuItem";
