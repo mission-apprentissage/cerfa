@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
 import { workspacePathsAtom, workspaceTitlesAtom, workspaceTitleAtom, workspaceAtom } from "./workspaceAtoms";
-import { setTitle as setTitlePage } from "../utils/pageUtils";
-import { _get } from "../httpClient";
+import { _get } from "../common/httpClient";
 import useAuth from "./useAuth";
 
 const hydrate = async (workspaceId) => {
@@ -22,7 +21,8 @@ const hydrate = async (workspaceId) => {
 };
 
 export function useWorkspace() {
-  const { pathname } = useLocation();
+  const router = useRouter();
+  const pathname = router.asPath;
   let [auth] = useAuth();
   let workspaceId = pathname.match(/^\/mes-dossiers\/espaces-partages\/([a-f0-9]{24})\//)?.[1];
   let dossierId = pathname.match(/^\/mes-dossiers\/dossiers-partages\/([a-f0-9]{24})\//)?.[1];
@@ -131,7 +131,7 @@ export function useWorkspace() {
           const baseBc = workspaceId || dossierId ? [{ title: "Mes dossiers", to: "/mes-dossiers/mon-espace" }] : [];
           switch (pathname) {
             case paths.parametresUtilisateurs:
-              setTitlePage(titles.parametresUtilisateurs);
+              // setTitlePage(titles.parametresUtilisateurs);
               bcDetails = [
                 ...baseBc,
                 { title: titles.workspace, to: paths.dossiers },
@@ -140,7 +140,7 @@ export function useWorkspace() {
               ];
               break;
             case paths.parametresNotifications:
-              setTitlePage(titles.parametresNotifications);
+              // setTitlePage(titles.parametresNotifications);
               bcDetails = [
                 ...baseBc,
                 { title: titles.workspace, to: paths.dossiers },
@@ -149,15 +149,15 @@ export function useWorkspace() {
               ];
               break;
             case paths.dossiers:
-              setTitlePage(titles.dossiers);
+              // setTitlePage(titles.dossiers);
               bcDetails = [...baseBc, { title: titles.dossiers }, { title: titles.workspace }];
               break;
             case paths.sharedDossiers:
-              setTitlePage(titles.sharedDossiers);
+              // setTitlePage(titles.sharedDossiers);
               bcDetails = [...baseBc, { title: titles.dossiers, to: paths.dossiers }, { title: titles.sharedDossiers }];
               break;
             case paths.nouveauDossier:
-              setTitlePage(titles.commencerNouveauDossier);
+              // setTitlePage(titles.commencerNouveauDossier);
               bcDetails = [
                 ...baseBc,
                 { title: titles.dossiers, to: paths.dossiers },
@@ -166,7 +166,7 @@ export function useWorkspace() {
               ];
               break;
             default:
-              setTitlePage(titles.dossiers);
+              // setTitlePage(titles.dossiers);
               bcDetails = [...baseBc, { title: titles.dossiers }, { title: titles.workspace }];
               break;
           }
@@ -174,7 +174,7 @@ export function useWorkspace() {
           // case of ${paths.dossiers}/:id/:step`
           const contratPath = new RegExp(`^${paths.dossiers}/[0-9A-Fa-f]{24}/[a-z]+$`);
           if (contratPath.test(pathname) && title) {
-            setTitlePage(title);
+            // setTitlePage(title);
             bcDetails = [
               ...baseBc,
               { title: titles.dossiers, to: paths.dossiers },

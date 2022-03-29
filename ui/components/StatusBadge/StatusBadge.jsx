@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge, Text, Center } from "@chakra-ui/react";
 import { InfoCircle, Cloud, Processing, RejectIcon, Question } from "../../theme/components/icons/index";
-import { DOSSIER_STATUS } from "../constants/status";
+import { DOSSIER_STATUS } from "../../common/constants/status";
 
 const Icon = ({ variant }) => {
   switch (variant) {
