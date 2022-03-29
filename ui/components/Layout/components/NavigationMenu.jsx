@@ -12,10 +12,11 @@ import {
   MenuGroup,
   MenuList,
   Button,
+  HStack,
 } from "@chakra-ui/react";
 import useAuth from "../../../hooks/useAuth";
 import { isUserAdmin, hasPageAccessTo } from "../../../common/utils/rolesUtils";
-import { MenuFill, Close, AccountFill, LockFill, Parametre } from "../../../theme/components/icons";
+import { MenuFill, Close, AccountFill, AccountUnfill, LockFill, Parametre } from "../../../theme/components/icons";
 import { _get } from "../../../common/httpClient";
 import Link from "../../../components/Link";
 import MenuItem from "../../../components/MenuItem";
@@ -49,12 +50,20 @@ const UserMenu = () => {
   return (
     <>
       {auth?.sub === "anonymous" && (
-        <Box>
-          <Link href="/auth/connexion" variant="pill">
-            <LockFill boxSize={3} mb={1} mr={2} />
-            Connexion
+        <HStack>
+          <Link href="/auth/inscription" variant="pill" px={3} py={1}>
+            <Text lineHeight={6}>
+              <AccountUnfill boxSize={5} mr={2} />
+              S&apos;inscrire
+            </Text>
           </Link>
-        </Box>
+          <Link href="/auth/connexion" variant="pill" px={3} py={1}>
+            <Text lineHeight={6}>
+              <AccountFill boxSize={5} mr={2} />
+              Se connecter
+            </Text>
+          </Link>
+        </HStack>
       )}
       {auth?.sub !== "anonymous" && (
         <Menu placement="bottom">

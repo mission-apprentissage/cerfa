@@ -252,7 +252,7 @@ const Finalize = () => {
               </HStack>
               <Flex flexGrow={1} alignItems="end">
                 <Text mt={8} fontSize="1rem">
-                  Vous rencontrez des difficultés à passer cette étape ?
+                  Vous rencontrez des difficultés à passer cette étape ?{" "}
                   <Link href="/assistance" as={NavLink} color="bluefrance" ml={3}>
                     Contacter l&apos;assistance
                   </Link>

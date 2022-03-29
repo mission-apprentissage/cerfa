@@ -4,6 +4,7 @@ const colors = {
   bluefrance: "#000091",
   white: "#ffffff",
   redmarianne: "#e1000f",
+  openbluefrance: "#E3E3FD",
   success: "#0d6635",
   error: "#b60000",
   warning: "#fa5c00",
