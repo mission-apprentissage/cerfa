@@ -17,12 +17,12 @@ import {
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { _post, _get, _put, _delete } from "../../common/httpClient";
-import Head from "next/head";
-import NavLink from "next/link";
 import { ArrowDropRightLine } from "../../theme/components/icons";
 import useAuth from "../../hooks/useAuth";
 import { Table } from "../../components/Table/Table";
 import { Page } from "../../components/Page/Page";
+import Head from "next/head";
+import NavLink from "next/link";
 
 import withAuth from "../../components/withAuth";
 

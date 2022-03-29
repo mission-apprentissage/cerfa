@@ -12,7 +12,7 @@ const withAuth = (Component, aclRef = null) => {
       return <></>;
     }
 
-    if (!hasPageAccessTo(auth, aclRef)) {
+    if (aclRef && !hasPageAccessTo(auth, aclRef)) {
       router.push("/auth/connexion");
       return <></>;
     }
