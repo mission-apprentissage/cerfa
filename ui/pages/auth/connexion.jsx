@@ -101,7 +101,7 @@ const Login = (props) => {
                             placeholder="Votre mot de passe..."
                           />
                           <InputRightElement width="2.5rem">
-                            <ShowPassword boxSize={5} onClick={handleClick} />
+                            <ShowPassword boxSize={5} onClick={handleClick} cursor="pointer" />
                           </InputRightElement>
                         </InputGroup>
                         <FormErrorMessage>{meta.error}</FormErrorMessage>
