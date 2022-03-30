@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, Flex, Box, Divider, Wrap, WrapItem, Avatar } from "@chakra-ui/react";
-import { prettyPrintDate } from "../../utils/dateUtils";
+import { prettyPrintDate } from "../../common/utils/dateUtils";
 
 const Card = ({ data }) => {
   return (

@@ -15,7 +15,6 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Input,
   // Container,
   // Switch,
   // Divider,
@@ -24,7 +23,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { ArrowRightLine, Close } from "../../theme/components/icons";
 import { workspaceAtom } from "../../hooks/workspaceAtoms";
 import { _put } from "../../common/httpClient";
-// import InputCerfa from "../../Dossier/Cerfa/components/Input";
+import InputCerfa from "../Dossier/Cerfa/components/Input";
 
 const ParameterModal = ({ isOpen, onClose, title = "Paramètres" }) => {
   const workspace = useRecoilValue(workspaceAtom);
@@ -88,7 +87,7 @@ const ParameterModal = ({ isOpen, onClose, title = "Paramètres" }) => {
             <TabPanels>
               <TabPanel>
                 <Box>
-                  <Input
+                  <InputCerfa
                     path={`wks.parametres.nom`}
                     field={{
                       description: "Nom de l'espace.",

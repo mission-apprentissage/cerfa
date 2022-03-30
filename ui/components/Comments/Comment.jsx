@@ -26,7 +26,7 @@ import { CheckIcon } from "@chakra-ui/icons";
 import FocusLock from "react-focus-lock";
 import { useFormik } from "formik";
 // import { useDossier } from "../../hooks/useDossier";
-import { useComment } from "../../../common/hooks/useComment";
+import { useComment } from "../../hooks/useComment";
 
 import CardComment from "./Card";
 

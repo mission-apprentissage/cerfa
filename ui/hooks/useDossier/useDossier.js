@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 // import { useQuery } from "react-query";
 import { useRecoilState } from "recoil";
 
-import { _post, _get, _put } from "../../httpClient";
+import { _post, _get, _put } from "../../common/httpClient";
 import { dossierAtom } from "./dossierAtom";
 
 const hydrate = async (dossierId) => {
