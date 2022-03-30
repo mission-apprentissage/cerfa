@@ -3,7 +3,7 @@
  */
 
 import { useCallback, useEffect } from "react";
-import { _post } from "../../../httpClient";
+import { _post } from "../../../common/httpClient";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import {
@@ -14,13 +14,13 @@ import {
   convertMultipleSelectOptionToValue,
   normalizeInputNumberForDb,
   doAsyncCodePostalActions,
-} from "../../../utils/formUtils";
+} from "../../../common/utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
 import * as employeurAtoms from "./useCerfaEmployeurAtoms";
-import { buildRemunerations } from "../../../utils/form/remunerationsUtils";
-import { fieldsChecker } from "../../../utils/form/fieldsCheckUtils";
+import { buildRemunerations } from "../../../common/utils/form/remunerationsUtils";
+import { fieldsChecker } from "../../../common/utils/form/fieldsCheckUtils";
 import { useCerfaContrat } from "../parts/useCerfaContrat";
 
 export const cerfaEmployeurCompletion = (res) => {
@@ -156,6 +156,7 @@ export const CerfaEmployeurController = async (dossier) => {
       },
       codeIdcc: {
         doAsyncActions: async (value, data) => {
+          // eslint-disable-next-line no-undef
           await new Promise((resolve) => setTimeout(resolve, 100));
 
           const index = data.enumCodeIdcc.indexOf(value);
@@ -183,7 +184,8 @@ export const CerfaEmployeurController = async (dossier) => {
         },
       },
       nombreDeSalaries: {
-        doAsyncActions: async (value, data) => {
+        doAsyncActions: async (value) => {
+          // eslint-disable-next-line no-undef
           await new Promise((resolve) => setTimeout(resolve, 100));
 
           if (parseInt(value) > 9999999) {
@@ -206,6 +208,7 @@ export const CerfaEmployeurController = async (dossier) => {
       adresse: {
         codePostal: {
           doAsyncActions: async (value, data) => {
+            // eslint-disable-next-line no-undef
             await new Promise((resolve) => setTimeout(resolve, 100));
             const result = await doAsyncCodePostalActions(value, data, dossier._id);
             if (result.successed) {
@@ -239,6 +242,7 @@ export const CerfaEmployeurController = async (dossier) => {
         },
         departement: {
           doAsyncActions: async (value, data) => {
+            // eslint-disable-next-line no-undef
             await new Promise((resolve) => setTimeout(resolve, 100));
 
             if (data.apprentiDateNaissance !== "" && data.dateFinContrat !== "" && data.dateDebutContrat !== "") {
@@ -276,7 +280,7 @@ export const CerfaEmployeurController = async (dossier) => {
         },
       },
       naf: {
-        doAsyncActions: async (value, data) => {
+        doAsyncActions: async (value) => {
           try {
             const insert = (str, index, value) => {
               return str.substr(0, index) + value + str.substr(index);

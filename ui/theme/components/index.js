@@ -10,6 +10,7 @@ import { Accordion } from "./accordion";
 import { Select } from "./select";
 import { Radio } from "./radio";
 import { Switch } from "./switch";
+import { Steps } from "./steps";
 import { Checkbox } from "./checkbox";
 
 const components = {
@@ -25,6 +26,7 @@ const components = {
   Select,
   Radio,
   Switch,
+  Steps,
   Checkbox,
 };
 

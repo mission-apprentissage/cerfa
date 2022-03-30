@@ -2,8 +2,8 @@ import React from "react";
 import { Box, FormLabel, Flex, Center, Spinner } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
-import { useCerfaMaitres } from "../../../../common/hooks/useCerfa/parts/useCerfaMaitres";
-import { cerfaContratDateDebutContratAtom } from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+import { useCerfaMaitres } from "../../../../hooks/useCerfa/parts/useCerfaMaitres";
+import { cerfaContratDateDebutContratAtom } from "../../../../hooks/useCerfa/parts/useCerfaContratAtoms";
 import InputCerfa from "./Input";
 
 // eslint-disable-next-line react/display-name

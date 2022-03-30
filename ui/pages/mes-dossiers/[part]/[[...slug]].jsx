@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import WorkspaceLayout from "../../../components/Workspace/WorkspaceLayout";
 import * as WorkspaceDossiers from "../../../components/Workspace/WorkspaceDossiers";
 import NouveauDossier from "../../../components/Dossier/NouveauDossier";
+import Dossier from "../../../components/Dossier/Dossier";
 
 import { useWorkspace } from "../../../hooks/useWorkspace";
 import withAuth from "../../../components/withAuth";
@@ -53,6 +54,7 @@ const MesDossiers = () => {
             mes-dossiers/espaces-partages/:workspaceId/dossiers/:id/:step  
             /mes-dossiers/dossiers-partages/:id/:step  
             */}
+        {part === "mon-espace" && slug?.[0] && slug?.[1] && <Dossier />}
 
         {/* /mes-dossiers/mon-espace/nouveau-dossier 
             /mes-dossiers/espaces-partages/${workspaceId}/dossiers/nouveau-dossier */}

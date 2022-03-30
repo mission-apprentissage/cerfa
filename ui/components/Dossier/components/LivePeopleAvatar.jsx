@@ -1,13 +1,19 @@
 import React, { useEffect } from "react";
-import { AvatarGroup, Avatar, Fade } from "@chakra-ui/react";
-import { useRouteMatch } from "react-router-dom";
+import {
+  AvatarGroup,
+  Avatar,
+  // Fade
+} from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 import { io } from "socket.io-client";
 import { useQueryClient, useQuery } from "react-query";
 
 const useWebSocketSubscription = () => {
   const queryClient = useQueryClient();
-  let match = useRouteMatch();
+  const router = useRouter();
+  const { slug } = router.query;
+  const [paramId] = slug;
 
   // eslint-disable-next-line no-undef
   const { data: liveUsers } = useQuery("dossier:live_users", () => Promise.resolve([]), {
@@ -19,7 +25,7 @@ const useWebSocketSubscription = () => {
     socket.on("connect", () => {
       console.log(socket.id);
 
-      socket.emit("dossier:connect", { dossierId: match.params.id }, ({ status, ...rest }) => {
+      socket.emit("dossier:connect", { dossierId: paramId }, ({ status, ...rest }) => {
         if (status === "KO") {
           console.log(rest);
           return socket.disconnect();
@@ -36,7 +42,7 @@ const useWebSocketSubscription = () => {
     return () => {
       socket.disconnect();
     };
-  }, [match.params.id, queryClient]);
+  }, [paramId, queryClient]);
 
   return { liveUsers: liveUsers || [] };
 };
@@ -50,9 +56,11 @@ const LivePeopleAvatar = React.memo(() => {
     <AvatarGroup size="md" max={4}>
       {liveUsers.map((liveUser, i) => {
         return (
-          <Fade in={true} key={i}>
+          <React.Fragment key={i}>
+            {/* <Fade in={true} key={i}> */}
             <Avatar name={`${liveUser.prenom} ${liveUser.nom}`} />
-          </Fade>
+            {/* </Fade> */}
+          </React.Fragment>
         );
       })}
     </AvatarGroup>

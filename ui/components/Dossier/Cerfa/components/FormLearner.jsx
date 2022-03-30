@@ -2,13 +2,13 @@ import React from "react";
 import { Box, FormLabel, Text, Flex, Collapse, Center, Spinner } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
-import { useCerfaApprenti } from "../../../../common/hooks/useCerfa/parts/useCerfaApprenti";
+import { useCerfaApprenti } from "../../../../hooks/useCerfa/parts/useCerfaApprenti";
 import {
   cerfaContratDateDebutContratAtom,
   cerfaContratDateFinContratAtom,
   cerfaContratRemunerationsAnnuellesAtom,
-} from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
-import { cerfaEmployeurAdresseDepartementAtom } from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+} from "../../../../hooks/useCerfa/parts/useCerfaContratAtoms";
+import { cerfaEmployeurAdresseDepartementAtom } from "../../../../hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 
 import InputCerfa from "./Input";
 import CheckEmptyFields from "./CheckEmptyFields";

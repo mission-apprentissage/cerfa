@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Collapse, Text, List, ListItem, ListIcon, Link, Flex } from "@chakra-ui/react";
-import Ribbons from "../../../../common/components/Ribbons";
+import Ribbons from "../../../Ribbons/Ribbons";
 import { ArrowRightLine, ErrorIcon } from "../../../../theme/components/icons";
 
 // eslint-disable-next-line react/display-name

@@ -12,7 +12,7 @@ import {
   convertValueToMultipleSelectOption,
   convertValueToOption,
   convertMultipleSelectOptionToValue,
-} from "../../utils/formUtils";
+} from "../../common/utils/formUtils";
 
 const setDocumentsCompletions = (typeContratApp, employeurAttestationPieces, documents) => {
   let countFields = 0;
@@ -61,7 +61,7 @@ export function useDocuments() {
   const [contratTypeContratApp, setContratTypeContratApp] = useRecoilState(cerfaContratTypeContratAppAtom);
 
   const onSubmittedEmployeurAttestationPieces = useCallback(
-    async (path, data) => {
+    async (path) => {
       try {
         if (path === "employeur.attestationPieces") {
           const newV = {

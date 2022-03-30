@@ -17,36 +17,40 @@ import {
   Flex,
   Divider,
 } from "@chakra-ui/react";
-import { useRecoilValueLoadable, useRecoilValue, useSetRecoilState } from "recoil";
-import { NavLink } from "react-router-dom";
+import {
+  useRecoilValueLoadable,
+  useRecoilValue,
+  // useSetRecoilState
+} from "recoil";
+import NavLink from "next/link";
 
-import useAuth from "../../../common/hooks/useAuth";
-import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
+import useAuth from "../../../hooks/useAuth";
+import { useCerfa } from "../../../hooks/useCerfa/useCerfa";
 import { _post } from "../../../common/httpClient";
 
-import { PdfViewer } from "../../../common/components/PdfViewer";
-import Tooltip from "../../../common/components/Tooltip";
+// import { PdfViewer } from "../../PdfViewer/PdfViewer";
+import Tooltip from "../../Tooltip/Tooltip";
 
-import { useSignatures } from "../../../common/hooks/useDossier/useSignatures";
-import { signaturesPdfLoadedAtom } from "../../../common/hooks/useDossier/signaturesAtoms";
+import { useSignatures } from "../../../hooks/useDossier/useSignatures";
+// import { signaturesPdfLoadedAtom } from "../../../hooks/useDossier/signaturesAtoms";
 import InputCerfa from "../Cerfa/components/Input";
 
-import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
+import { dossierAtom } from "../../../hooks/useDossier/dossierAtom";
 
-import { documentsCompletionAtom } from "../../../common/hooks/useDossier/documentsAtoms";
+import { documentsCompletionAtom } from "../../../hooks/useDossier/documentsAtoms";
 
-import { cerfaPartFormationCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
-import { cerfaPartEmployeurCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
-import { cerfaPartMaitresCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
-import { cerfaPartApprentiCompletionAtom } from "../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
+import { cerfaPartFormationCompletionAtom } from "../../../hooks/useCerfa/parts/useCerfaFormationAtoms";
+import { cerfaPartEmployeurCompletionAtom } from "../../../hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+import { cerfaPartMaitresCompletionAtom } from "../../../hooks/useCerfa/parts/useCerfaMaitresAtoms";
+import { cerfaPartApprentiCompletionAtom } from "../../../hooks/useCerfa/parts/useCerfaApprentiAtoms";
 import {
   cerfaPartContratCompletionAtom,
   cerfaContratDateDebutContratAtom,
   cerfaContratDateEffetAvenantAtom,
   cerfaContratTypeContratAppAtom,
-} from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+} from "../../../hooks/useCerfa/parts/useCerfaContratAtoms";
 
-import { StatusBadge } from "../../../common/components/StatusBadge";
+import { StatusBadge } from "../../StatusBadge/StatusBadge";
 
 const DdetsContainer = () => {
   const { cerfa } = useCerfa();
@@ -95,7 +99,7 @@ const DdetsContainer = () => {
 
             <Text>
               Pour toute question, consultez{" "}
-              <Link as={NavLink} to={"/assistance"} color="bluefrance">
+              <Link as={NavLink} href={"/assistance"} color="bluefrance">
                 la page &quot;Assistance&quot;
               </Link>
             </Text>
@@ -115,7 +119,7 @@ const DdetsContainer = () => {
 const ContratPdf = () => {
   let [auth] = useAuth();
   const [pdfBase64, setPdfBase64] = useState(null);
-  const setPdfLoaded = useSetRecoilState(signaturesPdfLoadedAtom);
+  // const setPdfLoaded = useSetRecoilState(signaturesPdfLoadedAtom);
   const { isLoading, cerfa } = useCerfa();
   const dossier = useRecoilValue(dossierAtom);
 
@@ -147,7 +151,7 @@ const ContratPdf = () => {
       </Heading>
       <Center mt={5}>
         {(isLoading || !pdfBase64) && <Spinner />}
-        {!isLoading && pdfBase64 && (
+        {/* {!isLoading && pdfBase64 && (
           <PdfViewer
             url={`/api/v1/cerfa/pdf/${cerfa.id}/?dossierId=${dossier._id}`}
             pdfBase64={pdfBase64}
@@ -156,7 +160,7 @@ const ContratPdf = () => {
               setPdfLoaded(true);
             }}
           />
-        )}
+        )} */}
       </Center>
     </Box>
   );

@@ -4,8 +4,8 @@ import { useDropzone } from "react-dropzone";
 import { useRecoilValue } from "recoil";
 import { _postFile, _delete } from "../../../../common/httpClient";
 import { DownloadLine, File, Bin } from "../../../../theme/components/icons";
-import { dossierAtom } from "../../../../common/hooks/useDossier/dossierAtom";
-import { useDocuments } from "../../../../common/hooks/useDossier/useDocuments";
+import { dossierAtom } from "../../../../hooks/useDossier/dossierAtom";
+import { useDocuments } from "../../../../hooks/useDossier/useDocuments";
 import { hasContextAccessTo } from "../../../../common/utils/rolesUtils";
 import queryString from "query-string";
 

@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 
 import { _post, _put } from "../../../common/httpClient";
-import useAuth from "../../../common/hooks/useAuth";
+import useAuth from "../../../hooks/useAuth";
 
 import { DownloadLine, SentPaperPlane, BallPenFill, InfoCircle } from "../../../theme/components/icons";
 
@@ -23,7 +23,7 @@ import { hasPageAccessTo, hasContextAccessTo } from "../../../common/utils/roles
 // import InfoTooltip from "../../../common/components/InfoTooltip";
 
 import { useSetRecoilState, useRecoilValue } from "recoil";
-import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
+import { dossierAtom } from "../../../hooks/useDossier/dossierAtom";
 
 const DossierFooterControls = ({
   activeStep,

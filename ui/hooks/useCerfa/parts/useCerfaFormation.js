@@ -8,7 +8,7 @@ import {
   // useState
 } from "react";
 import { DateTime } from "luxon";
-import { _post } from "../../../httpClient";
+import { _post } from "../../../common/httpClient";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import {
@@ -21,7 +21,7 @@ import {
   convertDateToValue,
   normalizeInputNumberForDb,
   doAsyncCodePostalActions,
-} from "../../../utils/formUtils";
+} from "../../../common/utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
@@ -31,7 +31,7 @@ export const CerfaFormationController = async (dossier) => {
   return {
     formation: {
       rncp: {
-        doAsyncActions: async (value, data) => {
+        doAsyncActions: async (value) => {
           try {
             const response = await _post(`/api/v1/cfdrncp`, {
               rncp: value,
@@ -138,6 +138,7 @@ export const CerfaFormationController = async (dossier) => {
       },
       dateDebutFormation: {
         doAsyncActions: async (value, data) => {
+          // eslint-disable-next-line no-undef
           await new Promise((resolve) => setTimeout(resolve, 100));
           const dateDebutFormation = DateTime.fromISO(value).setLocale("fr-FR");
           let dureeFormationCalc = 0;
@@ -200,6 +201,7 @@ export const CerfaFormationController = async (dossier) => {
       },
       dateFinFormation: {
         doAsyncActions: async (value, data) => {
+          // eslint-disable-next-line no-undef
           await new Promise((resolve) => setTimeout(resolve, 100));
           const dateFinFormation = DateTime.fromISO(value).setLocale("fr-FR");
           let dureeFormationCalc = 0;
@@ -261,7 +263,8 @@ export const CerfaFormationController = async (dossier) => {
         },
       },
       dureeFormation: {
-        doAsyncActions: async (value, data) => {
+        doAsyncActions: async (value) => {
+          // eslint-disable-next-line no-undef
           await new Promise((resolve) => setTimeout(resolve, 100));
 
           if (parseInt(value) > 9999) {

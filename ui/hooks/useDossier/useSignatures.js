@@ -12,10 +12,10 @@ import {
 } from "../useCerfa/parts/useCerfaContratAtoms";
 import { signaturesCompletionAtom, signaturesIsLoadedAtom } from "./signaturesAtoms";
 
-import { convertDateToValue, convertValueToDate } from "../../utils/formUtils";
-import { _put } from "../../httpClient";
+import { convertDateToValue, convertValueToDate } from "../../common/utils/formUtils";
+import { _put } from "../../common/httpClient";
 
-const setSignaturesCompletions = (lieuSignatureContrat, dateConclusion) => {
+const setSignaturesCompletions = (lieuSignatureContrat) => {
   let countFields = 1;
 
   let count = 0;
@@ -28,6 +28,7 @@ const setSignaturesCompletions = (lieuSignatureContrat, dateConclusion) => {
 };
 
 const doAsyncActionsDate = async (value, data) => {
+  // eslint-disable-next-line no-undef
   await new Promise((resolve) => setTimeout(resolve, 100));
 
   const dateDebutContrat = DateTime.fromISO(data.dateDebutContrat).setLocale("fr-FR");

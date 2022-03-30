@@ -30,6 +30,7 @@ const commentsC = {
 
 const hydrate = async () => {
   try {
+    // eslint-disable-next-line no-undef
     await new Promise((resolve) => setTimeout(resolve, 200)); // TODO Fetch comments
     return {
       comments: commentsC,

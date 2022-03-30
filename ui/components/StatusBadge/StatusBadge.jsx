@@ -52,7 +52,7 @@ export const StatusBadge = ({ status, text, withIcon = false, ...badgeProps }) =
       <Center>
         {withIcon && <Icon variant={variant} />}
         <Text {...(withIcon && { ml: 1, as: "span", whiteSpace: "break-spaces" })}>
-          {text ? `${text}` : DOSSIER_STATUS[status].text}
+          {text ? `${text}` : DOSSIER_STATUS[status]?.text}
         </Text>
       </Center>
     </Badge>

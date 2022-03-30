@@ -5,5 +5,5 @@ export const hasPageAccessTo = (auth, aclRef) => {
 };
 
 export const hasContextAccessTo = (context, aclRef) => {
-  return context.acl?.includes(aclRef);
+  return context?.acl?.includes(aclRef);
 };

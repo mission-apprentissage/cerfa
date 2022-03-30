@@ -31,6 +31,7 @@
     "lodash.range": "3.2.0",
     "lodash.throttle": "4.1.1",
     "luxon": "2.3.1",
+    "query-string": "7.0.1",
     "next": "12.1.0",
     "next-seo": "5.1.0",
     "react": "17.0.2",
@@ -48,6 +49,7 @@
     "react-table": "7.7.0",
     "recoil": "0.6.1",
     "socket.io-client": "4.4.1",
+    "styled-components": "5.3.3",
     "whatwg-fetch": "3.6.2",
     "yup": "0.32.11"
   },

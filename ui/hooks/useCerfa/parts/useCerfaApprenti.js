@@ -15,13 +15,13 @@ import {
   caclAgeAtDate,
   normalizeInputNumberForDb,
   doAsyncCodePostalActions,
-} from "../../../utils/formUtils";
+} from "../../../common/utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
 import * as apprentiAtoms from "./useCerfaApprentiAtoms";
-import { buildRemunerations } from "../../../utils/form/remunerationsUtils";
-import { fieldsChecker } from "../../../utils/form/fieldsCheckUtils";
+import { buildRemunerations } from "../../../common/utils/form/remunerationsUtils";
+import { fieldsChecker } from "../../../common/utils/form/fieldsCheckUtils";
 import { useCerfaContrat } from "../parts/useCerfaContrat";
 import { DateTime } from "luxon";
 
@@ -94,6 +94,7 @@ export const CerfaApprentiController = async (dossier) => {
     apprenti: {
       dateNaissance: {
         doAsyncActions: async (value, data) => {
+          // eslint-disable-next-line no-undef
           await new Promise((resolve) => setTimeout(resolve, 100));
           const dateNaissance = DateTime.fromISO(value).setLocale("fr-FR");
           const today = DateTime.now().setLocale("fr-FR");

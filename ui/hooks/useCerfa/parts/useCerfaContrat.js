@@ -5,7 +5,7 @@
 import { useCallback, useEffect } from "react";
 import { DateTime } from "luxon";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { _post } from "../../../httpClient";
+import { _post } from "../../../common/httpClient";
 
 import {
   fieldCompletionPercentage,
@@ -17,9 +17,9 @@ import {
   convertMultipleSelectOptionToValue,
   caclAgeAtDate,
   normalizeInputNumberForDb,
-} from "../../../utils/formUtils";
-import { buildRemunerations, buildRemunerationsDbValue } from "../../../utils/form/remunerationsUtils";
-import { fieldsChecker } from "../../../utils/form/fieldsCheckUtils";
+} from "../../../common/utils/formUtils";
+import { buildRemunerations, buildRemunerationsDbValue } from "../../../common/utils/form/remunerationsUtils";
+import { fieldsChecker } from "../../../common/utils/form/fieldsCheckUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
@@ -87,6 +87,7 @@ export const CerfaContratController = async (dossier) => {
     contrat: {
       dateDebutContrat: {
         doAsyncActions: async (value, data) => {
+          // eslint-disable-next-line no-undef
           await new Promise((resolve) => setTimeout(resolve, 100));
           const dateDebutContrat = DateTime.fromISO(value).setLocale("fr-FR");
           let dureeContrat = 0;
@@ -240,6 +241,7 @@ export const CerfaContratController = async (dossier) => {
       },
       dateFinContrat: {
         doAsyncActions: async (value, data) => {
+          // eslint-disable-next-line no-undef
           await new Promise((resolve) => setTimeout(resolve, 100));
           const dateFinContrat = DateTime.fromISO(value).setLocale("fr-FR");
           let dureeContrat = 0;
@@ -347,6 +349,7 @@ export const CerfaContratController = async (dossier) => {
       },
       dateEffetAvenant: {
         doAsyncActions: async (value, data) => {
+          // eslint-disable-next-line no-undef
           await new Promise((resolve) => setTimeout(resolve, 100));
           const dateEffetAvenant = DateTime.fromISO(value).setLocale("fr-FR");
           if (data.dateDebutContrat) {
@@ -384,6 +387,7 @@ export const CerfaContratController = async (dossier) => {
       },
       typeDerogation: {
         doAsyncActions: async (value, data) => {
+          // eslint-disable-next-line no-undef
           await new Promise((resolve) => setTimeout(resolve, 100));
           return {
             successed: true,
@@ -396,7 +400,8 @@ export const CerfaContratController = async (dossier) => {
         },
       },
       dureeTravailHebdoHeures: {
-        doAsyncActions: async (value, data) => {
+        doAsyncActions: async (value) => {
+          // eslint-disable-next-line no-undef
           await new Promise((resolve) => setTimeout(resolve, 100));
 
           if (parseInt(value) > 40) {
@@ -418,6 +423,7 @@ export const CerfaContratController = async (dossier) => {
       },
       dureeTravailHebdoMinutes: {
         doAsyncActions: async (value, { dureeTravailHebdoHeures }) => {
+          // eslint-disable-next-line no-undef
           await new Promise((resolve) => setTimeout(resolve, 100));
 
           if (parseInt(dureeTravailHebdoHeures) === 40) {
@@ -447,6 +453,7 @@ export const CerfaContratController = async (dossier) => {
       },
       numeroContratPrecedent: {
         doAsyncActions: async (value, { typeContratAppDbValue, employeurSiret }) => {
+          // eslint-disable-next-line no-undef
           await new Promise((resolve) => setTimeout(resolve, 100));
 
           if (employeurSiret === "") {
@@ -1489,7 +1496,7 @@ export function useCerfaContrat() {
   );
 
   const onSubmittedContratAutreAvantageEnNature = useCallback(
-    async (path, data) => {
+    async (path) => {
       try {
         if (path === "contrat.autreAvantageEnNature") {
           const newV = {

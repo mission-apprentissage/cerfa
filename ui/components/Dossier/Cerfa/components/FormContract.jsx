@@ -16,28 +16,28 @@ import {
 import { useRecoilValue } from "recoil";
 
 import { departements } from "../../../../common/constants/departements";
-import { useCerfaContrat } from "../../../../common/hooks/useCerfa/parts/useCerfaContrat";
+import { useCerfaContrat } from "../../../../hooks/useCerfa/parts/useCerfaContrat";
 import {
   cerfaApprentiDateNaissanceAtom,
   cerfaApprentiAgeAtom,
-} from "../../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
+} from "../../../../hooks/useCerfa/parts/useCerfaApprentiAtoms";
 import {
   cerfaMaitre1DateNaissanceAtom,
   cerfaMaitre2DateNaissanceAtom,
-} from "../../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
+} from "../../../../hooks/useCerfa/parts/useCerfaMaitresAtoms";
 import {
   cerfaFormationDateDebutFormationAtom,
   cerfaFormationDateFinFormationAtom,
-} from "../../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
+} from "../../../../hooks/useCerfa/parts/useCerfaFormationAtoms";
 
 import {
   cerfaEmployeurAdresseDepartementAtom,
   cerfaEmployeurSiretAtom,
-} from "../../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+} from "../../../../hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import InputCerfa from "./Input";
 import CheckEmptyFields from "./CheckEmptyFields";
 
-import Ribbons from "../../../../common/components/Ribbons";
+import Ribbons from "../../../Ribbons/Ribbons";
 import { ExternalLinkLine } from "../../../../theme/components/icons";
 
 // eslint-disable-next-line react/display-name

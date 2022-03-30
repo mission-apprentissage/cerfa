@@ -1,4 +1,6 @@
 import "../styles/globals.css";
+import "react-phone-input-2/lib/style.css";
+import "react-datepicker/dist/react-datepicker.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";

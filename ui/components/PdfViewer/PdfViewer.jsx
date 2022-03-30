@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Link, Flex, Text, Center, Spinner } from "@chakra-ui/react";
 import { Document, Page } from "react-pdf/dist/esm/entry.webpack";
 import { DownloadLine } from "../../theme/components/icons";
-import Pagination from "./Pagination";
+import Pagination from "../Pagination/Pagination";
 
 const PdfViewer = ({ url, pdfBase64, documentLoaded, showDownload = true }) => {
   const [numPages, setNumPages] = useState(null);

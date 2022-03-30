@@ -25,9 +25,9 @@ import { useRecoilValue } from "recoil";
 import { ArrowRightLine, Close, Question } from "../../../theme/components/icons";
 import { useQueries, useQueryClient, useMutation } from "react-query";
 import { _get, _post, _put, _delete } from "../../../common/httpClient";
-import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
-import { Table } from "../../../common/components/Table";
-import { NavLink } from "react-router-dom";
+import { dossierAtom } from "../../../hooks/useDossier/dossierAtom";
+import { Table } from "../../Table/Table";
+import NavLink from "next/link";
 
 function useDossiersAcces() {
   const dossier = useRecoilValue(dossierAtom);
@@ -187,7 +187,7 @@ const InviteModal = ({ title, size = "md", isOpen, onClose, onInvite, defaultRol
                 <Link
                   color="bluefrance"
                   as={NavLink}
-                  to={"/assistance/faq#31d725e0aa704c11b7b3e02534b2c971"}
+                  href={"/assistance/faq#31d725e0aa704c11b7b3e02534b2c971"}
                   isExternal
                 >
                   FAQ

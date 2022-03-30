@@ -1,13 +1,13 @@
 import React from "react";
 import { Text, Flex, UnorderedList, ListItem } from "@chakra-ui/react";
 import { _post } from "../../../common/httpClient";
-import PromptModal from "../../../common/components/Modals/PromptModal";
+import PromptModal from "../../Modals/PromptModal";
 import {
   useRecoilValue,
   // useSetRecoilState
 } from "recoil";
 
-import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
+import { dossierAtom } from "../../../hooks/useDossier/dossierAtom";
 
 import { Warning } from "../../../theme/components/icons";
 

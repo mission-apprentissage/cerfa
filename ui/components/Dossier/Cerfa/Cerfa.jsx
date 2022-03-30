@@ -10,31 +10,31 @@ import {
   Text,
   HStack,
 } from "@chakra-ui/react";
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 import { useRecoilValueLoadable } from "recoil";
-import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
+import { useCerfa } from "../../../hooks/useCerfa/useCerfa";
 import { AddFill, SubtractLine, StepWip, StepComplete } from "../../../theme/components/icons";
 
 import {
   cerfaPartFormationCompletionAtom,
   // cerfaPartFormationIsLoadingAtom,
-} from "../../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
+} from "../../../hooks/useCerfa/parts/useCerfaFormationAtoms";
 import {
   cerfaPartEmployeurCompletionAtom,
   // cerfaPartEmployeurIsLoadingAtom,
-} from "../../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+} from "../../../hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import {
   cerfaPartMaitresCompletionAtom,
   // cerfaPartMaitresIsLoadingAtom,
-} from "../../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
+} from "../../../hooks/useCerfa/parts/useCerfaMaitresAtoms";
 import {
   cerfaPartApprentiCompletionAtom,
   // cerfaPartApprentiIsLoadingAtom,
-} from "../../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
+} from "../../../hooks/useCerfa/parts/useCerfaApprentiAtoms";
 import {
   cerfaPartContratCompletionAtom,
   // cerfaPartContratIsLoadingAtom,
-} from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+} from "../../../hooks/useCerfa/parts/useCerfaContratAtoms";
 
 import FormEmployer from "./components/FormEmployer";
 import FormLearner from "./components/FormLearner";
@@ -44,7 +44,7 @@ import FormFormation from "./components/FormFormation";
 
 const useOpenAccordionToLocation = () => {
   const scrolledRef = useRef(false);
-  const { hash } = useLocation();
+  const { hash } = location;
   const hashRef = useRef(hash);
   const [accordionIndex, setAccordionIndex] = useState([]);
 
@@ -75,7 +75,7 @@ const useOpenAccordionToLocation = () => {
 
 const useScrollToLocationSub = (isExpanded) => {
   const scrolledRef = useRef(false);
-  const { hash } = useLocation();
+  const { hash } = location;
   const hashRef = useRef(hash);
 
   useEffect(() => {

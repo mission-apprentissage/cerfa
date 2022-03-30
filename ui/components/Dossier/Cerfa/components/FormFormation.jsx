@@ -2,11 +2,11 @@ import React from "react";
 import { Box, FormLabel, Flex, Center, Spinner, Text, Collapse } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 
-import { useCerfaFormation } from "../../../../common/hooks/useCerfa/parts/useCerfaFormation";
+import { useCerfaFormation } from "../../../../hooks/useCerfa/parts/useCerfaFormation";
 import {
   cerfaContratDateDebutContratAtom,
   cerfaContratDateFinContratAtom,
-} from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+} from "../../../../hooks/useCerfa/parts/useCerfaContratAtoms";
 import InputCerfa from "./Input";
 
 // eslint-disable-next-line react/display-name

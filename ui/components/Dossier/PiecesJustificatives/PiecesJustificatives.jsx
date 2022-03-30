@@ -1,11 +1,11 @@
 import React, { lazy } from "react";
 import { Box, Text, Center } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
-import { useDocuments } from "../../../common/hooks/useDossier/useDocuments";
+import { useDocuments } from "../../../hooks/useDossier/useDocuments";
 import InputCerfa from "../Cerfa/components/Input";
-import Tooltip from "../../../common/components/Tooltip";
-import { useCerfa } from "../../../common/hooks/useCerfa/useCerfa";
-import { cerfaContratTypeContratAppAtom } from "../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+import Tooltip from "../../Tooltip/Tooltip";
+import { useCerfa } from "../../../hooks/useCerfa/useCerfa";
+import { cerfaContratTypeContratAppAtom } from "../../../hooks/useCerfa/parts/useCerfaContratAtoms";
 
 const UploadFiles = lazy(() => import("./components/UploadFiles"));
 

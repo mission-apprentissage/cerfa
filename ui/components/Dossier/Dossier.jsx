@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Box, Flex, Center, Container, Spinner, useDisclosure } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps-rework-mna";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useRouter } from "next/router";
 import { useSetRecoilState, useRecoilValueLoadable, useRecoilValue } from "recoil";
 
 import useAuth from "../../hooks/useAuth";
@@ -45,11 +45,12 @@ const steps = [
 const stepByPath = ["cerfa", "documents", "signatures"];
 
 const Dossier = () => {
-  let match = useRouteMatch();
-  const history = useHistory();
+  const router = useRouter();
+  const { slug } = router.query;
+  const [paramid, paramstep] = slug;
   let [auth] = useAuth();
   const { nextStep, prevStep, activeStep, setStep } = useSteps({
-    initialStep: stepByPath.indexOf(match.params.step),
+    initialStep: stepByPath.indexOf(paramstep),
   });
   const [stepState1, setStep1State] = useState();
   const [stepState2, setStep2State] = useState();
@@ -58,7 +59,7 @@ const Dossier = () => {
   const [step2Visited, setStep2Visited] = useState(false);
   const [step3Visited, setStep3Visited] = useState(false);
 
-  const { isloaded, dossier } = useDossier(match.params.id);
+  const { isloaded, dossier } = useDossier(paramid);
   const cerfa = useRecoilValue(cerfaAtom);
   const { documentsCompletion, setDocumentsCompletion } = useDocuments();
   const [documentsComplete, setDocumentsComplete] = useState(false);
@@ -116,18 +117,18 @@ const Dossier = () => {
         setDocumentsComplete(documentsCompleteTmp);
         setSignaturesComplete(signaturesCompleteTmp);
 
-        if (match.params.step === "cerfa") {
+        if (paramstep === "cerfa") {
           if (cerfaPercentageCompletion > 0) {
             setStep1Visited(true);
             setStep2State(documentsCompleteTmp ? "success" : "error");
             setStep3State(!signaturesCompleteTmp ? "error" : "success");
           }
-        } else if (match.params.step === "documents") {
+        } else if (paramstep === "documents") {
           setStep2Visited(true);
           setStep3Visited(true);
           setStep1State(!cerfaComplete ? "error" : undefined);
           setStep3State(!signaturesCompleteTmp ? "error" : "success");
-        } else if (match.params.step === "signatures") {
+        } else if (paramstep === "signatures") {
           setStep3Visited(true);
           setStep2Visited(true);
           setStep1State(!cerfaComplete ? "error" : undefined);
@@ -143,9 +144,9 @@ const Dossier = () => {
     documentsComplete,
     documentsCompletion,
     dossier,
-    history,
+    router,
     isloaded,
-    match.params.step,
+    paramstep,
     setDocumentsCompletion,
     setSignaturesCompletion,
     setWorkspaceTitle,
@@ -190,10 +191,10 @@ const Dossier = () => {
     let newSlug = "/cerfa";
     if (nextActiveStep === 1) newSlug = "/documents";
     if (nextActiveStep === 2) newSlug = "/signatures";
-    history.replace(match.url.replace(/\/[^/]*$/, newSlug));
+    router.replace(router.asPath.replace(/\/[^/]*$/, newSlug));
 
     nextStep();
-  }, [activeStep, cerfaComplete, history, match, nextStep, stepStateSteps23]);
+  }, [activeStep, cerfaComplete, router, nextStep, stepStateSteps23]);
 
   let onClickPrevStep = useCallback(async () => {
     const nextActiveStep = activeStep - 1;
@@ -211,10 +212,10 @@ const Dossier = () => {
     let newSlug = "/cerfa";
     if (nextActiveStep === 1) newSlug = "/documents";
     if (nextActiveStep === 2) newSlug = "/signatures";
-    history.replace(match.url.replace(/\/[^/]*$/, newSlug));
+    router.replace(router.asPath.replace(/\/[^/]*$/, newSlug));
 
     prevStep();
-  }, [activeStep, cerfaComplete, history, match.url, prevStep, step1Visited, stepStateSteps23]);
+  }, [activeStep, cerfaComplete, router, prevStep, step1Visited, stepStateSteps23]);
 
   if (!isloaded)
     return (
@@ -224,7 +225,7 @@ const Dossier = () => {
     );
 
   if (!dossier) {
-    history.push("/404");
+    router.push("/404");
   }
 
   // TODO not Authorize handler
@@ -267,7 +268,7 @@ const Dossier = () => {
               let newSlug = "/cerfa";
               if (step === 1) newSlug = "/documents";
               if (step === 2) newSlug = "/signatures";
-              history.replace(match.url.replace(/\/[^/]*$/, newSlug));
+              router.replace(router.asPath.replace(/\/[^/]*$/, newSlug));
 
               return setStep(step);
             }}

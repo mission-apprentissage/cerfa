@@ -11,7 +11,7 @@ import {
   convertDateToValue,
   convertValueToOption,
   caclAgeAtDate,
-} from "../../../utils/formUtils";
+} from "../../../common/utils/formUtils";
 import { saveCerfa } from "../useCerfa";
 import { cerfaAtom } from "../cerfaAtom";
 import { dossierAtom } from "../../useDossier/dossierAtom";
@@ -39,11 +39,12 @@ export const cerfaMaitresCompletion = (res) => {
   return fieldCompletionPercentage(fieldsToKeep, countFields);
 };
 
-export const CerfaMaitresController = async (dossier) => {
+export const CerfaMaitresController = async () => {
   return {
     maitre1: {
       dateNaissance: {
         doAsyncActions: async (value, data) => {
+          // eslint-disable-next-line no-undef
           await new Promise((resolve) => setTimeout(resolve, 100));
 
           const dateNaissance = DateTime.fromISO(value).setLocale("fr-FR");
@@ -83,6 +84,7 @@ export const CerfaMaitresController = async (dossier) => {
     maitre2: {
       dateNaissance: {
         doAsyncActions: async (value, data) => {
+          // eslint-disable-next-line no-undef
           await new Promise((resolve) => setTimeout(resolve, 100));
 
           const dateNaissance = DateTime.fromISO(value).setLocale("fr-FR");
@@ -326,7 +328,7 @@ export function useCerfaMaitres() {
   );
 
   const onSubmittedEmployeurAttestationEligibilite = useCallback(
-    async (path, data) => {
+    async (path) => {
       try {
         if (path === "employeur.attestationEligibilite") {
           const newV = {

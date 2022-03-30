@@ -899,7 +899,7 @@ const InputCerfa = React.memo(
             <Box>
               <InfoTooltip
                 description={field?.description}
-                example={field?.example}
+                // example={field?.example}
                 label={field?.label}
                 history={field?.history}
                 noHistory={noHistory}

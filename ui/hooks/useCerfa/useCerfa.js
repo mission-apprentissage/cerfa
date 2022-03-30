@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { _get, _put } from "../../httpClient";
+import { _get, _put } from "../../common/httpClient";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useQuery, useQueryClient } from "react-query";
 import { dossierAtom } from "../useDossier/dossierAtom";
@@ -270,6 +270,7 @@ export function useCerfa() {
         setCerfaContrat(res);
       }
 
+      // eslint-disable-next-line no-undef
       return Promise.resolve(res);
     },
     {
