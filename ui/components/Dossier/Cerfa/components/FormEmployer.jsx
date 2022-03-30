@@ -15,7 +15,8 @@ import {
 import InputCerfa from "./Input";
 import CheckEmptyFields from "./CheckEmptyFields";
 
-const FormEmployer = React.memo(({ onFetched }) => {
+// eslint-disable-next-line react/display-name
+const FormEmployer = React.memo(() => {
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
   const dateFinContrat = useRecoilValue(cerfaContratDateFinContratAtom);
   const remunerationsAnnuelles = useRecoilValue(cerfaContratRemunerationsAnnuellesAtom);
@@ -110,7 +111,7 @@ const FormEmployer = React.memo(({ onFetched }) => {
             onSubmittedField={onSubmittedEmployeurDenomination}
           />
           <FormLabel fontWeight={700} my={3}>
-            Adresse de l'établissement d'exécution du contrat :
+            Adresse de l&lsquo;établissement d&lsquo;exécution du contrat :
           </FormLabel>
           <InputCerfa
             path="employeur.adresse.numero"

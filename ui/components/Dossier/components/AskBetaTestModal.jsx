@@ -5,7 +5,7 @@ import useAuth from "../../../common/hooks/useAuth";
 import { betaVersion, BetaFeatures } from "../../../common/components/BetaFeatures";
 import PromptModal from "../../../common/components/Modals/PromptModal";
 
-export default () => {
+const AskBetaTestModal = () => {
   let [auth, setAuth] = useAuth();
   const betaModal = useDisclosure({ defaultIsOpen: auth.beta === null });
 
@@ -38,7 +38,7 @@ export default () => {
           bgOverlay="rgba(0, 0, 0, 0.28)"
         >
           <Text mb={1}>
-            Souhaitez-vous participer à l'amélioration du service, en testant de nouvelles fonctionnalités ?
+            Souhaitez-vous participer à l&apos;amélioration du service, en testant de nouvelles fonctionnalités ?
           </Text>
           <Text>Cette activation vous donnera accès à :</Text>
           <BetaFeatures borderColor={"dgalt"} borderWidth={1} px={4} py={3} maxH="30vh" my={3} />
@@ -48,3 +48,4 @@ export default () => {
     </>
   );
 };
+export default AskBetaTestModal;

@@ -13,6 +13,7 @@ import { cerfaEmployeurAdresseDepartementAtom } from "../../../../common/hooks/u
 import InputCerfa from "./Input";
 import CheckEmptyFields from "./CheckEmptyFields";
 
+// eslint-disable-next-line react/display-name
 const FormLearner = React.memo(() => {
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
   const dateFinContrat = useRecoilValue(cerfaContratDateFinContratAtom);
@@ -131,7 +132,7 @@ const FormLearner = React.memo(() => {
           />
           {/* <InputCerfa path="apprenti.nir" field={nir} type="text" mt="2" /> */}
           <FormLabel fontWeight="bold" my={3}>
-            Adresse de l'apprenti(e) :
+            Adresse de l&lsquo;apprenti(e) :
           </FormLabel>
           <InputCerfa
             path="apprenti.adresse.numero"

@@ -6,6 +6,7 @@ import { useCerfaMaitres } from "../../../../common/hooks/useCerfa/parts/useCerf
 import { cerfaContratDateDebutContratAtom } from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 import InputCerfa from "./Input";
 
+// eslint-disable-next-line react/display-name
 const FormLearningMaster = React.memo(() => {
   const dateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
   const {
@@ -41,7 +42,7 @@ const FormLearningMaster = React.memo(() => {
     <Box>
       <Flex>
         <Box w="55%" flex="1">
-          <FormLabel fontWeight={700}>Maître d'apprentissage n°1 </FormLabel>
+          <FormLabel fontWeight={700}>Maître d&lsquo;apprentissage n°1 </FormLabel>
           <InputCerfa
             path="maitre1.nom"
             field={maitre1Nom}
@@ -70,7 +71,7 @@ const FormLearningMaster = React.memo(() => {
           />
         </Box>
         <Box w="55%" flex="1" ml={5}>
-          <FormLabel fontWeight={700}>Maître d'apprentissage n°2 (Optionnel)</FormLabel>
+          <FormLabel fontWeight={700}>Maître d&lsquo;apprentissage n°2 (Optionnel)</FormLabel>
           <InputCerfa
             path="maitre2.nom"
             field={maitre2Nom}

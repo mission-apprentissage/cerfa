@@ -2,7 +2,7 @@ import React from "react";
 import { Text, Link } from "@chakra-ui/react";
 import AcknowledgeModal from "../../../common/components/Modals/AcknowledgeModal";
 
-export default ({ isOpen, onClose, onAcknowledgement }) => {
+const IsPrivateEmployeurModal = ({ isOpen, onClose, onAcknowledgement }) => {
   return (
     <AcknowledgeModal
       title="Vous êtes employeur privé"
@@ -18,8 +18,9 @@ export default ({ isOpen, onClose, onAcknowledgement }) => {
         <Link href={"/"} color={"bluefrance"} textDecoration={"underline"} isExternal>
           la fiche pratique
         </Link>{" "}
-        pour établir un contrat d'apprentissage en tant qu'employeur privé.
+        pour établir un contrat d&apos;apprentissage en tant qu&apos;employeur privé.
       </Text>
     </AcknowledgeModal>
   );
 };
+export default IsPrivateEmployeurModal;

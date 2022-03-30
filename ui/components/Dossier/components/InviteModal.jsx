@@ -56,6 +56,7 @@ function useDossiersAcces() {
   };
 }
 
+// eslint-disable-next-line no-unused-vars
 const InviteModal = ({ title, size = "md", isOpen, onClose, onInvite, defaultRoleValue = undefined }) => {
   const queryClient = useQueryClient();
   const dossier = useRecoilValue(dossierAtom);
@@ -105,6 +106,7 @@ const InviteModal = ({ title, size = "md", isOpen, onClose, onInvite, defaultRol
           console.error(e);
         }
       }
+      // eslint-disable-next-line no-undef
       return Promise.reject();
     },
     {
@@ -122,6 +124,7 @@ const InviteModal = ({ title, size = "md", isOpen, onClose, onInvite, defaultRol
       roleId: Yup.string().required("Le rôle est obligatoire"),
     }),
     onSubmit: ({ userEmail, roleId }) => {
+      // eslint-disable-next-line no-undef
       return new Promise(async (resolve) => {
         await onAddContributor.mutate({ userEmail, roleId });
         resetForm();

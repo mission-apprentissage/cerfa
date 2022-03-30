@@ -4,7 +4,7 @@ import { Step, Steps, useSteps } from "chakra-ui-steps-rework-mna";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { useSetRecoilState, useRecoilValueLoadable, useRecoilValue } from "recoil";
 
-import useAuth from "../../common/hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 import { hasPageAccessTo } from "../../common/utils/rolesUtils";
 
 import Cerfa from "./Cerfa/Cerfa";
@@ -19,22 +19,22 @@ import IsPrivateEmployeurModal from "./components/IsPrivateEmployeurModal";
 import FinalizeModal from "./components/FinalizeModal";
 import ESignatureModal from "./components/ESignatureModal";
 
-import { useDossier } from "../../common/hooks/useDossier/useDossier";
-import { useDocuments } from "../../common/hooks/useDossier/useDocuments";
-import { useSignatures } from "../../common/hooks/useDossier/useSignatures";
-import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
-import { cerfaAtom } from "../../common/hooks/useCerfa/cerfaAtom";
+import { useDossier } from "../../hooks/useDossier/useDossier";
+import { useDocuments } from "../../hooks/useDossier/useDocuments";
+import { useSignatures } from "../../hooks/useDossier/useSignatures";
+import { workspaceTitleAtom } from "../../hooks/workspaceAtoms";
+import { cerfaAtom } from "../../hooks/useCerfa/cerfaAtom";
 import { StepWip, TickBubble } from "../../theme/components/icons";
 
-import { signaturesPdfLoadedAtom } from "../../common/hooks/useDossier/signaturesAtoms";
-import { cerfaPartFormationCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
+import { signaturesPdfLoadedAtom } from "../../hooks/useDossier/signaturesAtoms";
+import { cerfaPartFormationCompletionAtom } from "../../hooks/useCerfa/parts/useCerfaFormationAtoms";
 import {
   cerfaPartEmployeurCompletionAtom,
   cerfaEmployeurPrivePublicAtom,
-} from "../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
-import { cerfaPartMaitresCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
-import { cerfaPartApprentiCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
-import { cerfaPartContratCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+} from "../../hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+import { cerfaPartMaitresCompletionAtom } from "../../hooks/useCerfa/parts/useCerfaMaitresAtoms";
+import { cerfaPartApprentiCompletionAtom } from "../../hooks/useCerfa/parts/useCerfaApprentiAtoms";
+import { cerfaPartContratCompletionAtom } from "../../hooks/useCerfa/parts/useCerfaContratAtoms";
 
 const steps = [
   { label: "Cerfa", description: "Renseignez les informations" },
@@ -44,7 +44,7 @@ const steps = [
 
 const stepByPath = ["cerfa", "documents", "signatures"];
 
-export default () => {
+const Dossier = () => {
   let match = useRouteMatch();
   const history = useHistory();
   let [auth] = useAuth();
@@ -323,3 +323,5 @@ export default () => {
     </Box>
   );
 };
+
+export default Dossier;

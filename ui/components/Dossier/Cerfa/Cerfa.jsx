@@ -110,7 +110,8 @@ const useScrollToLocationSub = (isExpanded) => {
   }, [hash, isExpanded]);
 };
 
-const AccordionItemChild = React.memo(({ title, Component, completion, id, isExpanded }) => {
+// eslint-disable-next-line react/display-name
+const AccordionItemChild = React.memo(({ title, Component, completion, isExpanded }) => {
   useScrollToLocationSub(isExpanded);
   return (
     <>
@@ -134,7 +135,8 @@ const AccordionItemChild = React.memo(({ title, Component, completion, id, isExp
   );
 });
 
-export default React.memo(() => {
+// eslint-disable-next-line react/display-name
+const Cerfa = React.memo(() => {
   const { isLoading, isFetching } = useCerfa();
   const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
   const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
@@ -216,3 +218,5 @@ export default React.memo(() => {
     </Accordion>
   );
 });
+
+export default Cerfa;

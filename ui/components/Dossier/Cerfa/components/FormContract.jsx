@@ -40,6 +40,7 @@ import CheckEmptyFields from "./CheckEmptyFields";
 import Ribbons from "../../../../common/components/Ribbons";
 import { ExternalLinkLine } from "../../../../theme/components/icons";
 
+// eslint-disable-next-line react/display-name
 const FormContract = React.memo(() => {
   const maitre1DateNaissance = useRecoilValue(cerfaMaitre1DateNaissanceAtom);
   const maitre2DateNaissance = useRecoilValue(cerfaMaitre2DateNaissanceAtom);
@@ -169,11 +170,11 @@ const FormContract = React.memo(() => {
             <Text as={"span"} fontWeight="400" fontStyle="italic" textStyle="sm" opacity={0.8}>
               Pour appliquer une dérogation, merci de renseigner les champs:{" "}
               <Text as={"span"} textDecoration={apprentiDateNaissance.value === "" ? "underline tomato" : "none"}>
-                la date de naissance de l'apprenti
+                la date de naissance de l&lsquo;apprenti
               </Text>
               ,{" "}
               <Text as={"span"} textDecoration={dateDebutContrat.value === "" ? "underline tomato" : "none"}>
-                la date de début d'exécution du contrat
+                la date de début d&lsquo;exécution du contrat
               </Text>
             </Text>
           )}
@@ -323,7 +324,7 @@ const FormContract = React.memo(() => {
             Le calcul de la rémunération est généré automatiquement à partir des informations <br />
             que vous avez remplies. <br />
             <strong>
-              Le calcul indique la rémunération minimale légale, l'employeur pouvant décider d'attribuer
+              Le calcul indique la rémunération minimale légale, l&lsquo;employeur pouvant décider d&lsquo;attribuer
               <br /> une rémunération plus avantageuse.
             </strong>
           </Text>
@@ -333,8 +334,8 @@ const FormContract = React.memo(() => {
             <strong>Attention : Ne tient pas encore compte de situations spécifiques</strong>
             <br />
             <Text as="span" textStyle="xs" fontStyle="italic">
-              Exemples : rémunération du contrat d'apprentissage préparant à une licence professionnelle, majorations{" "}
-              <br />
+              Exemples : rémunération du contrat d&lsquo;apprentissage préparant à une licence professionnelle,
+              majorations <br />
             </Text>
             <Text as="span" textStyle="xs">
               En savoir plus sur les situations spécifiques sur le
@@ -345,7 +346,7 @@ const FormContract = React.memo(() => {
                 href="https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/contrat-apprentissage#salaire"
               >
                 {" "}
-                site du Ministère du Travail, de l'Emploi et de l'Insertion
+                site du Ministère du Travail, de l&lsquo;Emploi et de l&lsquo;Insertion
                 <ExternalLinkLine w={"0.55rem"} h={"0.55rem"} mb={"0.125rem"} ml={1} />
               </Link>
             </Text>
@@ -358,8 +359,8 @@ const FormContract = React.memo(() => {
             employeurAdresseDepartement.value === "") && (
             <VStack alignItems="flex-start" color="mgalt">
               <Text>
-                L'outil détermine les périodes de rémunération et s'assure du respect du minimum légale pour chacune des
-                périodes, à partir des éléments renseignés.
+                L&lsquo;outil détermine les périodes de rémunération et s&lsquo;assure du respect du minimum légale pour
+                chacune des périodes, à partir des éléments renseignés.
               </Text>
               <UnorderedList ml="30px !important">
                 <ListItem
@@ -367,14 +368,14 @@ const FormContract = React.memo(() => {
                   fontStyle="italic"
                   color={apprentiDateNaissance.value === "" ? "error" : "green.500"}
                 >
-                  La date de naissance de l'apprenti
+                  La date de naissance de l&lsquo;apprenti
                 </ListItem>
                 <ListItem
                   fontWeight="400"
                   fontStyle="italic"
                   color={dateDebutContrat.value === "" ? "error" : "green.500"}
                 >
-                  La date de début d'exécution du contrat
+                  La date de début d&lsquo;exécution du contrat
                 </ListItem>
                 <ListItem
                   fontWeight="400"
@@ -388,7 +389,7 @@ const FormContract = React.memo(() => {
                   fontStyle="italic"
                   color={employeurAdresseDepartement.value === "" ? "error" : "green.500"}
                 >
-                  Le département de l'employeur
+                  Le département de l&lsquo;employeur
                 </ListItem>
               </UnorderedList>
             </VStack>
@@ -521,7 +522,7 @@ const FormContract = React.memo(() => {
                 <Text>
                   Calculé sur la base du SMIC {smic?.annee} de {smic?.selectedSmic}€ mensuel (
                   {smic?.heuresHebdomadaires}
-                  €/h) [Date d'entrée en vigueur {smic?.dateEntreeEnVigueur}]
+                  €/h) [Date d&lsquo;entrée en vigueur {smic?.dateEntreeEnVigueur}]
                 </Text>
               )}
               {smic?.isSmicException && (
@@ -530,7 +531,7 @@ const FormContract = React.memo(() => {
                   <strong>{smic?.exceptions[employeurAdresseDepartement.value]?.nomDepartement}</strong> de{" "}
                   {smic?.selectedSmic}€ mensuel (
                   {smic?.exceptions[employeurAdresseDepartement.value]?.heuresHebdomadaires}
-                  €/h) [Date d'entrée en vigueur {smic?.dateEntreeEnVigueur}]
+                  €/h) [Date d&lsquo;entrée en vigueur {smic?.dateEntreeEnVigueur}]
                 </Text>
               )}
             </Flex>
@@ -560,7 +561,8 @@ const FormContract = React.memo(() => {
             </FormLabel>
             {missingFieldAvantages && (
               <Text color="flaterror">
-                Si l'apprenti(e) bénéficie d'avantages en nature, veuillez saisir au moins un des champs ci-dessous.
+                Si l&lsquo;apprenti(e) bénéficie d&lsquo;avantages en nature, veuillez saisir au moins un des champs
+                ci-dessous.
               </Text>
             )}
             <Box

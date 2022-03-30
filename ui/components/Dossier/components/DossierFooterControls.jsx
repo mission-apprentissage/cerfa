@@ -25,7 +25,7 @@ import { hasPageAccessTo, hasContextAccessTo } from "../../../common/utils/roles
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
 
-export default ({
+const DossierFooterControls = ({
   activeStep,
   steps,
   onClickPrevStep,
@@ -73,19 +73,16 @@ export default ({
     }
   }, [dossier._id, toast]);
 
-  let unpublishClicked = useCallback(
-    async (answer) => {
-      try {
-        await _put(`/api/v1/dossier/entity/${dossier._id}/unpublish`, {
-          dossierId: dossier._id,
-        });
-        window.location.reload();
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [dossier._id]
-  );
+  let unpublishClicked = useCallback(async () => {
+    try {
+      await _put(`/api/v1/dossier/entity/${dossier._id}/unpublish`, {
+        dossierId: dossier._id,
+      });
+      window.location.reload();
+    } catch (e) {
+      console.error(e);
+    }
+  }, [dossier._id]);
 
   const buttonDownloadStyleProps = useMemo(
     () => ({
@@ -158,7 +155,7 @@ export default ({
               variant="primary"
               isDisabled={employeurPrivePublic?.contents?.value === "Employeur privé"}
             >
-              Passer à l'étape suivante
+              Passer à l&apos;étape suivante
             </Button>
           )}
           {activeStep === steps.length - 1 && dossier.draft && (
@@ -200,8 +197,10 @@ export default ({
                     <OrderedList>
                       <ListItem>Ajoutez les signataires</ListItem>
                       <ListItem>Ils seront invités par courriel à signer via Yousign</ListItem>
-                      <ListItem>Suivez l'évolution en temps réel</ListItem>
-                      <ListItem>Transmission automatique au service en charge de l'instruction du dossier</ListItem>
+                      <ListItem>Suivez l&apos;évolution en temps réel</ListItem>
+                      <ListItem>
+                        Transmission automatique au service en charge de l&apos;instruction du dossier
+                      </ListItem>
                     </OrderedList>
                     <Text color="bluefrance" py={5}>
                       <InfoCircle mt={"-0.2rem"} w="20px" h="20px" /> Vous serez avertis lorsque cette fonctionnalité
@@ -357,3 +356,5 @@ export default ({
     </>
   );
 };
+
+export default DossierFooterControls;

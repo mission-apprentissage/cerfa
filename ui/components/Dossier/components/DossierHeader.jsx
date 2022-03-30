@@ -9,7 +9,7 @@ import { InviteModal } from "./InviteModal";
 
 import { AvatarPlus } from "../../../theme/components/icons";
 
-export default ({ dossier }) => {
+const DossierHeader = ({ dossier }) => {
   const inviteModal = useDisclosure();
   return (
     <Flex mt={6} flexDirection="column">
@@ -49,3 +49,4 @@ export default ({ dossier }) => {
     </Flex>
   );
 };
+export default DossierHeader;

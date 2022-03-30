@@ -79,7 +79,7 @@ const DdetsContainer = () => {
         <>
           <Box>
             <Text fontWeight="bold" mb={5}>
-              Ce dossier est finalisé, toute modification devra faire l'objet d'un avenant.
+              Ce dossier est finalisé, toute modification devra faire l&apos;objet d&apos;un avenant.
               <br />
             </Text>
             <Text>Vos prochaines étapes :</Text>
@@ -90,13 +90,13 @@ const DdetsContainer = () => {
                 {ddets.DDETS}
               </ListItem>
 
-              <ListItem>Suivez l'avancement de votre dossier depuis votre espace</ListItem>
+              <ListItem>Suivez l&apos;avancement de votre dossier depuis votre espace</ListItem>
             </OrderedList>
 
             <Text>
               Pour toute question, consultez{" "}
               <Link as={NavLink} to={"/assistance"} color="bluefrance">
-                la page "Assistance"
+                la page &quot;Assistance&quot;
               </Link>
             </Text>
             {ddets["Informations_complementaires"] && (
@@ -322,14 +322,14 @@ const SignatairesForm = () => {
         <Divider />
         {apprenti && (
           <Stack mb={5} mt={6}>
-            <Text fontWeight="bold">Pour l'apprenti(e) :</Text>
+            <Text fontWeight="bold">Pour l&apos;apprenti(e) :</Text>
             <SignataireLineForm signataire={apprenti} type="apprenti" />
           </Stack>
         )}
         <Divider />
         {legal && (
           <Stack mt={8}>
-            <Text fontWeight="bold">Pour le représentant légal de l'apprenti(e) :</Text>
+            <Text fontWeight="bold">Pour le représentant légal de l&apos;apprenti(e) :</Text>
             <SignataireLineForm signataire={legal} type="legal" />
           </Stack>
         )}
@@ -338,7 +338,7 @@ const SignatairesForm = () => {
   );
 };
 
-export default () => {
+const Signatures = () => {
   const dossier = useRecoilValue(dossierAtom);
   useCerfa();
   const {
@@ -501,3 +501,4 @@ export default () => {
     </Box>
   );
 };
+export default Signatures;

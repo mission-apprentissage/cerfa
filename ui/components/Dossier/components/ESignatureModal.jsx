@@ -11,7 +11,7 @@ import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
 
 import { Warning } from "../../../theme/components/icons";
 
-export default ({ ...modal }) => {
+const ESignatureModal = ({ ...modal }) => {
   const dossier = useRecoilValue(dossierAtom);
   // const setDossier = useSetRecoilState(dossierAtom);
   const onSignClicked = async () => {
@@ -54,10 +54,11 @@ export default ({ ...modal }) => {
           </ListItem>
         </UnorderedList>
         <Text mb={1} mt={5}>
-          La signature électronique est réalisée via l'outil Yousgin. <br />
+          La signature électronique est réalisée via l&apos;outil Yousgin. <br />
           Une fois la procedure de signature déclenchée, vous ne pourrez plus changer les informations des signataires.
         </Text>
       </PromptModal>
     </>
   );
 };
+export default ESignatureModal;

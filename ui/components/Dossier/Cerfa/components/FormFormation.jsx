@@ -9,7 +9,8 @@ import {
 } from "../../../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
 import InputCerfa from "./Input";
 
-const FormFormation = React.memo((props) => {
+// eslint-disable-next-line react/display-name
+const FormFormation = React.memo(() => {
   const contratDateDebutContrat = useRecoilValue(cerfaContratDateDebutContratAtom);
   const contratDateFinContrat = useRecoilValue(cerfaContratDateFinContratAtom);
   const {

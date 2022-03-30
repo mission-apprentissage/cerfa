@@ -9,6 +9,7 @@ const useWebSocketSubscription = () => {
   const queryClient = useQueryClient();
   let match = useRouteMatch();
 
+  // eslint-disable-next-line no-undef
   const { data: liveUsers } = useQuery("dossier:live_users", () => Promise.resolve([]), {
     refetchOnWindowFocus: false,
   });
@@ -28,6 +29,7 @@ const useWebSocketSubscription = () => {
 
     socket.on("dossier:live_users", async (payload) => {
       // console.log("event received", payload); // Received once
+      // eslint-disable-next-line no-unused-vars
       queryClient.setQueryData("dossier:live_users", (oldData) => payload);
     });
 
@@ -40,7 +42,8 @@ const useWebSocketSubscription = () => {
 };
 
 // TODO @antoine why double rendering when receiveing a message (the event is received once) ??
-export default React.memo(() => {
+// eslint-disable-next-line react/display-name
+const LivePeopleAvatar = React.memo(() => {
   const { liveUsers } = useWebSocketSubscription();
 
   return (
@@ -55,3 +58,4 @@ export default React.memo(() => {
     </AvatarGroup>
   );
 });
+export default LivePeopleAvatar;

@@ -3,6 +3,7 @@ import { Box, Button, Collapse, Text, List, ListItem, ListIcon, Link, Flex } fro
 import Ribbons from "../../../../common/components/Ribbons";
 import { ArrowRightLine, ErrorIcon } from "../../../../theme/components/icons";
 
+// eslint-disable-next-line react/display-name
 const CheckEmptyFields = React.memo(({ validation, fieldsErrored, resetCheckFields }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

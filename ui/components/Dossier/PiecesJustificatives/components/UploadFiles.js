@@ -40,7 +40,7 @@ function formatBytes(bytes, decimals = 2) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 }
 
-export default ({ title, onUploadSuccessed, typeDocument }) => {
+const UploadFiles = ({ title, typeDocument }) => {
   const dossier = useRecoilValue(dossierAtom);
   const toast = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -191,3 +191,4 @@ export default ({ title, onUploadSuccessed, typeDocument }) => {
     </>
   );
 };
+export default UploadFiles;

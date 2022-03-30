@@ -3,20 +3,17 @@ import { Text } from "@chakra-ui/react";
 import { _put } from "../../../common/httpClient";
 import PromptModal from "../../../common/components/Modals/PromptModal";
 
-export default ({ dossier, ...modal }) => {
-  let onReplyClicked = useCallback(
-    async (answer) => {
-      try {
-        await _put(`/api/v1/dossier/entity/${dossier._id}/publish`, {
-          dossierId: dossier._id,
-        });
-        window.location.replace(window.location.pathname.replace(/\/[^/]*$/, "/signatures"));
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [dossier._id]
-  );
+const FinalizeModal = ({ dossier, ...modal }) => {
+  let onReplyClicked = useCallback(async () => {
+    try {
+      await _put(`/api/v1/dossier/entity/${dossier._id}/publish`, {
+        dossierId: dossier._id,
+      });
+      window.location.replace(window.location.pathname.replace(/\/[^/]*$/, "/signatures"));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [dossier._id]);
 
   return (
     <>
@@ -36,9 +33,9 @@ export default ({ dossier, ...modal }) => {
         okText={"Oui, passer au téléchargement"}
         koText={"Non, continuer l'édition"}
       >
-        <Text mt={3}>Cette opération clôturera l'édition de ce dossier :</Text>
+        <Text mt={3}>Cette opération clôturera l&apos;édition de ce dossier :</Text>
         <Text mt={2}>
-          <strong>toute modification ultérieure devra faire l'objet d'un avenant.</strong>
+          <strong>toute modification ultérieure devra faire l&apos;objet d&apos;un avenant.</strong>
         </Text>
 
         <Text mt={5} fontStyle="italic">
@@ -48,3 +45,4 @@ export default ({ dossier, ...modal }) => {
     </>
   );
 };
+export default FinalizeModal;

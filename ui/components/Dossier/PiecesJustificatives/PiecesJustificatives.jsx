@@ -9,7 +9,7 @@ import { cerfaContratTypeContratAppAtom } from "../../../common/hooks/useCerfa/p
 
 const UploadFiles = lazy(() => import("./components/UploadFiles"));
 
-export default () => {
+const PiecesJustificatives = () => {
   const typeContratApp = useRecoilValue(cerfaContratTypeContratAppAtom);
   useCerfa();
   const { isRequired, employeurAttestationPieces, onSubmittedEmployeurAttestationPieces } = useDocuments();
@@ -52,3 +52,5 @@ export default () => {
   );
 };
 // <UploadFiles title="Convention d'aménagement de durée" typeDocument="CONVENTION_REDUCTION_DUREE" />
+
+export default PiecesJustificatives;
