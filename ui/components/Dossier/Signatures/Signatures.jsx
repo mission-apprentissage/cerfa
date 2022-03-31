@@ -17,22 +17,17 @@ import {
   Flex,
   Divider,
 } from "@chakra-ui/react";
-import {
-  useRecoilValueLoadable,
-  useRecoilValue,
-  // useSetRecoilState
-} from "recoil";
+import { useRecoilValueLoadable, useRecoilValue, useSetRecoilState } from "recoil";
 import NavLink from "next/link";
 
 import useAuth from "../../../hooks/useAuth";
 import { useCerfa } from "../../../hooks/useCerfa/useCerfa";
 import { _post } from "../../../common/httpClient";
 
-// import { PdfViewer } from "../../PdfViewer/PdfViewer";
 import Tooltip from "../../Tooltip/Tooltip";
 
 import { useSignatures } from "../../../hooks/useDossier/useSignatures";
-// import { signaturesPdfLoadedAtom } from "../../../hooks/useDossier/signaturesAtoms";
+import { signaturesPdfLoadedAtom } from "../../../hooks/useDossier/signaturesAtoms";
 import InputCerfa from "../Cerfa/components/Input";
 
 import { dossierAtom } from "../../../hooks/useDossier/dossierAtom";
@@ -51,6 +46,12 @@ import {
 } from "../../../hooks/useCerfa/parts/useCerfaContratAtoms";
 
 import { StatusBadge } from "../../StatusBadge/StatusBadge";
+
+import dynamic from "next/dynamic";
+
+const PdfViewer = dynamic(() => import("../../PdfViewer/PdfViewer"), {
+  ssr: false,
+});
 
 const DdetsContainer = () => {
   const { cerfa } = useCerfa();
@@ -119,7 +120,7 @@ const DdetsContainer = () => {
 const ContratPdf = () => {
   let [auth] = useAuth();
   const [pdfBase64, setPdfBase64] = useState(null);
-  // const setPdfLoaded = useSetRecoilState(signaturesPdfLoadedAtom);
+  const setPdfLoaded = useSetRecoilState(signaturesPdfLoadedAtom);
   const { isLoading, cerfa } = useCerfa();
   const dossier = useRecoilValue(dossierAtom);
 
@@ -151,7 +152,7 @@ const ContratPdf = () => {
       </Heading>
       <Center mt={5}>
         {(isLoading || !pdfBase64) && <Spinner />}
-        {/* {!isLoading && pdfBase64 && (
+        {!isLoading && pdfBase64 && (
           <PdfViewer
             url={`/api/v1/cerfa/pdf/${cerfa.id}/?dossierId=${dossier._id}`}
             pdfBase64={pdfBase64}
@@ -160,7 +161,7 @@ const ContratPdf = () => {
               setPdfLoaded(true);
             }}
           />
-        )} */}
+        )}
       </Center>
     </Box>
   );
