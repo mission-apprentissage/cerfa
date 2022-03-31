@@ -60,7 +60,7 @@
     "./server/*.{js,jsx}": [
       "eslint --cache --fix ./server/src ./server/tests"
     ],
-    "./ui/*.{js,jsx}": [
+    "./ui/*.{jsx}": [
       "yarn --cwd ui lint"
     ],
     "*.{js,jsx}": [
