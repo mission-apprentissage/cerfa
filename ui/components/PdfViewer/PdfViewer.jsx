@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { Box, Link, Flex, Text, Center, Spinner } from "@chakra-ui/react";
-import { Document, Page } from "react-pdf/dist/esm/entry.webpack";
 import { DownloadLine } from "../../theme/components/icons";
 import Pagination from "../Pagination/Pagination";
+
+import { Document, Page, pdfjs } from "react-pdf";
+import workerSrc from "../../pdf-worker";
+
+pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
 
 const PdfViewer = ({ url, pdfBase64, documentLoaded, showDownload = true }) => {
   const [numPages, setNumPages] = useState(null);
@@ -61,4 +65,4 @@ const PdfViewer = ({ url, pdfBase64, documentLoaded, showDownload = true }) => {
   );
 };
 
-export { PdfViewer };
+export default PdfViewer;
