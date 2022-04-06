@@ -1,49 +1,136 @@
 import { Input as ChackraInput } from "@chakra-ui/react";
-import {
-  Center,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  HStack,
-  InputGroup,
-  InputRightElement,
-  Spinner,
-} from "@chakra-ui/react";
-import React from "react";
-import { LockFill } from "../../../../../theme/components/icons";
+
+import React, { useMemo, useRef } from "react";
+import { InputWrapper } from "./InputWrapper";
+import { IMask, IMaskMixin } from "react-imask";
+
+const getVariantProp = (props) => {
+  if (props.success) return { variant: "valid" };
+};
 
 export const TextInput = (props) => {
-  const { name, onChange, error, value, success, loading, locked } = props;
+  const { name, onChange, error, example, description, locked, fieldType, mask, maskBlocks } = props;
+  const value = props.value + "";
+
+  const handleChange = (e) => {
+    const val = e.target.value;
+    if (fieldType === "number") {
+      onChange(val !== "" ? parseInt(val) : "");
+      return;
+    }
+    onChange(val);
+  };
+
   return (
-    <CommonInput {...props}>
-      <ChackraInput
-        isInvalid={!!error}
-        name={name}
-        disabled={locked}
-        onChange={(e) => onChange(e.target.value)}
-        value={value}
-        placeholder={name}
-      />
-    </CommonInput>
+    <InputWrapper {...props}>
+      {mask ? (
+        <MaskedInput
+          {...getVariantProp(props)}
+          isInvalid={!!error}
+          name={name.replaceAll(".", "_")}
+          type={fieldType}
+          disabled={locked}
+          onChange={handleChange}
+          value={value}
+          placeholder={example ? `Exemple : ${example}` : description}
+          mask={mask}
+          maskBlocks={maskBlocks}
+        />
+      ) : (
+        <ChackraInput
+          {...getVariantProp(props)}
+          isInvalid={!!error}
+          name={name.replaceAll(".", "_")}
+          type={fieldType}
+          disabled={locked}
+          onChange={handleChange}
+          value={value}
+          placeholder={example ? `Exemple : ${example}` : description}
+        />
+      )}
+    </InputWrapper>
   );
 };
 
-const CommonInput = ({ name, error, success, loading = false, locked, children, label = "", isRequired = false }) => (
-  <FormControl isRequired={isRequired} isInvalid={!!error} mt={2}>
-    <FormLabel color={locked ? "disablegrey" : "labelgrey"}>{label}</FormLabel>
-    <HStack>
-      <InputGroup id={`${name}_group_input`}>
-        {children}
-        <InputRightElement
-          children={
-            <Center w="40px" h="40px" ml={"0 !important"}>
-              {loading && <Spinner />}
-              {locked && <LockFill color={"disablegrey"} boxSize="4" />}
-            </Center>
-          }
-        />
-      </InputGroup>
-    </HStack>
-    {error && <FormErrorMessage>{error}</FormErrorMessage>}
-  </FormControl>
-);
+const MaskedInput = (props) => {
+  const { value, precision, min, onChange, mask, maskBlocks, unmask, placeholder, name, disabled } = props;
+  const inputRef = useRef(null);
+
+  let blocks = useMemo(() => {
+    return maskBlocks?.reduce((acc, item) => {
+      if (item.mask === "MaskedRange")
+        acc[item.name] = {
+          mask: IMask.MaskedRange,
+          ...(item.placeholderChar ? { placeholderChar: item.placeholderChar } : {}),
+          from: item.from,
+          to: item.to,
+          maxLength: item.maxLength,
+          autofix: item.autofix,
+          lazy: item.lazy,
+        };
+      else if (item.mask === "MaskedEnum")
+        acc[item.name] = {
+          mask: IMask.MaskedEnum,
+          ...(item.placeholderChar ? { placeholderChar: item.placeholderChar } : {}),
+          enum: item.enum,
+          maxLength: item.maxLength,
+        };
+      else if (item.mask === "Number")
+        acc[item.name] = {
+          mask: Number,
+          radix: ".", // fractional delimiter
+          mapToRadix: ["."], // symbols to process as radix
+          normalizeZeros: item.normalizeZeros,
+          scale: precision,
+          signed: item.signed,
+          min: min,
+          max: item.max,
+        };
+      else if (item.mask === "Pattern")
+        acc[item.name] = {
+          mask: new RegExp(item.pattern),
+        };
+      else
+        acc[item.name] = {
+          mask: item.mask,
+          ...(item.placeholderChar ? { placeholderChar: item.placeholderChar } : {}),
+        };
+      return acc;
+    }, {});
+  }, [maskBlocks, min, precision]);
+
+  const valueRef = useMemo(() => ({ current: value }), [value]);
+  const focusRef = useRef(false);
+
+  const handle = (val) => {
+    if (val !== value && focusRef.current === true) {
+      console.log(val, mask, value);
+      onChange({ target: { value: val }, persist: () => {} });
+    }
+  };
+
+  return (
+    <MInput
+      name={name.replaceAll(".", "_")}
+      mask={mask}
+      unmask={unmask ?? true}
+      lazy={false}
+      placeholderChar="_"
+      autofix={true}
+      blocks={blocks}
+      disabled={disabled}
+      onAccept={(currentValue) => (valueRef.current = currentValue)}
+      onComplete={(va) => handle(va)}
+      ref={inputRef}
+      value={value + ""}
+      onBlur={() => {
+        handle(valueRef.current);
+        focusRef.current = false;
+      }}
+      onFocus={() => (focusRef.current = true)}
+      placeholder={placeholder}
+    />
+  );
+};
+
+const MInput = IMaskMixin(({ inputRef, ...props }) => <ChackraInput {...props} ref={inputRef} />);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   Icon,
   Popover,
@@ -33,74 +33,76 @@ const TooltipIcon = (props) => (
   </Icon>
 );
 
-const InfoTooltip = ({ description, descriptionComponent, example, label, history, noHistory = true, ...rest }) => {
-  return (
-    <Popover placement="bottom">
-      <PopoverTrigger>
-        <IconButton icon={<TooltipIcon color={"grey.700"} w="23px" h="23px" />} />
-      </PopoverTrigger>
-      <PopoverContent {...rest}>
-        <PopoverArrow />
-        <PopoverCloseButton />
-        <PopoverHeader fontWeight="bold">{label}</PopoverHeader>
-        <PopoverBody>
-          <Stack>
-            {descriptionComponent}
-            {!descriptionComponent &&
-              replaceLinks(description).map((part, i) => {
-                return typeof part === "string" ? (
-                  <Text as="span" key={i}>
-                    <ReactMarkdown components={ChakraUIRenderer()} children={part} skipHtml />
-                  </Text>
-                ) : (
-                  <Link href={part.href} fontSize="md" key={i} textDecoration={"underline"} isExternal>
-                    {part.linkText} <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} ml={"0.125rem"} />
-                  </Link>
-                );
-              })}
-          </Stack>
-        </PopoverBody>
-        {history && !noHistory && (
-          <>
-            <PopoverHeader fontWeight="bold">Historique</PopoverHeader>
-            <PopoverBody>
-              {history?.map((entry, i) => {
-                return (
-                  <Wrap key={i} mb={3}>
-                    <WrapItem>
-                      <Avatar name={entry.who} size="xs" />
-                    </WrapItem>
-                    <Flex flexDirection="column">
-                      <Flex alignItems="center">
-                        <Text textStyle="sm" fontWeight="bold">
-                          {entry.who}
-                        </Text>
-                        <Badge
-                          variant="solid"
-                          bg="greenmedium.300"
-                          borderRadius="16px"
-                          color="grey.800"
-                          textStyle="sm"
-                          px="15px"
-                          ml="10px"
-                        >
-                          {entry.role}
-                        </Badge>
-                      </Flex>
-                      <Text textStyle="xs">{prettyPrintDate(entry.when)}</Text>
-                    </Flex>
-                    <Text textStyle="sm" mt="0">
-                      A modifié(e) la valeur du champ par {entry.to}
+const InfoTooltip = memo(
+  ({ description, descriptionComponent, example, label, history, noHistory = true, ...rest }) => {
+    return (
+      <Popover placement="bottom">
+        <PopoverTrigger>
+          <IconButton icon={<TooltipIcon color={"grey.700"} w="23px" h="23px" />} />
+        </PopoverTrigger>
+        <PopoverContent {...rest}>
+          <PopoverArrow />
+          <PopoverCloseButton />
+          <PopoverHeader fontWeight="bold">{label}</PopoverHeader>
+          <PopoverBody>
+            <Stack>
+              {descriptionComponent}
+              {!descriptionComponent &&
+                replaceLinks(description).map((part, i) => {
+                  return typeof part === "string" ? (
+                    <Text as="span" key={i}>
+                      <ReactMarkdown components={ChakraUIRenderer()} children={part} skipHtml />
                     </Text>
-                  </Wrap>
-                );
-              })}
-            </PopoverBody>
-          </>
-        )}
-      </PopoverContent>
-    </Popover>
-  );
-};
+                  ) : (
+                    <Link href={part.href} fontSize="md" key={i} textDecoration={"underline"} isExternal>
+                      {part.linkText} <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} ml={"0.125rem"} />
+                    </Link>
+                  );
+                })}
+            </Stack>
+          </PopoverBody>
+          {history && !noHistory && (
+            <>
+              <PopoverHeader fontWeight="bold">Historique</PopoverHeader>
+              <PopoverBody>
+                {history?.map((entry, i) => {
+                  return (
+                    <Wrap key={i} mb={3}>
+                      <WrapItem>
+                        <Avatar name={entry.who} size="xs" />
+                      </WrapItem>
+                      <Flex flexDirection="column">
+                        <Flex alignItems="center">
+                          <Text textStyle="sm" fontWeight="bold">
+                            {entry.who}
+                          </Text>
+                          <Badge
+                            variant="solid"
+                            bg="greenmedium.300"
+                            borderRadius="16px"
+                            color="grey.800"
+                            textStyle="sm"
+                            px="15px"
+                            ml="10px"
+                          >
+                            {entry.role}
+                          </Badge>
+                        </Flex>
+                        <Text textStyle="xs">{prettyPrintDate(entry.when)}</Text>
+                      </Flex>
+                      <Text textStyle="sm" mt="0">
+                        A modifié(e) la valeur du champ par {entry.to}
+                      </Text>
+                    </Wrap>
+                  );
+                })}
+              </PopoverBody>
+            </>
+          )}
+        </PopoverContent>
+      </Popover>
+    );
+  }
+);
 
 export default InfoTooltip;

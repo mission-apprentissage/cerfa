@@ -210,6 +210,7 @@ export default React.memo(() => {
             completion: formationCompletion?.contents,
           },
         ].map(({ id, ...rest }, key) => {
+          return <></>;
           return (
             <AccordionItem border="none" key={key} id={`accordion_${id}`}>
               {({ isExpanded }) => <AccordionItemChild isExpanded={isExpanded} {...rest} />}

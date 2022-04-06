@@ -1,9 +1,10 @@
-import set from "lodash.set";
+import setWith from "lodash.setwith";
 
 export const getValues = (fields) => {
+  if (!fields) return undefined;
   const values = {};
   Object.entries(fields).forEach(([key, field]) => {
-    set(values, key, field.value);
+    setWith(values, key, field.value);
   });
   return values;
 };
