@@ -16,6 +16,8 @@ services:
       - /app/.next/
       - /app/node_modules/
     build:
+      context: ui
+      dockerfile: Dockerfile.dev
       args:
         - REACT_APP_ENV=dev
         - REACT_APP_BASE_URL=http://localhost
