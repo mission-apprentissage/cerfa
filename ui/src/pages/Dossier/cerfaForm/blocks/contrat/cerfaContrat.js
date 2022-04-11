@@ -2,13 +2,15 @@ import React, { memo } from "react";
 import { Box, Flex, FormLabel, Link, Text } from "@chakra-ui/react";
 import Ribbons from "../../../../../common/components/Ribbons";
 import { ExternalLinkLine } from "../../../../../theme/components/icons";
-import { InputController } from "../../common/Input/InputController";
-import { NumeroContratPrecedentField } from "./NumeroContratPrecedentField";
-import { TypeDerogationField } from "./TypeDerogationField";
-import { Remunerations } from "./Remunerations";
-import { AvantagesNatures } from "./AvantagesNatures";
-import CheckEmptyFields from "../../common/CheckEmptyFields";
-import { contratSchema } from "./contratSchema";
+import { InputController } from "../../../formEngine/components/Input/InputController";
+import { NumeroContratPrecedentField } from "./components/NumeroContratPrecedentField";
+import { TypeDerogationField } from "./components/TypeDerogationField";
+import { Remunerations } from "./components/Remunerations";
+import { AvantagesNatures } from "./components/AvantagesNatures";
+import CheckEmptyFields from "../../../formEngine/components/CheckEmptyFields";
+import { CollapseController } from "../../../formEngine/components/CollapseController";
+import { shouldAskDateEffetAvenant } from "./domain/shouldAskDateEffetAvenant";
+import { apprentiSchema } from "../apprenti/apprentiSchema";
 
 export const CerfaContrat = memo(() => {
   return (
@@ -21,7 +23,9 @@ export const CerfaContrat = memo(() => {
         </Box>
         <Box w="55%" ml="5w">
           <InputController name="contrat.dateDebutContrat" />
-          <InputController name="contrat.dateEffetAvenant" />
+          <CollapseController show={shouldAskDateEffetAvenant}>
+            <InputController name="contrat.dateEffetAvenant" />
+          </CollapseController>
           <InputController name="contrat.dateFinContrat" />
         </Box>
       </Flex>
@@ -57,7 +61,7 @@ export const CerfaContrat = memo(() => {
               <br />
             </Text>
             <Text as="span" textStyle="xs">
-              En savoir plus sur les situations spécifiques sur le
+              En savoir plus sur les situations spécifiques sur le{" "}
               <Link
                 color="bluefrance"
                 textDecoration="underline"
@@ -73,7 +77,7 @@ export const CerfaContrat = memo(() => {
         <Remunerations />
         <AvantagesNatures />
       </Box>
-      <CheckEmptyFields fieldNames={Object.keys(contratSchema)} />
+      <CheckEmptyFields schema={apprentiSchema} blocName="contrat" />
     </Box>
   );
 });

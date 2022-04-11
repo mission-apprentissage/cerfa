@@ -1,8 +1,8 @@
-import { InputController } from "../../common/Input/InputController";
+import { InputController } from "../../../formEngine/components/Input/InputController";
 import { Box, Flex, FormLabel } from "@chakra-ui/react";
 import React, { memo } from "react";
 import { employerSchema } from "./employerSchema";
-import CheckEmptyFields from "../../common/CheckEmptyFields";
+import CheckEmptyFields from "../../../formEngine/components/CheckEmptyFields";
 
 export const CerfaEmployer = memo(() => {
   return (
@@ -35,7 +35,7 @@ export const CerfaEmployer = memo(() => {
           <InputController name="employeur.regimeSpecifique" fieldType="radio" />
         </Box>
       </Flex>
-      <CheckEmptyFields fieldNames={Object.keys(employerSchema)} />
+      <CheckEmptyFields schema={employerSchema} blocName="employeur" />
     </Box>
   );
 });

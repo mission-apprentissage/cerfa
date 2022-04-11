@@ -1,4 +1,4 @@
-import { shouldHideEtablissementFormation } from "./shouldHideEtablissementFormation";
+import { shouldAskEtablissementFormation } from "./domain/shouldAskEtablissementFormation";
 
 export const formationSchema = {
   "etablissementFormation.memeResponsable": {
@@ -19,9 +19,9 @@ export const formationSchema = {
   "etablissementFormation.denomination": {
     fieldType: "text",
     required: true,
-    hidden: shouldHideEtablissementFormation,
+    completion: shouldAskEtablissementFormation,
     label: "Dénomination du lieu de formation :",
-    requiredMessage: "la dénomination du du lieu de formation est obligatoire",
+    requiredMessage: "la dénomination du lieu de formation est obligatoire",
     example: "CFA",
     mask: "C",
     maskBlocks: [
@@ -34,7 +34,8 @@ export const formationSchema = {
   },
   "etablissementFormation.siret": {
     fieldType: "text",
-    hidden: shouldHideEtablissementFormation,
+    required: true,
+    completion: shouldAskEtablissementFormation,
     description: "N° SIRET du lieu de formation",
     example: "98765432400019",
     label: "N° SIRET du lieu de formation :",
@@ -50,7 +51,8 @@ export const formationSchema = {
   },
   "etablissementFormation.uaiCfa": {
     fieldType: "text",
-    hidden: shouldHideEtablissementFormation,
+    required: true,
+    completion: shouldAskEtablissementFormation,
     description:
       "Le numéro UAI est autocomplété ; il peut être recherché sur [le catalogue des formations en apprentissage.](https://catalogue.apprentissage.beta.gouv.fr/)",
     example: "0561910X",
@@ -59,7 +61,7 @@ export const formationSchema = {
   },
   "etablissementFormation.adresse.numero": {
     fieldType: "number",
-    hidden: shouldHideEtablissementFormation,
+    required: false,
     label: "N° :",
     example: 13,
     validateMessage: "le numéro de voie ne peut pas commencer par zéro",
@@ -75,7 +77,7 @@ export const formationSchema = {
   "etablissementFormation.adresse.voie": {
     fieldType: "text",
     required: true,
-    hidden: shouldHideEtablissementFormation,
+    completion: shouldAskEtablissementFormation,
     label: "Voie :",
     requiredMessage: "le nom de voie est obligatoire",
     example: "Boulevard de la liberté",
@@ -90,7 +92,7 @@ export const formationSchema = {
   },
   "etablissementFormation.adresse.complement": {
     fieldType: "text",
-    hidden: shouldHideEtablissementFormation,
+    required: false,
     label: "Complément d'adresse (optionnel):",
     requiredMessage: "le complement d'adress est obligatoire",
     example: "Bâtiment ; Résidence ; Entrée ; Appartement ; Escalier ; Etage",
@@ -98,7 +100,7 @@ export const formationSchema = {
   "etablissementFormation.adresse.codePostal": {
     fieldType: "text",
     required: true,
-    hidden: shouldHideEtablissementFormation,
+    completion: shouldAskEtablissementFormation,
     label: "Code postal :",
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
@@ -115,7 +117,7 @@ export const formationSchema = {
   "etablissementFormation.adresse.commune": {
     fieldType: "text",
     required: true,
-    hidden: shouldHideEtablissementFormation,
+    completion: shouldAskEtablissementFormation,
     label: "Commune: ",
     requiredMessage: "la commune est obligatoire",
     example: "PARIS",

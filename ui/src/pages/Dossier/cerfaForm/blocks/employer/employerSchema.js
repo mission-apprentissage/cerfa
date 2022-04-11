@@ -117,6 +117,7 @@ export const employerSchema = {
     ],
   },
   "employeur.telephone": {
+    fieldType: "phone",
     required: true,
     description:
       "Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le \"0\" car l'indicateur pays est pré-renseigné.",
@@ -170,6 +171,9 @@ export const employerSchema = {
         pattern: "^\\d*$",
       },
     ],
+    validate: ({ value }) => {
+      if (value > 9999999) return { error: "Le nombre de salariés ne peut excéder 9999999" };
+    },
   },
   "employeur.typeEmployeur": {
     required: true,
@@ -267,6 +271,7 @@ export const employerSchema = {
   "employeur.codeIdcc_special": {
     fieldType: "radio",
     description: "Autres cas",
+    autosave: false,
     label: "",
     example: "Sans convention collective",
     options: [
@@ -306,7 +311,6 @@ export const employerSchema = {
   },
   "employeur.privePublic": {
     required: true,
-    hidden: true,
     description: "Employeur privé ou public",
     label: "Je suis : ",
     example: "Employeur public",

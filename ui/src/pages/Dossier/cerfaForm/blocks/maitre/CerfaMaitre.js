@@ -1,6 +1,6 @@
 import { Box, Flex, FormLabel } from "@chakra-ui/react";
 import React, { memo } from "react";
-import { InputController } from "../../common/Input/InputController";
+import { InputController } from "../../../formEngine/components/Input/InputController";
 
 export const CerfaMaitre = memo(() => {
   return (

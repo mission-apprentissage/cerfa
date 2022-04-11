@@ -1,5 +1,5 @@
-import { shouldHideRepresentantLegal } from "./shouldHideRepresentantLegal";
-import { shouldHideResponsalLegalAdresse } from "./shouldHideResponsalLegalAdresse";
+import { shouldAskRepresentantLegal } from "./domain/shouldAskRepresentantLegal";
+import { shouldAskResponsalLegalAdresse } from "./domain/shouldAskResponsalLegalAdresse";
 
 export const apprentiSchema = {
   "apprenti.nom": {
@@ -35,6 +35,7 @@ export const apprentiSchema = {
     ],
   },
   "apprenti.adresse.numero": {
+    fieldType: "number",
     label: "N° :",
     example: 13,
     validateMessage: "le numéro de voie ne peut pas commencer par zéro",
@@ -959,8 +960,8 @@ export const apprentiSchema = {
     ],
   },
   "apprenti.responsableLegal.nom": {
-    required: true,
-    hidden: shouldHideRepresentantLegal,
+    // required: true,
+    _init: ({ values }) => ({ required: shouldAskRepresentantLegal({ values }) }),
     description: "Nom du représentant légal",
     label: "Nom du représentant légal:",
     requiredMessage: "le nom du représentant légal est obligatoire",
@@ -975,8 +976,7 @@ export const apprentiSchema = {
     ],
   },
   "apprenti.responsableLegal.prenom": {
-    hidden: shouldHideRepresentantLegal,
-    required: true,
+    _init: ({ values }) => ({ required: shouldAskRepresentantLegal({ values }) }),
     description: "Prénom du représentant légal",
     label: "Prénom du représentant légal:",
     requiredMessage: "le prénom du représentant légal est obligatoire",
@@ -991,8 +991,7 @@ export const apprentiSchema = {
     ],
   },
   "apprenti.responsableLegal.memeAdresse": {
-    hidden: shouldHideRepresentantLegal,
-    required: true,
+    _init: ({ values }) => ({ required: shouldAskRepresentantLegal({ values }) }),
     description: "l'apprenti(e) vit à la même adresse que son responsable légal",
     example: false,
     label: "l'apprenti(e) vit à la même adresse que son responsable légal",
@@ -1009,7 +1008,7 @@ export const apprentiSchema = {
     ],
   },
   "apprenti.responsableLegal.adresse.numero": {
-    hidden: shouldHideResponsalLegalAdresse,
+    required: false,
     fieldType: "number",
     label: "N° :",
     example: 13,
@@ -1024,13 +1023,10 @@ export const apprentiSchema = {
     ],
   },
   "apprenti.responsableLegal.adresse.voie": {
-    hidden: shouldHideResponsalLegalAdresse,
-    required: true,
+    _init: ({ values }) => ({ required: shouldAskResponsalLegalAdresse({ values }) }),
     label: "Voie :",
     requiredMessage: "le nom de voie est obligatoire",
-
     example: "Boulevard de la liberté",
-
     mask: "C",
     maskBlocks: [
       {
@@ -1041,22 +1037,17 @@ export const apprentiSchema = {
     ],
   },
   "apprenti.responsableLegal.adresse.complement": {
-    hidden: shouldHideResponsalLegalAdresse,
-    required: true,
+    required: false,
     label: "Complément d'adresse (optionnel):",
     requiredMessage: "le complement d'adress est obligatoire",
-
-    isNotRequiredForm: true,
     example: "Bâtiment ; Résidence ; Entrée ; Appartement ; Escalier ; Etage",
   },
   "apprenti.responsableLegal.adresse.codePostal": {
-    hidden: shouldHideResponsalLegalAdresse,
-    required: true,
+    _init: ({ values }) => ({ required: shouldAskResponsalLegalAdresse({ values }) }),
     label: "Code postal :",
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
     example: "75000",
-
     mask: "C",
     maskBlocks: [
       {
@@ -1067,14 +1058,12 @@ export const apprentiSchema = {
     ],
   },
   "apprenti.responsableLegal.adresse.commune": {
-    required: true,
-    hidden: shouldHideResponsalLegalAdresse,
+    _init: ({ values }) => ({ required: shouldAskResponsalLegalAdresse({ values }) }),
     path: "apprenti.responsableLegal.adresse.commune",
     maxLength: 80,
     label: "Commune: ",
     requiredMessage: "la commune est obligatoire",
     example: "PARIS",
-
     mask: "C",
     maskBlocks: [
       {
@@ -1085,8 +1074,8 @@ export const apprentiSchema = {
     ],
   },
   "apprenti.responsableLegal.adresse.pays": {
-    hidden: shouldHideResponsalLegalAdresse,
-    required: true,
+    _init: ({ values }) => ({ required: shouldAskResponsalLegalAdresse({ values }) }),
+    fieldType: "select",
     label: "Pays :",
     requiredMessage: "le pays est obligatoire",
     options: [

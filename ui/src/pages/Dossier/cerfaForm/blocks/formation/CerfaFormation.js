@@ -1,8 +1,10 @@
 import React, { memo } from "react";
 import { Box, Flex, FormLabel, Text } from "@chakra-ui/react";
-import { InputController } from "../../common/Input/InputController";
-import { CollapseController } from "../../common/CollapseController";
-import { shouldHideEtablissementFormation } from "./shouldHideEtablissementFormation";
+import { InputController } from "../../../formEngine/components/Input/InputController";
+import { CollapseController } from "../../../formEngine/components/CollapseController";
+import CheckEmptyFields from "../../../formEngine/components/CheckEmptyFields";
+import { formationSchema } from "./formationSchema";
+import { shouldAskEtablissementFormation } from "./domain/shouldAskEtablissementFormation";
 
 export const CerfaFormation = memo(() => {
   return (
@@ -51,7 +53,7 @@ export const CerfaFormation = memo(() => {
           Le lieu de formation :
         </Text>
         <InputController name="etablissementFormation.memeResponsable" type="radio" mt="2" />
-        <CollapseController hide={shouldHideEtablissementFormation}>
+        <CollapseController show={shouldAskEtablissementFormation}>
           <InputController name="etablissementFormation.siret" type="text" mb="2" />
           <Flex>
             <Box w="55%" flex="1">
@@ -75,6 +77,7 @@ export const CerfaFormation = memo(() => {
           </Flex>
         </CollapseController>
       </Box>
+      <CheckEmptyFields schema={formationSchema} blocName="formation" />
     </>
   );
 });

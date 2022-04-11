@@ -1,7 +1,7 @@
-import { shouldHideRemunerationsAnnuelles } from "./shouldHideRemunrationsAnnuelles";
-import { shouldHideAvantageNature } from "./shouldHideAvantageNature";
-import { shouldHideNumeroContratPrecedent } from "./shouldHideContratPrecedent";
-import { shouldHideDateEffetAvenant } from "./shouldHideDateEffetAvenant";
+import { shouldAskDateEffetAvenant } from "./domain/shouldAskDateEffetAvenant";
+import { getLabelNumeroContratPrecedent } from "./domain/getLabelNumeroContratPrecedent";
+import { isRequiredNumeroContratPrecedent } from "./domain/isRequiredNumeroContratPrecedent";
+import { getTypeDerogationOptions } from "./domain/getTypeDerogationOptions";
 
 export const contratSchema = {
   "contrat.typeContratApp": {
@@ -78,50 +78,17 @@ export const contratSchema = {
   },
   "contrat.typeDerogation": {
     fieldType: "select",
+    _init: ({ values }) => ({ options: getTypeDerogationOptions({ values }) }),
     description:
       "A renseigner si une dérogation existe pour ce contrat (exemple : l'apprentissage commence à partir de 16 ans mais par dérogation, les jeunes âgés d'au moins 15 ans et un jour peuvent conclure un contrat d'apprentissage s'ils ont terminé la scolarité du 1er cycle de l'enseignement secondaire (collège).",
-    options: [
-      {
-        label: "11 Age de l'apprenti inférieur à 16 ans",
-        value: 11,
-        locked: true,
-      },
-      {
-        label: "12 Age supérieur à 29 ans : cas spécifiques prévus dans le code du travail",
-        value: 12,
-        locked: true,
-      },
-      {
-        label: "21 Réduction de la durée du contrat ou de la période d'apprentissage",
-        value: 21,
-        locked: true,
-      },
-      {
-        label: "22 Allongement de la durée du contrat ou de la période d'apprentissage",
-        value: 22,
-        locked: true,
-      },
-      {
-        label: "50 Cumul de dérogations",
-        value: 50,
-        locked: true,
-      },
-      {
-        label: "60 Autre dérogation",
-        value: 60,
-        locked: true,
-      },
-    ],
     label: "Type de dérogation (optionnel)",
   },
   "contrat.numeroContratPrecedent": {
     fieldType: "text",
-    label: ({ values }) =>
-      [21, 22, 23].includes(values.contrat.typeContratApp)
-        ? "Numéro du contrat précédent :"
-        : "Numéro de contrat sur lequel porte l'avenant :",
-    hidden: shouldHideNumeroContratPrecedent,
-    required: ({ values }) => ![21, 22, 23].includes(values.contrat.typeContratApp),
+    _init: ({ values }) => ({
+      label: getLabelNumeroContratPrecedent({ values }),
+      required: isRequiredNumeroContratPrecedent({ values }),
+    }),
     description:
       "Succession (n° du contrat précédent) : s'il ne s'agit pas du tout premier contrat de l'apprenti, renseignez le numéro de son contrat précédent, même s'il a été conclu avec un autre employeur. Avenant (n° du contrat sur lequel porte l'avenant ) : indiquez le n° de dépôt du contrat initial qui fait l'objet de la modification.",
     requiredMessage: "la numéro du contrat précédent est obligatoire",
@@ -289,9 +256,8 @@ export const contratSchema = {
     example: "2021-02-01T00:00:00+0000",
   },
   "contrat.dateEffetAvenant": {
-    required: true,
     fieldType: "date",
-    hidden: shouldHideDateEffetAvenant,
+    _init: ({ values }) => ({ required: shouldAskDateEffetAvenant({ values }) }),
     description: "Date à laquelle l'avenant va prendre effet.",
     label: "Date d'effet d'avenant :",
     requiredMessage: "S'agissant d'un avenant sa date d'effet est obligatoire ",
@@ -314,12 +280,22 @@ export const contratSchema = {
     requiredMessage: "la durée hebdomadaire de travail est obligatoire",
     label: "Heures:",
     example: 37,
+    validate: ({ value }) => {
+      if (value > 40) {
+        return { error: "la durée de travail hebdomadaire en heures ne peut excéder 40h" };
+      }
+    },
   },
   "contrat.dureeTravailHebdoMinutes": {
     fieldType: "number",
     description: "Durée hebdomadaire du travail (minutes)",
     label: "Minutes:",
     example: 30,
+    validate: ({ value }) => {
+      if (value > 59) {
+        return { error: "la durée de travail hebdomadaire en minutes ne peut excéder 59 minutes" };
+      }
+    },
   },
   "contrat.travailRisque": {
     fieldType: "radio",
@@ -348,7 +324,6 @@ export const contratSchema = {
     fieldType: "date",
     required: true,
     locked: true,
-    hidden: shouldHideRemunerationsAnnuelles,
     example: "2021-02-01T00:00:00+0000",
   },
   "contrat.remunerationsAnnuelles[].dateFin": {
@@ -357,26 +332,22 @@ export const contratSchema = {
     label: "Date de fin",
     fieldType: "date",
     locked: true,
-    hidden: shouldHideRemunerationsAnnuelles,
   },
   "contrat.remunerationsAnnuelles[].ordre": {
     example: "1.1, 1.2, 2.1",
     label: "ordre",
     required: true,
-    hidden: shouldHideRemunerationsAnnuelles,
   },
   "contrat.remunerationsAnnuelles[].salaireBrut": {
     fieldType: "number",
     label: "salaireBrut",
     required: true,
-    hidden: shouldHideRemunerationsAnnuelles,
   },
   "contrat.remunerationsAnnuelles[].taux": {
     fieldType: "number",
     example: 75,
     label: "% de rémunération du SMIC",
     required: true,
-    hidden: shouldHideRemunerationsAnnuelles,
   },
   "contrat.remunerationsAnnuelles[].tauxMinimal": {
     fieldType: "number",
@@ -384,12 +355,10 @@ export const contratSchema = {
     example: 57,
     label: "% de rémunération du SMIC",
     required: true,
-    hidden: shouldHideRemunerationsAnnuelles,
   },
   "contrat.remunerationsAnnuelles[].typeSalaire": {
     label: "SMIC ou SMC",
     required: true,
-    hidden: shouldHideRemunerationsAnnuelles,
     description:
       "**Type de salaire** :\r\n  SMIC = salaire minimum de croissance\r\n  SMC = salaire minimum conventionnel",
     options: [
@@ -407,7 +376,6 @@ export const contratSchema = {
   "contrat.avantageNature": {
     fieldType: "radio",
     required: true,
-    hidden: shouldHideAvantageNature,
     requiredMessage: "Cette déclaration est obligatoire",
     description:
       "Une déduction du montant des avantages peut être pratiquée sur la rémunération de l'apprenti sous certaines conditions (code du travail, [art. D6222-33](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000041770368)).",
@@ -426,7 +394,6 @@ export const contratSchema = {
   },
   "contrat.avantageNourriture": {
     fieldType: "number",
-    hidden: shouldHideAvantageNature,
     label: "Nourriture:",
     example: 3,
     requiredMessage: "Cette déclaration est obligatoire",
@@ -444,7 +411,6 @@ export const contratSchema = {
   },
   "contrat.avantageLogement": {
     fieldType: "number",
-    hidden: shouldHideAvantageNature,
     label: "Logement:",
     example: 456,
     min: 1,
@@ -461,7 +427,6 @@ export const contratSchema = {
   },
   "contrat.autreAvantageEnNature": {
     fieldType: "consent",
-    hidden: shouldHideAvantageNature,
     label: "Autres avantages",
     example: true,
     options: [

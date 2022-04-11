@@ -1,11 +1,10 @@
-import { InputController } from "../../common/Input/InputController";
-import { Box, Collapse, Flex, FormLabel, Text } from "@chakra-ui/react";
+import { InputController } from "../../../formEngine/components/Input/InputController";
+import { Box, Flex, FormLabel, Text } from "@chakra-ui/react";
 import React, { memo } from "react";
-import { CollapseController } from "../../common/CollapseController";
-import { shouldHideRepresentantLegal } from "./shouldHideRepresentantLegal";
-import { shouldHideResponsalLegalAdresse } from "./shouldHideResponsalLegalAdresse";
-import { employerSchema } from "../employer/employerSchema";
-import CheckEmptyFields from "../../common/CheckEmptyFields";
+import { CollapseController } from "../../../formEngine/components/CollapseController";
+import { shouldAskRepresentantLegal } from "./domain/shouldAskRepresentantLegal";
+import { shouldAskResponsalLegalAdresse } from "./domain/shouldAskResponsalLegalAdresse";
+import CheckEmptyFields from "../../../formEngine/components/CheckEmptyFields";
 import { apprentiSchema } from "./apprentiSchema";
 
 export const CerfaApprenti = memo(() => {
@@ -31,8 +30,8 @@ export const CerfaApprenti = memo(() => {
             <InputController name="apprenti.apprentiMineurNonEmancipe" fieldType="radio" />
           </Box>
           <Box mt={5}>
-            <CollapseController hide={shouldHideRepresentantLegal}>
-              <Text fontWeight="bold" my={3}>
+            <CollapseController show={shouldAskRepresentantLegal}>
+              <Text fontWeight="bold" my={3} mt={0}>
                 Représentant légal
               </Text>
               <InputController name="apprenti.responsableLegal.nom" autoHide={false} />
@@ -41,7 +40,7 @@ export const CerfaApprenti = memo(() => {
                 Adresse du représentant légal :
               </Text>
               <InputController name="apprenti.responsableLegal.memeAdresse" fieldType="radio" autoHide={false} />
-              <CollapseController hide={shouldHideResponsalLegalAdresse}>
+              <CollapseController show={shouldAskResponsalLegalAdresse}>
                 <InputController name="apprenti.responsableLegal.adresse.numero" autoHide={false} />
                 <InputController name="apprenti.responsableLegal.adresse.voie" autoHide={false} />
                 <InputController name="apprenti.responsableLegal.adresse.complement" autoHide={false} />
@@ -68,7 +67,7 @@ export const CerfaApprenti = memo(() => {
           <InputController name="apprenti.diplome" />
         </Box>
       </Flex>
-      <CheckEmptyFields fieldNames={Object.keys(apprentiSchema)} />
+      <CheckEmptyFields schema={apprentiSchema} blocName="apprenti" />
     </Box>
   );
 });
