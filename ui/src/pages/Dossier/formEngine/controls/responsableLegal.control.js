@@ -78,12 +78,12 @@ export const responsableLegalControl = [
         return {
           cache: values.apprenti.responsableLegal.adresse,
           cascade: {
-            "apprenti.responsableLegal.adresse.numero": { reset: true },
-            "apprenti.responsableLegal.adresse.voie": { required: true, reset: true },
-            "apprenti.responsableLegal.adresse.complement": { reset: true },
-            "apprenti.responsableLegal.adresse.codePostal": { required: true, reset: true },
-            "apprenti.responsableLegal.adresse.commune": { required: true, reset: true },
-            "apprenti.responsableLegal.adresse.pays": { required: true, reset: true },
+            "apprenti.responsableLegal.adresse.numero": { required: false, reset: true },
+            "apprenti.responsableLegal.adresse.voie": { required: false, reset: true },
+            "apprenti.responsableLegal.adresse.complement": { required: false, reset: true },
+            "apprenti.responsableLegal.adresse.codePostal": { required: false, reset: true },
+            "apprenti.responsableLegal.adresse.commune": { required: false, reset: true },
+            "apprenti.responsableLegal.adresse.pays": { required: false, reset: true },
           },
         };
       }

@@ -14,16 +14,21 @@ export const useCerfa = ({ schema } = {}) => {
   const setCerfa = useSetRecoilState(cerfaAtom);
   const patchFields = useSetRecoilState(cerfaSetter);
 
-  const getData = useRecoilCallback(({ snapshot }) => async () => ({
-    dossier: await snapshot.getPromise(dossierAtom),
-    fields: await snapshot.getPromise(cerfaAtom),
-    values: await snapshot.getPromise(valuesSelector),
-  }));
+  const getData = useRecoilCallback(
+    ({ snapshot }) =>
+      async () => ({
+        dossier: await snapshot.getPromise(dossierAtom),
+        fields: await snapshot.getPromise(cerfaAtom),
+        values: await snapshot.getPromise(valuesSelector),
+      }),
+    []
+  );
 
   const getFields = useRecoilCallback(
     ({ snapshot }) =>
       async () =>
-        await snapshot.getPromise(cerfaAtom)
+        await snapshot.getPromise(cerfaAtom),
+    []
   );
 
   const abortControllers = useRef({});
@@ -43,7 +48,6 @@ export const useCerfa = ({ schema } = {}) => {
         } else if (warning) {
           patchFields({ [name]: { warning } });
         }
-
         if (cascade) {
           await Promise.all(
             Object.keys(cascade).map(
@@ -75,6 +79,9 @@ export const useCerfa = ({ schema } = {}) => {
           const logics = indexedDependencesRevalidationRules[name][dep];
           error = await findLogicErrors({ name: dep, logics, values, dossier, fields });
         }
+        if (!error) {
+          await processField({ name: dep, value: field.value });
+        }
         patchFields({ [dep]: { error, success: !error } });
       })
     );
@@ -105,9 +112,10 @@ export const useCerfa = ({ schema } = {}) => {
       return;
     }
 
-    if (/*patch.value === undefined || */ patch.value === field?.value) {
+    if (patch.value === field?.value) {
       patch = { ...patch };
       delete patch.value;
+      if (!Object.keys(patch).length) return;
       patchFields({ [name]: { ...patch, loading: false } });
       return;
     }
@@ -127,7 +135,8 @@ export const useCerfa = ({ schema } = {}) => {
   const getValue = useRecoilCallback(
     ({ snapshot }) =>
       async (name) =>
-        (await snapshot.getPromise(cerfaAtom))[name].value
+        (await snapshot.getPromise(cerfaAtom))[name].value,
+    []
   );
 
   const processField = async ({ name, value }) => {
@@ -163,7 +172,8 @@ export const useCerfa = ({ schema } = {}) => {
   const getStatus = useRecoilCallback(
     ({ snapshot }) =>
       async () =>
-        snapshot.getPromise(cerfaStatusGetter)
+        snapshot.getPromise(cerfaStatusGetter),
+    []
   );
 
   const controller = useMemo(() => {
