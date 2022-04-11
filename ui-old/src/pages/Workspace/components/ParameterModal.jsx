@@ -24,7 +24,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { ArrowRightLine, Close } from "../../../theme/components/icons";
 import { workspaceAtom } from "../../../common/hooks/workspaceAtoms";
 import { _put } from "../../../common/httpClient";
-import InputCerfa from "../../Dossier/Cerfa/components/Input";
+import { Input } from "../../Dossier/formEngine/components/Input/Input";
 
 export default ({ isOpen, onClose, title = "Paramètres" }) => {
   const workspace = useRecoilValue(workspaceAtom);
@@ -88,28 +88,22 @@ export default ({ isOpen, onClose, title = "Paramètres" }) => {
             <TabPanels>
               <TabPanel>
                 <Box>
-                  <InputCerfa
-                    path={`wks.parametres.nom`}
-                    field={{
-                      description: "Nom de l'espace.",
-                      label: "Nom de l'espace :",
-                      value: wksNom,
-                      maxLength: 36,
-                      mask: "C",
-                      maskBlocks: [
-                        {
-                          name: "C",
-                          mask: "Pattern",
-                          pattern: "^.*$",
-                        },
-                      ],
-                    }}
-                    type="text"
-                    hasInfo={false}
+                  <Input
+                    name="wks.parametres.nom"
+                    label="Nom de l'espace :"
+                    placeholder="Nom de l'espace."
+                    value={wksNom}
+                    maxLength={36}
+                    mask="C"
+                    maskBlocks={[
+                      {
+                        name: "C",
+                        mask: "Pattern",
+                        pattern: "^.*$",
+                      },
+                    ]}
                     mt={0}
-                    onSubmittedField={(path, data) => {
-                      setWksNom(data);
-                    }}
+                    onSubmit={setWksNom}
                   />
 
                   {/* <FormControl isRequired mt={2} isInvalid={errors.siret}>

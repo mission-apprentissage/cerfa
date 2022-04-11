@@ -7,7 +7,6 @@ import { useSetRecoilState, useRecoilValueLoadable, useRecoilValue } from "recoi
 import useAuth from "../../common/hooks/useAuth";
 import { hasPageAccessTo } from "../../common/utils/rolesUtils";
 
-import Cerfa from "./Cerfa/Cerfa";
 import PiecesJustificatives from "./PiecesJustificatives/PiecesJustificatives";
 import Signatures from "./Signatures/Signatures";
 
@@ -19,22 +18,19 @@ import IsPrivateEmployeurModal from "./components/IsPrivateEmployeurModal";
 import FinalizeModal from "./components/FinalizeModal";
 import ESignatureModal from "./components/ESignatureModal";
 
-import { useDossier } from "../../common/hooks/useDossier/useDossier";
-import { useDocuments } from "../../common/hooks/useDossier/useDocuments";
-import { useSignatures } from "../../common/hooks/useDossier/useSignatures";
 import { workspaceTitleAtom } from "../../common/hooks/workspaceAtoms";
-import { cerfaAtom } from "../../common/hooks/useCerfa/cerfaAtom";
 import { StepWip, TickBubble } from "../../theme/components/icons";
 
 import { signaturesPdfLoadedAtom } from "../../common/hooks/useDossier/signaturesAtoms";
-import { cerfaPartFormationCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaFormationAtoms";
-import {
-  cerfaPartEmployeurCompletionAtom,
-  cerfaEmployeurPrivePublicAtom,
-} from "../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
-import { cerfaPartMaitresCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaMaitresAtoms";
-import { cerfaPartApprentiCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaApprentiAtoms";
-import { cerfaPartContratCompletionAtom } from "../../common/hooks/useCerfa/parts/useCerfaContratAtoms";
+import { cerfaEmployeurPrivePublicAtom } from "../../common/hooks/useCerfa/parts/useCerfaEmployeurAtoms";
+import { CerfaForm } from "./cerfaForm/CerfaForm";
+import { useCerfa } from "./formEngine/useCerfa";
+import { cerfaSchema } from "./formEngine/cerfaSchema";
+import { CerfaControllerContext } from "./formEngine/CerfaControllerContext";
+import { dossierCompletionStatus } from "./dossierCompletionAtoms";
+import { useInitCerfa } from "./formEngine/hooks/useInitCerfa";
+import { useAutoSave } from "./formEngine/hooks/useAutoSave";
+import { useDossier } from "./hooks/useDossier";
 
 const steps = [
   { label: "Cerfa", description: "Renseignez les informations" },
@@ -59,10 +55,13 @@ export default () => {
   const [step3Visited, setStep3Visited] = useState(false);
 
   const { isloaded, dossier } = useDossier(match.params.id);
-  const cerfa = useRecoilValue(cerfaAtom);
-  const { documentsCompletion, setDocumentsCompletion } = useDocuments();
+  const { controller: cerfaController } = useCerfa({ schema: cerfaSchema });
+  const { isLoading } = useInitCerfa({ controller: cerfaController });
+  useAutoSave({ controller: cerfaController });
+
   const [documentsComplete, setDocumentsComplete] = useState(false);
-  const { signaturesCompletion, sca, setSignaturesCompletion } = useSignatures();
+  // const { signaturesCompletion, sca, setSignaturesCompletion } = useSignatures();
+  const { signaturesCompletion, sca, setSignaturesCompletion } = { signaturesCompletion: 0, sca: 0 };
   const [signaturesComplete, setSignaturesComplete] = useState(false);
 
   const setWorkspaceTitle = useSetRecoilState(workspaceTitleAtom);
@@ -72,28 +71,12 @@ export default () => {
   const finalizeModalDisclosure = useDisclosure();
   const eSignatureModalDisclosure = useDisclosure();
 
-  const formationCompletion = useRecoilValueLoadable(cerfaPartFormationCompletionAtom);
-  const employeurCompletionAtom = useRecoilValueLoadable(cerfaPartEmployeurCompletionAtom);
-  const maitresCompletionAtom = useRecoilValueLoadable(cerfaPartMaitresCompletionAtom);
-  const apprentiCompletionAtom = useRecoilValueLoadable(cerfaPartApprentiCompletionAtom);
-  const contratCompletionAtom = useRecoilValueLoadable(cerfaPartContratCompletionAtom);
-
   const signaturesPdfLoaded = useRecoilValueLoadable(signaturesPdfLoadedAtom);
 
-  const cerfaPercentageCompletion =
-    (employeurCompletionAtom?.contents +
-      apprentiCompletionAtom?.contents +
-      maitresCompletionAtom?.contents +
-      contratCompletionAtom?.contents +
-      formationCompletion?.contents) /
-    5;
-  const cerfaComplete =
-    employeurCompletionAtom?.contents === 100 &&
-    apprentiCompletionAtom?.contents === 100 &&
-    maitresCompletionAtom?.contents === 100 &&
-    contratCompletionAtom?.contents === 100 &&
-    formationCompletion?.contents === 100;
-  const dossierComplete = cerfaComplete && documentsComplete && signaturesComplete;
+  const dossierStatus = useRecoilValue(dossierCompletionStatus);
+  const cerfaComplete = dossierStatus?.cerfa?.complete;
+  const cerfaCompletion = dossierStatus?.cerfa?.completion;
+  const documentsCompletion = dossierStatus?.documents?.completion;
 
   useEffect(() => {
     const run = async () => {
@@ -101,15 +84,7 @@ export default () => {
         setWorkspaceTitle(dossier.nom);
       }
 
-      if (documentsCompletion === null && cerfa && dossier) {
-        setDocumentsCompletion(cerfa, dossier);
-      }
-
-      if (cerfa) {
-        setSignaturesCompletion(cerfa);
-      }
-
-      if (cerfa && documentsCompletion !== null && signaturesCompletion !== null) {
+      if (documentsCompletion !== null && signaturesCompletion !== null) {
         const documentsCompleteTmp = documentsCompletion === 100;
         const signaturesCompleteTmp = sca === 100;
 
@@ -117,7 +92,7 @@ export default () => {
         setSignaturesComplete(signaturesCompleteTmp);
 
         if (match.params.step === "cerfa") {
-          if (cerfaPercentageCompletion > 0) {
+          if (cerfaCompletion > 0) {
             setStep1Visited(true);
             setStep2State(documentsCompleteTmp ? "success" : "error");
             setStep3State(!signaturesCompleteTmp ? "error" : "success");
@@ -137,16 +112,13 @@ export default () => {
     };
     run();
   }, [
-    cerfa,
-    cerfaComplete,
-    cerfaPercentageCompletion,
+    dossierStatus,
     documentsComplete,
     documentsCompletion,
     dossier,
     history,
     isloaded,
     match.params.step,
-    setDocumentsCompletion,
     setSignaturesCompletion,
     setWorkspaceTitle,
     signaturesComplete,
@@ -193,7 +165,7 @@ export default () => {
     history.replace(match.url.replace(/\/[^/]*$/, newSlug));
 
     nextStep();
-  }, [activeStep, cerfaComplete, history, match, nextStep, stepStateSteps23]);
+  }, [activeStep, dossierStatus, history, match, nextStep, stepStateSteps23]);
 
   let onClickPrevStep = useCallback(async () => {
     const nextActiveStep = activeStep - 1;
@@ -216,12 +188,13 @@ export default () => {
     prevStep();
   }, [activeStep, cerfaComplete, history, match.url, prevStep, step1Visited, stepStateSteps23]);
 
-  if (!isloaded)
+  if (!isloaded || isLoading) {
     return (
       <Center>
         <Spinner />
       </Center>
     );
+  }
 
   if (!dossier) {
     history.push("/404");
@@ -230,96 +203,98 @@ export default () => {
   // TODO not Authorize handler
 
   return (
-    <Box w="100%" px={[1, 1, 6, 6]} mb={10}>
-      {hasPageAccessTo(auth, "signature_beta") && <AskBetaTestModal />}
-      {finalizeModalDisclosure.isOpen && <FinalizeModal {...finalizeModalDisclosure} dossier={dossier} />}
-      {eSignatureModalDisclosure.isOpen && <ESignatureModal {...eSignatureModalDisclosure} />}
-      <IsPrivateEmployeurModal
-        isOpen={
-          employeurPrivePublic?.contents?.value === "Employeur privé" &&
-          !hasSeenPrivateSectorModal &&
-          isPrivateSectorAckModal.isOpen
-        }
-        onClose={() => {
-          setHasSeenPrivateSectorModal(true);
-          isPrivateSectorAckModal.onClose();
-        }}
-        onAcknowledgement={() => {
-          setHasSeenPrivateSectorModal(true);
-          isPrivateSectorAckModal.onClose();
-        }}
-      />
-      <Container maxW="xl">
-        <DossierHeader dossier={dossier} />
+    <CerfaControllerContext.Provider value={cerfaController}>
+      <Box w="100%" px={[1, 1, 6, 6]} mb={10}>
+        {hasPageAccessTo(auth, "signature_beta") && <AskBetaTestModal />}
+        {finalizeModalDisclosure.isOpen && <FinalizeModal {...finalizeModalDisclosure} dossier={dossier} />}
+        {eSignatureModalDisclosure.isOpen && <ESignatureModal {...eSignatureModalDisclosure} />}
+        <IsPrivateEmployeurModal
+          isOpen={
+            employeurPrivePublic?.contents?.value === "Employeur privé" &&
+            !hasSeenPrivateSectorModal &&
+            isPrivateSectorAckModal.isOpen
+          }
+          onClose={() => {
+            setHasSeenPrivateSectorModal(true);
+            isPrivateSectorAckModal.onClose();
+          }}
+          onAcknowledgement={() => {
+            setHasSeenPrivateSectorModal(true);
+            isPrivateSectorAckModal.onClose();
+          }}
+        />
+        <Container maxW="xl">
+          <DossierHeader dossier={dossier} />
 
-        <Flex flexDir="column" width="100%" mt={9}>
-          <Steps
-            onClickStep={(step) => {
-              if (employeurPrivePublic?.contents?.value === "Employeur privé") return false;
-              if (!cerfaComplete && step !== 0) {
-                setStep1State(step1Visited ? "error" : "error");
-              } else {
-                setStep1State(undefined);
-              }
-              stepStateSteps23(step);
-              if (step === 0) setStep1Visited(true);
+          <Flex flexDir="column" width="100%" mt={9}>
+            <Steps
+              onClickStep={(step) => {
+                if (employeurPrivePublic?.contents?.value === "Employeur privé") return false;
+                if (!cerfaComplete && step !== 0) {
+                  setStep1State(step1Visited ? "error" : "error");
+                } else {
+                  setStep1State(undefined);
+                }
+                stepStateSteps23(step);
+                if (step === 0) setStep1Visited(true);
 
-              let newSlug = "/cerfa";
-              if (step === 1) newSlug = "/documents";
-              if (step === 2) newSlug = "/signatures";
-              history.replace(match.url.replace(/\/[^/]*$/, newSlug));
+                let newSlug = "/cerfa";
+                if (step === 1) newSlug = "/documents";
+                if (step === 2) newSlug = "/signatures";
+                history.replace(match.url.replace(/\/[^/]*$/, newSlug));
 
-              return setStep(step);
-            }}
-            activeStep={activeStep}
-            checkIcon={() => {
-              return <TickBubble color={"white"} boxSize="4" />;
-            }}
-            errorIcon={() => {
-              return <StepWip color={"white"} boxSize="4" />;
-            }}
-          >
-            {steps.map(({ label, description }, index) => {
-              return (
-                <Step
-                  label={
-                    <Box color="labelgrey" fontWeight={activeStep === index ? "bold" : "normal"} mb={1}>
-                      {label}
-                    </Box>
-                  }
-                  key={label}
-                  description={description}
-                  icon={() => {
-                    return (
-                      <Box color={activeStep === index ? "white" : "black"} fontWeight="bold">
-                        {index + 1}
+                return setStep(step);
+              }}
+              activeStep={activeStep}
+              checkIcon={() => {
+                return <TickBubble color={"white"} boxSize="4" />;
+              }}
+              errorIcon={() => {
+                return <StepWip color={"white"} boxSize="4" />;
+              }}
+            >
+              {steps.map(({ label, description }, index) => {
+                return (
+                  <Step
+                    label={
+                      <Box color="labelgrey" fontWeight={activeStep === index ? "bold" : "normal"} mb={1}>
+                        {label}
                       </Box>
-                    );
-                  }}
-                  state={index === 0 ? stepState1 : index === 1 ? stepState2 : stepState3}
-                >
-                  {index === 1 && <PiecesJustificatives />}
-                  {index === 2 && <Signatures />}
-                </Step>
-              );
-            })}
-          </Steps>
-          <Box opacity={activeStep === 0 ? 1 : 0} h={activeStep === 0 ? "auto" : 0}>
-            {(step1Visited || activeStep === 0) && <Cerfa />}
-          </Box>
-          <DossierFooterControls
-            activeStep={activeStep}
-            steps={steps}
-            onClickPrevStep={onClickPrevStep}
-            onClickNextStep={onClickNextStep}
-            finalizeModalDisclosure={finalizeModalDisclosure}
-            eSignatureModalDisclosure={eSignatureModalDisclosure}
-            dossierComplete={dossierComplete}
-            employeurPrivePublic={employeurPrivePublic}
-            signaturesPdfLoaded={signaturesPdfLoaded}
-          />
-        </Flex>
-      </Container>
-    </Box>
+                    }
+                    key={label}
+                    description={description}
+                    icon={() => {
+                      return (
+                        <Box color={activeStep === index ? "white" : "black"} fontWeight="bold">
+                          {index + 1}
+                        </Box>
+                      );
+                    }}
+                    state={index === 0 ? stepState1 : index === 1 ? stepState2 : stepState3}
+                  >
+                    {index === 1 && <PiecesJustificatives />}
+                    {index === 2 && <Signatures />}
+                  </Step>
+                );
+              })}
+            </Steps>
+            <Box opacity={activeStep === 0 ? 1 : 0} h={activeStep === 0 ? "auto" : 0}>
+              {(step1Visited || activeStep === 0) && <CerfaForm />}
+            </Box>
+            <DossierFooterControls
+              activeStep={activeStep}
+              steps={steps}
+              onClickPrevStep={onClickPrevStep}
+              onClickNextStep={onClickNextStep}
+              finalizeModalDisclosure={finalizeModalDisclosure}
+              eSignatureModalDisclosure={eSignatureModalDisclosure}
+              dossierComplete={dossierStatus.dossier.complete}
+              employeurPrivePublic={employeurPrivePublic}
+              signaturesPdfLoaded={signaturesPdfLoaded}
+            />
+          </Flex>
+        </Container>
+      </Box>
+    </CerfaControllerContext.Provider>
   );
 };
