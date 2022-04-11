@@ -1,13 +1,13 @@
 import useAuth from "../../../../common/hooks/useAuth";
 import React, { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { signaturesPdfLoadedAtom } from "../../../../common/hooks/useDossier/signaturesAtoms";
 import { useCerfa } from "../../../../common/hooks/useCerfa/useCerfa";
-import { dossierAtom } from "../../../../common/hooks/useDossier/dossierAtom";
 import { _post } from "../../../../common/httpClient";
 import { Box, Center, Heading, Link, ListItem, OrderedList, SkeletonText, Spinner, Text } from "@chakra-ui/react";
 import { PdfViewer } from "../../../../common/components/PdfViewer";
 import { NavLink } from "react-router-dom";
+import { dossierAtom } from "../../atoms";
+import { signaturesPdfLoadedAtom } from "../atoms";
 
 export const ContratPdf = () => {
   let [auth] = useAuth();

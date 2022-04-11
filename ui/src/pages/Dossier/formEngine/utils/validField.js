@@ -6,7 +6,7 @@ export const validField = async ({ field, value }) => {
     return { error: field.requiredMessage ?? "Ce champ est obligatoire" };
   }
 
-  if (field.fieldType === "phone" && field.extra?.countryCode === "fr" && value.length !== 11) {
+  if (field.fieldType === "phone" && field.extra?.countryCode === "fr" && value.length !== 12) {
     return { error: "Le numéro de téléphone n'est pas au bon format" };
   }
 

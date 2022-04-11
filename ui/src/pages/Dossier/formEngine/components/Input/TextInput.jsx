@@ -5,7 +5,8 @@ import { InputWrapper } from "./InputWrapper";
 import { IMask, IMaskMixin } from "react-imask";
 
 const getVariantProp = (props) => {
-  if (props.success) return { variant: "valid" };
+  // if (props.success) return { variant: "valid" };
+  return { variant: "cerfa" };
 };
 
 export const TextInput = (props) => {
@@ -90,6 +91,7 @@ const MaskedInput = (props) => {
     disabled,
     minLength,
     maxLength,
+    variant,
   } = props;
   const inputRef = useRef(null);
 
@@ -167,6 +169,7 @@ const MaskedInput = (props) => {
       placeholder={placeholder}
       minLength={minLength}
       maxLength={maxLength}
+      variant={variant}
     />
   );
 };

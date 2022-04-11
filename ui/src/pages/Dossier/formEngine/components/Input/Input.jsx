@@ -11,8 +11,6 @@ import { ConsentInput } from "./ConsentInput";
 
 export const Input = memo(
   ({
-    error,
-    success,
     loading,
     name,
     locked,
@@ -94,9 +92,10 @@ export const Input = memo(
       <InputField
         {...props}
         {...fieldState}
+        isRequired={required}
         loading={loading}
         value={value ?? fieldState.value}
-        error={fieldState.error || error}
+        error={fieldState.error}
         onChange={handle}
         mt={mt}
         mb={mb}
@@ -106,16 +105,18 @@ export const Input = memo(
   }
 );
 
-export const InputField = memo(({ mt, mb, w, ...props }) => {
-  const { name, label, locked, isRequired, error, description, fieldType = "text", warning, success } = props;
+export const InputField = memo(({ mt, mb, ml, mr, w, ...props }) => {
+  const { name, label, locked, isRequired, error, description, fieldType = "text", warning } = props;
   const Component = TypesMapping[fieldType] ?? (() => <></>);
 
   return (
     <FormControl
       isRequired={isRequired && !!label}
       isInvalid={!!error}
-      mt={mt ?? 2}
-      mb={mb}
+      mt={mt}
+      mb={mb ?? 4}
+      ml={ml}
+      mr={mr}
       w={w}
       id={name.replaceAll(".", "_")}
     >

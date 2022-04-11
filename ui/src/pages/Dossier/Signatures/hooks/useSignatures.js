@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useRecoilValue } from "recoil";
 
 import { apiService } from "../../services/api.service";
-import { dossierAtom } from "../../../../common/hooks/useDossier/dossierAtom";
+import { dossierAtom } from "../../atoms";
 
 export function useSignatures() {
   const dossier = useRecoilValue(dossierAtom);

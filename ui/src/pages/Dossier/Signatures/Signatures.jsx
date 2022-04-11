@@ -1,28 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Heading, Center, Button, Text, HStack, VStack } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 import Tooltip from "../../../common/components/Tooltip";
-import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
+import { dossierAtom } from "../atoms";
 
-import { dossierCompletionStatus } from "../dossierCompletionAtoms";
-import { valueSelector } from "../formEngine/atoms";
-import { InputController } from "../formEngine/components/Input/InputController";
+import { dossierCompletionStatus } from "../atoms";
+import { fieldSelector } from "../formEngine/atoms";
 import { useSignatures } from "./hooks/useSignatures";
 import { SignatairesForm } from "./components/SignatairesForm";
 import { ContratPdf } from "./components/ContratPdf";
 import { Signataires } from "./components/Signataires";
+import { Input } from "../formEngine/components/Input/Input";
+import { useCerfaController } from "../formEngine/CerfaControllerContext";
 
 export default () => {
   const dossier = useRecoilValue(dossierAtom);
   const { onSubmitted } = useSignatures();
 
-  const dateConclusion = useRecoilValue(valueSelector("contrat.dateConclusion"));
-  const lieuSignatureContrat = useRecoilValue(valueSelector("contrat.lieuSignatureContrat"));
+  const dateConclusionField = useRecoilValue(fieldSelector("contrat.dateConclusion"));
+  const lieuSignatureField = useRecoilValue(fieldSelector("contrat.lieuSignatureContrat"));
+
+  const [_lieuSignature, setLieuSignature] = useState(lieuSignatureField?.value);
+  const [_dateConclusion, setDateConclusion] = useState(dateConclusionField?.value);
 
   const dossierStatus = useRecoilValue(dossierCompletionStatus);
+  console.log(dossierStatus);
   const cerfaComplete = dossierStatus?.cerfa?.complete;
   const documentsComplete = dossierStatus?.documents?.complete;
-  const signatureComplete = 10 === 100;
+  const signatureComplete = dossierStatus?.signature?.complete;
+  const cerfaController = useCerfaController();
 
   if (!cerfaComplete) {
     return (
@@ -59,11 +65,11 @@ export default () => {
         </Heading>
         <HStack spacing={8} mt={8} alignItems="baseline" h="150px">
           <VStack w="45%">
-            <InputController name="contrat.lieuSignatureContrat" />
+            <Input {...lieuSignatureField} value={_lieuSignature} onChange={setLieuSignature} />
             <Text textStyle="sm">&nbsp;</Text>
           </VStack>
           <VStack>
-            <InputController name="contrat.dateConclusion" />
+            <Input {...dateConclusionField} value={_dateConclusion} onChange={setDateConclusion} />
             <Text textStyle="sm">&nbsp;</Text>
           </VStack>
         </HStack>
@@ -71,8 +77,10 @@ export default () => {
           <Button
             size="md"
             onClick={async () => {
-              if (dateConclusion !== "" && lieuSignatureContrat !== "") {
-                return onSubmitted(lieuSignatureContrat, dateConclusion);
+              if (_lieuSignature && _dateConclusion) {
+                await onSubmitted(_lieuSignature, _dateConclusion);
+                cerfaController.setField("contrat.lieuSignatureContrat", _lieuSignature, { triggerSave: false });
+                cerfaController.setField("contrat.dateConclusion", _dateConclusion, { triggerSave: false });
               }
               return false;
             }}
@@ -105,12 +113,13 @@ export default () => {
 
   if (dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION") return <></>;
 
-  if (dossier.etat === "EN_ATTENTE_DECLENCHEMENT_SIGNATURES")
+  if (dossier.etat === "EN_ATTENTE_DECLENCHEMENT_SIGNATURES") {
     return (
       <Box mt="5rem">
         <SignatairesForm />
       </Box>
     );
+  }
 
   return (
     <Box mt="5rem">

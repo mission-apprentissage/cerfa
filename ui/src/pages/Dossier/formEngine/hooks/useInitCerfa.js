@@ -2,8 +2,8 @@ import { useQuery } from "react-query";
 import { _get } from "../../../../common/httpClient";
 import { initFields } from "../initFields";
 import { cerfaSchema } from "../cerfaSchema";
-import { dossierAtom } from "../../../../common/hooks/useDossier/dossierAtom";
 import { useRecoilValue } from "recoil";
+import { dossierAtom } from "../../atoms";
 
 export const useInitCerfa = ({ controller }) => {
   const dossier = useRecoilValue(dossierAtom);

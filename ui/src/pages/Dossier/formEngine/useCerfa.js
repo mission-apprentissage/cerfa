@@ -2,7 +2,7 @@ import { useRecoilCallback, useSetRecoilState } from "recoil";
 import { cerfaAtom, cerfaSetter, cerfaStatusGetter, fieldSelector, valuesSelector } from "./atoms";
 import { validField } from "./utils/validField";
 import { useMemo, useRef } from "react";
-import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
+import { dossierAtom } from "../atoms";
 import { isEmptyValue } from "./utils/isEmptyValue";
 import { indexedDependencies } from "./cerfaSchema";
 import { findDefinition } from "./utils";
@@ -181,12 +181,14 @@ export const useCerfa = ({ schema } = {}) => {
     return {
       getStatus,
       triggerValidation,
-      setField: async (name, value, extra) => {
+      setField: async (name, value, { extra, triggerSave = true }) => {
         patchFields({ [name]: { value, extra } });
         setTimeout(async () => {
           const currentValue = await getValue(name);
           await processField({ name, value: currentValue });
-          controller.dispatch("CHANGE", await getFields());
+          if (triggerSave) {
+            controller.dispatch("CHANGE", await getFields());
+          }
         });
       },
       setFields: (fields) => {

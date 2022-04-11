@@ -1,4 +1,4 @@
-import { buildRemuneration } from "../../domain/buildRemuneration";
+import { buildRemuneration } from "../../cerfaForm/domain/buildRemuneration";
 
 export const RemunerationsControl = [
   {

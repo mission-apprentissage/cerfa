@@ -23,7 +23,7 @@ import { hasPageAccessTo, hasContextAccessTo } from "../../../common/utils/roles
 // import InfoTooltip from "../../../common/components/InfoTooltip";
 
 import { useSetRecoilState, useRecoilValue } from "recoil";
-import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
+import { dossierAtom } from "../atoms";
 
 export default ({
   activeStep,
@@ -33,7 +33,7 @@ export default ({
   finalizeModalDisclosure,
   eSignatureModalDisclosure,
   dossierComplete,
-  employeurPrivePublic,
+  isEmployeurPrive,
   signaturesPdfLoaded,
 }) => {
   let [auth] = useAuth();
@@ -152,12 +152,7 @@ export default ({
             </Button>
           )}
           {activeStep < steps.length - 1 && (
-            <Button
-              size="md"
-              onClick={onClickNextStep}
-              variant="primary"
-              isDisabled={employeurPrivePublic?.contents?.value === "Employeur privé"}
-            >
+            <Button size="md" onClick={onClickNextStep} variant="primary" isDisabled={isEmployeurPrive}>
               Passer à l'étape suivante
             </Button>
           )}
@@ -168,7 +163,7 @@ export default ({
                 finalizeModalDisclosure.onOpen();
               }}
               variant="primary"
-              isDisabled={!dossierComplete || employeurPrivePublic?.contents?.value === "Employeur privé"}
+              isDisabled={!dossierComplete || isEmployeurPrive}
               bg="greenmedium.600"
               _hover={{ bg: "greenmedium.500" }}
             >
@@ -286,7 +281,7 @@ export default ({
                 bg={"greenmedium.500"}
                 _hover={{ bg: "greenmedium.600" }}
                 color="white"
-                isDisabled={!dossierComplete || employeurPrivePublic?.contents?.value === "Employeur privé"}
+                isDisabled={!dossierComplete || isEmployeurPrive}
               >
                 <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
                 {buttonTextProp}
@@ -322,11 +317,7 @@ export default ({
                   onClick={onSendToAgecap}
                   variant="primary"
                   ml={12}
-                  isDisabled={
-                    !dossierComplete ||
-                    employeurPrivePublic?.contents?.value === "Employeur privé" ||
-                    !signaturesPdfLoaded?.contents
-                  }
+                  isDisabled={!dossierComplete || isEmployeurPrive || !signaturesPdfLoaded?.contents}
                   bg="orangemedium.500"
                   _hover={{ bg: "orangemedium.600" }}
                   px={8}

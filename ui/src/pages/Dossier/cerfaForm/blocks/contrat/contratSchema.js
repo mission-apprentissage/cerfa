@@ -7,8 +7,7 @@ export const contratSchema = {
   "contrat.typeContratApp": {
     fieldType: "select",
     required: true,
-    description:
-      "Le type de contrat ou avenant doit correspondre à la situation du contrat (premier contrat, succession de contrats, avenants).",
+    showInfo: true,
     options: [
       {
         name: "Contrat initial",
@@ -79,8 +78,7 @@ export const contratSchema = {
   "contrat.typeDerogation": {
     fieldType: "select",
     _init: ({ values }) => ({ options: getTypeDerogationOptions({ values }) }),
-    description:
-      "A renseigner si une dérogation existe pour ce contrat (exemple : l'apprentissage commence à partir de 16 ans mais par dérogation, les jeunes âgés d'au moins 15 ans et un jour peuvent conclure un contrat d'apprentissage s'ils ont terminé la scolarité du 1er cycle de l'enseignement secondaire (collège).",
+    showInfo: true,
     label: "Type de dérogation (optionnel)",
   },
   "contrat.numeroContratPrecedent": {
@@ -89,10 +87,8 @@ export const contratSchema = {
       label: getLabelNumeroContratPrecedent({ values }),
       required: isRequiredNumeroContratPrecedent({ values }),
     }),
-    description:
-      "Succession (n° du contrat précédent) : s'il ne s'agit pas du tout premier contrat de l'apprenti, renseignez le numéro de son contrat précédent, même s'il a été conclu avec un autre employeur. Avenant (n° du contrat sur lequel porte l'avenant ) : indiquez le n° de dépôt du contrat initial qui fait l'objet de la modification.",
+    showInfo: true,
     requiredMessage: "la numéro du contrat précédent est obligatoire",
-    example: "02B202212000000",
     mask: "DEP Y M N 0000",
     maskBlocks: [
       {
@@ -249,37 +245,30 @@ export const contratSchema = {
   "contrat.dateDebutContrat": {
     required: true,
     fieldType: "date",
-    description:
-      "Indiquez la date du 1er jour où débute effectivement le contrat (chez l'employeur ou dans le centre de formation). La date de début d'exécution du contrat est liée à la date de naissance de l'apprenti pour le calcul des périodes de rémunération.",
+    showInfo: true,
     label: "Date de début d'exécution du contrat :",
     requiredMessage: "la date de début d'exécution de contrat est obligatoire",
-    example: "2021-02-01T00:00:00+0000",
   },
   "contrat.dateEffetAvenant": {
     fieldType: "date",
     _init: ({ values }) => ({ required: shouldAskDateEffetAvenant({ values }) }),
-    description: "Date à laquelle l'avenant va prendre effet.",
+    showInfo: true,
     label: "Date d'effet d'avenant :",
     requiredMessage: "S'agissant d'un avenant sa date d'effet est obligatoire ",
-    example: "2021-03-01T00:00:00+0000",
   },
   "contrat.dateFinContrat": {
     required: true,
     fieldType: "date",
-    description:
-      "La période de contrat doit englober la date du dernier examen qui sanctionne l'obtention du diplôme. Si celle-ci n'est pas connue au moment de la conclusion du contrat, vous pouvez renseigner une date située maximum 2 mois au-delà de la date de fin prévisionnelle des examens.",
+    showInfo: true,
     label: "Date de fin du contrat ou de la période d'apprentissage :",
     requiredMessage: "la date de fin de contrat est obligatoire",
-    example: "2021-02-28T00:00:00+0000",
   },
   "contrat.dureeTravailHebdoHeures": {
     required: true,
     fieldType: "number",
-    description:
-      "La durée légale du travail effectif est fixée à 35h par semaine. Dans certains secteurs, quand l'organisation du travail le justifie, elle peut être portée à 40h. Le temps de formation en CFA est du temps de travail effectif et compte dans l'horaire de travail. En savoir plus sur les horaires sur [le site du Service public.](https://www.service-public.fr/particuliers/vosdroits/F2918), rubrique \"Temps de travail\".",
+    showInfo: true,
     requiredMessage: "la durée hebdomadaire de travail est obligatoire",
     label: "Heures:",
-    example: 37,
     validate: ({ value }) => {
       if (value > 40) {
         return { error: "la durée de travail hebdomadaire en heures ne peut excéder 40h" };
@@ -288,9 +277,8 @@ export const contratSchema = {
   },
   "contrat.dureeTravailHebdoMinutes": {
     fieldType: "number",
-    description: "Durée hebdomadaire du travail (minutes)",
+    showInfo: true,
     label: "Minutes:",
-    example: 30,
     validate: ({ value }) => {
       if (value > 59) {
         return { error: "la durée de travail hebdomadaire en minutes ne peut excéder 59 minutes" };
@@ -302,7 +290,6 @@ export const contratSchema = {
     required: true,
     requiredMessage: "Cette déclaration est obligatoire",
     label: "Travail sur machines dangereuses ou exposition à des risques particuliers: ",
-    example: "Oui",
     options: [
       {
         label: "Oui",
@@ -317,24 +304,20 @@ export const contratSchema = {
   "contrat.salaireEmbauche": {
     locked: true,
     label: "Salaire brut mensuel à l'embauche:",
-    example: 1530,
   },
   "contrat.remunerationsAnnuelles[].dateDebut": {
     label: "Date de début",
     fieldType: "date",
     required: true,
     locked: true,
-    example: "2021-02-01T00:00:00+0000",
   },
   "contrat.remunerationsAnnuelles[].dateFin": {
     required: true,
-    example: "2021-02-28T00:00:00+0000",
     label: "Date de fin",
     fieldType: "date",
     locked: true,
   },
   "contrat.remunerationsAnnuelles[].ordre": {
-    example: "1.1, 1.2, 2.1",
     label: "ordre",
     required: true,
   },
@@ -345,22 +328,19 @@ export const contratSchema = {
   },
   "contrat.remunerationsAnnuelles[].taux": {
     fieldType: "number",
-    example: 75,
     label: "% de rémunération du SMIC",
     required: true,
   },
   "contrat.remunerationsAnnuelles[].tauxMinimal": {
     fieldType: "number",
-    description: "Seuil légal en %",
-    example: 57,
+    showInfo: true,
     label: "% de rémunération du SMIC",
     required: true,
   },
   "contrat.remunerationsAnnuelles[].typeSalaire": {
     label: "SMIC ou SMC",
     required: true,
-    description:
-      "**Type de salaire** :\r\n  SMIC = salaire minimum de croissance\r\n  SMC = salaire minimum conventionnel",
+    showInfo: true,
     options: [
       {
         label: "SMIC",
@@ -377,10 +357,8 @@ export const contratSchema = {
     fieldType: "radio",
     required: true,
     requiredMessage: "Cette déclaration est obligatoire",
-    description:
-      "Une déduction du montant des avantages peut être pratiquée sur la rémunération de l'apprenti sous certaines conditions (code du travail, [art. D6222-33](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000041770368)).",
+    showInfo: true,
     label: "L'apprenti(e) bénéficie d'avantages en nature",
-    example: "Oui",
     options: [
       {
         label: "Oui",
@@ -395,7 +373,6 @@ export const contratSchema = {
   "contrat.avantageNourriture": {
     fieldType: "number",
     label: "Nourriture:",
-    example: 3,
     requiredMessage: "Cette déclaration est obligatoire",
     min: 1,
     mask: "X € / rep\\as",
@@ -412,7 +389,6 @@ export const contratSchema = {
   "contrat.avantageLogement": {
     fieldType: "number",
     label: "Logement:",
-    example: 456,
     min: 1,
     mask: "X € / mois",
     maskBlocks: [
@@ -428,7 +404,6 @@ export const contratSchema = {
   "contrat.autreAvantageEnNature": {
     fieldType: "consent",
     label: "Autres avantages",
-    example: true,
     options: [
       {
         label: "true",

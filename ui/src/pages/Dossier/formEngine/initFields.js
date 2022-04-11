@@ -71,7 +71,6 @@ const createField = ({ name, data, schema }) => {
   }
 
   return {
-    // ...data,
     minLength: data.minLength,
     maxLength: data.maxLength,
     min: data.min,
@@ -79,8 +78,10 @@ const createField = ({ name, data, schema }) => {
     pattern: data.pattern,
     enum: data.enum,
     ...fieldSchema,
-    locked: data.locked,
+    locked: fieldSchema.locked ?? data.locked,
     success: !isEmptyValue(data?.value),
+    description: fieldSchema.showInfo ? data.description : fieldSchema.description,
+    example: data.example,
     value,
     name,
   };

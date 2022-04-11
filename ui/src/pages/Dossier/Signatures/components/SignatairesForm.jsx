@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { dossierAtom } from "../../../../common/hooks/useDossier/dossierAtom";
+import { dossierAtom } from "../../atoms";
 import { Divider, Flex, HStack, Stack, Text } from "@chakra-ui/react";
 import React from "react";
 import { useSignatures } from "../hooks/useSignatures";

@@ -34,7 +34,7 @@ const TYPE_DEROGATIONS_OPTIONS = [
 export const getTypeDerogationOptions = ({ values }) => {
   const age = values.apprenti.age;
 
-  if (!age) return;
+  if (!age) return TYPE_DEROGATIONS_OPTIONS;
   // 11 not allowed if age >= 16 à la date d'execution
   // if age  à la date d'execution < 16   type 11 ||  50
   // 12 not allowed age < 30  à la date d'execution

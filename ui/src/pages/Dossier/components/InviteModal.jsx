@@ -25,7 +25,7 @@ import { useRecoilValue } from "recoil";
 import { ArrowRightLine, Close, Question } from "../../../theme/components/icons";
 import { useQueries, useQueryClient, useMutation } from "react-query";
 import { _get, _post, _put, _delete } from "../../../common/httpClient";
-import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
+import { dossierAtom } from "../atoms";
 import { Table } from "../../../common/components/Table";
 import { NavLink } from "react-router-dom";
 

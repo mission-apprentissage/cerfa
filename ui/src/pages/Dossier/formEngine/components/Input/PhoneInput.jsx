@@ -2,6 +2,12 @@ import { InputWrapper } from "./InputWrapper";
 import React from "react";
 import PInput from "react-phone-input-2";
 
+const getStatusClass = (props) => {
+  if (props.locked) return "disabled";
+  if (props.error) return "error";
+  if (props.success) return "valid";
+};
+
 export const PhoneInput = (props) => {
   const { name, onChange, locked, success, error } = props;
   const value = props.value.replace("+", "");
@@ -22,8 +28,8 @@ export const PhoneInput = (props) => {
         countryCodeEditable={false}
         onChange={handleChange}
         disabled={locked}
-        inputClass={`phone-form-input ${success && "valid"} ${error && "error"}`}
-        buttonClass={`phone-form-button ${success && "valid"} ${error && "error"}`}
+        inputClass={`phone-form-input ${getStatusClass(props)}`}
+        buttonClass={`phone-form-button ${getStatusClass(props)}`}
       />
     </InputWrapper>
   );

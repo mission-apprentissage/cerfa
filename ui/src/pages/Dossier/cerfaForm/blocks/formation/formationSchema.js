@@ -22,7 +22,6 @@ export const formationSchema = {
     completion: shouldAskEtablissementFormation,
     label: "Dénomination du lieu de formation :",
     requiredMessage: "la dénomination du lieu de formation est obligatoire",
-    example: "CFA",
     mask: "C",
     maskBlocks: [
       {
@@ -36,8 +35,6 @@ export const formationSchema = {
     fieldType: "text",
     required: true,
     completion: shouldAskEtablissementFormation,
-    description: "N° SIRET du lieu de formation",
-    example: "98765432400019",
     label: "N° SIRET du lieu de formation :",
     validateMessage: "n'est pas un siret valide",
     mask: "C",
@@ -53,9 +50,6 @@ export const formationSchema = {
     fieldType: "text",
     required: true,
     completion: shouldAskEtablissementFormation,
-    description:
-      "Le numéro UAI est autocomplété ; il peut être recherché sur [le catalogue des formations en apprentissage.](https://catalogue.apprentissage.beta.gouv.fr/)",
-    example: "0561910X",
     label: "N° UAI du CFA :",
     validateMessage: "n'est pas un uai valide",
   },
@@ -63,7 +57,6 @@ export const formationSchema = {
     fieldType: "number",
     required: false,
     label: "N° :",
-    example: 13,
     validateMessage: "le numéro de voie ne peut pas commencer par zéro",
     mask: "C",
     maskBlocks: [
@@ -80,7 +73,6 @@ export const formationSchema = {
     completion: shouldAskEtablissementFormation,
     label: "Voie :",
     requiredMessage: "le nom de voie est obligatoire",
-    example: "Boulevard de la liberté",
     mask: "C",
     maskBlocks: [
       {
@@ -95,7 +87,6 @@ export const formationSchema = {
     required: false,
     label: "Complément d'adresse (optionnel):",
     requiredMessage: "le complement d'adress est obligatoire",
-    example: "Bâtiment ; Résidence ; Entrée ; Appartement ; Escalier ; Etage",
   },
   "etablissementFormation.adresse.codePostal": {
     fieldType: "text",
@@ -104,7 +95,6 @@ export const formationSchema = {
     label: "Code postal :",
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
-    example: "75000",
     mask: "C",
     maskBlocks: [
       {
@@ -120,7 +110,6 @@ export const formationSchema = {
     completion: shouldAskEtablissementFormation,
     label: "Commune: ",
     requiredMessage: "la commune est obligatoire",
-    example: "PARIS",
     mask: "C",
     maskBlocks: [
       {
@@ -133,10 +122,7 @@ export const formationSchema = {
   "formation.rncp": {
     fieldType: "text",
     required: true,
-    description:
-      "Le code RNCP peut être recherché sur [le site France compétences.](https://www.francecompetences.fr/recherche_certificationprofessionnelle/) Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez renseigner un code diplôme pour déduire le code RNCP correspondant.",
     label: "Code RNCP : ",
-    example: "RNCP15516",
     requiredMessage: "Le code RNCP est obligatoire",
     validateMessage:
       "n'est pas un code RNCP valide. Le code RNCP doit être définit et au format 5 ou 9 caractères,  RNCP24440 ou 24440",
@@ -153,10 +139,7 @@ export const formationSchema = {
   "formation.codeDiplome": {
     fieldType: "text",
     required: true,
-    description:
-      "Ce code à 8 caractères permet d'identifier un titre ou diplôme préparé par la voie de l'apprentissage, plus d'informations sur [le site du ministère de l'Education Nationale.](https://www.education.gouv.fr/codification-des-formations-et-des-diplomes-11270) Le code diplôme peut être recherché sur [le catalogue des formations en apprentissage.](https://catalogue.apprentissage.beta.gouv.fr/) Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez renseigner un code diplôme pour déduire le code RNCP correspondant.",
     label: "Code diplôme (Éducation Nationale) : ",
-    example: "32322111",
     requiredMessage: "Le code diplôme est obligatoire",
     validateMessage:
       "n'est pas un code diplôme valide. Le code formation diplôme doit être au format 8 caractères ou 9 avec la lettre specialité",
@@ -164,8 +147,6 @@ export const formationSchema = {
   "formation.typeDiplome": {
     fieldType: "select",
     required: true,
-    description:
-      "Il faut sélectionner le diplôme ou le titre préparé avant la conclusion du présent contrat. Par exemple, si l'entrée en apprentissage concerne la 2ème année de BTS, le dernier diplôme ou titre préparé est la 1ère année de BTS : il faut donc sélectionner 54 - Brevet de Technicien supérieur.",
     options: [
       {
         name: "Diplôme ou titre de niveau bac +5 et plus",
@@ -295,64 +276,46 @@ export const formationSchema = {
       },
     ],
     label: "Diplôme ou titre visé par l'apprenti :",
-    example: 74,
     requiredMessage: "Le diplôme ou titre visé est obligatoire",
     validateMessage: " n'est pas un diplôme ou titre valide",
   },
   "formation.intituleQualification": {
     fieldType: "text",
     required: true,
-    description: "Intitulé précis du diplôme ou titre visé par l'Alternant",
     label: "Intitulé précis :",
-    example: "PRODUCTION ET SERVICE EN RESTAURATION (RAPIDE, COLLECTIVE, CAFETERIA) (CAP)",
     requiredMessage: "L'intitulé du diplôme ou titre est obligatoire",
     validateMessage: " n'est pas un intitulé valide",
   },
   "formation.dateDebutFormation": {
     fieldType: "date",
     required: true,
-    description:
-      "Il faut renseigner la date effective à laquelle l'apprenti débute sa formation, même si l'apprenti a démarré la formation sous le statut \"stagiaire de la formation professionnelle\".",
     label: "Date de début du cycle de formation : ",
-    example: "05/11/2021",
     requiredMessage: "la date de début de cycle est obligatoire",
     validateMessage: " n'est pas une date valide",
   },
   "formation.dateFinFormation": {
     fieldType: "date",
     required: true,
-    description:
-      "Lorsque la date précise n'est pas connue, il est possible de renseigner une date prévisionnelle avec une marge de 2 mois maximum.",
     label: "Date prévue de fin des épreuves ou examens : ",
-    example: "18/11/2021",
     requiredMessage: "la date de fin de cycle est obligatoire",
     validateMessage: " n'est pas une date valide",
   },
-  "formation.dureeFormationCalc": {
-    description: "Durée de formation en mois [calculé]",
-  },
+  "formation.dureeFormationCalc": {},
   "formation.dureeFormation": {
     fieldType: "number",
     required: true,
-    description:
-      "La quotité de formation théorique du contrat d’apprentissage ne peut pas être inférieure à 25% de la durée globale du contrat (cette quotité de formation est calculée sur la base de la durée légale annuelle de travail, soit 1 607 heures, sauf aménagements spécifiques en cas de pratique du sport à haut niveau ou reconnaissance de handicap).",
     label: "Durée de la formation en heures :",
-    example: "400",
     requiredMessage: "Le nombre d'heures de la formation est obligatoire",
     validateMessage: " n'est pas un nombre d'heures valide",
     precision: 0,
     min: 1,
   },
-  "formation.dateObtentionDiplome": {
-    fieldType: "date",
-    description: "Date d'obtention du diplôme ou titre visé par l'Alternant",
-  },
+  "formation.dateObtentionDiplome": { fieldType: "date" },
   "organismeFormation.denomination": {
     fieldType: "text",
     required: true,
     label: "Dénomination du CFA responsable :",
     requiredMessage: "la dénomination du CFA responsable est obligatoire",
-    example: "CFA",
     mask: "C",
     maskBlocks: [
       {
@@ -365,11 +328,8 @@ export const formationSchema = {
   "organismeFormation.formationInterne": {
     required: true,
     fieldType: "radio",
-    description:
-      "Un CFA d'entreprise est interne à l’entreprise ou constitué par plusieurs entreprises partageant des perspectives communes d’évolution des métiers ou qui interviennent dans des secteurs d’activité complémentaires.",
     label: "Le centre de formation est-il un CFA d'entreprise ?",
     requiredMessage: "Merci de préciser s'il sagit d'un CFA d'entreprise",
-    example: "Non",
     options: [
       {
         label: "Oui",
@@ -384,9 +344,6 @@ export const formationSchema = {
   "organismeFormation.siret": {
     fieldType: "text",
     required: true,
-    description:
-      "Vous devez renseigner le siret du CFA responsable. Le lieu principal de formation sera quant-à lui précisé dans la convention de formation. Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).",
-    example: "98765432400019",
     label: "N° SIRET du CFA responsable :",
     requiredMessage: "Le siret est obligatoire",
     validateMessage: "n'est pas un siret valide",
@@ -402,20 +359,17 @@ export const formationSchema = {
   "organismeFormation.uaiCfa": {
     fieldType: "text",
     required: true,
-    description:
-      "Le numéro UAI est autocomplété ; il peut être recherché sur [le catalogue des formations en apprentissage.](https://catalogue.apprentissage.beta.gouv.fr/)",
-    example: "0561910X",
+    showInfo: true,
     label: "N° UAI du CFA :",
     requiredMessage: "Le N° UAI de l'organisme est obligatoire",
     validateMessage: "n'est pas un uai valide",
   },
   "organismeFormation.visaCfa": {
-    description: "Est visé par l'organisme de formation responsable",
+    showInfo: true,
   },
   "organismeFormation.adresse.numero": {
     fieldType: "number",
     label: "N° :",
-    example: 13,
     validateMessage: "le numéro de voie ne peut pas commencer par zéro",
     mask: "C",
     maskBlocks: [
@@ -431,7 +385,6 @@ export const formationSchema = {
     required: true,
     label: "Voie :",
     requiredMessage: "le nom de voie est obligatoire",
-    example: "Boulevard de la liberté",
     mask: "C",
     maskBlocks: [
       {
@@ -445,7 +398,6 @@ export const formationSchema = {
     fieldType: "text",
     label: "Complément d'adresse (optionnel):",
     requiredMessage: "le complement d'adress est obligatoire",
-    example: "Bâtiment ; Résidence ; Entrée ; Appartement ; Escalier ; Etage",
   },
   "organismeFormation.adresse.codePostal": {
     fieldType: "text",
@@ -453,7 +405,6 @@ export const formationSchema = {
     label: "Code postal :",
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
-    example: "75000",
     mask: "C",
     maskBlocks: [
       {
@@ -468,7 +419,6 @@ export const formationSchema = {
     required: true,
     label: "Commune: ",
     requiredMessage: "la commune est obligatoire",
-    example: "PARIS",
     mask: "C",
     maskBlocks: [
       {

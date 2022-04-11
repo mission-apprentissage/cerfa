@@ -212,7 +212,7 @@ module.exports = (components) => {
             codePostal: Joi.string().allow(null),
             commune: Joi.string().allow(null),
             departement: Joi.string().allow(null),
-            region: Joi.string().allow(null),
+            region: Joi.number().allow(null),
           }),
           nom: Joi.string().allow(null),
           prenom: Joi.string().allow(null),
@@ -315,7 +315,7 @@ module.exports = (components) => {
           avantageLogement: Joi.number().allow(null),
           autreAvantageEnNature: Joi.boolean().allow(null),
           remunerationMajoration: Joi.number().allow(null),
-          smic: Joi.object({}).unknown(),
+          smic: Joi.object({}).unknown().allow(null),
           remunerationsAnnuelles: Joi.array().items({
             dateDebut: Joi.date().required(),
             dateFin: Joi.date().required(),

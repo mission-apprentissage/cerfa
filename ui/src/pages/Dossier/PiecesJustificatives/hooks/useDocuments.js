@@ -2,8 +2,8 @@ import { useCallback } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import { documentsGetter } from "../documentsCompletionAtoms";
-import { dossierAtom } from "../../../../common/hooks/useDossier/dossierAtom";
-import { documentsIsRequired } from "../documentsIsRequired";
+import { dossierAtom } from "../../atoms";
+import { documentsIsRequired } from "../domain/documentsIsRequired";
 import { valueSelector } from "../../formEngine/atoms";
 
 export function useDocuments() {
