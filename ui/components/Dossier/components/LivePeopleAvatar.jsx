@@ -13,7 +13,7 @@ const useWebSocketSubscription = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { slug } = router.query;
-  const [paramId] = slug;
+  const dossierIdParam = slug?.[slug.length - 2];
 
   // eslint-disable-next-line no-undef
   const { data: liveUsers } = useQuery("dossier:live_users", () => Promise.resolve([]), {
@@ -25,7 +25,7 @@ const useWebSocketSubscription = () => {
     socket.on("connect", () => {
       console.log(socket.id);
 
-      socket.emit("dossier:connect", { dossierId: paramId }, ({ status, ...rest }) => {
+      socket.emit("dossier:connect", { dossierId: dossierIdParam }, ({ status, ...rest }) => {
         if (status === "KO") {
           console.log(rest);
           return socket.disconnect();
@@ -42,7 +42,7 @@ const useWebSocketSubscription = () => {
     return () => {
       socket.disconnect();
     };
-  }, [paramId, queryClient]);
+  }, [dossierIdParam, queryClient]);
 
   return { liveUsers: liveUsers || [] };
 };

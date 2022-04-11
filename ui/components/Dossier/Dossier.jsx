@@ -47,7 +47,8 @@ const stepByPath = ["cerfa", "documents", "signatures"];
 const Dossier = () => {
   const router = useRouter();
   const { slug } = router.query;
-  const [paramid, paramstep] = slug;
+  const dossierIdParam = slug?.[slug.length - 2];
+  const paramstep = slug?.[slug.length - 1];
   let [auth] = useAuth();
   const { nextStep, prevStep, activeStep, setStep } = useSteps({
     initialStep: stepByPath.indexOf(paramstep),
@@ -59,7 +60,7 @@ const Dossier = () => {
   const [step2Visited, setStep2Visited] = useState(false);
   const [step3Visited, setStep3Visited] = useState(false);
 
-  const { isloaded, dossier } = useDossier(paramid);
+  const { isloaded, dossier } = useDossier(dossierIdParam);
   const cerfa = useRecoilValue(cerfaAtom);
   const { documentsCompletion, setDocumentsCompletion } = useDocuments();
   const [documentsComplete, setDocumentsComplete] = useState(false);

@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 
 import WorkspaceLayout from "../../../components/Workspace/WorkspaceLayout";
 import * as WorkspaceDossiers from "../../../components/Workspace/WorkspaceDossiers";
+import * as SharedDossiers from "../../../components/Workspace/SharedDossiers";
 import NouveauDossier from "../../../components/Dossier/NouveauDossier";
 import Dossier from "../../../components/Dossier/Dossier";
 
@@ -21,7 +22,20 @@ const Loader = () => (
 
 const MesDossiers = () => {
   const router = useRouter();
-  const { part, slug } = router.query;
+  // TODO REFACT SPLITTING SLUG
+  const { part, slug = [] } = router.query;
+  const isMySpacePage = part === "mon-espace" && !slug.length;
+  const isSharedSpacePage = part === "espaces-partages" && slug?.[slug.length - 1] === "dossiers";
+  const isSharedFolders = part === "dossiers-partages";
+
+  const isNouveauDossier = slug.includes("nouveau-dossier");
+
+  const isSpacePages = (isMySpacePage || isSharedSpacePage) && !isNouveauDossier && !isSharedFolders;
+  const workspaceId = isSharedSpacePage ? slug?.[0] : null;
+
+  const isDossierPage = !isSpacePages && !isNouveauDossier;
+  const dossierId = isDossierPage ? slug?.[slug.length - 2] : null;
+
   let {
     isloaded,
     isReloaded,
@@ -31,7 +45,10 @@ const MesDossiers = () => {
   } = useWorkspace();
 
   if (!isloaded || !workspace) return <Spinner />;
+
   console.log(">", part, slug); //paths
+  console.log(workspaceId, dossierId, isDossierPage, isNouveauDossier);
+
   return (
     <Page>
       <Head>
@@ -40,25 +57,27 @@ const MesDossiers = () => {
       </Head>
       <Breadcrumb pages={breadcrumbDetails} loading={!isReloaded} />
       <Box>
-        {/* mes-dossiers/mon-espace 
-            mes-dossiers/espaces-partages/:workspaceId/dossiers  */}
-        {part === "mon-espace" && !slug && (
+        {/* /mon-espace ; /espaces-partages/:workspaceId/dossiers  */}
+        {isSpacePages && (
           <WorkspaceLayout
-            header={isReloaded && <WorkspaceDossiers.Header />}
+            header={isReloaded && <WorkspaceDossiers.Header isSharedWorkspace={part === "espaces-partages"} />}
             content={!isReloaded ? <Loader /> : <WorkspaceDossiers.Content />}
           />
         )}
-        {/* /mes-dossiers/dossiers-partages */}
 
-        {/* mes-dossiers/mon-espace/:id/:step
-            mes-dossiers/espaces-partages/:workspaceId/dossiers/:id/:step  
-            /mes-dossiers/dossiers-partages/:id/:step  
-            */}
-        {part === "mon-espace" && slug?.[0] && slug?.[1] && <Dossier />}
+        {/* /dossiers-partages */}
+        {isSharedFolders && !dossierId && (
+          <WorkspaceLayout
+            header={isReloaded && <SharedDossiers.Header />}
+            content={!isReloaded ? <Loader /> : <SharedDossiers.Content />}
+          />
+        )}
 
-        {/* /mes-dossiers/mon-espace/nouveau-dossier 
-            /mes-dossiers/espaces-partages/${workspaceId}/dossiers/nouveau-dossier */}
-        {part === "mon-espace" && slug?.[0] === "nouveau-dossier" && <NouveauDossier />}
+        {/* /mon-espace/:id/:step ; /espaces-partages/:workspaceId/dossiers/:id/:step ; /dossiers-partages/:id/:step */}
+        {isDossierPage && dossierId && <Dossier />}
+
+        {/* /mon-espace/nouveau-dossier ; /espaces-partages/:workspaceId/dossiers/nouveau-dossier */}
+        {isNouveauDossier && <NouveauDossier />}
       </Box>
     </Page>
   );
