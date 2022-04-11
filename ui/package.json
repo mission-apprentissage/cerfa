@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "NEXT_PUBLIC_VERSION=$npm_package_version next dev",
     "build": "NEXT_PUBLIC_VERSION=$npm_package_version next build",
-    "start": "ls -la /app/.next && ls -la /site && NEXT_PUBLIC_VERSION=$npm_package_version next start",
+    "start": "NEXT_PUBLIC_VERSION=$npm_package_version next start",
     "lint": "next lint",
     "test": "jest --watch",
     "test:coverage": "jest --coverage"
