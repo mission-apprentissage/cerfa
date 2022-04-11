@@ -22,7 +22,6 @@
     "lodash.debounce": "4.0.8",
     "lodash.get": "4.4.2",
     "lodash.range": "3.2.0",
-    "lodash.set": "4.3.2",
     "lodash.setwith": "4.3.2",
     "lodash.throttle": "4.1.1",
     "luxon": "2.2.0",
