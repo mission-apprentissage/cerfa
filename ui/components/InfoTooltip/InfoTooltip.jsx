@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   Icon,
   Popover,
@@ -33,7 +33,8 @@ const TooltipIcon = (props) => (
   </Icon>
 );
 
-const InfoTooltip = ({ description, descriptionComponent, label, history, noHistory = true, ...rest }) => {
+// eslint-disable-next-line react/display-name
+const InfoTooltip = memo(({ description, descriptionComponent, label, history, noHistory = true, ...rest }) => {
   return (
     <Popover placement="bottom">
       <PopoverTrigger>
@@ -103,6 +104,6 @@ const InfoTooltip = ({ description, descriptionComponent, label, history, noHist
       </PopoverContent>
     </Popover>
   );
-};
+});
 
 export default InfoTooltip;
