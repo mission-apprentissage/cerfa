@@ -9,7 +9,6 @@ services:
         - CERFA_ENV=dev
 
   ui:
-    # command: yarn start
     mem_limit: 1g
     stdin_open: true
     volumes:
@@ -24,8 +23,6 @@ services:
         - REACT_APP_METABASE_URL=https://contrat.apprentissage.beta.gouv.fr/
         - REACT_APP_METABASE_SECRET_KEY=
         - SKIP_PREFLIGHT_CHECK=true
-    environment:
-      - FAST_REFRESH=false
 
   server:
     command: [ "yarn", "debug" ]

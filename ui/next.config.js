@@ -1,3 +1,23 @@
+function inline(value) {
+  return value.replace(/\s{2,}/g, " ").trim();
+}
+
+const contentSecurityPolicy = `
+      default-src 'self' https://plausible.io;frame-src;
+      base-uri 'self';
+      block-all-mixed-content;
+      font-src 'self' https: data:;
+      frame-ancestors 'self';
+      img-src 'self' https://www.notion.so data:;
+      object-src 'none';
+      script-src 'self'  https://plausible.io ${
+        process.env.REACT_APP_ENV === "dev" ? "'unsafe-eval'" : ""
+      };
+      script-src-attr 'none';
+      style-src 'self' https: 'unsafe-inline';
+      upgrade-insecure-requests;
+`;
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -16,6 +36,19 @@ const nextConfig = {
     });
 
     return config;
+  },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: inline(contentSecurityPolicy),
+          },
+        ],
+      },
+    ];
   },
 };
 
