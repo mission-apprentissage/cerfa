@@ -1,19 +1,18 @@
 import useAuth from "../../../../common/hooks/useAuth";
 import React, { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useCerfa } from "../../../../common/hooks/useCerfa/useCerfa";
 import { _post } from "../../../../common/httpClient";
 import { Box, Center, Heading, Link, ListItem, OrderedList, SkeletonText, Spinner, Text } from "@chakra-ui/react";
 import { PdfViewer } from "../../../../common/components/PdfViewer";
 import { NavLink } from "react-router-dom";
 import { dossierAtom } from "../../atoms";
 import { signaturesPdfLoadedAtom } from "../atoms";
+import { valueSelector } from "../../formEngine/atoms";
 
 export const ContratPdf = () => {
   let [auth] = useAuth();
   const [pdfBase64, setPdfBase64] = useState(null);
   const setPdfLoaded = useSetRecoilState(signaturesPdfLoadedAtom);
-  const { isLoading, cerfa } = useCerfa();
   const dossier = useRecoilValue(dossierAtom);
 
   const showDdets =
@@ -22,8 +21,8 @@ export const ContratPdf = () => {
   useEffect(() => {
     const run = async () => {
       try {
-        if (dossier._id && cerfa?.id) {
-          const { pdfBase64 } = await _post(`/api/v1/cerfa/pdf/${cerfa.id}`, {
+        if (dossier._id && dossier.cerfaId) {
+          const { pdfBase64 } = await _post(`/api/v1/cerfa/pdf/${dossier.cerfaId}`, {
             dossierId: dossier._id,
           });
           setPdfBase64(pdfBase64);
@@ -34,7 +33,7 @@ export const ContratPdf = () => {
     };
     run();
     return () => {};
-  }, [auth, cerfa, dossier?._id]);
+  }, [auth, dossier?._id, dossier.cerfaId]);
 
   return (
     <Box mt={8} minH="30vh">
@@ -43,10 +42,10 @@ export const ContratPdf = () => {
         Votre contrat généré (non signé):
       </Heading>
       <Center mt={5}>
-        {(isLoading || !pdfBase64) && <Spinner />}
-        {!isLoading && pdfBase64 && (
+        {!pdfBase64 && <Spinner />}
+        {pdfBase64 && (
           <PdfViewer
-            url={`/api/v1/cerfa/pdf/${cerfa.id}/?dossierId=${dossier._id}`}
+            url={`/api/v1/cerfa/pdf/${dossier.cerfaId.id}/?dossierId=${dossier._id}`}
             pdfBase64={pdfBase64}
             showDownload={false}
             documentLoaded={() => {
@@ -60,16 +59,15 @@ export const ContratPdf = () => {
 };
 
 const DdetsContainer = () => {
-  const { cerfa } = useCerfa();
+  const code_region = useRecoilValue(valueSelector("employeur.adresse.region"));
+  const code_dpt = useRecoilValue(valueSelector("employeur.adresse.departement"));
   const dossier = useRecoilValue(dossierAtom);
 
   const [ddets, setDdets] = useState(null);
 
   useEffect(() => {
     const run = async () => {
-      if (cerfa && !ddets) {
-        const code_region = cerfa.employeur.adresse.region.value;
-        const code_dpt = cerfa.employeur.adresse.departement.value;
+      if (!ddets) {
         if (code_region && code_dpt) {
           const response = await _post(`/api/v1/dreetsddets/`, {
             code_region,
@@ -81,7 +79,7 @@ const DdetsContainer = () => {
       }
     };
     run();
-  }, [cerfa, ddets, dossier?._id]);
+  }, [code_dpt, code_region, ddets, dossier._id]);
 
   return (
     <Box mt={8} mb={8}>

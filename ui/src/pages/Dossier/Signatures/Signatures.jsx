@@ -24,7 +24,6 @@ export default () => {
   const [_dateConclusion, setDateConclusion] = useState(dateConclusionField?.value);
 
   const dossierStatus = useRecoilValue(dossierCompletionStatus);
-  console.log(dossierStatus);
   const cerfaComplete = dossierStatus?.cerfa?.complete;
   const documentsComplete = dossierStatus?.documents?.complete;
   const signatureComplete = dossierStatus?.signature?.complete;

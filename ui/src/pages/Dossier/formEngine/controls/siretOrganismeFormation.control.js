@@ -63,7 +63,6 @@ export const siretOrganismeFormationLogic = {
         "organismeFormation.adresse.codePostal": {
           value: result.code_postal || undefined,
           locked: false,
-          cascade: false,
         },
         "organismeFormation.adresse.commune": { value: result.commune_implantation_nom || undefined, locked: false },
       },

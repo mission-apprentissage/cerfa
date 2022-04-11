@@ -4,6 +4,7 @@ export const etablissementFormationCodePostalControl = [
   {
     deps: ["etablissementFormation.adresse.codePostal"],
     process: async ({ values, dossier, signal }) => {
+      console.log("etablissementFormation.adresse.codePostal logic", values.etablissementFormation.adresse.codePostal);
       const codePostal = values.etablissementFormation.adresse.codePostal;
       const { messages, result } = await apiService.fetchCodePostal({
         codePostal,

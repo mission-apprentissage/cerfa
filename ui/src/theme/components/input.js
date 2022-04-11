@@ -23,7 +23,6 @@ const commonFieldStyle = {
   _invalid: {
     borderBottomColor: "error",
     boxShadow: "none",
-    // outline: "2px solid",
     outlineColor: "error",
     outlineOffset: "2px",
   },

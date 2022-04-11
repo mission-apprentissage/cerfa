@@ -8,6 +8,7 @@ import { DateInput } from "./DateInput";
 import { RadioInput } from "./RadioInput";
 import { Select } from "./Select";
 import { ConsentInput } from "./ConsentInput";
+import { NumberInput } from "./NumberInput";
 
 export const Input = memo(
   ({
@@ -144,6 +145,7 @@ const NoLabel = {
 const TypesMapping = {
   text: TextInput,
   number: TextInput,
+  float: NumberInput,
   email: TextInput,
   phone: PhoneInput,
   date: DateInput,

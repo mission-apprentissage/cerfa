@@ -327,7 +327,7 @@ export const contratSchema = {
     required: true,
   },
   "contrat.remunerationsAnnuelles[].taux": {
-    fieldType: "number",
+    fieldType: "float",
     label: "% de rémunération du SMIC",
     required: true,
   },

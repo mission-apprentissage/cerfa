@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { valuesSelector } from "../../../../formEngine/atoms";
 import { InputController } from "../../../../formEngine/components/Input/InputController";
 import { CollapseController } from "../../../../formEngine/components/CollapseController";
-import { shouldHideRemunerationsAnnuelles } from "../domain/shouldHideRemunrationsAnnuelles";
+import { shouldShowRemunerationsAnnuelles } from "../domain/shouldShowRemunerationsAnnuelles";
 import Ribbons from "../../../../../../common/components/Ribbons";
 import { ExternalLinkLine } from "../../../../../../theme/components/icons";
 
@@ -94,7 +94,7 @@ export const Remunerations = () => {
           </UnorderedList>
         </VStack>
       )}
-      <CollapseController hide={shouldHideRemunerationsAnnuelles}>
+      <CollapseController show={shouldShowRemunerationsAnnuelles}>
         <Box>
           {remunerationsAnnuelles?.map((annee, i) => (
             <Box key={annee.ordre} mt={4}>

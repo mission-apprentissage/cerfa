@@ -9,7 +9,7 @@ const getStatusClass = (props) => {
 };
 
 export const PhoneInput = (props) => {
-  const { name, onChange, locked, success, error } = props;
+  const { name, onChange, locked } = props;
   const value = props.value.replace("+", "");
 
   const handleChange = (val, country) => {

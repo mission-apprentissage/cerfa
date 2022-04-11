@@ -1,6 +1,6 @@
 import { getLabelNumeroContratPrecedent } from "../../cerfaForm/blocks/contrat/domain/getLabelNumeroContratPrecedent";
 import { isRequiredNumeroContratPrecedent } from "../../cerfaForm/blocks/contrat/domain/isRequiredNumeroContratPrecedent";
-import { shouldAskNumeroContratPrecedent } from "../../cerfaForm/blocks/contrat/domain/shouldHideContratPrecedent";
+import { shouldAskNumeroContratPrecedent } from "../../cerfaForm/blocks/contrat/domain/shouldAskContratPrecedent";
 import { shouldAskDateEffetAvenant } from "../../cerfaForm/blocks/contrat/domain/shouldAskDateEffetAvenant";
 
 export const typeContratAppControl = [

@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { Box, Flex, FormLabel, Link, Text } from "@chakra-ui/react";
+import { Box, Flex, FormLabel } from "@chakra-ui/react";
 import { InputController } from "../../../formEngine/components/Input/InputController";
 import { NumeroContratPrecedentField } from "./components/NumeroContratPrecedentField";
 import { TypeDerogationField } from "./components/TypeDerogationField";

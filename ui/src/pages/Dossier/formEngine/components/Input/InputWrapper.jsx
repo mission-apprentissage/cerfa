@@ -1,4 +1,4 @@
-import { Center, HStack, InputGroup, InputRightElement, Spinner } from "@chakra-ui/react";
+import { Center, InputGroup, InputRightElement, Spinner } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 import { LockFill } from "../../../../../theme/components/icons";
 import React from "react";
