@@ -15,9 +15,9 @@ export const NumberInput = (props) => {
   const [localValue, setLocalValue] = useState(props.value);
 
   useEffect(() => {
-    if (props.value === localValue) return;
+    if (localValue && parseFloat(props.value) === parseFloat(localValue + "")) return;
     setLocalValue(props.value);
-  }, [props.value]);
+  }, [setLocalValue, props.value, localValue]);
 
   return (
     <InputWrapper {...props}>

@@ -33,105 +33,6 @@ export const useCerfa = ({ schema } = {}) => {
 
   const abortControllers = useRef({});
 
-  const computeGlobal = async ({ name }) => {
-    abortControllers.current[name] = new AbortController();
-    for (let logic of indexedRules[name] ?? []) {
-      const { values, dossier, fields } = await getData();
-      try {
-        const signal = abortControllers.current[name].signal;
-        const { cascade, error, warning, cache } =
-          (await logic.process({ fields, values, signal, dossier, name, cache: logic.cache })) ?? {};
-        logic.cache = cache;
-
-        if (error && !logic.target) {
-          patchFields({ [name]: { error, success: false, warning: undefined } });
-        } else if (warning) {
-          patchFields({ [name]: { warning } });
-        }
-        if (cascade) {
-          await Promise.all(
-            Object.keys(cascade).map(
-              async (key) =>
-                await onCascadeField({
-                  name: key,
-                  patch: cascade[key],
-                })
-            )
-          );
-        }
-        if (error) return;
-      } catch (e) {
-        if (e.name !== "AbortError") throw e;
-      }
-    }
-    await validDeps({ name });
-  };
-
-  const validDeps = async ({ name }) => {
-    const { values, dossier, fields } = await getData();
-    await Promise.all(
-      (indexedDependencies[name] ?? []).map(async (dep) => {
-        const field = fields[dep];
-        if (!field.error || isEmptyValue(field.value)) return;
-        let error;
-        error = await validField({ field, value: field.value }).error;
-        if (!error) {
-          const logics = indexedDependencesRevalidationRules[name][dep];
-          error = await findLogicErrors({ name: dep, logics, values, dossier, fields });
-        }
-        if (!error) {
-          await processField({ name: dep, value: field.value });
-        }
-        patchFields({ [dep]: { error, success: !error } });
-      })
-    );
-  };
-
-  const onCascadeField = async ({ name, patch }) => {
-    if (patch === undefined) {
-      patchFields({ [name]: undefined });
-      return;
-    }
-
-    await registerField(name, patch);
-    const { fields, values } = await getData();
-    const field = fields[name];
-
-    if (patch.reset) {
-      patchFields({
-        [name]: {
-          value: undefined,
-          error: "",
-          loading: false,
-          success: undefined,
-          touched: false,
-          ...field?._init?.({ values }),
-          ...patch,
-        },
-      });
-      return;
-    }
-
-    if (patch.value === field?.value) {
-      patch = { ...patch };
-      delete patch.value;
-      if (!Object.keys(patch).length) return;
-      patchFields({ [name]: { ...patch, loading: false } });
-      return;
-    }
-    abortControllers.current[name]?.abort();
-
-    const { error } = await validField({ field, value: patch.value });
-    patchFields({ [name]: { ...patch, error, loading: false, success: !error } });
-    if (error) return;
-
-    if (patch.cascade === false) {
-      await validDeps({ name });
-    } else {
-      await computeGlobal({ name });
-    }
-  };
-
   const getValue = useRecoilCallback(
     ({ snapshot }) =>
       async (name) =>
@@ -139,35 +40,17 @@ export const useCerfa = ({ schema } = {}) => {
     []
   );
 
-  const processField = async ({ name, value }) => {
-    abortControllers.current[name]?.abort();
-    const fields = await getFields();
-    const { error } = await validField({ field: fields[name], value });
-    patchFields({ [name]: { error, warning: undefined, loading: !error, success: !error, value } });
-    if (error) return;
-    await computeGlobal({ name });
-    patchFields({ [name]: { loading: false } });
-  };
-
-  const registerField = useRecoilCallback(({ snapshot }) => async (name, fieldDefinition) => {
-    const field = await snapshot.getPromise(fieldSelector(name));
-    if (field) return;
-    const fieldSchema = findDefinition({ name, schema }) ?? fieldDefinition;
-    if (!fieldSchema) throw new Error(`Field ${name} is not defined.`);
-    patchFields({ [name]: fieldSchema });
-  });
-
-  const triggerValidation = async (fieldNames) => {
-    const { fields } = await getData();
-    const patch = {};
-    for (let name of fieldNames) {
-      const { error } = await validField({ field: fields[name], value: fields[name].value });
-      if (!fields[name].error) {
-        patch[name] = { error };
-      }
-    }
-    patchFields(patch);
-  };
+  const registerField = useRecoilCallback(
+    ({ snapshot }) =>
+      async (name, fieldDefinition) => {
+        const field = await snapshot.getPromise(fieldSelector(name));
+        if (field) return;
+        const fieldSchema = findDefinition({ name, schema }) ?? fieldDefinition;
+        if (!fieldSchema) throw new Error(`Field ${name} is not defined.`);
+        patchFields({ [name]: fieldSchema });
+      },
+    []
+  );
 
   const getStatus = useRecoilCallback(
     ({ snapshot }) =>
@@ -177,6 +60,125 @@ export const useCerfa = ({ schema } = {}) => {
   );
 
   const controller = useMemo(() => {
+    const computeGlobal = async ({ name }) => {
+      abortControllers.current[name] = new AbortController();
+      for (let logic of indexedRules[name] ?? []) {
+        const { values, dossier, fields } = await getData();
+        try {
+          const signal = abortControllers.current[name].signal;
+          const { cascade, error, warning, cache } =
+            (await logic.process({ fields, values, signal, dossier, name, cache: logic.cache })) ?? {};
+          logic.cache = cache;
+          if (error && !logic.target) {
+            patchFields({ [name]: { error, success: false, warning: undefined } });
+          } else if (warning) {
+            patchFields({ [name]: { warning } });
+          }
+          if (cascade) {
+            await Promise.all(
+              Object.keys(cascade).map(
+                async (key) =>
+                  await onCascadeField({
+                    name: key,
+                    patch: cascade[key],
+                  })
+              )
+            );
+          }
+          if (error && !logic.target) return;
+        } catch (e) {
+          if (e.name !== "AbortError") throw e;
+        }
+      }
+      await validDeps({ name });
+    };
+
+    const validDeps = async ({ name }) => {
+      const { values, dossier, fields } = await getData();
+      await Promise.all(
+        (indexedDependencies[name] ?? []).map(async (dep) => {
+          const field = fields[dep];
+          if (!field.error || isEmptyValue(field.value)) return;
+          let error;
+          error = await validField({ field, value: field.value }).error;
+          if (!error) {
+            const logics = indexedDependencesRevalidationRules[name][dep];
+            error = await findLogicErrors({ name: dep, logics, values, dossier, fields });
+          }
+          if (!error) {
+            await processField({ name: dep, value: field.value });
+          }
+          patchFields({ [dep]: { error, success: !error } });
+        })
+      );
+    };
+
+    const onCascadeField = async ({ name, patch }) => {
+      if (patch === undefined) {
+        patchFields({ [name]: undefined });
+        return;
+      }
+
+      await registerField(name, patch);
+      const { fields, values } = await getData();
+      const field = fields[name];
+
+      if (patch.reset) {
+        patchFields({
+          [name]: {
+            value: undefined,
+            error: "",
+            loading: false,
+            success: undefined,
+            touched: false,
+            ...field?._init?.({ values }),
+            ...patch,
+          },
+        });
+        return;
+      }
+
+      if (patch.value === field?.value) {
+        patch = { ...patch };
+        delete patch.value;
+        if (!Object.keys(patch).length) return;
+        patchFields({ [name]: { ...patch, loading: false } });
+        return;
+      }
+      abortControllers.current[name]?.abort();
+
+      const { error } = await validField({ field, value: patch.value });
+      patchFields({ [name]: { ...patch, error, loading: false, success: !error } });
+      if (error) return;
+
+      if (patch.cascade === false) {
+        await validDeps({ name });
+      } else {
+        await computeGlobal({ name });
+      }
+    };
+
+    const processField = async ({ name, value }) => {
+      abortControllers.current[name]?.abort();
+      const fields = await getFields();
+      const { error } = await validField({ field: fields[name], value });
+      patchFields({ [name]: { error, warning: undefined, loading: !error, success: !error, value } });
+      if (error) return;
+      await computeGlobal({ name });
+      patchFields({ [name]: { loading: false } });
+    };
+
+    const triggerValidation = async (fieldNames) => {
+      const { fields } = await getData();
+      const patch = {};
+      for (let name of fieldNames) {
+        const { error } = await validField({ field: fields[name], value: fields[name].value });
+        if (!fields[name].error) {
+          patch[name] = { error };
+        }
+      }
+      patchFields(patch);
+    };
     const observers = {};
     return {
       getStatus,
@@ -211,6 +213,6 @@ export const useCerfa = ({ schema } = {}) => {
         observers[eventName] = observers[eventName].filter((item) => item !== handler);
       },
     };
-  }, [patchFields, schema, setCerfa]);
+  }, [getData, getFields, getStatus, getValue, patchFields, registerField, setCerfa]);
   return { controller };
 };

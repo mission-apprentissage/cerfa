@@ -128,6 +128,8 @@ export default () => {
     signaturesComplete,
     signaturesCompletion,
     sca,
+    cerfaCompletion,
+    cerfaComplete,
   ]);
 
   let stepStateSteps23 = useCallback(
@@ -169,7 +171,7 @@ export default () => {
     history.replace(match.url.replace(/\/[^/]*$/, newSlug));
 
     nextStep();
-  }, [activeStep, dossierStatus, history, match, nextStep, stepStateSteps23]);
+  }, [activeStep, cerfaComplete, history, match.url, nextStep, stepStateSteps23]);
 
   let onClickPrevStep = useCallback(async () => {
     const nextActiveStep = activeStep - 1;

@@ -69,7 +69,7 @@ export const Remunerations = () => {
         dateFinContrat === "" ||
         apprentiDateNaissance === "" ||
         employeurAdresseDepartement === "") && (
-        <VStack alignItems="flex-start" color="mgalt">
+        <VStack alignItems="flex-start" color="mgalt" mt={3}>
           <Text>
             L'outil détermine les périodes de rémunération et s'assure du respect du minimum légale pour chacune des
             périodes, à partir des éléments renseignés.

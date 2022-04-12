@@ -900,6 +900,7 @@ export const apprentiSchema = {
   },
   "apprenti.courriel": {
     required: true,
+    fieldType: "email",
     label: "Courriel de l'apprenti(e) :",
     requiredMessage: "le courriel de l'apprenti(e) est obligatoire",
     mask: "C",
