@@ -4,24 +4,27 @@ services:
   reverse_proxy:
     volumes:
       - cerfa_nginx_data:/data
+    build:
+      args:
+        - CERFA_ENV=dev
 
   ui:
-    command: yarn start
     mem_limit: 1g
     stdin_open: true
     volumes:
       - ./ui:/app #Allows source folders to be watched
-      # - /app/node_modules/
+      - /app/.next/
+      - /app/node_modules/
     build:
+      context: ui
+      dockerfile: Dockerfile.dev
       args:
-        - REACT_APP_ENV=dev
-        - REACT_APP_BASE_URL=http://localhost
-        - REACT_APP_BASE_HOST=localhost
-        - REACT_APP_METABASE_URL=https://contrat.apprentissage.beta.gouv.fr/
-        - REACT_APP_METABASE_SECRET_KEY=
+        - NEXT_PUBLIC_ENV=dev
+        - NEXT_PUBLIC_BASE_URL=http://localhost
+        - NEXT_PUBLIC_BASE_HOST=localhost
+        - NEXT_PUBLIC_METABASE_URL=https://contrat.apprentissage.beta.gouv.fr/
+        - NEXT_PUBLIC_METABASE_SECRET_KEY=
         - SKIP_PREFLIGHT_CHECK=true
-    environment:
-      - FAST_REFRESH=false
 
   server:
     command: [ "yarn", "debug" ]

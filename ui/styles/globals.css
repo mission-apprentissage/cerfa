@@ -1,0 +1,91 @@
+.notion-page-icon-wrapper {
+  display: none !important;
+}
+
+.notion-viewport {
+  pointer-events: none;
+}
+
+.phone-form-input {
+  width: 100% !important;
+  min-width: 0;
+  outline: 0 solid transparent !important;
+  outline-offset: 2px;
+  position: relative !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  transition-property: var(--chakra-transition-property-common);
+  transition-duration: var(--chakra-transition-duration-normal);
+  font-size: var(--chakra-fontSizes-md) !important;
+  height: var(--chakra-sizes-10) !important;
+  color: var(--chakra-colors-grey-800);
+  background: var(--chakra-colors-grey-200) !important;
+  border: 1px solid !important;
+  border-radius: var(--chakra-radii-md) !important;
+  border-color: inherit;
+  border-bottom-left-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+  border-top-left-radius: 4px !important;
+  border-top-right-radius: 4px !important;
+  border-width: 0 !important;
+  border-bottom: 2px solid !important;
+  margin-bottom: 0 !important;
+  border-bottom-color: var(--chakra-colors-grey-600) !important;
+  border-top-width: 0 !important;
+}
+
+.phone-form-input:focus {
+  box-shadow: var(--chakra-shadows-none) !important;
+  outline: 2px solid  !important;
+  outline-color: #2A7FFE !important;
+  outline-offset: 2px !important;
+}
+
+.phone-form-input.valid {
+  border-bottom-color: var(--chakra-colors-green-500)  !important;
+}
+.phone-form-input.error {
+  border-bottom-color: var(--chakra-colors-error)  !important;
+  box-shadow: var(--chakra-shadows-none) !important;
+  outline-color: var(--chakra-colors-error) !important;
+  outline-offset: 2px !important;
+}
+
+.phone-form-input.disabled {
+  cursor: not-allowed;
+  opacity: 1;
+  color: var(--chakra-colors-grey-600) !important;
+  border-bottom-color: #E5E5E5 !important;
+}
+
+.phone-form-button {
+  background: var(--chakra-colors-grey-200) !important;
+  border: 1px solid !important;
+  border-radius: var(--chakra-radii-md) !important;
+  border-color: inherit;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-top-left-radius: 4px !important;
+  border-top-right-radius: 4px !important;
+  border-width: 0 !important;
+  border-bottom: 2px solid !important;
+  border-bottom-color: var(--chakra-colors-grey-600) !important;
+  border-top-width: 0 !important;
+}
+
+.phone-form-button.valid {
+  border-bottom-color: var(--chakra-colors-green-500)  !important;
+}
+.phone-form-button.error {
+  border-bottom-color: var(--chakra-colors-error)  !important;
+}
+
+.phone-form-button.disabled {
+  cursor: not-allowed;
+  opacity: 1;
+  color: var(--chakra-colors-grey-600) !important;
+  border-bottom-color: #E5E5E5 !important;
+}
+
