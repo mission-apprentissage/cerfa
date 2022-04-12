@@ -174,7 +174,9 @@ export const useCerfa = ({ schema } = {}) => {
       const { fields } = await getData();
       const patch = {};
       for (let name of fieldNames) {
-        const { error } = await validField({ field: fields[name], value: fields[name].value });
+        const field = fields[name];
+        if (!field) continue;
+        const { error } = await validField({ field, value: field.value });
         if (!fields[name].error) {
           patch[name] = { error };
         }

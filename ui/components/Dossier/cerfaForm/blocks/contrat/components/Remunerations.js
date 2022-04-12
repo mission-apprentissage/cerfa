@@ -11,11 +11,11 @@ import { ExternalLinkLine } from "../../../../../../theme/components/icons";
 const getAnneeLabel = (i, ordre) => {
   const indexAnnee = ordre?.slice(0, 1);
   return {
-    1: "1ère Année, du",
-    2: "2ère Année, du",
-    3: "3ère Année, du",
-    4: "4ème année, du",
-  }[indexAnnee];
+    1.1: "1ère Année, du",
+    2.1: "2ère Année, du",
+    3.1: "3ère Année, du",
+    4.1: "4ème année, du",
+  }[ordre];
 };
 
 export const Remunerations = () => {
@@ -96,23 +96,28 @@ export const Remunerations = () => {
       )}
       <CollapseController show={shouldShowRemunerationsAnnuelles}>
         <Box>
-          {remunerationsAnnuelles?.map((annee, i) => (
-            <Box key={i} mt={4}>
-              <Box fontSize="1.1rem" fontWeight="bold" mb={1}>
-                {getAnneeLabel(i, annee.ordre)}
+          {remunerationsAnnuelles?.map((annee, i) => {
+            const anneeLabel = getAnneeLabel(i, annee.ordre);
+            return (
+              <Box key={i} mt={anneeLabel ? 6 : 5}>
+                {anneeLabel && (
+                  <Box fontSize="1.1rem" fontWeight="bold" mb={1}>
+                    {anneeLabel}
+                  </Box>
+                )}
+                <HStack spacing={2} key={i} alignItems="flex-end">
+                  <InputController name={`contrat.remunerationsAnnuelles[${i}].dateDebut`} mb={0} />
+                  <Box mt="1.7rem !important">au</Box>
+                  <InputController name={`contrat.remunerationsAnnuelles[${i}].dateFin`} />
+                  <InputController name={`contrat.remunerationsAnnuelles[${i}].taux`} />
+                  <Box w="100%" position="relative" fontStyle="italic" color="disablegrey" pl={2}>
+                    soit {annee.salaireBrut} € / mois. <br />
+                    Seuil minimal légal {annee.tauxMinimal} %
+                  </Box>
+                </HStack>
               </Box>
-              <HStack spacing={2} key={i} alignItems="flex-end">
-                <InputController name={`contrat.remunerationsAnnuelles[${i}].dateDebut`} mb={0} />
-                <Box mt="1.7rem !important">au</Box>
-                <InputController name={`contrat.remunerationsAnnuelles[${i}].dateFin`} />
-                <InputController name={`contrat.remunerationsAnnuelles[${i}].taux`} />
-                <Box w="100%" position="relative" fontStyle="italic" color="disablegrey" pl={2}>
-                  soit {annee.salaireBrut} € / mois. <br />
-                  Seuil minimal légal {annee.tauxMinimal} %
-                </Box>
-              </HStack>
-            </Box>
-          ))}
+            );
+          })}
         </Box>
         <Flex mt={5}>
           <Box w="55%" flex="1">
