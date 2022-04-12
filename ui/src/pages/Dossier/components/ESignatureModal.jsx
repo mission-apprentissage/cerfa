@@ -7,7 +7,7 @@ import {
   // useSetRecoilState
 } from "recoil";
 
-import { dossierAtom } from "../../../common/hooks/useDossier/dossierAtom";
+import { dossierAtom } from "../atoms";
 
 import { Warning } from "../../../theme/components/icons";
 

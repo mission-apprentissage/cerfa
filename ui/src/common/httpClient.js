@@ -49,18 +49,20 @@ const getHeaders = (contentType = "application/json") => {
   return result;
 };
 
-export const _get = (path) => {
+export const _get = (path, signal) => {
   return fetchPolyfill(`${path}`, {
     method: "GET",
     headers: getHeaders(),
+    signal,
   }).then((res) => handleResponse(path, res));
 };
 
-export const _post = (path, body) => {
+export const _post = (path, body, signal) => {
   return fetchPolyfill(`${path}`, {
     method: "POST",
     headers: getHeaders(),
     body: JSON.stringify(body),
+    signal,
   }).then((res) => handleResponse(path, res));
 };
 

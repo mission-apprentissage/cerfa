@@ -3,9 +3,9 @@ import { Box, Flex, Heading, Container, Button, Text, Link, UnorderedList, ListI
 import { useHistory } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { workspacePathsAtom, workspaceAtom } from "../../common/hooks/workspaceAtoms";
-import { useDossier } from "../../common/hooks/useDossier/useDossier";
 import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 import { ExternalLinkLine } from "../../theme/components/icons";
+import { useDossier } from "./hooks/useDossier";
 
 export default () => {
   const { isloaded, createDossier, saveDossier } = useDossier();
