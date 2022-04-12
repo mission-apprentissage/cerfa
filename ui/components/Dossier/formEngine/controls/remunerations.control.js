@@ -90,8 +90,6 @@ export const RemunerationsControl = [
           selectedTaux: { [remunerationsAnnee.ordre + ""]: remunerationsAnnee.taux },
         });
 
-        console.log(remunerationsAnnuelles);
-
         return {
           cascade: {
             [`${remuAnneePath}.dateDebut`]: { value: remunerationsAnnuelles[i].dateDebut },
