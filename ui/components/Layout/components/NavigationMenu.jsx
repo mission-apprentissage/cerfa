@@ -36,14 +36,12 @@ const NavigationMenu = ({ isMyWorkspace, ...props }) => {
 };
 
 const UserMenu = () => {
-  let [auth, setAuth] = useAuth();
-  const router = useRouter();
+  let [auth] = useAuth();
 
   let logout = async () => {
     const { loggedOut } = await _get("/api/v1/auth/logout");
     if (loggedOut) {
-      setAuth(null);
-      router.push("/");
+      window.location.href = "/";
     }
   };
   let accountType = auth.roles.length ? auth.roles[0].name : isUserAdmin(auth) ? "admin" : "utilisateur";
