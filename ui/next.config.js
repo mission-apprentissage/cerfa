@@ -3,7 +3,8 @@ function inline(value) {
 }
 
 const contentSecurityPolicy = `
-      default-src 'self' https://plausible.io;frame-src;
+      default-src 'self' https://plausible.io;
+      frame-src 'self';
       base-uri 'self';
       block-all-mixed-content;
       font-src 'self' https: data:;
