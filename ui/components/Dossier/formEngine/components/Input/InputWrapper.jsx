@@ -16,13 +16,11 @@ export const InputWrapper = (props) => {
     <InputGroup id={`${name}_group_input`}>
       {children}
       {rightIcon && (
-        <InputRightElement
-          children={
-            <Center w="40px" h="40px" ml={"0 !important"}>
-              {getRightIcon({ loading, success, locked })}
-            </Center>
-          }
-        />
+        <InputRightElement>
+          <Center w="40px" h="40px" ml={"0 !important"}>
+            {getRightIcon({ loading, success, locked })}
+          </Center>
+        </InputRightElement>
       )}
     </InputGroup>
   );

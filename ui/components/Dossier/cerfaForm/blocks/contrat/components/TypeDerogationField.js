@@ -19,11 +19,11 @@ export const TypeDerogationField = () => {
         <Text as={"span"} fontWeight="400" fontStyle="italic" textStyle="sm" opacity={0.8}>
           Pour appliquer une dérogation, merci de renseigner les champs:{" "}
           <Text as={"span"} textDecoration={apprentiDateNaissance === "" ? "underline tomato" : "none"}>
-            la date de naissance de l'apprenti
+            la date de naissance de l&apos;apprenti
           </Text>
           ,{" "}
           <Text as={"span"} textDecoration={contratDateDebutContrat === "" ? "underline tomato" : "none"}>
-            la date de début d'exécution du contrat
+            la date de début d&apos;exécution du contrat
           </Text>
         </Text>
       )}
