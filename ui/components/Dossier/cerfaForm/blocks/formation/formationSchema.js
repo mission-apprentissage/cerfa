@@ -326,6 +326,7 @@ export const formationSchema = {
   "organismeFormation.formationInterne": {
     required: true,
     fieldType: "radio",
+    completion: false,
     label: "Le centre de formation est-il un CFA d'entreprise ?",
     requiredMessage: "Merci de préciser s'il sagit d'un CFA d'entreprise",
     options: [

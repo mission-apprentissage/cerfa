@@ -93,6 +93,7 @@ export const apprentiSchema = {
     fieldType: "select",
     label: "Pays :",
     requiredMessage: "le pays est obligatoire",
+    completion: false,
     options: [
       {
         label: "Afghanistan",
