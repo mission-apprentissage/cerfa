@@ -8,8 +8,7 @@ import { shouldShowRemunerationsAnnuelles } from "../domain/shouldShowRemunerati
 import Ribbons from "../../../../../Ribbons/Ribbons";
 import { ExternalLinkLine } from "../../../../../../theme/components/icons";
 
-const getAnneeLabel = (i, ordre) => {
-  const indexAnnee = ordre?.slice(0, 1);
+const getAnneeLabel = (ordre) => {
   return {
     1.1: "1ère Année, du",
     2.1: "2ère Année, du",
@@ -97,7 +96,7 @@ export const Remunerations = () => {
       <CollapseController show={shouldShowRemunerationsAnnuelles}>
         <Box>
           {remunerationsAnnuelles?.map((annee, i) => {
-            const anneeLabel = getAnneeLabel(i, annee.ordre);
+            const anneeLabel = getAnneeLabel(annee.ordre);
             return (
               <Box key={i} mt={anneeLabel ? 6 : 5}>
                 {anneeLabel && (
