@@ -4,9 +4,10 @@ const commonFieldStyle = {
   borderTopRadius: "4px",
   borderWidth: 0,
   borderBottom: "2px solid",
-  marginBottom: "-2px",
+  marginBottom: "0",
   borderBottomColor: "grey.600",
   bg: "grey.200",
+  outline: "0px solid",
   _focus: {
     borderBottomColor: "grey.600",
     boxShadow: "none",
@@ -22,7 +23,6 @@ const commonFieldStyle = {
   _invalid: {
     borderBottomColor: "error",
     boxShadow: "none",
-    outline: "2px solid",
     outlineColor: "error",
     outlineOffset: "2px",
   },
@@ -34,6 +34,17 @@ const commonFieldStyle = {
 const Input = {
   parts: ["field"],
   variants: {
+    cerfa: {
+      field: {
+        ...commonFieldStyle,
+        _disabled: {
+          cursor: "not-allowed",
+          opacity: 1,
+          color: "grey.600",
+          borderBottomColor: "#E5E5E5",
+        },
+      },
+    },
     edition: {
       field: {
         ...commonFieldStyle,
