@@ -4,7 +4,6 @@ export const employerSchema = {
     label: "Code postal :",
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
-    example: "75000",
     mask: "C",
     maskBlocks: [
       {
@@ -16,9 +15,7 @@ export const employerSchema = {
   },
   "employeur.siret": {
     required: true,
-    description:
-      "Vous devez renseigner le siret correspondant à l'établissement du lieu d'exécution du contrat (il ne correspond pas forcément au siège). Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).",
-    example: "98765432400019",
+    showInfo: true,
     label: "N° SIRET de l'employeur :",
     requiredMessage: "Le siret est obligatoire",
     validateMessage: "n'est pas un siret valide",
@@ -34,9 +31,8 @@ export const employerSchema = {
   "employeur.denomination": {
     required: true,
     label: "Dénomination :",
-    description: "La dénomination sociale doit être celle de l'établissement dans lequel le contrat s'exécute.",
+    showInfo: true,
     requiredMessage: "La dénomination de l'employeur est obligatoire",
-    example: "Mairie",
     mask: "C",
     maskBlocks: [
       {
@@ -50,7 +46,6 @@ export const employerSchema = {
     precision: 0,
     fieldType: "number",
     label: "N° :",
-    example: 13,
     validateMessage: "le numéro de voie ne peut pas commencer par zéro",
     mask: "C",
     maskBlocks: [
@@ -65,7 +60,6 @@ export const employerSchema = {
     required: true,
     label: "Voie :",
     requiredMessage: "le nom de voie est obligatoire",
-    example: "Boulevard de la liberté",
     mask: "C",
     maskBlocks: [
       {
@@ -78,13 +72,11 @@ export const employerSchema = {
   "employeur.adresse.complement": {
     label: "Complément d'adresse (optionnel):",
     requiredMessage: "le complement d'adress est obligatoire",
-    example: "Hôtel de ville ; Entrée ; Bâtiment ; Etage ; Service ; BP",
   },
   "employeur.adresse.commune": {
     required: true,
     label: "Commune: ",
     requiredMessage: "la commune est obligatoire",
-    example: "PARIS",
     mask: "C",
     maskBlocks: [
       {
@@ -97,14 +89,12 @@ export const employerSchema = {
   "employeur.adresse.departement": {
     required: true,
     label: "Département de l'employeur :",
-    example: "1 Ain, 99 Étranger",
     requiredMessage: "le département de l'employeur est obligatoire",
     validateMessage: " n'est pas un département valide",
   },
   "employeur.adresse.region": {
     required: true,
     label: "Région de l'employeur :",
-    example: "93 Provence-Alpes-Côte d'Azur",
     requiredMessage: "la région de l'employeur est obligatoire",
     validateMessage: " n'est pas une région valide",
     mask: "C",
@@ -119,18 +109,16 @@ export const employerSchema = {
   "employeur.telephone": {
     fieldType: "phone",
     required: true,
-    description:
-      "Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le \"0\" car l'indicateur pays est pré-renseigné.",
+    showInfo: true,
     label: "Téléphone de l'employeur :",
     requiredMessage: "Le téléphone de l'employeur est obligatoire",
   },
   "employeur.courriel": {
     required: true,
     fieldType: "email",
-    description: "Ce courriel sera utilisé pour l'envoi des notifications pour le suivi du dossier.",
+    showInfo: true,
     label: "Courriel de l'employeur :",
     requiredMessage: "Le courriel de l'employeur est obligatoire",
-    example: "energie3000.pro@gmail.com",
     mask: "C",
     maskBlocks: [
       {
@@ -142,8 +130,7 @@ export const employerSchema = {
   },
   "employeur.naf": {
     required: true,
-    description:
-      "Le Code NAF est composé de 4 chiffres et 1 lettre. Il est délivré par l'INSEE.[Informations sur le Code NAF.](https://www.economie.gouv.fr/entreprises/activite-entreprise-code-ape-code-naf)",
+    showInfo: true,
     label: "Code NAF de l'employeur :",
     requiredMessage: "le code NAF est obligatoire",
     validateMessage: "le code NAF n'est pas au bon format",
@@ -159,8 +146,7 @@ export const employerSchema = {
   "employeur.nombreDeSalaries": {
     fieldType: "number",
     required: true,
-    description:
-      "L'effectif salarié rempli automatiquement correspond à l'estimation de la base Entreprises de l'INSEE. <br/>L'effectif renseigné est celui de l’entreprise dans sa globalité (et non seulement l’effectif de l’établissement d’exécution du contrat).",
+    showInfo: true,
     label: "Effectif salarié de l'entreprise :",
     requiredMessage: "Effectif salarié de l'entreprise est obligatoire",
     mask: "C",
@@ -179,7 +165,7 @@ export const employerSchema = {
     required: true,
     label: "Type d'employeur :",
     requiredMessage: "le type d'employeur est obligatoire",
-    description: "Le type d'employeur doit être en adéquation avec son statut juridique.",
+    showInfo: true,
     options: [
       {
         name: "Public",
@@ -253,11 +239,9 @@ export const employerSchema = {
   },
   "employeur.codeIdcc": {
     required: true,
-    description:
-      "Identifiant de la convention collective de branche appliquée par l’établissement. [le site du Ministère du travail.](https://www.elections-professionnelles.travail.gouv.fr/web/guest/recherche-idcc)",
+    showInfo: true,
     label: "Code IDCC de la convention collective appliquée : ",
     requiredMessage: "le code idcc est obligatoire",
-    example: "9999",
     validateMessage: "le code IDCC n'est pas au bon format",
     mask: "C",
     maskBlocks: [
@@ -270,10 +254,9 @@ export const employerSchema = {
   },
   "employeur.codeIdcc_special": {
     fieldType: "radio",
-    description: "Autres cas",
+    showInfo: true,
     autosave: false,
     label: "",
-    example: "Sans convention collective",
     options: [
       {
         label: "9999 - Sans convention collective",
@@ -290,8 +273,6 @@ export const employerSchema = {
     label: "Libellé de la convention collective appliquée:",
     requiredMessage: "Le libellé de la convention collective est obligatoire",
     isNotRequiredForm: true,
-    example:
-      "Convention collective nationale des entreprises de commission, de courtage et de commerce intracommunautaire et d'importation-exportation de France métropolitaine",
   },
   "employeur.regimeSpecifique": {
     required: true,
@@ -311,9 +292,9 @@ export const employerSchema = {
   },
   "employeur.privePublic": {
     required: true,
-    description: "Employeur privé ou public",
+    completion: false,
+    showInfo: true,
     label: "Je suis : ",
-    example: "Employeur public",
     options: [
       {
         label: "Employeur public",

@@ -5,7 +5,7 @@ import React, { useMemo } from "react";
 import { fieldSelector } from "../../../../formEngine/atoms";
 import { useRecoilValue } from "recoil";
 import { CollapseController } from "../../../../formEngine/components/CollapseController";
-import { shouldAskNumeroContratPrecedent } from "../domain/shouldHideContratPrecedent";
+import { shouldAskNumeroContratPrecedent } from "../domain/shouldAskContratPrecedent";
 
 export const NumeroContratPrecedentField = () => {
   const numeroContratPrecedentField = useRecoilValue(fieldSelector("contrat.numeroContratPrecedent"));

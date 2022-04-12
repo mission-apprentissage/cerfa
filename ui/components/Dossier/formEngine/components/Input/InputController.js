@@ -5,14 +5,14 @@ import { useCerfaController } from "../../CerfaControllerContext";
 
 import { InputField } from "./Input";
 
-export const InputController = memo(({ name, fieldType, onChange, mt, mb, w }) => {
+export const InputController = memo(({ name, fieldType, mt, mb, ml, mr, w }) => {
   const controller = useCerfaController();
+
   const handle = useCallback(
     (value, extra) => {
-      controller.setField(name, value, extra);
-      onChange?.(value);
+      controller.setField(name, value, { extra });
     },
-    [controller, name, onChange]
+    [controller, name]
   );
 
   const field = useRecoilValue(fieldSelector(name));
@@ -31,6 +31,8 @@ export const InputController = memo(({ name, fieldType, onChange, mt, mb, w }) =
       isRequired={field.required}
       mb={mb}
       mt={mt}
+      ml={ml}
+      mr={mr}
       w={w}
       success={false}
     />

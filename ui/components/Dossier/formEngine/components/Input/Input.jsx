@@ -8,12 +8,11 @@ import { DateInput } from "./DateInput";
 import { RadioInput } from "./RadioInput";
 import { Select } from "./Select";
 import { ConsentInput } from "./ConsentInput";
+import { NumberInput } from "./NumberInput";
 
 // eslint-disable-next-line react/display-name
 export const Input = memo(
   ({
-    error,
-    // success,
     loading,
     name,
     locked,
@@ -95,9 +94,10 @@ export const Input = memo(
       <InputField
         {...props}
         {...fieldState}
+        isRequired={required}
         loading={loading}
         value={value ?? fieldState.value}
-        error={fieldState.error || error}
+        error={fieldState.error}
         onChange={handle}
         mt={mt}
         mb={mb}
@@ -108,7 +108,7 @@ export const Input = memo(
 );
 
 // eslint-disable-next-line react/display-name
-export const InputField = memo(({ mt, mb, w, ...props }) => {
+export const InputField = memo(({ mt, mb, ml, mr, w, ...props }) => {
   const { name, label, locked, isRequired, error, description, fieldType = "text", warning } = props;
   const Component = TypesMapping[fieldType] ?? (() => <></>);
 
@@ -116,8 +116,10 @@ export const InputField = memo(({ mt, mb, w, ...props }) => {
     <FormControl
       isRequired={isRequired && !!label}
       isInvalid={!!error}
-      mt={mt ?? 2}
-      mb={mb}
+      mt={mt}
+      mb={mb ?? 4}
+      ml={ml}
+      mr={mr}
       w={w}
       id={name.replaceAll(".", "_")}
     >
@@ -145,6 +147,7 @@ const NoLabel = {
 const TypesMapping = {
   text: TextInput,
   number: TextInput,
+  float: NumberInput,
   email: TextInput,
   phone: PhoneInput,
   date: DateInput,

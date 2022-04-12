@@ -1,7 +1,7 @@
 import { selector } from "recoil";
 import { valueSelector } from "../formEngine/atoms";
-import { dossierAtom } from "../../../hooks/useDossier/dossierAtom";
-import { documentsIsRequired } from "./documentsIsRequired";
+import { dossierAtom } from "../atoms";
+import { documentsIsRequired } from "./domain/documentsIsRequired";
 
 export const documentsCompletionStatusGetter = selector({
   key: "documentsCompletionStatus",

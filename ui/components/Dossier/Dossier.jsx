@@ -21,16 +21,16 @@ import ESignatureModal from "./components/ESignatureModal";
 import { workspaceTitleAtom } from "../../hooks/workspaceAtoms";
 import { StepWip, TickBubble } from "../../theme/components/icons";
 
-import { signaturesPdfLoadedAtom } from "../../hooks/useDossier/signaturesAtoms";
-import { cerfaEmployeurPrivePublicAtom } from "../../hooks/useCerfa/parts/useCerfaEmployeurAtoms";
 import { CerfaForm } from "./cerfaForm/CerfaForm";
 import { useCerfa } from "./formEngine/useCerfa";
 import { cerfaSchema } from "./formEngine/cerfaSchema";
 import { CerfaControllerContext } from "./formEngine/CerfaControllerContext";
-import { dossierCompletionStatus } from "./dossierCompletionAtoms";
+import { dossierCompletionStatus } from "./atoms";
 import { useInitCerfa } from "./formEngine/hooks/useInitCerfa";
 import { useAutoSave } from "./formEngine/hooks/useAutoSave";
 import { useDossier } from "./hooks/useDossier";
+import { valueSelector } from "./formEngine/atoms";
+import { signaturesPdfLoadedAtom } from "./Signatures/atoms";
 
 const steps = [
   { label: "Cerfa", description: "Renseignez les informations" },
@@ -65,11 +65,10 @@ const Dossier = () => {
 
   const [documentsComplete, setDocumentsComplete] = useState(false);
   // const { signaturesCompletion, sca, setSignaturesCompletion } = useSignatures();
-  const { signaturesCompletion, sca, setSignaturesCompletion } = { signaturesCompletion: 0, sca: 0 };
   const [signaturesComplete, setSignaturesComplete] = useState(false);
 
   const setWorkspaceTitle = useSetRecoilState(workspaceTitleAtom);
-  const employeurPrivePublic = useRecoilValueLoadable(cerfaEmployeurPrivePublicAtom);
+  const isEmployeurPrive = useRecoilValue(valueSelector("employeur.privePublic")) === false;
   const [hasSeenPrivateSectorModal, setHasSeenPrivateSectorModal] = useState(false);
   const isPrivateSectorAckModal = useDisclosure({ defaultIsOpen: true });
   const finalizeModalDisclosure = useDisclosure();
@@ -81,6 +80,11 @@ const Dossier = () => {
   const cerfaComplete = dossierStatus?.cerfa?.complete;
   const cerfaCompletion = dossierStatus?.cerfa?.completion;
   const documentsCompletion = dossierStatus?.documents?.completion;
+  const signatureCompletion = dossierStatus?.signature?.completion;
+  const { signaturesCompletion, sca, setSignaturesCompletion } = {
+    signaturesCompletion: signatureCompletion,
+    sca: signatureCompletion,
+  };
 
   useEffect(() => {
     const run = async () => {
@@ -116,8 +120,6 @@ const Dossier = () => {
     };
     run();
   }, [
-    cerfaComplete,
-    cerfaCompletion,
     dossierStatus,
     documentsComplete,
     documentsCompletion,
@@ -130,6 +132,8 @@ const Dossier = () => {
     signaturesComplete,
     signaturesCompletion,
     sca,
+    cerfaCompletion,
+    cerfaComplete,
   ]);
 
   let stepStateSteps23 = useCallback(
@@ -215,11 +219,7 @@ const Dossier = () => {
         {finalizeModalDisclosure.isOpen && <FinalizeModal {...finalizeModalDisclosure} dossier={dossier} />}
         {eSignatureModalDisclosure.isOpen && <ESignatureModal {...eSignatureModalDisclosure} />}
         <IsPrivateEmployeurModal
-          isOpen={
-            employeurPrivePublic?.contents?.value === "Employeur privé" &&
-            !hasSeenPrivateSectorModal &&
-            isPrivateSectorAckModal.isOpen
-          }
+          isOpen={isEmployeurPrive && !hasSeenPrivateSectorModal && isPrivateSectorAckModal.isOpen}
           onClose={() => {
             setHasSeenPrivateSectorModal(true);
             isPrivateSectorAckModal.onClose();
@@ -235,7 +235,7 @@ const Dossier = () => {
           <Flex flexDir="column" width="100%" mt={9}>
             <Steps
               onClickStep={(step) => {
-                if (employeurPrivePublic?.contents?.value === "Employeur privé") return false;
+                if (isEmployeurPrive) return false;
                 if (!cerfaComplete && step !== 0) {
                   setStep1State(step1Visited ? "error" : "error");
                 } else {
@@ -295,7 +295,7 @@ const Dossier = () => {
               finalizeModalDisclosure={finalizeModalDisclosure}
               eSignatureModalDisclosure={eSignatureModalDisclosure}
               dossierComplete={dossierStatus.dossier.complete}
-              employeurPrivePublic={employeurPrivePublic}
+              isEmployeurPrive={isEmployeurPrive}
               signaturesPdfLoaded={signaturesPdfLoaded}
             />
           </Flex>

@@ -14,7 +14,7 @@ export const AvantagesNatures = () => {
       <InputController name="contrat.avantageNature" type="radio" />
 
       <CollapseController show={shouldAskAvantageNature}>
-        <FormLabel mt={0} my={4} fontWeight={700} id={`avantageNature_bloc_section-label`}>
+        <FormLabel mt={0} mb={4} fontWeight={700} id={`avantageNature_bloc_section-label`}>
           Avantages en nature, le cas échéant :
         </FormLabel>
         {missingFieldAvantages && (

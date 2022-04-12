@@ -12,11 +12,11 @@ registerLocale("fr", fr);
 
 const getVariantProp = (props) => {
   if (props.success) return { variant: "valid" };
+  return { variant: "cerfa" };
 };
 
 export const DateInput = (props) => {
   const { name, onChange, error, value, label, locked } = props;
-
   return (
     <InputWrapper {...props}>
       <DateInputIn
@@ -155,8 +155,10 @@ const CustomDateInput = forwardRef(({ value, onChange, onFocus, locked, onClick,
         m: { mask: IMask.MaskedRange, placeholderChar: "m", from: 1, to: 12, maxLength: 2 },
         Y: { mask: IMask.MaskedRange, placeholderChar: "a", from: 1900, to: 2999, maxLength: 4 },
       }}
-      onComplete={(val) => {
-        onChange({ persist: () => {}, target: { value: val } });
+      onAccept={(val) => {
+        if (val.length === 8 || !val) {
+          onChange({ persist: () => {}, target: { value: val } });
+        }
       }}
       ref={ref}
       value={value}

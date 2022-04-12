@@ -1,7 +1,6 @@
 export const signatureSchema = {
   "contrat.lieuSignatureContrat": {
     label: "Fait à :",
-    example: "PARIS",
     requiredMessage: "Le lieu de signature est obligatoire",
     fieldType: "text",
     required: true,

@@ -4,11 +4,9 @@ import { shouldAskResponsalLegalAdresse } from "./domain/shouldAskResponsalLegal
 export const apprentiSchema = {
   "apprenti.nom": {
     required: true,
-    description:
-      "Le nom et le prénom doivent strictement correspondre à l'identité officielle du salarié (attention aux inversions).",
+    showInfo: true,
     label: "Nom de naissance de l'apprenti(e) :",
     requiredMessage: "Le nom de l'apprenti(e) est obligatoire",
-    example: "MARTIN",
     mask: "C",
     maskBlocks: [
       {
@@ -20,11 +18,9 @@ export const apprentiSchema = {
   },
   "apprenti.prenom": {
     required: true,
-    description:
-      "Le nom et le prénom doivent strictement correspondre à l'identité officielle du salarié (attention aux inversions).",
+    showInfo: true,
     label: "Prénom de l'apprenti(e) :",
     requiredMessage: "Le prénom de l'apprenti(e) est obligatoire",
-    example: "Jean-François",
     mask: "C",
     maskBlocks: [
       {
@@ -37,7 +33,6 @@ export const apprentiSchema = {
   "apprenti.adresse.numero": {
     fieldType: "number",
     label: "N° :",
-    example: 13,
     validateMessage: "le numéro de voie ne peut pas commencer par zéro",
     mask: "C",
     maskBlocks: [
@@ -52,7 +47,6 @@ export const apprentiSchema = {
     required: true,
     label: "Voie :",
     requiredMessage: "le nom de voie est obligatoire",
-    example: "Boulevard de la liberté",
     mask: "C",
     maskBlocks: [
       {
@@ -65,7 +59,6 @@ export const apprentiSchema = {
   "apprenti.adresse.complement": {
     label: "Complément d'adresse (optionnel):",
     requiredMessage: "le complement d'adress est obligatoire",
-    example: "Bâtiment ; Résidence ; Entrée ; Appartement ; Escalier ; Etage",
   },
   "apprenti.adresse.codePostal": {
     required: true,
@@ -73,7 +66,6 @@ export const apprentiSchema = {
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
     pattern: "^[0-9]{5}$",
-    example: "75000",
     mask: "C",
     maskBlocks: [
       {
@@ -87,7 +79,6 @@ export const apprentiSchema = {
     required: true,
     label: "Commune: ",
     requiredMessage: "la commune est obligatoire",
-    example: "PARIS",
     mask: "C",
     maskBlocks: [
       {
@@ -905,14 +896,12 @@ export const apprentiSchema = {
     required: true,
     fieldType: "phone",
     label: "Téléphone de l'apprenti(e) :",
-    description:
-      "Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le \"0\" car l'indicateur pays est pré-renseigné.",
-    example: "0102030405",
+    showInfo: true,
   },
   "apprenti.courriel": {
     required: true,
+    fieldType: "email",
     label: "Courriel de l'apprenti(e) :",
-    example: "jf.martin@orange.fr",
     requiredMessage: "le courriel de l'apprenti(e) est obligatoire",
     mask: "C",
     maskBlocks: [
@@ -926,7 +915,6 @@ export const apprentiSchema = {
   "apprenti.apprentiMineur": {
     required: true,
     fieldType: "radio",
-    example: false,
     label: "À la date de signature de ce contrat, l'apprenti(e) sera-t-il(elle) mineur(e) ?",
     requiredMessage: "l'apprenti(e) sera-t-il(elle) mineur(e) à la date de signature de ce contrat ?",
     options: [
@@ -943,10 +931,8 @@ export const apprentiSchema = {
   "apprenti.apprentiMineurNonEmancipe": {
     required: true,
     fieldType: "radio",
-    example: false,
     label: "L'apprenti est sous la responsabilité d'un représentant légal (non émancipé)",
-    description:
-      "Un mineur émancipé peut accomplir seul les actes nécessitant la majorité légale. Plus d'informations à propos de l'émancipation sur [le site du Service public.](https://www.service-public.fr/particuliers/vosdroits/F1194) ",
+    showInfo: true,
     requiredMessage: "Merci de renseigner si l'apprenti(e) mineur(e) est emancipé(e) ou non",
     options: [
       {
@@ -962,10 +948,9 @@ export const apprentiSchema = {
   "apprenti.responsableLegal.nom": {
     // required: true,
     _init: ({ values }) => ({ required: shouldAskRepresentantLegal({ values }) }),
-    description: "Nom du représentant légal",
+    showInfo: true,
     label: "Nom du représentant légal:",
     requiredMessage: "le nom du représentant légal est obligatoire",
-    example: "Honore",
     mask: "C",
     maskBlocks: [
       {
@@ -977,10 +962,9 @@ export const apprentiSchema = {
   },
   "apprenti.responsableLegal.prenom": {
     _init: ({ values }) => ({ required: shouldAskRepresentantLegal({ values }) }),
-    description: "Prénom du représentant légal",
+    showInfo: true,
     label: "Prénom du représentant légal:",
     requiredMessage: "le prénom du représentant légal est obligatoire",
-    example: "Robert",
     mask: "C",
     maskBlocks: [
       {
@@ -992,8 +976,7 @@ export const apprentiSchema = {
   },
   "apprenti.responsableLegal.memeAdresse": {
     _init: ({ values }) => ({ required: shouldAskRepresentantLegal({ values }) }),
-    description: "l'apprenti(e) vit à la même adresse que son responsable légal",
-    example: false,
+    showInfo: true,
     label: "l'apprenti(e) vit à la même adresse que son responsable légal",
     requiredMessage: "L'adresse du représentant légal est obligatoire",
     options: [
@@ -1011,7 +994,6 @@ export const apprentiSchema = {
     required: false,
     fieldType: "number",
     label: "N° :",
-    example: 13,
     validateMessage: "le numéro de voie ne peut pas commencer par zéro",
     mask: "C",
     maskBlocks: [
@@ -1026,7 +1008,6 @@ export const apprentiSchema = {
     _init: ({ values }) => ({ required: shouldAskResponsalLegalAdresse({ values }) }),
     label: "Voie :",
     requiredMessage: "le nom de voie est obligatoire",
-    example: "Boulevard de la liberté",
     mask: "C",
     maskBlocks: [
       {
@@ -1040,14 +1021,12 @@ export const apprentiSchema = {
     required: false,
     label: "Complément d'adresse (optionnel):",
     requiredMessage: "le complement d'adress est obligatoire",
-    example: "Bâtiment ; Résidence ; Entrée ; Appartement ; Escalier ; Etage",
   },
   "apprenti.responsableLegal.adresse.codePostal": {
     _init: ({ values }) => ({ required: shouldAskResponsalLegalAdresse({ values }) }),
     label: "Code postal :",
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
-    example: "75000",
     mask: "C",
     maskBlocks: [
       {
@@ -1063,7 +1042,6 @@ export const apprentiSchema = {
     maxLength: 80,
     label: "Commune: ",
     requiredMessage: "la commune est obligatoire",
-    example: "PARIS",
     mask: "C",
     maskBlocks: [
       {
@@ -1882,9 +1860,7 @@ export const apprentiSchema = {
     required: true,
     label: "Date de naissance :",
     requiredMessage: "La date de naissance de l'apprenti(e) est obligatoire",
-    example: "2001-01-01T00:00:00+0000",
-    description:
-      "La date de naissance combinée à la date d'exécution du contrat définira si l'apprenti(e) est mineur(e) ou majeur(e) et est bien âgé de 15 ans ou plus. Si l'apprenti(e) est mineur(e) à la date de signature du contrat, vous devrez renseigner le cas d'émancipation ou les informations relatives au représentant légal.",
+    showInfo: true,
   },
   "apprenti.sexe": {
     required: true,
@@ -1905,17 +1881,14 @@ export const apprentiSchema = {
   "apprenti.departementNaissance": {
     required: true,
     label: "Département de naissance :",
-    example: "1, 60",
     requiredMessage: "le département de naissance est obligatoire",
     validateMessage: " n'est pas un département valide",
-    description:
-      'Pour les personnes nées à l\'étranger, indiquez 99. Pour les départements à 1 chiffre, faites précéder le chiffre par un "0".',
+    showInfo: true,
   },
   "apprenti.communeNaissance": {
     required: true,
     label: "Commune de naissance :",
     requiredMessage: "la commune de naissance est obligatoire",
-    example: "Bourg-en-Bresse",
     mask: "C",
     maskBlocks: [
       {
@@ -1930,8 +1903,7 @@ export const apprentiSchema = {
     fieldType: "select",
     label: "Nationalité :",
     requiredMessage: "la nationalité de l'apprenti(e) est obligatoire",
-    description:
-      "Le salarié étranger, non citoyen européen, doit disposer d'un titre de séjour valable l'autorisant à travailler en France et d'une autorisation de travail au début du contrat. Les demandes de titres et d'autorisation de travail peuvent être réalisées sur [le site Etrangers en France.](https://administration-etrangers-en-france.interieur.gouv.fr/particuliers/#/)",
+    showInfo: true,
     options: [
       {
         label: "1: Française",
@@ -1968,7 +1940,6 @@ export const apprentiSchema = {
     required: true,
     label: "Déclare être inscrit sur la liste des sportifs, entraîneurs, arbitres et juges sportifs de haut niveau :",
     requiredMessage: "Cette déclaration est obligatoire",
-    example: true,
     options: [
       {
         label: "Oui",
@@ -1983,8 +1954,6 @@ export const apprentiSchema = {
   "apprenti.handicap": {
     fieldType: "radio",
     required: true,
-    example: false,
-
     label: "Déclare bénéficier de la reconnaissance travailleur handicapé :",
     requiredMessage: "La déclaration de reconnaissance travailleur handicapé est obligatoire",
     options: [
@@ -2195,8 +2164,7 @@ export const apprentiSchema = {
     required: true,
     label: "Dernière classe / année suivie :",
     requiredMessage: "la dernière classe / année suivie par l'apprenti(e) est obligatoire",
-    description:
-      "Il faut sélectionner la situation qui précède l'entrée en contrat d'apprentissage. Par exemple, si le diplôme préparé avant était une 1ère année de BTS et que cette dernière a été validée, il faut sélectionner 11 - l'apprenti a suivi la première année du cycle et l'a validée ( examens réussis mais année non diplômante).",
+    showInfo: true,
     options: [
       {
         label: "01: l'apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre",
@@ -2247,16 +2215,14 @@ export const apprentiSchema = {
   },
   "apprenti.intituleDiplomePrepare": {
     required: true,
-    description: "Intitulé précis du dernier diplôme ou titre préparé par l'apprenti(e)",
-    example: "BTS comptabilité gestion",
+    showInfo: true,
     label: "Intitulé précis du dernier diplôme ou titre préparé :",
     requiredMessage: "l'intitulé du dernier diplôme ou titre préparé par l'apprenti(e) est obligatoire",
   },
   "apprenti.diplome": {
     fieldType: "select",
     required: true,
-    description:
-      "Il faut sélectionner le diplôme ou le titre préparé avant la conclusion du présent contrat. Par exemple, si l'entrée en apprentissage concerne la 2ème année de BTS, le dernier diplôme ou titre préparé est la 1ère année de BTS : il faut donc sélectionner 54 - Brevet de Technicien supérieur.",
+    showInfo: true,
     options: [
       {
         name: "Diplôme ou titre de niveau bac +5 et plus",

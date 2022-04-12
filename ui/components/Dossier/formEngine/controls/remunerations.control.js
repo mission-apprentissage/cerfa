@@ -1,4 +1,4 @@
-import { buildRemuneration } from "../../domain/buildRemuneration";
+import { buildRemuneration } from "../../cerfaForm/domain/buildRemuneration";
 
 export const RemunerationsControl = [
   {
@@ -60,10 +60,6 @@ export const RemunerationsControl = [
           ];
         })
       );
-
-      console.log(oldRemusCascade, newRemus, remunerationsAnnuelles, dateFinContrat);
-
-      console.log(newRemus);
 
       return { cascade: { ...oldRemusCascade, ...newRemus, "contrat.smic": { value: smicObj } } };
     },

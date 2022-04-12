@@ -4,10 +4,10 @@ import { useDropzone } from "react-dropzone";
 import { useRecoilValue } from "recoil";
 import { _postFile, _delete } from "../../../../common/httpClient";
 import { DownloadLine, File, Bin } from "../../../../theme/components/icons";
-import { dossierAtom } from "../../../../hooks/useDossier/dossierAtom";
 import { hasContextAccessTo } from "../../../../common/utils/rolesUtils";
 import queryString from "query-string";
 import { useDocuments } from "../hooks/useDocuments";
+import { dossierAtom } from "../../atoms";
 
 const endpoint = `${process.env.REACT_APP_BASE_URL}/api`;
 

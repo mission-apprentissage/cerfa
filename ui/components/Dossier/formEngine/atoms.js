@@ -1,7 +1,7 @@
 import { atom, selector, selectorFamily } from "recoil";
 import { getValues } from "./utils/getValues";
 import { getFormStatus } from "../cerfaForm/completion";
-import { dossierAtom } from "../../../hooks/useDossier/dossierAtom";
+import { dossierAtom } from "../atoms";
 
 export const cerfaAtom = atom({
   key: "cerfaAtom",

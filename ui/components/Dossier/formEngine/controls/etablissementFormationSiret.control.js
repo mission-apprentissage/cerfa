@@ -1,5 +1,22 @@
 import { apiService } from "../../services/api.service";
 
+const unlockAllCascade = {
+  "employeur.denomination": { locked: false, reset: true },
+  "employeur.naf": { locked: false, reset: true },
+  "employeur.codeIdcc": { locked: false, reset: true },
+  "employeur.codeIdcc_special": { locked: false, reset: true },
+  "employeur.libelleIdcc": { locked: false, reset: true },
+  "employeur.nombreDeSalaries": { locked: false, reset: true },
+  "employeur.adresse.numero": { locked: false, reset: true },
+  "employeur.adresse.voie": { locked: false, reset: true },
+  "employeur.adresse.complement": { locked: false, reset: true },
+  "employeur.adresse.codePostal": { locked: false, reset: true },
+  "employeur.adresse.commune": { locked: false, reset: true },
+  "employeur.adresse.departement": { locked: false, reset: true },
+  "employeur.adresse.region": { locked: false, reset: true },
+  "employeur.privePublic": { locked: false, reset: true },
+};
+
 export const etablissementFormationSiretControl = [
   {
     deps: ["etablissementFormation.siret"],
@@ -13,6 +30,7 @@ export const etablissementFormationSiretControl = [
       if (result.api_entreprise === "KO") {
         return {
           warning: `Le service de récupération des informations Siret est momentanément indisponible. Nous ne pouvons pas pre-remplir le formulaire.`,
+          cascade: unlockAllCascade,
         };
       }
 
@@ -22,7 +40,8 @@ export const etablissementFormationSiretControl = [
 
       if (result.secretSiret) {
         return {
-          error: `Votre siret est valide. En revanche, en raison de sa nature, nous ne pouvons pas récupérer les informations reliées.`,
+          warning: `Votre siret est valide. En revanche, en raison de sa nature, nous ne pouvons pas récupérer les informations reliées.`,
+          cascade: unlockAllCascade,
         };
       }
 

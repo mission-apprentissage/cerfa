@@ -3,9 +3,9 @@ import { Box, Flex, Heading, Container, Button, Text, Link, UnorderedList, ListI
 import { useRouter } from "next/router";
 import { useRecoilValue } from "recoil";
 import { workspacePathsAtom, workspaceAtom } from "../../hooks/workspaceAtoms";
-import { useDossier } from "../../hooks/useDossier/useDossier";
 import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 import { ExternalLinkLine } from "../../theme/components/icons";
+import { useDossier } from "./hooks/useDossier";
 
 const NouveauDossier = () => {
   const { isloaded, createDossier, saveDossier } = useDossier();

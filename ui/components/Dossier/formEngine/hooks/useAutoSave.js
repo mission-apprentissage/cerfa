@@ -1,14 +1,22 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useRecoilCallback } from "recoil";
-import { dossierAtom } from "../../../../hooks/useDossier/dossierAtom";
 import { isEmptyValue } from "../utils/isEmptyValue";
 import { getValues } from "../utils/getValues";
 import { apiService } from "../../services/api.service";
 import debounce from "lodash.debounce";
+import { dossierAtom } from "../../atoms";
+import setWith from "lodash.setwith";
+
+const getIsLocked = (fields) => {
+  if (!fields) return undefined;
+  const values = {};
+  Object.entries(fields).forEach(([key, field]) => {
+    setWith(values, key, field.locked);
+  });
+  return values;
+};
 
 export const useAutoSave = ({ controller }) => {
-  const savedFields = useRef();
-
   const getDossier = useRecoilCallback(
     ({ snapshot }) =>
       async () =>
@@ -19,12 +27,6 @@ export const useAutoSave = ({ controller }) => {
   useEffect(() => {
     const handler = debounce(
       async (fields) => {
-        console.log("save");
-        // TODO
-        // eslint-disable-next-line no-unused-vars
-        const changed = Object.fromEntries(
-          Object.entries(fields).filter(([key, value]) => value !== savedFields.current?.[key])
-        );
         const toSave = Object.fromEntries(
           Object.entries(fields)
             .filter(([, field]) => field.autosave !== false)
@@ -35,13 +37,10 @@ export const useAutoSave = ({ controller }) => {
               return [name, { ...field, value: null }];
             })
         );
-        const data = getValues(toSave);
-        // if (savedFields.current) {
+
+        const data = { ...getValues(toSave), isLockedField: getIsLocked(toSave) };
         const dossier = await getDossier();
-        console.log("save", fields, toSave, data);
         await apiService.saveCerfa({ dossierId: dossier._id, data, cerfaId: dossier.cerfaId });
-        // }
-        savedFields.current = fields;
       },
       1000,
       { trailing: true }

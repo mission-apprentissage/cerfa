@@ -50,7 +50,6 @@ export const maitresControl = [
         return;
       }
       const { age: ageDebutContrat } = caclAgeAtDate(values.maitre2.dateNaissance, values.contrat.dateDebutContrat);
-
       if (ageDebutContrat < 18) {
         return {
           error: "Le maître d'apprentissage doit avoir au moins 18 ans à la date de début d'exécution du contrat",

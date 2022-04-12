@@ -1,17 +1,16 @@
 import React, { lazy } from "react";
 import { Box, Text, Center } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
-import { useDocuments } from "../../../hooks/useDossier/useDocuments";
 import Tooltip from "../../Tooltip/Tooltip";
 import { InputController } from "../formEngine/components/Input/InputController";
 import { valueSelector } from "../formEngine/atoms";
+import { documentsIsRequired } from "./domain/documentsIsRequired";
 
 const UploadFiles = lazy(() => import("./components/UploadFiles"));
 
 const PiecesJustificatives = () => {
   const typeContratApp = useRecoilValue(valueSelector("contrat.typeContratApp"));
-
-  const { required: documentsRequired } = useDocuments();
+  const documentsRequired = documentsIsRequired(typeContratApp);
 
   return (
     <Box mt={12} pt={2} minH="25vh">

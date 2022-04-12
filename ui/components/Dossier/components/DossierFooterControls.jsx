@@ -23,7 +23,7 @@ import { hasPageAccessTo, hasContextAccessTo } from "../../../common/utils/roles
 // import InfoTooltip from "../../../common/components/InfoTooltip";
 
 import { useSetRecoilState, useRecoilValue } from "recoil";
-import { dossierAtom } from "../../../hooks/useDossier/dossierAtom";
+import { dossierAtom } from "../atoms";
 
 const DossierFooterControls = ({
   activeStep,

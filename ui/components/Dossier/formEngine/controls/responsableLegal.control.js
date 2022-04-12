@@ -29,24 +29,23 @@ export const responsableLegalControl = [
     deps: ["apprenti.apprentiMineurNonEmancipe"],
     process: ({ values, cache }) => {
       if (shouldAskRepresentantLegal({ values })) {
+        const cachedValueOrResetRequired = (value) => ({ value, reset: !value, required: true });
         return {
+          cache,
           cascade: {
-            "apprenti.responsableLegal.nom": { required: true, value: cache?.nom, reset: !cache?.nom },
-            "apprenti.responsableLegal.prenom": { required: true, value: cache?.prenom, reset: !cache?.prenom },
-            "apprenti.responsableLegal.memeAdresse": {
-              required: true,
-              value: cache?.memeAdresse,
-              reset: !cache?.memeAdresse,
-            },
+            "apprenti.responsableLegal.nom": cachedValueOrResetRequired(cache?.nom),
+            "apprenti.responsableLegal.prenom": cachedValueOrResetRequired(cache?.prenom),
+            "apprenti.responsableLegal.memeAdresse": cachedValueOrResetRequired(cache?.memeAdresse),
           },
         };
       } else {
+        const requiredAndReset = { reset: true, required: false };
         return {
           cache: values.apprenti.responsableLegal,
           cascade: {
-            "apprenti.responsableLegal.nom": { reset: true, required: false },
-            "apprenti.responsableLegal.prenom": { reset: true, required: false },
-            "apprenti.responsableLegal.memeAdresse": { reset: true, required: false },
+            "apprenti.responsableLegal.nom": requiredAndReset,
+            "apprenti.responsableLegal.prenom": requiredAndReset,
+            "apprenti.responsableLegal.memeAdresse": requiredAndReset,
           },
         };
       }
@@ -55,35 +54,31 @@ export const responsableLegalControl = [
   {
     deps: ["apprenti.apprentiMineurNonEmancipe", "apprenti.responsableLegal.memeAdresse"],
     process: ({ values, cache }) => {
+      const cachedValueOrReset = (value) => ({ value, reset: !value });
+      const cachedValueOrResetRequired = (value) => ({ value, reset: !value, required: true });
       if (shouldAskResponsalLegalAdresse({ values })) {
         return {
+          cache,
           cascade: {
-            "apprenti.responsableLegal.adresse.numero": { value: cache?.numero, reset: !cache?.numero },
-            "apprenti.responsableLegal.adresse.voie": { required: true, value: cache?.voie, reset: !cache?.voie },
-            "apprenti.responsableLegal.adresse.complement": { value: cache?.complement, reset: !cache?.complement },
-            "apprenti.responsableLegal.adresse.codePostal": {
-              required: true,
-              value: cache?.codePostal,
-              reset: !cache?.codePostal,
-            },
-            "apprenti.responsableLegal.adresse.commune": {
-              required: true,
-              value: cache?.commune,
-              reset: !cache?.commune,
-            },
-            "apprenti.responsableLegal.adresse.pays": { required: true, value: cache?.pays, reset: !cache?.pays },
+            "apprenti.responsableLegal.adresse.numero": cachedValueOrReset(cache?.numero),
+            "apprenti.responsableLegal.adresse.voie": cachedValueOrResetRequired(cache?.voie),
+            "apprenti.responsableLegal.adresse.complement": cachedValueOrReset(cache?.complement),
+            "apprenti.responsableLegal.adresse.codePostal": cachedValueOrResetRequired(cache?.codePostal),
+            "apprenti.responsableLegal.adresse.commune": cachedValueOrResetRequired(cache?.commune),
+            "apprenti.responsableLegal.adresse.pays": cachedValueOrResetRequired(cache?.pays),
           },
         };
       } else {
+        const requiredAndReset = { reset: true, required: false };
         return {
           cache: values.apprenti.responsableLegal.adresse,
           cascade: {
-            "apprenti.responsableLegal.adresse.numero": { required: false, reset: true },
-            "apprenti.responsableLegal.adresse.voie": { required: false, reset: true },
-            "apprenti.responsableLegal.adresse.complement": { required: false, reset: true },
-            "apprenti.responsableLegal.adresse.codePostal": { required: false, reset: true },
-            "apprenti.responsableLegal.adresse.commune": { required: false, reset: true },
-            "apprenti.responsableLegal.adresse.pays": { required: false, reset: true },
+            "apprenti.responsableLegal.adresse.numero": requiredAndReset,
+            "apprenti.responsableLegal.adresse.voie": requiredAndReset,
+            "apprenti.responsableLegal.adresse.complement": requiredAndReset,
+            "apprenti.responsableLegal.adresse.codePostal": requiredAndReset,
+            "apprenti.responsableLegal.adresse.commune": requiredAndReset,
+            "apprenti.responsableLegal.adresse.pays": requiredAndReset,
           },
         };
       }
