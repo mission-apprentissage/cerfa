@@ -5,6 +5,7 @@ export const rncpControl = [
     deps: ["formation.rncp"],
     process: async ({ values, dossier, signal }) => {
       const rncp = values.formation.rncp;
+
       const { messages, result, error } = await apiService.fetchCfdrncp({
         rncp,
         dossierId: dossier._id,
@@ -15,7 +16,7 @@ export const rncpControl = [
         return { error };
       }
 
-      if (messages.code_rncp !== "Ok") {
+      if (messages?.code_rncp !== "Ok") {
         return { error: messages.code_rncp };
       }
 
