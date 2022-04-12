@@ -622,6 +622,7 @@ export const buildRemuneration = (data) => {
     buildBlock2(12, result1),
     buildBlock2(21, result2),
     buildBlock2(22, result2),
+    buildBlock2(31, result3),
     buildBlock2(32, result3),
     buildBlock2(41, result4),
     buildBlock2(42, result4),

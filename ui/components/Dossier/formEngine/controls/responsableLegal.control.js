@@ -1,5 +1,4 @@
 import { shouldAskRepresentantLegal } from "../../cerfaForm/blocks/apprenti/domain/shouldAskRepresentantLegal";
-import { shouldAskResponsalLegalAdresse } from "../../cerfaForm/blocks/apprenti/domain/shouldAskResponsalLegalAdresse";
 import { createCopyRules } from "./utils/createCopyRules";
 
 export const responsableLegalControl = [
@@ -14,17 +13,6 @@ export const responsableLegalControl = [
       };
     },
   },
-  ...createCopyRules({
-    copyIf: ({ values }) => values.apprenti.responsableLegal.memeAdresse,
-    mapping: {
-      "apprenti.adresse.numero": "apprenti.responsableLegal.adresse.numero",
-      "apprenti.adresse.voie": "apprenti.responsableLegal.adresse.voie",
-      "apprenti.adresse.complement": "apprenti.responsableLegal.adresse.complement",
-      "apprenti.adresse.codePostal": "apprenti.responsableLegal.adresse.codePostal",
-      "apprenti.adresse.commune": "apprenti.responsableLegal.adresse.commune",
-      "apprenti.adresse.pays": "apprenti.responsableLegal.adresse.pays",
-    },
-  }),
   {
     deps: ["apprenti.apprentiMineurNonEmancipe"],
     process: ({ values, cache }) => {
@@ -56,7 +44,20 @@ export const responsableLegalControl = [
     process: ({ values, cache }) => {
       const cachedValueOrReset = (value) => ({ value, reset: !value });
       const cachedValueOrResetRequired = (value) => ({ value, reset: !value, required: true });
-      if (shouldAskResponsalLegalAdresse({ values })) {
+      const memeAdresse = values.apprenti.responsableLegal.memeAdresse;
+      if (memeAdresse !== true && memeAdresse !== false) {
+        const notRequiredAndReset = { reset: true, required: false };
+        return {
+          cascade: {
+            "apprenti.responsableLegal.adresse.numero": notRequiredAndReset,
+            "apprenti.responsableLegal.adresse.voie": notRequiredAndReset,
+            "apprenti.responsableLegal.adresse.complement": notRequiredAndReset,
+            "apprenti.responsableLegal.adresse.codePostal": notRequiredAndReset,
+            "apprenti.responsableLegal.adresse.commune": notRequiredAndReset,
+            "apprenti.responsableLegal.adresse.pays": notRequiredAndReset,
+          },
+        };
+      } else if (!memeAdresse) {
         return {
           cache,
           cascade: {
@@ -69,19 +70,30 @@ export const responsableLegalControl = [
           },
         };
       } else {
-        const requiredAndReset = { reset: true, required: false };
+        const createCascadeValue = (value) => ({ value, reset: true });
         return {
           cache: values.apprenti.responsableLegal.adresse,
           cascade: {
-            "apprenti.responsableLegal.adresse.numero": requiredAndReset,
-            "apprenti.responsableLegal.adresse.voie": requiredAndReset,
-            "apprenti.responsableLegal.adresse.complement": requiredAndReset,
-            "apprenti.responsableLegal.adresse.codePostal": requiredAndReset,
-            "apprenti.responsableLegal.adresse.commune": requiredAndReset,
-            "apprenti.responsableLegal.adresse.pays": requiredAndReset,
+            "apprenti.responsableLegal.adresse.numero": createCascadeValue(values.apprenti.adresse.numero),
+            "apprenti.responsableLegal.adresse.voie": createCascadeValue(values.apprenti.adresse.voie),
+            "apprenti.responsableLegal.adresse.complement": createCascadeValue(values.apprenti.adresse.complement),
+            "apprenti.responsableLegal.adresse.codePostal": createCascadeValue(values.apprenti.adresse.codePostal),
+            "apprenti.responsableLegal.adresse.commune": createCascadeValue(values.apprenti.adresse.commune),
+            "apprenti.responsableLegal.adresse.pays": createCascadeValue(values.apprenti.adresse.pays),
           },
         };
       }
     },
   },
+  ...createCopyRules({
+    copyIf: ({ values }) => values.apprenti.responsableLegal.memeAdresse,
+    mapping: {
+      "apprenti.adresse.numero": "apprenti.responsableLegal.adresse.numero",
+      "apprenti.adresse.voie": "apprenti.responsableLegal.adresse.voie",
+      "apprenti.adresse.complement": "apprenti.responsableLegal.adresse.complement",
+      "apprenti.adresse.codePostal": "apprenti.responsableLegal.adresse.codePostal",
+      "apprenti.adresse.commune": "apprenti.responsableLegal.adresse.commune",
+      "apprenti.adresse.pays": "apprenti.responsableLegal.adresse.pays",
+    },
+  }),
 ];

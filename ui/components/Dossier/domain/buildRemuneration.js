@@ -457,6 +457,7 @@ export const buildRemuneration = (data) => {
   const taux32 = taux.a3[getSeuils(ageA4)];
   const selectedTaux31 = getTaux(3.1, taux31);
   const selectedTaux32 = getTaux(3.2, taux32);
+
   if (isChangingTaux(ageA3, ageA4) && !finRemuneration && !isAnniversaireInLastMonth) {
     const dateDebut32 = anniversaireA3.set({ day: 1, month: anniversaireA3.get("month") + 1 });
     const dateFin31 = dateDebut32.minus({ days: 1 });
@@ -622,6 +623,7 @@ export const buildRemuneration = (data) => {
     buildBlock2(12, result1),
     buildBlock2(21, result2),
     buildBlock2(22, result2),
+    buildBlock2(31, result3),
     buildBlock2(32, result3),
     buildBlock2(41, result4),
     buildBlock2(42, result4),

@@ -1,5 +1,9 @@
 import { buildRemuneration } from "../../cerfaForm/domain/buildRemuneration";
 
+const getTauxFromRemunerationsAnnuelles = (remunerationsAnnuelles) => {
+  return Object.fromEntries(remunerationsAnnuelles.map((annee) => [annee.ordre, annee.taux]));
+};
+
 export const RemunerationsControl = [
   {
     deps: [
@@ -26,15 +30,16 @@ export const RemunerationsControl = [
         return;
       }
 
+      const oldRemus = values.contrat.remunerationsAnnuelles ?? [];
       const { remunerationsAnnuelles, smicObj } = buildRemuneration({
         apprentiDateNaissance,
         apprentiAge,
         dateDebutContrat,
         dateFinContrat,
         employeurAdresseDepartement,
+        selectedTaux: getTauxFromRemunerationsAnnuelles(oldRemus),
       });
 
-      const oldRemus = values.contrat.remunerationsAnnuelles ?? [];
       const oldRemusCascade = Object.fromEntries(
         oldRemus?.flatMap((remu, i) => [
           [`contrat.remunerationsAnnuelles[${i}].dateDebut`, undefined],
