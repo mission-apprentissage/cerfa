@@ -1,7 +1,7 @@
 import { useRecoilValue } from "recoil";
 import { dossierAtom } from "../../atoms";
 import { Divider, Flex, HStack, Stack, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { useSignatures } from "../hooks/useSignatures";
 import { Input } from "../../formEngine/components/Input/Input";
 
@@ -29,14 +29,14 @@ export const SignatairesForm = () => {
         <Divider />
         {apprenti && (
           <Stack mb={5} mt={6}>
-            <Text fontWeight="bold">Pour l&apos;apprenti(e) :</Text>
+            <Text fontWeight="bold">Pour l'apprenti(e) :</Text>
             <SignataireLineForm signataire={apprenti} type="apprenti" />
           </Stack>
         )}
         <Divider />
         {legal && (
           <Stack mt={8}>
-            <Text fontWeight="bold">Pour le représentant légal de l&apos;apprenti(e) :</Text>
+            <Text fontWeight="bold">Pour le représentant légal de l'apprenti(e) :</Text>
             <SignataireLineForm signataire={legal} type="legal" />
           </Stack>
         )}
@@ -47,12 +47,19 @@ export const SignatairesForm = () => {
 
 const SignataireLineForm = ({ signataire, type }) => {
   const { onSubmittedSignataireDetails } = useSignatures();
+
+  const [firstname, setFirstname] = useState(signataire.firstname);
+  const [lastname, setLastname] = useState(signataire.lastname);
+  const [email, setEmail] = useState(signataire.email);
+  const [phone, setPhone] = useState(signataire.phone);
+
   return (
     <HStack spacing={3}>
       <Input
+        required={true}
         name={`signataire.${type}.lastname`}
         label="Nom"
-        value={signataire.lastname || ""}
+        value={lastname || ""}
         mask="C"
         maskBlocks={[
           {
@@ -61,14 +68,19 @@ const SignataireLineForm = ({ signataire, type }) => {
             pattern: "^\\D*$",
           },
         ]}
-        mt={0}
+        mb={0}
         w="20%"
+        onError={(val, name) => {
+          onSubmittedSignataireDetails("", name);
+        }}
         onSubmit={onSubmittedSignataireDetails}
+        onChange={setLastname}
       />
       <Input
+        required={true}
         name={`signataire.${type}.firstname`}
         label="Prénom"
-        value={signataire.firstname || ""}
+        value={firstname || ""}
         mask="C"
         maskBlocks={[
           {
@@ -79,12 +91,17 @@ const SignataireLineForm = ({ signataire, type }) => {
         ]}
         mt={0}
         w="20%"
+        onError={(val, name) => {
+          onSubmittedSignataireDetails("", name);
+        }}
         onSubmit={onSubmittedSignataireDetails}
+        onChange={setFirstname}
       />
       <Input
+        required={true}
         name={`signataire.${type}.email`}
         label="Courriel"
-        value={signataire.email}
+        value={email}
         mask="C"
         maskBlocks={[
           {
@@ -96,15 +113,24 @@ const SignataireLineForm = ({ signataire, type }) => {
         fieldType="email"
         mt={0}
         w="40%"
+        onError={(val, name) => {
+          onSubmittedSignataireDetails("", name);
+        }}
         onSubmit={onSubmittedSignataireDetails}
+        onChange={setEmail}
       />
       <Input
+        required={true}
         name={`signataire.${type}.phone`}
         label="phone"
-        value={signataire.phone?.replace("+", "") || ""}
+        value={phone?.replace("+", "") || ""}
         fieldType="phone"
         w="20%"
+        onError={(val, name) => {
+          onSubmittedSignataireDetails("", name);
+        }}
         onSubmit={onSubmittedSignataireDetails}
+        onChange={setPhone}
       />
     </HStack>
   );

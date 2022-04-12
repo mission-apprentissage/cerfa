@@ -84,7 +84,10 @@ export const Input = memo(
         });
         setFieldState({ error, value });
         onChange?.(value, name, extra);
-        if (error) return;
+        if (error) {
+          onError?.(value, name, extra);
+          return;
+        }
         onSubmit?.(value, name, extra);
       },
       [onChange, onSubmit, props, name]

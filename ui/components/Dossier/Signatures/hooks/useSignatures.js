@@ -1,11 +1,54 @@
 import { useCallback } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 
 import { apiService } from "../../services/api.service";
 import { dossierAtom } from "../../atoms";
+import { _put } from "../../../../common/httpClient";
 
 export function useSignatures() {
-  const dossier = useRecoilValue(dossierAtom);
+  const [dossier, setDossier] = useRecoilState(dossierAtom);
+
+  const onSubmittedSignataireDetails = useCallback(
+    async (data, path) => {
+      try {
+        const [, type, detail] = path.match(/^signataire\.(.+)\.(.+)$/);
+
+        let signataires = {
+          employeur: {
+            ...dossier.signataires.employeur,
+          },
+          apprenti: {
+            ...dossier.signataires.apprenti,
+          },
+          cfa: {
+            ...dossier.signataires.cfa,
+          },
+          ...(dossier.signataires.legal
+            ? {
+                legal: {
+                  ...dossier.signataires.legal,
+                },
+              }
+            : {}),
+        };
+        if (detail === "phone") {
+          signataires[type][detail] = data !== "" ? `+${data}` : "";
+        } else {
+          signataires[type][detail] = data;
+        }
+
+        const newDossier = await _put(`/api/v1/dossier/entity/${dossier._id}/signataires`, {
+          dossierId: dossier._id,
+          signataires,
+        });
+
+        setDossier(newDossier);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [dossier, setDossier]
+  );
 
   const onSubmitted = useCallback(
     async (lieu, date) => {
@@ -27,5 +70,5 @@ export function useSignatures() {
     [dossier]
   );
 
-  return { onSubmitted };
+  return { onSubmitted, onSubmittedSignataireDetails };
 }
