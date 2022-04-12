@@ -15,7 +15,7 @@ import { rncpControl } from "./rncp.control";
 import { codeDiplomeControl } from "./codeDiplome.control";
 import { organismeFormationCodePostalControl } from "./organismeFormationCodePostal.control";
 import { dateFormationControl } from "./dateFormation.control";
-import { siretOrganismeFormationLogic } from "./siretOrganismeFormation.control";
+import { siretOrganismeFormationLogic } from "./organismeFormationSiret.control";
 import { apprentiCodePostalControl } from "./apprentiCodePostal.control";
 import { etablissementFormationSiretControl } from "./etablissementFormationSiret.control";
 import { etablissementFormationCodePostalControl } from "./etablissementFormationCodePostal.control";

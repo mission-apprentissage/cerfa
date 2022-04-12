@@ -21,7 +21,12 @@ export const siretOrganismeFormationLogic = {
   deps: ["organismeFormation.siret"],
   process: async ({ values, signal, dossier }) => {
     const siret = values.organismeFormation.siret;
-    const { messages, result } = await apiService.fetchSiret({ siret, dossierId: dossier._id, signal });
+    const { messages, result } = await apiService.fetchSiret({
+      siret,
+      dossierId: dossier._id,
+      organismeFormation: true,
+      signal,
+    });
 
     const resultLength = Object.keys(result).length;
     if (resultLength === 0) return { error: messages.error };
