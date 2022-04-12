@@ -115,7 +115,7 @@ module.exports = ({ users, mailer, sessions }) => {
         civility: user.civility,
         tmpPwd: password,
         publicUrl: config.publicUrl,
-        activationToken: createActivationToken(user.email, { payload: { tmpPwd: password } }),
+        activationToken: createActivationToken(user.email.toLowerCase(), { payload: { tmpPwd: password } }),
       });
 
       return res.json({ succeeded: true });

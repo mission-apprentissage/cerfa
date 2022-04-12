@@ -4,28 +4,37 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { _post } from "../../common/httpClient";
 import decodeJWT from "../../common/utils/decodeJWT";
+import jwt from "jsonwebtoken";
+import useAuth from "../../hooks/useAuth";
+import useToken from "../../hooks/useToken";
 
 const Confirmed = () => {
   const router = useRouter();
+  const [, setAuth] = useAuth();
+  const [, setToken] = useToken();
   const { activationToken } = router.query;
   const email = decodeJWT(activationToken).sub;
   const [error, setError] = useState(false);
-
   useEffect(() => {
     const run = async () => {
-      try {
-        const result = await _post("/api/v1/auth/activation", { activationToken });
-        if (result.succeeded) {
-          window.location.reload();
+      if (activationToken) {
+        try {
+          const result = await _post("/api/v1/auth/activation", { activationToken });
+          if (result.succeeded) {
+            const user = jwt.decode(result.token);
+            setAuth(user);
+            setToken(result.token);
+            window.location.href = "/";
+          }
+        } catch (e) {
+          console.error(e);
+          setError(true);
         }
-      } catch (e) {
-        console.error(e);
-        setError(true);
       }
     };
     run();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activationToken]);
 
   const title = `Confirmation du compte pour l'utilisateur ${email}`;
   // setTitle(title);
@@ -48,7 +57,7 @@ const Confirmed = () => {
             mail :
           </Heading>
           <Box>
-            <a href="mailto:cerfa@apprentissage.beta.gouv.fr">cerfa@apprentissage.beta.gouv.fr</a>
+            <a href="mailto:cerfa@apprentissage.beta.gouv.fr">support-contrat@apprentissage.beta.gouv.fr</a>
           </Box>
         </HStack>
       )}
