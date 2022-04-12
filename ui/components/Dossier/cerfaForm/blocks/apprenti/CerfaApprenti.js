@@ -7,6 +7,7 @@ import { shouldAskResponsalLegalAdresse } from "./domain/shouldAskResponsalLegal
 import CheckEmptyFields from "../../../formEngine/components/CheckEmptyFields";
 import { apprentiSchema } from "./apprentiSchema";
 
+// eslint-disable-next-line react/display-name
 export const CerfaApprenti = memo(() => {
   return (
     <Box>
@@ -15,7 +16,7 @@ export const CerfaApprenti = memo(() => {
           <InputController name="apprenti.nom" />
           <InputController name="apprenti.prenom" />
           <FormLabel fontWeight="bold" my={3}>
-            Adresse de l'apprenti(e) :
+            Adresse de l&apos;apprenti(e) :
           </FormLabel>
           <InputController name="apprenti.adresse.numero" />
           <InputController name="apprenti.adresse.voie" />

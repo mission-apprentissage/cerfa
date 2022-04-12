@@ -31,6 +31,7 @@ export const Input = memo(
     mask,
     maskBlocks,
     onChange,
+    onError,
     onSubmit,
     mt,
     mb,
@@ -90,7 +91,7 @@ export const Input = memo(
         }
         onSubmit?.(value, name, extra);
       },
-      [onChange, onSubmit, props, name]
+      [props, onChange, name, onSubmit, onError]
     );
 
     return (

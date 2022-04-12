@@ -132,6 +132,7 @@ const DateInputIn = (props) => {
 
 const MInput = IMaskMixin(({ inputRef, ...props }) => <ChackraInput {...props} ref={inputRef} />);
 
+// eslint-disable-next-line react/display-name
 const CustomDateInput = forwardRef(({ value, onChange, onFocus, locked, onClick, ...props }, ref) => {
   const actions = !locked
     ? { onClick: onClick, onFocus: onFocus }

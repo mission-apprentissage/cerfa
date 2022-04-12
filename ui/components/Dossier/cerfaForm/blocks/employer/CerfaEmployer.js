@@ -4,6 +4,7 @@ import React, { memo } from "react";
 import { employerSchema } from "./employerSchema";
 import CheckEmptyFields from "../../../formEngine/components/CheckEmptyFields";
 
+// eslint-disable-next-line react/display-name
 export const CerfaEmployer = memo(() => {
   return (
     <Box>
@@ -12,7 +13,7 @@ export const CerfaEmployer = memo(() => {
         <Box w="55%" flex="1">
           <InputController name="employeur.denomination" />
           <FormLabel fontWeight={700} my={3}>
-            Adresse de l'établissement d'exécution du contrat :
+            Adresse de l&apos;établissement d&apos;exécution du contrat :
           </FormLabel>
           <InputController name="employeur.adresse.numero" fieldType="number" />
           <InputController name="employeur.adresse.voie" fieldType="text" />

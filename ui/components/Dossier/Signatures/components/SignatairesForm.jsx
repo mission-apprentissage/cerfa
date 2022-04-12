@@ -29,14 +29,14 @@ export const SignatairesForm = () => {
         <Divider />
         {apprenti && (
           <Stack mb={5} mt={6}>
-            <Text fontWeight="bold">Pour l'apprenti(e) :</Text>
+            <Text fontWeight="bold">Pour l&apos;apprenti(e) :</Text>
             <SignataireLineForm signataire={apprenti} type="apprenti" />
           </Stack>
         )}
         <Divider />
         {legal && (
           <Stack mt={8}>
-            <Text fontWeight="bold">Pour le représentant légal de l'apprenti(e) :</Text>
+            <Text fontWeight="bold">Pour le représentant légal de l&apos;apprenti(e) :</Text>
             <SignataireLineForm signataire={legal} type="legal" />
           </Stack>
         )}

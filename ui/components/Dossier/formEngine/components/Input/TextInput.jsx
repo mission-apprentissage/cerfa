@@ -4,7 +4,7 @@ import React, { useMemo, useRef } from "react";
 import { InputWrapper } from "./InputWrapper";
 import { IMask, IMaskMixin } from "react-imask";
 
-const getVariantProp = (props) => {
+const getVariantProp = () => {
   // if (props.success) return { variant: "valid" };
   return { variant: "cerfa" };
 };

@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { Select as ChakraSelect } from "@chakra-ui/react";
 import { InputWrapper } from "./InputWrapper";
 
-const getVariantProp = (props) => {
+const getVariantProp = () => {
   // if (props.success) return { variant: "valid" };
   return { variant: "cerfa" };
 };

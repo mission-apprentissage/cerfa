@@ -5,6 +5,7 @@ import { useCerfaController } from "../../CerfaControllerContext";
 
 import { InputField } from "./Input";
 
+// eslint-disable-next-line react/display-name
 export const InputController = memo(({ name, fieldType, mt, mb, ml, mr, w }) => {
   const controller = useCerfaController();
 

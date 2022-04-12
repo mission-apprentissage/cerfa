@@ -6,6 +6,7 @@ import CheckEmptyFields from "../../../formEngine/components/CheckEmptyFields";
 import { formationSchema } from "./formationSchema";
 import { shouldAskEtablissementFormation } from "./domain/shouldAskEtablissementFormation";
 
+// eslint-disable-next-line react/display-name
 export const CerfaFormation = memo(() => {
   return (
     <>

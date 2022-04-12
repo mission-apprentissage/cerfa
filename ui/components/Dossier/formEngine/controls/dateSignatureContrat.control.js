@@ -1,7 +1,7 @@
 export const dateSignatureContratControl = [
   {
     deps: ["contrat.dateDebutContrat", "contrat.dateConclusion", "contrat.typeContratApp"],
-    process: ({ values, fields }) => {
+    process: ({ values }) => {
       const typeContratApp = values.contrat.typeContratApp;
       const contratInitial = typeContratApp === 11;
 
@@ -17,7 +17,7 @@ export const dateSignatureContratControl = [
   },
   {
     deps: ["contrat.dateConclusion", "contrat.dateEffetAvenant", "contrat.typeContratApp"],
-    process: ({ values, fields }) => {
+    process: ({ values }) => {
       const typeContratApp = values.contrat.typeContratApp;
       const hasAvenant = [31, 32, 33, 34, 35, 36, 37].includes(typeContratApp);
 

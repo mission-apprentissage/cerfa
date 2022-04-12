@@ -19,7 +19,8 @@ export const AvantagesNatures = () => {
         </FormLabel>
         {missingFieldAvantages && (
           <Text color="flaterror">
-            Si l'apprenti(e) bénéficie d'avantages en nature, veuillez saisir au moins un des champs ci-dessous.
+            Si l&apos;apprenti(e) bénéficie d&apos;avantages en nature, veuillez saisir au moins un des champs
+            ci-dessous.
           </Text>
         )}
         <Box

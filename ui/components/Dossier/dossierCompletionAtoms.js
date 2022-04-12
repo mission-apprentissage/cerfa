@@ -7,7 +7,7 @@ export const dossierCompletionStatus = selector({
   get: ({ get }) => {
     const cerfaCompletionStatus = get(cerfaStatusGetter);
     const documentsCompletionStatus = get(documentsCompletionStatusGetter);
-    const signatureCompletionStatus = get(documentsCompletionStatusGetter);
+    // const signatureCompletionStatus = get(documentsCompletionStatusGetter);
     return {
       cerfa: {
         completion: cerfaCompletionStatus?.completion,
