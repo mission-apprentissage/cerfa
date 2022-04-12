@@ -22,7 +22,12 @@ export const etablissementFormationSiretControl = [
     deps: ["etablissementFormation.siret"],
     process: async ({ values, signal, dossier }) => {
       const siret = values.etablissementFormation.siret;
-      const { messages, result } = await apiService.fetchSiret({ siret, dossierId: dossier._id, signal });
+      const { messages, result } = await apiService.fetchSiret({
+        siret,
+        dossierId: dossier._id,
+        organismeFormation: true,
+        signal,
+      });
 
       const resultLength = Object.keys(result).length;
       if (resultLength === 0) return { error: messages.error };

@@ -11,9 +11,9 @@ const saveCerfa = async ({ dossierId, cerfaId, data }) => {
   }
 };
 
-const fetchSiret = async ({ siret, dossierId, signal }) => {
+const fetchSiret = async ({ siret, dossierId, organismeFormation = false, signal }) => {
   try {
-    return await _post(`/api/v1/siret`, { siret, dossierId }, signal);
+    return await _post(`/api/v1/siret`, { siret, dossierId, organismeFormation }, signal);
   } catch (e) {
     if (e.name !== "AbortError") throw e;
     return { error: e.prettyMessage };

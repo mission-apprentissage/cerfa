@@ -33,7 +33,6 @@ export const formationSchema = {
   },
   "etablissementFormation.siret": {
     fieldType: "text",
-    required: true,
     completion: shouldAskEtablissementFormation,
     label: "N° SIRET du lieu de formation :",
     validateMessage: "n'est pas un siret valide",
@@ -48,7 +47,6 @@ export const formationSchema = {
   },
   "etablissementFormation.uaiCfa": {
     fieldType: "text",
-    required: true,
     completion: shouldAskEtablissementFormation,
     label: "N° UAI du CFA :",
     validateMessage: "n'est pas un uai valide",
