@@ -19,11 +19,11 @@ services:
       context: ui
       dockerfile: Dockerfile.dev
       args:
-        - REACT_APP_ENV=dev
-        - REACT_APP_BASE_URL=http://localhost
-        - REACT_APP_BASE_HOST=localhost
-        - REACT_APP_METABASE_URL=https://contrat.apprentissage.beta.gouv.fr/
-        - REACT_APP_METABASE_SECRET_KEY=
+        - NEXT_PUBLIC_ENV=dev
+        - NEXT_PUBLIC_BASE_URL=http://localhost
+        - NEXT_PUBLIC_BASE_HOST=localhost
+        - NEXT_PUBLIC_METABASE_URL=https://contrat.apprentissage.beta.gouv.fr/
+        - NEXT_PUBLIC_METABASE_SECRET_KEY=
         - SKIP_PREFLIGHT_CHECK=true
 
   server:

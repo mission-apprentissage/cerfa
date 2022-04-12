@@ -114,7 +114,7 @@ const Assistance = () => {
               fullPage={true}
               darkMode={false}
               disableHeader={true}
-              rootDomain={process.env.REACT_APP_BASE_URL}
+              rootDomain={process.env.NEXT_PUBLIC_BASE_URL}
               bodyClassName={styles.notionBody}
             />
           )}

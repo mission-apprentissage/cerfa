@@ -10,7 +10,7 @@ const contentSecurityPolicy = `
       frame-ancestors 'self';
       img-src 'self' https://www.notion.so data:;
       object-src 'none';
-      script-src 'self'  https://plausible.io ${process.env.REACT_APP_ENV === "dev" ? "'unsafe-eval'" : ""};
+      script-src 'self'  https://plausible.io ${process.env.NEXT_PUBLIC_ENV === "dev" ? "'unsafe-eval'" : ""};
       script-src-attr 'none';
       style-src 'self' https: 'unsafe-inline';
       upgrade-insecure-requests;

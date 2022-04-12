@@ -9,7 +9,7 @@ import queryString from "query-string";
 import { useDocuments } from "../hooks/useDocuments";
 import { dossierAtom } from "../../atoms";
 
-const endpoint = `${process.env.REACT_APP_BASE_URL}/api`;
+const endpoint = `${process.env.NEXT_PUBLIC_BASE_URL}/api`;
 
 const baseStyle = {
   flex: 1,
