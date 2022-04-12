@@ -133,6 +133,14 @@ export const formationSchema = {
       },
     ],
     unmask: false,
+    validate: ({ value }) => {
+      if (value.length !== 9) {
+        return {
+          error:
+            "n'est pas un code RNCP valide. Le code RNCP doit être définit et au format 5 ou 9 caractères,  RNCP24440 ou 24440",
+        };
+      }
+    },
   },
   "formation.codeDiplome": {
     fieldType: "text",
