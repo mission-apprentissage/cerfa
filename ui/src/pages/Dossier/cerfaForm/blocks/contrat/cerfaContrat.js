@@ -8,7 +8,7 @@ import { AvantagesNatures } from "./components/AvantagesNatures";
 import CheckEmptyFields from "../../../formEngine/components/CheckEmptyFields";
 import { CollapseController } from "../../../formEngine/components/CollapseController";
 import { shouldAskDateEffetAvenant } from "./domain/shouldAskDateEffetAvenant";
-import { apprentiSchema } from "../apprenti/apprentiSchema";
+import { contratSchema } from "./contratSchema";
 
 export const CerfaContrat = memo(() => {
   return (
@@ -39,7 +39,7 @@ export const CerfaContrat = memo(() => {
         <Remunerations />
         <AvantagesNatures />
       </Box>
-      <CheckEmptyFields schema={apprentiSchema} blocName="contrat" />
+      <CheckEmptyFields schema={contratSchema} blocName="contrat" />
     </Box>
   );
 });
