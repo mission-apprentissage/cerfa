@@ -97,7 +97,7 @@ export const Remunerations = () => {
       <CollapseController show={shouldShowRemunerationsAnnuelles}>
         <Box>
           {remunerationsAnnuelles?.map((annee, i) => (
-            <Box key={annee.ordre} mt={4}>
+            <Box key={i} mt={4}>
               <Box fontSize="1.1rem" fontWeight="bold" mb={1}>
                 {getAnneeLabel(i, annee.ordre)}
               </Box>

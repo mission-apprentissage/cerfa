@@ -31,7 +31,7 @@ export const NumberInput = (props) => {
         disabled={locked}
         onChange={(val) => {
           setLocalValue(val);
-          if (!/\.$/.test(val)) onChange(parseFloat(val));
+          if (!/\.$/.test(val) && val !== "") onChange(parseFloat(val));
         }}
         value={localValue}
         placeholder={example ? `Exemple : ${example}` : description}
