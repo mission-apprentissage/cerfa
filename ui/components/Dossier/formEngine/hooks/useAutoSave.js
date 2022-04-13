@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useRecoilCallback } from "recoil";
+import { atom, useRecoilCallback, useSetRecoilState } from "recoil";
 import { isEmptyValue } from "../utils/isEmptyValue";
 import { getValues } from "../utils/getValues";
 import { apiService } from "../../services/api.service";
@@ -16,6 +16,11 @@ const getIsLocked = (fields) => {
   return values;
 };
 
+export const autoSaveStatusAtom = atom({
+  key: "autoSaveStatusAtom",
+  default: "OK", // "OK" | "ERROR" | "PENDING"
+});
+
 export const useAutoSave = ({ controller }) => {
   const getDossier = useRecoilCallback(
     ({ snapshot }) =>
@@ -24,9 +29,13 @@ export const useAutoSave = ({ controller }) => {
     []
   );
 
+  const setAutoSave = useSetRecoilState(autoSaveStatusAtom);
+
   useEffect(() => {
-    const handler = debounce(
+    let timeout;
+    const save = debounce(
       async (fields) => {
+        clearTimeout(timeout);
         const toSave = Object.fromEntries(
           Object.entries(fields)
             .filter(([, field]) => field.autosave !== false)
@@ -40,11 +49,25 @@ export const useAutoSave = ({ controller }) => {
 
         const data = { ...getValues(toSave), isLockedField: getIsLocked(toSave) };
         const dossier = await getDossier();
-        await apiService.saveCerfa({ dossierId: dossier._id, data, cerfaId: dossier.cerfaId });
+        try {
+          await apiService.saveCerfa({ dossierId: dossier._id, data, cerfaId: dossier.cerfaId });
+        } catch (e) {
+          setAutoSave("ERROR");
+          throw e;
+        }
+        timeout = setTimeout(() => {
+          setAutoSave("OK");
+        }, 800);
       },
       1000,
       { trailing: true }
     );
+
+    const handler = (...args) => {
+      setAutoSave("PENDING");
+      save(args);
+    };
+
     controller.on("CHANGE", handler);
     return () => controller.off("CHANGE", handler);
   }, [controller, getDossier]);
