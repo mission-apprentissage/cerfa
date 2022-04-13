@@ -4,11 +4,6 @@ import React, { useMemo, useRef } from "react";
 import { InputWrapper } from "./InputWrapper";
 import { IMask, IMaskMixin } from "react-imask";
 
-const getVariantProp = () => {
-  // if (props.success) return { variant: "valid" };
-  return { variant: "cerfa" };
-};
-
 export const TextInput = (props) => {
   const {
     name,
@@ -25,13 +20,18 @@ export const TextInput = (props) => {
     maxLength,
     min,
     max,
+    precision,
   } = props;
   const value = props.value + "";
 
   const handleChange = (e) => {
     const val = e.target.value;
     if (fieldType === "number") {
-      onChange(val === "" ? undefined : parseInt(val));
+      if (precision) {
+        onChange(val === "" ? undefined : parseFloat(val));
+      } else {
+        onChange(val === "" ? undefined : parseInt(val));
+      }
       return;
     }
     onChange(val);
@@ -41,7 +41,7 @@ export const TextInput = (props) => {
     <InputWrapper {...props}>
       {mask ? (
         <MaskedInput
-          {...getVariantProp(props)}
+          variant="cerfa"
           isInvalid={!!error}
           name={name.replaceAll(".", "_")}
           type={fieldType}
@@ -56,14 +56,16 @@ export const TextInput = (props) => {
           maxLength={maxLength}
           min={min}
           max={max}
+          precision={precision}
         />
       ) : (
         <ChackraInput
-          {...getVariantProp(props)}
+          variant="cerfa"
           isInvalid={!!error}
           name={name.replaceAll(".", "_")}
           type={fieldType}
           disabled={locked}
+          step={1}
           onChange={handleChange}
           value={value}
           placeholder={example ? `Exemple : ${example}` : description}
@@ -94,7 +96,6 @@ const MaskedInput = (props) => {
     variant,
   } = props;
   const inputRef = useRef(null);
-
   let blocks = useMemo(() => {
     return maskBlocks?.reduce((acc, item) => {
       if (item.mask === "MaskedRange")
@@ -118,7 +119,7 @@ const MaskedInput = (props) => {
         acc[item.name] = {
           mask: Number,
           radix: ".", // fractional delimiter
-          mapToRadix: ["."], // symbols to process as radix
+          mapToRadix: [".", ","], // symbols to process as radix
           normalizeZeros: item.normalizeZeros,
           scale: precision,
           signed: item.signed,

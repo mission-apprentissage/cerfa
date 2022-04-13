@@ -2,11 +2,6 @@ import React, { useMemo } from "react";
 import { Select as ChakraSelect } from "@chakra-ui/react";
 import { InputWrapper } from "./InputWrapper";
 
-const getVariantProp = () => {
-  // if (props.success) return { variant: "valid" };
-  return { variant: "cerfa" };
-};
-
 export const Select = (props) => {
   const { name, locked, onChange, value, options } = props;
 
@@ -38,7 +33,7 @@ export const Select = (props) => {
         data-testid={`select-${name}`}
         placeholder="Sélectionnez une option"
         value={selectedLabel ?? ""}
-        {...getVariantProp(props)}
+        variant="cerfa"
       >
         {options[0].options && (
           <>

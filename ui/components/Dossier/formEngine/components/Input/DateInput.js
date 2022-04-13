@@ -10,17 +10,12 @@ import DatePicker, { registerLocale } from "react-datepicker";
 import fr from "date-fns/locale/fr";
 registerLocale("fr", fr);
 
-const getVariantProp = (props) => {
-  if (props.success) return { variant: "valid" };
-  return { variant: "cerfa" };
-};
-
 export const DateInput = (props) => {
   const { name, onChange, error, value, label, locked } = props;
   return (
     <InputWrapper {...props}>
       <DateInputIn
-        {...getVariantProp(props)}
+        variant="cerfa"
         isInvalid={!!error}
         name={name}
         locked={locked}

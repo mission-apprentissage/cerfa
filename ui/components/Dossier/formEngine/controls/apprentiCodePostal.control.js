@@ -11,7 +11,7 @@ export const apprentiCodePostalControl = [
         signal,
       });
 
-      if (messages.cp === "Ok") {
+      if (messages?.cp === "Ok") {
         return {
           cascade: {
             "apprenti.adresse.commune": { value: result.commune.trim() },
@@ -19,7 +19,7 @@ export const apprentiCodePostalControl = [
         };
       }
 
-      return { error: messages.error };
+      return { error: messages?.error };
     },
   },
 ];

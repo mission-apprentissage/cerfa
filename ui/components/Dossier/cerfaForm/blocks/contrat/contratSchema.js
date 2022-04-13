@@ -269,6 +269,14 @@ export const contratSchema = {
     showInfo: true,
     requiredMessage: "la durée hebdomadaire de travail est obligatoire",
     label: "Heures:",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\d*$",
+      },
+    ],
     validate: ({ value }) => {
       if (value > 40) {
         return { error: "la durée de travail hebdomadaire en heures ne peut excéder 40h" };
@@ -279,6 +287,14 @@ export const contratSchema = {
     fieldType: "number",
     showInfo: true,
     label: "Minutes:",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\d*$",
+      },
+    ],
     validate: ({ value }) => {
       if (value > 59) {
         return { error: "la durée de travail hebdomadaire en minutes ne peut excéder 59 minutes" };
@@ -327,7 +343,7 @@ export const contratSchema = {
     required: true,
   },
   "contrat.remunerationsAnnuelles[].taux": {
-    fieldType: "float",
+    fieldType: "numberStepper",
     label: "% de rémunération du SMIC",
     required: true,
   },
@@ -376,6 +392,7 @@ export const contratSchema = {
     requiredMessage: "Cette déclaration est obligatoire",
     min: 1,
     mask: "X € / rep\\as",
+    precision: 2,
     maskBlocks: [
       {
         name: "X",
@@ -391,6 +408,7 @@ export const contratSchema = {
     label: "Logement:",
     min: 1,
     mask: "X € / mois",
+    precision: 2,
     maskBlocks: [
       {
         name: "X",

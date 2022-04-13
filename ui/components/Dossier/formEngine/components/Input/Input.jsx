@@ -151,7 +151,7 @@ const NoLabel = {
 const TypesMapping = {
   text: TextInput,
   number: TextInput,
-  float: NumberInput,
+  numberStepper: NumberInput,
   email: TextInput,
   phone: PhoneInput,
   date: DateInput,

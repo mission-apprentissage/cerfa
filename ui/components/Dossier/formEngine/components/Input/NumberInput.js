@@ -17,7 +17,8 @@ export const NumberInput = (props) => {
   useEffect(() => {
     if (localValue && parseFloat(props.value) === parseFloat(localValue + "")) return;
     setLocalValue(props.value);
-  }, [setLocalValue, props.value, localValue]);
+    // eslint-disable-next-line
+  }, [setLocalValue, props.value]);
 
   return (
     <InputWrapper {...props}>
@@ -31,7 +32,9 @@ export const NumberInput = (props) => {
         disabled={locked}
         onChange={(val) => {
           setLocalValue(val);
-          if (!/\.$/.test(val) && val !== "") onChange(parseFloat(val));
+          if (!/\.$/.test(val) && val !== "") {
+            onChange(parseFloat(val));
+          }
         }}
         value={localValue}
         placeholder={example ? `Exemple : ${example}` : description}

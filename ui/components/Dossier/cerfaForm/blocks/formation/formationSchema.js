@@ -313,7 +313,14 @@ export const formationSchema = {
     label: "Durée de la formation en heures :",
     requiredMessage: "Le nombre d'heures de la formation est obligatoire",
     validateMessage: " n'est pas un nombre d'heures valide",
-    precision: 0,
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\d*$",
+      },
+    ],
     min: 1,
   },
   "formation.dateObtentionDiplome": { fieldType: "date" },
