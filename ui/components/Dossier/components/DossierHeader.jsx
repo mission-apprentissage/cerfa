@@ -1,5 +1,5 @@
 import React from "react";
-import { Heading, Button, Badge, HStack, Text, useDisclosure, Flex, Box } from "@chakra-ui/react";
+import { Heading, Button, Badge, HStack, Text, useDisclosure, Flex, Box, Spinner } from "@chakra-ui/react";
 
 import { hasContextAccessTo } from "../../../common/utils/rolesUtils";
 
@@ -8,6 +8,31 @@ import LivePeopleAvatar from "./LivePeopleAvatar";
 import { InviteModal } from "./InviteModal";
 
 import { AvatarPlus } from "../../../theme/components/icons";
+import { useRecoilValue } from "recoil";
+import { autoSaveStatusAtom } from "../formEngine/hooks/useAutoSave";
+import { CheckIcon } from "@chakra-ui/icons";
+
+const AutoSaveBadge = () => {
+  const status = useRecoilValue(autoSaveStatusAtom);
+  return (
+    <Badge variant="solid" bg="grey.100" color="grey.500" textStyle="sm" px="15px" ml="10px">
+      {status === "OK" && (
+        <Text as="i" display="flex" alignItems="center">
+          Sauvegarde automatique activée <CheckIcon w="10px" h="10px" ml="2" color="grey" />
+        </Text>
+      )}
+      {status === "PENDING" && (
+        <Text as="i">
+          {" "}
+          <Text as="i" display="flex" alignItems="center">
+            Sauvegarde en cours <Spinner w="10px" h="10px" ml="2" />
+          </Text>
+        </Text>
+      )}
+      {status === "ERROR" && <Text as="i">Non sauvegardé</Text>}
+    </Badge>
+  );
+};
 
 const DossierHeader = ({ dossier }) => {
   const inviteModal = useDisclosure();
@@ -17,9 +42,7 @@ const DossierHeader = ({ dossier }) => {
         <Heading as="h1" flexGrow="1">
           {dossier?.nom}
           <StatusBadge status={dossier?.etat} ml={5} />
-          <Badge variant="solid" bg="grey.100" color="grey.500" textStyle="sm" px="15px" ml="10px">
-            <Text as="i">{!dossier?.saved ? "Non sauvegardé" : `Sauvegarde automatique activée`}</Text>
-          </Badge>
+          <AutoSaveBadge />
         </Heading>
         <HStack>
           <LivePeopleAvatar />
