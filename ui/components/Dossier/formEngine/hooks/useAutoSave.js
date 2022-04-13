@@ -65,10 +65,13 @@ export const useAutoSave = ({ controller }) => {
 
     const handler = (...args) => {
       setAutoSave("PENDING");
-      save(args);
+      save(...args);
     };
 
     controller.on("CHANGE", handler);
-    return () => controller.off("CHANGE", handler);
-  }, [controller, getDossier]);
+    return () => {
+      controller.off("CHANGE", handler);
+      clearTimeout(timeout);
+    };
+  }, [controller, getDossier, setAutoSave]);
 };
