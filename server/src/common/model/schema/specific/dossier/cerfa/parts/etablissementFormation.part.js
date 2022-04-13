@@ -3,7 +3,7 @@ const adresseSchema = require("./adresse.part");
 const etablissementFormationSchema = {
   memeResponsable: {
     type: Boolean,
-    description: "Le lieu de formation est le même que l'organisme responsable",
+    description: "",
     example: false,
     default: null,
     required: function () {
@@ -84,7 +84,7 @@ const etablissementFormationSchema = {
     },
     type: String,
     isNotRequiredForm: true,
-    description: "N° UAI du lieu de formation",
+    description: `Le numéro UAI est autocomplété ; il peut être recherché sur [le catalogue des formations en apprentissage.](https://catalogue.apprentissage.beta.gouv.fr/)`,
     example: "0561910X",
     label: "N° UAI du CFA :",
     validateMessage: `n'est pas un uai valide`,

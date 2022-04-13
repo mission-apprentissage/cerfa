@@ -1,5 +1,7 @@
 FROM nginx:1.21.4
 
+ARG CERFA_ENV
+
 RUN apt-get update \
     && apt-get install -y logrotate nginx-extras
 
