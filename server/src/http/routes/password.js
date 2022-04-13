@@ -52,7 +52,7 @@ module.exports = ({ users, sessions, mailer }) => {
       let noEmail = req.query.noEmail;
 
       const token = createPasswordToken(user.email);
-      const url = `${config.publicUrl}/reset-password?passwordToken=${token}`;
+      const url = `${config.publicUrl}/auth/reset-password?passwordToken=${token}`;
 
       if (noEmail) {
         return res.json({ token });
