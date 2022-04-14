@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Button, Collapse, Text, List, ListItem, ListIcon, Link, Flex } from "@chakra-ui/react";
-import Ribbons from "../../../Ribbons/Ribbons";
+import Ribbons from "../../../../components/Ribbons/Ribbons";
 import { ArrowRightLine, ErrorIcon } from "../../../../theme/components/icons";
 import { useRecoilValue } from "recoil";
 import { cerfaStatusGetter } from "../atoms";

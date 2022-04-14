@@ -2,8 +2,8 @@ import React from "react";
 import { useDisclosure, Text } from "@chakra-ui/react";
 import { _put } from "../../../common/httpClient";
 import useAuth from "../../../hooks/useAuth";
-import { betaVersion, BetaFeatures } from "../../BetaFeatures/BetaFeatures";
-import PromptModal from "../../Modals/PromptModal";
+import { betaVersion, BetaFeatures } from "../../../components/BetaFeatures/BetaFeatures";
+import PromptModal from "../../../components/Modals/PromptModal";
 
 const AskBetaTestModal = () => {
   let [auth, setAuth] = useAuth();

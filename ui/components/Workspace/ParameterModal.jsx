@@ -23,7 +23,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { ArrowRightLine, Close } from "../../theme/components/icons";
 import { workspaceAtom } from "../../hooks/workspaceAtoms";
 import { _put } from "../../common/httpClient";
-import { Input } from "../Dossier/formEngine/components/Input/Input";
+import { Input } from "../../modules/Dossier/formEngine/components/Input/Input";
 
 const ParameterModal = ({ isOpen, onClose, title = "Paramètres" }) => {
   const workspace = useRecoilValue(workspaceAtom);

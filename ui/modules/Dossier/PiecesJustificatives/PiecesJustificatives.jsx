@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Text, Center } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
-import Tooltip from "../../Tooltip/Tooltip";
+import Tooltip from "../../../components/Tooltip/Tooltip";
 import { InputController } from "../formEngine/components/Input/InputController";
 import { valueSelector } from "../formEngine/atoms";
 import { documentsIsRequired } from "./domain/documentsIsRequired";

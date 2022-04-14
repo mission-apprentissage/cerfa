@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, Link } from "@chakra-ui/react";
-import AcknowledgeModal from "../../Modals/AcknowledgeModal";
+import AcknowledgeModal from "../../../components/Modals/AcknowledgeModal";
 
 const IsPrivateEmployeurModal = ({ isOpen, onClose, onAcknowledgement }) => {
   return (

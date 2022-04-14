@@ -1,7 +1,7 @@
 import { useRecoilValue } from "recoil";
 import { dossierAtom } from "../../atoms";
 import { Avatar, Divider, Flex, HStack, Stack, Text } from "@chakra-ui/react";
-import { StatusBadge } from "../../../StatusBadge/StatusBadge";
+import { StatusBadge } from "../../../../components/StatusBadge/StatusBadge";
 import React from "react";
 
 export const Signataires = () => {

@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useMemo, useState } from "react";
 import { validField } from "../../utils/validField";
 import { Box, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, InputGroup } from "@chakra-ui/react";
-import InfoTooltip from "../../../../InfoTooltip/InfoTooltip";
+import InfoTooltip from "../../../../../components/InfoTooltip/InfoTooltip";
 import { TextInput } from "./TextInput";
 import { PhoneInput } from "./PhoneInput";
 import { DateInput } from "./DateInput";

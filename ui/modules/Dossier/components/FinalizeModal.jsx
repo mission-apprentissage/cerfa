@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { Text } from "@chakra-ui/react";
 import { _put } from "../../../common/httpClient";
-import PromptModal from "../../Modals/PromptModal";
+import PromptModal from "../../../components/Modals/PromptModal";
 
 const FinalizeModal = ({ dossier, ...modal }) => {
   let onReplyClicked = useCallback(async () => {
