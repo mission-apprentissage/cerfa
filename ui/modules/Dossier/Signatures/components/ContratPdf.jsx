@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { _post } from "../../../../common/httpClient";
 import { Box, Center, Heading, Link, ListItem, OrderedList, SkeletonText, Spinner, Text } from "@chakra-ui/react";
-import PdfViewer from "../../../PdfViewer/PdfViewer";
+import PdfViewer from "../../../../components/PdfViewer/PdfViewer";
 import NavLink from "next/link";
 import { dossierAtom } from "../../atoms";
 import { signaturesPdfLoadedAtom } from "../atoms";

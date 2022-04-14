@@ -8,8 +8,8 @@ import { useRouter } from "next/router";
 import WorkspaceLayout from "../../../components/Workspace/WorkspaceLayout";
 import * as WorkspaceDossiers from "../../../components/Workspace/WorkspaceDossiers";
 import * as SharedDossiers from "../../../components/Workspace/SharedDossiers";
-import NouveauDossier from "../../../components/Dossier/NouveauDossier";
-import Dossier from "../../../components/Dossier/Dossier";
+import NouveauDossier from "../../../modules/Dossier/NouveauDossier";
+import Dossier from "../../../modules/Dossier/Dossier";
 
 import { useWorkspace } from "../../../hooks/useWorkspace";
 import withAuth from "../../../components/withAuth";

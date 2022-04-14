@@ -26,7 +26,7 @@ import { ArrowRightLine, Close, Question } from "../../../theme/components/icons
 import { useQueries, useQueryClient, useMutation } from "react-query";
 import { _get, _post, _put, _delete } from "../../../common/httpClient";
 import { dossierAtom } from "../atoms";
-import { Table } from "../../Table/Table";
+import { Table } from "../../../components/Table/Table";
 import NavLink from "next/link";
 
 function useDossiersAcces() {

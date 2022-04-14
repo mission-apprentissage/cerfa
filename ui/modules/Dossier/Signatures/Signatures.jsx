@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, Heading, Center, Button, Text, HStack, VStack } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
-import Tooltip from "../../Tooltip/Tooltip";
+import Tooltip from "../../../components/Tooltip/Tooltip";
 import { dossierAtom } from "../atoms";
 
 import { dossierCompletionStatus } from "../atoms";

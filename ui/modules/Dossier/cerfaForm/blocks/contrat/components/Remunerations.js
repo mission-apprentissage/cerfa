@@ -5,7 +5,7 @@ import { valuesSelector } from "../../../../formEngine/atoms";
 import { InputController } from "../../../../formEngine/components/Input/InputController";
 import { CollapseController } from "../../../../formEngine/components/CollapseController";
 import { shouldShowRemunerationsAnnuelles } from "../domain/shouldShowRemunerationsAnnuelles";
-import Ribbons from "../../../../../Ribbons/Ribbons";
+import Ribbons from "../../../../../../components/Ribbons/Ribbons";
 import { ExternalLinkLine } from "../../../../../../theme/components/icons";
 
 const getAnneeLabel = (ordre) => {

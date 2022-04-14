@@ -3,7 +3,7 @@ import { Heading, Button, Badge, HStack, Text, useDisclosure, Flex, Box, Spinner
 
 import { hasContextAccessTo } from "../../../common/utils/rolesUtils";
 
-import { StatusBadge } from "../../StatusBadge/StatusBadge";
+import { StatusBadge } from "../../../components/StatusBadge/StatusBadge";
 import LivePeopleAvatar from "./LivePeopleAvatar";
 import { InviteModal } from "./InviteModal";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, Flex, UnorderedList, ListItem } from "@chakra-ui/react";
 import { _post } from "../../../common/httpClient";
-import PromptModal from "../../Modals/PromptModal";
+import PromptModal from "../../../components/Modals/PromptModal";
 import {
   useRecoilValue,
   // useSetRecoilState
