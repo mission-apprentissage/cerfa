@@ -4,7 +4,7 @@ import axios from "axios";
 
 export const getAuthServerSideProps = async (context) => {
   if (!isInitialServerSideProps(context)) {
-    return undefined;
+    return {};
   }
   try {
     const { status, data } = await axios.get(`${process.env.SERVER_URI}/api/v1/authentified/current`, {

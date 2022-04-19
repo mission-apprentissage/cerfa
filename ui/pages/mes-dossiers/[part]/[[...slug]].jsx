@@ -47,7 +47,6 @@ const MesDossiers = () => {
     workspace,
   } = useWorkspace();
 
-  // if (!isloaded || !workspace) return <Spinner />;
   return (
     <Page>
       <Head>
