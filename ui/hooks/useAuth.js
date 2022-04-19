@@ -1,15 +1,7 @@
-import { useAuthState, anonymous } from "../common/globalStates";
+import { useContext } from "react";
+import { AuthenticationContext } from "../components/UserWrapper/UserWrapper";
 
 export default function useAuth() {
-  let [auth, setAuth] = useAuthState();
-
-  let setAuthFromToken = (user) => {
-    if (!user) {
-      setAuth(anonymous);
-    } else {
-      setAuth(user);
-    }
-  };
-
-  return [auth, setAuthFromToken];
+  const { auth, setAuth } = useContext(AuthenticationContext);
+  return [auth, setAuth];
 }

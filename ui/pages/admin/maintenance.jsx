@@ -25,6 +25,9 @@ import Head from "next/head";
 import NavLink from "next/link";
 
 import withAuth from "../../components/withAuth";
+import { getAuthServerSideProps } from "../../common/SSR/getAuthServerSideProps";
+
+export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const Message = () => {
   const [messageAutomatique, setMessageAutomatique] = useState([]);

@@ -29,6 +29,7 @@ import useToken from "../../hooks/useToken";
 import { _post, _get } from "../../common/httpClient";
 
 import { ShowPassword } from "../../theme/components/icons";
+import { getAuthServerSideProps } from "../../common/SSR/getAuthServerSideProps";
 
 const Login = (props) => {
   const [, setAuth] = useAuth();
@@ -137,6 +138,8 @@ const Login = (props) => {
     </Flex>
   );
 };
+
+export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const ConnexionPage = () => {
   const styleProps = {

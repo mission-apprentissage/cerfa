@@ -13,12 +13,15 @@ import Dossier from "../../../modules/Dossier/Dossier";
 
 import { useWorkspace } from "../../../hooks/useWorkspace";
 import withAuth from "../../../components/withAuth";
+import { getAuthServerSideProps } from "../../../common/SSR/getAuthServerSideProps";
 
 const Loader = () => (
   <Center>
     <Spinner />
   </Center>
 );
+
+export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const MesDossiers = () => {
   const router = useRouter();
@@ -44,8 +47,7 @@ const MesDossiers = () => {
     workspace,
   } = useWorkspace();
 
-  if (!isloaded || !workspace) return <Spinner />;
-
+  // if (!isloaded || !workspace) return <Spinner />;
   return (
     <Page>
       <Head>
@@ -53,28 +55,33 @@ const MesDossiers = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Breadcrumb pages={breadcrumbDetails} loading={!isReloaded} />
-      <Box>
-        {/* /mon-espace ; /espaces-partages/:workspaceId/dossiers  */}
-        {isSpacePages && (
-          <WorkspaceLayout
-            header={isReloaded && <WorkspaceDossiers.Header isSharedWorkspace={part === "espaces-partages"} />}
-            content={!isReloaded ? <Loader /> : <WorkspaceDossiers.Content />}
-          />
+      <Box mt={4}>
+        {(!isloaded || !workspace) && <Loader />}
+        {isloaded && workspace && (
+          <>
+            {/* /mon-espace ; /espaces-partages/:workspaceId/dossiers  */}
+            {isSpacePages && (
+              <WorkspaceLayout
+                header={isReloaded && <WorkspaceDossiers.Header isSharedWorkspace={part === "espaces-partages"} />}
+                content={!isReloaded ? <Loader /> : <WorkspaceDossiers.Content />}
+              />
+            )}
+
+            {/* /dossiers-partages */}
+            {isSharedFolders && !dossierId && (
+              <WorkspaceLayout
+                header={isReloaded && <SharedDossiers.Header />}
+                content={!isReloaded ? <Loader /> : <SharedDossiers.Content />}
+              />
+            )}
+
+            {/* /mon-espace/:id/:step ; /espaces-partages/:workspaceId/dossiers/:id/:step ; /dossiers-partages/:id/:step */}
+            {isDossierPage && dossierId && <Dossier />}
+
+            {/* /mon-espace/nouveau-dossier ; /espaces-partages/:workspaceId/dossiers/nouveau-dossier */}
+            {isNouveauDossier && <NouveauDossier />}
+          </>
         )}
-
-        {/* /dossiers-partages */}
-        {isSharedFolders && !dossierId && (
-          <WorkspaceLayout
-            header={isReloaded && <SharedDossiers.Header />}
-            content={!isReloaded ? <Loader /> : <SharedDossiers.Content />}
-          />
-        )}
-
-        {/* /mon-espace/:id/:step ; /espaces-partages/:workspaceId/dossiers/:id/:step ; /dossiers-partages/:id/:step */}
-        {isDossierPage && dossierId && <Dossier />}
-
-        {/* /mon-espace/nouveau-dossier ; /espaces-partages/:workspaceId/dossiers/nouveau-dossier */}
-        {isNouveauDossier && <NouveauDossier />}
       </Box>
     </Page>
   );

@@ -29,6 +29,7 @@ import Head from "next/head";
 import withAuth from "../../components/withAuth";
 
 import Acl from "../../components/Acl";
+import { getAuthServerSideProps } from "../../common/SSR/getAuthServerSideProps";
 
 const buildRolesAcl = (newRoles, roles) => {
   let acl = [];
@@ -255,6 +256,8 @@ const UserLine = ({ user, roles }) => {
     </form>
   );
 };
+
+export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const Users = () => {
   const { data: roles } = useQuery("roles", () => _get(`/api/v1/admin/roles/`), {

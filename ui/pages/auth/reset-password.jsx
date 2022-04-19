@@ -9,6 +9,9 @@ import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import useAuth from "../../hooks/useAuth";
 import useToken from "../../hooks/useToken";
 import { _post } from "../../common/httpClient";
+import { getAuthServerSideProps } from "../../common/SSR/getAuthServerSideProps";
+
+export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const ResetPasswordPage = () => {
   const [auth, setAuth] = useAuth();

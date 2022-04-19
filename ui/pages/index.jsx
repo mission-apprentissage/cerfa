@@ -3,6 +3,9 @@ import { Box, Heading, Text, UnorderedList, ListItem, Button, Flex, Link } from 
 import { Page } from "../components/Page/Page";
 import { Breadcrumb } from "../components/Breadcrumb/Breadcrumb";
 import NavLink from "next/link";
+import { getAuthServerSideProps } from "../common/SSR/getAuthServerSideProps";
+
+export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 function Home() {
   const title = "Accueil";
@@ -58,15 +61,6 @@ function Home() {
       </Flex>
     </Page>
   );
-}
-
-export async function getServerSideProps() {
-  // Fetch data from external API TEST
-  const res = await fetch(`https://zoo-animal-api.herokuapp.com/animals/rand`);
-  const data = await res.json();
-
-  // Pass data to the page via props
-  return { props: { data } };
 }
 
 export default Home;

@@ -13,7 +13,7 @@ const Layout = ({ children, ...rest }) => {
       <Header />
       <NavigationMenu isMyWorkspace={isMyWorkspace} />
       <Box minH={"60vh"} flexGrow="1">
-        <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
+        <Box w="100%" py={[4, 8]} px={[1, 1, 12, 24]}>
           <Container maxW="xl">{children}</Container>
         </Box>
       </Box>

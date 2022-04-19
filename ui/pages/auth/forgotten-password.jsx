@@ -4,6 +4,9 @@ import React from "react";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { _post } from "../../common/httpClient";
+import { getAuthServerSideProps } from "../../common/SSR/getAuthServerSideProps";
+
+export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const ForgottenPasswordPage = () => {
   const router = useRouter();
