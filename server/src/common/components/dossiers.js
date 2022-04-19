@@ -201,18 +201,25 @@ module.exports = async () => {
         throw Boom.notFound("Doesn't exist");
       }
 
-      if (!signataires.complete) {
-        let tmpComplete = true;
-        const keys = Object.keys(signataires);
-        for (let index = 0; index < keys.length; index++) {
-          const element = signataires[keys[index]];
-          if (element.firstname === "" || element.lastname === "" || element.email === "" || element.phone === "") {
-            tmpComplete = false;
-            break;
-          }
+      let tmpComplete = true;
+
+      const lookupDuplicate = [];
+      for (let key of Object.keys(signataires)) {
+        const element = signataires[key];
+        if (element.firstname === "" || element.lastname === "" || element.email === "") {
+          tmpComplete = false;
+          break;
         }
-        signataires.complete = tmpComplete;
+
+        if (lookupDuplicate.includes(element.email)) {
+          tmpComplete = false;
+          break;
+        } else {
+          lookupDuplicate.push(element.email);
+        }
       }
+
+      signataires.complete = tmpComplete;
 
       return await Dossier.findOneAndUpdate({ _id: id }, { signataires }, { new: true });
     },

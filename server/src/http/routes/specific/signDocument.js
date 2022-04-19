@@ -76,10 +76,10 @@ module.exports = (components) => {
 
       const operationDetails = {
         operationLevel: "custom",
-        operationCustomModes: ["sms"],
-        operationModeSmsConfig: {
-          content: `eSIGNATURE - {{code}} est le code pour signer le contrat ${dossier.nom}.`,
-        },
+        operationCustomModes: ["email"],
+        // operationModeSmsConfig: {
+        //   content: `eSIGNATURE - {{code}} est le code pour signer le contrat ${dossier.nom}.`,
+        // },
       };
       const positions = {
         employeur: "20,149,189,199", // Employeur
@@ -97,7 +97,7 @@ module.exports = (components) => {
           firstname: signataires.employeur.firstname,
           lastname: signataires.employeur.lastname,
           email: signataires.employeur.email,
-          phone: signataires.employeur.phone,
+          phone: "+33601020304",
           ...operationDetails,
           fileObjects: [
             {
@@ -110,7 +110,7 @@ module.exports = (components) => {
           firstname: signataires.apprenti.firstname,
           lastname: signataires.apprenti.lastname,
           email: signataires.apprenti.email,
-          phone: signataires.apprenti.phone,
+          phone: "+33601020304",
           ...operationDetails,
           fileObjects: [
             {
@@ -123,7 +123,7 @@ module.exports = (components) => {
           firstname: signataires.cfa.firstname,
           lastname: signataires.cfa.lastname,
           email: signataires.cfa.email,
-          phone: signataires.cfa.phone,
+          phone: "+33601020304",
           ...operationDetails,
           fileObjects: [
             {
@@ -138,7 +138,7 @@ module.exports = (components) => {
           firstname: signataires.legal.firstname,
           lastname: signataires.legal.lastname,
           email: signataires.legal.email,
-          phone: signataires.legal.phone,
+          phone: "+33601020304",
           ...operationDetails,
           fileObjects: [
             {
@@ -239,23 +239,19 @@ module.exports = (components) => {
           nomFichier: filename,
           cheminFichier: path,
           tailleFichier: 0,
-          userEmail: "yousign@hooks.fr", // user.email,
+          userEmail: "yousign@hooks.fr", // TODO user.email,
         });
       }
 
       const doneMembers = procedure.members.filter(({ status }) => status === "done");
-      for (let index = 0; index < doneMembers.length; index++) {
-        const doneMember = doneMembers[index];
-        if (doneMember.email === signataires.apprenti.email && doneMember.phone === signataires.apprenti.phone) {
+      for (let doneMember of doneMembers) {
+        if (doneMember.email === signataires.apprenti.email) {
           signataires.apprenti.status = "SIGNE";
-        } else if (
-          doneMember.email === signataires.employeur.email &&
-          doneMember.phone === signataires.employeur.phone
-        ) {
+        } else if (doneMember.email === signataires.employeur.email) {
           signataires.employeur.status = "SIGNE";
-        } else if (doneMember.email === signataires.cfa.email && doneMember.phone === signataires.cfa.phone) {
+        } else if (doneMember.email === signataires.cfa.email) {
           signataires.cfa.status = "SIGNE";
-        } else if (doneMember.email === signataires.legal.email && doneMember.phone === signataires.legal.phone) {
+        } else if (doneMember.email === signataires.legal.email) {
           signataires.legal.status = "SIGNE";
         }
       }

@@ -6,7 +6,7 @@ import React from "react";
 
 export const Signataires = () => {
   const dossier = useRecoilValue(dossierAtom);
-  const { apprenti, employeur, cfa } = dossier.signataires;
+  const { apprenti, employeur, cfa, legal } = dossier.signataires;
   return (
     <Stack>
       {cfa && (
@@ -49,6 +49,21 @@ export const Signataires = () => {
             </HStack>
             <Flex>
               <StatusBadge status={apprenti.status} h="28px" />
+            </Flex>
+          </Flex>
+          <Divider />
+        </>
+      )}
+      {legal && (
+        <>
+          <Flex>
+            <HStack flexGrow={1}>
+              <Avatar size="sm" name={`${legal.firstname} ${legal.lastname}`} />
+              <Text>{`${legal.firstname} ${legal.lastname}`}</Text>
+              <Text fontWeight="bold">{`(Représentant légal)`}</Text>
+            </HStack>
+            <Flex>
+              <StatusBadge status={legal.status} h="28px" />
             </Flex>
           </Flex>
           <Divider />
