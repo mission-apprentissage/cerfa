@@ -31,11 +31,8 @@ export function useSignatures() {
               }
             : {}),
         };
-        if (detail === "phone") {
-          signataires[type][detail] = data !== "" ? `+${data}` : "";
-        } else {
-          signataires[type][detail] = data;
-        }
+
+        signataires[type][detail] = data;
 
         const newDossier = await _put(`/api/v1/dossier/entity/${dossier._id}/signataires`, {
           dossierId: dossier._id,

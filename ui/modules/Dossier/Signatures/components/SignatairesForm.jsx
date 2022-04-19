@@ -51,7 +51,6 @@ const SignataireLineForm = ({ signataire, type }) => {
   const [firstname, setFirstname] = useState(signataire.firstname);
   const [lastname, setLastname] = useState(signataire.lastname);
   const [email, setEmail] = useState(signataire.email);
-  const [phone, setPhone] = useState(signataire.phone);
 
   return (
     <HStack spacing={3}>
@@ -118,19 +117,6 @@ const SignataireLineForm = ({ signataire, type }) => {
         }}
         onSubmit={onSubmittedSignataireDetails}
         onChange={setEmail}
-      />
-      <Input
-        required={true}
-        name={`signataire.${type}.phone`}
-        label="phone"
-        value={phone?.replace("+", "") || ""}
-        fieldType="phone"
-        w="20%"
-        onError={(val, name) => {
-          onSubmittedSignataireDetails("", name);
-        }}
-        onSubmit={onSubmittedSignataireDetails}
-        onChange={setPhone}
       />
     </HStack>
   );

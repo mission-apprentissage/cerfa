@@ -206,7 +206,7 @@ module.exports = async () => {
         const keys = Object.keys(signataires);
         for (let index = 0; index < keys.length; index++) {
           const element = signataires[keys[index]];
-          if (element.firstname === "" || element.lastname === "" || element.email === "" || element.phone === "") {
+          if (element.firstname === "" || element.lastname === "" || element.email === "") {
             tmpComplete = false;
             break;
           }
