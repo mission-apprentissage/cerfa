@@ -16,7 +16,7 @@ import {
 import { _post, _put } from "../../../common/httpClient";
 import useAuth from "../../../hooks/useAuth";
 
-import { DownloadLine, SentPaperPlane, BallPenFill, InfoCircle } from "../../../theme/components/icons";
+import { DownloadLine, SentPaperPlane, BallPenFill } from "../../../theme/components/icons";
 
 import { hasPageAccessTo, hasContextAccessTo } from "../../../common/utils/rolesUtils";
 
@@ -202,13 +202,9 @@ const DossierFooterControls = ({
                         Transmission automatique au service en charge de l&apos;instruction du dossier
                       </ListItem>
                     </OrderedList>
-                    <Text color="bluefrance" py={5}>
-                      <InfoCircle mt={"-0.2rem"} w="20px" h="20px" /> Vous serez avertis lorsque cette fonctionnalité
-                      sera disponible.
-                    </Text>
                   </Box>
                   <Center h="25%">
-                    {auth && hasPageAccessTo(auth) && (
+                    {auth && hasPageAccessTo(auth, "signature_beta") && (
                       <Button
                         onClick={() => {
                           onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
@@ -218,17 +214,6 @@ const DossierFooterControls = ({
                       >
                         <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
                         Signatures électroniques
-                      </Button>
-                    )}
-                    {auth && !hasPageAccessTo(auth) && (
-                      <Button
-                        size={"md"}
-                        color="grey.600"
-                        variant={"secondary"}
-                        borderColor="grey.600"
-                        isDisabled={true}
-                      >
-                        Bientôt disponible !
                       </Button>
                     )}
                   </Center>
