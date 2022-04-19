@@ -97,6 +97,7 @@ module.exports = (components) => {
           firstname: signataires.employeur.firstname,
           lastname: signataires.employeur.lastname,
           email: signataires.employeur.email,
+          phone: "+33601020304",
           ...operationDetails,
           fileObjects: [
             {
@@ -109,6 +110,7 @@ module.exports = (components) => {
           firstname: signataires.apprenti.firstname,
           lastname: signataires.apprenti.lastname,
           email: signataires.apprenti.email,
+          phone: "+33601020304",
           ...operationDetails,
           fileObjects: [
             {
@@ -121,6 +123,7 @@ module.exports = (components) => {
           firstname: signataires.cfa.firstname,
           lastname: signataires.cfa.lastname,
           email: signataires.cfa.email,
+          phone: "+33601020304",
           ...operationDetails,
           fileObjects: [
             {
@@ -135,6 +138,7 @@ module.exports = (components) => {
           firstname: signataires.legal.firstname,
           lastname: signataires.legal.lastname,
           email: signataires.legal.email,
+          phone: "+33601020304",
           ...operationDetails,
           fileObjects: [
             {
