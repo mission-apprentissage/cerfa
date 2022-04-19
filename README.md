@@ -32,6 +32,15 @@ L'application est ensuite disponible à l'url [http://localhost](http://localhos
 Il est possible de consulter les emails envoyés par l'application à
 l'url [http://localhost/smtp](http://localhost/smtp)
 
+### Hydratation du projet en local
+
+Pour créer des jeux de test facilement il suffit de lancer les commandes suivante :
+
+```bash
+yarn --cwd server seed -e admin@mail.com
+yarn --cwd server imports
+```
+
 ## Développement
 
 Pour plus d'informations sur la structure du projet [DEV](./DEV.md)

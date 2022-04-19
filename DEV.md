@@ -3,7 +3,7 @@
 ## Pré-requis
 
 - Docker & Docker-compose
-- Nodejs 14
+- Nodejs 16
 - Yarn
 
 ## Organisation des dossiers
@@ -14,6 +14,7 @@ Ce projet est organisé de la manière suivante :
     |-- .github
     |-- reverse_proxy
     |-- server
+    |-- ui
     |-- docker-compose.yml
     |-- docker-compose.override.yml
 
@@ -22,27 +23,25 @@ Ce projet est organisé de la manière suivante :
 - Le dossier `/.github` contient l'ensemble des Github Actions.
 - Le dossier `/reverse_proxy` contient le serveur Nginx et sa configuration en tant que reverse_proxy.
 - Le dossier `server` contient l'ensemble de l'application coté serveur, à savoir l'API Node Express.
+- Le dossier `ui` contient l'ensemble de l'application coté front, à savoir le code NextJs.
 - Le fichier `/docker-compose.yml` va définir la configuration des conteneurs de l'application, _pour plus d'informations sur Docker cf: https://docs.docker.com/_
 - Le fichier `/docker-compose.override.yml` va définir la configuration Docker spécifique à l'environnement local de développement.
-
-## Gestion de la configuration
-
-La gestion de configuration et de variables d'environnement est mise en place avec la librairie node-config : https://www.npmjs.com/package/config
-
-La configuration est définie dans le dossier `server/config` et on y trouve :
-
-- Un fichier `server/config/custom-environment-variables.json` qui va définir la liste des variables d'environnements pour l'application
-- Un fichier `server/config/default.json` qui va définir la valeur par défaut de ces variables d'environnement.
-
-Ensuite dans la définition des conteneurs Docker ces variables d'environnements seront écrasées au besoin.
 
 ## Conteneurs Docker
 
 - Un serveur Web Nginx jouant le role de reverse proxy, _défini dans le service `reverse_proxy` du docker-compose_.
 - Un serveur Node Express, _défini dans le service `server` du docker-compose_.
 - Une base de donnée mongoDb _défini dans le service `mongodb` du docker-compose_.
-- Un moteur de recherche elasticsearch _défini dans le service `elasticsearch` du docker-compose_.
-- Un portail kibana pour elasticsearch _défini dans le service `kibana` du docker-compose_.
+- Un serveur Front sous NextJs _défini dans le service `ui` du docker-compose_.
+- Un antivirus _défini dans le service `clamav` du docker-compose_.
+
+### Seulement sur les environnements production, recette et test
+
+- Un outil de statistiques \_défini dans le service `metabase` dans le repository d'infrastructure.
+
+### Seulement sur les environnements de test
+
+- Un serveur SMTP mailHog \_défini dans le service `smtp` du docker-compose.override.
 
 ### Serveur Nodes & Nginx - Reverse Proxy
 
@@ -52,12 +51,29 @@ Le serveur Web Node Express utilise le port 5000.
 
 Dans la configuration de nginx, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/api.inc` qui définir la gestion de l'API Node Express.
 Dans la configuration de nginx, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/ui.inc` qui définir la gestion de l'UI React.
-Dans la configuration de nginx, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/es.inc` qui définir la gestion d'Elasticsearch.
-Dans la configuration de nginx, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/kibana.inc` qui définir la gestion de Kibana.
+Dans la configuration des websocket, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/ws.inc` qui définir la gestion de socket.io.
+Dans la configuration de smtp, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/smtp.inc` qui définir la gestion de MailHog.
+Dans la configuration de metabase, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/metabase.inc` qui définir la gestion de Metabase.
 
 ### Base de données MongoDb
 
 Le base de données est une MongoDb et utilise le port par défaut 27017.
+
+### Varaibles d'environnement
+
+Avant de démarrer la stack il vous faut copier et renommer les fichier suivant :
+
+```bash
+cp ui/.env.example ui/.env
+cp server/.env.example server/.env
+```
+
+Les variables par défaut ne permettent pas :
+
+- L'affichage de la page de statistiques
+- L'upload de fichier
+- La signature électronique
+- L'envoi vers AGECAP.
 
 ### Démarrage de la stack
 
@@ -66,6 +82,15 @@ Pour créer la stack et monter l'environnement il suffit de lancer la commande s
 ```bash
 make install
 make start
+```
+
+### Hydratation du projet en local
+
+Pour créer des jeux de test facilement il suffit de lancer les commandes suivante :
+
+```bash
+yarn --cwd server seed -e admin@mail.com
+yarn --cwd server imports
 ```
 
 ### Arrêt de la stack
@@ -89,13 +114,13 @@ make clean
 Après avoir créé la stack pour vérifier que les conteneurs sont bien présents vous pouvez lancer la commande suivante depuis le répertoire `server` :
 
 ```bash
-docker exec -t -i tables_correspondances_server /bin/bash
+docker exec -t -i cerfa_server /bin/bash
 ```
 
 De même pour consulter la liste des fichiers dans le docker :
 
 ```bash
-docker exec tables_correspondances_server bash -c 'ls'
+docker exec cerfa_server bash -c 'ls'
 ```
 
 ## Linter
