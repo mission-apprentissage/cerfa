@@ -64,7 +64,7 @@ const SignataireLineForm = ({ signataire, type }) => {
           {
             name: "C",
             mask: "Pattern",
-            pattern: "^\\D*$",
+            pattern: "^[a-zA-Z]*$",
           },
         ]}
         mb={0}
@@ -85,7 +85,7 @@ const SignataireLineForm = ({ signataire, type }) => {
           {
             name: "C",
             mask: "Pattern",
-            pattern: "^\\D*$",
+            pattern: "^[a-zA-Z]*$",
           },
         ]}
         mt={0}
