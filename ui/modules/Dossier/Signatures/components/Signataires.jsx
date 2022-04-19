@@ -60,7 +60,7 @@ export const Signataires = () => {
             <HStack flexGrow={1}>
               <Avatar size="sm" name={`${legal.firstname} ${legal.lastname}`} />
               <Text>{`${legal.firstname} ${legal.lastname}`}</Text>
-              <Text fontWeight="bold">{`(Apprenti(e))`}</Text>
+              <Text fontWeight="bold">{`(Représentant légal)`}</Text>
             </HStack>
             <Flex>
               <StatusBadge status={legal.status} h="28px" />
