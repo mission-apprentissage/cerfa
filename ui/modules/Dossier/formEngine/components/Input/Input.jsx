@@ -33,6 +33,7 @@ export const Input = memo(
     onChange,
     onError,
     onSubmit,
+    validate,
     mt,
     mb,
     w,
@@ -55,6 +56,7 @@ export const Input = memo(
         pattern,
         mask,
         maskBlocks,
+        validate,
       }),
       [
         description,
@@ -73,6 +75,7 @@ export const Input = memo(
         required,
         value,
         warning,
+        validate,
       ]
     );
     const [fieldState, setFieldState] = useState({ value });

@@ -9,6 +9,13 @@ export const SignatairesForm = () => {
   const dossier = useRecoilValue(dossierAtom);
   const { apprenti, employeur, cfa, legal } = dossier.signataires;
 
+  const emails = {
+    apprenti: apprenti?.email,
+    employeur: employeur?.email,
+    cfa: cfa?.email,
+    legal: legal?.email,
+  };
+
   return (
     <>
       <Text mb={5}>Coordonnées des signataires du contrat :</Text>
@@ -16,28 +23,28 @@ export const SignatairesForm = () => {
         {employeur && (
           <Stack mb={5}>
             <Text fontWeight="bold">Employeur :</Text>
-            <SignataireLineForm signataire={employeur} type="employeur" />
+            <SignataireLineForm signataire={employeur} type="employeur" emails={emails} />
           </Stack>
         )}
         <Divider />
         {cfa && (
           <Stack mb={5} mt={6}>
             <Text fontWeight="bold">CFA :</Text>
-            <SignataireLineForm signataire={cfa} type="cfa" />
+            <SignataireLineForm signataire={cfa} type="cfa" emails={emails} />
           </Stack>
         )}
         <Divider />
         {apprenti && (
           <Stack mb={5} mt={6}>
             <Text fontWeight="bold">Pour l&apos;apprenti(e) :</Text>
-            <SignataireLineForm signataire={apprenti} type="apprenti" />
+            <SignataireLineForm signataire={apprenti} type="apprenti" emails={emails} />
           </Stack>
         )}
         <Divider />
         {legal && (
           <Stack mt={8}>
             <Text fontWeight="bold">Pour le représentant légal de l&apos;apprenti(e) :</Text>
-            <SignataireLineForm signataire={legal} type="legal" />
+            <SignataireLineForm signataire={legal} type="legal" emails={emails} />
           </Stack>
         )}
       </Flex>
@@ -45,7 +52,7 @@ export const SignatairesForm = () => {
   );
 };
 
-const SignataireLineForm = ({ signataire, type }) => {
+const SignataireLineForm = ({ signataire, type, emails }) => {
   const { onSubmittedSignataireDetails } = useSignatures();
 
   const [firstname, setFirstname] = useState(signataire.firstname);
@@ -117,6 +124,13 @@ const SignataireLineForm = ({ signataire, type }) => {
         }}
         onSubmit={onSubmittedSignataireDetails}
         onChange={setEmail}
+        validate={async ({ value }) => {
+          const filteredEmails = { ...emails };
+          delete filteredEmails[type];
+          if (Object.values(filteredEmails).includes(value)) {
+            return { error: "Chaque courriel des signataires doit être unique" };
+          }
+        }}
       />
     </HStack>
   );
