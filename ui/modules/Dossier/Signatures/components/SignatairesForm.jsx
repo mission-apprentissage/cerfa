@@ -124,7 +124,7 @@ const SignataireLineForm = ({ signataire, type, emails }) => {
         }}
         onSubmit={onSubmittedSignataireDetails}
         onChange={setEmail}
-        validate={async ({ value }) => {
+        validate={({ value }) => {
           const filteredEmails = { ...emails };
           delete filteredEmails[type];
           if (Object.values(filteredEmails).includes(value)) {

@@ -244,8 +244,7 @@ module.exports = (components) => {
       }
 
       const doneMembers = procedure.members.filter(({ status }) => status === "done");
-      for (let index = 0; index < doneMembers.length; index++) {
-        const doneMember = doneMembers[index];
+      for (let doneMember of doneMembers) {
         if (doneMember.email === signataires.apprenti.email) {
           signataires.apprenti.status = "SIGNE";
         } else if (doneMember.email === signataires.employeur.email) {

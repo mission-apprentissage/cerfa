@@ -202,10 +202,10 @@ module.exports = async () => {
       }
 
       let tmpComplete = true;
-      const keys = Object.keys(signataires);
+
       const lookupDuplicate = [];
-      for (let index = 0; index < keys.length; index++) {
-        const element = signataires[keys[index]];
+      for (let key of Object.keys(signataires)) {
+        const element = signataires[key];
         if (element.firstname === "" || element.lastname === "" || element.email === "") {
           tmpComplete = false;
           break;
@@ -218,6 +218,7 @@ module.exports = async () => {
           lookupDuplicate.push(element.email);
         }
       }
+
       signataires.complete = tmpComplete;
 
       return await Dossier.findOneAndUpdate({ _id: id }, { signataires }, { new: true });
