@@ -48,10 +48,6 @@ const ESignatureModal = ({ ...modal }) => {
           <ListItem>
             Afin de recevoir le lien de signature, <strong>tous les courriels doivent être corrects</strong>
           </ListItem>
-          <ListItem>
-            Afin de recevoir les codes de signatures par <strong>SMS</strong>, les télephones doivent être
-            <strong> des numéros de télephone mobile</strong>
-          </ListItem>
         </UnorderedList>
         <Text mb={1} mt={5}>
           La signature électronique est réalisée via l&apos;outil Yousgin. <br />
