@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, createContext } from "react";
 import { useRouter } from "next/router";
 import { Box, Text, Spinner } from "@chakra-ui/react";
 import { _get, _post, _put } from "../../common/httpClient";
 import useAuth from "../../hooks/useAuth";
 import { Cgu, cguVersion } from "../legal/Cgu";
 import AcknowledgeModal from "../../components/Modals/AcknowledgeModal";
+import { anonymous } from "../../common/anonymous";
+import { emitter } from "../../common/emitter";
 
 const AccountWrapper = ({ children }) => {
   let [auth] = useAuth();
@@ -87,36 +89,56 @@ const ForceAcceptCGU = ({ children }) => {
   );
 };
 
-const UserWrapper = ({ children }) => {
-  let [, setAuth] = useAuth();
+export const AuthenticationContext = createContext({
+  auth: anonymous,
+  token: undefined,
+  setAuth: () => {},
+  setToken: () => {},
+});
 
-  const [isLoading, setIsLoading] = useState(true);
+const UserWrapper = ({ children, ssrAuth }) => {
+  const [token, setToken] = useState();
+  const [auth, setAuth] = useState(ssrAuth ?? anonymous);
+  const [isLoading, setIsLoading] = useState(!ssrAuth);
 
   useEffect(() => {
     async function getUser() {
       try {
-        let user = await _get("/api/v1/authentified/current");
+        let user = ssrAuth ?? (await _get("/api/v1/authentified/current"));
         if (user && user.loggedIn) {
           setAuth(user);
         }
       } catch (error) {
-        setAuth(null);
+        setAuth(anonymous);
       }
       setIsLoading(false);
     }
-    getUser();
+    if (!ssrAuth) {
+      getUser();
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const handler = (response) => {
+      if (response.status === 401) {
+        //Auto logout user when token is invalid
+        setAuth(anonymous);
+      }
+    };
+    emitter.on("http:error", handler);
+    return () => emitter.off("http:error", handler);
+  }, []);
 
   if (isLoading) {
     return <Spinner />;
   }
 
   return (
-    <>
+    <AuthenticationContext.Provider value={{ auth, token, setAuth, setToken }}>
       <AccountWrapper>
         <ForceAcceptCGU>{children}</ForceAcceptCGU>
       </AccountWrapper>
-    </>
+    </AuthenticationContext.Provider>
   );
 };
 

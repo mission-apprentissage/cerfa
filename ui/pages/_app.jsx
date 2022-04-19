@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }) {
       <ChakraProvider theme={theme} resetCSS>
         <Fonts />
         <QueryClientProvider client={queryClient}>
-          <UserWrapper>
+          <UserWrapper ssrAuth={pageProps.auth}>
             <Component {...pageProps} />
           </UserWrapper>
         </QueryClientProvider>

@@ -4,6 +4,9 @@ import { Box, Container, Heading } from "@chakra-ui/react";
 import { Page } from "../components/Page/Page";
 import { Breadcrumb } from "../components/Breadcrumb/Breadcrumb";
 import { Cgu } from "../components/legal/Cgu";
+import { getAuthServerSideProps } from "../common/SSR/getAuthServerSideProps";
+
+export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const CguPage = () => {
   const title = "CONDITIONS GÉNÉRALES D'UTILISATION DE LA PLATEFORME";

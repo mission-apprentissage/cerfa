@@ -26,6 +26,7 @@ import { Page } from "../../components/Page/Page";
 import generator from "generate-password-browser";
 
 import { _post, _get } from "../../common/httpClient";
+import { getAuthServerSideProps } from "../../common/SSR/getAuthServerSideProps";
 
 const validate = async (validationSchema, obj) => {
   let isValid = false;
@@ -341,6 +342,8 @@ const Register = ({ onSucceeded, ...props }) => {
     </Flex>
   );
 };
+
+export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const RegisterPage = () => {
   const styleProps = {

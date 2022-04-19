@@ -1,15 +1,7 @@
-import { useTokenState } from "../common/globalStates";
+import { useContext } from "react";
+import { AuthenticationContext } from "../components/UserWrapper/UserWrapper";
 
 export default function useToken() {
-  let [token, setToken] = useTokenState();
-
-  let setFromToken = (token) => {
-    if (!token) {
-      setToken(null);
-    } else {
-      setToken(token);
-    }
-  };
-
-  return [token, setFromToken];
+  const { token, setToken } = useContext(AuthenticationContext);
+  return [token, setToken];
 }

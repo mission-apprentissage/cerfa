@@ -1,6 +1,5 @@
-import { getAuth } from "./globalStates";
 import { emitter } from "./emitter";
-import { fetch as fetchPolyfill } from "whatwg-fetch";
+import axios from "axios";
 
 class AuthError extends Error {
   constructor(json, statusCode) {
@@ -21,7 +20,7 @@ class HTTPError extends Error {
   }
 }
 
-const handleResponse = async (path, response) => {
+const handleResponse = (path, response) => {
   let statusCode = response.status;
   if (statusCode >= 400 && statusCode < 600) {
     emitter.emit("http:error", response);
@@ -29,7 +28,7 @@ const handleResponse = async (path, response) => {
     if (statusCode === 401 || statusCode === 403) {
       throw new AuthError(response, statusCode);
     } else {
-      const messages = await response.json();
+      const messages = response.data;
       throw new HTTPError(
         `Server returned ${statusCode} when requesting resource ${path}`,
         response,
@@ -38,62 +37,57 @@ const handleResponse = async (path, response) => {
       );
     }
   }
-  return response.json();
+  return response.data;
 };
 
 const getHeaders = (contentType = "application/json") => {
-  let result = {
+  return {
     Accept: "application/json",
     ...(contentType ? { "Content-Type": contentType } : {}),
   };
-  return result;
 };
 
-export const _get = (path, signal) => {
-  return fetchPolyfill(`${path}`, {
-    method: "GET",
+export const _get = async (path, signal) => {
+  const response = await axios.get(path, {
     headers: getHeaders(),
     signal,
-  }).then((res) => handleResponse(path, res));
+    validateStatus: () => true,
+  });
+  return handleResponse(path, response);
 };
 
-export const _post = (path, body, signal) => {
-  return fetchPolyfill(`${path}`, {
-    method: "POST",
+export const _post = async (path, body, signal) => {
+  const response = await axios.post(path, body, {
     headers: getHeaders(),
-    body: JSON.stringify(body),
+    validateStatus: () => true,
     signal,
-  }).then((res) => handleResponse(path, res));
+  });
+  return handleResponse(path, response);
 };
 
-export const _postFile = (path, data) => {
-  return fetchPolyfill(`${path}`, {
-    method: "POST",
-    headers: getHeaders(null),
-    body: data,
-  }).then((res) => handleResponse(path, res));
-};
-
-export const _put = (path, body = {}) => {
-  return fetchPolyfill(`${path}`, {
-    method: "PUT",
+export const _postFile = async (path, data, signal) => {
+  const response = await axios.post(path, data, {
     headers: getHeaders(),
-    body: JSON.stringify(body),
-  }).then((res) => handleResponse(path, res));
+    validateStatus: () => true,
+    signal,
+  });
+  return handleResponse(path, response);
 };
 
-export const _delete = (path) => {
-  return fetchPolyfill(`${path}`, {
-    method: "DELETE",
+export const _put = async (path, body = {}, signal) => {
+  const response = await axios.put(path, body, {
     headers: getHeaders(),
-  }).then((res) => handleResponse(path, res));
+    validateStatus: () => true,
+    signal,
+  });
+  return handleResponse(path, response);
 };
 
-export const buildLink = (path) => {
-  let auth = getAuth();
-  if (auth.sub !== "anonymous") {
-    //TODO better handle params
-    return `${path}?token=${auth.token}`;
-  }
-  return path;
+export const _delete = async (path, signal) => {
+  const response = await axios.delete(path, {
+    headers: getHeaders(),
+    validateStatus: () => true,
+    signal,
+  });
+  return handleResponse(path, response);
 };

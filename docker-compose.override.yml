@@ -25,6 +25,8 @@ services:
         - NEXT_PUBLIC_METABASE_URL=https://contrat.apprentissage.beta.gouv.fr/
         - NEXT_PUBLIC_METABASE_SECRET_KEY=
         - SKIP_PREFLIGHT_CHECK=true
+    environment:
+      - SERVER_URI=http://reverse_proxy
 
   server:
     command: [ "yarn", "debug" ]

@@ -5,6 +5,7 @@ import { Page } from "../../components/Page/Page";
 import { motion } from "framer-motion";
 
 import Login from "../../components/Auth/connexion";
+import { getAuthServerSideProps } from "../../common/SSR/getAuthServerSideProps";
 // import Register from "./components/Register";
 // import Finalize from "./components/Finalize";
 // import Confirmed from "./components/Confirmed";
@@ -44,6 +45,8 @@ const FormBoxMotion = ({ children, isOpen, ...rest }) => {
     </MotionBox>
   );
 };
+
+export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const AuthPage = () => {
   // const title = "Connexion";

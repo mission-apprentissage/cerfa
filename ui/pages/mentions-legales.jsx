@@ -4,6 +4,9 @@ import { Box, Container, Heading } from "@chakra-ui/react";
 import { Page } from "../components/Page/Page";
 import { Breadcrumb } from "../components/Breadcrumb/Breadcrumb";
 import MentionsLegales from "../components/legal/MentionsLegales";
+import { getAuthServerSideProps } from "../common/SSR/getAuthServerSideProps";
+
+export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const MentionsLegalesPage = () => {
   const title = "Mentions Légales";

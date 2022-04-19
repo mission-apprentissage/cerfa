@@ -21,6 +21,7 @@ import Head from "next/head";
 import withAuth from "../../components/withAuth";
 
 import Acl from "../../components/Acl";
+import { getAuthServerSideProps } from "../../common/SSR/getAuthServerSideProps";
 
 const RoleLine = ({ role }) => {
   const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
@@ -84,6 +85,8 @@ const RoleLine = ({ role }) => {
     </form>
   );
 };
+
+export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const Roles = () => {
   const [roles, setRoles] = useState([]);

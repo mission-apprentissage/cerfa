@@ -11,6 +11,8 @@ import { _get } from "../../common/httpClient";
 
 import "react-notion-x/src/styles.css";
 import styles from "../../styles/notion.module.css";
+import { getAuthServerSideProps } from "../../common/SSR/getAuthServerSideProps";
+import { isInitialServerSideProps } from "../../common/SSR/isInitialServerSideProps";
 
 const mapId = {
   faq: "8b83c43d387f4fc7b7872957807b8c66",
@@ -68,25 +70,37 @@ const NavItem = ({ icon, children, to, shoudBeActive, isSubItem, ...rest }) => {
   );
 };
 
-// TODO SSR
-const Assistance = () => {
-  const router = useRouter();
-  const { slug } = router.query;
-  const id = slug?.[0] || null;
+export const getServerSideProps = async (context) => {
+  const isInitial = isInitialServerSideProps(context);
+  if (!isInitial) return { props: {} };
+  const id = context.query.slug?.[0] || null;
   const pageId = mapId[id] || "6e373f15a9b94a87a5cabde3fa2af0bc";
+  return {
+    props: {
+      ...(await getAuthServerSideProps(context)),
+      recordMapNotionSSR: await _get(`${process.env.SERVER_URI}/api/v1/support/content/${pageId}`),
+      pageId,
+    },
+  };
+};
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [recordMapNotion, setRecordMapNotion] = useState(null);
+const Assistance = ({ recordMapNotionSSR }) => {
+  const router = useRouter();
+  const id = router.query.slug?.[0] || null;
+
+  const [recordMapNotion, setRecordMapNotion] = useState(recordMapNotionSSR);
+  const [isLoading, setIsLoading] = useState(!recordMapNotionSSR);
 
   useEffect(() => {
-    const run = async () => {
+    if (recordMapNotionSSR) return;
+    (async () => {
       setIsLoading(true);
-      const tmp = await _get(`/api/v1/support/content/${pageId}`);
-      setRecordMapNotion(tmp);
+      const pageId = mapId[id] || "6e373f15a9b94a87a5cabde3fa2af0bc";
+      const recordMapNotionD = await _get(`/api/v1/support/content/${pageId}`);
+      setRecordMapNotion(recordMapNotionD);
       setIsLoading(false);
-    };
-    run();
-  }, [pageId]);
+    })();
+  }, [id, setRecordMapNotion, recordMapNotionSSR]);
 
   return (
     <Page>
@@ -102,9 +116,9 @@ const Assistance = () => {
           <NavItem to={"/assistance/faq"}>FAQ</NavItem>
           <NavItem to={"/assistance/documents_utiles"}>Documents utiles</NavItem>
         </Box>
-        <Box pt={[2, 4]} flexGrow={1} pl={16}>
+        <Box pt={[2, 4]} flexGrow={1} pl={16} w="100%">
           {isLoading && (
-            <Stack mt={20}>
+            <Stack mt={0}>
               <SkeletonText mt="4" noOfLines={10} spacing="4" />
             </Stack>
           )}
