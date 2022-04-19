@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 // import Fonts from "../theme/Fonts";
 import theme from "../theme/index";
 import UserWrapper from "../components/UserWrapper/UserWrapper";
+import Fonts from "../theme/Fonts";
 
 const queryClient = new QueryClient();
 
@@ -14,6 +15,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <RecoilRoot>
       <ChakraProvider theme={theme} resetCSS>
+        <Fonts />
         <QueryClientProvider client={queryClient}>
           <UserWrapper ssrAuth={pageProps.auth}>
             <Component {...pageProps} />
