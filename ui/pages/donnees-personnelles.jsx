@@ -7,7 +7,6 @@ import DonneesPersonnelles from "../components/legal/DonneesPersonnelles";
 import { getAuthServerSideProps } from "../common/SSR/getAuthServerSideProps";
 
 export const getServerSideProps = async (context) => {
-  console.log("nonono");
   return { props: { ...(await getAuthServerSideProps(context)) } };
 };
 
