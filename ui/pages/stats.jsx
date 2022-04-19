@@ -5,6 +5,7 @@ import { Heading, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/rea
 import Head from "next/head";
 import { Page } from "../components/Page/Page";
 import { Breadcrumb } from "../components/Breadcrumb/Breadcrumb";
+import { getAuthServerSideProps } from "../common/SSR/getAuthServerSideProps";
 
 const METABASE_SITE_URL = `${process.env.NEXT_PUBLIC_METABASE_URL ?? process.env.NEXT_PUBLIC_BASE_URL}/metabase`;
 const METABASE_SECRET_KEY = process.env.NEXT_PUBLIC_METABASE_SECRET_KEY;
@@ -20,6 +21,8 @@ const getIframeUrl = ({ id }) => {
   const token = jwt.sign(payload, METABASE_SECRET_KEY);
   return METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=false&titled=false";
 };
+
+export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const stats = () => {
   const dashboards = [
