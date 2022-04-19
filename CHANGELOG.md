@@ -1,3 +1,10 @@
+# [2.0.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2022-04-19)
+
+
+### Features
+
+* mise à jour documentation d’installation ([#578](https://github.com/mission-apprentissage/cerfa/issues/578)) ([7627e65](https://github.com/mission-apprentissage/cerfa/commit/7627e655e7161a784fe055235c756a05773f077e))
+
 # [2.0.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v1.23.4...v2.0.0-beta.1) (2022-04-13)
 
 
