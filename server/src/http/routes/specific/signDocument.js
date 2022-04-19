@@ -239,7 +239,7 @@ module.exports = (components) => {
           nomFichier: filename,
           cheminFichier: path,
           tailleFichier: 0,
-          userEmail: "yousign@hooks.fr", // user.email,
+          userEmail: "yousign@hooks.fr", // TODO user.email,
         });
       }
 
