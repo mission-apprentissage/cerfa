@@ -1,3 +1,15 @@
+# [2.0.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2022-04-19)
+
+
+### Bug Fixes
+
+* ajout du SSR sur la page stats ([46890b9](https://github.com/mission-apprentissage/cerfa/commit/46890b92acede2ddcb4e5084d1682d2555ccd087))
+* rajout des polices ([2d93ed8](https://github.com/mission-apprentissage/cerfa/commit/2d93ed81d882a0ce16fc973f3e6d710a9e5bd997))
+* suppresion dun log ([5f51a0a](https://github.com/mission-apprentissage/cerfa/commit/5f51a0a0a31aff8db67856ad35d6b9908bf092f0))
+* suppression d'un commentaire d'import ([2ea1540](https://github.com/mission-apprentissage/cerfa/commit/2ea1540086434c24eddaf0f8ec94f913e4870129))
+* suppression d'un commentaire et meileur gestion d'un undefined ([cc5a62e](https://github.com/mission-apprentissage/cerfa/commit/cc5a62e8f4ad04a5c0e1b405232ef9bc1dd97fb1))
+* usage de axios pour la requete d'authentication ([52747ee](https://github.com/mission-apprentissage/cerfa/commit/52747eebb6c256a917af1d3c1d566deea446d2e7))
+
 # [2.0.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2022-04-19)
 
 
