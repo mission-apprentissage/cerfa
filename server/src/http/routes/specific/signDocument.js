@@ -246,13 +246,13 @@ module.exports = (components) => {
       const doneMembers = procedure.members.filter(({ status }) => status === "done");
       for (let index = 0; index < doneMembers.length; index++) {
         const doneMember = doneMembers[index];
-        if (doneMember.email === signataires.apprenti.email && signataires.apprenti.status !== "SIGNE") {
+        if (doneMember.email === signataires.apprenti.email) {
           signataires.apprenti.status = "SIGNE";
-        } else if (doneMember.email === signataires.employeur.email && signataires.employeur.status !== "SIGNE") {
+        } else if (doneMember.email === signataires.employeur.email) {
           signataires.employeur.status = "SIGNE";
-        } else if (doneMember.email === signataires.cfa.email && signataires.cfa.status !== "SIGNE") {
+        } else if (doneMember.email === signataires.cfa.email) {
           signataires.cfa.status = "SIGNE";
-        } else if (doneMember.email === signataires.legal.email && signataires.legal.status !== "SIGNE") {
+        } else if (doneMember.email === signataires.legal.email) {
           signataires.legal.status = "SIGNE";
         }
       }
