@@ -1,3 +1,10 @@
+# [2.0.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2022-04-19)
+
+
+### Features
+
+* re-activation yousign  ([#581](https://github.com/mission-apprentissage/cerfa/issues/581)) ([93acd2b](https://github.com/mission-apprentissage/cerfa/commit/93acd2bc7e7e4c2b08497ff5522a60765b36b44d))
+
 # [2.0.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2022-04-19)
 
 
