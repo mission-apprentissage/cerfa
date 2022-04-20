@@ -26,7 +26,7 @@ services:
     depends_on:
       - server
     environment:
-      - SERVER_URI=https://reverse_proxy
+      - SERVER_URI=http://reverse_proxy
 
   server:
     image: cerfa_server
