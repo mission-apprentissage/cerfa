@@ -9,8 +9,8 @@ RESOLVER_DIRECTIVE="resolver ${DNS_SERVER} ipv6=off valid=5s;"
 sed -i.bak "/http {/a ${RESOLVER_DIRECTIVE}" /etc/nginx/nginx.conf
 sed -i.bak "s/include includes\/location_common.conf;/include includes\/location_common.conf;\ninclude \/etc\/nginx\/conf.d\/ws.inc;/g" /etc/nginx/conf.d/default.conf
 
-cat /etc/nginx/nginx.conf
-cat /etc/nginx/conf.d/default.conf
+# cat /etc/nginx/nginx.conf
+# cat /etc/nginx/conf.d/default.conf
 
 
  
