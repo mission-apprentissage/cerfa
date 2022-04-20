@@ -221,7 +221,7 @@ module.exports = (components) => {
     "/:id",
     passport.authenticate("jwt-yousign-webhook", { session: false, failWithError: true }),
     // eslint-disable-next-line no-unused-vars
-    tryCatch(async ({ body, params, user, headers }, res) => {
+    tryCatch(async ({ body, params, user }, res) => {
       let { test } = await Joi.object({
         test: Joi.boolean(),
       })
