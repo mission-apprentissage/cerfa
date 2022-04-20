@@ -1,3 +1,10 @@
+# [2.0.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2022-04-20)
+
+
+### Bug Fixes
+
+* autorisation de host different pour les requetes next ([4b5d194](https://github.com/mission-apprentissage/cerfa/commit/4b5d19445f0c6aff8bec0a52d9df1887b03e016d))
+
 # [2.0.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2022-04-20)
 
 
