@@ -14,14 +14,13 @@ services:
       - ./waf/99-fix-resolver.sh:/docker-entrypoint.d/99-fix-resolver.sh:ro
     environment:
       - SERVERNAME=localhost
-      - PARANOIA=1
+      - BLOCKING_PARANOIA=1
       - ANOMALY_INBOUND=5
       - ANOMALY_OUTBOUND=4
-      - REPORTING_LEVEL=2
+      - REPORTING_LEVEL=4
       - DNS_SERVER=127.0.0.11
       - PROXY=1
       - BACKEND=http://reverse_proxy
-      - STATIC_EXTENSIONS=/.jpg/ /.jpeg/ /.png/ /.gif/ /.js/ /.css/ /.ico/ /.svg/ /.webp/
 
   reverse_proxy:
     image: cerfa_reverse_proxy
