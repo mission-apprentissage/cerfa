@@ -1,5 +1,6 @@
 import { emitter } from "./emitter";
 import axios from "axios";
+import * as https from "https";
 
 class AuthError extends Error {
   constructor(json, statusCode) {
@@ -47,11 +48,20 @@ const getHeaders = (contentType = "application/json") => {
   };
 };
 
+const getHttpsAgent = () => {
+  return typeof window === "undefined"
+    ? undefined
+    : new https.Agent({
+        rejectUnauthorized: false,
+      });
+};
+
 export const _get = async (path, signal) => {
   const response = await axios.get(path, {
     headers: getHeaders(),
     signal,
     validateStatus: () => true,
+    httpsAgent: getHttpsAgent(),
   });
   return handleResponse(path, response);
 };
