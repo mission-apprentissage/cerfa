@@ -49,7 +49,6 @@ const getHeaders = (contentType = "application/json") => {
 };
 
 const getHttpsAgent = () => {
-  console.log("logg", typeof window === "undefined");
   return typeof window === "undefined"
     ? new https.Agent({
         rejectUnauthorized: false,
@@ -64,7 +63,6 @@ export const _get = async (path, signal) => {
     validateStatus: () => true,
     httpsAgent: getHttpsAgent(),
   });
-  console.log(response.status);
   return handleResponse(path, response);
 };
 
