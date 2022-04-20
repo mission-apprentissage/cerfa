@@ -27,6 +27,10 @@ module.exports = {
       jwtSecret: env.get("CERFA_AUTH_PASSWORD_JWT_SECRET").asString(),
       expiresIn: "1h",
     },
+    youSignWebhook: {
+      jwtSecret: env.get("CERFA_AUTH_PASSWORD_JWT_SECRET").asString(),
+      expiresIn: "30 days",
+    },
   },
   log: {
     level: env.get("CERFA_LOG_LEVEL").default("info").asString(),
