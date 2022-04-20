@@ -50,10 +50,10 @@ const getHeaders = (contentType = "application/json") => {
 
 const getHttpsAgent = () => {
   return typeof window === "undefined"
-    ? undefined
-    : new https.Agent({
+    ? new https.Agent({
         rejectUnauthorized: false,
-      });
+      })
+    : undefined;
 };
 
 export const _get = async (path, signal) => {
