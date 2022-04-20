@@ -12,6 +12,7 @@ services:
       - cerfa_network
     volumes:
       - ./waf/99-fix-resolver.sh:/docker-entrypoint.d/99-fix-resolver.sh:ro
+      - ./waf/ws.inc:/etc/nginx/conf.d/ws.inc
     environment:
       - SERVERNAME=localhost
       - BLOCKING_PARANOIA=1
