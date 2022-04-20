@@ -1,3 +1,10 @@
+# [2.0.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2022-04-20)
+
+
+### Bug Fixes
+
+* http à la place de https ([#584](https://github.com/mission-apprentissage/cerfa/issues/584)) ([5d84f06](https://github.com/mission-apprentissage/cerfa/commit/5d84f0660ef5200819325c1b779b492c324cac5e))
+
 # [2.0.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2022-04-19)
 
 
