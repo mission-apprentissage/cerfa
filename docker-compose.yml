@@ -22,6 +22,7 @@ services:
       - DNS_SERVER=127.0.0.11
       - PROXY=1
       - BACKEND=http://reverse_proxy
+      - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT
 
   reverse_proxy:
     image: cerfa_reverse_proxy
