@@ -11,6 +11,7 @@
 Ce projet est organisé de la manière suivante :
 
 ```
+    |-- .infra
     |-- .github
     |-- reverse_proxy
     |-- server
@@ -27,37 +28,7 @@ Ce projet est organisé de la manière suivante :
 - Le fichier `/docker-compose.yml` va définir la configuration des conteneurs de l'application, _pour plus d'informations sur Docker cf: https://docs.docker.com/_
 - Le fichier `/docker-compose.override.yml` va définir la configuration Docker spécifique à l'environnement local de développement.
 
-## Conteneurs Docker
-
-- Un serveur Web Nginx jouant le role de reverse proxy, _défini dans le service `reverse_proxy` du docker-compose_.
-- Un serveur Node Express, _défini dans le service `server` du docker-compose_.
-- Une base de donnée mongoDb _défini dans le service `mongodb` du docker-compose_.
-- Un serveur Front sous NextJs _défini dans le service `ui` du docker-compose_.
-- Un antivirus _défini dans le service `clamav` du docker-compose_.
-
-### Seulement sur les environnements production, recette et test
-
-- Un outil de statistiques \_défini dans le service `metabase` dans le repository d'infrastructure.
-
-### Seulement sur les environnements de test
-
-- Un serveur SMTP mailHog \_défini dans le service `smtp` du docker-compose.override.
-
-### Serveur Nodes & Nginx - Reverse Proxy
-
-Le serveur nginx joue le role de reverse proxy sur le port 80.
-
-Le serveur Web Node Express utilise le port 5000.
-
-Dans la configuration de nginx, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/api.inc` qui définir la gestion de l'API Node Express.
-Dans la configuration de nginx, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/ui.inc` qui définir la gestion de l'UI React.
-Dans la configuration des websocket, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/ws.inc` qui définir la gestion de socket.io.
-Dans la configuration de smtp, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/smtp.inc` qui définir la gestion de MailHog.
-Dans la configuration de metabase, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/metabase.inc` qui définir la gestion de Metabase.
-
-### Base de données MongoDb
-
-Le base de données est une MongoDb et utilise le port par défaut 27017.
+=======
 
 ### Varaibles d'environnement
 
@@ -93,6 +64,40 @@ Pour créer des jeux de test facilement il suffit de lancer les commandes suivan
 yarn --cwd server seed -e admin@mail.com
 yarn --cwd server imports
 ```
+
+=======
+
+## Conteneurs Docker
+
+- Un serveur Web Nginx jouant le role de reverse proxy, _défini dans le service `reverse_proxy` du docker-compose_.
+- Un serveur Node Express, _défini dans le service `server` du docker-compose_.
+- Une base de donnée mongoDb _défini dans le service `mongodb` du docker-compose_.
+- Un serveur Front sous NextJs _défini dans le service `ui` du docker-compose_.
+- Un antivirus _défini dans le service `clamav` du docker-compose_.
+
+### Seulement sur les environnements production, recette et test
+
+- Un outil de statistiques \_défini dans le service `metabase` dans le repository d'infrastructure.
+
+### Seulement sur les environnements de test
+
+- Un serveur SMTP mailHog \_défini dans le service `smtp` du docker-compose.override.
+
+### Serveur Nodes & Nginx - Reverse Proxy
+
+Le serveur nginx joue le role de reverse proxy sur le port 80.
+
+Le serveur Web Node Express utilise le port 5000.
+
+Dans la configuration de nginx, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/api.inc` qui définir la gestion de l'API Node Express.
+Dans la configuration de nginx, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/ui.inc` qui définir la gestion de l'UI React.
+Dans la configuration des websocket, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/ws.inc` qui définir la gestion de socket.io.
+Dans la configuration de smtp, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/smtp.inc` qui définir la gestion de MailHog.
+Dans la configuration de metabase, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/metabase.inc` qui définir la gestion de Metabase.
+
+### Base de données MongoDb
+
+Le base de données est une MongoDb et utilise le port par défaut 27017.
 
 ### Arrêt de la stack
 
