@@ -3,12 +3,15 @@ services:
 
   waf:
     image: owasp/modsecurity-crs:3.3.2-nginx
+    container_name: cerfa_waf
     ports:
       - 80:80
     depends_on:
       - reverse_proxy
     networks:
       - cerfa_network
+    volumes:
+      - ./waf/99-fix-resolver.sh:/docker-entrypoint.d/99-fix-resolver.sh:ro
     environment:
       - SERVERNAME=localhost
       - PARANOIA=1
@@ -18,6 +21,7 @@ services:
       - DNS_SERVER=127.0.0.11
       - PROXY=1
       - BACKEND=http://reverse_proxy
+      - STATIC_EXTENSIONS=/.jpg/ /.jpeg/ /.png/ /.gif/ /.js/ /.css/ /.ico/ /.svg/ /.webp/
 
   reverse_proxy:
     image: cerfa_reverse_proxy
