@@ -25,7 +25,7 @@
   with_filetree:
     - cerfa/.overrides/common/
     - cerfa/.overrides/{{ env_type }}/
-  when: item.state == 'file'
+  when: item.state == 'file' and ".DS_Store" not in item.path
 
 - name: Root only pour tous les répertoires applicatifs
   file:
