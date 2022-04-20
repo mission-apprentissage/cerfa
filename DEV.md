@@ -70,6 +70,7 @@ cp server/.env.example server/.env
 
 Les variables par défaut ne permettent pas :
 
+- De recuperer les information liées à un siret
 - L'affichage de la page de statistiques
 - L'upload de fichier
 - La signature électronique
