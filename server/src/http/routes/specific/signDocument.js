@@ -200,7 +200,7 @@ module.exports = (components) => {
   );
 
   passport.use(
-    "yousign-webhook-strategy",
+    "jwt-yousign-webhook",
     new Strategy(
       {
         jwtFromRequest: ExtractJwt.fromHeader("x-authorization"),
@@ -208,7 +208,6 @@ module.exports = (components) => {
         passReqToCallback: true,
       },
       (req, jwt_payload, done) => {
-        console.log("aae", jwt_payload, done);
         if (jwt_payload.dossierId === req.params.id) {
           done(null, true);
         } else {
@@ -218,10 +217,9 @@ module.exports = (components) => {
     )
   );
 
-  // TODO SECURE IT
   router.post(
     "/:id",
-    passport.authenticate("yousign-webhook-strategy", { session: false, failWithError: true }),
+    passport.authenticate("jwt-yousign-webhook", { session: false, failWithError: true }),
     // eslint-disable-next-line no-unused-vars
     tryCatch(async ({ body, params, user, headers }, res) => {
       let { test } = await Joi.object({
