@@ -1,0 +1,42 @@
+- name: Stoppe tous les conteneurs applicatifs
+  shell: "bash /opt/cerfa/stop-app.sh"
+
+- name: "Clone du repository (branche : {{ git_revision }})"
+  git:
+    repo: "https://github.com/mission-apprentissage/cerfa.git"
+    version: "{{ git_revision }}"
+    force: yes
+    accept_hostkey: yes
+    dest: /opt/cerfa/repository
+
+- name: Création des répertoires 'overrides'
+  file:
+    path: "/opt/cerfa/.overrides/{{ item.path }}/"
+    state: directory
+  with_filetree:
+    - app/.overrides/common/
+    - app/.overrides/{{ env_type }}/
+  when: item.state == 'directory'
+
+- name: Copie des fichiers 'overrides'
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "/opt/cerfa/.overrides/{{ item.path }}"
+  with_filetree:
+    - app/.overrides/common/
+    - app/.overrides/{{ env_type }}/
+  when: item.state == 'file'
+
+- name: Root only pour tous les répertoires applicatifs
+  file:
+    path: "{{item}}"
+    state: directory
+    owner: root
+    group: root
+    mode: 770
+  with_items:
+    - "/opt/cerfa/tools"
+    - "/opt/cerfa/repository"
+    - "/opt/cerfa/data"
+    - "/opt/cerfa/backups"
+    - "/opt/cerfa/.overrides"

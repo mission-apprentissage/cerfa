@@ -1,0 +1,41 @@
+- name: Création des répertoires tools
+  file:
+    path: "/opt/cerfa/tools/{{ item.path }}/"
+    state: directory
+  with_filetree:
+    - cerfa/tools
+  when: item.state == 'directory'
+
+- name: Copie des fichiers 'overrides'
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "/opt/cerfa/tools/{{ item.path }}"
+    mode: "g+x"
+  with_filetree:
+    - cerfa/tools
+  when: item.state == 'file'
+
+- name: Copie des scripts bash
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: /opt/cerfa/{{ item | basename }}
+    mode: "g+x"
+  with_fileglob:
+    - "cerfa/*.sh"
+
+- name: Nettoyage des permissions sudo pour le groupe 'mna'
+  lineinfile:
+    path: /etc/sudoers
+    state: absent
+    regexp: "mna"
+
+- shell: ls /opt/cerfa/*.sh
+  register: nopasswd_script_files
+
+- name: Ajout des scripts en NOPASSWD pour le groupe 'mna'
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: "{{item}}"
+    line: "%mna        ALL=(ALL)       NOPASSWD: {{item}}"
+  with_items: "{{ nopasswd_script_files.stdout_lines }}"
