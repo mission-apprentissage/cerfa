@@ -71,6 +71,7 @@ export const _post = async (path, body, signal) => {
     headers: getHeaders(),
     validateStatus: () => true,
     signal,
+    httpsAgent: getHttpsAgent(),
   });
   return handleResponse(path, response);
 };
@@ -80,6 +81,7 @@ export const _postFile = async (path, data, signal) => {
     headers: getHeaders(),
     validateStatus: () => true,
     signal,
+    httpsAgent: getHttpsAgent(),
   });
   return handleResponse(path, response);
 };
@@ -89,6 +91,7 @@ export const _put = async (path, body = {}, signal) => {
     headers: getHeaders(),
     validateStatus: () => true,
     signal,
+    httpsAgent: getHttpsAgent(),
   });
   return handleResponse(path, response);
 };
@@ -98,6 +101,7 @@ export const _delete = async (path, signal) => {
     headers: getHeaders(),
     validateStatus: () => true,
     signal,
+    httpsAgent: getHttpsAgent(),
   });
   return handleResponse(path, response);
 };
