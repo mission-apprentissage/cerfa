@@ -1,5 +1,31 @@
 version: "2.4"
 services:
+
+  crs:
+    image: owasp/modsecurity-crs:3.3.2-nginx
+    ports:
+      - 80:80
+      # only available if SETTLS was enabled:
+      - 443:443
+    depends_on:
+      - reverse_proxy
+    environment:
+      - SERVERNAME=localhost
+      - PARANOIA=1
+      - ANOMALY_INBOUND=5
+      - ANOMALY_OUTBOUND=4
+
+      - REPORTING_LEVEL=2
+
+      # Reverse Proxy mode
+      - PROXY=1
+      - BACKEND=http://reverse_proxy
+
+    volumes:
+      - ./REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf:/etc/modsecurity.d/owasp-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
+      - ./RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf:/etc/modsecurity.d/owasp-crs/rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
+
+
   reverse_proxy:
     image: cerfa_reverse_proxy
     container_name: cerfa_reverse_proxy
