@@ -224,8 +224,6 @@ module.exports = (components) => {
     passport.authenticate("yousign-webhook-strategy", { session: false, failWithError: true }),
     // eslint-disable-next-line no-unused-vars
     tryCatch(async ({ body, params, user, headers }, res) => {
-      res.json({});
-      return;
       let { test } = await Joi.object({
         test: Joi.boolean(),
       })
