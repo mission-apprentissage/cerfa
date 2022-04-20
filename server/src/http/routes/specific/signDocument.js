@@ -219,7 +219,7 @@ module.exports = (components) => {
   );
 
   // TODO SECURE IT
-  router.get(
+  router.post(
     "/:id",
     passport.authenticate("yousign-webhook-strategy", { session: false, failWithError: true }),
     // eslint-disable-next-line no-unused-vars
