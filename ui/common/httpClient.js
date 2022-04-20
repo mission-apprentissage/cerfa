@@ -1,5 +1,6 @@
 import { emitter } from "./emitter";
 import axios from "axios";
+import * as https from "https";
 
 class AuthError extends Error {
   constructor(json, statusCode) {
@@ -47,11 +48,20 @@ const getHeaders = (contentType = "application/json") => {
   };
 };
 
+const getHttpsAgent = () => {
+  return typeof window === "undefined"
+    ? new https.Agent({
+        rejectUnauthorized: false,
+      })
+    : undefined;
+};
+
 export const _get = async (path, signal) => {
   const response = await axios.get(path, {
     headers: getHeaders(),
     signal,
     validateStatus: () => true,
+    httpsAgent: getHttpsAgent(),
   });
   return handleResponse(path, response);
 };
@@ -61,6 +71,7 @@ export const _post = async (path, body, signal) => {
     headers: getHeaders(),
     validateStatus: () => true,
     signal,
+    httpsAgent: getHttpsAgent(),
   });
   return handleResponse(path, response);
 };
@@ -70,6 +81,7 @@ export const _postFile = async (path, data, signal) => {
     headers: getHeaders(),
     validateStatus: () => true,
     signal,
+    httpsAgent: getHttpsAgent(),
   });
   return handleResponse(path, response);
 };
@@ -79,6 +91,7 @@ export const _put = async (path, body = {}, signal) => {
     headers: getHeaders(),
     validateStatus: () => true,
     signal,
+    httpsAgent: getHttpsAgent(),
   });
   return handleResponse(path, response);
 };
@@ -88,6 +101,7 @@ export const _delete = async (path, signal) => {
     headers: getHeaders(),
     validateStatus: () => true,
     signal,
+    httpsAgent: getHttpsAgent(),
   });
   return handleResponse(path, response);
 };
