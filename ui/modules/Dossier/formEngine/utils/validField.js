@@ -32,6 +32,8 @@ export const validField = async ({ field, value }) => {
 const emailValidator = Yup.string().email("Le courriel doit être au format correct");
 const isValidEmail = async (value) => {
   try {
+    // check that extension has more than 2 or 3 chars. We keep Yup verification for other controls.
+    if (!/.*\..{2,3}$/.test(value)) return false;
     await emailValidator.validate(value);
     return true;
   } catch (e) {
