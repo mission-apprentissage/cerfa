@@ -20,6 +20,13 @@
 
 ## Démarrage rapide
 
+Avant de démarrer la stack il vous faut copier et renommer les fichier suivant :
+
+```bash
+cp ui/.env.example ui/.env
+cp server/.env.example server/.env
+```
+
 Pour lancer l'application, vous pouvez exécuter les commandes suivantes :
 
 ```shell

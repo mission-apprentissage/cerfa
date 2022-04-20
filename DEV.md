@@ -11,6 +11,7 @@
 Ce projet est organisé de la manière suivante :
 
 ```
+    |-- .infra
     |-- .github
     |-- reverse_proxy
     |-- server
@@ -26,6 +27,45 @@ Ce projet est organisé de la manière suivante :
 - Le dossier `ui` contient l'ensemble de l'application coté front, à savoir le code NextJs.
 - Le fichier `/docker-compose.yml` va définir la configuration des conteneurs de l'application, _pour plus d'informations sur Docker cf: https://docs.docker.com/_
 - Le fichier `/docker-compose.override.yml` va définir la configuration Docker spécifique à l'environnement local de développement.
+
+=======
+
+### Varaibles d'environnement
+
+Avant de démarrer la stack il vous faut copier et renommer les fichier suivant :
+
+```bash
+cp ui/.env.example ui/.env
+cp server/.env.example server/.env
+```
+
+Les variables par défaut ne permettent pas :
+
+- De recuperer les information liées à un siret
+- L'affichage de la page de statistiques
+- L'upload de fichier
+- La signature électronique
+- L'envoi vers AGECAP.
+
+### Démarrage de la stack
+
+Pour créer la stack et monter l'environnement il suffit de lancer la commande suivante :
+
+```bash
+make install
+make start
+```
+
+### Hydratation du projet en local
+
+Pour créer des jeux de test facilement il suffit de lancer les commandes suivante :
+
+```bash
+yarn --cwd server seed -e admin@mail.com
+yarn --cwd server imports
+```
+
+=======
 
 ## Conteneurs Docker
 
@@ -58,40 +98,6 @@ Dans la configuration de metabase, on fait référence au fichier `/reverse_prox
 ### Base de données MongoDb
 
 Le base de données est une MongoDb et utilise le port par défaut 27017.
-
-### Varaibles d'environnement
-
-Avant de démarrer la stack il vous faut copier et renommer les fichier suivant :
-
-```bash
-cp ui/.env.example ui/.env
-cp server/.env.example server/.env
-```
-
-Les variables par défaut ne permettent pas :
-
-- L'affichage de la page de statistiques
-- L'upload de fichier
-- La signature électronique
-- L'envoi vers AGECAP.
-
-### Démarrage de la stack
-
-Pour créer la stack et monter l'environnement il suffit de lancer la commande suivante :
-
-```bash
-make install
-make start
-```
-
-### Hydratation du projet en local
-
-Pour créer des jeux de test facilement il suffit de lancer les commandes suivante :
-
-```bash
-yarn --cwd server seed -e admin@mail.com
-yarn --cwd server imports
-```
 
 ### Arrêt de la stack
 
