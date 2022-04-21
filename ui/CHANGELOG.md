@@ -1,3 +1,18 @@
+# [2.0.0-beta.10](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.9...v2.0.0-beta.10) (2022-04-21)
+
+
+### Bug Fixes
+
+* changement de textes, fix de champ verrouilles ([ccacb87](https://github.com/mission-apprentissage/cerfa/commit/ccacb87aaa59b14920e7ecced5909dde68935db7))
+* suppression d'un import ([c2e78cc](https://github.com/mission-apprentissage/cerfa/commit/c2e78cc80e5c6511a2ce2ffb27e0b05e61239d73))
+* suppression d'un log ([4503303](https://github.com/mission-apprentissage/cerfa/commit/45033036209da681c7f6378f127773b47ea45747))
+
+
+### Features
+
+* on securise la modification du cerfa s'il est publié ([b65474c](https://github.com/mission-apprentissage/cerfa/commit/b65474c10133159fffc4c3e23673ac7414a48885))
+* verrouillage correct des champs ([263ff26](https://github.com/mission-apprentissage/cerfa/commit/263ff26c52a250d12b2877abfa2fbe4eab63dc9b))
+
 # [2.0.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.8...v2.0.0-beta.9) (2022-04-21)
 
 
