@@ -183,7 +183,7 @@ const DossierFooterControls = ({
               <Text>Choisissez une méthode de signature:</Text>
             </HStack>
             <HStack spacing={16} justifyContent="center" mt={10}>
-              {isBetaTester && hasPageAccessTo(auth, "signature_beta") && (
+              {isBetaTester && (
                 <Flex flexDirection="column" borderWidth="1px" borderColor="bluefrance" p={10} w="55%" h="50vh">
                   <Box flexGrow="1">
                     <Flex flexDirection="column" alignItems="flex-start" p={0}>
@@ -204,18 +204,16 @@ const DossierFooterControls = ({
                     </OrderedList>
                   </Box>
                   <Center h="25%">
-                    {auth && hasPageAccessTo(auth, "signature_beta") && (
-                      <Button
-                        onClick={() => {
-                          onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
-                        }}
-                        size={"md"}
-                        variant={"primary"}
-                      >
-                        <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
-                        Signatures électroniques
-                      </Button>
-                    )}
+                    <Button
+                      onClick={() => {
+                        onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
+                      }}
+                      size={"md"}
+                      variant={"primary"}
+                    >
+                      <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
+                      Signatures électroniques
+                    </Button>
                   </Center>
                 </Flex>
               )}
@@ -277,7 +275,6 @@ const DossierFooterControls = ({
               </Button>
             )}
             {isBetaTester &&
-              hasPageAccessTo(auth, "signature_beta") &&
               dossier.mode === "NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE" &&
               dossier.etat === "EN_ATTENTE_DECLENCHEMENT_SIGNATURES" && (
                 <Button

@@ -8,7 +8,6 @@ const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfa
 const apiYousign = require("../../../common/apis/yousign/ApiYousign");
 const config = require("../../../config");
 const authMiddleware = require("../../middlewares/authMiddleware");
-const pageAccessMiddleware = require("../../middlewares/pageAccessMiddleware");
 const { uploadToStorage, deleteFromStorage } = require("../../../common/utils/ovhUtils");
 const { oleoduc } = require("oleoduc");
 const { PassThrough } = require("stream");
@@ -29,7 +28,6 @@ module.exports = (components) => {
   router.post(
     "/",
     authMiddleware(components),
-    pageAccessMiddleware(["signature_beta"]),
     permissionsDossierMiddleware(components, ["dossier/page_signatures/signer"]),
     tryCatch(async (req, res) => {
       let { cerfaId, dossierId } = await Joi.object({
