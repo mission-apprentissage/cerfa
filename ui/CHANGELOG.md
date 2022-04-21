@@ -1,3 +1,19 @@
+# [2.0.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.7...v2.0.0-beta.8) (2022-04-21)
+
+
+### Bug Fixes
+
+* changement de method http ([0d94e12](https://github.com/mission-apprentissage/cerfa/commit/0d94e12ea42352698b5b93f93a13549c5b6b7570))
+* ouvre la route ([4728f65](https://github.com/mission-apprentissage/cerfa/commit/4728f657129236aec7fb356a7dc04fd115c6549c))
+* suppression d'une variabe inutile ([2e88d6e](https://github.com/mission-apprentissage/cerfa/commit/2e88d6e0cfeccd68c75824fce52ebdd296dc7c21))
+* usage d'un nouveau secret ([8455655](https://github.com/mission-apprentissage/cerfa/commit/845565570c3a1838004aa894aecf7a70bd158f79))
+
+
+### Features
+
+* ajout d'une securite par jwt au webhook yousign ([5442e65](https://github.com/mission-apprentissage/cerfa/commit/5442e65847a2e23bbf76aff723b021ac4a02bd58))
+* ajout variable d'environnement yousign JWT ([70a9873](https://github.com/mission-apprentissage/cerfa/commit/70a98739162af73eb7f2a9053f629c163a78f0ef))
+
 # [2.0.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2022-04-21)
 
 
