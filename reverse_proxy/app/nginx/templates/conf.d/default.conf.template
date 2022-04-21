@@ -11,11 +11,11 @@ server {
     server_name ${SERVER_NAME};
     set $always_redirect ${NGINX_ALWAYS_TLS_REDIRECT};
 
-    server_tokens       off; ???
+    # server_tokens       off; ???
 
     include includes/location_api.conf;
     include includes/location_ui.conf;
-    include includes/location_metabase.conf;
+    # include includes/location_metabase.conf;
     include includes/location_socketio.conf;
     include includes/location_smtp.conf;
     include includes/location_upload.conf;
@@ -46,7 +46,7 @@ server {
 
     include includes/location_api.conf;
     include includes/location_ui.conf;
-    include includes/location_metabase.conf;
+    # include includes/location_metabase.conf;
     include includes/location_socketio.conf;
     include includes/location_smtp.conf;
     include includes/location_upload.conf;
