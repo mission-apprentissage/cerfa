@@ -13,6 +13,9 @@ const { uploadToStorage, deleteFromStorage } = require("../../../common/utils/ov
 const { oleoduc } = require("oleoduc");
 const { PassThrough } = require("stream");
 const { find } = require("lodash");
+const passport = require("passport");
+const { Strategy, ExtractJwt } = require("passport-jwt");
+const { createYouSignWebhookToken } = require("../../../common/utils/jwtUtils");
 
 function noop() {
   return new PassThrough();
@@ -148,6 +151,7 @@ module.exports = (components) => {
           ],
         });
       }
+      const webhookJwtBearer = createYouSignWebhookToken({ payload: { dossierId } });
       const dataToSend = {
         name: `Signature du dossier ${dossier.nom}`,
         description: `Le contrat en apprentissage de ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} pour ${cerfa.employeur.denomination}`,
@@ -169,18 +173,18 @@ module.exports = (components) => {
               {
                 url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
                 method: "POST",
-                // "headers": {
-                //   "X-Custom-Header": "Yousign Webhook - Test value"
-                // }
+                headers: {
+                  "X-authorization": webhookJwtBearer,
+                },
               },
             ],
             "procedure.finished": [
               {
                 url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
                 method: "POST",
-                // "headers": {
-                //   "X-Custom-Header": "Yousign Webhook - Test value"
-                // }
+                headers: {
+                  "X-authorization": webhookJwtBearer,
+                },
               },
             ],
           },
@@ -195,9 +199,27 @@ module.exports = (components) => {
     })
   );
 
-  // TODO SECURE IT
+  passport.use(
+    "jwt-yousign-webhook",
+    new Strategy(
+      {
+        jwtFromRequest: ExtractJwt.fromHeader("x-authorization"),
+        secretOrKey: config.auth.youSignWebhook.jwtSecret,
+        passReqToCallback: true,
+      },
+      (req, jwt_payload, done) => {
+        if (jwt_payload.dossierId === req.params.id) {
+          done(null, true);
+        } else {
+          done(new Error("Unauthorized"));
+        }
+      }
+    )
+  );
+
   router.post(
     "/:id",
+    passport.authenticate("jwt-yousign-webhook", { session: false, failWithError: true }),
     // eslint-disable-next-line no-unused-vars
     tryCatch(async ({ body, params, user }, res) => {
       let { test } = await Joi.object({

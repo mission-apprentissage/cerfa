@@ -22,4 +22,5 @@ module.exports = {
   createActivationToken: (subject, options = {}) => createToken("activation", subject, options),
   createUserToken: (options = {}) => createToken("user", null, options),
   createPdsToken: (options = {}) => createToken("pds", null, options),
+  createYouSignWebhookToken: (options = {}) => createToken("youSignWebhook", null, options),
 };

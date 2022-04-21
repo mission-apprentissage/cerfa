@@ -14,8 +14,8 @@
     path: "/opt/cerfa/.overrides/{{ item.path }}/"
     state: directory
   with_filetree:
-    - app/.overrides/common/
-    - app/.overrides/{{ env_type }}/
+    - cerfa/.overrides/common/
+    - cerfa/.overrides/{{ env_type }}/
   when: item.state == 'directory'
 
 - name: Copie des fichiers 'overrides'
@@ -23,9 +23,9 @@
     src: "{{ item.src }}"
     dest: "/opt/cerfa/.overrides/{{ item.path }}"
   with_filetree:
-    - app/.overrides/common/
-    - app/.overrides/{{ env_type }}/
-  when: item.state == 'file'
+    - cerfa/.overrides/common/
+    - cerfa/.overrides/{{ env_type }}/
+  when: item.state == 'file' and ".DS_Store" not in item.path
 
 - name: Root only pour tous les répertoires applicatifs
   file:
