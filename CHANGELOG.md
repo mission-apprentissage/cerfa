@@ -1,3 +1,10 @@
+# [2.0.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.10...v2.0.0-beta.11) (2022-04-21)
+
+
+### Features
+
+* ouverture complète signature électronique ([#595](https://github.com/mission-apprentissage/cerfa/issues/595)) ([77d084f](https://github.com/mission-apprentissage/cerfa/commit/77d084f92bf1f7899814ffef49f8e012b75d897c))
+
 # [2.0.0-beta.10](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.9...v2.0.0-beta.10) (2022-04-21)
 
 
