@@ -4,9 +4,7 @@ services:
   reverse_proxy:
     volumes:
       - cerfa_nginx_data:/data
-    build:
-      args:
-        - CERFA_ENV=dev
+      - ./reverse_proxy/dev/includes:/etc/nginx/templates/includes/env
 
   ui:
     mem_limit: 1g
