@@ -10,7 +10,7 @@ export const initFields = ({ cerfa, schema }) => {
   Object.keys(schema.fields).forEach((name) => {
     const data = get(cerfa, name);
     if (!data) return;
-    fields[name] = createField({ name, data, schema });
+    fields[name] = createField({ name, data });
   });
 
   cerfa.contrat.remunerationsAnnuelles.forEach((annee, i) => {
