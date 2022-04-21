@@ -4,9 +4,6 @@ import { Step, Steps, useSteps } from "chakra-ui-steps-rework-mna";
 import { useRouter } from "next/router";
 import { useSetRecoilState, useRecoilValueLoadable, useRecoilValue } from "recoil";
 
-import useAuth from "../../hooks/useAuth";
-import { hasPageAccessTo } from "../../common/utils/rolesUtils";
-
 import PiecesJustificatives from "./PiecesJustificatives/PiecesJustificatives";
 import Signatures from "./Signatures/Signatures";
 
@@ -47,7 +44,6 @@ const Dossier = () => {
   const dossierIdParam = slug?.[slug.length - 2];
   const paramstep = slug?.[slug.length - 1];
 
-  let [auth] = useAuth();
   const { nextStep, prevStep, activeStep, setStep } = useSteps({
     initialStep: stepByPath.indexOf(paramstep),
   });
@@ -215,7 +211,7 @@ const Dossier = () => {
   return (
     <CerfaControllerContext.Provider value={cerfaController}>
       <Box w="100%" px={[1, 1, 6, 6]} mb={10}>
-        {hasPageAccessTo(auth, "signature_beta") && <AskBetaTestModal />}
+        <AskBetaTestModal />
         {finalizeModalDisclosure.isOpen && <FinalizeModal {...finalizeModalDisclosure} dossier={dossier} />}
         {eSignatureModalDisclosure.isOpen && <ESignatureModal {...eSignatureModalDisclosure} />}
         <IsPrivateEmployeurModal

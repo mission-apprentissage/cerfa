@@ -18,7 +18,6 @@ import PhoneInput from "react-phone-input-2";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import useAuth from "../../hooks/useAuth";
-import { hasPageAccessTo } from "../../common/utils/rolesUtils";
 import { _put } from "../../common/httpClient";
 import { betaVersion, BetaFeatures } from "../BetaFeatures/BetaFeatures";
 
@@ -135,33 +134,31 @@ const ProfileInformation = () => {
           </FormControl>
         </Flex>
         <Divider mt={10} mb={4} borderWidth="2px" />
-        {hasPageAccessTo(auth, "signature_beta") && (
-          <Box>
-            <HStack>
-              <FormLabel fontWeight="bold">Activer les fonctionnalité expérimentales de la plateforme ?</FormLabel>
-              <RadioGroup value={values.beta}>
-                <HStack>
-                  <Radio
-                    type="radio"
-                    name="beta"
-                    value={betaVersion()}
-                    checked={values.beta !== "non"}
-                    onChange={handleChange}
-                  >
-                    Oui
-                  </Radio>
-                  <Radio type="radio" name="beta" value="non" checked={values.beta === "non"} onChange={handleChange}>
-                    Non
-                  </Radio>
-                </HStack>
-              </RadioGroup>
-            </HStack>
-            <Box pl={4}>
-              <Text>Cette activation vous donnera accès à :</Text>
-              <BetaFeatures borderColor={"dgalt"} borderWidth={1} px={4} py={3} maxH="30vh" my={3} />
-            </Box>
+        <Box>
+          <HStack>
+            <FormLabel fontWeight="bold">Activer les fonctionnalité expérimentales de la plateforme ?</FormLabel>
+            <RadioGroup value={values.beta}>
+              <HStack>
+                <Radio
+                  type="radio"
+                  name="beta"
+                  value={betaVersion()}
+                  checked={values.beta !== "non"}
+                  onChange={handleChange}
+                >
+                  Oui
+                </Radio>
+                <Radio type="radio" name="beta" value="non" checked={values.beta === "non"} onChange={handleChange}>
+                  Non
+                </Radio>
+              </HStack>
+            </RadioGroup>
+          </HStack>
+          <Box pl={4}>
+            <Text>Cette activation vous donnera accès à :</Text>
+            <BetaFeatures borderColor={"dgalt"} borderWidth={1} px={4} py={3} maxH="30vh" my={3} />
           </Box>
-        )}
+        </Box>
         <Divider mt={10} mb={4} borderWidth="2px" />
       </Box>
       <Box mt="2rem">
