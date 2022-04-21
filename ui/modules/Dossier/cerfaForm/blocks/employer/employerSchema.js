@@ -94,9 +94,92 @@ export const employerSchema = {
   },
   "employeur.adresse.region": {
     required: true,
+    fieldType: "select",
     label: "Région de l'employeur :",
     requiredMessage: "la région de l'employeur est obligatoire",
     validateMessage: " n'est pas une région valide",
+    options: [
+      {
+        label: "1 - Guadeloupe",
+        value: "1",
+      },
+      {
+        label: "2 - Martinique",
+        value: "2",
+      },
+      {
+        label: "3 - Guyane",
+        value: "3",
+      },
+      {
+        label: "4 - La Réunion",
+        value: "4",
+      },
+      {
+        label: "6 - Mayotte",
+        value: "6",
+      },
+      {
+        label: "11 - Ile de France",
+        value: "11",
+      },
+      {
+        label: "24 - Centre- Val de Loire",
+        value: "24",
+      },
+      {
+        label: "27 - Bourgogne Franche Comté",
+        value: "27",
+      },
+      {
+        label: "28 - Normandie",
+        value: "28",
+      },
+      {
+        label: "32 - Hauts de France",
+        value: "32",
+      },
+      {
+        label: "44 - Grand Est",
+        value: "44",
+      },
+      {
+        label: "52 - Pays de la Loire",
+        value: "52",
+      },
+      {
+        label: "53 - Bretagne",
+        value: "53",
+      },
+      {
+        label: "75 - Nouvelle-Aquitaine",
+        value: "75",
+      },
+      {
+        label: "76 - Occitanie",
+        value: "76",
+      },
+      {
+        label: "84 - Auvergne-Rhône-Alpes",
+        value: "84",
+      },
+      {
+        label: "93 - Provence-Alpes-Côte d'Azur",
+        value: "93",
+      },
+      {
+        label: "94 - Corse",
+        value: "94",
+      },
+      {
+        label: "905 - St Pierre et Miquelon",
+        value: "905",
+      },
+      {
+        label: "912 - Nouvelle Calédonie",
+        value: "912",
+      },
+    ],
     mask: "C",
     maskBlocks: [
       {
