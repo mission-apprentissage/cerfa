@@ -120,7 +120,7 @@ const employeurCerfaSchema = {
     required: function () {
       return !this.draft;
     },
-    description: `Identifiant de la convention collective de branche appliquée par l’établissement. [le site du Ministère du travail.](https://www.elections-professionnelles.travail.gouv.fr/web/guest/recherche-idcc)`,
+    description: `Identifiant de la convention collective de branche appliquée par l’établissement.  \n\n Recherchez votre code convention collective sur : [le site du Ministère du travail.](https://www.elections-professionnelles.travail.gouv.fr/web/guest/recherche-idcc)`,
     label: "Code IDCC de la convention collective appliquée : ",
     requiredMessage: "le code idcc est obligatoire",
     example: "9999",

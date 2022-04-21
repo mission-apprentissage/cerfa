@@ -40,6 +40,8 @@ export const RemunerationsControl = [
         selectedTaux: getTauxFromRemunerationsAnnuelles(oldRemus),
       });
 
+      console.log(oldRemus, remunerationsAnnuelles);
+
       const oldRemusCascade = Object.fromEntries(
         oldRemus?.flatMap((remu, i) => [
           [`contrat.remunerationsAnnuelles[${i}].dateDebut`, undefined],
@@ -57,7 +59,7 @@ export const RemunerationsControl = [
           return [
             [`contrat.remunerationsAnnuelles[${i}].dateDebut`, { value: remu.dateDebut }],
             [`contrat.remunerationsAnnuelles[${i}].dateFin`, { value: remu.dateFin }],
-            [`contrat.remunerationsAnnuelles[${i}].taux`, { value: remu.taux }],
+            [`contrat.remunerationsAnnuelles[${i}].taux`, { value: remu.taux, min: remu.tauxMinimal }],
             [`contrat.remunerationsAnnuelles[${i}].tauxMinimal`, { value: remu.tauxMinimal }],
             [`contrat.remunerationsAnnuelles[${i}].typeSalaire`, { value: remu.typeSalaire }],
             [`contrat.remunerationsAnnuelles[${i}].salaireBrut`, { value: remu.salaireBrut }],

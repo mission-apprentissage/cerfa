@@ -17,6 +17,7 @@ import {
   Badge,
   Stack,
   Link,
+  Box,
 } from "@chakra-ui/react";
 import { prettyPrintDate } from "../../common/utils/dateUtils";
 import { replaceLinks } from "../../common/utils/markdownUtils";
@@ -45,7 +46,7 @@ const InfoTooltip = memo(({ description, descriptionComponent, label, history, n
         <PopoverCloseButton />
         <PopoverHeader fontWeight="bold">{label}</PopoverHeader>
         <PopoverBody>
-          <Stack>
+          <Box>
             {descriptionComponent}
             {!descriptionComponent &&
               replaceLinks(description).map((part, i) => {
@@ -61,7 +62,7 @@ const InfoTooltip = memo(({ description, descriptionComponent, label, history, n
                   </Link>
                 );
               })}
-          </Stack>
+          </Box>
         </PopoverBody>
         {history && !noHistory && (
           <>
