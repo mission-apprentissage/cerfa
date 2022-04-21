@@ -1,9 +1,24 @@
 #Override containers for azure environments
 version: "2.4"
 services:
-  reverse_proxy:
+
+  waf:
     ports:
       - 443:443
+    depends_on:
+      - reverse_proxy
+    networks:
+      - cerfa_network
+    environment:
+      - NGINX_ALWAYS_TLS_REDIRECT=on
+      - PROXY_SSL_CERT=/ssl/fullchain.pem
+      - PROXY_SSL_CERT_KEY=/ssl/privkey.pem
+    volumes:
+      - /opt/cerfa/data/ssl:/ssl:ro
+      - /opt/cerfa/repository/waf/99-fix-resolver.sh:/docker-entrypoint.d/99-fix-resolver.sh:ro
+      - /opt/cerfa/repository/waf/ws.inc:/etc/nginx/conf.d/ws.inc
+
+  reverse_proxy:
     volumes:
       - /opt/cerfa/data/nginx:/data
       - /opt/cerfa/data/ssl:/ssl:ro
