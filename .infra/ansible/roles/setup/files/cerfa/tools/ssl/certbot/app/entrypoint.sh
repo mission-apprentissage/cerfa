@@ -36,14 +36,6 @@ function generate_self_signed_certificate() {
     -subj "/C=FR/O=Mission Apprentissage/CN=Root"
 }
 
-function download_tls_config_for_nginx() {
-  echo "Downloading recommended nginx conf..."
-  curl "https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf" \
-    -o "${SSL_OUTPUT_DIR}/options-ssl-nginx.conf"
-
-  curl "https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem" -o "${SSL_OUTPUT_DIR}/ssl-dhparams.pem"
-}
-
 function renew_certificate() {
   local dns_name="${1}"
 
@@ -63,7 +55,6 @@ function main() {
 
   case "${task}" in
   generate)
-    download_tls_config_for_nginx
     if [ "${dns_name}" == "localhost" ]; then
       generate_self_signed_certificate
     else

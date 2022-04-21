@@ -2,12 +2,14 @@
 version: "2.4"
 services:
   reverse_proxy:
-    ports:
-      - 443:443
+    environment:
+      - SERVER_NAME={{dns_name}}
+      - NGINX_ALWAYS_TLS_REDIRECT=true
+      - PROXY_SSL_CERT=/ssl/fullchain.pem
+      - PROXY_SSL_CERT_KEY=/ssl/privkey.pem
     volumes:
       - /opt/cerfa/data/nginx:/data
       - /opt/cerfa/data/ssl:/ssl:ro
-      - /opt/cerfa/.overrides/reverse_proxy/default.conf:/etc/nginx/conf.d/default.conf:ro
 
   server:
     volumes:
