@@ -25,6 +25,7 @@ jobs:
           CERFA_AUTH_PDS_JWT_SECRET: ${{ secrets.CERFA_AUTH_PDS_JWT_SECRET }}
           CERFA_AUTH_ACTIVATION_JWT_SECRET: ${{ secrets.CERFA_AUTH_ACTIVATION_JWT_SECRET }}
           CERFA_AUTH_PASSWORD_JWT_SECRET: ${{ secrets.CERFA_AUTH_PASSWORD_JWT_SECRET }}
+          CERFA_AUTH_YOUSIGN_WEBHOOK_JWT_SECRET: ${{ secrets.CERFA_AUTH_YOUSIGN_WEBHOOK_JWT_SECRET }}
 
       # codecov
       - name: Upload coverage to Codecov
