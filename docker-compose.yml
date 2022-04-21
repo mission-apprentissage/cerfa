@@ -40,7 +40,7 @@ services:
     depends_on:
       - server
     environment:
-      - SERVER_URI=http://reverse_proxy
+      - SERVER_URI=http://server:5000
 
   server:
     image: cerfa_server
