@@ -15,7 +15,6 @@ import {
   Flex,
   Text,
   Badge,
-  Stack,
   Link,
   Box,
 } from "@chakra-ui/react";
