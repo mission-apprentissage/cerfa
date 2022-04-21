@@ -1,3 +1,11 @@
+# [2.0.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2022-04-21)
+
+
+### Features
+
+* choix de la region avec libelle ([ca5fe6d](https://github.com/mission-apprentissage/cerfa/commit/ca5fe6db8cb11215dcf95f2adb0a90935d6518e1))
+* controle de l'extension des emails 2/3 characteres ([5c80119](https://github.com/mission-apprentissage/cerfa/commit/5c80119874f948fa47270816c822814303de25f5))
+
 # [2.0.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2022-04-20)
 
 
