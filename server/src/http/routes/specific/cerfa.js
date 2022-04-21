@@ -361,6 +361,10 @@ module.exports = (components) => {
 
       let cerfaDb = await Cerfa.findOne({ _id: params.id }, { _id: 0, __v: 0 }).lean();
 
+      if (!cerfaDb.draft) {
+        throw Boom.forbidden("Cerfa is locked");
+      }
+
       let remunerationsAnnuelles = [...(data.contrat?.remunerationsAnnuelles || [])];
       for (let i = 0; i < cerfaDb.contrat.remunerationsAnnuelles.length; i++) {
         const remunerationsAnnuelleDb = cerfaDb.contrat.remunerationsAnnuelles[i];
