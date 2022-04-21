@@ -34,7 +34,7 @@ const DossierFooterControls = ({
   eSignatureModalDisclosure,
   dossierComplete,
   employeurPrivePublic,
-  signaturesPdfLoaded,
+  // signaturesPdfLoaded,
 }) => {
   let [auth] = useAuth();
   const toast = useToast();
@@ -304,9 +304,8 @@ const DossierFooterControls = ({
                   variant="primary"
                   ml={12}
                   isDisabled={
-                    !dossierComplete ||
-                    employeurPrivePublic?.contents?.value === "Employeur privé" ||
-                    !signaturesPdfLoaded?.contents
+                    !dossierComplete || employeurPrivePublic?.contents?.value === "Employeur privé"
+                    // || !signaturesPdfLoaded?.contents
                   }
                   bg="orangemedium.500"
                   _hover={{ bg: "orangemedium.600" }}
