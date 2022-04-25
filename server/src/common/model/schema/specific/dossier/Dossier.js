@@ -50,6 +50,11 @@ const dossierSchema = {
     default: null,
     example: "222222222222",
   },
+  statutAgecap: {
+    type: [mongoose.Schema.Types.Mixed],
+    description: `Historique des statuts agecap`,
+    default: [],
+  },
   etat: {
     enum: [
       "BROUILLON", // 0
