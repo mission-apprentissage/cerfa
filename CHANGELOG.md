@@ -1,3 +1,16 @@
+# [2.1.0](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0...v2.1.0) (2022-04-25)
+
+
+### Bug Fixes
+
+* completion des documents à 100 si optionnel et rempli ([f557823](https://github.com/mission-apprentissage/cerfa/commit/f5578234e09095f78a4f045f7057be76a031e66b))
+
+
+### Features
+
+* controle sur la date exacte de l'apprenti ([88cb045](https://github.com/mission-apprentissage/cerfa/commit/88cb0450e71d4d9d7fbf27d7eb3be19ec6369d2f))
+* documents obligatoires pour les avenants sauf 33 et 34 ([f166c83](https://github.com/mission-apprentissage/cerfa/commit/f166c834878a04cf3646cf206094b377c2635539))
+
 # [2.1.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.1.0-beta.1...v2.1.0-beta.2) (2022-04-25)
 
 
