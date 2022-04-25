@@ -10,6 +10,7 @@ services:
     volumes:
       - /opt/cerfa/data/nginx:/data
       - /opt/cerfa/data/ssl:/ssl:ro
+      - /opt/cerfa/.overrides/reverse_proxy/includes:/etc/nginx/templates/includes/env
 
   server:
     volumes:
