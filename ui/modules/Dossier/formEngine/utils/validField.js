@@ -18,6 +18,10 @@ export const validField = async ({ field, value }) => {
     return { error: field?.validateMessage ?? "Le format ne correspond pas" };
   }
 
+  if (value && field.enum && field.enum.indexOf(value) === -1) {
+    return { error: field?.validateMessage ?? "Le format ne correspond pas" };
+  }
+
   if (field.maxLength && value?.length > field.maxLength) {
     return { error: field?.validateMessage ?? "La valeur est trop longue" };
   }
