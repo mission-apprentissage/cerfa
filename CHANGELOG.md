@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/mission-apprentissage/cerfa/compare/v2.1.0...v2.1.1) (2022-04-25)
+
+
+### Bug Fixes
+
+* enum vérifié pour tous les champs côté front ([15eb75d](https://github.com/mission-apprentissage/cerfa/commit/15eb75de32d06f8d4d5567fe394e54ca65601b71))
+
 # [2.1.0](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0...v2.1.0) (2022-04-25)
 
 
