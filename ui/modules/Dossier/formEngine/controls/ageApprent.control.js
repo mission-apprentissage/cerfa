@@ -17,8 +17,11 @@ export const ageApprentControl = [
     deps: ["apprenti.dateNaissance", "contrat.dateDebutContrat"],
     process: ({ values }) => {
       if (!values.contrat.dateDebutContrat) return;
-      const { age: ageDebutContrat } = caclAgeAtDate(values.apprenti.dateNaissance, values.contrat.dateDebutContrat);
-      if (ageDebutContrat < 15) {
+      const { exactAge: ageDebutContrat } = caclAgeAtDate(
+        values.apprenti.dateNaissance,
+        values.contrat.dateDebutContrat
+      );
+      if (ageDebutContrat <= 15) {
         return { error: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat" };
       }
       return {
