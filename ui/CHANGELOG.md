@@ -1,3 +1,12 @@
+# [2.0.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.10...v2.0.0-beta.11) (2022-04-25)
+
+
+### Bug Fixes
+
+* enleve undefined ([e7b2a2b](https://github.com/mission-apprentissage/cerfa/commit/e7b2a2b559bd47c0a6adc0317f77b69effad3fa5))
+* meilleur affichage des erreurs sur champs vide, changement de vocab ([347dc30](https://github.com/mission-apprentissage/cerfa/commit/347dc3020a92eed5792dddbb8419ae4e78590d3d))
+* remplacement apostrophe ([34ded28](https://github.com/mission-apprentissage/cerfa/commit/34ded28dcc174c78c1585f24484f41c5fbb3e322))
+
 # [2.0.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0-beta.10...v2.0.0-beta.11) (2022-04-21)
 
 
