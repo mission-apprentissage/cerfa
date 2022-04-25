@@ -630,10 +630,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236,
+          x: 233,
           y: 632,
-          maxLength: 3,
-          defaultSize: 9,
+          maxLength: 10,
+          defaultSize: 8,
         },
         typeSalaire: {
           x: 285,
@@ -658,10 +658,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236 + 255,
+          x: 233 + 255,
           y: 632,
           maxLength: 10,
-          defaultSize: 9,
+          defaultSize: 8,
         },
         typeSalaire: {
           x: 285 + 255,
@@ -686,10 +686,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236,
+          x: 233,
           y: 632 - 12,
           maxLength: 10,
-          defaultSize: 9,
+          defaultSize: 8,
         },
         typeSalaire: {
           x: 285,
@@ -714,10 +714,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236 + 255,
+          x: 233 + 255,
           y: 632 - 12,
           maxLength: 10,
-          defaultSize: 9,
+          defaultSize: 8,
         },
         typeSalaire: {
           x: 285 + 255,
@@ -742,10 +742,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236,
+          x: 233,
           y: 632 - 25,
           maxLength: 10,
-          defaultSize: 9,
+          defaultSize: 8,
         },
         typeSalaire: {
           x: 285,
@@ -770,10 +770,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236 + 255,
+          x: 233 + 255,
           y: 632 - 25,
           maxLength: 10,
-          defaultSize: 9,
+          defaultSize: 8,
         },
         typeSalaire: {
           x: 285 + 255,
@@ -798,10 +798,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236,
+          x: 233,
           y: 632 - 40,
           maxLength: 10,
-          defaultSize: 9,
+          defaultSize: 8,
         },
         typeSalaire: {
           x: 285,
@@ -826,10 +826,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236 + 255,
+          x: 233 + 255,
           y: 632 - 40,
           maxLength: 10,
-          defaultSize: 9,
+          defaultSize: 8,
         },
         typeSalaire: {
           x: 285 + 255,
