@@ -13,6 +13,9 @@ const { uploadToStorage, deleteFromStorage } = require("../../../common/utils/ov
 const { oleoduc } = require("oleoduc");
 const { PassThrough } = require("stream");
 const { find } = require("lodash");
+const passport = require("passport");
+const { Strategy, ExtractJwt } = require("passport-jwt");
+const { createYouSignWebhookToken } = require("../../../common/utils/jwtUtils");
 
 function noop() {
   return new PassThrough();
@@ -76,10 +79,10 @@ module.exports = (components) => {
 
       const operationDetails = {
         operationLevel: "custom",
-        operationCustomModes: ["sms"],
-        operationModeSmsConfig: {
-          content: `eSIGNATURE - {{code}} est le code pour signer le contrat ${dossier.nom}.`,
-        },
+        operationCustomModes: ["email"],
+        // operationModeSmsConfig: {
+        //   content: `eSIGNATURE - {{code}} est le code pour signer le contrat ${dossier.nom}.`,
+        // },
       };
       const positions = {
         employeur: "20,149,189,199", // Employeur
@@ -97,7 +100,7 @@ module.exports = (components) => {
           firstname: signataires.employeur.firstname,
           lastname: signataires.employeur.lastname,
           email: signataires.employeur.email,
-          phone: signataires.employeur.phone,
+          phone: "+33601020304",
           ...operationDetails,
           fileObjects: [
             {
@@ -110,7 +113,7 @@ module.exports = (components) => {
           firstname: signataires.apprenti.firstname,
           lastname: signataires.apprenti.lastname,
           email: signataires.apprenti.email,
-          phone: signataires.apprenti.phone,
+          phone: "+33601020304",
           ...operationDetails,
           fileObjects: [
             {
@@ -123,7 +126,7 @@ module.exports = (components) => {
           firstname: signataires.cfa.firstname,
           lastname: signataires.cfa.lastname,
           email: signataires.cfa.email,
-          phone: signataires.cfa.phone,
+          phone: "+33601020304",
           ...operationDetails,
           fileObjects: [
             {
@@ -138,7 +141,7 @@ module.exports = (components) => {
           firstname: signataires.legal.firstname,
           lastname: signataires.legal.lastname,
           email: signataires.legal.email,
-          phone: signataires.legal.phone,
+          phone: "+33601020304",
           ...operationDetails,
           fileObjects: [
             {
@@ -148,6 +151,7 @@ module.exports = (components) => {
           ],
         });
       }
+      const webhookJwtBearer = createYouSignWebhookToken({ payload: { dossierId } });
       const dataToSend = {
         name: `Signature du dossier ${dossier.nom}`,
         description: `Le contrat en apprentissage de ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} pour ${cerfa.employeur.denomination}`,
@@ -169,18 +173,18 @@ module.exports = (components) => {
               {
                 url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
                 method: "POST",
-                // "headers": {
-                //   "X-Custom-Header": "Yousign Webhook - Test value"
-                // }
+                headers: {
+                  "X-authorization": webhookJwtBearer,
+                },
               },
             ],
             "procedure.finished": [
               {
                 url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
                 method: "POST",
-                // "headers": {
-                //   "X-Custom-Header": "Yousign Webhook - Test value"
-                // }
+                headers: {
+                  "X-authorization": webhookJwtBearer,
+                },
               },
             ],
           },
@@ -195,9 +199,27 @@ module.exports = (components) => {
     })
   );
 
-  // TODO SECURE IT
+  passport.use(
+    "jwt-yousign-webhook",
+    new Strategy(
+      {
+        jwtFromRequest: ExtractJwt.fromHeader("x-authorization"),
+        secretOrKey: config.auth.youSignWebhook.jwtSecret,
+        passReqToCallback: true,
+      },
+      (req, jwt_payload, done) => {
+        if (jwt_payload.dossierId === req.params.id) {
+          done(null, true);
+        } else {
+          done(new Error("Unauthorized"));
+        }
+      }
+    )
+  );
+
   router.post(
     "/:id",
+    passport.authenticate("jwt-yousign-webhook", { session: false, failWithError: true }),
     // eslint-disable-next-line no-unused-vars
     tryCatch(async ({ body, params, user }, res) => {
       let { test } = await Joi.object({
@@ -239,23 +261,19 @@ module.exports = (components) => {
           nomFichier: filename,
           cheminFichier: path,
           tailleFichier: 0,
-          userEmail: "yousign@hooks.fr", // user.email,
+          userEmail: "yousign@hooks.fr", // TODO user.email,
         });
       }
 
       const doneMembers = procedure.members.filter(({ status }) => status === "done");
-      for (let index = 0; index < doneMembers.length; index++) {
-        const doneMember = doneMembers[index];
-        if (doneMember.email === signataires.apprenti.email && doneMember.phone === signataires.apprenti.phone) {
+      for (let doneMember of doneMembers) {
+        if (doneMember.email === signataires.apprenti.email) {
           signataires.apprenti.status = "SIGNE";
-        } else if (
-          doneMember.email === signataires.employeur.email &&
-          doneMember.phone === signataires.employeur.phone
-        ) {
+        } else if (doneMember.email === signataires.employeur.email) {
           signataires.employeur.status = "SIGNE";
-        } else if (doneMember.email === signataires.cfa.email && doneMember.phone === signataires.cfa.phone) {
+        } else if (doneMember.email === signataires.cfa.email) {
           signataires.cfa.status = "SIGNE";
-        } else if (doneMember.email === signataires.legal.email && doneMember.phone === signataires.legal.phone) {
+        } else if (doneMember.email === signataires.legal.email) {
           signataires.legal.status = "SIGNE";
         }
       }

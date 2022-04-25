@@ -2,7 +2,7 @@
   "name": "mna-cerfa",
   "description": "[MNA] Générateur de Cerfa publique",
   "repository": "https://github.com/mission-apprentissage/cerfa.git",
-  "version": "1.23.4",
+  "version": "2.0.0-beta.11",
   "author": "MNA",
   "license": "MIT",
   "private": true,
@@ -15,7 +15,8 @@
     "docker:stop": "docker-compose stop",
     "docker:down": "docker-compose down",
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",
-    "lint": "eslint --cache ./ui ./server --ext .js,.jsx",
+    "lint": "eslint --cache ./server --ext .js,.jsx && yarn --cwd ui lint",
+    "lint:staged": "lint-staged",
     "prettier:fix": "prettier --write ./ui ./server",
     "prettier:check": "prettier --check ./ui ./server",
     "npm:release": "semantic-release",
@@ -56,8 +57,13 @@
     }
   },
   "lint-staged": {
+    "./server/*.{js,jsx}": [
+      "eslint --cache --fix ./server/src ./server/tests"
+    ],
+    "./ui/*.{jsx}": [
+      "yarn --cwd ui lint"
+    ],
     "*.{js,jsx}": [
-      "eslint --cache --fix ./ui ./server",
       "prettier --write ./ui ./server"
     ],
     "*.{md,json,html}": "prettier --write ./ui ./server"

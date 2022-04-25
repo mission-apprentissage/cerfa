@@ -111,3 +111,7 @@ src/**/*.css.map
 */**/*.css.map
 
 */**/CHANGELOG.md
+
+
+next.config.js
+pdf-worker.js

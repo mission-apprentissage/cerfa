@@ -10,7 +10,7 @@ const employeurCerfaSchema = {
     label: "Dénomination :",
     description: "La dénomination sociale doit être celle de l'établissement dans lequel le contrat s'exécute.",
     requiredMessage: "La dénomination de l'employeur est obligatoire",
-    example: "ENERGIE 3000",
+    example: "Mairie",
     default: null,
     required: function () {
       return !this.draft;
@@ -120,7 +120,7 @@ const employeurCerfaSchema = {
     required: function () {
       return !this.draft;
     },
-    description: `Identifiant de la convention collective de branche appliquée par l’établissement. [le site du Ministère du travail.](https://www.elections-professionnelles.travail.gouv.fr/web/guest/recherche-idcc)`,
+    description: `Identifiant de la convention collective de branche appliquée par l’établissement.  \n\n Recherchez votre code convention collective sur : [le site du Ministère du travail.](https://www.elections-professionnelles.travail.gouv.fr/web/guest/recherche-idcc)`,
     label: "Code IDCC de la convention collective appliquée : ",
     requiredMessage: "le code idcc est obligatoire",
     example: "9999",
@@ -212,6 +212,7 @@ const employeurCerfaSchema = {
     complement: {
       path: "employeur.adresse.complement",
       ...adresseSchema.complement,
+      example: "Hôtel de ville ; Entrée ; Bâtiment ; Etage ; Service ; BP",
     },
     codePostal: {
       path: "employeur.adresse.codePostal",

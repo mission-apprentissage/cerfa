@@ -111,7 +111,7 @@ const apprentiSchema = {
     requiredMessage: "La date de naissance de l'apprenti(e) est obligatoire",
     example: "2001-01-01T00:00:00+0000",
     description:
-      "La date de naissance combinée à la date d'exécution du contrat définira si l'apprenti(e) est mineur(e) ou majeur(e) et est bien âgé de 15 ans ou plus. <br/> Si l'apprenti(e) est mineur(e) à la date de signature du contrat, vous devrez renseigner le cas d'émancipation ou les informations relatives au représentant légal.",
+      "La date de naissance combinée à la date d'exécution du contrat définira si l'apprenti(e) est mineur(e) ou majeur(e) et est bien âgé de 15 ans ou plus. Si l'apprenti(e) est mineur(e) à la date de signature du contrat, vous devrez renseigner le cas d'émancipation ou les informations relatives au représentant légal.",
     default: null,
     required: function () {
       return !this.draft;
@@ -142,7 +142,7 @@ const apprentiSchema = {
     },
     type: String,
     label: "Département de naissance :",
-    example: "1 Ain, 99 Étranger",
+    example: "1, 60",
     pattern: "^([0-9][0-9]|2[AB]|9[012345]|97[12346])$",
     requiredMessage: "le département de naissance est obligatoire",
     validateMessage: ` n'est pas un département valide`,
@@ -250,7 +250,7 @@ const apprentiSchema = {
       return !this.draft;
     },
     label: "Situation avant ce contrat :",
-    requiredMessage: "la situation social avant ce contrat de l'apprenti(e) est obligatoire",
+    requiredMessage: "la situation de l'apprenti(e) avant ce contrat est obligatoire",
     options: [
       {
         label: "1 Scolaire",
@@ -459,6 +459,7 @@ const apprentiSchema = {
     complement: {
       path: "apprenti.adresse.complement",
       ...adresseSchema.complement,
+      example: "Bâtiment ; Résidence ; Entrée ; Appartement ; Escalier ; Etage",
     },
     codePostal: {
       path: "apprenti.adresse.codePostal",

@@ -62,28 +62,31 @@ const createUsersPenTest = async ({ users }) => {
   return { userWks: userCfa, shareWithEmail: "contrat-pentest+entreprise1@apprentissage.beta.gouv.fr" };
 };
 
-const createUsersTest = async ({ users }) => {
-  const userAdmin = await users.createUser("antoine.bigard+testAdmin@beta.gouv.fr", "password", {
+const createUsersTest = async ({ users, userEmail }) => {
+  const userAdmin = await users.createUser(userEmail, "password", {
     nom: "Admin",
     prenom: "test",
     permissions: { isAdmin: true },
     confirmed: true,
   });
-  logger.info(`User 'tAdmin' with password 'password' and admin is successfully created `);
+  logger.info(`User ${userEmail} with password 'password' and admin is successfully created `);
 
-  await users.createUser("antoine.bigard+testEntreprise@beta.gouv.fr", "password", {
+  await users.createUser("employeur@test.com", "password", {
     nom: "Damien",
     prenom: "Arthur",
     roles: ["entreprise"],
     confirmed: true,
   });
-  logger.info(`User 'tEntreprise' with password 'password' is successfully created `);
-  return { userWks: userAdmin, shareWithEmail: "antoine.bigard+testEntreprise@beta.gouv.fr" };
+  logger.info(`User "employeur@test.com" with password 'password' is successfully created `);
+  return { userWks: userAdmin, shareWithEmail: "employeur@test.com" };
 };
 
 runScript(async ({ users, workspaces, dossiers }) => {
   const args = process.argv.slice(2);
   const seedPentest = args.includes("--pentest");
+  const userEmail = args.includes("-e")
+    ? args[args.indexOf("-e") + 1].toLowerCase()
+    : "antoine.bigard+testadmin@beta.gouv.fr";
 
   await MaintenanceMessage.create({
     context: "automatique",
@@ -108,7 +111,7 @@ runScript(async ({ users, workspaces, dossiers }) => {
     createUsers = createUsersTest;
   }
 
-  const { userWks, shareWithEmail } = await createUsers({ users });
+  const { userWks, shareWithEmail } = await createUsers({ users, userEmail });
 
   const wks = await workspaces.getUserWorkspace(userWks, { _id: 1 });
   await workspaces.addContributeur(wks._id, shareWithEmail, "wks.member");

@@ -20,6 +20,13 @@
 
 ## Démarrage rapide
 
+Avant de démarrer la stack il vous faut copier et renommer les fichier suivant :
+
+```bash
+cp ui/.env.example ui/.env
+cp server/.env.example server/.env
+```
+
 Pour lancer l'application, vous pouvez exécuter les commandes suivantes :
 
 ```shell
@@ -31,6 +38,15 @@ L'application est ensuite disponible à l'url [http://localhost](http://localhos
 
 Il est possible de consulter les emails envoyés par l'application à
 l'url [http://localhost/smtp](http://localhost/smtp)
+
+### Hydratation du projet en local
+
+Pour créer des jeux de test facilement il suffit de lancer les commandes suivante :
+
+```bash
+yarn --cwd server seed -e admin@mail.com
+yarn --cwd server imports
+```
 
 ## Développement
 

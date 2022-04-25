@@ -52,6 +52,7 @@ class ApiYousign {
         let response = await client.post(`procedures`, data);
         return response.data;
       } catch (e) {
+        console.log(e);
         throw new ApiError("Api Yousign", `${e.message}`, e.code || e.response.status);
       }
     });

@@ -35,7 +35,7 @@ const formationSchema = {
     maxLength: 8,
     type: String,
     default: null,
-    description: `Ce code à 8 caractères permet d'identifier un titre ou diplôme préparés par la voir de l'apprentissage, plus d'informations sur [le site du ministère de l'Education Nationale.](https://www.education.gouv.fr/codification-des-formations-et-des-diplomes-11270) Le code diplôme peut être recherché sur [le catalogue des formations en apprentissage.](https://catalogue.apprentissage.beta.gouv.fr/) Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez renseigner un code diplôme pour déduire le code RNCP correspondant.`,
+    description: `Ce code à 8 caractères permet d'identifier un titre ou diplôme préparé par la voie de l'apprentissage, plus d'informations sur [le site du ministère de l'Education Nationale.](https://www.education.gouv.fr/codification-des-formations-et-des-diplomes-11270) Le code diplôme peut être recherché sur [le catalogue des formations en apprentissage.](https://catalogue.apprentissage.beta.gouv.fr/) Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez renseigner un code diplôme pour déduire le code RNCP correspondant.`,
     label: "Code diplôme (Éducation Nationale) : ",
     example: "32322111",
     requiredMessage: "Le code diplôme est obligatoire",

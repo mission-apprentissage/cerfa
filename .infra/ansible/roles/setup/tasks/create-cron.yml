@@ -1,0 +1,30 @@
+- name: Add server jobs script. Creates an entry "0 1 * * bash /opt/cerfa/server-jobs.sh >> /var/log/server-jobs.log"
+  cron:
+    name: "server jobs"
+    minute: "0"
+    hour: "1"
+    job: "bash /opt/cerfa/server-jobs.sh >> /var/log/server-jobs.log"
+
+- name: Add cron to rotate nginx files
+  ansible.builtin.cron:
+    name: "rotate_nginx_log_files"
+    minute: "0"
+    hour: "1"
+    job: "bash /opt/cerfa/tools/rotate-nginx-log-files.sh >> /var/log/cron.log 2>&1"
+
+- name: Add cron to ensure SSL certificate will be renewed
+  ansible.builtin.cron:
+    name: "renew-certificate"
+    minute: "0"
+    hour: "2"
+    weekday: "1"
+    job: "bash /opt/cerfa/tools/ssl/renew-certificate.sh {{dns_name}} >> /var/log/cron.log 2>&1"
+
+# - name: Add cron to reload app automatically
+#   when: env_type == "recette"
+#   ansible.builtin.cron:
+#     name: "reload-app"
+#     minute: "*/1"
+#     hour: 8-20
+#     weekday: 1-5
+#     job: "bash /opt/cerfa/reload-app.sh >> /var/log/cron.log 2>&1"
