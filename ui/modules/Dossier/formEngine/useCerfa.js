@@ -140,7 +140,7 @@ export const useCerfa = ({ schema } = {}) => {
         return;
       }
 
-      if (patch.value === field?.value) {
+      if (patch.value === field?.value || (isEmptyValue(patch.value) && isEmptyValue(field.value))) {
         patch = { ...patch };
         delete patch.value;
         if (!Object.keys(patch).length) return;
