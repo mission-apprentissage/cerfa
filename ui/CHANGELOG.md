@@ -1,3 +1,10 @@
+# [2.2.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.1.1...v2.2.0-beta.1) (2022-04-25)
+
+
+### Features
+
+* ajout job recherche de changement de statuts de dossier télétransmis ([#622](https://github.com/mission-apprentissage/cerfa/issues/622)) ([28c61da](https://github.com/mission-apprentissage/cerfa/commit/28c61da760399f511722a84ac4eaa9bf9588ae10))
+
 ## [2.1.1](https://github.com/mission-apprentissage/cerfa/compare/v2.1.0...v2.1.1) (2022-04-25)
 
 
