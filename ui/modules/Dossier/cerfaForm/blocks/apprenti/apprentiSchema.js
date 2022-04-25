@@ -43,6 +43,29 @@ export const apprentiSchema = {
       },
     ],
   },
+  "apprenti.adresse.repetitionVoie": {
+    fieldType: "select",
+    label: "Indice de répétition",
+    validateMessage: `n'est pas un indice de répétition valide`,
+    options: [
+      {
+        value: "B",
+        label: "BIS",
+      },
+      {
+        value: "T",
+        label: "TER",
+      },
+      {
+        value: "Q",
+        label: "Quatter",
+      },
+      {
+        value: "C",
+        label: "Quinquiès",
+      },
+    ],
+  },
   "apprenti.adresse.voie": {
     required: true,
     label: "Voie :",
@@ -1002,6 +1025,29 @@ export const apprentiSchema = {
         name: "C",
         mask: "Pattern",
         pattern: "^\\d*$",
+      },
+    ],
+  },
+  "apprenti.responsableLegal.adresse.repetitionVoie": {
+    fieldType: "select",
+    label: "Indice de répétition",
+    validateMessage: `n'est pas un indice de répétition valide`,
+    options: [
+      {
+        value: "B",
+        label: "BIS",
+      },
+      {
+        value: "T",
+        label: "TER",
+      },
+      {
+        value: "Q",
+        label: "Quatter",
+      },
+      {
+        value: "C",
+        label: "Quinquiès",
       },
     ],
   },

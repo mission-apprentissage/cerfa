@@ -1,5 +1,5 @@
 import { InputController } from "../../../formEngine/components/Input/InputController";
-import { Box, Flex, FormLabel } from "@chakra-ui/react";
+import { Box, Flex, FormLabel, HStack } from "@chakra-ui/react";
 import React, { memo } from "react";
 import { employerSchema } from "./employerSchema";
 import CheckEmptyFields from "../../../formEngine/components/CheckEmptyFields";
@@ -15,7 +15,10 @@ export const CerfaEmployer = memo(() => {
           <FormLabel fontWeight={700} my={3}>
             Adresse de l&apos;établissement d&apos;exécution du contrat :
           </FormLabel>
-          <InputController name="employeur.adresse.numero" fieldType="number" />
+          <HStack mb={3}>
+            <InputController mb={0} name="employeur.adresse.numero" fieldType="number" />
+            <InputController name="employeur.adresse.repetitionVoie" />
+          </HStack>
           <InputController name="employeur.adresse.voie" fieldType="text" />
           <InputController name="employeur.adresse.complement" />
           <InputController name="employeur.adresse.codePostal" />

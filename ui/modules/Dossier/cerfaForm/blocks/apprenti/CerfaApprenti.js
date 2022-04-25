@@ -1,5 +1,5 @@
 import { InputController } from "../../../formEngine/components/Input/InputController";
-import { Box, Flex, FormLabel, Text } from "@chakra-ui/react";
+import { Box, Flex, FormLabel, HStack, Text } from "@chakra-ui/react";
 import React, { memo } from "react";
 import { CollapseController } from "../../../formEngine/components/CollapseController";
 import { shouldAskRepresentantLegal } from "./domain/shouldAskRepresentantLegal";
@@ -18,7 +18,10 @@ export const CerfaApprenti = memo(() => {
           <FormLabel fontWeight="bold" my={3}>
             Adresse de l&apos;apprenti(e) :
           </FormLabel>
-          <InputController name="apprenti.adresse.numero" />
+          <HStack mb={3}>
+            <InputController mb={0} name="apprenti.adresse.numero" />
+            <InputController name="apprenti.adresse.repetitionVoie" />
+          </HStack>
           <InputController name="apprenti.adresse.voie" />
           <InputController name="apprenti.adresse.complement" />
           <InputController name="apprenti.adresse.codePostal" />
@@ -35,19 +38,23 @@ export const CerfaApprenti = memo(() => {
               <Text fontWeight="bold" my={3} mt={0}>
                 Représentant légal
               </Text>
-              <InputController name="apprenti.responsableLegal.nom" autoHide={false} />
-              <InputController name="apprenti.responsableLegal.prenom" autoHide={false} />
+              <InputController name="apprenti.responsableLegal.nom" />
+              <InputController name="apprenti.responsableLegal.prenom" />
               <Text fontWeight="bold" my={3}>
                 Adresse du représentant légal :
               </Text>
-              <InputController name="apprenti.responsableLegal.memeAdresse" fieldType="radio" autoHide={false} />
+              <InputController name="apprenti.responsableLegal.memeAdresse" fieldType="radio" />
               <CollapseController show={shouldAskResponsalLegalAdresse}>
-                <InputController name="apprenti.responsableLegal.adresse.numero" autoHide={false} />
-                <InputController name="apprenti.responsableLegal.adresse.voie" autoHide={false} />
-                <InputController name="apprenti.responsableLegal.adresse.complement" autoHide={false} />
-                <InputController name="apprenti.responsableLegal.adresse.codePostal" autoHide={false} />
-                <InputController name="apprenti.responsableLegal.adresse.commune" autoHide={false} />
-                <InputController name="apprenti.responsableLegal.adresse.pays" autoHide={false} />
+                <InputController name="apprenti.responsableLegal.adresse.numero" />
+                <HStack mb={3}>
+                  <InputController mb={0} name="apprenti.responsableLegal.adresse.numero" />
+                  <InputController name="apprenti.responsableLegal.adresse.repetitionVoie" />
+                </HStack>
+                <InputController name="apprenti.responsableLegal.adresse.voie" />
+                <InputController name="apprenti.responsableLegal.adresse.complement" />
+                <InputController name="apprenti.responsableLegal.adresse.codePostal" />
+                <InputController name="apprenti.responsableLegal.adresse.commune" />
+                <InputController name="apprenti.responsableLegal.adresse.pays" />
               </CollapseController>
             </CollapseController>
           </Box>

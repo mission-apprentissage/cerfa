@@ -65,6 +65,29 @@ export const formationSchema = {
       },
     ],
   },
+  "etablissementFormation.adresse.repetitionVoie": {
+    fieldType: "select",
+    label: "Indice de répétition",
+    validateMessage: `n'est pas un indice de répétition valide`,
+    options: [
+      {
+        value: "B",
+        label: "BIS",
+      },
+      {
+        value: "T",
+        label: "TER",
+      },
+      {
+        value: "Q",
+        label: "Quatter",
+      },
+      {
+        value: "C",
+        label: "Quinquiès",
+      },
+    ],
+  },
   "etablissementFormation.adresse.voie": {
     fieldType: "text",
     required: true,
@@ -391,6 +414,29 @@ export const formationSchema = {
         name: "C",
         mask: "Pattern",
         pattern: "^\\d*$",
+      },
+    ],
+  },
+  "organismeFormation.adresse.repetitionVoie": {
+    fieldType: "select",
+    label: "Indice de répétition",
+    validateMessage: `n'est pas un indice de répétition valide`,
+    options: [
+      {
+        value: "B",
+        label: "BIS",
+      },
+      {
+        value: "T",
+        label: "TER",
+      },
+      {
+        value: "Q",
+        label: "Quatter",
+      },
+      {
+        value: "C",
+        label: "Quinquiès",
       },
     ],
   },

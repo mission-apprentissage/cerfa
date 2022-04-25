@@ -56,6 +56,29 @@ export const employerSchema = {
       },
     ],
   },
+  "employeur.adresse.repetitionVoie": {
+    fieldType: "select",
+    label: "Indice de répétition",
+    validateMessage: `n'est pas un indice de répétition valide`,
+    options: [
+      {
+        value: "B",
+        label: "BIS",
+      },
+      {
+        value: "T",
+        label: "TER",
+      },
+      {
+        value: "Q",
+        label: "Quatter",
+      },
+      {
+        value: "C",
+        label: "Quinquiès",
+      },
+    ],
+  },
   "employeur.adresse.voie": {
     required: true,
     label: "Voie :",
