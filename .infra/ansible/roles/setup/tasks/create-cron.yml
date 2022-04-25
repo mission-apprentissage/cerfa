@@ -1,8 +1,9 @@
 - name: Add server jobs script. Creates an entry "0 1 * * bash /opt/cerfa/server-jobs.sh >> /var/log/server-jobs.log"
   cron:
     name: "server jobs"
-    minute: "0"
-    hour: "1"
+    minute: "#0"
+    hour: "*"
+    weekday: "*"
     job: "bash /opt/cerfa/server-jobs.sh >> /var/log/server-jobs.log"
 
 - name: Add cron to rotate nginx files
