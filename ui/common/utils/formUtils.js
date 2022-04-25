@@ -116,6 +116,7 @@ export const caclAgeAtDate = (dateNaissanceString, dateString) => {
   const age = years ? Math.floor(years) : 0;
   return {
     age,
+    exactAge: years,
   };
 };
 
