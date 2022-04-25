@@ -15,7 +15,7 @@ export const documentsCompletionStatusGetter = selector({
     const attestationPiece = get(valueSelector("employeur.attestationPieces"));
 
     const nbFields = (documentsRequired ? 1 : 0) + 1;
-    const nbFilled = (docs?.length ? 1 : 0) + (attestationPiece ? 1 : 0);
+    const nbFilled = (docs?.length && documentsRequired ? 1 : 0) + (attestationPiece ? 1 : 0);
 
     const completion = (nbFilled / nbFields) * 100;
     return {
