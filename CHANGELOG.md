@@ -1,3 +1,10 @@
+# [2.1.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.0.0...v2.1.0-beta.1) (2022-04-25)
+
+
+### Features
+
+* controle sur la date exacte de l'apprenti ([88cb045](https://github.com/mission-apprentissage/cerfa/commit/88cb0450e71d4d9d7fbf27d7eb3be19ec6369d2f))
+
 # [2.0.0](https://github.com/mission-apprentissage/cerfa/compare/v1.23.4...v2.0.0) (2022-04-25)
 
 
