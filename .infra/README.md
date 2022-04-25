@@ -210,7 +210,7 @@ Il est possible d'ajouter un disque externe permettant de sauvegarder l'ensemble
 faire, il faut la commande suivante
 
 ```sh
-bash ovh/create-backup-partition.sh <nom de l'environnement>
+bash scripts/ovh/create-backup-partition.sh <nom de l'environnement>
 ```
 
 Lors de l'exécution de ce script, vous serez redirigé vers une page web vous demandant de vous authentifier afin de
@@ -256,7 +256,7 @@ La première étape est de créer un VPS via l'interface d'OVH : https://www.ovh
 Une fois le VPS créé, il est nécessaire de configurer le firewall en lançant la commande :
 
 ```sh
-bash ovh/create-firewall.sh <nom de l'environnement>
+bash scripts/ovh/create-firewall.sh <nom de l'environnement>
 ```
 
 Lors de l'exécution de ce script, vous serez redirigé vers une page web vous demandant de vous authentifier afin de
