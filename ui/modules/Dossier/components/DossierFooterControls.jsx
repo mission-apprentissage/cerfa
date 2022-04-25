@@ -234,7 +234,9 @@ const DossierFooterControls = ({
                     <ListItem>Téléchargez le document complété</ListItem>
                     <ListItem>Imprimez le contrat</ListItem>
                     <ListItem>Recueillez les différentes signatures</ListItem>
-                    <ListItem>Transmission automatique à votre DEETS</ListItem>
+                    <ListItem>
+                      Transmission automatique à votre service en charge de l'instruction et du dépôt du dossier
+                    </ListItem>
                   </OrderedList>
                 </Box>
                 <Center h="25%">
