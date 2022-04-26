@@ -1,4 +1,5 @@
 import { shouldAskEtablissementFormation } from "./domain/shouldAskEtablissementFormation";
+import { INDICE_DE_REPETITION_OPTIONS } from "../../domain/indiceDeRepetionOptions";
 
 export const formationSchema = {
   "etablissementFormation.memeResponsable": {
@@ -69,24 +70,7 @@ export const formationSchema = {
     fieldType: "select",
     label: "Indice de répétition",
     validateMessage: `n'est pas un indice de répétition valide`,
-    options: [
-      {
-        value: "B",
-        label: "BIS",
-      },
-      {
-        value: "T",
-        label: "TER",
-      },
-      {
-        value: "Q",
-        label: "Quatter",
-      },
-      {
-        value: "C",
-        label: "Quinquiès",
-      },
-    ],
+    options: INDICE_DE_REPETITION_OPTIONS,
   },
   "etablissementFormation.adresse.voie": {
     fieldType: "text",
@@ -421,24 +405,7 @@ export const formationSchema = {
     fieldType: "select",
     label: "Indice de répétition",
     validateMessage: `n'est pas un indice de répétition valide`,
-    options: [
-      {
-        value: "B",
-        label: "BIS",
-      },
-      {
-        value: "T",
-        label: "TER",
-      },
-      {
-        value: "Q",
-        label: "Quatter",
-      },
-      {
-        value: "C",
-        label: "Quinquiès",
-      },
-    ],
+    options: INDICE_DE_REPETITION_OPTIONS,
   },
   "organismeFormation.adresse.voie": {
     fieldType: "text",

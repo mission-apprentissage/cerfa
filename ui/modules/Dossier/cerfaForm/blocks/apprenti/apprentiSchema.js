@@ -1,5 +1,6 @@
 import { shouldAskRepresentantLegal } from "./domain/shouldAskRepresentantLegal";
 import { shouldAskResponsalLegalAdresse } from "./domain/shouldAskResponsalLegalAdresse";
+import { INDICE_DE_REPETITION_OPTIONS } from "../../domain/indiceDeRepetionOptions";
 
 export const apprentiSchema = {
   "apprenti.nom": {
@@ -47,24 +48,7 @@ export const apprentiSchema = {
     fieldType: "select",
     label: "Indice de répétition",
     validateMessage: `n'est pas un indice de répétition valide`,
-    options: [
-      {
-        value: "B",
-        label: "BIS",
-      },
-      {
-        value: "T",
-        label: "TER",
-      },
-      {
-        value: "Q",
-        label: "Quatter",
-      },
-      {
-        value: "C",
-        label: "Quinquiès",
-      },
-    ],
+    options: INDICE_DE_REPETITION_OPTIONS,
   },
   "apprenti.adresse.voie": {
     required: true,
@@ -1032,24 +1016,7 @@ export const apprentiSchema = {
     fieldType: "select",
     label: "Indice de répétition",
     validateMessage: `n'est pas un indice de répétition valide`,
-    options: [
-      {
-        value: "B",
-        label: "BIS",
-      },
-      {
-        value: "T",
-        label: "TER",
-      },
-      {
-        value: "Q",
-        label: "Quatter",
-      },
-      {
-        value: "C",
-        label: "Quinquiès",
-      },
-    ],
+    options: INDICE_DE_REPETITION_OPTIONS,
   },
   "apprenti.responsableLegal.adresse.voie": {
     _init: ({ values }) => ({ required: shouldAskResponsalLegalAdresse({ values }) }),
