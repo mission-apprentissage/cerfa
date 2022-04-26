@@ -1,3 +1,12 @@
+# [2.2.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.2...v2.2.0-beta.3) (2022-04-26)
+
+
+### Bug Fixes
+
+* ligne en trop ([f8e5816](https://github.com/mission-apprentissage/cerfa/commit/f8e58165a2caf70835c62348c42b704e73e7158b))
+* meilleur affichage des taux ([a7c04c6](https://github.com/mission-apprentissage/cerfa/commit/a7c04c602a35b9a45806b6975078dd0ef7d4552b))
+* modification de la position pour faire rentrer les décimales dans le cerfa ([8dace98](https://github.com/mission-apprentissage/cerfa/commit/8dace980fbb64df83d8ea4a0f7d6e0655a72d8a2))
+
 # [2.2.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.1...v2.2.0-beta.2) (2022-04-26)
 
 
