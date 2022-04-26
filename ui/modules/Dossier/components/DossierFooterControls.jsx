@@ -33,7 +33,7 @@ const DossierFooterControls = ({
   finalizeModalDisclosure,
   eSignatureModalDisclosure,
   dossierComplete,
-  employeurPrivePublic,
+  isEmployeurPrive,
   signaturesPdfLoaded,
 }) => {
   let [auth] = useAuth();
@@ -149,12 +149,7 @@ const DossierFooterControls = ({
             </Button>
           )}
           {activeStep < steps.length - 1 && (
-            <Button
-              size="md"
-              onClick={onClickNextStep}
-              variant="primary"
-              isDisabled={employeurPrivePublic?.contents?.value === "Employeur privé"}
-            >
+            <Button size="md" onClick={onClickNextStep} variant="primary" isDisabled={isEmployeurPrive}>
               Passer à l&apos;étape suivante
             </Button>
           )}
@@ -165,7 +160,7 @@ const DossierFooterControls = ({
                 finalizeModalDisclosure.onOpen();
               }}
               variant="primary"
-              isDisabled={!dossierComplete || employeurPrivePublic?.contents?.value === "Employeur privé"}
+              isDisabled={!dossierComplete || isEmployeurPrive}
               bg="greenmedium.600"
               _hover={{ bg: "greenmedium.500" }}
             >
@@ -272,7 +267,7 @@ const DossierFooterControls = ({
                 bg={"greenmedium.500"}
                 _hover={{ bg: "greenmedium.600" }}
                 color="white"
-                isDisabled={!dossierComplete || employeurPrivePublic?.contents?.value === "Employeur privé"}
+                isDisabled={!dossierComplete || isEmployeurPrive}
               >
                 <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
                 {buttonTextProp}
@@ -308,11 +303,7 @@ const DossierFooterControls = ({
                   onClick={onSendToAgecap}
                   variant="primary"
                   ml={12}
-                  isDisabled={
-                    !dossierComplete ||
-                    employeurPrivePublic?.contents?.value === "Employeur privé" ||
-                    !signaturesPdfLoaded?.contents
-                  }
+                  isDisabled={!dossierComplete || isEmployeurPrive || !signaturesPdfLoaded?.contents}
                   bg="orangemedium.500"
                   _hover={{ bg: "orangemedium.600" }}
                   px={8}
