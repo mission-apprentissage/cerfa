@@ -2,7 +2,7 @@ set -euo pipefail
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly MODULE_DIR="${SCRIPT_DIR}/ovh-nodejs-client"
-readonly ANSIBLE_DIR="${SCRIPT_DIR}/../ansible"
+readonly ANSIBLE_DIR="${SCRIPT_DIR}/../../ansible"
 readonly ENV_NAME=${1:?"Merci de préciser un environnement (ex. recette ou production)"}
 shift
 
