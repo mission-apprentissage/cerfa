@@ -249,6 +249,15 @@ Une fois le lien de la Webhook récupéré il faudra stocker l'information dans 
 
 ## Création d'un nouvel environnement
 
+## Création d'une app OVH
+
+OVH Europe https://eu.api.ovh.com/createApp/
+
+Conserver les informmations suivantes :
+
+- Application Key
+- Application Secret
+
 ### Création du VPS OVH
 
 La première étape est de créer un VPS via l'interface d'OVH : https://www.ovhcloud.com/fr/vps/
