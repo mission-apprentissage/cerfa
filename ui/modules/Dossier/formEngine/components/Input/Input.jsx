@@ -34,6 +34,7 @@ export const Input = memo(
     onError,
     onSubmit,
     validate,
+    error: externalError,
     mt,
     mb,
     w,
@@ -57,6 +58,7 @@ export const Input = memo(
         mask,
         maskBlocks,
         validate,
+        externalError,
       }),
       [
         description,
@@ -76,6 +78,7 @@ export const Input = memo(
         value,
         warning,
         validate,
+        externalError,
       ]
     );
     const [fieldState, setFieldState] = useState({ value });
@@ -104,7 +107,7 @@ export const Input = memo(
         isRequired={required}
         loading={loading}
         value={value ?? fieldState.value}
-        error={fieldState.error}
+        error={fieldState.error || externalError}
         onChange={handle}
         mt={mt}
         mb={mb}
