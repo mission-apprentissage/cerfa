@@ -1,3 +1,12 @@
+# [2.2.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.4...v2.2.0-beta.5) (2022-04-26)
+
+
+### Bug Fixes
+
+* prise en compte de tous les contrats sans avenant pour la date de signature ([e05540e](https://github.com/mission-apprentissage/cerfa/commit/e05540e9f096e6e9c54a460a3903e198ddce8566))
+* prise en compte des controles de coherences sur la signature ([a4a32bd](https://github.com/mission-apprentissage/cerfa/commit/a4a32bdf733e96bcfa14617ae1312d920e227705))
+* renommage d'une variable ([06d6999](https://github.com/mission-apprentissage/cerfa/commit/06d6999fb8f11b9cdf332e239eaf9f066dc10a32))
+
 # [2.2.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.3...v2.2.0-beta.4) (2022-04-26)
 
 
