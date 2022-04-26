@@ -8,6 +8,7 @@ const unlockAllCascade = {
   "employeur.libelleIdcc": { locked: false, reset: true },
   "employeur.nombreDeSalaries": { locked: false, reset: true },
   "employeur.adresse.numero": { locked: false, reset: true },
+  "employeur.adresse.repetitionVoie": { locked: false, reset: true },
   "employeur.adresse.voie": { locked: false, reset: true },
   "employeur.adresse.complement": { locked: false, reset: true },
   "employeur.adresse.codePostal": { locked: false, reset: true },
@@ -76,6 +77,10 @@ export const employerSiretLogic = {
         },
         "employeur.adresse.numero": {
           value: result.numero_voie || undefined,
+          locked: false,
+        },
+        "employeur.adresse.repetitionVoie": {
+          reset: true,
           locked: false,
         },
         "employeur.adresse.voie": {
