@@ -14,7 +14,7 @@ const unlockAllCascade = {
   "employeur.adresse.commune": { locked: false, reset: true },
   "employeur.adresse.departement": { locked: false, reset: true },
   "employeur.adresse.region": { locked: false, reset: true },
-  "employeur.privePublic": { locked: false, reset: true },
+  "employeur.privePublic": { locked: false, reset: true, value: true },
 };
 
 export const employerSiretLogic = {
