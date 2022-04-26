@@ -630,10 +630,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 233,
+          x: 231,
           y: 632,
           maxLength: 10,
-          defaultSize: 8,
+          defaultSize: 9,
         },
         typeSalaire: {
           x: 285,
@@ -658,10 +658,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 233 + 255,
+          x: 231 + 255,
           y: 632,
           maxLength: 10,
-          defaultSize: 8,
+          defaultSize: 9,
         },
         typeSalaire: {
           x: 285 + 255,
@@ -686,10 +686,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 233,
+          x: 231,
           y: 632 - 12,
           maxLength: 10,
-          defaultSize: 8,
+          defaultSize: 9,
         },
         typeSalaire: {
           x: 285,
@@ -714,10 +714,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 233 + 255,
+          x: 231 + 255,
           y: 632 - 12,
           maxLength: 10,
-          defaultSize: 8,
+          defaultSize: 9,
         },
         typeSalaire: {
           x: 285 + 255,
@@ -742,10 +742,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 233,
+          x: 231,
           y: 632 - 25,
           maxLength: 10,
-          defaultSize: 8,
+          defaultSize: 9,
         },
         typeSalaire: {
           x: 285,
@@ -770,10 +770,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 233 + 255,
+          x: 231 + 255,
           y: 632 - 25,
           maxLength: 10,
-          defaultSize: 8,
+          defaultSize: 9,
         },
         typeSalaire: {
           x: 285 + 255,
@@ -798,10 +798,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 233,
+          x: 231,
           y: 632 - 40,
           maxLength: 10,
-          defaultSize: 8,
+          defaultSize: 9,
         },
         typeSalaire: {
           x: 285,
@@ -826,10 +826,10 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 233 + 255,
+          x: 231 + 255,
           y: 632 - 40,
           maxLength: 10,
-          defaultSize: 8,
+          defaultSize: 9,
         },
         typeSalaire: {
           x: 285 + 255,
@@ -1029,6 +1029,7 @@ const buildRemunerations = async (remunerationsAnnuelles) => {
         remunerationAnnuelle.taux,
         fieldsPositions.contrat.remunerationsAnnuelles[remunerationAnnuelle.ordre].taux
       ),
+      await buildFieldDraw(55.55, fieldsPositions.contrat.remunerationsAnnuelles[remunerationAnnuelle.ordre].taux),
       await buildFieldDraw(
         remunerationAnnuelle.typeSalaire,
         fieldsPositions.contrat.remunerationsAnnuelles[remunerationAnnuelle.ordre].typeSalaire
