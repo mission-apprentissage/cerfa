@@ -1,3 +1,10 @@
+# [2.2.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.1...v2.2.0-beta.2) (2022-04-26)
+
+
+### Bug Fixes
+
+* infra path to ansible folder ([#626](https://github.com/mission-apprentissage/cerfa/issues/626)) ([7989996](https://github.com/mission-apprentissage/cerfa/commit/798999683e6c5bab1ea05fb84e3487131797e06a)), closes [#622](https://github.com/mission-apprentissage/cerfa/issues/622)
+
 # [2.2.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.1.1...v2.2.0-beta.1) (2022-04-25)
 
 
