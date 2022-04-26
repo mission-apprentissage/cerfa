@@ -1,3 +1,10 @@
+## [2.1.2](https://github.com/mission-apprentissage/cerfa/compare/v2.1.1...v2.1.2) (2022-04-26)
+
+
+### Bug Fixes
+
+* si secret defense, employeur public ([d6ef3bc](https://github.com/mission-apprentissage/cerfa/commit/d6ef3bcaa664a0b256727de1ef756644ed687ef2))
+
 ## [2.1.1](https://github.com/mission-apprentissage/cerfa/compare/v2.1.0...v2.1.1) (2022-04-25)
 
 
