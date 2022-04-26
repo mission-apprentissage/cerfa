@@ -1029,7 +1029,6 @@ const buildRemunerations = async (remunerationsAnnuelles) => {
         remunerationAnnuelle.taux,
         fieldsPositions.contrat.remunerationsAnnuelles[remunerationAnnuelle.ordre].taux
       ),
-      await buildFieldDraw(55.55, fieldsPositions.contrat.remunerationsAnnuelles[remunerationAnnuelle.ordre].taux),
       await buildFieldDraw(
         remunerationAnnuelle.typeSalaire,
         fieldsPositions.contrat.remunerationsAnnuelles[remunerationAnnuelle.ordre].typeSalaire
