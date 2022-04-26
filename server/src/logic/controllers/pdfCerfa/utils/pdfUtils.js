@@ -630,9 +630,9 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236,
+          x: 231,
           y: 632,
-          maxLength: 3,
+          maxLength: 10,
           defaultSize: 9,
         },
         typeSalaire: {
@@ -658,7 +658,7 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236 + 255,
+          x: 231 + 255,
           y: 632,
           maxLength: 10,
           defaultSize: 9,
@@ -686,7 +686,7 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236,
+          x: 231,
           y: 632 - 12,
           maxLength: 10,
           defaultSize: 9,
@@ -714,7 +714,7 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236 + 255,
+          x: 231 + 255,
           y: 632 - 12,
           maxLength: 10,
           defaultSize: 9,
@@ -742,7 +742,7 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236,
+          x: 231,
           y: 632 - 25,
           maxLength: 10,
           defaultSize: 9,
@@ -770,7 +770,7 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236 + 255,
+          x: 231 + 255,
           y: 632 - 25,
           maxLength: 10,
           defaultSize: 9,
@@ -798,7 +798,7 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236,
+          x: 231,
           y: 632 - 40,
           maxLength: 10,
           defaultSize: 9,
@@ -826,7 +826,7 @@ const fieldsPositions = {
           title: (value) => (value ? convertDate(value) : ""),
         },
         taux: {
-          x: 236 + 255,
+          x: 231 + 255,
           y: 632 - 40,
           maxLength: 10,
           defaultSize: 9,
