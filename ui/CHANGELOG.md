@@ -1,3 +1,10 @@
+# [2.2.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.5...v2.2.0-beta.6) (2022-04-28)
+
+
+### Bug Fixes
+
+* chemin des polices relatif à l'url de base ([50a1354](https://github.com/mission-apprentissage/cerfa/commit/50a135429033e1fdc771707222023f63f03752b5))
+
 # [2.2.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.4...v2.2.0-beta.5) (2022-04-26)
 
 
