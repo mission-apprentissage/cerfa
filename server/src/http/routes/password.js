@@ -40,8 +40,9 @@ module.exports = ({ users, sessions, mailer }) => {
   router.post(
     "/forgotten-password",
     tryCatch(async (req, res) => {
-      const { username } = await Joi.object({
+      const { username, noEmail } = await Joi.object({
         username: Joi.string().required(),
+        noEmail: Joi.boolean(),
       }).validateAsync(req.body, { abortEarly: false });
 
       // try also by username since users tends to do that
@@ -49,7 +50,6 @@ module.exports = ({ users, sessions, mailer }) => {
       if (!user) {
         return res.json({});
       }
-      let noEmail = req.query.noEmail;
 
       const token = createPasswordToken(user.email);
       const url = `${config.publicUrl}/auth/reset-password?passwordToken=${token}`;

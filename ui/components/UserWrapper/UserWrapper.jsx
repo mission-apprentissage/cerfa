@@ -19,7 +19,7 @@ const AccountWrapper = ({ children }) => {
           router.push(`/en-attente-confirmation`);
         } else {
           if (auth.account_status === "FORCE_RESET_PASSWORD") {
-            let { token } = await _post("/api/v1/password/forgotten-password?noEmail=true", { username: auth.sub });
+            let { token } = await _post("/api/v1/password/forgotten-password", { username: auth.sub, noEmail: true });
             router.push(`/auth/reset-password?passwordToken=${token}`);
           } else if (auth.account_status === "FORCE_COMPLETE_PROFILE") {
             router.push(`/auth/finalize`);
