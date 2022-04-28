@@ -1,3 +1,10 @@
+# [2.2.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.6...v2.2.0-beta.7) (2022-04-28)
+
+
+### Bug Fixes
+
+* use noemail parameter as post body ([#640](https://github.com/mission-apprentissage/cerfa/issues/640)) ([ee33836](https://github.com/mission-apprentissage/cerfa/commit/ee338364a9006a9124f938cb8925d7c2fb8c7c4a))
+
 # [2.2.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.5...v2.2.0-beta.6) (2022-04-28)
 
 
