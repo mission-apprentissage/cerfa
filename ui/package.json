@@ -8,9 +8,9 @@
   "private": true,
   "scripts": {
     "docker-dev": "yarn install && yarn dev",
-    "dev": "NEXT_PUBLIC_VERSION=$npm_package_version next dev",
-    "build": "NEXT_PUBLIC_VERSION=$npm_package_version next build",
-    "start": "NEXT_PUBLIC_VERSION=$npm_package_version next start",
+    "dev": "cross-env NEXT_PUBLIC_VERSION=$npm_package_version next dev",
+    "build": "cross-env NEXT_PUBLIC_VERSION=$npm_package_version next build",
+    "start": "cross-env NEXT_PUBLIC_VERSION=$npm_package_version next start",
     "lint": "next lint",
     "test": "jest --watch",
     "test:coverage": "jest --coverage"
@@ -61,6 +61,7 @@
     "@testing-library/react": "11.2.6",
     "@testing-library/react-hooks": "7.0.2",
     "@testing-library/user-event": "13.3.0",
+    "cross-env": "7.0.3",
     "cypress": "9.5.2",
     "eslint": "8.11.0",
     "eslint-config-next": "12.1.0",

@@ -10,7 +10,7 @@
   "scripts": {
     "start": "nodemon --ignore tests/ src/index.js",
     "debug": "nodemon --inspect=0.0.0.0 --signal SIGINT --ignore tests/ src/index.js",
-    "test": "CERFA_LOG_LEVEL=fatal dotenv cross-var mocha tests",
+    "test": "cross-env CERFA_LOG_LEVEL=fatal dotenv cross-var mocha tests",
     "test:coverage": "nyc --temp-dir coverage/.nyc_output --report-dir coverage --reporter=lcov --reporter=html yarn test",
     "lint": "eslint src/ tests/",
     "docker:start": "docker-compose up -d --build --force-recreate",
@@ -19,15 +19,15 @@
     "jobs": "node src/jobs/index.js",
     "seed": "node src/jobs/seed/index.js",
     "seed:pen": "node src/jobs/seed/index.js --pentest",
-    "clear": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/clear/index.js",
-    "clear:all": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/clear/index.js --all",
-    "imports": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/importers/index.js",
-    "imports:jurid": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/importers/index.js --catJurid",
-    "imports:dreets": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/importers/index.js --ddetsDreets",
-    "add:contributor": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/addContributor/index.js",
-    "job:agecap_status": "CERFA_LOG_DESTINATIONS=stderr standaloneJobs=true node src/jobs/statutsAgecap/lookupAgecapStatusChanged.js",
-    "patch": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/patches/index.js",
-    "zipStorage": "CERFA_LOG_DESTINATIONS=stderr node src/jobs/zipStorage.js"
+    "clear": "cross-env CERFA_LOG_DESTINATIONS=stderr node src/jobs/clear/index.js",
+    "clear:all": "cross-env CERFA_LOG_DESTINATIONS=stderr node src/jobs/clear/index.js --all",
+    "imports": "cross-env CERFA_LOG_DESTINATIONS=stderr node src/jobs/importers/index.js",
+    "imports:jurid": "cross-env CERFA_LOG_DESTINATIONS=stderr node src/jobs/importers/index.js --catJurid",
+    "imports:dreets": "cross-env CERFA_LOG_DESTINATIONS=stderr node src/jobs/importers/index.js --ddetsDreets",
+    "add:contributor": "cross-env CERFA_LOG_DESTINATIONS=stderr node src/jobs/addContributor/index.js",
+    "job:agecap_status": "cross-env CERFA_LOG_DESTINATIONS=stderr standaloneJobs=true node src/jobs/statutsAgecap/lookupAgecapStatusChanged.js",
+    "patch": "cross-env CERFA_LOG_DESTINATIONS=stderr node src/jobs/patches/index.js",
+    "zipStorage": "cross-env CERFA_LOG_DESTINATIONS=stderr node src/jobs/zipStorage.js"
   },
   "dependencies": {
     "archiver": "5.3.0",
@@ -92,10 +92,11 @@
     "node": ">=14.18.0"
   },
   "devDependencies": {
-    "eslint": "8.3.0",
-    "eslint-plugin-node": "11.1.0",
     "axiosist": "0.10.0",
+    "cross-env": "7.0.3",
+    "eslint": "8.3.0",
     "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-node": "11.1.0",
     "eslint-plugin-prettier": "4.0.0",
     "form-data": "4.0.0",
     "mocha": "9.1.3",
