@@ -20,14 +20,12 @@ const Signatures = () => {
   const dateConclusionField = useRecoilValue(fieldSelector("contrat.dateConclusion"));
   const lieuSignatureField = useRecoilValue(fieldSelector("contrat.lieuSignatureContrat"));
 
-  const [_lieuSignature, setLieuSignature] = useState(lieuSignatureField?.value);
-  const [_dateConclusion, setDateConclusion] = useState(dateConclusionField?.value);
-
   const dossierStatus = useRecoilValue(dossierCompletionStatus);
   const cerfaComplete = dossierStatus?.cerfa?.complete;
   const documentsComplete = dossierStatus?.documents?.complete;
   const signatureComplete = dossierStatus?.signature?.complete;
   const cerfaController = useCerfaController();
+  const [submitted, setSubmitted] = useState(dateConclusionField.value && lieuSignatureField.value);
 
   if (!cerfaComplete) {
     return (
@@ -56,7 +54,7 @@ const Signatures = () => {
     );
   }
 
-  if (!signatureComplete) {
+  if (!signatureComplete || !submitted) {
     return (
       <Box mt={16} mb={16} minH="25vh">
         <Heading as="h3" fontSize="1.4rem">
@@ -64,22 +62,35 @@ const Signatures = () => {
         </Heading>
         <HStack spacing={8} mt={8} alignItems="baseline" h="150px">
           <VStack w="45%">
-            <Input {...lieuSignatureField} value={_lieuSignature} onChange={setLieuSignature} />
-            <Text textStyle="sm">&nbsp;</Text>
+            <Input
+              {...lieuSignatureField}
+              onChange={(val) => {
+                cerfaController.setField("contrat.lieuSignatureContrat", val, { triggerSave: false });
+              }}
+            />
           </VStack>
-          <VStack>
-            <Input {...dateConclusionField} value={_dateConclusion} onChange={setDateConclusion} />
-            <Text textStyle="sm">&nbsp;</Text>
+          <VStack w="55%">
+            <Input
+              {...dateConclusionField}
+              onChange={(value) => {
+                cerfaController.setField("contrat.dateConclusion", value, { triggerSave: false });
+              }}
+            />
           </VStack>
         </HStack>
         <HStack w="full" alignItems="end" justifyContent="end" mt={8}>
           <Button
+            disabled={
+              lieuSignatureField.error ||
+              dateConclusionField.error ||
+              !lieuSignatureField.value ||
+              !dateConclusionField.value
+            }
             size="md"
             onClick={async () => {
-              if (_lieuSignature && _dateConclusion) {
-                await onSubmitted(_lieuSignature, _dateConclusion);
-                cerfaController.setField("contrat.lieuSignatureContrat", _lieuSignature, { triggerSave: false });
-                cerfaController.setField("contrat.dateConclusion", _dateConclusion, { triggerSave: false });
+              if (!lieuSignatureField.error && !dateConclusionField.error) {
+                await onSubmitted(lieuSignatureField.value, dateConclusionField.value);
+                setSubmitted(true);
               }
               return false;
             }}
