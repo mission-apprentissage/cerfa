@@ -1,3 +1,10 @@
+## [2.1.4](https://github.com/mission-apprentissage/cerfa/compare/v2.1.3...v2.1.4) (2022-04-28)
+
+
+### Bug Fixes
+
+* waf config DELETE method ([26fff81](https://github.com/mission-apprentissage/cerfa/commit/26fff81e184aba76d4eb4b5b6e571841e90213b1))
+
 ## [2.1.3](https://github.com/mission-apprentissage/cerfa/compare/v2.1.2...v2.1.3) (2022-04-28)
 
 
