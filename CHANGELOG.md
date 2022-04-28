@@ -1,3 +1,10 @@
+# [2.2.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.7...v2.2.0-beta.8) (2022-04-28)
+
+
+### Bug Fixes
+
+* waf config DELETE method ([e9674a4](https://github.com/mission-apprentissage/cerfa/commit/e9674a419eb28dc33d9afeda7b655fec5216c240))
+
 # [2.2.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.6...v2.2.0-beta.7) (2022-04-28)
 
 
