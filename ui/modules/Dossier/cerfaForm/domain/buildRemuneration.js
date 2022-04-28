@@ -5,6 +5,26 @@ const SMICs = {
     smics: [
       {
         annee: 2022,
+        mensuel: 1645.58,
+        horaire: 10.85,
+        heuresHebdomadaires: 35,
+        minimumGaranti: 3.86,
+        dateEntreeEnVigueur: "01/05/2022",
+        dateEntreeEnVigueurObj: DateTime.fromISO("01/05/2022").setLocale("fr-FR"),
+        dateParutionJo: "20/04/2022",
+        dateParutionJoObj: DateTime.fromISO("20/04/2022").setLocale("fr-FR"),
+        exceptions: {
+          976: {
+            departement: 976,
+            nomDepartement: "Mayotte",
+            mensuel: 1242.15,
+            horaire: 8.19,
+            heuresHebdomadaires: 35,
+          },
+        },
+      },
+      {
+        annee: 2022,
         mensuel: 1603.12,
         horaire: 10.57,
         heuresHebdomadaires: 35,
