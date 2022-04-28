@@ -1,18 +1,18 @@
 export const INDICE_DE_REPETITION_OPTIONS = [
   {
-    value: "Bis",
+    value: "B",
     label: "Bis",
   },
   {
-    value: "Ter",
+    value: "T",
     label: "Ter",
   },
   {
-    value: "Quatter",
+    value: "Q",
     label: "Quatter",
   },
   {
-    value: "Quinquiès",
+    value: "C",
     label: "Quinquiès",
   },
 ];

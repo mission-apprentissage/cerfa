@@ -24,7 +24,7 @@ const adresseSchema = {
     nullable: true,
     example: "BIS",
     default: null,
-    enum: [null, "Bis", "Ter", "Quatter", "Quinquiès"],
+    enum: [null, "B", "T", "Q", "C"],
   },
   voie: {
     type: String,

@@ -31,12 +31,6 @@ const convertDate = (value) =>
     ? DateTime.fromMillis(value.valueOf()).setZone("Europe/Paris").setLocale("fr-FR").toFormat("dd/MM/yyyy")
     : undefined;
 
-const formatRepetitionVoie = (repetitionVoie) => {
-  if (!repetitionVoie) return "";
-  const mapping = { Bis: "B", Ter: "T", Quatter: "Q", Quinquiès: "C" };
-  return mapping[repetitionVoie] ?? "";
-};
-
 const fieldsPositions = {
   employeur: {
     denomination: {
@@ -1054,7 +1048,7 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
       await buildFieldDraw(cerfa.employeur.privePublic, fieldsPositions.employeur.privePublic),
       await buildFieldDraw(cerfa.employeur.denomination, fieldsPositions.employeur.denomination),
       await buildFieldDraw(
-        (cerfa.employeur.adresse.numero ?? "") + formatRepetitionVoie(cerfa.employeur.adresse.repetitionVoie),
+        (cerfa.employeur.adresse.numero ?? "") + (cerfa.employeur.adresse.repetitionVoie ?? ""),
         fieldsPositions.employeur.adresse.numero
       ),
       await buildFieldDraw(cerfa.employeur.adresse.voie, fieldsPositions.employeur.adresse.voie),
@@ -1077,7 +1071,7 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
       await buildFieldDraw(cerfa.apprenti.prenom, fieldsPositions.apprenti.prenom),
       await buildFieldDraw(cerfa.apprenti.nir, fieldsPositions.apprenti.nir),
       await buildFieldDraw(
-        (cerfa.apprenti.adresse.numero ?? "") + formatRepetitionVoie(cerfa.apprenti.adresse.repetitionVoie),
+        (cerfa.apprenti.adresse.numero ?? "") + (cerfa.apprenti.adresse.repetitionVoie ?? ""),
         fieldsPositions.apprenti.adresse.numero
       ),
       await buildFieldDraw(cerfa.apprenti.adresse.voie, fieldsPositions.apprenti.adresse.voie),
@@ -1092,7 +1086,7 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
       }),
       await buildFieldDraw(
         (cerfa.apprenti.responsableLegal.adresse.numero ?? "") +
-          formatRepetitionVoie(cerfa.apprenti.responsableLegal.adresse.repetitionVoie),
+          (cerfa.apprenti.responsableLegal.adresse.repetitionVoie ?? ""),
         fieldsPositions.apprenti.responsableLegal.adresse.numero
       ),
       await buildFieldDraw(
@@ -1174,8 +1168,7 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
       await buildFieldDraw(cerfa.formation.dureeFormation, fieldsPositions.formation.dureeFormation),
 
       await buildFieldDraw(
-        (cerfa.organismeFormation.adresse.numero ?? "") +
-          formatRepetitionVoie(cerfa.organismeFormation.adresse.repetitionVoie),
+        (cerfa.organismeFormation.adresse.numero ?? "") + (cerfa.organismeFormation.adresse.repetitionVoie ?? ""),
         fieldsPositions.formation.adresse.numero
       ),
       await buildFieldDraw(cerfa.organismeFormation.adresse.voie, fieldsPositions.formation.adresse.voie),
