@@ -1,3 +1,19 @@
+# [2.2.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.10...v2.2.0-beta.11) (2022-05-02)
+
+
+### Bug Fixes
+
+* deblocage du champs et typo dans Quater ([366d578](https://github.com/mission-apprentissage/cerfa/commit/366d5784bc5533c989a2744ca74552ac93b27306))
+
+
+### Features
+
+* ajout de l'indice de repetion de voie dans ageca ([275743d](https://github.com/mission-apprentissage/cerfa/commit/275743d76548b60a156801cf987bbaf74d5d4840))
+* ajout de l'indice de répétition au formulaire et pdf ([bee8bcc](https://github.com/mission-apprentissage/cerfa/commit/bee8bccfad604dbaed644a12a4a490b4476451fe))
+* changement du format de l'indice agecap ([172a5a2](https://github.com/mission-apprentissage/cerfa/commit/172a5a267fab487582ab3bc5fe1c6e095bb9902e))
+* gestion de l'indice de repetition dans le cerfa ([42c1a06](https://github.com/mission-apprentissage/cerfa/commit/42c1a065b97350ca3b0390457d0f49fef52fb67b))
+* gestion du blocage du champs ([f2228b6](https://github.com/mission-apprentissage/cerfa/commit/f2228b612f0cc6d52b4fb8ebc84aac65c8763595))
+
 # [2.2.0-beta.10](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.9...v2.2.0-beta.10) (2022-05-02)
 
 
