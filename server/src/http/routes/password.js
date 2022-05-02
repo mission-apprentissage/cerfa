@@ -95,7 +95,7 @@ module.exports = ({ users, sessions, mailer }) => {
 
       res
         .cookie(`cerfa-${config.env}-jwt`, token, {
-          maxAge: 365 * 24 * 3600000,
+          maxAge: 30 * 24 * 3600000,
           httpOnly: !IS_OFFLINE,
           sameSite: "lax",
           secure: !IS_OFFLINE,
