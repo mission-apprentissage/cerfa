@@ -68,7 +68,6 @@
 
 # [2.2.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.2...v2.2.0-beta.3) (2022-04-26)
 
-
 ### Bug Fixes
 
 * ligne en trop ([f8e5816](https://github.com/mission-apprentissage/cerfa/commit/f8e58165a2caf70835c62348c42b704e73e7158b))
@@ -87,7 +86,7 @@
 
 ### Features
 
-* ajout job recherche de changement de statuts de dossier télétransmis ([#622](https://github.com/mission-apprentissage/cerfa/issues/622)) ([28c61da](https://github.com/mission-apprentissage/cerfa/commit/28c61da760399f511722a84ac4eaa9bf9588ae10))
+* ajout job recherche de changement de statuts de dossier télétransmis ([#622](https://github.com/mission-apprentissage/cerfa/issues/622)) ([28c61da](https://github.com/mission-apprentissage/cerfa/commit/28c61da760399f511722a84ac4eaa9bf9588ae10)
 
 ## [2.1.1](https://github.com/mission-apprentissage/cerfa/compare/v2.1.0...v2.1.1) (2022-04-25)
 

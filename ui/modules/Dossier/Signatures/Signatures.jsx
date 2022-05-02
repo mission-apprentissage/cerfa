@@ -39,11 +39,13 @@ const Signatures = () => {
   const dateConclusionField = useRecoilValue(fieldSelector("contrat.dateConclusion"));
   const lieuSignatureField = useRecoilValue(fieldSelector("contrat.lieuSignatureContrat"));
   const cerfaValues = useRecoilValue(valuesSelector);
+
   const dossierStatus = useRecoilValue(dossierCompletionStatus);
   const cerfaComplete = dossierStatus?.cerfa?.complete;
   const documentsComplete = dossierStatus?.documents?.complete;
   const signatureComplete = dossierStatus?.signature?.complete;
   const cerfaController = useCerfaController();
+  const [submitted, setSubmitted] = useState(dateConclusionField.value && lieuSignatureField.value);
 
   const [lieuSignature, setLieuSignature] = useState({ value: lieuSignatureField.value, hasError: false });
   const [dateConclusion, setDateConclusion] = useState({ value: dateConclusionField.value, hasError: false });
@@ -75,7 +77,7 @@ const Signatures = () => {
     );
   }
 
-  if (!signatureComplete) {
+  if (!signatureComplete || !submitted) {
     return (
       <Box mt={16} mb={16} minH="25vh">
         <Heading as="h3" fontSize="1.4rem">
