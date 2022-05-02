@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Heading, Center, Button, Text, HStack, VStack } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 import Tooltip from "../../../components/Tooltip/Tooltip";
 import { dossierAtom } from "../atoms";
 
 import { dossierCompletionStatus } from "../atoms";
-import { fieldSelector } from "../formEngine/atoms";
+import { fieldSelector, valuesSelector } from "../formEngine/atoms";
 import { useSignatures } from "./hooks/useSignatures";
 import { SignatairesForm } from "./components/SignatairesForm";
 import { ContratPdf } from "./components/ContratPdf";
@@ -13,18 +13,40 @@ import { Signataires } from "./components/Signataires";
 import { Input } from "../formEngine/components/Input/Input";
 import { useCerfaController } from "../formEngine/CerfaControllerContext";
 
+const validateDateConclusion = (value, cerfaValues) => {
+  const typeContratApp = cerfaValues.contrat.typeContratApp;
+  const dateDebutContrat = cerfaValues.contrat.dateDebutContrat;
+  const dateEffetAvenant = cerfaValues.contrat.dateEffetAvenant;
+
+  if (typeContratApp >= 30) {
+    if (value > dateEffetAvenant) {
+      return {
+        error: "La date de signature du contrat ne peut pas être après la date d'effet de l'avenant",
+      };
+    }
+  } else {
+    if (value > dateDebutContrat) {
+      return {
+        error: "La date de signature du contrat ne peut pas être après la date de début de contrat",
+      };
+    }
+  }
+};
+
 const Signatures = () => {
   const dossier = useRecoilValue(dossierAtom);
   const { onSubmitted } = useSignatures();
-
   const dateConclusionField = useRecoilValue(fieldSelector("contrat.dateConclusion"));
   const lieuSignatureField = useRecoilValue(fieldSelector("contrat.lieuSignatureContrat"));
-
+  const cerfaValues = useRecoilValue(valuesSelector);
   const dossierStatus = useRecoilValue(dossierCompletionStatus);
   const cerfaComplete = dossierStatus?.cerfa?.complete;
   const documentsComplete = dossierStatus?.documents?.complete;
   const signatureComplete = dossierStatus?.signature?.complete;
   const cerfaController = useCerfaController();
+
+  const [lieuSignature, setLieuSignature] = useState({ value: lieuSignatureField.value, hasError: false });
+  const [dateConclusion, setDateConclusion] = useState({ value: dateConclusionField.value, hasError: false });
 
   if (!cerfaComplete) {
     return (
@@ -63,27 +85,32 @@ const Signatures = () => {
           <VStack w="45%">
             <Input
               {...lieuSignatureField}
-              onChange={(val) => {
-                cerfaController.setField("contrat.lieuSignatureContrat", val, { triggerSave: false });
-              }}
+              value={lieuSignature.value}
+              onSubmit={(value) => setLieuSignature({ value, hasError: false })}
+              onError={(value) => setLieuSignature({ value, hasError: true })}
             />
           </VStack>
           <VStack w="55%">
             <Input
               {...dateConclusionField}
-              onChange={(value) => {
-                cerfaController.setField("contrat.dateConclusion", value, { triggerSave: false });
-              }}
+              value={dateConclusion.value}
+              onSubmit={(value) => setDateConclusion({ value, hasError: false })}
+              onError={(value) => setDateConclusion({ value, hasError: true })}
+              validate={({ value }) => validateDateConclusion(value, cerfaValues)}
             />
           </VStack>
         </HStack>
         <HStack w="full" alignItems="end" justifyContent="end" mt={8}>
           <Button
-            disabled={lieuSignatureField.error || dateConclusionField.error}
+            disabled={
+              lieuSignature.hasError || dateConclusion.hasError || !lieuSignature.value || !dateConclusion.value
+            }
             size="md"
             onClick={async () => {
-              if (!lieuSignatureField.error && !dateConclusionField.error) {
-                await onSubmitted(lieuSignatureField.value, dateConclusionField.value);
+              if (!lieuSignature.hasError && !dateConclusion.hasError) {
+                await onSubmitted(lieuSignature.value, dateConclusion.value);
+                cerfaController.setField("contrat.lieuSignatureContrat", lieuSignature.value, { triggerSave: false });
+                cerfaController.setField("contrat.dateConclusion", dateConclusion.value, { triggerSave: false });
               }
               return false;
             }}
