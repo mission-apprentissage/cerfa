@@ -9,5 +9,5 @@ process.on("uncaughtException", (e) => logger.error("An unexpected error occurre
 (async function () {
   const components = await createComponents();
   const http = await server(components);
-  http.listen(5000, () => logger.info(`${config.appName} - Server ready and listening on port ${5000}`));
+  http.listen(5000, () => logger.info(`${config.appName} - Server is ready and listening on port ${5000}`));
 })();
