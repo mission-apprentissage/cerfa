@@ -1,3 +1,11 @@
+# [2.2.0-beta.10](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.9...v2.2.0-beta.10) (2022-05-02)
+
+
+### Bug Fixes
+
+* fix signature et fix lors de la revalidation d'un champ cerfa ([086c764](https://github.com/mission-apprentissage/cerfa/commit/086c7649a8546263de191025f5c43faf5e3c7d17))
+* suppression de l'ancien controle de date de signature ([4657095](https://github.com/mission-apprentissage/cerfa/commit/4657095a5127798536bccaadcff633b364ff2d1a))
+
 # [2.2.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.8...v2.2.0-beta.9) (2022-05-02)
 
 
