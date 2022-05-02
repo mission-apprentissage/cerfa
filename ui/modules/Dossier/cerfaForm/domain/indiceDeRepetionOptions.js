@@ -9,7 +9,7 @@ export const INDICE_DE_REPETITION_OPTIONS = [
   },
   {
     value: "Q",
-    label: "Quatter",
+    label: "Quater",
   },
   {
     value: "C",

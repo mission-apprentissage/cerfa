@@ -51,6 +51,7 @@ export const siretOrganismeFormationLogic = {
         },
         "organismeFormation.uaiCfa": { value: result.uai, locked: false },
         "organismeFormation.adresse.numero": { value: result.numero_voie || undefined, locked: false },
+        "organismeFormation.adresse.repetitionVoie": { reset: true, locked: false },
         "organismeFormation.adresse.voie": {
           value:
             result.type_voie || result.nom_voie

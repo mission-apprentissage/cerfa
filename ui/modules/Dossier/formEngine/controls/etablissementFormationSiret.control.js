@@ -58,6 +58,10 @@ export const etablissementFormationSiretControl = [
             value: result.numero_voie || undefined,
             locked: false,
           },
+          "etablissementFormation.adresse.repetitionVoie": {
+            reset: true,
+            locked: false,
+          },
           "etablissementFormation.adresse.voie": {
             value:
               result.type_voie || result.nom_voie
