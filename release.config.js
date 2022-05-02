@@ -1,9 +1,5 @@
 const mainConfig = {
-  branches: [
-    "main",
-    { name: "develop", channel: false, prerelease: true },
-    { name: "next", channel: "beta", prerelease: "beta" },
-  ],
+  branches: ["main", "develop", { name: "next", channel: "beta", prerelease: "beta" }],
   repositoryUrl: "https://github.com/mission-apprentissage/cerfa.git",
   plugins: [
     "@semantic-release/commit-analyzer",
@@ -57,7 +53,7 @@ const channel = createHash("md5").update(branch).digest("hex");
 const localConfig = {
   branches: [
     "main",
-    { name: "develop", channel: false, prerelease: true },
+    "develop",
     { name: "next", channel: "beta", prerelease: "beta" },
     {
       name: branch,
