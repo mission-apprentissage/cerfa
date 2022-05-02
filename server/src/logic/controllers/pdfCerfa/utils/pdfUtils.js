@@ -23,9 +23,7 @@ const shortenVoie = (value, transformType) => {
 
 const splitMultipleLines = (value, maxLength) => {
   const reg = new RegExp(`.{1,${maxLength}}(\\s|$)`, "g");
-  const chunks = value.match(reg);
-
-  return chunks;
+  return value.match(reg);
 };
 
 const convertDate = (value) =>
@@ -1049,7 +1047,10 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
       // TODO EMPLOYEUR
       await buildFieldDraw(cerfa.employeur.privePublic, fieldsPositions.employeur.privePublic),
       await buildFieldDraw(cerfa.employeur.denomination, fieldsPositions.employeur.denomination),
-      await buildFieldDraw(cerfa.employeur.adresse.numero, fieldsPositions.employeur.adresse.numero),
+      await buildFieldDraw(
+        (cerfa.employeur.adresse.numero ?? "") + (cerfa.employeur.adresse.repetitionVoie ?? ""),
+        fieldsPositions.employeur.adresse.numero
+      ),
       await buildFieldDraw(cerfa.employeur.adresse.voie, fieldsPositions.employeur.adresse.voie),
       await buildFieldDraw(cerfa.employeur.adresse.complement, fieldsPositions.employeur.adresse.complement),
       await buildFieldDraw(cerfa.employeur.adresse.codePostal, fieldsPositions.employeur.adresse.codePostal),
@@ -1069,7 +1070,10 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
       await buildFieldDraw(cerfa.apprenti.nom, fieldsPositions.apprenti.nom),
       await buildFieldDraw(cerfa.apprenti.prenom, fieldsPositions.apprenti.prenom),
       await buildFieldDraw(cerfa.apprenti.nir, fieldsPositions.apprenti.nir),
-      await buildFieldDraw(cerfa.apprenti.adresse.numero, fieldsPositions.apprenti.adresse.numero),
+      await buildFieldDraw(
+        (cerfa.apprenti.adresse.numero ?? "") + (cerfa.apprenti.adresse.repetitionVoie ?? ""),
+        fieldsPositions.apprenti.adresse.numero
+      ),
       await buildFieldDraw(cerfa.apprenti.adresse.voie, fieldsPositions.apprenti.adresse.voie),
       await buildFieldDraw(cerfa.apprenti.adresse.complement, fieldsPositions.apprenti.adresse.complement),
       await buildFieldDraw(cerfa.apprenti.adresse.codePostal, fieldsPositions.apprenti.adresse.codePostal),
@@ -1081,7 +1085,8 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
         writtingFont,
       }),
       await buildFieldDraw(
-        cerfa.apprenti.responsableLegal.adresse.numero,
+        (cerfa.apprenti.responsableLegal.adresse.numero ?? "") +
+          (cerfa.apprenti.responsableLegal.adresse.repetitionVoie ?? ""),
         fieldsPositions.apprenti.responsableLegal.adresse.numero
       ),
       await buildFieldDraw(
@@ -1162,7 +1167,10 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
       await buildFieldDraw(cerfa.formation.dateFinFormation, fieldsPositions.formation.dateFinFormation),
       await buildFieldDraw(cerfa.formation.dureeFormation, fieldsPositions.formation.dureeFormation),
 
-      await buildFieldDraw(cerfa.organismeFormation.adresse.numero, fieldsPositions.formation.adresse.numero),
+      await buildFieldDraw(
+        (cerfa.organismeFormation.adresse.numero ?? "") + (cerfa.organismeFormation.adresse.repetitionVoie ?? ""),
+        fieldsPositions.formation.adresse.numero
+      ),
       await buildFieldDraw(cerfa.organismeFormation.adresse.voie, fieldsPositions.formation.adresse.voie),
       await buildFieldDraw(cerfa.organismeFormation.adresse.complement, fieldsPositions.formation.adresse.complement),
       await buildFieldDraw(cerfa.organismeFormation.adresse.codePostal, fieldsPositions.formation.adresse.codePostal),

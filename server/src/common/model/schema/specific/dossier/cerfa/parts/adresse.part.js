@@ -18,6 +18,14 @@ const adresseSchema = {
       },
     ],
   },
+  repetitionVoie: {
+    type: String,
+    description: "Indice de répétition du numéro de voie",
+    nullable: true,
+    example: "BIS",
+    default: null,
+    enum: [null, "B", "T", "Q", "C"],
+  },
   voie: {
     type: String,
     description: "Nom de voie",

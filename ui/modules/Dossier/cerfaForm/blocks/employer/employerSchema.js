@@ -1,3 +1,5 @@
+import { INDICE_DE_REPETITION_OPTIONS } from "../../domain/indiceDeRepetionOptions";
+
 export const employerSchema = {
   "employeur.adresse.codePostal": {
     required: true,
@@ -55,6 +57,12 @@ export const employerSchema = {
         pattern: "^\\d*$",
       },
     ],
+  },
+  "employeur.adresse.repetitionVoie": {
+    fieldType: "select",
+    label: "Indice de répétition",
+    validateMessage: `n'est pas un indice de répétition valide`,
+    options: INDICE_DE_REPETITION_OPTIONS,
   },
   "employeur.adresse.voie": {
     required: true,

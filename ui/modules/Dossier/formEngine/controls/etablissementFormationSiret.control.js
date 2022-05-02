@@ -1,20 +1,14 @@
 import { apiService } from "../../services/api.service";
 
 const unlockAllCascade = {
-  "employeur.denomination": { locked: false, reset: true },
-  "employeur.naf": { locked: false, reset: true },
-  "employeur.codeIdcc": { locked: false, reset: true },
-  "employeur.codeIdcc_special": { locked: false, reset: true },
-  "employeur.libelleIdcc": { locked: false, reset: true },
-  "employeur.nombreDeSalaries": { locked: false, reset: true },
-  "employeur.adresse.numero": { locked: false, reset: true },
-  "employeur.adresse.voie": { locked: false, reset: true },
-  "employeur.adresse.complement": { locked: false, reset: true },
-  "employeur.adresse.codePostal": { locked: false, reset: true },
-  "employeur.adresse.commune": { locked: false, reset: true },
-  "employeur.adresse.departement": { locked: false, reset: true },
-  "employeur.adresse.region": { locked: false, reset: true },
-  "employeur.privePublic": { locked: false, reset: true },
+  "etablissementFormation.denomination": { locked: false, reset: true },
+  "etablissementFormation.uaiCfa": { locked: false, reset: true },
+  "etablissementFormation.adresse.numero": { locked: false, reset: true },
+  "etablissementFormation.adresse.repetitionVoie": { locked: false, reset: true },
+  "etablissementFormation.adresse.voie": { locked: false, reset: true },
+  "etablissementFormation.adresse.complement": { locked: false, reset: true },
+  "etablissementFormation.adresse.codePostal": { locked: false, reset: true },
+  "etablissementFormation.adresse.commune": { locked: false, reset: true },
 };
 
 export const etablissementFormationSiretControl = [
@@ -62,6 +56,10 @@ export const etablissementFormationSiretControl = [
           },
           "etablissementFormation.adresse.numero": {
             value: result.numero_voie || undefined,
+            locked: false,
+          },
+          "etablissementFormation.adresse.repetitionVoie": {
+            reset: true,
             locked: false,
           },
           "etablissementFormation.adresse.voie": {
