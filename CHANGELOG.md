@@ -1,30 +1,102 @@
-## [2.1.5](https://github.com/mission-apprentissage/cerfa/compare/v2.1.4...v2.1.5) (2022-04-28)
+# [2.2.0-beta.12](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.11...v2.2.0-beta.12) (2022-05-02)
 
 
 ### Bug Fixes
 
 * fix de la geston de date et lieu de signature ([a0add76](https://github.com/mission-apprentissage/cerfa/commit/a0add76da63e0a93e144ecd00d845c976cf1f71b))
-
-## [2.1.4](https://github.com/mission-apprentissage/cerfa/compare/v2.1.3...v2.1.4) (2022-04-28)
-
-
-### Bug Fixes
-
+* si secret defense, employeur public ([d6ef3bc](https://github.com/mission-apprentissage/cerfa/commit/d6ef3bcaa664a0b256727de1ef756644ed687ef2))
+* use noemail parameter as post body ([#640](https://github.com/mission-apprentissage/cerfa/issues/640)) ([f2009b1](https://github.com/mission-apprentissage/cerfa/commit/f2009b198f962b91efdc2040f2f7ddb05cf3932c))
 * waf config DELETE method ([26fff81](https://github.com/mission-apprentissage/cerfa/commit/26fff81e184aba76d4eb4b5b6e571841e90213b1))
 
-## [2.1.3](https://github.com/mission-apprentissage/cerfa/compare/v2.1.2...v2.1.3) (2022-04-28)
+# [2.2.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.10...v2.2.0-beta.11) (2022-05-02)
 
 
 ### Bug Fixes
 
-* use noemail parameter as post body ([#640](https://github.com/mission-apprentissage/cerfa/issues/640)) ([f2009b1](https://github.com/mission-apprentissage/cerfa/commit/f2009b198f962b91efdc2040f2f7ddb05cf3932c))
+* deblocage du champs et typo dans Quater ([366d578](https://github.com/mission-apprentissage/cerfa/commit/366d5784bc5533c989a2744ca74552ac93b27306))
 
-## [2.1.2](https://github.com/mission-apprentissage/cerfa/compare/v2.1.1...v2.1.2) (2022-04-26)
+
+### Features
+
+* ajout de l'indice de repetion de voie dans ageca ([275743d](https://github.com/mission-apprentissage/cerfa/commit/275743d76548b60a156801cf987bbaf74d5d4840))
+* ajout de l'indice de répétition au formulaire et pdf ([bee8bcc](https://github.com/mission-apprentissage/cerfa/commit/bee8bccfad604dbaed644a12a4a490b4476451fe))
+* changement du format de l'indice agecap ([172a5a2](https://github.com/mission-apprentissage/cerfa/commit/172a5a267fab487582ab3bc5fe1c6e095bb9902e))
+* gestion de l'indice de repetition dans le cerfa ([42c1a06](https://github.com/mission-apprentissage/cerfa/commit/42c1a065b97350ca3b0390457d0f49fef52fb67b))
+* gestion du blocage du champs ([f2228b6](https://github.com/mission-apprentissage/cerfa/commit/f2228b612f0cc6d52b4fb8ebc84aac65c8763595))
+
+# [2.2.0-beta.10](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.9...v2.2.0-beta.10) (2022-05-02)
 
 
 ### Bug Fixes
 
-* si secret defense, employeur public ([d6ef3bc](https://github.com/mission-apprentissage/cerfa/commit/d6ef3bcaa664a0b256727de1ef756644ed687ef2))
+* fix signature et fix lors de la revalidation d'un champ cerfa ([086c764](https://github.com/mission-apprentissage/cerfa/commit/086c7649a8546263de191025f5c43faf5e3c7d17))
+* suppression de l'ancien controle de date de signature ([4657095](https://github.com/mission-apprentissage/cerfa/commit/4657095a5127798536bccaadcff633b364ff2d1a))
+
+# [2.2.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.8...v2.2.0-beta.9) (2022-05-02)
+
+
+### Features
+
+* ajout du smic 01/05 au referentiel ([d890842](https://github.com/mission-apprentissage/cerfa/commit/d890842120e24b3408f667383d5dfafce52617da))
+
+# [2.2.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.7...v2.2.0-beta.8) (2022-04-28)
+
+
+### Bug Fixes
+
+* waf config DELETE method ([e9674a4](https://github.com/mission-apprentissage/cerfa/commit/e9674a419eb28dc33d9afeda7b655fec5216c240))
+
+# [2.2.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.6...v2.2.0-beta.7) (2022-04-28)
+
+
+### Bug Fixes
+
+* use noemail parameter as post body ([#640](https://github.com/mission-apprentissage/cerfa/issues/640)) ([ee33836](https://github.com/mission-apprentissage/cerfa/commit/ee338364a9006a9124f938cb8925d7c2fb8c7c4a))
+
+# [2.2.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.5...v2.2.0-beta.6) (2022-04-28)
+
+
+### Bug Fixes
+
+* chemin des polices relatif à l'url de base ([50a1354](https://github.com/mission-apprentissage/cerfa/commit/50a135429033e1fdc771707222023f63f03752b5))
+
+# [2.2.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.4...v2.2.0-beta.5) (2022-04-26)
+
+
+### Bug Fixes
+
+* prise en compte de tous les contrats sans avenant pour la date de signature ([e05540e](https://github.com/mission-apprentissage/cerfa/commit/e05540e9f096e6e9c54a460a3903e198ddce8566))
+* prise en compte des controles de coherences sur la signature ([a4a32bd](https://github.com/mission-apprentissage/cerfa/commit/a4a32bdf733e96bcfa14617ae1312d920e227705))
+* renommage d'une variable ([06d6999](https://github.com/mission-apprentissage/cerfa/commit/06d6999fb8f11b9cdf332e239eaf9f066dc10a32))
+
+# [2.2.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.3...v2.2.0-beta.4) (2022-04-26)
+
+
+### Bug Fixes
+
+* si secret defense, employeur public ([56f703b](https://github.com/mission-apprentissage/cerfa/commit/56f703b63184a740b634b602993212d345f46b80))
+
+# [2.2.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.2...v2.2.0-beta.3) (2022-04-26)
+
+### Bug Fixes
+
+* ligne en trop ([f8e5816](https://github.com/mission-apprentissage/cerfa/commit/f8e58165a2caf70835c62348c42b704e73e7158b))
+* meilleur affichage des taux ([a7c04c6](https://github.com/mission-apprentissage/cerfa/commit/a7c04c602a35b9a45806b6975078dd0ef7d4552b))
+* modification de la position pour faire rentrer les décimales dans le cerfa ([8dace98](https://github.com/mission-apprentissage/cerfa/commit/8dace980fbb64df83d8ea4a0f7d6e0655a72d8a2))
+
+# [2.2.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.1...v2.2.0-beta.2) (2022-04-26)
+
+
+### Bug Fixes
+
+* infra path to ansible folder ([#626](https://github.com/mission-apprentissage/cerfa/issues/626)) ([7989996](https://github.com/mission-apprentissage/cerfa/commit/798999683e6c5bab1ea05fb84e3487131797e06a)), closes [#622](https://github.com/mission-apprentissage/cerfa/issues/622)
+
+# [2.2.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.1.1...v2.2.0-beta.1) (2022-04-25)
+
+
+### Features
+
+* ajout job recherche de changement de statuts de dossier télétransmis ([#622](https://github.com/mission-apprentissage/cerfa/issues/622)) ([28c61da](https://github.com/mission-apprentissage/cerfa/commit/28c61da760399f511722a84ac4eaa9bf9588ae10)
 
 ## [2.1.1](https://github.com/mission-apprentissage/cerfa/compare/v2.1.0...v2.1.1) (2022-04-25)
 

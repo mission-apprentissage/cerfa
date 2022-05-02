@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { Box, Flex, FormLabel, Text } from "@chakra-ui/react";
+import { Box, Flex, FormLabel, HStack, Text } from "@chakra-ui/react";
 import { InputController } from "../../../formEngine/components/Input/InputController";
 import { CollapseController } from "../../../formEngine/components/CollapseController";
 import CheckEmptyFields from "../../../formEngine/components/CheckEmptyFields";
@@ -12,32 +12,29 @@ export const CerfaFormation = memo(() => {
     <>
       <Box>
         <InputController name="organismeFormation.formationInterne" type="radio" mt="2" mb={6} />
-        <InputController name="organismeFormation.siret" type="text" mb="10" />
+        <InputController name="organismeFormation.siret" mb="10" />
 
         <Flex>
           <Box w="55%" flex="1">
-            <InputController name="organismeFormation.denomination" type="text" mt="2" hasInfo={false} />
-            <InputController name="organismeFormation.uaiCfa" type="text" mt="2" />
+            <InputController name="organismeFormation.denomination" mt="2" />
+            <InputController name="organismeFormation.uaiCfa" mt="2" />
             <FormLabel fontWeight={700} my={3}>
               Adresse du CFA responsable :{" "}
             </FormLabel>
-            <InputController
-              name="organismeFormation.adresse.numero"
-              type="number"
-              precision={0}
-              mt="2"
-              hasInfo={false}
-            />
-            <InputController name="organismeFormation.adresse.voie" type="text" mt="2" hasInfo={false} />
-            <InputController name="organismeFormation.adresse.complement" type="text" mt="2" hasInfo={false} />
-            <InputController name="organismeFormation.adresse.codePostal" type="text" mt="2" hasInfo={false} />
-            <InputController name="organismeFormation.adresse.commune" type="text" mt="2" hasInfo={false} />
+            <HStack mb={3}>
+              <InputController mb={0} name="organismeFormation.adresse.numero" />
+              <InputController name="organismeFormation.adresse.repetitionVoie" />
+            </HStack>
+            <InputController name="organismeFormation.adresse.voie" mt="2" />
+            <InputController name="organismeFormation.adresse.complement" mt="2" />
+            <InputController name="organismeFormation.adresse.codePostal" mt="2" />
+            <InputController name="organismeFormation.adresse.commune" mt="2" />
           </Box>
           <Box w="45%" flex="1" ml="5w">
-            <InputController name="formation.rncp" type="text" mt="2" />
-            <InputController name="formation.codeDiplome" type="text" mt="2" />
+            <InputController name="formation.rncp" mt="2" />
+            <InputController name="formation.codeDiplome" mt="2" />
             <InputController name="formation.typeDiplome" type="select" mt="2" />
-            <InputController name="formation.intituleQualification" type="text" mt="2" />
+            <InputController name="formation.intituleQualification" mt="2" />
             <FormLabel fontWeight={700} my={3}>
               Organisation de la formation en CFA :
             </FormLabel>
@@ -55,25 +52,22 @@ export const CerfaFormation = memo(() => {
         </Text>
         <InputController name="etablissementFormation.memeResponsable" type="radio" mt="2" />
         <CollapseController show={shouldAskEtablissementFormation}>
-          <InputController name="etablissementFormation.siret" type="text" mb="2" />
+          <InputController name="etablissementFormation.siret" mb="2" />
           <Flex>
             <Box w="55%" flex="1">
-              <InputController name="etablissementFormation.denomination" type="text" mt="2" hasInfo={false} />
-              <InputController name="etablissementFormation.uaiCfa" type="text" mt="2" />
+              <InputController name="etablissementFormation.denomination" mt="2" />
+              <InputController name="etablissementFormation.uaiCfa" mt="2" />
               <FormLabel fontWeight={700} my={3}>
                 Adresse du lieu de formation :{" "}
               </FormLabel>
-              <InputController
-                name="etablissementFormation.adresse.numero"
-                type="number"
-                precision={0}
-                mt="2"
-                hasInfo={false}
-              />
-              <InputController name="etablissementFormation.adresse.voie" type="text" mt="2" hasInfo={false} />
-              <InputController name="etablissementFormation.adresse.complement" type="text" mt="2" hasInfo={false} />
-              <InputController name="etablissementFormation.adresse.codePostal" type="text" mt="2" hasInfo={false} />
-              <InputController name="etablissementFormation.adresse.commune" type="text" mt="2" hasInfo={false} />
+              <HStack mb={3}>
+                <InputController mb={0} precision={0} name="etablissementFormation.adresse.numero" />
+                <InputController name="etablissementFormation.adresse.repetitionVoie" />
+              </HStack>
+              <InputController name="etablissementFormation.adresse.voie" mt="2" />
+              <InputController name="etablissementFormation.adresse.complement" mt="2" />
+              <InputController name="etablissementFormation.adresse.codePostal" mt="2" />
+              <InputController name="etablissementFormation.adresse.commune" mt="2" />
             </Box>
           </Flex>
         </CollapseController>

@@ -102,7 +102,7 @@ export const useCerfa = ({ schema } = {}) => {
           const field = fields[dep];
           if (!field.error || isEmptyValue(field.value)) return;
           let error;
-          error = await validField({ field, value: field.value }).error;
+          error = (await validField({ field, value: field.value })).error;
           if (!error) {
             const logics = indexedDependencesRevalidationRules[name][dep];
             error = await findLogicErrors({ name: dep, logics, values, dossier, fields });

@@ -63,6 +63,8 @@ const DossierFooterControls = ({
             // details += `${fieldKeys[index]} > ${subFieldKeys[j]} > ${element.join(" ")}`;
           }
         }
+      } else if (error.messages.details?.reason?.globalErrors) {
+        details = error.messages.details?.reason?.globalErrors[0];
       }
       toast({
         title: `Une erreur est survenue lors de la transmission${details}`,

@@ -2,9 +2,9 @@ const { Workspace, Dossier, Cerfa, User } = require("../model/index");
 const Boom = require("boom");
 const Joi = require("joi");
 const permissions = require("./permissions");
-const moment = require("moment");
 const { findIndex, find, countBy } = require("lodash");
-moment.locale("fr-FR");
+
+const { DateTime } = require("luxon");
 const { mongoose } = require("../../common/mongodb");
 
 module.exports = async () => {
@@ -58,9 +58,11 @@ module.exports = async () => {
       }
 
       let result = null;
+
       try {
         result = await Dossier.create({
-          nom: option.nom || `Dossier ${moment(new Date()).add(1, "hour").format("DD MMM YYYY à HH:mm")}`,
+          nom:
+            option.nom || `Dossier ${DateTime.now().setZone("Europe/Paris").setLocale("fr-FR").toFormat("DD à HH:mm")}`,
           draft: true,
           workspaceId: workspaceId || wks._id,
           owner: userDb._id,

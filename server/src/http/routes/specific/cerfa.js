@@ -206,6 +206,7 @@ module.exports = (components) => {
           courriel: Joi.string().allow(null),
           adresse: Joi.object({
             numero: Joi.number().allow(null),
+            repetitionVoie: Joi.string().allow(null),
             voie: Joi.string().allow(null),
             complement: Joi.string().allow(null),
             label: Joi.string().allow(null),
@@ -245,6 +246,7 @@ module.exports = (components) => {
           courriel: Joi.string().allow(null),
           adresse: Joi.object({
             numero: Joi.number().allow(null),
+            repetitionVoie: Joi.string().allow(null),
             voie: Joi.string().allow(null),
             complement: Joi.string().allow(null),
             label: Joi.string().allow(null),
@@ -260,6 +262,7 @@ module.exports = (components) => {
             memeAdresse: Joi.boolean().allow(null),
             adresse: Joi.object({
               numero: Joi.number().allow(null),
+              repetitionVoie: Joi.string().allow(null),
               voie: Joi.string().allow(null),
               complement: Joi.string().allow(null).allow(null),
               label: Joi.string().allow(null),
@@ -334,6 +337,7 @@ module.exports = (components) => {
           visaCfa: Joi.boolean().allow(null),
           adresse: Joi.object({
             numero: Joi.number().allow(null),
+            repetitionVoie: Joi.string().allow(null),
             voie: Joi.string().allow("").allow(null),
             complement: Joi.string().allow("").allow(null),
             label: Joi.string().allow("").allow(null),
@@ -348,6 +352,7 @@ module.exports = (components) => {
           uaiCfa: Joi.string().allow(null),
           adresse: Joi.object({
             numero: Joi.number().allow(null),
+            repetitionVoie: Joi.string().allow(null),
             voie: Joi.string().allow("").allow(null),
             complement: Joi.string().allow("").allow(null),
             label: Joi.string().allow("").allow(null),

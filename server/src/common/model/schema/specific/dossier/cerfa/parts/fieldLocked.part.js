@@ -41,6 +41,10 @@ const fieldLockedSchema = {
         type: Boolean,
         default: true,
       },
+      repetitionVoie: {
+        type: Boolean,
+        default: true,
+      },
       voie: {
         type: Boolean,
         default: true,
@@ -177,6 +181,10 @@ const fieldLockedSchema = {
         type: Boolean,
         default: false,
       },
+      repetitionVoie: {
+        type: Boolean,
+        default: false,
+      },
       voie: {
         type: Boolean,
         default: false,
@@ -205,6 +213,10 @@ const fieldLockedSchema = {
       },
       adresse: {
         numero: {
+          type: Boolean,
+          default: false,
+        },
+        repetitionVoie: {
           type: Boolean,
           default: false,
         },
@@ -397,6 +409,10 @@ const fieldLockedSchema = {
         type: Boolean,
         default: true,
       },
+      repetitionVoie: {
+        type: Boolean,
+        default: true,
+      },
       voie: {
         type: Boolean,
         default: true,
@@ -430,6 +446,10 @@ const fieldLockedSchema = {
     },
     adresse: {
       numero: {
+        type: Boolean,
+        default: false,
+      },
+      repetitionVoie: {
         type: Boolean,
         default: false,
       },

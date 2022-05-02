@@ -70,6 +70,7 @@ services:
   clamav:
     image: clamav/clamav:0.104.1
     container_name: cerfa_clamav
+    mem_limit: 1g
     restart: unless-stopped
     networks:
       - cerfa_network

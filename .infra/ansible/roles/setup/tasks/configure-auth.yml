@@ -22,7 +22,7 @@
   lineinfile:
     path: /etc/pam.d/common-password
     regexp: "pam_cracklib.so"
-    line: "password   requisite   pam_cracklib.so retry=3 minlen=8 difok=3 dcredit=-1 ucredit=-1 lcredit=-1 ocredit=-1"
+    line: "password   requisite   pam_cracklib.so retry=3 minlen=14 difok=3 dcredit=-1 ucredit=-1 lcredit=-1 ocredit=-1"
 
 - name: Set umask=077 for root user
   lineinfile:

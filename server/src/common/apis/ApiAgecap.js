@@ -3,29 +3,29 @@ const logger = require("../logger");
 const config = require("../../config");
 const ApiError = require("./_apiError");
 const apiRateLimiter = require("./_apiRateLimiter");
-const https = require("https");
-const fs = require("fs");
+// const https = require("https");
+// const fs = require("fs");
 const FormData = require("form-data");
 const { getFromStorage } = require("../utils/ovhUtils");
 const { oleoduc, writeData } = require("oleoduc");
 const { PassThrough } = require("stream");
 const Boom = require("boom");
 
-const CERT_PATH = "/data/agecap";
+// const CERT_PATH = "/data/agecap";
 
-let optAgent = {};
+// let optAgent = {};
 
-try {
-  optAgent = {
-    key: fs.readFileSync(`${CERT_PATH}/client-key.pem`),
-    cert: fs.readFileSync(`${CERT_PATH}/client-crt.pem`),
-    passphrase: config.agecap_passphrase,
-  };
-} catch (e) {
-  console.log(e);
-}
+// try {
+//   optAgent = {
+//     key: fs.readFileSync(`${CERT_PATH}/client-key.pem`),
+//     cert: fs.readFileSync(`${CERT_PATH}/client-crt.pem`),
+//     passphrase: config.agecap_passphrase,
+//   };
+// } catch (e) {
+//   console.log(e);
+// }
 // eslint-disable-next-line no-unused-vars
-const httpsAgent = new https.Agent(optAgent);
+// const httpsAgent = new https.Agent(optAgent);
 
 // Cf Documentation : Api Agecap
 const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
@@ -118,6 +118,24 @@ class ApiAgecap {
         console.log(e);
         console.log(e.response.data);
         throw new ApiError("Api Agecap document", `${e.message}`, e.response.data);
+      }
+    });
+  }
+  statut({ dateDebut, dateFin }) {
+    return executeWithRateLimiting(async (client) => {
+      if (!this.auth) {
+        throw new ApiError("Api Agecap", `Not authenticate`);
+      }
+      try {
+        logger.debug(`[Agecap API] send contrat`);
+        let response = await client.get(`/contrats/changementStatut?dateDebut=${dateDebut}&dateFin=${dateFin}`, {
+          headers: { Authorization: `Bearer ${this.token}` },
+        });
+
+        return response.data;
+      } catch (e) {
+        console.log(e.response.data);
+        throw new ApiError("Api Agecap contrat", `${e.message}`, { ...e.response.data });
       }
     });
   }

@@ -1,20 +1,14 @@
 import { apiService } from "../../services/api.service";
 
 const unlockAllCascade = {
-  "employeur.denomination": { locked: false, reset: true },
-  "employeur.naf": { locked: false, reset: true },
-  "employeur.codeIdcc": { locked: false, reset: true },
-  "employeur.codeIdcc_special": { locked: false, reset: true },
-  "employeur.libelleIdcc": { locked: false, reset: true },
-  "employeur.nombreDeSalaries": { locked: false, reset: true },
-  "employeur.adresse.numero": { locked: false, reset: true },
-  "employeur.adresse.voie": { locked: false, reset: true },
-  "employeur.adresse.complement": { locked: false, reset: true },
-  "employeur.adresse.codePostal": { locked: false, reset: true },
-  "employeur.adresse.commune": { locked: false, reset: true },
-  "employeur.adresse.departement": { locked: false, reset: true },
-  "employeur.adresse.region": { locked: false, reset: true },
-  "employeur.privePublic": { locked: false, reset: true },
+  "organismeFormation.denomination": { locked: false, reset: true },
+  "organismeFormation.uaiCfa": { locked: false, reset: true },
+  "organismeFormation.adresse.numero": { locked: false, reset: true },
+  "organismeFormation.adresse.repetitionVoie": { locked: false, reset: true },
+  "organismeFormation.adresse.voie": { locked: false, reset: true },
+  "organismeFormation.adresse.complement": { locked: false, reset: true },
+  "organismeFormation.adresse.codePostal": { locked: false, reset: true },
+  "organismeFormation.adresse.commune": { locked: false, reset: true },
 };
 
 export const siretOrganismeFormationLogic = {
@@ -57,6 +51,7 @@ export const siretOrganismeFormationLogic = {
         },
         "organismeFormation.uaiCfa": { value: result.uai, locked: false },
         "organismeFormation.adresse.numero": { value: result.numero_voie || undefined, locked: false },
+        "organismeFormation.adresse.repetitionVoie": { reset: true, locked: false },
         "organismeFormation.adresse.voie": {
           value:
             result.type_voie || result.nom_voie

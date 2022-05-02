@@ -13,7 +13,6 @@ const cryptoLib = require("crypto");
 module.exports = (components) => {
   const router = express.Router();
   const { dossiers, cerfas, crypto } = components;
-
   const convertDate = (value) =>
     value
       ? DateTime.fromMillis(value.valueOf()).setZone("Europe/Paris").setLocale("fr-FR").toFormat("yyyy-MM-dd")
@@ -88,7 +87,7 @@ module.exports = (components) => {
           courriel: cerfa.employeur.courriel,
           adresse: {
             numero: cerfa.employeur.adresse.numero || undefined,
-            // repetitionVoie: cerfa.employeur.adresse.
+            repetitionVoie: cerfa.employeur.adresse.repetitionVoie ?? undefined,
             // typeVoie: cerfa.employeur.adresse.
             voie: cerfa.employeur.adresse.voie,
             complement: cerfa.employeur.adresse.complement
@@ -121,7 +120,7 @@ module.exports = (components) => {
           courriel: cerfa.apprenti.courriel,
           adresse: {
             numero: cerfa.apprenti.adresse.numero || undefined,
-            // repetitionVoie: cerfa.apprenti.adresse.
+            repetitionVoie: cerfa.apprenti.adresse.repetitionVoie ?? undefined,
             // typeVoie: cerfa.apprenti.adresse.
             voie: cerfa.apprenti.adresse.voie,
             complement: cerfa.apprenti.adresse.complement
@@ -138,7 +137,7 @@ module.exports = (components) => {
                   prenom: cerfa.apprenti.responsableLegal.prenom,
                   adresse: {
                     numero: cerfa.apprenti.responsableLegal.adresse.numero || undefined,
-                    // repetitionVoie: cerfa.apprenti.responsableLegal.adresse.
+                    repetitionVoie: cerfa.apprenti.responsableLegal.adresse.repetitionVoie ?? undefined,
                     // typeVoie: cerfa.apprenti.responsableLegal.adresse.
                     voie: cerfa.apprenti.responsableLegal.adresse.voie,
                     complement: cerfa.apprenti.responsableLegal.adresse.complement
@@ -217,7 +216,7 @@ module.exports = (components) => {
           // noDeclaration: cerfa.organismeFormation.,
           adresse: {
             numero: cerfa.organismeFormation.adresse.numero || undefined,
-            // repetitionVoie: cerfa.organismeFormation.adresse.
+            repetitionVoie: cerfa.organismeFormation.adresse.repetitionVoie ?? undefined,
             // typeVoie: cerfa.organismeFormation.adresse.
             voie: cerfa.organismeFormation.adresse.voie,
             complement: cerfa.organismeFormation.adresse.complement
@@ -233,7 +232,7 @@ module.exports = (components) => {
           uaiSite: cerfa.etablissementFormation.uaiCfa || undefined,
           adresse: {
             numero: cerfa.etablissementFormation.adresse.numero || undefined,
-            // repetitionVoie: cerfa.etablissementFormation.adresse.
+            repetitionVoie: cerfa.etablissementFormation.adresse.repetitionVoie ?? undefined,
             // typeVoie: cerfa.etablissementFormation.adresse.
             voie: cerfa.etablissementFormation.adresse.voie,
             complement: cerfa.etablissementFormation.adresse.complement

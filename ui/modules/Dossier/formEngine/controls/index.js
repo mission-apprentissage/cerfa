@@ -22,7 +22,6 @@ import { etablissementFormationCodePostalControl } from "./etablissementFormatio
 import { numeroContratPrecedentControl } from "./numeroContratPrecedent.control";
 import { responsableLegalCodePostalControl } from "./responsableLegalCodePostal.control";
 import { Maitre2Control } from "./maitre2.control";
-import { dateSignatureContratControl } from "./dateSignatureContrat.control";
 import { dureeTravailControl } from "./dureeTravail.control";
 
 export const controls = [
@@ -51,5 +50,4 @@ export const controls = [
   ...RemunerationsControl,
   ...rncpControl,
   ...codeDiplomeControl,
-  ...dateSignatureContratControl,
 ];
