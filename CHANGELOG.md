@@ -1,3 +1,13 @@
+# [2.2.0-beta.12](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.11...v2.2.0-beta.12) (2022-05-02)
+
+
+### Bug Fixes
+
+* fix de la geston de date et lieu de signature ([a0add76](https://github.com/mission-apprentissage/cerfa/commit/a0add76da63e0a93e144ecd00d845c976cf1f71b))
+* si secret defense, employeur public ([d6ef3bc](https://github.com/mission-apprentissage/cerfa/commit/d6ef3bcaa664a0b256727de1ef756644ed687ef2))
+* use noemail parameter as post body ([#640](https://github.com/mission-apprentissage/cerfa/issues/640)) ([f2009b1](https://github.com/mission-apprentissage/cerfa/commit/f2009b198f962b91efdc2040f2f7ddb05cf3932c))
+* waf config DELETE method ([26fff81](https://github.com/mission-apprentissage/cerfa/commit/26fff81e184aba76d4eb4b5b6e571841e90213b1))
+
 # [2.2.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0-beta.10...v2.2.0-beta.11) (2022-05-02)
 
 
