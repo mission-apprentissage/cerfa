@@ -1,5 +1,5 @@
 require("dotenv").config();
-const moment = require("moment");
+const { DateTime } = require("luxon");
 const { closeMongoConnection } = require("../common/mongodb");
 const createComponents = require("../common/components/components");
 const logger = require("../common/logger");
@@ -18,10 +18,10 @@ const createTimer = () => {
   let launchTime;
   return {
     start: () => {
-      launchTime = new Date().getTime();
+      launchTime = DateTime.now();
     },
     stop: (results) => {
-      const duration = moment.utc(new Date().getTime() - launchTime).format("HH:mm:ss.SSS");
+      const duration = DateTime.now().diff(launchTime).toFormat("hh:mm:ss:SSS");
       const data = results && results.toJSON ? results.toJSON() : results;
       data && logger.info(JSON.stringify(data || {}, null, 2));
       logger.info(`Completed in ${duration}`);

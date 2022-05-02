@@ -65,7 +65,6 @@
     "lodash": "4.17.21",
     "luxon": "2.3.0",
     "mjml": "4.11.0",
-    "moment": "2.29.1",
     "mongoose": "5.13.13",
     "mongoose-paginate": "5.0.3",
     "multiparty": "4.2.2",
