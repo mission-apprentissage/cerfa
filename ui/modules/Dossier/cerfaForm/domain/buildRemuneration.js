@@ -1,5 +1,7 @@
 import { DateTime } from "luxon";
 
+const parseDate = (date) => DateTime.fromFormat(date, "D", { locale: "fr" }).setLocale("fr-FR");
+
 const SMICs = {
   2022: {
     smics: [
@@ -10,9 +12,9 @@ const SMICs = {
         heuresHebdomadaires: 35,
         minimumGaranti: 3.86,
         dateEntreeEnVigueur: "01/05/2022",
-        dateEntreeEnVigueurObj: DateTime.fromISO("01/05/2022").setLocale("fr-FR"),
+        dateEntreeEnVigueurObj: parseDate("01/05/2022"),
         dateParutionJo: "20/04/2022",
-        dateParutionJoObj: DateTime.fromISO("20/04/2022").setLocale("fr-FR"),
+        dateParutionJoObj: parseDate("20/04/2022"),
         exceptions: {
           976: {
             departement: 976,
@@ -30,9 +32,9 @@ const SMICs = {
         heuresHebdomadaires: 35,
         minimumGaranti: 3.76,
         dateEntreeEnVigueur: "01/01/2022",
-        dateEntreeEnVigueurObj: DateTime.fromISO("01/01/2022").setLocale("fr-FR"),
+        dateEntreeEnVigueurObj: parseDate("01/01/2022"),
         dateParutionJo: "22/12/2021",
-        dateParutionJoObj: DateTime.fromISO("22/12/2021").setLocale("fr-FR"),
+        dateParutionJoObj: parseDate("22/12/2021"),
         exceptions: {
           976: {
             departement: 976,
@@ -54,9 +56,9 @@ const SMICs = {
         heuresHebdomadaires: 35,
         minimumGaranti: 3.73,
         dateEntreeEnVigueur: "01/10/2021",
-        dateEntreeEnVigueurObj: DateTime.fromISO("01/10/2021").setLocale("fr-FR"),
+        dateEntreeEnVigueurObj: parseDate("01/10/2021"),
         dateParutionJo: "30/09/2021",
-        dateParutionJoObj: DateTime.fromISO("30/09/2021").setLocale("fr-FR"),
+        dateParutionJoObj: parseDate("30/09/2021"),
         exceptions: {
           976: {
             departement: 976,
@@ -74,9 +76,9 @@ const SMICs = {
         heuresHebdomadaires: 35,
         minimumGaranti: 3.65,
         dateEntreeEnVigueur: "01/01/2021",
-        dateEntreeEnVigueurObj: DateTime.fromISO("01/01/2021").setLocale("fr-FR"),
+        dateEntreeEnVigueurObj: parseDate("01/01/2021"),
         dateParutionJo: "17/12/2020",
-        dateParutionJoObj: DateTime.fromISO("17/12/2020").setLocale("fr-FR"),
+        dateParutionJoObj: parseDate("17/12/2020"),
         exceptions: {
           976: {
             departement: 976,
@@ -98,9 +100,9 @@ const SMICs = {
         heuresHebdomadaires: 35,
         minimumGaranti: 3.65,
         dateEntreeEnVigueur: "01/01/2020",
-        dateEntreeEnVigueurObj: DateTime.fromISO("01/01/2020").setLocale("fr-FR"),
+        dateEntreeEnVigueurObj: parseDate("01/01/2020"),
         dateParutionJo: "19/12/2019",
-        dateParutionJoObj: DateTime.fromISO("19/12/2019").setLocale("fr-FR"),
+        dateParutionJoObj: parseDate("19/12/2019"),
         exceptions: {
           976: {
             departement: 976,
@@ -122,9 +124,9 @@ const SMICs = {
         heuresHebdomadaires: 35,
         minimumGaranti: 3.62,
         dateEntreeEnVigueur: "01/01/2019",
-        dateEntreeEnVigueurObj: DateTime.fromISO("01/01/2019").setLocale("fr-FR"),
+        dateEntreeEnVigueurObj: parseDate("01/01/2019"),
         dateParutionJo: "20/12/2018",
-        dateParutionJoObj: DateTime.fromISO("20/12/2018").setLocale("fr-FR"),
+        dateParutionJoObj: parseDate("20/12/2018"),
         exceptions: {
           976: {
             departement: 976,
@@ -146,9 +148,9 @@ const SMICs = {
         heuresHebdomadaires: 35,
         minimumGaranti: 3.57,
         dateEntreeEnVigueur: "01/01/2018",
-        dateEntreeEnVigueurObj: DateTime.fromISO("01/01/2018").setLocale("fr-FR"),
+        dateEntreeEnVigueurObj: parseDate("01/01/2018"),
         dateParutionJo: "21/12/2017",
-        dateParutionJoObj: DateTime.fromISO("21/12/2017").setLocale("fr-FR"),
+        dateParutionJoObj: parseDate("21/12/2017"),
         exceptions: {
           976: {
             departement: 976,
@@ -174,17 +176,7 @@ const findSmicAtDate = (lookupDate) => {
 
   let smicsArray = SMICs[lookupYear].smics;
 
-  let smicObjResult = null;
-  let indexToSmic = 0;
-  for (let i = 0; i < smicsArray.length; i++) {
-    const smicObj = smicsArray[i];
-    if (lookupDate >= smicObj.dateEntreeEnVigueurObj) {
-      indexToSmic = i;
-    }
-  }
-  smicObjResult = smicsArray[indexToSmic];
-
-  return smicObjResult;
+  return smicsArray.find((smicObj) => lookupDate >= smicObj.dateEntreeEnVigueurObj) ?? smicsArray[0];
 };
 
 const ceilUp = (x) => Math.ceil(x * 100) / 100;
