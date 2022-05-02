@@ -43,7 +43,7 @@ module.exports = ({ users, mailer, sessions }) => {
       const { username, password } = req.body;
       const user = await users.getUser(username.toLowerCase());
       if (!user) {
-        return res.status(401).json({ message: "Utilisateur non trouvé" });
+        return res.status(401).json({ message: "Accès non autorisé" });
       }
 
       if (user.orign_register === "PDS") {
@@ -52,7 +52,7 @@ module.exports = ({ users, mailer, sessions }) => {
 
       const auth = await users.authenticate(user.email, password);
 
-      if (!auth) return res.status(401).json({ message: "Utilisateur non trouvé" });
+      if (!auth) return res.status(401).json({ message: "Accès non autorisé" });
 
       const payload = await users.structureUser(user);
 
