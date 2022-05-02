@@ -43,7 +43,7 @@ module.exports = ({ users, mailer, sessions }) => {
       const { username, password } = req.body;
       const user = await users.getUser(username.toLowerCase());
       if (!user) {
-        return res.status(401).json({ message: "Utilisateur non trouvé" });
+        return res.status(401).json({ message: "Accès non autorisé" });
       }
 
       if (user.orign_register === "PDS") {
@@ -52,7 +52,7 @@ module.exports = ({ users, mailer, sessions }) => {
 
       const auth = await users.authenticate(user.email, password);
 
-      if (!auth) return res.status(401).json({ message: "Utilisateur non trouvé" });
+      if (!auth) return res.status(401).json({ message: "Accès non autorisé" });
 
       const payload = await users.structureUser(user);
 
@@ -67,7 +67,7 @@ module.exports = ({ users, mailer, sessions }) => {
 
       res
         .cookie(`cerfa-${config.env}-jwt`, token, {
-          maxAge: 365 * 24 * 3600000,
+          maxAge: 30 * 24 * 3600000,
           httpOnly: !IS_OFFLINE,
           sameSite: "lax",
           secure: !IS_OFFLINE,
@@ -147,7 +147,7 @@ module.exports = ({ users, mailer, sessions }) => {
 
       return res
         .cookie(`cerfa-${config.env}-jwt`, token, {
-          maxAge: 365 * 24 * 3600000,
+          maxAge: 30 * 24 * 3600000,
           httpOnly: !IS_OFFLINE,
           sameSite: "lax",
           secure: !IS_OFFLINE,
