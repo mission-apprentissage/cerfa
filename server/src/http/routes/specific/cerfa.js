@@ -1,7 +1,7 @@
 const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
-const { cloneDeep, mergeWith, find, isNil } = require("lodash");
+const { cloneDeep, mergeWith, find } = require("lodash");
 const merge = require("deepmerge");
 const { Cerfa, History } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
