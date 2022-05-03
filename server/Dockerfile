@@ -10,8 +10,13 @@ RUN cd /tmp && \
     mkdir -p /app && \
     mv /tmp/node_modules /app/
 
-COPY ./ /app
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 expressjs
+
 WORKDIR /app
+COPY --chown=expressjs:nodejs ./ /app
+
+USER expressjs
 
 VOLUME /data
 EXPOSE 5000
