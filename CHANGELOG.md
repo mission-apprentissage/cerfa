@@ -1,3 +1,10 @@
+## [2.2.3](https://github.com/mission-apprentissage/cerfa/compare/v2.2.2...v2.2.3) (2022-05-03)
+
+
+### Bug Fixes
+
+* on enleve le controle de longeur de l'extension ([ae8faf1](https://github.com/mission-apprentissage/cerfa/commit/ae8faf1af71c60ee4c6e93b34fe27b2ea0d4d894))
+
 ## [2.2.2](https://github.com/mission-apprentissage/cerfa/compare/v2.2.1...v2.2.2) (2022-05-03)
 
 
