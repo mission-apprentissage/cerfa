@@ -1,3 +1,31 @@
+# [2.3.0](https://github.com/mission-apprentissage/cerfa/compare/v2.2.3...v2.3.0) (2022-05-03)
+
+
+### Features
+
+* base fonctionnel gestion des statuts AGECAP ([#666](https://github.com/mission-apprentissage/cerfa/issues/666)) ([f433f24](https://github.com/mission-apprentissage/cerfa/commit/f433f24f14d38ef12bc08ade68d728fc087d5d8a))
+
+## [2.2.3](https://github.com/mission-apprentissage/cerfa/compare/v2.2.2...v2.2.3) (2022-05-03)
+
+
+### Bug Fixes
+
+* on enleve le controle de longeur de l'extension ([ae8faf1](https://github.com/mission-apprentissage/cerfa/commit/ae8faf1af71c60ee4c6e93b34fe27b2ea0d4d894))
+
+## [2.2.2](https://github.com/mission-apprentissage/cerfa/compare/v2.2.1...v2.2.2) (2022-05-03)
+
+
+### Bug Fixes
+
+* fix du choix du smic applicable ([fa330e9](https://github.com/mission-apprentissage/cerfa/commit/fa330e9eaad0288e01ebdc47186375a403060b8d))
+
+## [2.2.1](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0...v2.2.1) (2022-05-02)
+
+
+### Bug Fixes
+
+* bind server message ([0dc41fc](https://github.com/mission-apprentissage/cerfa/commit/0dc41fc1ce67c445845b1e843627f93162e32941))
+
 # [2.2.0](https://github.com/mission-apprentissage/cerfa/compare/v2.1.5...v2.2.0) (2022-05-02)
 
 

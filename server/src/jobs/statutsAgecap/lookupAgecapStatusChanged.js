@@ -21,19 +21,22 @@ const lookupAgecapStatusChanged = async ({ crypto }) => {
   const { contrats } = await apiAgecap.statut({ dateDebut, dateFin });
 
   await asyncForEach(contrats, async (contrat) => {
-    const dossier = await Dossier.find({ _id: contrat.numTeletransmission });
-    if (dossier) {
-      if (contrat.numDepot) {
-        dossier.numeroDeca = contrat.numDepot;
-      }
-      if (contrat.numDepot) {
+    const isMongoObjectId = new RegExp(`^[0-9A-Fa-f]{24}$`);
+    if (isMongoObjectId.test(contrat.numTeletransmission)) {
+      const dossier = await Dossier.findOne({ _id: contrat.numTeletransmission });
+      if (dossier) {
+        if (contrat.numDepot) {
+          dossier.numeroDeca = contrat.numDepot;
+        }
+
         const etat = STATUS_AGECAP[contrat.statut];
         if (etat) {
-          dossier.etat = contrat.numDepot;
+          dossier.etat = etat;
         }
+
+        dossier.statutAgecap = [...(dossier.statutAgecap ?? []), contrat];
+        await dossier.save();
       }
-      dossier.statutAgecap = [...dossier.statutAgecap, contrat];
-      await dossier.save();
     }
   });
 };
