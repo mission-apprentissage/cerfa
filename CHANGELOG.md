@@ -1,3 +1,10 @@
+## [2.2.2](https://github.com/mission-apprentissage/cerfa/compare/v2.2.1...v2.2.2) (2022-05-03)
+
+
+### Bug Fixes
+
+* fix du choix du smic applicable ([fa330e9](https://github.com/mission-apprentissage/cerfa/commit/fa330e9eaad0288e01ebdc47186375a403060b8d))
+
 ## [2.2.1](https://github.com/mission-apprentissage/cerfa/compare/v2.2.0...v2.2.1) (2022-05-02)
 
 
