@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/mission-apprentissage/cerfa/compare/v2.2.3...v2.3.0) (2022-05-03)
+
+
+### Features
+
+* base fonctionnel gestion des statuts AGECAP ([#666](https://github.com/mission-apprentissage/cerfa/issues/666)) ([f433f24](https://github.com/mission-apprentissage/cerfa/commit/f433f24f14d38ef12bc08ade68d728fc087d5d8a))
+
 ## [2.2.3](https://github.com/mission-apprentissage/cerfa/compare/v2.2.2...v2.2.3) (2022-05-03)
 
 
