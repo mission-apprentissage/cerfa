@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/mission-apprentissage/cerfa/compare/v2.3.0...v2.3.1) (2022-05-03)
+
+
+### Bug Fixes
+
+* change bind server message ([ff67f8f](https://github.com/mission-apprentissage/cerfa/commit/ff67f8fc03dc75775b921674dd112fbbe85d921b))
+
 ## [2.3.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.3.0...v2.3.1-beta.1) (2022-05-03)
 
 
