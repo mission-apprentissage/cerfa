@@ -1,9 +1,9 @@
 const express = require("express");
 const Joi = require("joi");
 const Boom = require("boom");
-const { cloneDeep, mergeWith, find } = require("lodash");
+const { cloneDeep, mergeWith, find, isNil } = require("lodash");
 const merge = require("deepmerge");
-const { Cerfa } = require("../../../common/model/index");
+const { Cerfa, History } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 const cerfaSchema = require("../../../common/model/schema/specific/dossier/cerfa/Cerfa");
@@ -11,6 +11,7 @@ const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfa
 const { getFromStorage } = require("../../../common/utils/ovhUtils");
 const { oleoduc, writeData } = require("oleoduc");
 const { PassThrough } = require("stream");
+const { get } = require("lodash/object");
 
 module.exports = (components) => {
   const router = express.Router();
@@ -193,7 +194,7 @@ module.exports = (components) => {
   router.put(
     "/:id",
     permissionsDossierMiddleware(components, ["dossier/sauvegarder"]),
-    tryCatch(async ({ body, params }, res) => {
+    tryCatch(async ({ body, params, user }, res) => {
       const data = await Joi.object({
         employeur: Joi.object({
           denomination: Joi.string().allow(null),
@@ -362,6 +363,7 @@ module.exports = (components) => {
         }),
         isLockedField: Joi.object({}).unknown(),
         dossierId: Joi.string().required(),
+        inputNames: Joi.array().items(Joi.string()).required(),
       }).validateAsync(body, { abortEarly: false });
 
       let cerfaDb = await Cerfa.findOne({ _id: params.id }, { _id: 0, __v: 0 }).lean();
@@ -388,6 +390,32 @@ module.exports = (components) => {
         cerfaDb.contrat.remunerationsAnnuelles.length > 0 && remunerationsAnnuelles.length === 0
           ? cerfaDb.contrat.remunerationsAnnuelles
           : remunerationsAnnuelles;
+
+      let history = await History.findOne({ dossierId: cerfaDb.dossierId });
+      if (!history) {
+        history = await History.create({
+          dossierId: cerfaDb.dossierId,
+          context: "cerfa",
+          history: [],
+        });
+      }
+
+      await History.findOneAndUpdate(
+        { _id: history._id },
+        {
+          $push: {
+            history: {
+              $each: data.inputNames.map((inputName) => ({
+                fieldName: inputName,
+                from: get(cerfaDb, inputName),
+                to: get(data, inputName),
+                when: new Date(),
+                who: user.username,
+              })),
+            },
+          },
+        }
+      );
 
       const cerfaUpdated = await Cerfa.findOneAndUpdate({ _id: params.id }, mergedData, {
         new: true,

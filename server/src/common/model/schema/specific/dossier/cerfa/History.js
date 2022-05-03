@@ -14,6 +14,10 @@ const historySchema = {
   history: {
     type: [
       new mongoose.Schema({
+        fieldName: {
+          type: String,
+          required: true,
+        },
         from: {
           type: String,
           default: null,
