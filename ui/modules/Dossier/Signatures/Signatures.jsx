@@ -12,24 +12,43 @@ import { ContratPdf } from "./components/ContratPdf";
 import { Signataires } from "./components/Signataires";
 import { Input } from "../formEngine/components/Input/Input";
 import { useCerfaController } from "../formEngine/CerfaControllerContext";
+import { caclAgeAtDate } from "../../../common/utils/formUtils";
 
-const validateDateConclusion = (value, cerfaValues) => {
+const validateDateConclusion = (dateConclusion, cerfaValues) => {
   const typeContratApp = cerfaValues.contrat.typeContratApp;
   const dateDebutContrat = cerfaValues.contrat.dateDebutContrat;
   const dateEffetAvenant = cerfaValues.contrat.dateEffetAvenant;
 
   if (typeContratApp >= 30) {
-    if (value > dateEffetAvenant) {
+    if (dateConclusion > dateEffetAvenant) {
       return {
         error: "La date de signature du contrat ne peut pas être après la date d'effet de l'avenant",
       };
     }
   } else {
-    if (value > dateDebutContrat) {
+    if (dateConclusion > dateDebutContrat) {
       return {
         error: "La date de signature du contrat ne peut pas être après la date de début de contrat",
       };
     }
+  }
+
+  const ageApprentiValidation = validateAgeApprenti(dateConclusion, cerfaValues);
+  if (ageApprentiValidation?.error) {
+    return ageApprentiValidation;
+  }
+};
+
+const validateAgeApprenti = (dateConclusion, cerfaValues) => {
+  if (cerfaValues.apprenti.apprentiMineur) return;
+
+  const { exactAge: ageApprentiSignature } = caclAgeAtDate(cerfaValues.apprenti.dateNaissance, dateConclusion);
+
+  if (ageApprentiSignature < 18) {
+    return {
+      error:
+        "L'apprenti est mineur à la date de signature, veuillez corriger les informations relatives à la minorité dans le formulaire",
+    };
   }
 };
 
