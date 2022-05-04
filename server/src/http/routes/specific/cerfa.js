@@ -391,7 +391,7 @@ module.exports = (components) => {
           ? cerfaDb.contrat.remunerationsAnnuelles
           : remunerationsAnnuelles;
 
-      let cerfaHistory = await CerfaHistory.findOne({ cerfaHistory: params.id });
+      let cerfaHistory = await CerfaHistory.findOne({ cerfaId: params.id });
       if (!cerfaHistory) {
         cerfaHistory = await CerfaHistory.create({
           cerfaId: params.id,

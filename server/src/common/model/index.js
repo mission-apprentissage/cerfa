@@ -68,7 +68,7 @@ module.exports = {
   Commentaire: createModel("commentaire", schema.commentaireSchema),
   CerfaHistory: createModel("cerfaHistory", schema.cerfaHistorySchema, {
     createMongoDBIndexes: (schema) => {
-      schema.index({ dossierId: 1, context: 1 }, { unique: true });
+      schema.index({ cerfaId: 1 }, { unique: true });
     },
   }),
 };
