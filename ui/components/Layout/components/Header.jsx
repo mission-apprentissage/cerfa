@@ -21,7 +21,7 @@ const Header = () => {
               <Heading as="h6" textStyle="h6" fontSize="xl">
                 Contrat d&apos;apprentissage dématérialisé pour les employeurs publics{" "}
                 <Tag marginBottom="1w" backgroundColor="bluefrance" color="white">
-                  beta
+                  V1
                 </Tag>
               </Heading>
             </Box>
