@@ -129,8 +129,7 @@ export const formationSchema = {
     required: true,
     label: "Code RNCP : ",
     requiredMessage: "Le code RNCP est obligatoire",
-    validateMessage:
-      "n'est pas un code RNCP valide. Le code RNCP doit être définit et au format 5 ou 9 caractères,  RNCP24440 ou 24440",
+    validateMessage: "n'est pas un code RNCP valide. Le code RNCP doit être définit et contenir entre 3 et 5 chiffres",
     mask: "RNCPX",
     maskBlocks: [
       {
@@ -140,14 +139,8 @@ export const formationSchema = {
       },
     ],
     unmask: false,
-    validate: ({ value }) => {
-      if (value.length !== 9) {
-        return {
-          error:
-            "n'est pas un code RNCP valide. Le code RNCP doit être définit et au format 5 ou 9 caractères,  RNCP24440 ou 24440",
-        };
-      }
-    },
+    minLength: 7,
+    maxLength: 9,
   },
   "formation.codeDiplome": {
     fieldType: "text",
