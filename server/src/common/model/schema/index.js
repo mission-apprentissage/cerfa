@@ -7,7 +7,7 @@ const dossierSchema = require("./specific/dossier/Dossier");
 const connectionDossierSchema = require("./specific/dossier/ConnectionDossier");
 const cerfaSchema = require("./specific/dossier/cerfa/Cerfa");
 const commentaireSchema = require("./specific/dossier/Commentaire");
-const historySchema = require("./specific/dossier/cerfa/History");
+const cerfaHistorySchema = require("./specific/dossier/cerfa/CerfaHistory");
 const permissionSchema = require("./specific/Permission");
 const workspaceSchema = require("./specific/Workspace");
 const categoriesJuridiqueSchema = require("./specific/CategoriesJuridique");
@@ -25,7 +25,7 @@ module.exports = {
   connectionDossierSchema,
   cerfaSchema,
   commentaireSchema,
-  historySchema,
+  cerfaHistorySchema,
   permissionSchema,
   workspaceSchema,
   categoriesJuridiqueSchema,

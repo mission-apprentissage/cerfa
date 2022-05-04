@@ -1,15 +1,10 @@
 const mongoose = require("mongoose");
 
 const historySchema = {
-  dossierId: {
+  cerfaId: {
     type: String,
-    description: "Identifiant interne du dossier",
+    description: "Identifiant interne du cerfa",
     required: true,
-  },
-  context: {
-    type: String,
-    required: true,
-    description: "contexte de l'historique",
   },
   history: {
     type: mongoose.Schema.Types.Mixed,

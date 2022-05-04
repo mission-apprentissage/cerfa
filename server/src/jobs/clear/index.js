@@ -5,7 +5,7 @@ const {
   MaintenanceMessage,
   Role,
   Workspace,
-  History,
+  CerfaHistory,
   Commentaire,
   Permission,
   ConnectionDossier,
@@ -37,7 +37,7 @@ const clearDossierRelated = async ({ dossiers }) => {
     await dossiers.removeDossier(_id);
   });
 
-  await History.deleteMany({});
+  await CerfaHistory.deleteMany({});
   await Commentaire.deleteMany({});
 };
 

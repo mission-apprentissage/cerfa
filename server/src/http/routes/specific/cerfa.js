@@ -3,7 +3,7 @@ const Joi = require("joi");
 const Boom = require("boom");
 const { cloneDeep, mergeWith, find } = require("lodash");
 const merge = require("deepmerge");
-const { Cerfa, History } = require("../../../common/model/index");
+const { Cerfa, CerfaHistory } = require("../../../common/model/index");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 const cerfaSchema = require("../../../common/model/schema/specific/dossier/cerfa/Cerfa");
@@ -391,23 +391,22 @@ module.exports = (components) => {
           ? cerfaDb.contrat.remunerationsAnnuelles
           : remunerationsAnnuelles;
 
-      let history = await History.findOne({ dossierId: cerfaDb.dossierId });
-      if (!history) {
-        history = await History.create({
-          dossierId: cerfaDb.dossierId,
-          context: "cerfa",
+      let cerfaHistory = await CerfaHistory.findOne({ cerfaHistory: params.id });
+      if (!cerfaHistory) {
+        cerfaHistory = await CerfaHistory.create({
+          cerfaId: params.id,
           history: {},
         });
       }
 
-      await History.findOneAndUpdate(
-        { _id: history._id },
+      await CerfaHistory.findOneAndUpdate(
+        { _id: cerfaHistory._id },
         {
           $set: data.inputNames.reduce(
             (acc, inputName) => ({
               ...acc,
               [`history.${inputName}`]: [
-                ...(get(history, `history.${inputName}`) ?? []),
+                ...(get(cerfaHistory, `history.${inputName}`) ?? []),
                 {
                   from: get(cerfaDb, inputName),
                   to: get(data, inputName),
