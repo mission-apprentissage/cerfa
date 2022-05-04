@@ -396,24 +396,28 @@ module.exports = (components) => {
         history = await History.create({
           dossierId: cerfaDb.dossierId,
           context: "cerfa",
-          history: [],
+          history: {},
         });
       }
 
       await History.findOneAndUpdate(
         { _id: history._id },
         {
-          $push: {
-            history: {
-              $each: data.inputNames.map((inputName) => ({
-                fieldName: inputName,
-                from: get(cerfaDb, inputName),
-                to: get(data, inputName),
-                when: new Date(),
-                who: user.username,
-              })),
-            },
-          },
+          $set: data.inputNames.reduce(
+            (acc, inputName) => ({
+              ...acc,
+              [`history.${inputName}`]: [
+                ...(get(history, `history.${inputName}`) ?? []),
+                {
+                  from: get(cerfaDb, inputName),
+                  to: get(data, inputName),
+                  when: new Date(),
+                  who: user.username,
+                },
+              ],
+            }),
+            {}
+          ),
         }
       );
 

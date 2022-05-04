@@ -1,4 +1,4 @@
-const { mongoose } = require("../../../../../mongodb");
+const mongoose = require("mongoose");
 
 const historySchema = {
   dossierId: {
@@ -12,42 +12,7 @@ const historySchema = {
     description: "contexte de l'historique",
   },
   history: {
-    type: [
-      new mongoose.Schema({
-        fieldName: {
-          type: String,
-          required: true,
-        },
-        from: {
-          type: String,
-          default: null,
-          description: "valeur historique",
-        },
-        to: {
-          type: String,
-          required: true,
-          description: "valeur historique",
-        },
-        when: {
-          type: Date,
-          default: Date.now,
-          required: true,
-          description: "Date de modification",
-        },
-        who: {
-          type: String,
-          default: null,
-          required: true,
-          description: "Qui a réalisé la modification",
-        },
-        how: {
-          type: String,
-          required: true,
-          description: "comment a été modifié la valeur (automatique, manuel ...)",
-        },
-      }),
-    ],
-    default: [],
+    type: mongoose.Schema.Types.Mixed,
   },
 };
 
