@@ -1,3 +1,17 @@
+# [2.4.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.4.0-beta.1...v2.4.0-beta.2) (2022-05-04)
+
+
+### Bug Fixes
+
+* change mem limit clamav + revert node version to 14.18.2 ([#674](https://github.com/mission-apprentissage/cerfa/issues/674)) ([9246f20](https://github.com/mission-apprentissage/cerfa/commit/9246f209d2fca64073a82654ebfdeff43054599c))
+
+# [2.4.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.3.1...v2.4.0-beta.1) (2022-05-03)
+
+
+### Features
+
+* ajout d'un contrôle de majorité à la signature ([32a5b0d](https://github.com/mission-apprentissage/cerfa/commit/32a5b0db58636bada9fe5c51c10c54fa115bd301))
+
 ## [2.3.1](https://github.com/mission-apprentissage/cerfa/compare/v2.3.0...v2.3.1) (2022-05-03)
 
 
