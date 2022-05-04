@@ -57,13 +57,13 @@ CATEGJURID;LIBELLE;SIASP;EXCEPTIONS
 7373;Établissement public local culturel;FPT;
 7378;Régie d'une collectivité locale à caractère administratif;FPT;
 7379;(Autre) Établissement public administratif local;FPT;
-7381;Organisme consulaire;HFP;
+7381;Organisme consulaire;FPE;
 7382;Établissement public national ayant fonction d'administration centrale;FPE;
 7383;Établissement public national à caractère scientifique culturel et professionnel;FPE;
 7384;Autre établissement public national d'enseignement;FPE;
 7385;Autre établissement public national administratif à compétence territoriale limitée;FPE;
 7389;Établissement public national à caractère administratif;FPE;
-7410;Groupement d'intérêt public (GIP);HFP;
+7410;Groupement d'intérêt public (GIP);FPE;
 7430;Établissement public des cultes d'Alsace-Lorraine;HFP;
 7450;Etablissement public administratif, cercle et foyer dans les armées;HFP;
 7470;Groupement de coopération sanitaire à gestion publique;HFP;
