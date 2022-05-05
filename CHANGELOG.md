@@ -1,3 +1,10 @@
+# [2.5.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.5.0-beta.1...v2.5.0-beta.2) (2022-05-05)
+
+
+### Features
+
+* changements de validation code RNCP ([2a898ba](https://github.com/mission-apprentissage/cerfa/commit/2a898ba5bceb6e095f3376b993bdff9f934ad46e))
+
 # [2.5.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.4.0...v2.5.0-beta.1) (2022-05-05)
 
 
