@@ -95,7 +95,7 @@ const UploadFiles = ({ title, typeDocument }) => {
   );
 
   const onDeleteClicked = async (file) => {
-    if (hasContextAccessTo(dossier, "dossier/page_documents/ajouter_un_document")) {
+    if (hasContextAccessTo(dossier, "dossier/page_documents/supprimer_un_document")) {
       // eslint-disable-next-line no-restricted-globals
       const remove = confirm("Voulez-vous vraiment supprimer ce document ?");
       if (remove) {
