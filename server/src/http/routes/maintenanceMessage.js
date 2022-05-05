@@ -2,6 +2,7 @@ const express = require("express");
 const { MaintenanceMessage } = require("../../common/model/index");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const pageAccessMiddleware = require("../middlewares/pageAccessMiddleware");
+const Joi = require("joi");
 
 module.exports = (checkJwtToken) => {
   const router = express.Router();
@@ -19,7 +20,13 @@ module.exports = (checkJwtToken) => {
     checkJwtToken,
     pageAccessMiddleware(["admin/page_message_maintenance"]),
     tryCatch(async ({ body }, res) => {
-      const { msg, name, type, enabled, context } = body;
+      let { msg, name, type, enabled, context } = await Joi.object({
+        msg: Joi.string().required(),
+        name: Joi.string().required(),
+        type: Joi.string().required(),
+        enabled: Joi.boolean().required(),
+        context: Joi.string().required(),
+      }).validateAsync(body, { abortEarly: false });
 
       if (!msg || !name || !type || enabled === undefined) {
         return res.status(400).send({ error: "Erreur avec le message ou avec le nom ou le type ou enabled" });
