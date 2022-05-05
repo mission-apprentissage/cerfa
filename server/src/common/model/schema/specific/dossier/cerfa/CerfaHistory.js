@@ -2,7 +2,9 @@ const mongoose = require("mongoose");
 
 const historySchema = {
   cerfaId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "cerfa",
+    unique: true,
     description: "Identifiant interne du cerfa",
     required: true,
   },

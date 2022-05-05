@@ -71,7 +71,6 @@ export const useAutoSave = ({ controller }) => {
 
     const handler = ({ fields, inputName }) => {
       setAutoSave("PENDING");
-      console.log(inputNamesRef, inputNamesRef.current);
       if (inputNamesRef.current.indexOf(inputName) === -1) {
         inputNamesRef.current = [...inputNamesRef.current, inputName];
       }
