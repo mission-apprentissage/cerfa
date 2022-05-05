@@ -1,3 +1,12 @@
+# [2.5.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.4.0...v2.5.0-beta.1) (2022-05-05)
+
+
+### Features
+
+* ajout d'un acl pour la suppression d'un document ([d43685a](https://github.com/mission-apprentissage/cerfa/commit/d43685a8d50f0974198561e72397b1e8d8e4d6e7))
+* changement de vocabulaire ([24e1bdf](https://github.com/mission-apprentissage/cerfa/commit/24e1bdf51f3e1a696496c25ef3980ad9e771b6fa))
+* modifs des categories juridiques ([1adf5b1](https://github.com/mission-apprentissage/cerfa/commit/1adf5b121f42e7dc3f2ada2da28f6866d7b2c230))
+
 # [2.4.0](https://github.com/mission-apprentissage/cerfa/compare/v2.3.1...v2.4.0) (2022-05-04)
 
 
