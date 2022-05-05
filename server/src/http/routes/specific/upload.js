@@ -160,7 +160,7 @@ module.exports = (components) => {
 
   router.delete(
     "/",
-    permissionsDossierMiddleware(components, ["dossier/page_documents/ajouter_un_document"]),
+    permissionsDossierMiddleware(components, ["dossier/page_documents/supprimer_un_document"]),
     tryCatch(async (req, res) => {
       let { dossierId, typeDocument, nomFichier, cheminFichier, tailleFichier } = await Joi.object({
         dossierId: Joi.string().required(),

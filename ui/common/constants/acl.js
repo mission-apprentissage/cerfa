@@ -110,6 +110,10 @@ export default [
             feature: "Ajouter un document",
             ref: "dossier/page_documents/ajouter_un_document",
           },
+          {
+            feature: "Supprimer un document",
+            ref: "dossier/page_documents/supprimer_un_document",
+          },
         ],
       },
       {
