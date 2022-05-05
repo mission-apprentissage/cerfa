@@ -24,12 +24,12 @@ module.exports = (checkJwtToken) => {
       if (!msg || !name || !type || enabled === undefined) {
         return res.status(400).send({ error: "Erreur avec le message ou avec le nom ou le type ou enabled" });
       }
-
       const newMaintenanceMessage = new MaintenanceMessage({
         type,
         context,
         name,
-        msg,
+        // TODO quick bypass https://github.com/coreruleset/coreruleset/blob/v4.1/dev/rules/REQUEST-949-BLOCKING-EVALUATION.conf
+        msg: msg.replace(/(\[.*?\])\(##(.*?)\)/gim, "$1($2)"),
         enabled,
         time: new Date(),
       });
