@@ -195,7 +195,7 @@ module.exports = (components) => {
     "/:id",
     permissionsDossierMiddleware(components, ["dossier/sauvegarder"]),
     tryCatch(async ({ body, params, user }, res) => {
-      const data = await Joi.object({
+      const { inputNames, ...data } = await Joi.object({
         employeur: Joi.object({
           denomination: Joi.string().allow(null),
           siret: Joi.string().allow(null),
@@ -402,7 +402,7 @@ module.exports = (components) => {
       await CerfaHistory.findOneAndUpdate(
         { _id: cerfaHistory._id },
         {
-          $set: data.inputNames.reduce(
+          $set: inputNames.reduce(
             (acc, inputName) => ({
               ...acc,
               [`history.${inputName}`]: [
@@ -411,7 +411,7 @@ module.exports = (components) => {
                   from: get(cerfaDb, inputName),
                   to: get(data, inputName),
                   when: new Date(),
-                  who: user.username,
+                  userId: user._id,
                 },
               ],
             }),
