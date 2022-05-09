@@ -1,3 +1,10 @@
+# [2.6.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.5.0...v2.6.0-beta.1) (2022-05-09)
+
+
+### Features
+
+* adaptation badges figma ([1e6ac14](https://github.com/mission-apprentissage/cerfa/commit/1e6ac144cd8e8b51b64e3ead79d47e2c45dfc68f))
+
 # [2.5.0](https://github.com/mission-apprentissage/cerfa/compare/v2.4.0...v2.5.0) (2022-05-05)
 
 
