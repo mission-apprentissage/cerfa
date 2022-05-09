@@ -5,11 +5,11 @@ export const DOSSIER_STATUS = {
   },
   DOSSIER_FINALISE_EN_ATTENTE_ACTION: {
     priority: 1,
-    text: "Dossier finalisé en attente d'action",
+    text: "En cours de signature",
   },
   EN_ATTENTE_DECLENCHEMENT_SIGNATURES: {
     priority: 2,
-    text: "En attente d'action",
+    text: "En cours de signature",
   },
   EN_ATTENTE_SIGNATURE: {
     priority: 2,
@@ -17,11 +17,11 @@ export const DOSSIER_STATUS = {
   },
   EN_ATTENTE_SIGNATURES: {
     priority: 2,
-    text: "En attente de signatures",
+    text: "En cours de signature",
   },
   SIGNATURES_EN_COURS: {
     priority: 2,
-    text: "En cours de signatures",
+    text: "En cours de signature",
   },
   SIGNE: {
     priority: 2,
@@ -29,11 +29,11 @@ export const DOSSIER_STATUS = {
   },
   DOSSIER_TERMINE_AVEC_SIGNATURE: {
     priority: 3,
-    text: "Dossier terminé",
+    text: "À télétransmettre",
   },
   DOSSIER_TERMINE_SANS_SIGNATURE: {
     priority: 3,
-    text: "Dossier terminé",
+    text: "À télétransmettre",
   },
   TRANSMIS: {
     priority: 4,
@@ -45,19 +45,19 @@ export const DOSSIER_STATUS = {
   },
   INCOMPLET: {
     priority: 6,
-    text: "Demande de complément",
+    text: "À modifier",
   },
   DEPOSE: {
     priority: 6,
-    text: "Déposé",
+    text: "Validé",
   },
   REFUSE: {
     priority: 6,
-    text: "Refusé",
+    text: "Non déposable",
   },
   ENGAGE: {
     priority: 7,
-    text: "Engagé",
+    text: "Contrat en cours",
   },
   ANNULE: {
     priority: 7,
@@ -69,6 +69,6 @@ export const DOSSIER_STATUS = {
   },
   SOLDE: {
     priority: 7,
-    text: "Soldé",
+    text: "Terminé",
   },
 };

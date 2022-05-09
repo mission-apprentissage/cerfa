@@ -9,6 +9,50 @@ const commonStatusBadgeStyle = {
 
 const Badge = {
   variants: {
+    draft: {
+      ...commonStatusBadgeStyle,
+      bg: "#DEE5FD",
+      color: "#161616",
+      border: "none",
+    },
+    waitingSignature: {
+      ...commonStatusBadgeStyle,
+      bg: "#FCEEAC",
+      color: "#161616",
+      border: "none",
+    },
+    sign: {
+      ...commonStatusBadgeStyle,
+      bg: "greensoft.200",
+      color: "success",
+      pl: "15px",
+      fontWeight: "500",
+      pr: "15px",
+    },
+    aTeletransmettre: {
+      ...commonStatusBadgeStyle,
+      bg: "#FBE769",
+      color: "#161616",
+      border: "none",
+    },
+    nonConforme: {
+      ...commonStatusBadgeStyle,
+      bg: "#FBDFDB",
+      color: "#161616",
+      border: "none",
+    },
+    published: {
+      ...commonStatusBadgeStyle,
+      bg: "#A9FB68",
+      color: "#161616",
+      border: "none",
+    },
+    termine: {
+      ...commonStatusBadgeStyle,
+      bg: "#E5E5E5",
+      color: "#161616",
+      border: "none",
+    },
     notRelevant: {
       ...commonStatusBadgeStyle,
       bg: "#e3e8ea",
@@ -16,13 +60,7 @@ const Badge = {
       border: "1px solid",
       borderColor: "#e3e8ea",
     },
-    nonConforme: {
-      ...commonStatusBadgeStyle,
-      bg: "#e3e8ea",
-      color: "grey.800",
-      border: "1px solid",
-      borderColor: "#e3e8ea",
-    },
+
     conforme: {
       ...commonStatusBadgeStyle,
       bg: "greenmedium.300",
@@ -30,13 +68,7 @@ const Badge = {
       border: "1px solid",
       borderColor: "greenmedium.200",
     },
-    published: {
-      ...commonStatusBadgeStyle,
-      bg: "greenmedium.300",
-      color: "grey.800",
-      border: "1px solid",
-      borderColor: "greenmedium.200",
-    },
+
     notPublished: {
       ...commonStatusBadgeStyle,
       bg: "grey.300",
@@ -51,11 +83,7 @@ const Badge = {
       border: "1px solid",
       borderColor: "orangemedium.300",
     },
-    termine: {
-      ...commonStatusBadgeStyle,
-      bg: "greensoftc",
-      color: "white",
-    },
+
     pending: {
       ...commonStatusBadgeStyle,
       bg: "greenmedium.200",
@@ -87,27 +115,6 @@ const Badge = {
       bg: "#E3E3FD",
       color: "bluefrance",
     },
-    waitingSignature: {
-      ...commonStatusBadgeStyle,
-      bg: "#E3E3FD",
-      color: "bluefrance",
-    },
-    sign: {
-      ...commonStatusBadgeStyle,
-      bg: "greensoft.200",
-      color: "success",
-      pl: "15px",
-      fontWeight: "500",
-      pr: "15px",
-    },
-    draft: {
-      ...commonStatusBadgeStyle,
-      bg: "#FCC0B0",
-      color: "#161616",
-      pl: "15px",
-      pr: "15px",
-      fontWeight: "500",
-    },
     save: {
       ...commonStatusBadgeStyle,
       bg: "#EEEEEE",
@@ -120,3 +127,33 @@ const Badge = {
 };
 
 export { Badge };
+
+// BROUILLON: "draft",  //  text: "Brouillon",
+
+// DOSSIER_FINALISE_EN_ATTENTE_ACTION: "waitingSignature",//  text: "En cours de signature",
+// EN_ATTENTE_DECLENCHEMENT_SIGNATURES: "waitingSignature",//  text: "En cours de signature",
+// EN_ATTENTE_SIGNATURE: "waitingSignature",  //  text: "En attente de signature",
+// EN_ATTENTE_SIGNATURES: "waitingSignature",// text: "En cours de signature",
+// SIGNATURES_EN_COURS: "waitingSignature",  //text: "En cours de signature",
+
+// SIGNE: "sign", //  text: "Signé",
+
+// DOSSIER_TERMINE_AVEC_SIGNATURE: "aTeletransmettre", //   text: "À télétransmettre",
+// DOSSIER_TERMINE_SANS_SIGNATURE: "aTeletransmettre", //   text: "À télétransmettre",
+
+// TRANSMIS: "draft", //  text: "Transmis",
+
+// EN_COURS_INSTRUCTION: "draft",  // text: "En cours d'instruction",
+
+// INCOMPLET: "nonConforme", // text: "À modifier",
+
+// DEPOSE: "published", //  text: "Validé",
+
+// REFUSE: "nonConforme", // text: "Non déposable",
+
+// ENGAGE: "draft",//  text: "Contrat en cours",
+
+// ANNULE: "unknown", //  text: "Annulé",
+// RUTPURE: "unknown", //  text: "Rupture",
+
+// SOLDE: "termine",// text: "Terminé",
