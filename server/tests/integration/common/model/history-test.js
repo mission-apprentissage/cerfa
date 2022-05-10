@@ -1,32 +1,25 @@
 const assert = require("assert");
-const { History } = require("../../../../src/common/model");
+const { CerfaHistory } = require("../../../../src/common/model");
 
-describe("History", () => {
-  it("Doit créer une historique sur un champ", async () => {
-    await History.create({
-      dossierId: "619baec6fcdd030ba4e13c40",
-      context: "organismeFormation.siret",
-      history: [
-        {
-          from: null,
-          to: "98765432400070",
-          how: "manuel",
-          when: Date.now(),
-          who: "Antoine Bigard",
+describe("CerfaHistory", () => {
+  it("Doit créer un historique pour un cerfa", async () => {
+    await CerfaHistory.create({
+      cerfaId: "619baec6fcdd030ba4e13c40",
+      history: {
+        employeur: {
+          siret: {
+            from: "123",
+            to: "456",
+            how: "manuel",
+            when: Date.now(),
+            who: "1Jnkljn123KNJ",
+          },
         },
-        {
-          from: "98765432400070",
-          to: "98765432400019",
-          how: "manuel",
-          when: Date.now(),
-          who: "Paul Pierre",
-        },
-      ],
+      },
     });
 
-    const results = await History.find({
-      dossierId: "619baec6fcdd030ba4e13c40",
-      context: "organismeFormation.siret",
+    const results = await CerfaHistory.find({
+      cerfaId: "619baec6fcdd030ba4e13c40",
     });
 
     assert.equal(results.length === 1, true);

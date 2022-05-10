@@ -39,7 +39,7 @@ module.exports = ({ users, sessions }) => {
               return done(null, { invalided_token: true });
             }
             const result = await users.structureUser(user);
-            return done(null, result);
+            return done(null, { ...result, _id: user._id });
           })
           .catch((err) => done(err));
       }

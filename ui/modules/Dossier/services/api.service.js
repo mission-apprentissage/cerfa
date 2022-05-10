@@ -1,10 +1,11 @@
 import { _post, _put } from "../../../common/httpClient";
 
-const saveCerfa = async ({ dossierId, cerfaId, data }) => {
+const saveCerfa = async ({ dossierId, cerfaId, data, inputNames }) => {
   try {
     return await _put(`/api/v1/cerfa/${cerfaId}`, {
       ...data,
       dossierId,
+      inputNames,
     });
   } catch (e) {
     console.log(e);
