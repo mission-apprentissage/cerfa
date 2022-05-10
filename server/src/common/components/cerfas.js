@@ -21,7 +21,7 @@ const buildErrorResult = (validatedModel) => {
   if (result.apprenti?.apprentiMineurNonEmancipe) {
     result.reason = "Nous avons détecté un problème sur l'âge de l'apprenti(e)";
   }
-  return validatedModel.errors;
+  return result;
 };
 
 module.exports = async () => {
