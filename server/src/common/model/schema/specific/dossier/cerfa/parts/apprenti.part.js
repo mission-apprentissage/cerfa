@@ -401,11 +401,11 @@ const apprentiSchema = {
   telephone: {
     path: "apprenti.telephone",
     maxLength: 13,
-    minLength: 10,
+    minLength: 8,
     validate: {
       validator: function (v) {
         if (!v) return true;
-        return /([+])?((\d)[.-]?)?[\s]?\(?(\d{3})\)?[.-]?[\s]?(\d{3})[.-]?[\s]?(\d{4,})/.test(v);
+        return /([+])?(\d{7,12})/.test(v);
       },
       message: (props) => `${props.value} n'est pas un numéro de télephone valide`,
     },

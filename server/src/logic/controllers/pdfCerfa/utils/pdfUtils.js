@@ -113,7 +113,7 @@ const fieldsPositions = {
       y: 574,
       maxLength: 15,
       title: (value) => {
-        let newValue = value.replace("+33", "0");
+        let newValue = value.replace("+", "00");
         return newValue.match(/\d{2}/g).join(" ");
       },
     },
@@ -290,7 +290,7 @@ const fieldsPositions = {
       y: 324,
       maxLength: 15,
       title: (value) => {
-        let newValue = value.replace("+33", "0");
+        let newValue = value.replace("+", "00");
         return newValue.match(/\d{2}/g).join(" ");
       },
     },
