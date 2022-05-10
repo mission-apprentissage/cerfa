@@ -1,3 +1,17 @@
+# [2.6.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.1...v2.6.0-beta.2) (2022-05-10)
+
+
+### Features
+
+* cerfa changes history ([cc2abd1](https://github.com/mission-apprentissage/cerfa/commit/cc2abd1a40cecf24437707a1b7007153a43e0c35))
+* change history structure ([80018c6](https://github.com/mission-apprentissage/cerfa/commit/80018c6acc3a545610f71e9db21bfe78bc5121a5))
+* historique des modifs du cerfa ([8c3a755](https://github.com/mission-apprentissage/cerfa/commit/8c3a75503df2a1c9910b5f74083c077141e6fe8f))
+* index de collection ([f263480](https://github.com/mission-apprentissage/cerfa/commit/f2634804c65af2b68f11b1cc5fa64f1ef7c78d8a))
+* meilleur syntaxe et suppression log ([bf911ec](https://github.com/mission-apprentissage/cerfa/commit/bf911ec68438fccef8c919dbde6dc5b96c7ce42c))
+* remove unused var ([5838256](https://github.com/mission-apprentissage/cerfa/commit/58382565549d4700c85239082bc97bbec5da33d8))
+* removed old history routes ([b59fc5c](https://github.com/mission-apprentissage/cerfa/commit/b59fc5cc28f62036f99fc6c4c08e0b2e6a598611))
+* usage du champs userId à la place de usename ([7bcff56](https://github.com/mission-apprentissage/cerfa/commit/7bcff565bb55e9f75e0eab9d3c1337d97dc641e5))
+
 # [2.6.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.5.0...v2.6.0-beta.1) (2022-05-09)
 
 
