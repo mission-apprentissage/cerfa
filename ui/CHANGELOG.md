@@ -1,3 +1,10 @@
+# [2.6.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.2...v2.6.0-beta.3) (2022-05-10)
+
+
+### Bug Fixes
+
+* phone format ([0a87fb0](https://github.com/mission-apprentissage/cerfa/commit/0a87fb09129b03f78988d307dd0ff1bf2fb31643))
+
 # [2.6.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.1...v2.6.0-beta.2) (2022-05-10)
 
 
