@@ -152,7 +152,7 @@ const employeurCerfaSchema = {
   telephone: {
     path: "employeur.telephone",
     maxLength: 13,
-    minLength: 10,
+    minLength: 8,
     validate: {
       validator: function (v) {
         if (!v) return true;
