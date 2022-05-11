@@ -1,3 +1,10 @@
+# [2.6.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.6...v2.6.0-beta.7) (2022-05-11)
+
+
+### Bug Fixes
+
+* **logger:** nettoyage log et meilleur affichage ([285614f](https://github.com/mission-apprentissage/cerfa/commit/285614f63a34d62069905f7b544ac4782447970f))
+
 # [2.6.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.5...v2.6.0-beta.6) (2022-05-11)
 
 
