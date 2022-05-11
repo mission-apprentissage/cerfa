@@ -1,3 +1,31 @@
+# [2.6.0](https://github.com/mission-apprentissage/cerfa/compare/v2.5.1...v2.6.0) (2022-05-11)
+
+
+### Bug Fixes
+
+* ajout des noms de champs lors de la signature ([b83d5b2](https://github.com/mission-apprentissage/cerfa/commit/b83d5b28004a7e8a38408ef903d83599a0864181))
+* changement d'url ([90ee728](https://github.com/mission-apprentissage/cerfa/commit/90ee72802b45a8b7b50cc8dffdbfb17e8fc18d91))
+* fix des erreurs de creation d'utilisateurs ([8246415](https://github.com/mission-apprentissage/cerfa/commit/82464150cd9cddbc631ef818ffaca6cbf3a8068b))
+* **logger:** nettoyage log et meilleur affichage ([285614f](https://github.com/mission-apprentissage/cerfa/commit/285614f63a34d62069905f7b544ac4782447970f))
+* phone format ([0a87fb0](https://github.com/mission-apprentissage/cerfa/commit/0a87fb09129b03f78988d307dd0ff1bf2fb31643))
+* suppression d'un log ([4b879f3](https://github.com/mission-apprentissage/cerfa/commit/4b879f3490e10410f793c073d635ee94ce53e8f1))
+* url_typo ([99b54b7](https://github.com/mission-apprentissage/cerfa/commit/99b54b760f5c7cd1aa51dff10ea2b6b529be4ab8))
+
+
+### Features
+
+* adaptation badges figma ([1e6ac14](https://github.com/mission-apprentissage/cerfa/commit/1e6ac144cd8e8b51b64e3ead79d47e2c45dfc68f))
+* bouton d'aide flottant avec modale ([6e408e0](https://github.com/mission-apprentissage/cerfa/commit/6e408e05d3953c3c7c0a016861cda5dd66d85c98))
+* cerfa changes history ([cc2abd1](https://github.com/mission-apprentissage/cerfa/commit/cc2abd1a40cecf24437707a1b7007153a43e0c35))
+* change history structure ([80018c6](https://github.com/mission-apprentissage/cerfa/commit/80018c6acc3a545610f71e9db21bfe78bc5121a5))
+* historique des modifs du cerfa ([8c3a755](https://github.com/mission-apprentissage/cerfa/commit/8c3a75503df2a1c9910b5f74083c077141e6fe8f))
+* index de collection ([f263480](https://github.com/mission-apprentissage/cerfa/commit/f2634804c65af2b68f11b1cc5fa64f1ef7c78d8a))
+* meilleur syntaxe et suppression log ([bf911ec](https://github.com/mission-apprentissage/cerfa/commit/bf911ec68438fccef8c919dbde6dc5b96c7ce42c))
+* remove unused var ([5838256](https://github.com/mission-apprentissage/cerfa/commit/58382565549d4700c85239082bc97bbec5da33d8))
+* removed old history routes ([b59fc5c](https://github.com/mission-apprentissage/cerfa/commit/b59fc5cc28f62036f99fc6c4c08e0b2e6a598611))
+* suppression de code mort ([2bdf34a](https://github.com/mission-apprentissage/cerfa/commit/2bdf34a0aa9192715661af47555c9553f51b49cb))
+* usage du champs userId à la place de usename ([7bcff56](https://github.com/mission-apprentissage/cerfa/commit/7bcff565bb55e9f75e0eab9d3c1337d97dc641e5))
+
 # [2.6.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.8...v2.6.0-beta.9) (2022-05-11)
 
 
