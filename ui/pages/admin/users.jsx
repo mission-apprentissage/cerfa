@@ -21,7 +21,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../components/Breadcrumb/Breadcrumb";
-import { setTitle } from "../../common/utils/pageUtils";
 import generator from "generate-password-browser";
 import { useQuery } from "react-query";
 import { Page } from "../../components/Page/Page";
