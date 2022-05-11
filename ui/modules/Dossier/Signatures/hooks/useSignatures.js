@@ -59,6 +59,7 @@ export function useSignatures() {
               dateConclusion: date,
             },
           },
+          inputNames: ["contrat.lieuSignatureContrat", "contrat.dateConclusion"],
         });
       } catch (e) {
         console.error(e);

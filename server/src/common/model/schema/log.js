@@ -20,5 +20,16 @@ const logSchema = {
     expires: "7d", // mongo will auto-remove data after 7 days
     required: true,
   },
+  request: {
+    type: Object,
+  },
+  response: {
+    type: Object,
+  },
+  error: { type: Object },
+  type: {
+    type: String,
+  },
+  elapsedTime: { type: Number },
 };
 module.exports = logSchema;

@@ -193,7 +193,7 @@ export const useCerfa = ({ schema } = {}) => {
           const currentValue = await getValue(name);
           await processField({ name, value: currentValue });
           if (triggerSave) {
-            controller.dispatch("CHANGE", await getFields());
+            controller.dispatch("CHANGE", { fields: await getFields(), inputName: name });
           }
         });
       },

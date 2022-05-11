@@ -4,6 +4,7 @@ import { Box, Container } from "@chakra-ui/react";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import NavigationMenu from "./components/NavigationMenu";
+import { HelpBox } from "../HelpBox/HelpBox";
 
 const Layout = ({ children, ...rest }) => {
   const router = useRouter();
@@ -18,6 +19,7 @@ const Layout = ({ children, ...rest }) => {
         </Box>
       </Box>
       <Footer />
+      <HelpBox />
     </Container>
   );
 };
