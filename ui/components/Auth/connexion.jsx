@@ -34,7 +34,7 @@ const Login = () => {
         setAuth(user);
         setToken(result.token);
         if (!user.confirmed) {
-          router.push(`/auth/waiting-confirmation`);
+          router.push(`/auth/en-attente-confirmation`);
         } else {
           router.push("/");
         }

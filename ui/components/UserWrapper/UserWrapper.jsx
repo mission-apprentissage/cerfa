@@ -16,8 +16,8 @@ const AccountWrapper = ({ children }) => {
     (async () => {
       if (auth.sub !== "anonymous") {
         if (!auth.confirmed) {
-          if (router.pathname !== "/auth/waiting-confirmation") {
-            router.push(`/auth/waiting-confirmation`);
+          if (router.pathname !== "/auth/en-attente-confirmation") {
+            router.push(`/auth/en-attente-confirmation`);
           }
         } else {
           if (auth.account_status === "FORCE_RESET_PASSWORD" && router.pathname !== "/auth/reset-password") {
