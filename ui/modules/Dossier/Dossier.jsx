@@ -1,24 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  Box,
-  Flex,
-  Center,
-  Container,
-  Spinner,
-  useDisclosure,
-  ModalOverlay,
-  ModalContent,
-  Button,
-  Text,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  HStack,
-  Modal,
-  Link,
-  Divider,
-  Image,
-} from "@chakra-ui/react";
+import { Box, Flex, Center, Container, Spinner, useDisclosure } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps-rework-mna";
 import { useRouter } from "next/router";
 import { useSetRecoilState, useRecoilValueLoadable, useRecoilValue } from "recoil";
@@ -38,7 +19,7 @@ import FinalizeModal from "./components/FinalizeModal";
 import ESignatureModal from "./components/ESignatureModal";
 
 import { workspaceTitleAtom } from "../../hooks/workspaceAtoms";
-import { ArrowRightLine, Close, ExternalLinkLine, StepWip, TickBubble } from "../../theme/components/icons";
+import { StepWip, TickBubble } from "../../theme/components/icons";
 
 import { CerfaForm } from "./cerfaForm/CerfaForm";
 import { useCerfa } from "./formEngine/useCerfa";
@@ -50,7 +31,6 @@ import { useAutoSave } from "./formEngine/hooks/useAutoSave";
 import { useDossier } from "./hooks/useDossier";
 import { valueSelector } from "./formEngine/atoms";
 import { signaturesPdfLoadedAtom } from "./Signatures/atoms";
-import { HelpBox } from "../../components/HelpBox/HelpBox";
 
 const steps = [
   { label: "Cerfa", description: "Renseignez les informations" },
