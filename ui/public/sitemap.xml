@@ -6,7 +6,7 @@
 <url> <loc>https://contrat.apprentissage.beta.gouv.fr/auth/inscription</loc> </url>
 <url> <loc>https://contrat.apprentissage.beta.gouv.fr/auth/confirmation</loc> </url>
 <url> <loc>https://contrat.apprentissage.beta.gouv.fr/auth/finalize</loc> </url>
-<url> <loc>https://contrat.apprentissage.beta.gouv.fr/en-attente-confirmation</loc> </url>
+<url> <loc>https://contrat.apprentissage.beta.gouv.fr/auth/en-attente-confirmation</loc> </url>
 <url> <loc>https://contrat.apprentissage.beta.gouv.fr/reset-password</loc> </url>
 <url> <loc>https://contrat.apprentissage.beta.gouv.fr/forgotten-password</loc> </url>
 <url> <loc>https://contrat.apprentissage.beta.gouv.fr/support</loc> </url>

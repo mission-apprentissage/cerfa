@@ -3,6 +3,7 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const Joi = require("joi");
 const config = require("../../config");
 const Boom = require("boom");
+const { createActivationToken } = require("../../common/utils/jwtUtils");
 
 module.exports = ({ users, roles, mailer }) => {
   const router = express.Router();
@@ -51,6 +52,7 @@ module.exports = ({ users, roles, mailer }) => {
         username: user.username,
         civility: user.civility,
         tmpPwd: password,
+        activationToken: createActivationToken(user.email.toLowerCase(), { payload: { tmpPwd: password } }),
         publicUrl: config.publicUrl,
       });
 
