@@ -269,16 +269,15 @@ const Users = () => {
   });
 
   const title = "Gestion des utilisateurs";
-  setTitle(title);
 
   return (
     <Page>
       <Head>
-        <title>Liste des utilisateurs</title>
+        <title>{title}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
+      <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title }]} />
 
       <Heading as="h1" mb={8} mt={6}>
         {title}

@@ -47,7 +47,7 @@ const Login = (props) => {
         setAuth(user);
         setToken(result.token);
         if (!user.confirmed) {
-          router.push(`/en-attente-confirmation`);
+          router.push(`/auth/waiting-confirmation`);
         } else {
           router.push("/");
         }

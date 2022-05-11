@@ -16,7 +16,9 @@ const AccountWrapper = ({ children }) => {
     (async () => {
       if (auth.sub !== "anonymous") {
         if (!auth.confirmed) {
-          router.push(`/en-attente-confirmation`);
+          if (router.pathname !== "/auth/waiting-confirmation") {
+            router.push(`/auth/waiting-confirmation`);
+          }
         } else {
           if (auth.account_status === "FORCE_RESET_PASSWORD" && router.pathname !== "/auth/reset-password") {
             let { token } = await _post("/api/v1/password/forgotten-password", { username: auth.sub, noEmail: true });
