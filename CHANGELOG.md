@@ -1,3 +1,11 @@
+# [2.6.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.3...v2.6.0-beta.4) (2022-05-11)
+
+
+### Features
+
+* bouton d'aide flottant avec modale ([6e408e0](https://github.com/mission-apprentissage/cerfa/commit/6e408e05d3953c3c7c0a016861cda5dd66d85c98))
+* suppression de code mort ([2bdf34a](https://github.com/mission-apprentissage/cerfa/commit/2bdf34a0aa9192715661af47555c9553f51b49cb))
+
 # [2.6.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.2...v2.6.0-beta.3) (2022-05-10)
 
 
