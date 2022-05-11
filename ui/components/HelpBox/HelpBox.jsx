@@ -69,7 +69,7 @@ export const HelpBox = () => {
           <ModalBody pb={6}>
             <Box mb={5}>
               Avant de contacter l&apos;assistance, peut-être trouverez vous votre réponse dans la{" "}
-              <Link href={"/assitance"} textDecoration={"underline"} color="bluefrance">
+              <Link href={"/assistance/faq"} textDecoration={"underline"} color="bluefrance">
                 page FAQ
               </Link>
               .
