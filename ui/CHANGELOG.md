@@ -1,3 +1,10 @@
+# [2.6.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.5...v2.6.0-beta.6) (2022-05-11)
+
+
+### Bug Fixes
+
+* ajout des noms de champs lors de la signature ([b83d5b2](https://github.com/mission-apprentissage/cerfa/commit/b83d5b28004a7e8a38408ef903d83599a0864181))
+
 # [2.6.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.4...v2.6.0-beta.5) (2022-05-11)
 
 
