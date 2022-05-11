@@ -1,3 +1,12 @@
+# [2.6.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.8...v2.6.0-beta.9) (2022-05-11)
+
+
+### Bug Fixes
+
+* changement de format du telephone agecap ([b940ba9](https://github.com/mission-apprentissage/cerfa/commit/b940ba921add015fcba28fa467c3ae8f10ae29ac))
+* usage de l'erreur formatée ([8d6f221](https://github.com/mission-apprentissage/cerfa/commit/8d6f221acf9e373743b6691b32b59843aa1cddde))
+* validation du telephone ([2c488be](https://github.com/mission-apprentissage/cerfa/commit/2c488bed16219dbffdc303ea8b9b0959d9f9dd68))
+
 # [2.6.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.7...v2.6.0-beta.8) (2022-05-11)
 
 
