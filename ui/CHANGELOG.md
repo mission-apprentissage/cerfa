@@ -1,3 +1,12 @@
+# [2.6.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.4...v2.6.0-beta.5) (2022-05-11)
+
+
+### Bug Fixes
+
+* changement d'url ([90ee728](https://github.com/mission-apprentissage/cerfa/commit/90ee72802b45a8b7b50cc8dffdbfb17e8fc18d91))
+* fix des erreurs de creation d'utilisateurs ([8246415](https://github.com/mission-apprentissage/cerfa/commit/82464150cd9cddbc631ef818ffaca6cbf3a8068b))
+* suppression d'un log ([4b879f3](https://github.com/mission-apprentissage/cerfa/commit/4b879f3490e10410f793c073d635ee94ce53e8f1))
+
 # [2.6.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.3...v2.6.0-beta.4) (2022-05-11)
 
 
