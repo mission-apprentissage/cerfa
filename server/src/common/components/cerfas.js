@@ -6,15 +6,29 @@ const { set, get } = require("lodash");
 const cerfaSchema = require("../model/schema/specific/dossier/cerfa/Cerfa");
 
 const buildErrorResult = (validatedModel) => {
-  let result = { reason: "" };
+  let result = {};
   if (validatedModel) {
     const keys = Object.keys(validatedModel.errors);
     for (let i = 0; i < keys.length; i++) {
       const err = validatedModel.errors[keys[i]];
       if (err.kind === "required") {
-        set(result, `${err.path}`, { ...get(cerfaSchema, `${err.path}`), isErrored: true });
+        set(result, `${err.path}`, {
+          detail: "is required",
+        });
       } else if (err.kind === "enum") {
-        set(result, `${err.path}`, { message: "Value not found in enum", isErrored: true });
+        set(result, `${err.path}`, {
+          message: "Value not found in enum",
+          detail: "enum error",
+        });
+      } else if (err.kind === "user defined") {
+        set(result, `${err.path}`, {
+          detail: "Value error",
+        });
+      } else {
+        set(result, `${err.path}`, {
+          path: get(cerfaSchema, `${err.path}`)["path"],
+          detail: err.kind,
+        });
       }
     }
   }
@@ -84,10 +98,10 @@ module.exports = async () => {
           if (cerfa.apprenti.age >= 18) {
             cerfa.apprenti.apprentiMineurNonEmancipe = false;
           } else {
-            throw Boom.badData("Validation", errorResult);
+            throw Boom.badData("Validation schema cerfa", errorResult);
           }
         } else {
-          throw Boom.badData("Validation", errorResult);
+          throw Boom.badData("Validation schema cerfa", errorResult);
         }
       }
 

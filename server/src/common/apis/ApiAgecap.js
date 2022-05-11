@@ -79,7 +79,10 @@ class ApiAgecap {
       } catch (e) {
         // console.log(e);
         // console.log(e.response.data);
-        throw new ApiError("Api Agecap contrat", `${e.message}`, { contratAgecap, ...e.response.data });
+        throw new ApiError("Api Agecap contrat", `${e.message}`, {
+          id: contratAgecap.detailsContrat.numeroEnregistrementContrat,
+          ...e.response.data,
+        });
       }
     });
   }

@@ -34,7 +34,8 @@ module.exports = {
   },
   log: {
     level: env.get("CERFA_LOG_LEVEL").default("info").asString(),
-    destinations: env.get("CERFA_LOG_DESTINATIONS").default("stdout").asString(),
+    destinations: env.get("CERFA_LOG_DESTINATIONS").default("stdout").asArray(),
+    format: env.get("CERFA_LOG_FORMAT").default("pretty").asString(),
   },
   slackWebhookUrl: env.get("CERFA_SLACK_WEBHOOK_URL").asString(),
   outputDir: env.get("CERFA_OUTPUT_DIR").default(".local/output").asString(),
