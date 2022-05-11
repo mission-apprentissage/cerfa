@@ -1,3 +1,10 @@
+# [2.6.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.7...v2.6.0-beta.8) (2022-05-11)
+
+
+### Bug Fixes
+
+* url_typo ([99b54b7](https://github.com/mission-apprentissage/cerfa/commit/99b54b760f5c7cd1aa51dff10ea2b6b529be4ab8))
+
 # [2.6.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0-beta.6...v2.6.0-beta.7) (2022-05-11)
 
 
