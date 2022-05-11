@@ -4,23 +4,23 @@
  * DO NOT MODIFY IT BY HAND. Instead, modify the Mongoose schema file,
  * To regenerate this file run $> yarn doc
  */
- const { Types } = require("mongoose");
+const { Types } = require("mongoose");
 
- export interface Log {
-   msg: string;
-   level: number;
-   name: string;
-   time: Date;
-   request?: {
-     [k: string]: unknown;
-   };
-   response?: {
-     [k: string]: unknown;
-   };
-   error?: {
-     [k: string]: unknown;
-   };
-   type?: string;
-   elapsedTime?: number;
-   _id?: Types.ObjectId;
- }
+export interface Log {
+  msg: string;
+  level: number;
+  name: string;
+  time: Date;
+  request?: {
+    [k: string]: unknown;
+  };
+  response?: {
+    [k: string]: unknown;
+  };
+  error?: {
+    [k: string]: unknown;
+  };
+  type?: string;
+  elapsedTime?: number;
+  _id?: Types.ObjectId;
+}
