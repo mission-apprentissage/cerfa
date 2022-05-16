@@ -45,7 +45,8 @@ export const DOSSIER_STATUS = {
   },
   INCOMPLET: {
     priority: 6,
-    text: "À modifier",
+    // text: "À modifier",
+    text: "Non déposable",
   },
   DEPOSE: {
     priority: 6,
