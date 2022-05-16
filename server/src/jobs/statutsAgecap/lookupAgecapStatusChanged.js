@@ -7,7 +7,7 @@ const { asyncForEach } = require("../../common/utils/asyncUtils");
 const STATUS_AGECAP = {
   "Transmis au gestionnaire": "TRANSMIS",
   "En cours d'instruction": "EN_COURS_INSTRUCTION",
-  "Non déposable": "INCOMPLET",
+  "Non déposable": "REFUSE",
   // eslint-disable-next-line prettier/prettier
   Déposé: "DEPOSE",
 };
