@@ -5,6 +5,7 @@ const Boom = require("boom");
 const passport = require("passport");
 const { Strategy, ExtractJwt } = require("passport-jwt");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
+// eslint-disable-next-line no-unused-vars
 const { createUserToken, createActivationToken } = require("../../common/utils/jwtUtils");
 
 const IS_OFFLINE = Boolean(config.isOffline);
@@ -34,6 +35,7 @@ const checkActivationToken = (users) => {
   return passport.authenticate("jwt-activation", { session: false, failWithError: true });
 };
 
+// eslint-disable-next-line no-unused-vars
 module.exports = ({ users, mailer, sessions }) => {
   const router = express.Router(); // eslint-disable-line new-cap
 
@@ -80,45 +82,52 @@ module.exports = ({ users, mailer, sessions }) => {
     })
   );
 
+  // router.post(
+  //   "/register",
+  //   tryCatch(async ({ body }, res) => {
+  //     const { compte, siret, email, password, nom, prenom, civility } = await Joi.object({
+  //       compte: Joi.string().required(),
+  //       email: Joi.string().required(),
+  //       password: Joi.string().required(),
+  //       siret: Joi.string().required(),
+  //       nom: Joi.string().required(),
+  //       prenom: Joi.string().required(),
+  //       civility: Joi.string().required(),
+  //     }).validateAsync(body, { abortEarly: false });
+
+  //     const alreadyExists = await users.getUser(email.toLowerCase());
+  //     if (alreadyExists) {
+  //       throw Boom.conflict(`Unable to create`, { message: `email already in use` });
+  //     }
+
+  //     const user = await users.createUser(email, password, {
+  //       siret,
+  //       nom,
+  //       prenom,
+  //       civility,
+  //       roles: compte === "entreprise" || compte === "cfa" ? [compte] : [],
+  //       orign_register: "ORIGIN",
+  //     });
+  //     if (!user) {
+  //       throw Boom.badRequest("Something went wrong");
+  //     }
+
+  //     await mailer.sendEmail(user.email, `[${config.env} Contrat publique apprentissage] Bienvenue`, "grettings", {
+  //       username: user.username,
+  //       civility: user.civility,
+  //       tmpPwd: password,
+  //       publicUrl: config.publicUrl,
+  //       activationToken: createActivationToken(user.email.toLowerCase(), { payload: { tmpPwd: password } }),
+  //     });
+
+  //     return res.json({ succeeded: true });
+  //   })
+  // );
+
   router.post(
     "/register",
-    tryCatch(async ({ body }, res) => {
-      const { compte, siret, email, password, nom, prenom, civility } = await Joi.object({
-        compte: Joi.string().required(),
-        email: Joi.string().required(),
-        password: Joi.string().required(),
-        siret: Joi.string().required(),
-        nom: Joi.string().required(),
-        prenom: Joi.string().required(),
-        civility: Joi.string().required(),
-      }).validateAsync(body, { abortEarly: false });
-
-      const alreadyExists = await users.getUser(email.toLowerCase());
-      if (alreadyExists) {
-        throw Boom.conflict(`Unable to create`, { message: `email already in use` });
-      }
-
-      const user = await users.createUser(email, password, {
-        siret,
-        nom,
-        prenom,
-        civility,
-        roles: compte === "entreprise" || compte === "cfa" ? [compte] : [],
-        orign_register: "ORIGIN",
-      });
-      if (!user) {
-        throw Boom.badRequest("Something went wrong");
-      }
-
-      await mailer.sendEmail(user.email, `[${config.env} Contrat publique apprentissage] Bienvenue`, "grettings", {
-        username: user.username,
-        civility: user.civility,
-        tmpPwd: password,
-        publicUrl: config.publicUrl,
-        activationToken: createActivationToken(user.email.toLowerCase(), { payload: { tmpPwd: password } }),
-      });
-
-      return res.json({ succeeded: true });
+    tryCatch(async (req, res) => {
+      return res.json({ closed: true });
     })
   );
 

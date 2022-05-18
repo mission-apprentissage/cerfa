@@ -158,6 +158,7 @@ const Register = ({ onSucceeded, ...props }) => {
                       handleChange(e);
                     }}
                     size="lg"
+                    disabled
                   >
                     Un employeur public
                   </Radio>
@@ -168,6 +169,7 @@ const Register = ({ onSucceeded, ...props }) => {
                       handleChange(e);
                     }}
                     size="lg"
+                    disabled
                   >
                     Un CFA
                   </Radio>
@@ -368,6 +370,9 @@ const RegisterPage = () => {
         <title>Inscription</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Heading as="h2" fontSize="2xl" mb={[3, 6]} color="redmarianne">
+        Attention: Les inscriptions native sont fermées.
+      </Heading>
       <Flex w="full" maxW="xl" mt={4}>
         {!succeeded && (
           <>

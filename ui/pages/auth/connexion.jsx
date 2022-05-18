@@ -54,7 +54,7 @@ const Login = (props) => {
       }
     } catch (e) {
       if (e.messages?.details?.message === "pds login") {
-        setStatus({ error: "Veuillez vous connecter avec le portail de service." });
+        setStatus({ error: "Veuillez vous connecter avec le portail Mes Démarches Emploi et Formation." });
       } else {
         console.error(e);
         setStatus({ error: e.prettyMessage });
