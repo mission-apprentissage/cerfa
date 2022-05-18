@@ -74,8 +74,8 @@ const UserMenu = () => {
             </Text>
           </Link>
           <Link
-            // href="/auth/connexion"
-            href={linkToPds}
+            href="/auth/connexion"
+            // href={linkToPds}
             variant="pill"
             px={3}
             py={1}
