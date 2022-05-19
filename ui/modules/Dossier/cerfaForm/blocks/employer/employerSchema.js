@@ -255,7 +255,7 @@ export const employerSchema = {
   "employeur.typeEmployeur": {
     required: true,
     label: "Type d'employeur :",
-    requiredMessage: "le type d'employeur est obligatoire",
+    requiredMessage: "Le type d'employeur est obligatoire",
     showInfo: true,
     options: [
       {
@@ -304,6 +304,7 @@ export const employerSchema = {
     ],
   },
   "employeur.employeurSpecifique": {
+    required: true,
     label: "Est un employeur spécifique :",
     options: [
       {
