@@ -1,3 +1,10 @@
+# [2.7.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0...v2.7.0-beta.1) (2022-05-19)
+
+
+### Features
+
+* inscription pds ([#729](https://github.com/mission-apprentissage/cerfa/issues/729)) ([d381a13](https://github.com/mission-apprentissage/cerfa/commit/d381a13025c949975ef145f418bafb23ebc3bc1c))
+
 # [2.6.0](https://github.com/mission-apprentissage/cerfa/compare/v2.5.1...v2.6.0) (2022-05-11)
 
 

@@ -89,7 +89,7 @@ export const HelpBox = () => {
               </Link>{" "}
               ou composer le numéro vert ci-dessous du lundi au vendredi, de 9h à 18h, sans interruption.
             </Box>
-            <Image mb={6} width={300} src={"/numero_vert.jpg"} />
+            <Image mb={6} width={300} src={"/numero_vert.jpg"} alt="0 805 032 430" />
           </ModalBody>
         </ModalContent>
       </Modal>
