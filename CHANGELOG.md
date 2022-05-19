@@ -1,3 +1,10 @@
+## [2.7.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.7.0...v2.7.1-beta.1) (2022-05-19)
+
+
+### Bug Fixes
+
+* rendre obligatoire le champ employeurSpecifique ([8d453c2](https://github.com/mission-apprentissage/cerfa/commit/8d453c2f548e8deb2d9cc4c8152a984162e90a87))
+
 # [2.7.0](https://github.com/mission-apprentissage/cerfa/compare/v2.6.0...v2.7.0) (2022-05-19)
 
 
