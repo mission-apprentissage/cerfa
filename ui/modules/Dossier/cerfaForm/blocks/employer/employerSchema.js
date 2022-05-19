@@ -108,24 +108,24 @@ export const employerSchema = {
     validateMessage: " n'est pas une région valide",
     options: [
       {
-        label: "1 - Guadeloupe",
-        value: "1",
+        label: "01 - Guadeloupe",
+        value: "01",
       },
       {
-        label: "2 - Martinique",
-        value: "2",
+        label: "02 - Martinique",
+        value: "02",
       },
       {
-        label: "3 - Guyane",
-        value: "3",
+        label: "03 - Guyane",
+        value: "03",
       },
       {
-        label: "4 - La Réunion",
-        value: "4",
+        label: "04 - La Réunion",
+        value: "04",
       },
       {
-        label: "6 - Mayotte",
-        value: "6",
+        label: "06 - Mayotte",
+        value: "06",
       },
       {
         label: "11 - Ile de France",
@@ -305,6 +305,7 @@ export const employerSchema = {
   },
   "employeur.employeurSpecifique": {
     required: true,
+    completion: false,
     label: "Est un employeur spécifique :",
     options: [
       {
