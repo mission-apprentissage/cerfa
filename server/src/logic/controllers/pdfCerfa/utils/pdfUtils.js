@@ -111,11 +111,7 @@ const fieldsPositions = {
     telephone: {
       x: 90,
       y: 574,
-      maxLength: 15,
-      title: (value) => {
-        let newValue = value.replace("+", "00");
-        return newValue.match(/\d{2}/g).join(" ");
-      },
+      maxLength: 20,
     },
     courriel: {
       x: 27,
@@ -288,11 +284,7 @@ const fieldsPositions = {
     telephone: {
       x: 88,
       y: 324,
-      maxLength: 15,
-      title: (value) => {
-        let newValue = value.replace("+", "00");
-        return newValue.match(/\d{2}/g).join(" ");
-      },
+      maxLength: 20,
     },
     courriel: {
       x: 27,
