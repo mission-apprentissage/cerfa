@@ -1,3 +1,10 @@
+## [2.7.2-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.7.2-beta.1...v2.7.2-beta.2) (2022-05-19)
+
+
+### Bug Fixes
+
+* correction de la completion et des codes regions ([8189195](https://github.com/mission-apprentissage/cerfa/commit/818919535e2931acf32d7431dddc008d493670b3))
+
 ## [2.7.2-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.7.1...v2.7.2-beta.1) (2022-05-19)
 
 
