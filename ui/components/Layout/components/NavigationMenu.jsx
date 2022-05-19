@@ -38,6 +38,15 @@ const NavigationMenu = ({ isMyWorkspace, ...props }) => {
 const UserMenu = () => {
   let [auth] = useAuth();
 
+  const [linkToPds, setLinkToPds] = useState(null);
+  useEffect(() => {
+    const run = async () => {
+      const data = await _get(`/api/v1/pds/getUrl`);
+      setLinkToPds(data.authorizationUrl);
+    };
+    run();
+  }, []);
+
   let logout = async () => {
     const { loggedOut } = await _get("/api/v1/auth/logout");
     if (loggedOut) {
@@ -46,11 +55,13 @@ const UserMenu = () => {
   };
   let accountType = auth.roles.length ? auth.roles[0].name : isUserAdmin(auth) ? "admin" : "utilisateur";
 
+  if (!linkToPds) return null;
+
   return (
     <>
       {auth?.sub === "anonymous" && (
         <HStack>
-          <Link href="/auth/inscription" variant="pill" px={3} py={1}>
+          <Link href={linkToPds} variant="pill" px={3} py={1}>
             <Text lineHeight={6}>
               <AccountUnfill boxSize={5} mr={2} />
               S&apos;inscrire
