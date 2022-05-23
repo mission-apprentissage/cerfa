@@ -5,55 +5,6 @@ const remunerationAnnuelleSchema = require("./remunerationAnnuelle.part");
 
 const numContratChecks = {
   example: "02B202212000000",
-  mask: "DEP Y M N 0000",
-  maskBlocks: [
-    {
-      name: "D",
-      mask: "MaskedEnum",
-      placeholderChar: "_",
-      enum: ["0", "9"],
-      maxLength: 1,
-    },
-    {
-      name: "E",
-      mask: "MaskedRange",
-      placeholderChar: "_",
-      from: 0,
-      to: 9,
-      maxLength: 1,
-    },
-    {
-      name: "P",
-      mask: "MaskedEnum",
-      placeholderChar: "_",
-      enum: ["A", "B", "a", "b", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
-      maxLength: 1,
-    },
-    {
-      name: "Y",
-      mask: "MaskedRange",
-      placeholderChar: "_",
-      from: 1900,
-      to: 2999,
-      maxLength: 4,
-    },
-    {
-      name: "M",
-      mask: "MaskedRange",
-      placeholderChar: "_",
-      from: 1,
-      to: 12,
-      maxLength: 2,
-    },
-    {
-      name: "N",
-      mask: "MaskedEnum",
-      placeholderChar: "_",
-      enum: ["NC", "nc", ...new Array(100).fill().map((e, i) => (i < 10 ? `0${i}` : `${i}`))],
-      maxLength: 2,
-    },
-  ],
-
   validate: {
     validator: function (v) {
       if (!v) return true;
@@ -62,7 +13,6 @@ const numContratChecks = {
     message: (props) => `${props.value} n'est pas un numéro valide`,
   },
   pattern: "^(0[0-9][0-9]|02[ABab]|9[012345]|97[12346])([0-9]{4})([0-1][0-9])((NC|nc)|[0-9]{2})([0-9]{4})$",
-  validateMessage: `n'est pas un numéro valide`,
 };
 
 const contratSchema = {
@@ -70,8 +20,6 @@ const contratSchema = {
     path: "contrat.modeContractuel",
     ...modeContractuelSchema,
     default: null,
-    label: "Mode contratctuel",
-    requiredMessage: "le mode de contrat est obligatoire",
   },
   typeContratApp: {
     path: "contrat.typeContratApp",
@@ -80,18 +28,14 @@ const contratSchema = {
     required: function () {
       return !this.draft;
     },
-    label: "Type de contrat ou d'avenant",
-    requiredMessage: "le type de contrat ou d'avenant est obligatoire",
   },
   numeroContratPrecedent: {
     path: "contrat.numeroContratPrecedent",
     type: String,
     description:
       "Succession (n° du contrat précédent) : s'il ne s'agit pas du tout premier contrat de l'apprenti, renseignez le numéro de son contrat précédent, même s'il a été conclu avec un autre employeur. Avenant (n° du contrat sur lequel porte l'avenant ) : indiquez le n° de dépôt du contrat initial qui fait l'objet de la modification.",
-    label: "Numéro du contrat précédent ou du contrat sur lequel porte l'avenant :",
     labelAvenant: "Numéro de contrat sur lequel porte l'avenant :",
     labelSuccession: "Numéro du contrat précédent :",
-    requiredMessage: "la numéro du contrat précédent est obligatoire",
     nullable: true,
     default: null,
     ...numContratChecks,
@@ -115,8 +59,6 @@ const contratSchema = {
     type: Date,
     description:
       "Indiquez la date du 1er jour où débute effectivement le contrat (chez l'employeur ou dans le centre de formation). La date de début d'exécution du contrat est liée à la date de naissance de l'apprenti pour le calcul des périodes de rémunération.",
-    label: "Date de début d'exécution du contrat :",
-    requiredMessage: "la date de début d'exécution de contrat est obligatoire",
     example: "2021-02-01T00:00:00+0000",
     default: null,
     required: function () {
@@ -128,8 +70,6 @@ const contratSchema = {
     type: Date,
     description:
       "La période de contrat doit englober la date du dernier examen qui sanctionne l'obtention du diplôme. Si celle-ci n'est pas connue au moment de la conclusion du contrat, vous pouvez renseigner une date située maximum 2 mois au-delà de la date de fin prévisionnelle des examens.",
-    label: "Date de fin du contrat ou de la période d'apprentissage :",
-    requiredMessage: "la date de fin de contrat est obligatoire",
     example: "2021-02-28T00:00:00+0000",
     default: null,
     required: function () {
@@ -149,8 +89,6 @@ const contratSchema = {
     path: "contrat.dateEffetAvenant",
     type: Date,
     description: "Date à laquelle l'avenant va prendre effet.",
-    label: "Date d'effet d'avenant :",
-    requiredMessage: "S'agissant d'un avenant sa date d'effet est obligatoire ",
     nullable: true,
     default: null,
     example: "2021-03-01T00:00:00+0000",
@@ -159,8 +97,6 @@ const contratSchema = {
     path: "contrat.dateConclusion",
     type: Date,
     description: "Date de conclusion du contrat. (Date de signature du présent contrat)",
-    label: "Date de conclusion du contrat :",
-    requiredMessage: "La date de conclusion de contrat est obligatoire",
     example: "2021-01-15T00:00:00+0000",
     default: null,
     required: function () {
@@ -178,8 +114,6 @@ const contratSchema = {
     path: "contrat.lieuSignatureContrat",
     type: String,
     description: "Lieu de signature du contrat",
-    label: "Lieu de signature du contrat:",
-    requiredMessage: "Le lieu de signature est obligatoire",
     example: "PARIS",
     default: null,
     required: function () {
@@ -189,15 +123,11 @@ const contratSchema = {
   typeDerogation: {
     path: "contrat.typeDerogation",
     ...typeDerogationSchema,
-    label: "Type de dérogation (optionnel)",
-    isNotRequiredForm: true,
   },
   dureeTravailHebdoHeures: {
     path: "contrat.dureeTravailHebdoHeures",
     type: Number,
     description: `La durée légale du travail effectif est fixée à 35h par semaine. Dans certains secteurs, quand l'organisation du travail le justifie, elle peut être portée à 40h. Le temps de formation en CFA est du temps de travail effectif et compte dans l'horaire de travail. En savoir plus sur les horaires sur [le site du Service public.](https://www.service-public.fr/particuliers/vosdroits/F2918), rubrique "Temps de travail".`,
-    requiredMessage: "la durée hebdomadaire de travail est obligatoire",
-    label: "Heures:",
     example: 37,
     default: null,
     required: function () {
@@ -208,135 +138,73 @@ const contratSchema = {
     path: "contrat.dureeTravailHebdoMinutes",
     type: Number,
     description: "Durée hebdomadaire du travail (minutes)",
-    label: "Minutes:",
     example: 30,
     default: null,
-    isNotRequiredForm: true,
   },
   travailRisque: {
     path: "contrat.travailRisque",
     type: Boolean,
     description: "Travaille sur machines dangereuses ou exposition à des risques particuliers",
-    requiredMessage: "Cette déclaration est obligatoire",
     default: null,
     required: function () {
       return !this.draft;
     },
-    label: "Travail sur machines dangereuses ou exposition à des risques particuliers: ",
     example: "Oui",
-    options: [
-      {
-        label: "Oui",
-        value: true,
-      },
-      {
-        label: "Non",
-        value: false,
-      },
-    ],
   },
   caisseRetraiteComplementaire: {
     path: "contrat.caisseRetraiteComplementaire",
     type: String,
     description: "Caisse de retraite complémentaire",
-    label: "Caisse de retraite complémentaire :",
     example: "",
     default: null,
-    isNotRequiredForm: true,
   },
   avantageNature: {
     path: "contrat.avantageNature",
-    requiredMessage: "Cette déclaration est obligatoire",
     type: Boolean,
     default: null,
     required: function () {
       return !this.draft;
     },
     description: `Une déduction du montant des avantages peut être pratiquée sur la rémunération de l'apprenti sous certaines conditions (code du travail, [art. D6222-33](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000041770368)).`,
-    label: "L'apprenti(e) bénéficie d'avantages en nature",
     example: "Oui",
-    options: [
-      {
-        label: "Oui",
-        value: true,
-      },
-      {
-        label: "Non",
-        value: false,
-      },
-    ],
   },
   avantageNourriture: {
     path: "contrat.avantageNourriture",
     type: Number,
     description: "Nourriture €/repas",
-    label: "Nourriture:",
     nullable: true,
     default: null,
     example: 3,
     // required: function () {
     //   return this.contrat.avantageNature && (!this.contrat.avantageLogement || !this.contrat.autreAvantageEnNature);
     // },
-    requiredMessage: "Cette déclaration est obligatoire",
-    isNotRequiredForm: true,
-    mask: "X € / rep\\as",
-    maskBlocks: [
-      {
-        name: "X",
-        mask: "Number",
-        signed: true, // disallow negative
-        normalizeZeros: true, // appends or removes zeros at ends
-        max: 10000,
-      },
-    ],
   },
   avantageLogement: {
     path: "contrat.avantageLogement",
     type: Number,
     description: "Logement €/mois",
-    label: "Logement:",
     nullable: true,
     default: null,
     example: 456,
     // required: function () {
     //   return this.contrat.avantageNature;
     // },
-    isNotRequiredForm: true,
-    mask: "X € / mois",
-    maskBlocks: [
-      {
-        name: "X",
-        mask: "Number",
-        signed: true, // disallow negative
-        normalizeZeros: true, // appends or removes zeros at ends
-        max: 10000,
-      },
-    ],
   },
   autreAvantageEnNature: {
     path: "contrat.autreAvantageEnNature",
     type: Boolean,
     description: "Autre avantage en nature",
-    label: "Autres avantages",
     nullable: true,
     default: null,
     example: true,
     // required: function () {
     //   return this.contrat.avantageNature;
     // },
-    options: [
-      {
-        label: "true",
-        value: true,
-      },
-    ],
-    isNotRequiredForm: true,
   },
   salaireEmbauche: {
     path: "contrat.salaireEmbauche",
     type: Number,
     description: "Salaire brut à l'embauche",
-    label: "Salaire brut mensuel à l'embauche:",
     example: 1530,
     default: null,
     required: function () {
@@ -353,23 +221,7 @@ const contratSchema = {
     enum: [0, 10, 20],
     type: Number,
     default: 0,
-    isNotRequiredForm: true,
     description: `**Majoration de la rémunération** :\r\n  Aucune\r\n  10%\r\n  20%`,
-    label: "L'employeur souhaite appliquer un majoration à la rémunération :",
-    options: [
-      {
-        label: "Aucune",
-        value: 0,
-      },
-      {
-        label: "10%",
-        value: 10,
-      },
-      {
-        label: "20%",
-        value: 20,
-      },
-    ],
   },
   remunerationsAnnuelles: {
     type: [

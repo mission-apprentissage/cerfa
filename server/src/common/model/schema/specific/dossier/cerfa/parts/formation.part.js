@@ -21,12 +21,9 @@ const formationSchema = {
     required: function () {
       return !this.draft;
     },
-    mask: "RNCPX",
-    unmask: false,
-    maskBlocks: [
+    unmaskBlocks: [
       {
         name: "X",
-        mask: "Pattern",
         pattern: "^\\d*$",
       },
     ],

@@ -365,7 +365,6 @@ export const employerSchema = {
     // required: true ??,
     label: "Libellé de la convention collective appliquée:",
     requiredMessage: "Le libellé de la convention collective est obligatoire",
-    isNotRequiredForm: true,
   },
   "employeur.regimeSpecifique": {
     required: true,
