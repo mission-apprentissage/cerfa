@@ -246,10 +246,6 @@ const employeurCerfaSchema = {
     type: Boolean,
     description:
       "Le maître d'apprentissage doit notamment justifier d'une formation et d'une expérience professionnelle minimales (code du travail, [art. R6223-22](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000037813428/)). Le changement de maître d'apprentissage en cours de contrat implique de conclure un avenant au contrat initial, sauf si le contrat initial indique un second maître d'apprentissage.",
-    label:
-      "L'employeur atteste sur l'honneur que le(s) maître(s) d'apprentissage répond à l'ensemble des critères d'éligibilité à cette fonction.",
-    requiredMessage:
-      "Il est obligatoire d'attester que le(s) maître(s) d'apprentissage répond à l'ensemble des critères d'éligibilité à cette fonction ",
     default: null,
     required: function () {
       return !this.draft;

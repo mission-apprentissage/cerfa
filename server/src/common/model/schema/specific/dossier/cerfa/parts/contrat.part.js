@@ -34,8 +34,6 @@ const contratSchema = {
     type: String,
     description:
       "Succession (n° du contrat précédent) : s'il ne s'agit pas du tout premier contrat de l'apprenti, renseignez le numéro de son contrat précédent, même s'il a été conclu avec un autre employeur. Avenant (n° du contrat sur lequel porte l'avenant ) : indiquez le n° de dépôt du contrat initial qui fait l'objet de la modification.",
-    labelAvenant: "Numéro de contrat sur lequel porte l'avenant :",
-    labelSuccession: "Numéro du contrat précédent :",
     nullable: true,
     default: null,
     ...numContratChecks,
