@@ -21,12 +21,6 @@ const formationSchema = {
     required: function () {
       return !this.draft;
     },
-    unmaskBlocks: [
-      {
-        name: "X",
-        pattern: "^\\d*$",
-      },
-    ],
   },
   codeDiplome: {
     maxLength: 8,
