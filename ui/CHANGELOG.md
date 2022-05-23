@@ -1,3 +1,17 @@
+## [2.7.2-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.7.2-beta.1...v2.7.2-beta.2) (2022-05-19)
+
+
+### Bug Fixes
+
+* correction de la completion et des codes regions ([8189195](https://github.com/mission-apprentissage/cerfa/commit/818919535e2931acf32d7431dddc008d493670b3))
+
+## [2.7.2-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.7.1...v2.7.2-beta.1) (2022-05-19)
+
+
+### Bug Fixes
+
+* format telephone sur la generation du pdf ([#737](https://github.com/mission-apprentissage/cerfa/issues/737)) ([810c708](https://github.com/mission-apprentissage/cerfa/commit/810c708e721d15f232b77e7a40dfaad82468dcd2))
+
 ## [2.7.1](https://github.com/mission-apprentissage/cerfa/compare/v2.7.0...v2.7.1) (2022-05-19)
 
 
