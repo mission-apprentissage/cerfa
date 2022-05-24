@@ -26,6 +26,7 @@ export const PhoneInput = (props) => {
           fr: ". .. .. .. ..",
         }}
         countryCodeEditable={false}
+        enableTerritories={true}
         onChange={handleChange}
         disabled={locked}
         inputClass={`phone-form-input ${getStatusClass(props)}`}
