@@ -1,3 +1,10 @@
+# [2.8.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.8.0-beta.1...v2.8.0-beta.2) (2022-05-24)
+
+
+### Features
+
+* ajout _document, remise de plausible ([#750](https://github.com/mission-apprentissage/cerfa/issues/750)) ([3651579](https://github.com/mission-apprentissage/cerfa/commit/36515797dd9ed0e2dfa5ee0b49e492f0453a4331))
+
 # [2.8.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.7.2...v2.8.0-beta.1) (2022-05-24)
 
 
