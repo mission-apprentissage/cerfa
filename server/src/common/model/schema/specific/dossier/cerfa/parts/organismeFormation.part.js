@@ -5,21 +5,11 @@ const organismeFormationSchema = {
     // maxLength: 80,
     type: String,
     description: "Nom de l'organisme de formation responsable",
-    label: "Dénomination du CFA responsable :",
-    requiredMessage: "la dénomination du CFA responsable est obligatoire",
     example: "CFA",
     default: null,
     required: function () {
       return !this.draft;
     },
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
   },
   formationInterne: {
     type: Boolean,
@@ -29,19 +19,7 @@ const organismeFormationSchema = {
     required: function () {
       return !this.draft;
     },
-    label: "Le centre de formation est-il un CFA d'entreprise ?",
-    requiredMessage: "Merci de préciser s'il sagit d'un CFA d'entreprise",
     example: "Non",
-    options: [
-      {
-        label: "Oui",
-        value: true,
-      },
-      {
-        label: "Non",
-        value: false,
-      },
-    ],
   },
   siret: {
     maxLength: 14,
@@ -64,18 +42,7 @@ const organismeFormationSchema = {
       return this.draft;
     },
     example: "98765432400019",
-    label: "N° SIRET du CFA responsable :",
-    requiredMessage: "Le siret est obligatoire",
-    validateMessage: `n'est pas un siret valide`,
     pattern: "^([0-9]{14})$",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d*$",
-      },
-    ],
   },
   uaiCfa: {
     maxLength: 8,
@@ -90,9 +57,6 @@ const organismeFormationSchema = {
     type: String,
     description: `Le numéro UAI est autocomplété ; il peut être recherché sur [le catalogue des formations en apprentissage.](https://catalogue.apprentissage.beta.gouv.fr/)`,
     example: "0561910X",
-    label: "N° UAI du CFA :",
-    requiredMessage: "Le N° UAI de l'organisme est obligatoire",
-    validateMessage: `n'est pas un uai valide`,
     pattern: "^[0-9]{7}[a-zA-Z]$",
     default: null,
     nullable: function () {
