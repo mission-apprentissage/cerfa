@@ -1,3 +1,10 @@
+# [2.8.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.7.2...v2.8.0-beta.1) (2022-05-24)
+
+
+### Features
+
+* ajouter indicateurs manquants DROM COM ([#748](https://github.com/mission-apprentissage/cerfa/issues/748)) ([b62761e](https://github.com/mission-apprentissage/cerfa/commit/b62761e7a4d2c79235d94ef8ce163001bd8ec988))
+
 ## [2.7.2](https://github.com/mission-apprentissage/cerfa/compare/v2.7.1...v2.7.2) (2022-05-23)
 
 
