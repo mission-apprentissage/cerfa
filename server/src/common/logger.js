@@ -2,6 +2,7 @@ const util = require("util");
 const { throttle, omit, isEmpty } = require("lodash");
 const bunyan = require("bunyan");
 const BunyanSlack = require("bunyan-slack");
+const BunyanTeams = require("bunyan-teams");
 const BunyanMongodbStream = require("bunyan-mongodb-stream");
 const { Log } = require("./model/index");
 const config = require("../config");
@@ -147,12 +148,28 @@ function sendLogsToSlack() {
   };
 }
 
+function sendLogsToTeams() {
+  console.error("config teams: " + config.teamsWebhookUrl);
+  const stream = new BunyanTeams({
+    webhook_url: config.teamsWebhookUrl,
+  });
+
+  stream.write = throttle(stream.write, 5000);
+
+  return {
+    name: "teams",
+    level: "error",
+    stream,
+  };
+}
+
 const createStreams = () => {
   let availableDestinations = {
     stdout: () => sendLogsToConsole("stdout"),
     stderr: () => sendLogsToConsole("stderr"),
     mongodb: () => mongoDBStream(),
     slack: () => sendLogsToSlack(),
+    teams: () => sendLogsToTeams(),
   };
 
   return config.log.destinations
