@@ -1,3 +1,10 @@
+## [2.8.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.8.0...v2.8.1-beta.1) (2022-05-30)
+
+
+### Bug Fixes
+
+* suppresion des caractères spéciaux pour agecap ([a7bb3d4](https://github.com/mission-apprentissage/cerfa/commit/a7bb3d4244766f90a8ea8530c4e7df4bb7f508e8))
+
 # [2.8.0](https://github.com/mission-apprentissage/cerfa/compare/v2.7.2...v2.8.0) (2022-05-24)
 
 
