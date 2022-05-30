@@ -70,7 +70,6 @@
     "mongoose-paginate": "5.0.3",
     "multiparty": "4.2.2",
     "multipipe": "4.0.0",
-    "node-fetch": "^2.6.0",
     "nodemailer": "6.7.2",
     "nodemailer-html-to-text": "3.2.0",
     "notion-client": "4.12.0",
