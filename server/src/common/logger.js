@@ -2,7 +2,7 @@ const util = require("util");
 const { throttle, omit, isEmpty } = require("lodash");
 const bunyan = require("bunyan");
 const BunyanSlack = require("bunyan-slack");
-const BunyanTeams = require("bunyan-teams");
+const BunyanTeams = require("./utils/bunyanTeams");
 const BunyanMongodbStream = require("bunyan-mongodb-stream");
 const { Log } = require("./model/index");
 const config = require("../config");
@@ -103,36 +103,40 @@ function stringify(val, depth, replacer, space) {
   return JSON.stringify(_build("", val, depth), null, space);
 }
 
+function getCustomFormatter() {
+  return (record, levelName) => {
+    if (record.type === "http") {
+      let data = record.error.data;
+      if (data.reason === "") delete data.reason;
+      record = {
+        url: record.request.url.relative,
+        statusCode: record.response.statusCode,
+        ...(record.error
+          ? {
+              message: record.error.message,
+              data: {
+                ...(data.reason
+                  ? {
+                      message: data.message,
+                      error: stringify(data.reason, 4, null, 0),
+                    }
+                  : { error: stringify(data, 4, null, 0) }),
+              },
+            }
+          : {}),
+      };
+    }
+    return {
+      text: util.format(`[%s][${config.env}] %O`, levelName.toUpperCase(), record),
+    };
+  };
+}
+
 function sendLogsToSlack() {
   const stream = new BunyanSlack(
     {
       webhook_url: config.slackWebhookUrl,
-      customFormatter: (record, levelName) => {
-        if (record.type === "http") {
-          let data = record.error.data;
-          if (data.reason === "") delete data.reason;
-          record = {
-            url: record.request.url.relative,
-            statusCode: record.response.statusCode,
-            ...(record.error
-              ? {
-                  message: record.error.message,
-                  data: {
-                    ...(data.reason
-                      ? {
-                          message: data.message,
-                          error: stringify(data.reason, 4, null, 0),
-                        }
-                      : { error: stringify(data, 4, null, 0) }),
-                  },
-                }
-              : {}),
-          };
-        }
-        return {
-          text: util.format(`[%s][${config.env}] %O`, levelName.toUpperCase(), record),
-        };
-      },
+      customFormatter: getCustomFormatter(),
     },
     (error) => {
       console.error("Unable to send log to slack", error);
@@ -149,10 +153,15 @@ function sendLogsToSlack() {
 }
 
 function sendLogsToTeams() {
-  console.error("config teams: " + config.teamsWebhookUrl);
-  const stream = new BunyanTeams({
-    webhook_url: config.teamsWebhookUrl,
-  });
+  const stream = new BunyanTeams(
+    {
+      webhook_url: config.teamsWebhookUrl,
+      customerFormatter: getCustomFormatter(),
+    },
+    (error) => {
+      console.error("Unable to send log to teams", error);
+    }
+  );
 
   stream.write = throttle(stream.write, 5000);
 
