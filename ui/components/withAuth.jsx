@@ -9,14 +9,14 @@ const withAuth = (Component, aclRef = null) => {
 
     if (auth.sub === "anonymous") {
       if (typeof window !== "undefined") {
-        router.push("/auth/connexion");
+        router.push("/");
       }
       return <></>;
     }
 
     if (aclRef && !hasPageAccessTo(auth, aclRef)) {
       if (typeof window !== "undefined") {
-        router.push("/auth/connexion");
+        router.push("/");
       }
       return <></>;
     }

@@ -4,10 +4,21 @@ import { Page } from "../components/Page/Page";
 import { Breadcrumb } from "../components/Breadcrumb/Breadcrumb";
 import NavLink from "next/link";
 import { getAuthServerSideProps } from "../common/SSR/getAuthServerSideProps";
+import { useQuery } from "react-query";
+import { _get } from "../common/httpClient";
 
 export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 function Home() {
+  const { data: linkToPds } = useQuery(
+    "pdsLink",
+    async () => {
+      const data = await _get(`/api/v1/pds/getUrl`);
+      return data.authorizationUrl;
+    },
+    { refetchOnWindowFocus: false }
+  );
+
   const title = "Accueil";
   return (
     <Page>
@@ -47,7 +58,7 @@ function Home() {
         </UnorderedList>
       </Box>
       <Flex justifyContent="end" w="full">
-        <NavLink href={"/mes-dossiers/mon-espace"} passHref>
+        <NavLink href={linkToPds ?? ""} passHref>
           <Button
             as={Link}
             fontSize={{ base: "md", md: "lg" }}
