@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Box, Flex, Center, Container, Spinner, useDisclosure } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps-rework-mna";
 import { useRouter } from "next/router";
@@ -42,9 +42,7 @@ const Dossier = () => {
   const paramstep = slug?.[slug.length - 1];
 
   let [auth] = useAuth();
-  const { nextStep, prevStep, activeStep, setStep } = useSteps({
-    initialStep: stepByPath.indexOf(paramstep),
-  });
+  const { activeStep, setStep } = useSteps({ initialStep: stepByPath.indexOf(paramstep) });
 
   const { isloaded, dossier } = useDossier(dossierIdParam);
   const { controller: cerfaController } = useCerfa({ schema: cerfaSchema });
@@ -65,9 +63,7 @@ const Dossier = () => {
   const documentsComplete = dossierStatus?.documents?.complete;
   const signatureComplete = dossierStatus?.signature?.complete;
 
-  useEffect(() => {
-    setWorkspaceTitle(dossier?.nom);
-  }, [dossier, setWorkspaceTitle]);
+  useEffect(() => setWorkspaceTitle(dossier?.nom), [dossier, setWorkspaceTitle]);
 
   const stepStatuses = useMemo(
     () => ({
@@ -78,23 +74,14 @@ const Dossier = () => {
     [activeStep, cerfaComplete, documentsComplete, signatureComplete]
   );
 
-  let onClickNextStep = useCallback(async () => {
-    const nextActiveStep = activeStep + 1;
+  const goToStep = async (targetIndex) => {
+    if (isEmployeurPrive) return false;
     let newSlug = "/cerfa";
-    if (nextActiveStep === 1) newSlug = "/documents";
-    if (nextActiveStep === 2) newSlug = "/signatures";
+    if (targetIndex === 1) newSlug = "/documents";
+    if (targetIndex === 2) newSlug = "/signatures";
     router.replace(router.asPath.replace(/\/[^/]*$/, newSlug));
-    nextStep();
-  }, [activeStep, router, nextStep]);
-
-  let onClickPrevStep = useCallback(async () => {
-    const nextActiveStep = activeStep - 1;
-    let newSlug = "/cerfa";
-    if (nextActiveStep === 1) newSlug = "/documents";
-    if (nextActiveStep === 2) newSlug = "/signatures";
-    router.replace(router.asPath.replace(/\/[^/]*$/, newSlug));
-    prevStep();
-  }, [activeStep, router, prevStep]);
+    setStep(targetIndex);
+  };
 
   if (!isloaded || isLoading) {
     return (
@@ -130,47 +117,38 @@ const Dossier = () => {
 
           <Flex flexDir="column" width="100%" mt={9}>
             <Steps
-              onClickStep={(step) => {
-                if (isEmployeurPrive) return false;
-                let newSlug = "/cerfa";
-                if (step === 1) newSlug = "/documents";
-                if (step === 2) newSlug = "/signatures";
-                router.replace(router.asPath.replace(/\/[^/]*$/, newSlug));
-                return setStep(step);
-              }}
+              onClickStep={(step) => goToStep(step)}
               activeStep={activeStep}
               checkIcon={() => <TickBubble color={"white"} boxSize="4" />}
               errorIcon={() => <StepWip color={"white"} boxSize="4" />}
             >
-              {steps.map(({ label, description }, index) => {
-                return (
-                  <Step
-                    label={
-                      <Box color="labelgrey" fontWeight={activeStep === index ? "bold" : "normal"} mb={1}>
-                        {label}
-                      </Box>
-                    }
-                    key={label}
-                    description={description}
-                    icon={() => (
-                      <Box color={activeStep === index ? "white" : "black"} fontWeight="bold">
-                        {index + 1}
-                      </Box>
-                    )}
-                    state={stepStatuses[index].state}
-                  >
-                    {index === 0 && <CerfaForm />}
-                    {index === 1 && <PiecesJustificatives />}
-                    {index === 2 && <Signatures />}
-                  </Step>
-                );
-              })}
+              {steps.map(({ label, description }, index) => (
+                <Step
+                  label={
+                    <Box color="labelgrey" fontWeight={activeStep === index ? "bold" : "normal"} mb={1}>
+                      {label}
+                    </Box>
+                  }
+                  key={label}
+                  description={description}
+                  icon={() => (
+                    <Box color={activeStep === index ? "white" : "black"} fontWeight="bold">
+                      {index + 1}
+                    </Box>
+                  )}
+                  state={stepStatuses[index].state}
+                >
+                  {index === 0 && <CerfaForm />}
+                  {index === 1 && <PiecesJustificatives />}
+                  {index === 2 && <Signatures />}
+                </Step>
+              ))}
             </Steps>
             <DossierFooterControls
               activeStep={activeStep}
               steps={steps}
-              onClickPrevStep={onClickPrevStep}
-              onClickNextStep={onClickNextStep}
+              onClickPrevStep={() => goToStep(activeStep - 1)}
+              onClickNextStep={() => goToStep(activeStep + 1)}
               finalizeModalDisclosure={finalizeModalDisclosure}
               eSignatureModalDisclosure={eSignatureModalDisclosure}
               dossierComplete={dossierStatus.dossier.complete}
