@@ -136,33 +136,35 @@ const ProfileInformation = () => {
         </Flex>
         <Divider mt={10} mb={4} borderWidth="2px" />
         {hasPageAccessTo(auth, "signature_beta") && (
-          <Box>
-            <HStack>
-              <FormLabel fontWeight="bold">Activer les fonctionnalité expérimentales de la plateforme ?</FormLabel>
-              <RadioGroup value={values.beta}>
-                <HStack>
-                  <Radio
-                    type="radio"
-                    name="beta"
-                    value={betaVersion()}
-                    checked={values.beta !== "non"}
-                    onChange={handleChange}
-                  >
-                    Oui
-                  </Radio>
-                  <Radio type="radio" name="beta" value="non" checked={values.beta === "non"} onChange={handleChange}>
-                    Non
-                  </Radio>
-                </HStack>
-              </RadioGroup>
-            </HStack>
-            <Box pl={4}>
-              <Text>Cette activation vous donnera accès à :</Text>
-              <BetaFeatures borderColor={"dgalt"} borderWidth={1} px={4} py={3} maxH="30vh" my={3} />
+          <>
+            <Box>
+              <HStack>
+                <FormLabel fontWeight="bold">Activer les fonctionnalité expérimentales de la plateforme ?</FormLabel>
+                <RadioGroup value={values.beta}>
+                  <HStack>
+                    <Radio
+                      type="radio"
+                      name="beta"
+                      value={betaVersion()}
+                      checked={values.beta !== "non"}
+                      onChange={handleChange}
+                    >
+                      Oui
+                    </Radio>
+                    <Radio type="radio" name="beta" value="non" checked={values.beta === "non"} onChange={handleChange}>
+                      Non
+                    </Radio>
+                  </HStack>
+                </RadioGroup>
+              </HStack>
+              <Box pl={4}>
+                <Text>Cette activation vous donnera accès à :</Text>
+                <BetaFeatures borderColor={"dgalt"} borderWidth={1} px={4} py={3} maxH="30vh" my={3} />
+              </Box>
             </Box>
-          </Box>
+            <Divider mt={10} mb={4} borderWidth="2px" />
+          </>
         )}
-        <Divider mt={10} mb={4} borderWidth="2px" />
       </Box>
       <Box mt="2rem">
         <Button variant="primary" onClick={handleSubmit} type="submit">
