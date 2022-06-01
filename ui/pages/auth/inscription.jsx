@@ -4,7 +4,6 @@ import NavLink from "next/link";
 import Head from "next/head";
 import { Page } from "../../components/Page/Page";
 
-import { _get } from "../../common/httpClient";
 import { getAuthServerSideProps } from "../../common/SSR/getAuthServerSideProps";
 import { useLinkToPds } from "../../hooks/useLinkToPds";
 
