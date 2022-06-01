@@ -6,18 +6,12 @@ import { Page } from "../../components/Page/Page";
 
 import { _get } from "../../common/httpClient";
 import { getAuthServerSideProps } from "../../common/SSR/getAuthServerSideProps";
-import { useQuery } from "react-query";
+import { useLinkToPds } from "../../hooks/useLinkToPds";
 
 export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const RegisterPage = () => {
-  const linkToPds = useQuery(
-    "linkToPds",
-    async () => {
-      return await _get(`/api/v1/pds/getUrl`);
-    },
-    { refetchOnWindowFocus: false }
-  ).data?.authorizationUrl;
+  const linkToPds = useLinkToPds();
 
   return (
     <Page>

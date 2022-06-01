@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -20,7 +20,7 @@ import { MenuFill, Close, AccountFill, AccountUnfill, Parametre } from "../../..
 import { _get } from "../../../common/httpClient";
 import Link from "../../../components/Link";
 import MenuItem from "../../../components/MenuItem";
-import { useQuery } from "react-query";
+import { useLinkToPds } from "../../../hooks/useLinkToPds";
 
 const NavigationMenu = ({ isMyWorkspace, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,15 +38,7 @@ const NavigationMenu = ({ isMyWorkspace, ...props }) => {
 
 const UserMenu = () => {
   let [auth] = useAuth();
-
-  const { data: linkToPds } = useQuery(
-    "pdsLink",
-    async () => {
-      const data = await _get(`/api/v1/pds/getUrl`);
-      return data.authorizationUrl;
-    },
-    { refetchOnWindowFocus: false }
-  );
+  const linkToPds = useLinkToPds();
 
   let logout = async () => {
     const { loggedOut } = await _get("/api/v1/auth/logout");
