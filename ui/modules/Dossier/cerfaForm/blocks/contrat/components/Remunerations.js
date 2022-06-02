@@ -10,10 +10,10 @@ import { ExternalLinkLine } from "../../../../../../theme/components/icons";
 
 const getAnneeLabel = (ordre) => {
   return {
-    1.1: "1ère Année, du",
-    2.1: "2ère Année, du",
-    3.1: "3ère Année, du",
-    4.1: "4ème année, du",
+    1.1: "1ère année d'exécution du contrat",
+    2.1: "2ère année d'exécution du contrat",
+    3.1: "3ère année d'exécution du contrat",
+    4.1: "4ème année d'exécution du contrat",
   }[ordre];
 };
 
