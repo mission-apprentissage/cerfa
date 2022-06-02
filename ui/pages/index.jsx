@@ -4,13 +4,10 @@ import { Page } from "../components/Page/Page";
 import { Breadcrumb } from "../components/Breadcrumb/Breadcrumb";
 import NavLink from "next/link";
 import { getAuthServerSideProps } from "../common/SSR/getAuthServerSideProps";
-import { useLinkToPds } from "../hooks/useLinkToPds";
 
 export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 function Home() {
-  const linkToPds = useLinkToPds();
-
   const title = "Accueil";
   return (
     <Page>
@@ -50,7 +47,7 @@ function Home() {
         </UnorderedList>
       </Box>
       <Flex justifyContent="end" w="full">
-        <NavLink href={linkToPds ?? ""} passHref>
+        <NavLink href={"/mes-dossiers/mon-espace"} passHref>
           <Button
             as={Link}
             fontSize={{ base: "md", md: "lg" }}
