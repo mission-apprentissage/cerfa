@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -20,6 +20,7 @@ import { MenuFill, Close, AccountFill, AccountUnfill, Parametre } from "../../..
 import { _get } from "../../../common/httpClient";
 import Link from "../../../components/Link";
 import MenuItem from "../../../components/MenuItem";
+import { useLinkToPds } from "../../../hooks/useLinkToPds";
 
 const NavigationMenu = ({ isMyWorkspace, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,15 +38,7 @@ const NavigationMenu = ({ isMyWorkspace, ...props }) => {
 
 const UserMenu = () => {
   let [auth] = useAuth();
-
-  const [linkToPds, setLinkToPds] = useState(null);
-  useEffect(() => {
-    const run = async () => {
-      const data = await _get(`/api/v1/pds/getUrl`);
-      setLinkToPds(data.authorizationUrl);
-    };
-    run();
-  }, []);
+  const linkToPds = useLinkToPds();
 
   let logout = async () => {
     const { loggedOut } = await _get("/api/v1/auth/logout");
@@ -67,7 +60,7 @@ const UserMenu = () => {
               S&apos;inscrire
             </Text>
           </Link>
-          <Link href="/auth/connexion" variant="pill" px={3} py={1}>
+          <Link href={linkToPds} variant="pill" px={3} py={1}>
             <Text lineHeight={6}>
               <AccountFill boxSize={5} mr={2} />
               Se connecter

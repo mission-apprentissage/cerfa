@@ -19,6 +19,15 @@ const contentSecurityPolicy = `
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/auth/connexion",
+        destination: "/",
+        permanent: true,
+      },
+    ];
+  },
   reactStrictMode: true,
   experimental: {
     outputStandalone: true,

@@ -1,3 +1,24 @@
+# [2.9.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.8.1-beta.1...v2.9.0-beta.1) (2022-06-02)
+
+
+### Bug Fixes
+
+* suppression d'une variable ([cc6ed00](https://github.com/mission-apprentissage/cerfa/commit/cc6ed00b8fb0bc7641c6ac96beea22300c8b2a75))
+
+
+### Features
+
+* meilleur gestion des redirections d'auth ([c56ebbc](https://github.com/mission-apprentissage/cerfa/commit/c56ebbcfc05cb8a42bfe91d1d5fe8c7f462e1e7f))
+* redirection de a connexion native ([6ac196d](https://github.com/mission-apprentissage/cerfa/commit/6ac196decff5b1793b8f35d9f7e4ffcb014ac404))
+* utilisation de PDS pour la connexion ([be40654](https://github.com/mission-apprentissage/cerfa/commit/be40654a2f34b7e3adb923ba81167d5772b24310))
+
+## [2.8.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.8.0...v2.8.1-beta.1) (2022-05-30)
+
+
+### Bug Fixes
+
+* suppresion des caractères spéciaux pour agecap ([a7bb3d4](https://github.com/mission-apprentissage/cerfa/commit/a7bb3d4244766f90a8ea8530c4e7df4bb7f508e8))
+
 # [2.8.0](https://github.com/mission-apprentissage/cerfa/compare/v2.7.2...v2.8.0) (2022-05-24)
 
 

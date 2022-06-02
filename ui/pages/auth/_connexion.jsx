@@ -16,7 +16,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import * as Yup from "yup";
 import jwt from "jsonwebtoken";
 import { useRouter } from "next/router";
@@ -26,10 +26,11 @@ import { Page } from "../../components/Page/Page";
 
 import useAuth from "../../hooks/useAuth";
 import useToken from "../../hooks/useToken";
-import { _post, _get } from "../../common/httpClient";
+import { _post } from "../../common/httpClient";
 
 import { ShowPassword } from "../../theme/components/icons";
 import { getAuthServerSideProps } from "../../common/SSR/getAuthServerSideProps";
+import { useLinkToPds } from "../../hooks/useLinkToPds";
 
 const Login = (props) => {
   const [, setAuth] = useAuth();
@@ -142,20 +143,12 @@ const Login = (props) => {
 export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const ConnexionPage = () => {
+  const linkToPds = useLinkToPds();
   const styleProps = {
     flexBasis: "50%",
     p: 12,
     justifyContent: "center",
   };
-  const [linkToPds, setLinkToPds] = useState(null);
-
-  useEffect(() => {
-    const run = async () => {
-      const data = await _get(`/api/v1/pds/getUrl`);
-      setLinkToPds(data.authorizationUrl);
-    };
-    run();
-  }, []);
 
   return (
     <Page>
