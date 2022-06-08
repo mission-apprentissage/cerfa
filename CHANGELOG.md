@@ -1,3 +1,18 @@
+# [2.10.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.9.0...v2.10.0-beta.1) (2022-06-08)
+
+
+### Bug Fixes
+
+* ajout nouvelle var d'env dans les docker-compose ([809a769](https://github.com/mission-apprentissage/cerfa/commit/809a769cbdf6da7116cb044ffaadfb32f96b488b))
+* changement syntax definition class bunyanTeams + removed node-fetch ([4a71fab](https://github.com/mission-apprentissage/cerfa/commit/4a71fab0d632af17d2492b33a5bf165d08d43461))
+* removed useless import ([dab271d](https://github.com/mission-apprentissage/cerfa/commit/dab271dc9d19015e41cc481e911a4b5c0f809bc5))
+
+
+### Features
+
+* ajout logger pour altering teams ([2fcfa9b](https://github.com/mission-apprentissage/cerfa/commit/2fcfa9b9019a8fd1aa9831361e7397440290cfef))
+* réutilisation curstomerFormatter de slack vers teams ([6d1f5a0](https://github.com/mission-apprentissage/cerfa/commit/6d1f5a07dcfb8a7ce496ee61e08c81c8b2827947))
+
 # [2.9.0](https://github.com/mission-apprentissage/cerfa/compare/v2.8.0...v2.9.0) (2022-06-02)
 
 
