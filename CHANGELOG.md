@@ -1,3 +1,15 @@
+# [2.10.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.10.0-beta.1...v2.10.0-beta.2) (2022-06-08)
+
+
+### Bug Fixes
+
+* bouton 'Accéder maintenant', ! retiré (755) ([bc4d16c](https://github.com/mission-apprentissage/cerfa/commit/bc4d16c3016ded37b1a8d1eecef7eba7034789d9))
+* bouton 'Accéder maintenant', texte non souligné au survol (755) ([dc4517c](https://github.com/mission-apprentissage/cerfa/commit/dc4517c1843424088a956a6dd710ede28b50ddcf))
+* deux barres présentes dans mon compte > mes infos si utilisateur non admin ([8e8b660](https://github.com/mission-apprentissage/cerfa/commit/8e8b660c5e7ca50bb10b42db4ebc54340afa7c9d))
+* marginY => my ([71e6f60](https://github.com/mission-apprentissage/cerfa/commit/71e6f60207d2f134279997eafd60127720b7d7e9))
+* modification intitulés lignes rémunération (524) ([80ec2ef](https://github.com/mission-apprentissage/cerfa/commit/80ec2efc0844379f99d139388cdf8c54bcd08f44))
+* reduction de l'espace en haut et en bas du logo du footer ([8568322](https://github.com/mission-apprentissage/cerfa/commit/856832245ec0d8cc652de4bea398b99d4658a79d))
+
 # [2.10.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.9.0...v2.10.0-beta.1) (2022-06-08)
 
 
