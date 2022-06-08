@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Box, Heading, Text, UnorderedList, ListItem, Button, Flex, Link } from "@chakra-ui/react";
+import { Box, Heading, Text, UnorderedList, ListItem, Button, Flex } from "@chakra-ui/react";
 import { Page } from "../components/Page/Page";
 import { Breadcrumb } from "../components/Breadcrumb/Breadcrumb";
 import NavLink from "next/link";
@@ -49,13 +49,13 @@ function Home() {
       <Flex justifyContent="end" w="full">
         <NavLink href={"/mes-dossiers/mon-espace"} passHref>
           <Button
-            as={Link}
+            as={Button}
             fontSize={{ base: "md", md: "lg" }}
             p={{ base: 4, md: 6 }}
             h={{ base: 8, md: 10 }}
             variant="primary"
           >
-            Accéder maintenant!
+            Accéder maintenant
           </Button>
         </NavLink>
       </Flex>
