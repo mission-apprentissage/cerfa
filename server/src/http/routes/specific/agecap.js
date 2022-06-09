@@ -169,7 +169,7 @@ module.exports = (components) => {
           modeContractuel: 1,
           typeContratApp: cerfa.contrat.typeContratApp,
           numeroContratPrecedent: cerfa.contrat.numeroContratPrecedent || undefined,
-          noContrat: cerfa.contrat.numeroContratPrecedent || undefined,
+          noContrat: cerfa.contrat.noContrat || undefined,
           dateDebutContrat: convertDate(cerfa.contrat.dateDebutContrat),
           dateEffetAvenant: convertDate(cerfa.contrat.dateEffetAvenant),
           dateConclusion: convertDate(cerfa.contrat.dateConclusion),
