@@ -22,7 +22,10 @@ const TableDossiers = ({
         Nom: {
           Header: "Nom",
           width: 120,
-          value: m.nom,
+          value:
+            m.cerfaDossier.apprenti.nom && m.cerfaDossier.apprenti.prenom
+              ? m.cerfaDossier.apprenti.nom.toUpperCase() + " " + m.cerfaDossier.apprenti.prenom
+              : m.nom,
         },
         Contributors: {
           Header: "Contributeurs",

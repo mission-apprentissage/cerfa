@@ -11,6 +11,7 @@ import { AvatarPlus } from "../../../theme/components/icons";
 import { useRecoilValue } from "recoil";
 import { autoSaveStatusAtom } from "../formEngine/hooks/useAutoSave";
 import { CheckIcon } from "@chakra-ui/icons";
+import { workspaceTitleAtom } from "../../../hooks/workspaceAtoms";
 
 const AutoSaveBadge = () => {
   const status = useRecoilValue(autoSaveStatusAtom);
@@ -35,12 +36,13 @@ const AutoSaveBadge = () => {
 };
 
 const DossierHeader = ({ dossier }) => {
+  const nomDossier = useRecoilValue(workspaceTitleAtom);
   const inviteModal = useDisclosure();
   return (
     <Flex mt={6} flexDirection="column">
       <HStack w="full">
         <Heading as="h1" flexGrow="1">
-          {dossier?.nom}
+          {nomDossier}
           <StatusBadge status={dossier?.etat} ml={5} />
           <AutoSaveBadge />
         </Heading>
@@ -66,7 +68,7 @@ const DossierHeader = ({ dossier }) => {
       </HStack>
       <Box>
         <Text color="mgalt" as="i" fontSize="0.9rem">
-          Numéro de télétransmission : {dossier?._id}
+          Numéro de {dossier?.etat === "TRANSMIS" ? "télétransmission" : "dossier"} : {dossier?._id}
         </Text>
       </Box>
     </Flex>

@@ -25,6 +25,7 @@ import { useAutoSave } from "./formEngine/hooks/useAutoSave";
 import { useDossier } from "./hooks/useDossier";
 import { valueSelector } from "./formEngine/atoms";
 import { signaturesPdfLoadedAtom } from "./Signatures/atoms";
+import { apprentiNameSelector } from "./cerfaForm/blocks/apprenti/atoms";
 
 const steps = [
   { label: "Cerfa", description: "Renseignez les informations" },
@@ -63,7 +64,9 @@ const Dossier = () => {
   const documentsComplete = dossierStatus?.documents?.complete;
   const signatureComplete = dossierStatus?.signature?.complete;
 
-  useEffect(() => setWorkspaceTitle(dossier?.nom), [dossier, setWorkspaceTitle]);
+  const apprentiName = useRecoilValue(apprentiNameSelector);
+
+  useEffect(() => setWorkspaceTitle(apprentiName || dossier?.nom), [dossier, apprentiName, setWorkspaceTitle]);
 
   const stepStatuses = useMemo(
     () => ({
