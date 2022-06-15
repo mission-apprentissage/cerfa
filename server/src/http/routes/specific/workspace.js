@@ -65,11 +65,15 @@ module.exports = (components) => {
         const dossier = dossiersWks[index];
         const contributeurs = await dossiers.getContributeurs(dossier._id, components);
         const cerfaDossier = await cerfas.findCerfaByDossierId(dossier._id);
+        const nomDossier =
+          cerfaDossier.apprenti.nom && cerfaDossier.apprenti.prenom
+            ? cerfaDossier.apprenti.nom.toUpperCase() + " " + cerfaDossier.apprenti.prenom
+            : dossier.nom;
 
         results.push({
           ...dossier,
           contributeurs,
-          cerfaDossier,
+          nomDossier,
         });
       }
       return res.json(results);
