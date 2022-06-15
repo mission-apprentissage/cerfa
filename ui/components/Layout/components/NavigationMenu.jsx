@@ -104,6 +104,11 @@ const UserMenu = () => {
                     Message de maintenance
                   </MenuItem>
                 )}
+                {hasPageAccessTo(auth, "admin/page_assistance_dossier") && (
+                  <MenuItem href="/admin/assistance_dossier" icon={<Parametre boxSize={4} />}>
+                    Assistance Dossier
+                  </MenuItem>
+                )}
               </MenuGroup>
             )}
             <MenuDivider />
