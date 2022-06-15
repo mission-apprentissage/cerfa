@@ -23,6 +23,10 @@ export default [
         feature: "Dépublier un dossier",
         ref: "admin/dossier_depublier",
       },
+      {
+        feature: "Assistance Dossier",
+        ref: "admin/page_assistance_dossier",
+      },
     ],
   },
   {
