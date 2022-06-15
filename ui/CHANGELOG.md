@@ -1,3 +1,10 @@
+# [2.10.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.10.0-beta.2...v2.10.0-beta.3) (2022-06-15)
+
+
+### Features
+
+* ajout page assistance dossier pour admin ([#782](https://github.com/mission-apprentissage/cerfa/issues/782)) ([e610780](https://github.com/mission-apprentissage/cerfa/commit/e610780f2a85c1b2594ce3d0b29bbc8ee95a79c2))
+
 # [2.10.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.10.0-beta.1...v2.10.0-beta.2) (2022-06-08)
 
 
