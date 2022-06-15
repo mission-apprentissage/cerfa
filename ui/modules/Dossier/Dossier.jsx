@@ -19,13 +19,12 @@ import { CerfaForm } from "./cerfaForm/CerfaForm";
 import { useCerfa } from "./formEngine/useCerfa";
 import { cerfaSchema } from "./formEngine/cerfaSchema";
 import { CerfaControllerContext } from "./formEngine/CerfaControllerContext";
-import { dossierCompletionStatus } from "./atoms";
+import { dossierCompletionStatus, dossierNameSelector } from "./atoms";
 import { useInitCerfa } from "./formEngine/hooks/useInitCerfa";
 import { useAutoSave } from "./formEngine/hooks/useAutoSave";
 import { useDossier } from "./hooks/useDossier";
 import { valueSelector } from "./formEngine/atoms";
 import { signaturesPdfLoadedAtom } from "./Signatures/atoms";
-import { apprentiNameSelector } from "./cerfaForm/blocks/apprenti/atoms";
 
 const steps = [
   { label: "Cerfa", description: "Renseignez les informations" },
@@ -64,9 +63,9 @@ const Dossier = () => {
   const documentsComplete = dossierStatus?.documents?.complete;
   const signatureComplete = dossierStatus?.signature?.complete;
 
-  const apprentiName = useRecoilValue(apprentiNameSelector);
+  const dossierName = useRecoilValue(dossierNameSelector);
 
-  useEffect(() => setWorkspaceTitle(apprentiName || dossier?.nom), [dossier, apprentiName, setWorkspaceTitle]);
+  useEffect(() => setWorkspaceTitle(dossierName), [dossierName, setWorkspaceTitle]);
 
   const stepStatuses = useMemo(
     () => ({

@@ -1,5 +1,5 @@
 import { atom, selector } from "recoil";
-import { cerfaStatusGetter } from "./formEngine/atoms";
+import { cerfaAtom, cerfaStatusGetter } from "./formEngine/atoms";
 import { documentsCompletionStatusGetter } from "./PiecesJustificatives/documentsCompletionAtoms";
 import { signaturesCompletionSelector } from "./Signatures/atoms";
 
@@ -35,4 +35,15 @@ export const dossierCompletionStatus = selector({
 export const dossierAtom = atom({
   key: "dossierAtom",
   default: null,
+});
+
+export const dossierNameSelector = selector({
+  key: "apprentiNameSelector",
+  get: ({ get }) => {
+    const prenom = get(cerfaAtom)?.["apprenti.prenom"].value;
+    const nom = get(cerfaAtom)?.["apprenti.nom"].value;
+    const dossier = get(dossierAtom);
+
+    return nom && prenom ? "Contrat - " + nom + " " + prenom : dossier?.nom;
+  },
 });
