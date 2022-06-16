@@ -1,3 +1,12 @@
+# [2.10.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v2.10.0-beta.3...v2.10.0-beta.4) (2022-06-16)
+
+
+### Bug Fixes
+
+* libellé du dossier liste + page formulaire + fil d'ariane ([f85e03b](https://github.com/mission-apprentissage/cerfa/commit/f85e03b810c36676c46b94aac65329ca22c23887))
+* on ne retourne plus le cerfa entier mais juste le nom du dossier ([377745c](https://github.com/mission-apprentissage/cerfa/commit/377745c6e2fb366c0b884e4960e032d51755b1f1))
+* selector nom du dossier plus explicite + valeur par défault ([2fe9339](https://github.com/mission-apprentissage/cerfa/commit/2fe9339f3b46cee78c579d2f9409ca82daead8c1))
+
 # [2.10.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.10.0-beta.2...v2.10.0-beta.3) (2022-06-15)
 
 
