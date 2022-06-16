@@ -19,7 +19,7 @@ import { CerfaForm } from "./cerfaForm/CerfaForm";
 import { useCerfa } from "./formEngine/useCerfa";
 import { cerfaSchema } from "./formEngine/cerfaSchema";
 import { CerfaControllerContext } from "./formEngine/CerfaControllerContext";
-import { dossierCompletionStatus } from "./atoms";
+import { dossierCompletionStatus, dossierNameSelector } from "./atoms";
 import { useInitCerfa } from "./formEngine/hooks/useInitCerfa";
 import { useAutoSave } from "./formEngine/hooks/useAutoSave";
 import { useDossier } from "./hooks/useDossier";
@@ -63,7 +63,9 @@ const Dossier = () => {
   const documentsComplete = dossierStatus?.documents?.complete;
   const signatureComplete = dossierStatus?.signature?.complete;
 
-  useEffect(() => setWorkspaceTitle(dossier?.nom), [dossier, setWorkspaceTitle]);
+  const dossierName = useRecoilValue(dossierNameSelector);
+
+  useEffect(() => setWorkspaceTitle(dossierName), [dossierName, setWorkspaceTitle]);
 
   const stepStatuses = useMemo(
     () => ({
