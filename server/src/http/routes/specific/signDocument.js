@@ -84,6 +84,11 @@ module.exports = (components) => {
         //   content: `eSIGNATURE - {{code}} est le code pour signer le contrat ${dossier.nom}.`,
         // },
       };
+
+      const operationDetailsAdvanced = {
+        operationLevel: "advanced",
+      };
+
       const positions = {
         employeur: "20,149,189,199", // Employeur
         apprenti: "190,149,360,199", // Apprenti(e)
@@ -114,7 +119,7 @@ module.exports = (components) => {
           lastname: signataires.apprenti.lastname,
           email: signataires.apprenti.email,
           phone: "+33601020304",
-          ...operationDetails,
+          ...operationDetailsAdvanced,
           fileObjects: [
             {
               ...constantFile,
@@ -142,7 +147,7 @@ module.exports = (components) => {
           lastname: signataires.legal.lastname,
           email: signataires.legal.email,
           phone: "+33601020304",
-          ...operationDetails,
+          ...operationDetailsAdvanced,
           fileObjects: [
             {
               ...constantFile,
