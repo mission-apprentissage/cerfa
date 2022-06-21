@@ -19,6 +19,7 @@ const password = require("./routes/password");
 const upload = require("./routes/specific/upload");
 const auth = require("./routes/auth");
 const maintenanceMessage = require("./routes/maintenanceMessage");
+const assistanceDossier = require("./routes/assistanceDossier");
 const workspace = require("./routes/specific/workspace");
 const dossier = require("./routes/specific/dossier");
 const cerfa = require("./routes/specific/cerfa");
@@ -62,6 +63,12 @@ module.exports = async (components) => {
   // private access
   app.use("/api/v1/authentified", checkJwtToken, authentified(components));
   app.use("/api/v1/admin", checkJwtToken, pageAccessMiddleware(["admin/page_gestion_utilisateurs"]), user(components));
+  app.use(
+    "/api/v1/admin",
+    checkJwtToken,
+    pageAccessMiddleware(["admin/page_assistance_dossier"]),
+    assistanceDossier(components)
+  );
   app.use(
     "/api/v1/admin",
     checkJwtToken,

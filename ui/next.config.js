@@ -9,9 +9,16 @@ const contentSecurityPolicy = `
       block-all-mixed-content;
       font-src 'self' https: data:;
       frame-ancestors 'self';
-      img-src 'self' https://www.notion.so data:;
+      img-src 'self' https://www.notion.so data: ${
+        process.env.NEXT_PUBLIC_ENV !== "production" ? "https://www.ssa.gov" : ""
+      };
       object-src 'none';
-      script-src 'self'  https://plausible.io ${process.env.NEXT_PUBLIC_ENV === "dev" ? "'unsafe-eval'" : ""};
+      script-src 'self'  https://plausible.io ${process.env.NEXT_PUBLIC_ENV === "dev" ? "'unsafe-eval'" : ""} 
+      ${
+        process.env.NEXT_PUBLIC_ENV !== "production"
+          ? "https://www.ssa.gov https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+          : ""
+      };
       script-src-attr 'none';
       style-src 'self' https: 'unsafe-inline';
       upgrade-insecure-requests;

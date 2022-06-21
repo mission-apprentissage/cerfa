@@ -38,6 +38,7 @@ module.exports = {
     format: env.get("CERFA_LOG_FORMAT").default("pretty").asString(),
   },
   slackWebhookUrl: env.get("CERFA_SLACK_WEBHOOK_URL").asString(),
+  teamsWebhookUrl: env.get("CERFA_TEAMS_WEBHOOK_URL").asString(),
   outputDir: env.get("CERFA_OUTPUT_DIR").default(".local/output").asString(),
   smtp: {
     host: env.get("CERFA_SMTP_HOST").asString(),

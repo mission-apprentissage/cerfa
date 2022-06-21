@@ -28,7 +28,6 @@ import jwt from "jsonwebtoken";
 import useToken from "../../hooks/useToken";
 import useAuth from "../../hooks/useAuth";
 import { _post } from "../../common/httpClient";
-import { getAuthServerSideProps } from "../../common/SSR/getAuthServerSideProps";
 
 const validate = async (validationSchema, obj) => {
   let isValid = false;
@@ -41,8 +40,6 @@ const validate = async (validationSchema, obj) => {
   }
   return { isValid, error };
 };
-
-export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const Finalize = () => {
   const [auth, setAuth] = useAuth();
