@@ -1,9 +1,10 @@
 import { useRecoilValue } from "recoil";
 import { dossierAtom } from "../../atoms";
-import { Divider, Flex, HStack, Stack, Text } from "@chakra-ui/react";
+import { Divider, Flex, HStack, Link, Stack, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useSignatures } from "../hooks/useSignatures";
 import { Input } from "../../formEngine/components/Input/Input";
+import Ribbons from "../../../../components/Ribbons/Ribbons";
 
 export const SignatairesForm = () => {
   const dossier = useRecoilValue(dossierAtom);
@@ -18,32 +19,47 @@ export const SignatairesForm = () => {
 
   return (
     <>
-      <Text mb={5}>Coordonnées des signataires du contrat :</Text>
-      <Flex flexDirection="column">
+      <HStack w="full" alignItems="start" spacing="4w">
+        <Text>tototototoottoo</Text>
+        <Ribbons variant="info_clear" marginTop="1rem">
+          <Text color="grey.800">
+            Veuillez vous assurer de la conformité des <br />
+            adresses mails renseignées ci-après. <br />
+            Elles doivent être obligatoirement détenues <br />
+            et accessibles par l&apos;interlocuteur associé. <br />
+            Pour plus d&apos;informations, vous pouvez consulter <br />
+            les&nbsp;
+            <Link href={"/cgu"} textDecoration={"underline"} color="bluefrance">
+              conditions générales d&apos;utilisation.
+            </Link>
+          </Text>
+        </Ribbons>
+      </HStack>
+      <Flex flexDirection="column" mt={8}>
         {employeur && (
           <Stack mb={5}>
-            <Text fontWeight="bold">Employeur :</Text>
+            <Text fontWeight="bold">Signature de l&apos;Employeur :</Text>
             <SignataireLineForm signataire={employeur} type="employeur" emails={emails} />
-          </Stack>
-        )}
-        <Divider />
-        {cfa && (
-          <Stack mb={5} mt={6}>
-            <Text fontWeight="bold">CFA :</Text>
-            <SignataireLineForm signataire={cfa} type="cfa" emails={emails} />
           </Stack>
         )}
         <Divider />
         {apprenti && (
           <Stack mb={5} mt={6}>
-            <Text fontWeight="bold">Pour l&apos;apprenti(e) :</Text>
+            <Text fontWeight="bold">Signature de l&apos;Apprenti(e) :</Text>
             <SignataireLineForm signataire={apprenti} type="apprenti" emails={emails} isLocked={true} />
+          </Stack>
+        )}
+        <Divider />
+        {cfa && (
+          <Stack mb={5} mt={6}>
+            <Text fontWeight="bold">Visa du CFA :</Text>
+            <SignataireLineForm signataire={cfa} type="cfa" emails={emails} />
           </Stack>
         )}
         <Divider />
         {legal && (
           <Stack mt={8}>
-            <Text fontWeight="bold">Pour le représentant légal de l&apos;apprenti(e) :</Text>
+            <Text fontWeight="bold">Signature du représentant légal de l&apos;apprenti(e) :</Text>
             <SignataireLineForm signataire={legal} type="legal" emails={emails} isLocked={true} />
           </Stack>
         )}
