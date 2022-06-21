@@ -1,3 +1,10 @@
+## [2.10.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.10.0...v2.10.1-beta.1) (2022-06-21)
+
+
+### Bug Fixes
+
+* usewrapper loop on finalize ([#808](https://github.com/mission-apprentissage/cerfa/issues/808)) ([5f88703](https://github.com/mission-apprentissage/cerfa/commit/5f88703572acb6b84fd0be97f70326a2f661f2da))
+
 # [2.10.0](https://github.com/mission-apprentissage/cerfa/compare/v2.9.0...v2.10.0) (2022-06-21)
 
 
