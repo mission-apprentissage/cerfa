@@ -1,3 +1,32 @@
+# [2.10.0](https://github.com/mission-apprentissage/cerfa/compare/v2.9.0...v2.10.0) (2022-06-21)
+
+
+### Bug Fixes
+
+* ajout nouvelle var d'env dans les docker-compose ([809a769](https://github.com/mission-apprentissage/cerfa/commit/809a769cbdf6da7116cb044ffaadfb32f96b488b))
+* bouton 'Accéder maintenant', ! retiré (755) ([bc4d16c](https://github.com/mission-apprentissage/cerfa/commit/bc4d16c3016ded37b1a8d1eecef7eba7034789d9))
+* bouton 'Accéder maintenant', texte non souligné au survol (755) ([dc4517c](https://github.com/mission-apprentissage/cerfa/commit/dc4517c1843424088a956a6dd710ede28b50ddcf))
+* changement syntax definition class bunyanTeams + removed node-fetch ([4a71fab](https://github.com/mission-apprentissage/cerfa/commit/4a71fab0d632af17d2492b33a5bf165d08d43461))
+* deux barres présentes dans mon compte > mes infos si utilisateur non admin ([8e8b660](https://github.com/mission-apprentissage/cerfa/commit/8e8b660c5e7ca50bb10b42db4ebc54340afa7c9d))
+* libellé du dossier liste + page formulaire + fil d'ariane ([f85e03b](https://github.com/mission-apprentissage/cerfa/commit/f85e03b810c36676c46b94aac65329ca22c23887))
+* marginY => my ([71e6f60](https://github.com/mission-apprentissage/cerfa/commit/71e6f60207d2f134279997eafd60127720b7d7e9))
+* modification intitulés lignes rémunération (524) ([80ec2ef](https://github.com/mission-apprentissage/cerfa/commit/80ec2efc0844379f99d139388cdf8c54bcd08f44))
+* on ne retourne plus le cerfa entier mais juste le nom du dossier ([377745c](https://github.com/mission-apprentissage/cerfa/commit/377745c6e2fb366c0b884e4960e032d51755b1f1))
+* reduction de l'espace en haut et en bas du logo du footer ([8568322](https://github.com/mission-apprentissage/cerfa/commit/856832245ec0d8cc652de4bea398b99d4658a79d))
+* remove serverSideProps on finalize page ([#807](https://github.com/mission-apprentissage/cerfa/issues/807)) ([fb511ab](https://github.com/mission-apprentissage/cerfa/commit/fb511ab417ba35cc24f1e14965b2c775a5539d41))
+* removed useless import ([dab271d](https://github.com/mission-apprentissage/cerfa/commit/dab271dc9d19015e41cc481e911a4b5c0f809bc5))
+* selector nom du dossier plus explicite + valeur par défault ([2fe9339](https://github.com/mission-apprentissage/cerfa/commit/2fe9339f3b46cee78c579d2f9409ca82daead8c1))
+
+
+### Features
+
+* ajout logger pour altering teams ([2fcfa9b](https://github.com/mission-apprentissage/cerfa/commit/2fcfa9b9019a8fd1aa9831361e7397440290cfef))
+* ajout page assistance dossier pour admin ([#782](https://github.com/mission-apprentissage/cerfa/issues/782)) ([e610780](https://github.com/mission-apprentissage/cerfa/commit/e610780f2a85c1b2594ce3d0b29bbc8ee95a79c2))
+* changement des envs ([0e641ac](https://github.com/mission-apprentissage/cerfa/commit/0e641ac17b110015d2eba69d5517c6601b1e2b79))
+* réutilisation curstomerFormatter de slack vers teams ([6d1f5a0](https://github.com/mission-apprentissage/cerfa/commit/6d1f5a07dcfb8a7ce496ee61e08c81c8b2827947))
+* script Andi ready to run ([ec00bca](https://github.com/mission-apprentissage/cerfa/commit/ec00bca4fe6ebf49f1b0e1639aef600d759df8b8))
+* script andi seulement sur dev ([2e4ecf3](https://github.com/mission-apprentissage/cerfa/commit/2e4ecf3d08e8a611094ed086cd6a30bb4d904079))
+
 # [2.10.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v2.10.0-beta.5...v2.10.0-beta.6) (2022-06-21)
 
 
