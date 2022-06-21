@@ -1,6 +1,5 @@
 import React from "react";
-import { Text, Button, HStack, Link, Menu, MenuButton, MenuList, MenuItem, Avatar, Center } from "@chakra-ui/react";
-import NavLink from "next/link";
+import { Text, Button, HStack, Menu, MenuButton, MenuList, MenuItem, Avatar, Center } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import { Parametre } from "../../theme/components/icons";
 import { Table } from "../Table/Table";
@@ -8,6 +7,8 @@ import { StatusBadge } from "../StatusBadge/StatusBadge";
 import { useRecoilValue } from "recoil";
 import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 import { workspaceAtom } from "../../hooks/workspaceAtoms";
+
+import Link from "../Link";
 
 const TableDossiers = ({
   dossiers,
@@ -22,7 +23,7 @@ const TableDossiers = ({
         Nom: {
           Header: "Nom",
           width: 120,
-          value: m.nomDossier,
+          value: m.nom,
         },
         Contributors: {
           Header: "Contributeurs",
@@ -49,11 +50,9 @@ const TableDossiers = ({
         Nom: (value, i) => {
           let step = "signatures";
           if (dossiers[i].etat === "BROUILLON") step = "cerfa";
-
           return (
             <Center>
               <Link
-                as={NavLink}
                 href={`${baseUrl}/${dossiers[i]._id}/${step}`}
                 _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.300" }}
                 w="full"
