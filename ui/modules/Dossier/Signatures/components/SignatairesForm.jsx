@@ -37,14 +37,14 @@ export const SignatairesForm = () => {
         {apprenti && (
           <Stack mb={5} mt={6}>
             <Text fontWeight="bold">Pour l&apos;apprenti(e) :</Text>
-            <SignataireLineForm signataire={apprenti} type="apprenti" emails={emails} />
+            <SignataireLineForm signataire={apprenti} type="apprenti" emails={emails} isLocked={true} />
           </Stack>
         )}
         <Divider />
         {legal && (
           <Stack mt={8}>
             <Text fontWeight="bold">Pour le représentant légal de l&apos;apprenti(e) :</Text>
-            <SignataireLineForm signataire={legal} type="legal" emails={emails} />
+            <SignataireLineForm signataire={legal} type="legal" emails={emails} isLocked={true} />
           </Stack>
         )}
       </Flex>
@@ -52,7 +52,7 @@ export const SignatairesForm = () => {
   );
 };
 
-const SignataireLineForm = ({ signataire, type, emails }) => {
+const SignataireLineForm = ({ signataire, type, emails, isLocked }) => {
   const { onSubmittedSignataireDetails } = useSignatures();
 
   const [firstname, setFirstname] = useState(signataire.firstname);
@@ -63,6 +63,7 @@ const SignataireLineForm = ({ signataire, type, emails }) => {
     <HStack spacing={3}>
       <Input
         required={true}
+        locked={isLocked}
         name={`signataire.${type}.lastname`}
         label="Nom"
         value={lastname || ""}
@@ -84,6 +85,7 @@ const SignataireLineForm = ({ signataire, type, emails }) => {
       />
       <Input
         required={true}
+        locked={isLocked}
         name={`signataire.${type}.firstname`}
         label="Prénom"
         value={firstname || ""}
@@ -105,6 +107,7 @@ const SignataireLineForm = ({ signataire, type, emails }) => {
       />
       <Input
         required={true}
+        locked={isLocked && type !== "legal"}
         name={`signataire.${type}.email`}
         label="Courriel"
         value={email}
