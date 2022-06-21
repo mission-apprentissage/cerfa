@@ -130,9 +130,9 @@ module.exports = async () => {
 
       let signataires = {
         employeur: {
-          firstname: "",
-          lastname: "",
-          email: cerfa.employeur.courriel,
+          firstname: contributors[0].user.prenom,
+          lastname: contributors[0].user.nom,
+          email: contributors[0].user.email,
           phone: cerfa.employeur.telephone,
           status: "EN_ATTENTE_SIGNATURE",
         },
