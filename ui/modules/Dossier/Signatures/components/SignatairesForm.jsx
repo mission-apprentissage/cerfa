@@ -83,14 +83,6 @@ const SignataireLineForm = ({ signataire, type, emails, isLocked }) => {
         name={`signataire.${type}.lastname`}
         label="Nom"
         value={lastname || ""}
-        mask="C"
-        maskBlocks={[
-          {
-            name: "C",
-            mask: "Pattern",
-            pattern: "^[a-zA-Z]*$",
-          },
-        ]}
         mb={0}
         w="20%"
         onError={(val, name) => {
@@ -105,14 +97,6 @@ const SignataireLineForm = ({ signataire, type, emails, isLocked }) => {
         name={`signataire.${type}.firstname`}
         label="Prénom"
         value={firstname || ""}
-        mask="C"
-        maskBlocks={[
-          {
-            name: "C",
-            mask: "Pattern",
-            pattern: "^[a-zA-Z]*$",
-          },
-        ]}
         mt={0}
         w="20%"
         onError={(val, name) => {
