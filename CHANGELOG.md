@@ -1,3 +1,10 @@
+## [2.10.2](https://github.com/mission-apprentissage/cerfa/compare/v2.10.1...v2.10.2) (2022-06-21)
+
+
+### Bug Fixes
+
+* lien table ([6818811](https://github.com/mission-apprentissage/cerfa/commit/68188115d014c6057e43681a62b2241319339d22))
+
 ## [2.10.2-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.10.1...v2.10.2-beta.1) (2022-06-21)
 
 
