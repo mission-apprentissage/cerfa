@@ -1,3 +1,10 @@
+# [2.10.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v2.10.0-beta.5...v2.10.0-beta.6) (2022-06-21)
+
+
+### Bug Fixes
+
+* remove serverSideProps on finalize page ([#807](https://github.com/mission-apprentissage/cerfa/issues/807)) ([fb511ab](https://github.com/mission-apprentissage/cerfa/commit/fb511ab417ba35cc24f1e14965b2c775a5539d41))
+
 # [2.10.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v2.10.0-beta.4...v2.10.0-beta.5) (2022-06-16)
 
 
