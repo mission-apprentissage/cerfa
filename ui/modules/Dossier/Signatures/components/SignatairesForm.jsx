@@ -20,7 +20,25 @@ export const SignatairesForm = () => {
   return (
     <>
       <HStack w="full" alignItems="start" spacing="4w">
-        <Text>tototototoottoo</Text>
+        <Text>
+          <strong>Remplissez les champs des signataires.</strong>
+          <br />
+          Ils recevront une invitation à signer par email.
+          <br />
+          <br />
+          <strong>
+            Lorsque toutes les signatures sont réunies, le contrat est automatiquement télétransmis aux services
+            administratifs.
+          </strong>
+          <br />
+          Vous pouvez suivre l&apos;avancement de son instruction depuis la plateforme.
+          <br />
+          <br />
+          Pour toute question, consultez&nbsp;
+          <Link href={"/assistance"} textDecoration={"underline"} color="bluefrance">
+            la page assistance
+          </Link>
+        </Text>
         <Ribbons variant="info_clear" marginTop="1rem">
           <Text color="grey.800">
             Veuillez vous assurer de la conformité des <br />
