@@ -16,7 +16,7 @@ import {
 import { _post, _put } from "../../../common/httpClient";
 import useAuth from "../../../hooks/useAuth";
 
-import { DownloadLine, SentPaperPlane, BallPenFill } from "../../../theme/components/icons";
+import { DownloadLine, SentPaperPlane, BallPenFill, ExternalLinkLine } from "../../../theme/components/icons";
 
 import { hasPageAccessTo, hasContextAccessTo } from "../../../common/utils/rolesUtils";
 
@@ -188,17 +188,33 @@ const DossierFooterControls = ({
                         Signature en ligne
                       </Heading>
                       <Heading as="h5" fontSize="1rem" mb={4}>
-                        Processus automatique sécurisé & gratuit
+                        Processus dématérialisée
                       </Heading>
                     </Flex>
                     <OrderedList>
-                      <ListItem>Ajoutez les signataires</ListItem>
-                      <ListItem>Ils seront invités par courriel à signer via Yousign</ListItem>
-                      <ListItem>Suivez l&apos;évolution en temps réel</ListItem>
                       <ListItem>
-                        Transmission automatique au service en charge de l&apos;instruction du dossier
+                        Vous ajoutez les coordonnées des signataires en cliquant sur &laquo;&nbsp;signature en
+                        ligne&nbsp;&raquo;,
+                      </ListItem>
+                      <ListItem>
+                        Chaque signataire reçoit une notification l&apos;invitant à signer le contrat,
+                      </ListItem>
+                      <ListItem>
+                        Lorsque toutes les signatures sont réunies, le contrat est automatiquement télétransmis.
                       </ListItem>
                     </OrderedList>
+                    <br />
+                    <Text>
+                      La signature électronique est opérée par notre partenaire YouSign. <br />
+                      <Link
+                        href={"https://yousign.com/fr-fr/signature-electronique"}
+                        textDecoration={"underline"}
+                        isExternal
+                      >
+                        Plus d&apos;informations&nbsp;
+                        <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
+                      </Link>
+                    </Text>
                   </Box>
                   <Center h="25%">
                     {auth && hasPageAccessTo(auth, "signature_beta") && (
@@ -224,17 +240,22 @@ const DossierFooterControls = ({
                       Signature papier
                     </Heading>
                     <Heading as="h5" fontSize="1rem" mb={4}>
-                      Processus manuel
+                      Processus classique
                     </Heading>
                   </Flex>
                   <OrderedList>
-                    <ListItem>Téléchargez le document complété</ListItem>
-                    <ListItem>Imprimez le contrat</ListItem>
-                    <ListItem>Recueillez les différentes signatures</ListItem>
                     <ListItem>
-                      Transmission automatique à votre service en charge de l&apos;instruction et du dépôt du dossier
+                      Téléchargez et imprimez le contrat finalisé en cliquant sur &laquo;&nbsp;signature
+                      papier&nbsp;&raquo;,
+                    </ListItem>
+                    <ListItem>Recueillez les différentes signatures manuscrites par vos propres moyens,</ListItem>
+                    <ListItem>
+                      Lorsque toutes les signatures sont réunies, revenez sur la plateforme pour télétransmettre le
+                      contrat.
                     </ListItem>
                   </OrderedList>
+                  <br />
+                  <Text>Il n&apos;est plus nécessaire de joindre le contrat signé en pièce jointe du dossier.</Text>
                 </Box>
                 <Center h="25%">
                   <Button
