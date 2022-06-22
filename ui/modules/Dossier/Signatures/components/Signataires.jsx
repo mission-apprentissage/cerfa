@@ -14,7 +14,7 @@ export const Signataires = () => {
           <Flex>
             <HStack flexGrow={1}>
               <Avatar size="sm" name={`${cfa.firstname} ${cfa.lastname}`} />
-              <Text>{`${cfa.firstname} ${cfa.lastname}`}</Text>
+              <Text>{`${cfa.firstname} ${cfa.lastname} <${cfa.email}>`}</Text>
               <Text fontWeight="bold">{`(cfa)`}</Text>
             </HStack>
             <Flex>
@@ -29,7 +29,7 @@ export const Signataires = () => {
           <Flex>
             <HStack flexGrow={1}>
               <Avatar size="sm" name={`${employeur.firstname} ${employeur.lastname}`} />
-              <Text>{`${employeur.firstname} ${employeur.lastname}`}</Text>
+              <Text>{`${employeur.firstname} ${employeur.lastname} <${employeur.email}>`}</Text>
               <Text fontWeight="bold">{`(Employeur)`}</Text>
             </HStack>
             <Flex>
@@ -44,7 +44,7 @@ export const Signataires = () => {
           <Flex>
             <HStack flexGrow={1}>
               <Avatar size="sm" name={`${apprenti.firstname} ${apprenti.lastname}`} />
-              <Text>{`${apprenti.firstname} ${apprenti.lastname}`}</Text>
+              <Text>{`${apprenti.firstname} ${apprenti.lastname} <${apprenti.email}>`}</Text>
               <Text fontWeight="bold">{`(Apprenti(e))`}</Text>
             </HStack>
             <Flex>
@@ -59,7 +59,7 @@ export const Signataires = () => {
           <Flex>
             <HStack flexGrow={1}>
               <Avatar size="sm" name={`${legal.firstname} ${legal.lastname}`} />
-              <Text>{`${legal.firstname} ${legal.lastname}`}</Text>
+              <Text>{`${legal.firstname} ${legal.lastname} <${legal.email}>`}</Text>
               <Text fontWeight="bold">{`(Représentant légal)`}</Text>
             </HStack>
             <Flex>
