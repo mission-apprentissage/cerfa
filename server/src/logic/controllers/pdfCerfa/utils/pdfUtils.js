@@ -322,8 +322,9 @@ const fieldsPositions = {
         },
         voie: {
           x: 104,
+          y: 215,
           title: (value) => {
-            if (!value) return "";
+            if (!value) return [""];
             let shorttened =
               shortenVoie(value) || shortenVoie(value, "toLowerCase") || shortenVoie(value, "toUpperCase");
 
