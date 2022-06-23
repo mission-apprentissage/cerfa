@@ -20,9 +20,15 @@ module.exports = (components) => {
 
     const contributors = await dossiers.getContributeurs(dossier._id, components);
 
+    const nomDossier =
+      cerfa.apprenti.nom && cerfa.apprenti.prenom
+        ? cerfa.apprenti.nom.toUpperCase() + " " + cerfa.apprenti.prenom
+        : dossier.nom;
+
     return {
       ...dossier,
       contributeurs: contributors,
+      nomDossier: nomDossier,
       acl: user.currentPermissionAcl,
       owner: {
         ...owner,
