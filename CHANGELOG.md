@@ -1,3 +1,10 @@
+# [2.11.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.10.3-beta.1...v2.11.0-beta.1) (2022-06-23)
+
+
+### Features
+
+* ajout webhooks teams recette & prod dans le vault ansible ([afbdd9d](https://github.com/mission-apprentissage/cerfa/commit/afbdd9d098a86c43081590b5d168ce7e880d93d3))
+
 ## [2.10.3-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.10.2...v2.10.3-beta.1) (2022-06-23)
 
 
