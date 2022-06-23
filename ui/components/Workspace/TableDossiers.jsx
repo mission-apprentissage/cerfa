@@ -23,7 +23,7 @@ const TableDossiers = ({
         Nom: {
           Header: "Nom",
           width: 120,
-          value: m.nomDossier ?? m.nom,
+          value: m.nomDossier,
         },
         Contributors: {
           Header: "Contributeurs",
