@@ -372,24 +372,9 @@ module.exports = (components) => {
         throw Boom.forbidden("Cerfa is locked");
       }
 
-      let remunerationsAnnuelles = [...(data.contrat?.remunerationsAnnuelles || [])];
-      for (let i = 0; i < cerfaDb.contrat.remunerationsAnnuelles.length; i++) {
-        const remunerationsAnnuelleDb = cerfaDb.contrat.remunerationsAnnuelles[i];
-        for (let j = 0; j < remunerationsAnnuelles.length; j++) {
-          let remAnnuelle = remunerationsAnnuelles[j];
-          if (remunerationsAnnuelleDb.ordre === remunerationsAnnuelleDb.ordre) {
-            remAnnuelle = {
-              ...remunerationsAnnuelleDb,
-              ...remAnnuelle,
-            };
-          }
-        }
-      }
-      let mergedData = merge(cerfaDb, data);
+      const mergedData = merge(cerfaDb, data);
       mergedData.contrat.remunerationsAnnuelles =
-        cerfaDb.contrat.remunerationsAnnuelles.length > 0 && remunerationsAnnuelles.length === 0
-          ? cerfaDb.contrat.remunerationsAnnuelles
-          : remunerationsAnnuelles;
+        data.contrat?.remunerationsAnnuelles ?? cerfaDb.contrat.remunerationsAnnuelles;
 
       let cerfaHistory = await CerfaHistory.findOne({ cerfaId: params.id });
       if (!cerfaHistory) {
