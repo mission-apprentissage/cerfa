@@ -126,16 +126,15 @@ export const Remunerations = () => {
         <Flex color="grey.600">
           {!smic?.isSmicException && (
             <Text>
-              Calculé sur la base du SMIC {smic?.annee} de {smic?.selectedSmic}€ mensuel ({smic?.heuresHebdomadaires}
-              €/h) [Date d&apos;entrée en vigueur {smic?.dateEntreeEnVigueur}]
+              Calculé sur la base du SMIC {smic?.annee} de {smic?.selectedSmic}€ brut mensuel [Date d&apos;entrée en
+              vigueur {smic?.dateEntreeEnVigueur}]
             </Text>
           )}
           {smic?.isSmicException && (
             <Text>
               Calculé sur la base du SMIC {smic?.annee} pour{" "}
               <strong>{smic?.exceptions[employeurAdresseDepartement]?.nomDepartement}</strong> de {smic?.selectedSmic}€
-              mensuel ({smic?.exceptions[employeurAdresseDepartement]?.heuresHebdomadaires}
-              €/h) [Date d&apos;entrée en vigueur {smic?.dateEntreeEnVigueur}]
+              brut mensuel [Date d&apos;entrée en vigueur {smic?.dateEntreeEnVigueur}]
             </Text>
           )}
         </Flex>
