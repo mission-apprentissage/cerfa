@@ -1,3 +1,10 @@
+# [2.11.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.11.0-beta.2...v2.11.0-beta.3) (2022-06-27)
+
+
+### Features
+
+* affichage du smic ([5d597c2](https://github.com/mission-apprentissage/cerfa/commit/5d597c20d0e1386918328cc5213c8a1430c69338))
+
 # [2.11.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.11.0-beta.1...v2.11.0-beta.2) (2022-06-27)
 
 
