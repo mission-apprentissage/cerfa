@@ -1,13 +1,31 @@
+import { nomPattern } from "../../../domain/nomPattern";
+
 export const maitreSchema = {
   "maitre1.nom": {
     required: true,
     label: "Nom de naissance:",
     requiredMessage: "le nom du maître d'apprentissage est obligatoire",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: nomPattern,
+      },
+    ],
   },
   "maitre1.prenom": {
     required: true,
     label: "Prénom:",
     requiredMessage: "le prénom du maître d'apprentissage est obligatoire",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: nomPattern,
+      },
+    ],
   },
   "maitre1.dateNaissance": {
     required: true,
@@ -19,10 +37,26 @@ export const maitreSchema = {
   "maitre2.nom": {
     label: "Nom de naissance:",
     requiredMessage: "le nom du maître d'apprentissage est obligatoire",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: nomPattern,
+      },
+    ],
   },
   "maitre2.prenom": {
     label: "Prénom:",
     requiredMessage: "le prénom du maître d'apprentissage est obligatoire",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: nomPattern,
+      },
+    ],
   },
   "maitre2.dateNaissance": {
     fieldType: "date",
