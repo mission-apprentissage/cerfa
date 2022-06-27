@@ -1,3 +1,10 @@
+# [2.11.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.11.0-beta.1...v2.11.0-beta.2) (2022-06-27)
+
+
+### Bug Fixes
+
+* gestion du code diplome ([f580e77](https://github.com/mission-apprentissage/cerfa/commit/f580e77e9959823c1ae98fa1f2d326312d4a257b))
+
 # [2.11.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.10.3-beta.1...v2.11.0-beta.1) (2022-06-23)
 
 
