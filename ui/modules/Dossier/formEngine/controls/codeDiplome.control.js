@@ -15,7 +15,7 @@ export const codeDiplomeControl = [
         return { error };
       }
 
-      if (messages?.rncp.code_rncp !== "Ok") {
+      if (messages?.rncp?.code_rncp !== "Ok") {
         return { error: messages?.code_rncp };
       }
 
