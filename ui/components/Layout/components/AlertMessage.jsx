@@ -3,6 +3,29 @@ import { Box, Alert, AlertIcon, AlertTitle, AlertDescription, Text, Link } from 
 import { _get } from "../../../common/httpClient";
 import { replaceLinks } from "../../../common/utils/markdownUtils";
 
+const Messages = ({ messages }) => (
+  <>
+    {messages.map((element) => {
+      if (!element.enabled) return null;
+      return (
+        <Text key={element._id}>
+          {replaceLinks(element.msg).map((part, i) => {
+            return typeof part === "string" ? (
+              <Text as="span" key={i}>
+                {part}
+              </Text>
+            ) : (
+              <Link href={part.href} fontSize="md" key={i} textDecoration={"underline"} isExternal>
+                {part.linkText}
+              </Link>
+            );
+          })}
+        </Text>
+      );
+    })}
+  </>
+);
+
 const AlertMessage = () => {
   const [messagesInfo, setMessagesInfo] = useState([]);
   const [messagesAlert, setMessagesAlert] = useState([]);
@@ -37,24 +60,7 @@ const AlertMessage = () => {
           <AlertIcon />
           <AlertTitle mr={2}>Alerte : </AlertTitle>
           <AlertDescription>
-            {messagesAlert.map((element) => {
-              if (!element.enabled) return null;
-              return (
-                <Text key={element._id}>
-                  {replaceLinks(element.msg).map((part, i) => {
-                    return typeof part === "string" ? (
-                      <Text as="span" key={i}>
-                        {part}
-                      </Text>
-                    ) : (
-                      <Link href={part.href} fontSize="md" key={i} textDecoration={"underline"} isExternal>
-                        {part.linkText}
-                      </Link>
-                    );
-                  })}
-                </Text>
-              );
-            })}
+            <Messages messages={messagesAlert} />
           </AlertDescription>
         </Alert>
       )}
@@ -63,24 +69,7 @@ const AlertMessage = () => {
           <AlertIcon />
           <AlertTitle mr={2}>Info : </AlertTitle>
           <AlertDescription>
-            {messagesInfo.map((element) => {
-              if (!element.enabled) return null;
-              return (
-                <Text key={element._id}>
-                  {replaceLinks(element.msg).map((part, i) => {
-                    return typeof part === "string" ? (
-                      <Text as="span" key={i}>
-                        {part}
-                      </Text>
-                    ) : (
-                      <Link href={part.href} fontSize="md" key={i} textDecoration={"underline"} isExternal>
-                        {part.linkText}
-                      </Link>
-                    );
-                  })}
-                </Text>
-              );
-            })}
+            <Messages messages={messagesInfo} />
           </AlertDescription>
         </Alert>
       )}

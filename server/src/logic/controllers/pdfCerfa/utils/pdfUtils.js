@@ -31,6 +31,15 @@ const convertDate = (value) =>
     ? DateTime.fromMillis(value.valueOf()).setZone("Europe/Paris").setLocale("fr-FR").toFormat("dd/MM/yyyy")
     : undefined;
 
+const formatCourriel = (value, options) => {
+  let [user, domain] = value.split("@");
+  return [
+    { text: user },
+    { text: "@", options: { color: rgb(0, 0, 0), x: 25 + options.writtingFont.widthOfTextAtSize(user, 11) } },
+    { text: domain, options: { x: 25 + options.writtingFont.widthOfTextAtSize(user + "@", 11) } },
+  ];
+};
+
 const fieldsPositions = {
   employeur: {
     denomination: {
@@ -117,14 +126,7 @@ const fieldsPositions = {
       x: 27,
       y: 544,
       maxLength: 50,
-      title: async (value, options) => {
-        let [user, domain] = value.split("@");
-        return [
-          { text: user },
-          { text: "@", options: { color: rgb(0, 0, 0), x: 25 + options.writtingFont.widthOfTextAtSize(user, 11) } },
-          { text: domain, options: { x: 25 + options.writtingFont.widthOfTextAtSize(user + "@", 11) } },
-        ];
-      },
+      title: formatCourriel,
     },
     siret: {
       x: 305,
@@ -290,14 +292,7 @@ const fieldsPositions = {
       x: 27,
       y: 295,
       maxLength: 50,
-      title: async (value, options) => {
-        let [user, domain] = value.split("@");
-        return [
-          { text: user },
-          { text: "@", options: { color: rgb(0, 0, 0), x: 25 + options.writtingFont.widthOfTextAtSize(user, 11) } },
-          { text: domain, options: { x: 25 + options.writtingFont.widthOfTextAtSize(user + "@", 11) } },
-        ];
-      },
+      title: formatCourriel,
     },
     responsableLegal: {
       nom: {
