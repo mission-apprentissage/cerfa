@@ -12,6 +12,11 @@ module.exports = async (dossiers, crypto, agecap, users) => {
 
   return {
     handleRetourYouSign: async ({ body, params }) => {
+      // On ne traite pas l'event procedure.finished pour éviter de faire le traitement 2 fois
+      if (body.eventName !== "procedure.finished") {
+        return;
+      }
+
       // On récupère le dossier en cours de traitement
       const dossier = await dossiers.findDossierById(params.id);
       if (!dossier) {
@@ -79,7 +84,7 @@ module.exports = async (dossiers, crypto, agecap, users) => {
 
       // La procédure de signature est terminée, on lance automatiquement la télétransmission vers AGECAP
       // if (body.eventName === "procedure.finished" || (doneMembers && doneMembers.length === procedure.members.length)) {
-      if (doneMembers && doneMembers.length === procedure.members.length && body.eventName !== "procedure.finished") {
+      if (doneMembers && doneMembers.length === procedure.members.length) {
         await dossiers.updateEtatDossier(params.id, "DOSSIER_TERMINE_AVEC_SIGNATURE");
 
         await agecap.convertAndSendToAgecap({
