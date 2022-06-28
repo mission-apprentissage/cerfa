@@ -162,8 +162,6 @@ const DossierFooterControls = ({
               }}
               variant="primary"
               isDisabled={!dossierComplete || isEmployeurPrive}
-              bg="greenmedium.600"
-              _hover={{ bg: "greenmedium.500" }}
             >
               Choisir le mode de signature
             </Button>
@@ -280,9 +278,7 @@ const DossierFooterControls = ({
                 as={Link}
                 href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?dossierId=${dossier._id}`}
                 {...buttonDownloadStyleProps}
-                bg={"greenmedium.500"}
-                _hover={{ bg: "greenmedium.600" }}
-                color="white"
+                variant="secondary"
                 isDisabled={!dossierComplete || isEmployeurPrive}
               >
                 <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
@@ -298,8 +294,6 @@ const DossierFooterControls = ({
                   }}
                   variant="primary"
                   ml={12}
-                  bg="pinksoft.500"
-                  _hover={{ bg: "pinksoft.500" }}
                   px={8}
                   mt={16}
                   isDisabled={!dossier.signataires.complete}
