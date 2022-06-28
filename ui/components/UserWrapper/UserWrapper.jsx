@@ -91,12 +91,7 @@ const ForceAcceptCGU = ({ children }) => {
   );
 };
 
-export const AuthenticationContext = createContext({
-  auth: anonymous,
-  token: undefined,
-  setAuth: () => {},
-  setToken: () => {},
-});
+export const AuthenticationContext = createContext({});
 
 const UserWrapper = ({ children, ssrAuth }) => {
   const [token, setToken] = useState();
