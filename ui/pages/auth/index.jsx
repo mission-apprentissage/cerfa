@@ -6,9 +6,6 @@ import { motion } from "framer-motion";
 
 import Login from "../../components/Auth/connexion";
 import { getAuthServerSideProps } from "../../common/SSR/getAuthServerSideProps";
-// import Register from "./components/Register";
-// import Finalize from "./components/Finalize";
-// import Confirmed from "./components/Confirmed";
 
 const MotionBox = motion(
   forwardRef((props, ref) => {
@@ -49,31 +46,10 @@ const FormBoxMotion = ({ children, isOpen, ...rest }) => {
 export const getServerSideProps = async (context) => ({ props: { ...(await getAuthServerSideProps(context)) } });
 
 const AuthPage = () => {
-  // const title = "Connexion";
-  // setTitle(title);
-
   return (
     <Page>
-      {/* <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
+      <Box w="100%" py={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
         <Container maxW="xl">
-          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
-        </Container>
-      </Box> */}
-      <Box
-        w="100%"
-        py={[4, 8]}
-        px={[1, 1, 12, 24]}
-        color="#1E1E1E"
-        // minH="55vh"
-      >
-        <Container maxW="xl">
-          {/* {slug === "confirmation" && <Confirmed />}
-          {slug === "finalize" && (
-            <Box bg="galt" py={[4, 12]} px={[1, 1, 8, 10]}>
-              <Finalize />
-            </Box>
-          )} */}
-          {/* {(slug === "connexion" || slug === "inscription") && ( */}
           <Flex w="full" minH="67vh" maxW="xl">
             <Flex
               flexDirection="column"
@@ -91,18 +67,9 @@ const AuthPage = () => {
                 <br />
                 un Employeur ou un CFA ?
               </Heading>
-              <Text mt={8}>
-                {/* {slug === "connexion" ? "Connectez-vous" : "Inscrivez-vous"} pour accéder au service de contrat
-                  d&apos;apprentissage dématérialisé. */}
-              </Text>
+              <Text mt={8}></Text>
             </Flex>
             <Box flexGrow={1} flexShrink={1} flexBasis="50%" ml={10}>
-              {/* <FormBoxMotion isOpen={slug === "inscription"} display={slug === "connexion" ? "none" : "flex"}>
-                <Heading as="h1" fontSize="1.8rem" lineHeight="1.5">
-                  Inscription
-                </Heading>
-                <Box flexGrow={1}><Register /></Box>
-              </FormBoxMotion> */}
               <FormBoxMotion isOpen={true} top="-100%" display={"flex"}>
                 <Heading as="h1" fontSize="1.8rem" lineHeight="1.5" mb={4}>
                   Connexion
@@ -113,7 +80,6 @@ const AuthPage = () => {
               </FormBoxMotion>
             </Box>
           </Flex>
-          {/* )} */}
         </Container>
       </Box>
     </Page>

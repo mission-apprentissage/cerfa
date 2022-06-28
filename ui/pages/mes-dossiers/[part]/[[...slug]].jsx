@@ -34,7 +34,6 @@ const MesDossiers = () => {
   const isNouveauDossier = slug.includes("nouveau-dossier");
 
   const isSpacePages = (isMySpacePage || isSharedSpacePage) && !isNouveauDossier && !isSharedFolders;
-  // const workspaceId = isSharedSpacePage ? slug?.[0] : null;
 
   const isDossierPage = !isSpacePages && !isNouveauDossier;
   const dossierId = isDossierPage ? slug?.[slug.length - 2] : null;

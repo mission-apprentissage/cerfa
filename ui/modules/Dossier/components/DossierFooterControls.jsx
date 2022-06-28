@@ -15,13 +15,8 @@ import {
 
 import { _post, _put } from "../../../common/httpClient";
 import useAuth from "../../../hooks/useAuth";
-
 import { DownloadLine, SentPaperPlane, BallPenFill } from "../../../theme/components/icons";
-
 import { hasPageAccessTo, hasContextAccessTo } from "../../../common/utils/rolesUtils";
-
-// import InfoTooltip from "../../../common/components/InfoTooltip";
-
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { dossierAtom } from "../atoms";
 
@@ -60,7 +55,6 @@ const DossierFooterControls = ({
           for (let j = 0; j < subFieldKeys.length; j++) {
             const element = field[subFieldKeys[j]];
             details += `${element.join(" ")}`;
-            // details += `${fieldKeys[index]} > ${subFieldKeys[j]} > ${element.join(" ")}`;
           }
         }
       } else if (error.messages.details?.reason?.globalErrors) {

@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-// import { _get } from "../httpClient";
 
 const commentsC = {
   "organismeFormation.siret": {

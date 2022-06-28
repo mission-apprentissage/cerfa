@@ -64,7 +64,6 @@ export const Header = ({ isSharedWorkspace }) => {
               Paramètres
             </Text>
           </Button>
-          {/* {hasContextAccessTo(workspace, "wks/page_espace/page_parametres/gestion_notifications") */}
           <ParameterModal
             isOpen={parameterModal.isOpen}
             onClose={parameterModal.onClose}
