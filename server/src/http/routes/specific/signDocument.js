@@ -160,9 +160,9 @@ module.exports = (components) => {
           email: {
             "procedure.started": [
               {
-                subject: `Vous avez été invité à signer un contrat`,
+                subject: `Vous avez été invité à signer un contrat d'apprentissage par ${cerfa.employeur.denomination}`,
                 message:
-                  'Bonjour <tag data-tag-type="string" data-tag-name="recipient.firstname"></tag> <tag data-tag-type="string" data-tag-name="recipient.lastname"></tag>, <br><br> Vous avez été invité à signer un contrat en apprentissage, merci de cliquer sur le boutton suivant pour y accéder: <br><br> <tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Accéder au document</tag>',
+                  'Bonjour <tag data-tag-type="string" data-tag-name="recipient.firstname"></tag> <tag data-tag-type="string" data-tag-name="recipient.lastname"></tag>, <br><br> Vous avez été invité à signer un contrat d&apos;apprentissage, merci de cliquer sur le bouttn suivant pour y accéder: <br><br> <tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Accéder au document</tag>',
                 to: ["@members"],
               },
             ],
