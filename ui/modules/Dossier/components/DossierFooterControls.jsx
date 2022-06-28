@@ -219,7 +219,7 @@ const DossierFooterControls = ({
                     variant={"primary"}
                   >
                     <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
-                    Signatures électroniques
+                    Signature électronique
                   </Button>
                 </Center>
               </Flex>
@@ -259,7 +259,7 @@ const DossierFooterControls = ({
                     bg="galt"
                   >
                     <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
-                    Signatures papier
+                    Signature papier
                   </Button>
                 </Center>
               </Flex>
