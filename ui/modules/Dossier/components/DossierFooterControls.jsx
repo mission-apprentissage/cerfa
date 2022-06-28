@@ -165,7 +165,7 @@ const DossierFooterControls = ({
               bg="greenmedium.600"
               _hover={{ bg: "greenmedium.500" }}
             >
-              Finaliser et Télécharger le dossier
+              Choisir le mode de signature
             </Button>
           )}
         </Flex>
