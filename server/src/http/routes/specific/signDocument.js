@@ -8,29 +8,19 @@ const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfa
 const apiYousign = require("../../../common/apis/yousign/ApiYousign");
 const config = require("../../../config");
 const authMiddleware = require("../../middlewares/authMiddleware");
-const pageAccessMiddleware = require("../../middlewares/pageAccessMiddleware");
-const { uploadToStorage, deleteFromStorage } = require("../../../common/utils/ovhUtils");
-const { oleoduc } = require("oleoduc");
-const { PassThrough } = require("stream");
-const { find } = require("lodash");
 const passport = require("passport");
 const { Strategy, ExtractJwt } = require("passport-jwt");
 const { createYouSignWebhookToken } = require("../../../common/utils/jwtUtils");
 
-function noop() {
-  return new PassThrough();
-}
-
 module.exports = (components) => {
   const router = express.Router();
 
-  const { dossiers, crypto } = components;
+  const { dossiers, yousign } = components;
 
   router.post(
     "/",
     authMiddleware(components),
-    pageAccessMiddleware(["signature_beta"]),
-    permissionsDossierMiddleware(components, ["dossier/page_signatures/signer"]),
+    permissionsDossierMiddleware(components, ["dossier/page_signatures/signature_electronique"]),
     tryCatch(async (req, res) => {
       let { cerfaId, dossierId } = await Joi.object({
         test: Joi.boolean(),
@@ -85,9 +75,13 @@ module.exports = (components) => {
         // },
       };
 
-      const operationDetailsAdvanced = {
+      // On active la signature avancée uniquement en production
+      let operationDetailsAdvanced = {
         operationLevel: "advanced",
       };
+      if (config.env !== "production") {
+        operationDetailsAdvanced = operationDetails;
+      }
 
       const positions = {
         employeur: "20,149,189,199", // Employeur
@@ -176,6 +170,10 @@ module.exports = (components) => {
           webhook: {
             "member.finished": [
               {
+                // Pour tester en dev : aller sur webhook.site et remplacer cette url.
+                // Récupérer le retour du webhook et l'envoyer à la PDIGI via Postman (ne pas oublier les headers, l'auth est dedans!)
+                // Le faire pour les 2 webhooks ci-dessous
+                // url: "https://webhook.site/bb93b16f-ac32-44f6-92a9-16b3c4291cd8",
                 url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
                 method: "POST",
                 headers: {
@@ -185,6 +183,7 @@ module.exports = (components) => {
             ],
             "procedure.finished": [
               {
+                // url: "https://webhook.site/bb93b16f-ac32-44f6-92a9-16b3c4291cd8",
                 url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
                 method: "POST",
                 headers: {
@@ -227,69 +226,7 @@ module.exports = (components) => {
     passport.authenticate("jwt-yousign-webhook", { session: false, failWithError: true }),
     // eslint-disable-next-line no-unused-vars
     tryCatch(async ({ body, params, user }, res) => {
-      let { test } = await Joi.object({
-        test: Joi.boolean(),
-      })
-        .unknown()
-        .validateAsync(body, { abortEarly: false });
-
-      const dossier = await dossiers.findDossierById(params.id);
-      if (!dossier) {
-        throw Boom.notFound("Doesn't exist");
-      }
-
-      const { _doc } = await dossiers.updateSignatures(params.id, body);
-      const { procedure } = _doc.signatures;
-      const signataires = _doc.signataires;
-      const dossierId = params.id;
-      const yousignFile = procedure.files[0];
-
-      let { hashStream, getHash } = crypto.checksum();
-      let filename = yousignFile.name;
-      let path = `contrats/${dossierId}/${filename}`;
-      const documents = await dossiers.getDocuments(dossierId);
-      const contratDocument = find(documents, { typeDocument: "CONTRAT" });
-      if (contratDocument) {
-        await deleteFromStorage(path);
-      }
-      await oleoduc(
-        await apiYousign.getFile(yousignFile.id.replace("/files/", "")),
-        hashStream,
-        crypto.isCipherAvailable() ? crypto.cipher(dossierId) : noop(),
-        test ? noop() : await uploadToStorage(path, { contentType: "application/pdf" })
-      );
-      if (!contratDocument) {
-        let hash = await getHash();
-        await dossiers.addDocument(dossierId, {
-          typeDocument: "CONTRAT",
-          hash,
-          nomFichier: filename,
-          cheminFichier: path,
-          tailleFichier: 0,
-          userEmail: "yousign@hooks.fr", // TODO user.email,
-        });
-      }
-
-      const doneMembers = procedure.members.filter(({ status }) => status === "done");
-      for (let doneMember of doneMembers) {
-        if (doneMember.email === signataires.apprenti.email) {
-          signataires.apprenti.status = "SIGNE";
-        } else if (doneMember.email === signataires.employeur.email) {
-          signataires.employeur.status = "SIGNE";
-        } else if (doneMember.email === signataires.cfa.email) {
-          signataires.cfa.status = "SIGNE";
-        } else if (doneMember.email === signataires.legal.email) {
-          signataires.legal.status = "SIGNE";
-        }
-      }
-
-      await dossiers.updateSignatairesDossier(dossierId, signataires);
-
-      if (body.eventName === "procedure.finished" || (doneMembers && doneMembers.length === procedure.members.length)) {
-        await dossiers.updateEtatDossier(params.id, "DOSSIER_TERMINE_AVEC_SIGNATURE");
-      } else {
-        await dossiers.updateEtatDossier(params.id, "SIGNATURES_EN_COURS");
-      }
+      await yousign.handleRetourYouSign({ body, params });
 
       res.json({});
     })

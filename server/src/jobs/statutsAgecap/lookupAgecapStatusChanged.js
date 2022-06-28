@@ -16,8 +16,8 @@ const lookupAgecapStatusChanged = async ({ crypto }) => {
   const apiAgecap = new ApiAgecap(crypto);
   await apiAgecap.authenticate();
 
-  const dateDebut = DateTime.fromISO("2021-12-01").setLocale("fr-FR").toFormat("yyyy-MM-dd hh:mm:ss"); // TODO Should be rotate
-  const dateFin = DateTime.now().setLocale("fr-FR").toFormat("yyyy-MM-dd hh:mm:ss");
+  const dateDebut = DateTime.fromISO("2021-12-01").setLocale("fr-FR").toFormat("yyyy-MM-dd HH:mm:ss"); // TODO Should be rotate
+  const dateFin = DateTime.now().setLocale("fr-FR").toFormat("yyyy-MM-dd HH:mm:ss");
   const { contrats } = await apiAgecap.statut({ dateDebut, dateFin });
 
   await asyncForEach(contrats, async (contrat) => {

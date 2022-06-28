@@ -1,14 +1,15 @@
 import { atom, selector } from "recoil";
 import { cerfaAtom, cerfaStatusGetter } from "./formEngine/atoms";
 import { documentsCompletionStatusGetter } from "./PiecesJustificatives/documentsCompletionAtoms";
-import { signaturesCompletionSelector } from "./Signatures/atoms";
+import { infoSignaturesCompletionSelector } from "./Signatures/atoms";
 
 export const dossierCompletionStatus = selector({
   key: "dossierCompletionStatus",
   get: ({ get }) => {
     const cerfaCompletionStatus = get(cerfaStatusGetter);
     const documentsCompletionStatus = get(documentsCompletionStatusGetter);
-    const signatureCompletionStatus = get(signaturesCompletionSelector);
+    const signatureCompletionStatus = get(infoSignaturesCompletionSelector);
+
     return {
       cerfa: {
         completion: cerfaCompletionStatus?.completion,
@@ -20,12 +21,12 @@ export const dossierCompletionStatus = selector({
         complete:
           cerfaCompletionStatus?.completion +
             documentsCompletionStatus?.completion +
-            signatureCompletionStatus.completion ===
+            signatureCompletionStatus?.completion ===
           300,
         completion:
           (cerfaCompletionStatus?.completion +
             documentsCompletionStatus?.completion +
-            signatureCompletionStatus.completion) /
+            signatureCompletionStatus?.completion) /
           3,
       },
     };

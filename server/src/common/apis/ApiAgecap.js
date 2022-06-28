@@ -3,29 +3,11 @@ const logger = require("../logger");
 const config = require("../../config");
 const ApiError = require("./_apiError");
 const apiRateLimiter = require("./_apiRateLimiter");
-// const https = require("https");
-// const fs = require("fs");
 const FormData = require("form-data");
 const { getFromStorage } = require("../utils/ovhUtils");
 const { oleoduc, writeData } = require("oleoduc");
 const { PassThrough } = require("stream");
 const Boom = require("boom");
-
-// const CERT_PATH = "/data/agecap";
-
-// let optAgent = {};
-
-// try {
-//   optAgent = {
-//     key: fs.readFileSync(`${CERT_PATH}/client-key.pem`),
-//     cert: fs.readFileSync(`${CERT_PATH}/client-crt.pem`),
-//     passphrase: config.agecap_passphrase,
-//   };
-// } catch (e) {
-//   console.log(e);
-// }
-// eslint-disable-next-line no-unused-vars
-// const httpsAgent = new https.Agent(optAgent);
 
 // Cf Documentation : Api Agecap
 const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
