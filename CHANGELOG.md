@@ -1,3 +1,21 @@
+# [2.11.0](https://github.com/mission-apprentissage/cerfa/compare/v2.10.2...v2.11.0) (2022-06-29)
+
+
+### Bug Fixes
+
+* bug nom dossier dans dossier partagé ([c65723a](https://github.com/mission-apprentissage/cerfa/commit/c65723a9a9c3b795d93288ebb52f146d168698d9))
+* gestion du code diplome ([f580e77](https://github.com/mission-apprentissage/cerfa/commit/f580e77e9959823c1ae98fa1f2d326312d4a257b))
+* nom dossier removed useless condition ([7cbbb67](https://github.com/mission-apprentissage/cerfa/commit/7cbbb674d6deea7a10ff998b7d94e357155358ad))
+* regex valeurs autorisees dans les noms ([ca57c2c](https://github.com/mission-apprentissage/cerfa/commit/ca57c2cf7c7cbdcd6c0cd597f68f0a7578dca571))
+* sonar equality types ([21c46d6](https://github.com/mission-apprentissage/cerfa/commit/21c46d62d6a9c60015221e6c55050a7ad45080a3))
+* sonar extra arguments ([0e531ec](https://github.com/mission-apprentissage/cerfa/commit/0e531ec82104ac050bda0e26d3e73818d775933b))
+
+
+### Features
+
+* affichage du smic ([5d597c2](https://github.com/mission-apprentissage/cerfa/commit/5d597c20d0e1386918328cc5213c8a1430c69338))
+* ajout webhooks teams recette & prod dans le vault ansible ([afbdd9d](https://github.com/mission-apprentissage/cerfa/commit/afbdd9d098a86c43081590b5d168ce7e880d93d3))
+
 # [2.11.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v2.11.0-beta.3...v2.11.0-beta.4) (2022-06-29)
 
 
