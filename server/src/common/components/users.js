@@ -38,7 +38,7 @@ module.exports = async () => {
       let rolesDb = [];
       if (options.roles && options.roles.length > 0) {
         rolesDb = await Role.find({ name: { $in: options.roles } }, { _id: 1 });
-        if (!rolesDb.length === 0) {
+        if (!rolesDb.length) {
           throw new Error("Roles doesn't exist");
         }
       }
@@ -110,7 +110,7 @@ module.exports = async () => {
       let rolesDb = [];
       if (data.roles && data.roles.length > 0) {
         rolesDb = await Role.find({ name: { $in: data.roles } }, { _id: 1 });
-        if (!rolesDb.length === 0) {
+        if (!rolesDb.length) {
           throw new Error("Roles doesn't exist");
         }
       }
