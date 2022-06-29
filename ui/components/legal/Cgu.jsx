@@ -547,7 +547,7 @@ export const Cgu = ({ onLoad = () => {} }) => {
           électronique du CERFA sera envoyée par mail aux adresses renseignées.
           <br />
           <br />
-          La DGEFP se saurait être tenue pour responsable d&apos;une information de contact incomplète ou erronée, et
+          La DGEFP ne saurait être tenue pour responsable d&apos;une information de contact incomplète ou erronée, et
           des conséquences y afférentes
         </Text>
       </Box>
