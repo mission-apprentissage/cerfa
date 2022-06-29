@@ -130,6 +130,12 @@ const Finalize = () => {
     setEntrepriseData(ret);
   };
 
+  const handleCompte = (e) => {
+    setStep(1);
+    handleChange(e);
+    siretLookUp({ target: { value: values.siret } });
+  };
+
   return (
     <Page>
       <Head>
@@ -144,26 +150,10 @@ const Finalize = () => {
                 <FormLabel>Je représente :</FormLabel>
                 <RadioGroup id="compte" name="compte" value={values.compte} mt={8}>
                   <VStack alignItems="baseline" fontSize="1.2rem" spacing={8}>
-                    <Radio
-                      value="entreprise"
-                      onChange={(e) => {
-                        setStep(1);
-                        handleChange(e);
-                        siretLookUp({ target: { value: values.siret } });
-                      }}
-                      size="lg"
-                    >
+                    <Radio value="entreprise" onChange={handleCompte} size="lg">
                       une entreprise
                     </Radio>
-                    <Radio
-                      value="cfa"
-                      onChange={(e) => {
-                        setStep(1);
-                        handleChange(e);
-                        siretLookUp({ target: { value: values.siret } });
-                      }}
-                      size="lg"
-                    >
+                    <Radio value="cfa" onChange={handleCompte} size="lg">
                       un CFA
                     </Radio>
                   </VStack>
