@@ -2,18 +2,18 @@ const logger = require("../../common/logger");
 const { buildErrorLog } = require("../../common/utils/errorUtils");
 
 module.exports = (callback, socket) => {
-  return async (payload, acknowledge = () => {}) => {
+  return async (payload, acknowledge) => {
     try {
       const result = await callback(payload);
 
-      acknowledge({
+      acknowledge?.({
         status: "OK",
         result,
       });
     } catch (rawError) {
       const error = buildErrorLog(rawError);
       logger["error"](error, `Socket Request KO`);
-      acknowledge({
+      acknowledge?.({
         status: "KO",
         error,
       });

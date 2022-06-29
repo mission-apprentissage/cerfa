@@ -5,8 +5,6 @@ const geoController = require("./geo/geoController");
 const { CategoriesJuridique } = require("../../common/model/index");
 
 class EntrepriseApiData {
-  constructor() {}
-
   async findDataFromSiret(providedSiret) {
     if (!providedSiret || !/^[0-9]{14}$/g.test(providedSiret.trim())) {
       return {

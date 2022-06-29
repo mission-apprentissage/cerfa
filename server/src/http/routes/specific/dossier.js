@@ -20,9 +20,15 @@ module.exports = (components) => {
 
     const contributors = await dossiers.getContributeurs(dossier._id, components);
 
+    const nomDossier =
+      cerfa.apprenti.nom && cerfa.apprenti.prenom
+        ? cerfa.apprenti.nom.toUpperCase() + " " + cerfa.apprenti.prenom
+        : dossier.nom;
+
     return {
       ...dossier,
       contributeurs: contributors,
+      nomDossier: nomDossier,
       acl: user.currentPermissionAcl,
       owner: {
         ...owner,
@@ -337,17 +343,6 @@ module.exports = (components) => {
     tryCatch(async (req, res) => {
       const rolesList = await roles.findRolePermission({}, { name: 1, description: 1, title: 1, _id: 1, acl: 1 });
       const defaultList = rolesList.filter((role) => role.name.includes("dossier."));
-
-      // TODO
-      // const custonRole = {
-      //   _id: find(defaultList, { name: "wks.readonly" })._id,
-      //   name: "wks.custom",
-      //   title: "Personalisé",
-      //   description: "Permissions personalisé d'espace",
-      //   acl: ["wks", "wks/page_espace", "wks/page_espace/page_dossiers"],
-      // };
-      // return res.json([...defaultList, custonRole]);
-
       return res.json(defaultList);
     })
   );

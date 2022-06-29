@@ -144,7 +144,7 @@ const MaskedInput = (props) => {
 
   const handle = (val) => {
     if (val !== value && focusRef.current === true) {
-      onChange({ target: { value: val }, persist: () => {} });
+      onChange({ target: { value: val } });
     }
   };
 
