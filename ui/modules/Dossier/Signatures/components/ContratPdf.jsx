@@ -32,7 +32,6 @@ export const ContratPdf = () => {
       }
     };
     run();
-    return () => {};
   }, [auth, dossier?._id, dossier.cerfaId]);
 
   return (

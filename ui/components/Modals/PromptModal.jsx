@@ -15,14 +15,14 @@ import { ArrowRightLine, Close } from "../../theme/components/icons";
 // eslint-disable-next-line react/display-name
 export default ({
   isOpen,
-  onClose = () => {},
+  onClose,
   title,
   children,
   size = "4xl",
   okText = "Oui",
   koText = "Non",
-  onOk = () => {},
-  onKo = () => {},
+  onOk,
+  onKo,
   canBeClosed = true,
   bgOverlay = "rgba(0, 0, 0, 0.48)",
 }) => {
@@ -37,7 +37,7 @@ export default ({
             color="bluefrance"
             fontSize={"epsilon"}
             onClick={() => {
-              onClose();
+              onClose?.();
             }}
             variant="unstyled"
             pt={10}
@@ -63,8 +63,8 @@ export default ({
             <Button
               variant="secondary"
               onClick={() => {
-                onKo();
-                onClose();
+                onKo?.();
+                onClose?.();
               }}
               type="submit"
             >
@@ -73,8 +73,8 @@ export default ({
             <Button
               variant="primary"
               onClick={() => {
-                onOk();
-                onClose();
+                onOk?.();
+                onClose?.();
               }}
               type="submit"
             >

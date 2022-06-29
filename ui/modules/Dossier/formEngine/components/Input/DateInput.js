@@ -153,7 +153,7 @@ const CustomDateInput = forwardRef(({ value, onChange, onFocus, locked, onClick,
       }}
       onAccept={(val) => {
         if (val.length === 8 || !val) {
-          onChange({ persist: () => {}, target: { value: val } });
+          onChange({ target: { value: val } });
         }
       }}
       ref={ref}

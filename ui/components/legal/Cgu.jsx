@@ -6,9 +6,9 @@ export const cguVersion = () => {
   return "v1.1";
 };
 
-export const Cgu = ({ onLoad = () => {} }) => {
+export const Cgu = ({ onLoad }) => {
   useEffect(() => {
-    onLoad();
+    onLoad?.();
   }, [onLoad]);
   return (
     <Box>
