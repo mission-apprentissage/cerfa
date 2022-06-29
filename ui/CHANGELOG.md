@@ -1,3 +1,12 @@
+# [2.11.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v2.11.0-beta.3...v2.11.0-beta.4) (2022-06-29)
+
+
+### Bug Fixes
+
+* regex valeurs autorisees dans les noms ([ca57c2c](https://github.com/mission-apprentissage/cerfa/commit/ca57c2cf7c7cbdcd6c0cd597f68f0a7578dca571))
+* sonar equality types ([21c46d6](https://github.com/mission-apprentissage/cerfa/commit/21c46d62d6a9c60015221e6c55050a7ad45080a3))
+* sonar extra arguments ([0e531ec](https://github.com/mission-apprentissage/cerfa/commit/0e531ec82104ac050bda0e26d3e73818d775933b))
+
 # [2.11.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.11.0-beta.2...v2.11.0-beta.3) (2022-06-27)
 
 
