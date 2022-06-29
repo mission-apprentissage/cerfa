@@ -41,10 +41,10 @@ export function useDossier(dossierId = null) {
 
   const saveDossier = useCallback(
     async (id) => {
-      const dossierId = dossier?._id || id;
+      id = dossier?._id || id;
       let d = null;
       try {
-        d = await _put(`/api/v1/dossier/entity/${dossierId}/saved`, { dossierId });
+        d = await _put(`/api/v1/dossier/entity/${id}/saved`, { dossierId: id });
       } catch (e) {
         setError(e);
       } finally {
@@ -59,9 +59,9 @@ export function useDossier(dossierId = null) {
     const abortController = new AbortController();
 
     hydrate(dossierId)
-      .then(({ dossier }) => {
+      .then((data) => {
         if (!abortController.signal.aborted) {
-          setDossier(dossier);
+          setDossier(data.dossier);
           setIsLoaded(true);
         }
       })

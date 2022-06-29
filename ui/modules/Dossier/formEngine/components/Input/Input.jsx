@@ -84,18 +84,18 @@ export const Input = memo(
     const [fieldState, setFieldState] = useState({ value });
 
     const handle = useCallback(
-      async (value, extra) => {
+      async (newValue, extra) => {
         const { error } = await validField({
           field: { ...props, extra },
-          value,
+          value: newValue,
         });
-        setFieldState({ error, value });
-        onChange?.(value, name, extra);
+        setFieldState({ error, value: newValue });
+        onChange?.(newValue, name, extra);
         if (error) {
-          onError?.(value, name, extra);
+          onError?.(newValue, name, extra);
           return;
         }
-        onSubmit?.(value, name, extra);
+        onSubmit?.(newValue, name, extra);
       },
       [props, onChange, name, onSubmit, onError]
     );
