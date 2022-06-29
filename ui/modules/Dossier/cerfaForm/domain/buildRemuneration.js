@@ -205,13 +205,6 @@ export const buildRemuneration = (data) => {
   const anniversaireA4 = anniversaireA3.plus({ years: 1 });
   const ageA5 = ageA4 + 1;
 
-  // console.table([
-  //   { date: apprentiDateNaissance.toFormat("yyyy-MM-dd"), age: ageA1 },
-  //   { date: anniversaireA1.toFormat("yyyy-MM-dd"), age: ageA2 },
-  //   { date: anniversaireA2.toFormat("yyyy-MM-dd"), age: ageA3 },
-  //   { date: anniversaireA3.toFormat("yyyy-MM-dd"), age: ageA4 },
-  // ]);
-
   const smicObj = findSmicAtDate(dateDebutContrat);
   let SMIC = smicObj.mensuel;
   const departementEmployeur = data.employeurAdresseDepartement;

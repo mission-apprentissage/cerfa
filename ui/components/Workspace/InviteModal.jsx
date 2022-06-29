@@ -135,7 +135,7 @@ const InviteModal = ({ title, size = "md", isOpen, onClose }) => {
 
   if (isLoading) return null;
 
-  // console.log(workspaceContributors); // TODO separate component to avoid re-rendering when submit form
+  // TODO separate component to avoid re-rendering when submit form
 
   return (
     <Modal

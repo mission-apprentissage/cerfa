@@ -23,7 +23,6 @@ const ForgottenPasswordPage = () => {
   };
 
   const title = "Mot de passe oublié";
-  // setTitle(title);
 
   return (
     <Flex height="100vh" justifyContent="center" mt="10">

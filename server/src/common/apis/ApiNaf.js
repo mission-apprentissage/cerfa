@@ -29,7 +29,6 @@ class ApiNaf {
         if (!response?.data) {
           throw new ApiError("Api Naf", `No data found for naf=${naf}`);
         }
-        // if (response.data.numFounds !== 1) return null;
         return response.data.documents[0];
       } catch (e) {
         if (e.response.status === 404) {
