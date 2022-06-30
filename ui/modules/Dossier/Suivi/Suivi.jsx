@@ -1,11 +1,11 @@
-import { Box, Center, List, ListIcon, ListItem, Text } from "@chakra-ui/react";
-import { MdCheckCircle } from "react-icons/md";
+import { Box, Center, Flex, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { dossierAtom } from "../atoms";
 import Tooltip from "../../../components/Tooltip/Tooltip";
 import { _post } from "../../../common/httpClient";
 import { valueSelector } from "../formEngine/atoms";
+import { Step, Steps } from "chakra-ui-steps-rework-mna";
 
 const Suivi = () => {
   const dossier = useRecoilValue(dossierAtom);
@@ -54,18 +54,16 @@ const Suivi = () => {
 
   const listStatusPdigi = [
     {
-      key: 0,
       titre: "Dossier transmis",
       commentaire: `Votre dossier a bien été transmis à ${orgaDepot}`,
     },
   ];
 
   // Convertir les statut agecap en statut pdigi
-  dossier.statutAgecap.forEach((statutAgecap, index) => {
-    let key = ++index;
+  dossier.statutAgecap.forEach((statutAgecap) => {
     let titre = "";
     let commentaire = "";
-    let date = `- ${statutAgecap.dateMiseAJourStatut}`;
+    let date = statutAgecap.dateMiseAJourStatut ? `- ${statutAgecap.dateMiseAJourStatut}` : " ";
 
     if (statutAgecap.statut === "En cours d'instruction") {
       titre = "Dossier en cours d'instruction";
@@ -83,22 +81,31 @@ const Suivi = () => {
       if (statutAgecap.numAvenant) commentaire += `-${statutAgecap.numAvenant}`;
     }
 
-    listStatusPdigi.push({ key, titre, commentaire, date });
+    listStatusPdigi.push({ titre, commentaire, date });
   });
 
   return (
-    <Box mt={8}>
-      <List spacing={3}>
-        {listStatusPdigi.map((statutPdigi) => {
+    <Flex flexDir="column" width="100%" mt={9}>
+      <Steps activeStep={listStatusPdigi.length - 1} orientation={"vertical"} colorScheme="telegram">
+        {listStatusPdigi.map((statutPdigi, index) => {
+          let label = statutPdigi.titre;
+          if (statutPdigi.date) label += statutPdigi.date;
+
           return (
-            <ListItem key={statutPdigi.key}>
-              <ListIcon as={MdCheckCircle} color="green.500" />
-              {statutPdigi.titre} - {statutPdigi.commentaire} {statutPdigi.date}
-            </ListItem>
+            <Step
+              key={index}
+              label={label}
+              description={statutPdigi.commentaire}
+              icon={() => (
+                <Box color={"white"} fontWeight="bold">
+                  {listStatusPdigi.length}
+                </Box>
+              )}
+            />
           );
         })}
-      </List>
-    </Box>
+      </Steps>
+    </Flex>
   );
 };
 
