@@ -265,6 +265,27 @@ const DossierFooterControls = ({
           </HStack>
         </Flex>
       )}
+      {/*TODO factoriser ce bouton qui est dupliqué juste en dessous => quickwin*/}
+      {activeStep === 3 &&
+        (dossier.etat === "TRANSMIS" ||
+          dossier.etat === "EN_COURS_INSTRUCTION" ||
+          dossier.etat === "REFUSE" ||
+          dossier.etat === "DEPOSE") && (
+          <Flex width="100%" justify="flex-start" mt={8} mb={10}>
+            <Center w="full">
+              <Button
+                as={Link}
+                href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?dossierId=${dossier._id}`}
+                {...buttonDownloadStyleProps}
+                variant="secondary"
+                isDisabled={!dossierComplete || isEmployeurPrive}
+              >
+                <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
+                {buttonTextProp}
+              </Button>
+            </Center>
+          </Flex>
+        )}
       {activeStep === 2 && !dossier.draft && dossier.mode && (
         <Flex width="100%" justify="flex-start" mt={8} mb={10}>
           <Center w="full">
@@ -273,7 +294,10 @@ const DossierFooterControls = ({
               dossier.etat === "EN_ATTENTE_SIGNATURES" ||
               dossier.etat === "SIGNATURES_EN_COURS" ||
               dossier.etat === "TRANSMIS" ||
-              dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE") && (
+              dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE" ||
+              dossier.etat === "EN_COURS_INSTRUCTION" ||
+              dossier.etat === "REFUSE" ||
+              dossier.etat === "DEPOSE") && (
               <Button
                 as={Link}
                 href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?dossierId=${dossier._id}`}
