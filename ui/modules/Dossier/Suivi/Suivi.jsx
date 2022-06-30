@@ -6,6 +6,7 @@ import Tooltip from "../../../components/Tooltip/Tooltip";
 import { _post } from "../../../common/httpClient";
 import { valueSelector } from "../formEngine/atoms";
 import { Step, Steps } from "chakra-ui-steps-rework-mna";
+import { DateTime } from "luxon";
 
 const Suivi = () => {
   const dossier = useRecoilValue(dossierAtom);
@@ -13,11 +14,12 @@ const Suivi = () => {
   const code_dpt = useRecoilValue(valueSelector("employeur.adresse.departement"));
 
   // TODO : duplicate Signataires.jsx
-  const [orgaDepot, setOrgaDepot] = useState(null);
+  const [serviceInstruction, setServiceInstruction] = useState(null);
+
   // On récupère la valeure la plus actuelle de la DDETS / DREETS
   useEffect(() => {
     const run = async () => {
-      if (!orgaDepot) {
+      if (!serviceInstruction) {
         if (code_region && code_dpt) {
           const response = await _post(`/api/v1/dreetsddets/`, {
             code_region,
@@ -25,12 +27,12 @@ const Suivi = () => {
             dossierId: dossier._id,
           });
 
-          setOrgaDepot(response.ddets?.DDETS ?? response.dreets?.DREETS_DREETS);
+          setServiceInstruction(response.ddets?.DDETS ?? response.dreets?.DREETS_DREETS);
         }
       }
     };
     run();
-  }, [code_dpt, code_region, orgaDepot, dossier._id]);
+  }, [code_dpt, code_region, serviceInstruction, dossier._id]);
 
   // On ne peut pas accéder à l'écran de suivi de télétransmission du dossier si la partie signature n'est pas terminée
   if (
@@ -55,7 +57,7 @@ const Suivi = () => {
   const listStatusPdigi = [
     {
       titre: "Dossier transmis",
-      commentaire: `Votre dossier a bien été transmis à ${orgaDepot}`,
+      commentaire: `Votre dossier a bien été transmis à ${serviceInstruction}`,
     },
   ];
 
@@ -63,7 +65,9 @@ const Suivi = () => {
   dossier.statutAgecap.forEach((statutAgecap) => {
     let titre = "";
     let commentaire = "";
-    let date = statutAgecap.dateMiseAJourStatut ? `- ${statutAgecap.dateMiseAJourStatut}` : " ";
+    let date = statutAgecap.dateMiseAJourStatut
+      ? `- ${DateTime.fromSQL(statutAgecap.dateMiseAJourStatut).toFormat("dd/MM/y")}`
+      : " ";
 
     if (statutAgecap.statut === "En cours d'instruction") {
       titre = "Dossier en cours d'instruction";
@@ -72,7 +76,11 @@ const Suivi = () => {
 
     if (statutAgecap.statut === "Non déposable") {
       titre = "Dossier à compléter";
-      commentaire = `Votre [DREETS/DDETS] vous a transmis le message suivant : ${statutAgecap.libelleMotifNonDepot} : ${statutAgecap.commentaireMotifNonDepot}`;
+      let commentaireMotifNonDepot = "";
+      if (statutAgecap.commentaireMotifNonDepot) {
+        commentaireMotifNonDepot = " : " + statutAgecap.commentaireMotifNonDepot;
+      }
+      commentaire = `Votre ${serviceInstruction} vous a transmis le message suivant : ${statutAgecap.libelleMotifNonDepot}${commentaireMotifNonDepot}`;
     }
 
     if (statutAgecap.statut === "Déposé") {
@@ -89,7 +97,7 @@ const Suivi = () => {
       <Steps activeStep={listStatusPdigi.length - 1} orientation={"vertical"} colorScheme="telegram">
         {listStatusPdigi.map((statutPdigi, index) => {
           let label = statutPdigi.titre;
-          if (statutPdigi.date) label += statutPdigi.date;
+          if (statutPdigi.date) label += " " + statutPdigi.date;
 
           return (
             <Step
