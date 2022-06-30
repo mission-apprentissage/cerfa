@@ -13,7 +13,7 @@ module.exports = async (dossiers, crypto, agecap, users) => {
   return {
     handleRetourYouSign: async ({ body, params }) => {
       // On ne traite pas l'event procedure.finished pour éviter de faire le traitement 2 fois
-      if (body.eventName !== "procedure.finished") {
+      if (body.eventName === "procedure.finished") {
         return;
       }
 
