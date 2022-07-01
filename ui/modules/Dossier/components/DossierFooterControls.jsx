@@ -120,7 +120,6 @@ const DossierFooterControls = ({
       dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION" ||
       dossier.etat === "EN_ATTENTE_DECLENCHEMENT_SIGNATURES" ||
       dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
-      dossier.etat === "TRANSMIS" ||
       dossier.etat === "EN_ATTENTE_SIGNATURES"
     )
       return "Télécharger le contrat non signé";
