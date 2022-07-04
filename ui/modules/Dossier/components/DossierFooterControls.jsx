@@ -181,7 +181,7 @@ const DossierFooterControls = ({
                       Signature en ligne
                     </Heading>
                     <Heading as="h5" fontSize="1rem" mb={4}>
-                      Processus dématérialisée
+                      Processus dématérialisé
                     </Heading>
                   </Flex>
                   <OrderedList>
