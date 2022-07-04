@@ -88,7 +88,7 @@ const SignataireLineForm = ({ signataire, type, emails, isLocked }) => {
   const [email, setEmail] = useState(signataire.email);
 
   return (
-    <HStack spacing={3}>
+    <HStack spacing={3} alignItems={"start"}>
       <Input
         required={true}
         locked={isLocked}
