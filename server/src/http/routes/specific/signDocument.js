@@ -11,6 +11,7 @@ const authMiddleware = require("../../middlewares/authMiddleware");
 const passport = require("passport");
 const { Strategy, ExtractJwt } = require("passport-jwt");
 const { createYouSignWebhookToken } = require("../../../common/utils/jwtUtils");
+const { DateTime } = require("luxon");
 
 module.exports = (components) => {
   const router = express.Router();
@@ -70,16 +71,29 @@ module.exports = (components) => {
       const operationDetails = {
         operationLevel: "custom",
         operationCustomModes: ["email"],
-        // operationModeSmsConfig: {
-        //   content: `eSIGNATURE - {{code}} est le code pour signer le contrat ${dossier.nom}.`,
-        // },
+        operationModeEmailConfig: {
+          subject: `Signature du contrat d'apprentissage - ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} - Votre code confidentiel`,
+          content:
+            'Bonjour <tag data-tag-type="string" data-tag-name="recipient.firstname"></tag> <tag data-tag-type="string" data-tag-name="recipient.lastname"></tag>,' +
+            "<br><br>" +
+            `Voici votre code confidentiel afin de compléter la signature électronique du contrat d'apprentissage de ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} :` +
+            "<br><br>" +
+            "{{code}}" +
+            "<br><br>" +
+            "Cet email a été envoyé automatiquement, merci de ne pas répondre." +
+            "<br><br>" +
+            "Cordialement<br>" +
+            "Equipe Alternance du Ministère du Travail, du Plein Emploi et de l'Insertion",
+        },
+      };
+
+      let operationDetailsAdvanced = {
+        ...operationDetails,
+        operationLevel: "advanced",
       };
 
       // On active la signature avancée uniquement en production
-      let operationDetailsAdvanced = {
-        operationLevel: "advanced",
-      };
-      if (config.env !== "production") {
+      if (config.env === "dev") {
         operationDetailsAdvanced = operationDetails;
       }
 
@@ -162,7 +176,63 @@ module.exports = (components) => {
               {
                 subject: `Vous avez été invité à signer un contrat d'apprentissage par ${cerfa.employeur.denomination}`,
                 message:
-                  'Bonjour <tag data-tag-type="string" data-tag-name="recipient.firstname"></tag> <tag data-tag-type="string" data-tag-name="recipient.lastname"></tag>, <br><br> Vous avez été invité à signer un contrat d&apos;apprentissage, merci de cliquer sur le bouttn suivant pour y accéder: <br><br> <tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Accéder au document</tag>',
+                  'Bonjour <tag data-tag-type="string" data-tag-name="recipient.firstname"></tag> <tag data-tag-type="string" data-tag-name="recipient.lastname"></tag>,' +
+                  "<br><br>" +
+                  "Vous êtes invité à signer un contrat d&apos;apprentissage via la plateform YouSign." +
+                  "<br><br>" +
+                  '<tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Accéder au document</tag>' +
+                  "<br><br>" +
+                  "Détails du contrat: {{url}}" +
+                  "<br>" +
+                  `- Employeur : ${cerfa.employeur.denomination}, SIRET: ${cerfa.employeur.siret}<br>` +
+                  `- Apprenti(e) : ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom}<br>` +
+                  `- Date de début de contrat : ${DateTime.fromSQL(cerfa.contrat.dateDebutContrat).toFormat(
+                    "dd/MM/y"
+                  )}<br>` +
+                  `- CFA : ${cerfa.organismeFormation.denomination}` +
+                  "<br><br>" +
+                  "Quelles sont les prochaines étapes pour signer électroniquement le contrat ? <br>" +
+                  '  1. Cliquez sur le lien ci-dessus pour vérifier le contrat : <a href="{{url}}">lien de signature</a><br>' +
+                  "  2. Vous recevrez un code confidentiel par email<br>" +
+                  "  3. Signez le contrat en utilisant votre code confidentiel<br>" +
+                  "  4. Pour l'apprenti(e), joignez votre pièce d'identité" +
+                  "<br><br>" +
+                  "Vous serez ensuite informé(e) par e-mail dès que le contrat est signé par l'employeur, l'apprenti, et visé par le CFA." +
+                  "<br><br>" +
+                  "Cordialement<br>" +
+                  "Equipe Alternance du Ministère du Travail, du Plein Emploi et de l'Insertion",
+                to: ["@members"],
+              },
+            ],
+            "procedure.finished": [
+              {
+                subject: `Contrat d'apprentissage signé - ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom}`,
+                message:
+                  `Nous vous informons que votre contrat d'apprentissage entre ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} et l'employeur ${cerfa.employeur.denomination} a été signé.` +
+                  "<br><br>" +
+                  "Il a été télétransmis au service administratif en charge de son instruction et de son dépôt." +
+                  "<br><br>" +
+                  "Vous pouvez consulter et télécharger votre contrat signé suivant le lien ci-dessous :" +
+                  "<br><br>" +
+                  '<tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Consulter le document</tag>' +
+                  "<br><br>" +
+                  "Ce lien restera actif pendant un mois à partir de ce jour. Nous vous invitons à télécharger et conserver votre contrat d'apprentissage." +
+                  "<br><br>" +
+                  "Cordialement<br>" +
+                  "Equipe Alternance du Ministère du Travail, du Plein Emploi et de l'Insertion",
+                to: ["@members"],
+              },
+            ],
+            "procedure.refused": [
+              {
+                subject: `Contrat d'apprentissage signé - ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom}`,
+                message:
+                  "La procédure de signature électronique n'a pas abouti. Vous pouvez consulter la procédure concernée et le motif en cliquant sur le lien ci-dessous :" +
+                  "<br><br>" +
+                  '<tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Consulter le document</tag>' +
+                  "<br><br>" +
+                  "Cordialement<br>" +
+                  "Equipe Alternance du Ministère du Travail, du Plein Emploi et de l'Insertion",
                 to: ["@members"],
               },
             ],
