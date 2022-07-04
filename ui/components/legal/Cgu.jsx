@@ -12,7 +12,7 @@ export const Cgu = ({ onLoad = () => {} }) => {
   }, [onLoad]);
   return (
     <Box>
-      <Text>Dernière mise à jour le : 18/01/2022 - {cguVersion()} </Text>
+      <Text>Dernière mise à jour le : 04/07/2022 - {cguVersion()} </Text>
       <Box mt={4}>
         <Heading as={"h3"} textStyle="h6" mb={5}>
           1. PRÉAMBULE
