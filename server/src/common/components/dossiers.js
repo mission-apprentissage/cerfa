@@ -406,6 +406,27 @@ module.exports = async () => {
 
       return await Dossier.findOneAndUpdate({ _id: id }, { etat }, { new: true });
     },
+    updateStatutTransmission: async (
+      id,
+      statut_transmission_agecap,
+      { statut_transmission_agecap_contrat_details, statut_transmission_agecap_pj_details }
+    ) => {
+      const found = await Dossier.findById(id).lean();
+
+      if (!found) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      return await Dossier.findOneAndUpdate(
+        { _id: id },
+        {
+          statut_transmission_agecap,
+          ...(statut_transmission_agecap_contrat_details ? { statut_transmission_agecap_contrat_details } : {}),
+          ...(statut_transmission_agecap_pj_details ? { statut_transmission_agecap_pj_details } : {}),
+        },
+        { new: true }
+      );
+    },
     updateSignatures: async (id, signatures) => {
       const found = await Dossier.findById(id).lean();
 

@@ -41,7 +41,7 @@ const DossierFooterControls = ({
       await _post(`/api/v1/agecap/`, {
         dossierId: dossier._id,
       });
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.log({ error });
       let details = "";

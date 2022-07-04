@@ -93,6 +93,25 @@ const dossierSchema = {
     default: null,
     nullable: true,
   },
+  statut_transmission_agecap: {
+    enum: ["ERROR_CONTRAT", "ERROR_PJ", "SUCCESS", null],
+    description: "Statut de la transmission vers Agecap",
+    type: String,
+    default: null,
+    nullable: true,
+  },
+  statut_transmission_agecap_contrat_details: {
+    type: String,
+    description: "Statut de la transmission du contrat vers Agecap",
+    nullable: true,
+    default: null,
+  },
+  statut_transmission_agecap_pj_details: {
+    type: String,
+    description: "Statut de la transmission des pj vers Agecap",
+    nullable: true,
+    default: null,
+  },
   draft: {
     type: Boolean,
     default: true,
