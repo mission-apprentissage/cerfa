@@ -174,7 +174,7 @@ module.exports = (components) => {
           email: {
             "procedure.started": [
               {
-                subject: `Vous avez été invité à signer un contrat d'apprentissage par ${cerfa.employeur.denomination}`,
+                subject: `Signature du contrat d'apprentissage - ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom}`,
                 message:
                   'Bonjour <tag data-tag-type="string" data-tag-name="recipient.firstname"></tag> <tag data-tag-type="string" data-tag-name="recipient.lastname"></tag>,' +
                   "<br><br>" +
@@ -182,7 +182,7 @@ module.exports = (components) => {
                   "<br><br>" +
                   '<tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Accéder au document</tag>' +
                   "<br><br>" +
-                  "Détails du contrat: {{url}}" +
+                  "Détails du contrat: " +
                   "<br>" +
                   `- Employeur : ${cerfa.employeur.denomination}, SIRET: ${cerfa.employeur.siret}<br>` +
                   `- Apprenti(e) : ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom}<br>` +
@@ -192,10 +192,9 @@ module.exports = (components) => {
                   `- CFA : ${cerfa.organismeFormation.denomination}` +
                   "<br><br>" +
                   "Quelles sont les prochaines étapes pour signer électroniquement le contrat ? <br>" +
-                  '  1. Cliquez sur le lien ci-dessus pour vérifier le contrat : <a href="{{url}}">lien de signature</a><br>' +
-                  "  2. Vous recevrez un code confidentiel par email<br>" +
-                  "  3. Signez le contrat en utilisant votre code confidentiel<br>" +
-                  "  4. Pour l'apprenti(e), joignez votre pièce d'identité" +
+                  "  1. Cliquez le contrat en cliquant sur le bouton ci-dessus<br>" +
+                  "  2. Signez le contrat en utilisant votre code confidentiel que vous allez recevoir par mail de la part de yousign<br>" +
+                  "  3. Joignez votre pièce d'identité (apprenti-e)" +
                   "<br><br>" +
                   "Vous serez ensuite informé(e) par e-mail dès que le contrat est signé par l'employeur, l'apprenti, et visé par le CFA." +
                   "<br><br>" +
@@ -212,11 +211,11 @@ module.exports = (components) => {
                   "<br><br>" +
                   "Il a été télétransmis au service administratif en charge de son instruction et de son dépôt." +
                   "<br><br>" +
-                  "Vous pouvez consulter et télécharger votre contrat signé suivant le lien ci-dessous :" +
+                  "Vous pouvez consulter et télécharger votre contrat signé en suivant le lien ci-dessous :" +
                   "<br><br>" +
                   '<tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Consulter le document</tag>' +
                   "<br><br>" +
-                  "Ce lien restera actif pendant un mois à partir de ce jour. Nous vous invitons à télécharger et conserver votre contrat d'apprentissage." +
+                  "Ce lien restera actif pendant un mois à partir de ce jour. Nous vous invitons à télécharger et conserver votre contrat d'apprentissage dès à présent." +
                   "<br><br>" +
                   "Cordialement<br>" +
                   "Equipe Alternance du Ministère du Travail, du Plein Emploi et de l'Insertion",
