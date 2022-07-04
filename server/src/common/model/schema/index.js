@@ -3,6 +3,7 @@ const userSchema = require("./user");
 const jwtSessionSchema = require("./jwtSession");
 const roleSchema = require("./role");
 const maintenanceMessageSchema = require("./maintenanceMessage");
+const batchManagementSchema = require("./batchManagement");
 const dossierSchema = require("./specific/dossier/Dossier");
 const connectionDossierSchema = require("./specific/dossier/ConnectionDossier");
 const cerfaSchema = require("./specific/dossier/cerfa/Cerfa");
@@ -19,6 +20,7 @@ module.exports = {
   jwtSessionSchema,
   roleSchema,
   maintenanceMessageSchema,
+  batchManagementSchema,
 
   // below Cerfa specific
   dossierSchema,
