@@ -57,11 +57,11 @@ const UploadFiles = ({ title, typeDocument }) => {
       try {
         const data = new FormData();
         data.append("file", acceptedFiles[0]);
-        const { documents } = await _postFile(
+        const { documents: mutatedDocuments } = await _postFile(
           `${endpoint}/v1/upload?dossierId=${dossier._id}&typeDocument=${typeDocument}`,
           data
         );
-        onDocumentsChanged(documents, typeDocument);
+        onDocumentsChanged(mutatedDocuments, typeDocument);
         toast({
           title: "Le fichier a bien été déposé",
           status: "success",
@@ -101,10 +101,10 @@ const UploadFiles = ({ title, typeDocument }) => {
       if (remove) {
         try {
           let data = file;
-          const { documents } = await _delete(
+          const { documents: mutatedDocuments } = await _delete(
             `${endpoint}/v1/upload?dossierId=${dossier._id}&${queryString.stringify(data)}`
           );
-          onDocumentsChanged(documents, typeDocument);
+          onDocumentsChanged(mutatedDocuments, typeDocument);
         } catch (e) {
           console.error(e);
         }

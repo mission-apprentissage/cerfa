@@ -1,4 +1,3 @@
-// TODO
 import React, { useEffect, useState } from "react";
 import { _delete, _get, _post, _put } from "../../common/httpClient";
 import { useFormik } from "formik";
@@ -54,14 +53,6 @@ const UserLine = ({ user, roles }) => {
     run();
   }, [roles, user]);
 
-  const newTmpPassword = generator.generate({
-    length: 10,
-    numbers: true,
-    lowercase: true,
-    uppercase: true,
-    strict: true,
-  });
-
   const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
       accessAllCheckbox: user?.isAdmin ? ["on"] : [],
@@ -70,7 +61,13 @@ const UserLine = ({ user, roles }) => {
       newNom: user?.nom || "",
       newPrenom: user?.prenom || "",
       newEmail: user?.email || "",
-      newTmpPassword,
+      newTmpPassword: generator.generate({
+        length: 10,
+        numbers: true,
+        lowercase: true,
+        uppercase: true,
+        strict: true,
+      }),
     },
     onSubmit: ({ accessAllCheckbox, newNom, newPrenom, newEmail, newTmpPassword, roles, acl }, { setSubmitting }) => {
       // eslint-disable-next-line no-undef

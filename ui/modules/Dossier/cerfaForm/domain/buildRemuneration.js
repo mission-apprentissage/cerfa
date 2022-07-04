@@ -253,7 +253,7 @@ export const buildRemuneration = (data) => {
     return getSeuils(nextAge) > getSeuils(currentAge);
   };
 
-  const getTaux = (part, taux) => Math.max(selectedTaux?.[part] ?? 0, taux);
+  const getTaux = (part, tauxValue) => Math.max(selectedTaux?.[part] ?? 0, tauxValue);
 
   let finRemuneration = false;
   const emptyLineObj = {
@@ -595,7 +595,6 @@ export const buildRemuneration = (data) => {
       };
     }
   } else if (!finRemuneration) {
-    const taux41 = taux.a4[getSeuils(ageA4)];
     result4 = {
       41: {
         dateDebut: dateDebutA4.toISO(),
