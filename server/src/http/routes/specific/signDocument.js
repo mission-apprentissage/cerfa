@@ -165,6 +165,14 @@ module.exports = (components) => {
         });
       }
       const webhookJwtBearer = createYouSignWebhookToken({ payload: { dossierId } });
+
+      // Pour tester en dev : aller sur webhook.site et remplacer cette url.
+      // Récupérer le retour du webhook et l'envoyer à la PDIGI via Postman (ne pas oublier les headers, l'auth est dedans!)
+      const webhookUrl =
+        config.env === "dev"
+          ? "https://webhook.site/bb93b16f-ac32-44f6-92a9-16b3c4291cd8"
+          : `${config.publicUrl}/api/v1/sign_document/${dossierId}`;
+
       const dataToSend = {
         name: `Signature du dossier ${dossier.nom}`,
         description: `Le contrat en apprentissage de ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} pour ${cerfa.employeur.denomination}`,
@@ -239,11 +247,7 @@ module.exports = (components) => {
           webhook: {
             "member.finished": [
               {
-                // Pour tester en dev : aller sur webhook.site et remplacer cette url.
-                // Récupérer le retour du webhook et l'envoyer à la PDIGI via Postman (ne pas oublier les headers, l'auth est dedans!)
-                // Le faire pour les 2 webhooks ci-dessous
-                // url: "https://webhook.site/bb93b16f-ac32-44f6-92a9-16b3c4291cd8",
-                url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
+                url: webhookUrl,
                 method: "POST",
                 headers: {
                   "X-authorization": webhookJwtBearer,
@@ -252,8 +256,16 @@ module.exports = (components) => {
             ],
             "procedure.finished": [
               {
-                // url: "https://webhook.site/bb93b16f-ac32-44f6-92a9-16b3c4291cd8",
-                url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
+                url: webhookUrl,
+                method: "POST",
+                headers: {
+                  "X-authorization": webhookJwtBearer,
+                },
+              },
+            ],
+            "procedure.refused": [
+              {
+                url: webhookUrl,
                 method: "POST",
                 headers: {
                   "X-authorization": webhookJwtBearer,
