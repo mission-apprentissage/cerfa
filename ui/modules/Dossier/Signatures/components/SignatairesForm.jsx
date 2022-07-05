@@ -86,6 +86,7 @@ const SignataireLineForm = ({ signataire, type, emails, isLocked }) => {
   const [firstname, setFirstname] = useState(signataire.firstname);
   const [lastname, setLastname] = useState(signataire.lastname);
   const [email, setEmail] = useState(signataire.email);
+  const [phone, setPhone] = useState(signataire.phone);
 
   return (
     <HStack spacing={3} alignItems={"start"}>
@@ -133,7 +134,7 @@ const SignataireLineForm = ({ signataire, type, emails, isLocked }) => {
         ]}
         fieldType="email"
         mt={0}
-        w="40%"
+        w="30%"
         onError={(val, name) => {
           onSubmittedSignataireDetails("", name);
         }}
@@ -147,6 +148,23 @@ const SignataireLineForm = ({ signataire, type, emails, isLocked }) => {
           }
         }}
       />
+      {(type === "apprenti" || type === "legal") && (
+        <Input
+          required={true}
+          locked={false}
+          name={`signataire.${type}.phone`}
+          label="Téléphone"
+          value={phone}
+          fieldType={"phone"}
+          mt={0}
+          w="20%"
+          onError={(val, name) => {
+            onSubmittedSignataireDetails("", name);
+          }}
+          onSubmit={onSubmittedSignataireDetails}
+          onChange={setPhone}
+        />
+      )}
     </HStack>
   );
 };

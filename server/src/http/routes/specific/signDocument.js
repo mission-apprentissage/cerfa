@@ -126,7 +126,7 @@ module.exports = (components) => {
           firstname: signataires.apprenti.firstname,
           lastname: signataires.apprenti.lastname,
           email: signataires.apprenti.email,
-          phone: "+33601020304",
+          phone: signataires.apprenti.phone,
           ...operationDetailsAdvanced,
           fileObjects: [
             {
@@ -154,7 +154,7 @@ module.exports = (components) => {
           firstname: signataires.legal.firstname,
           lastname: signataires.legal.lastname,
           email: signataires.legal.email,
-          phone: "+33601020304",
+          phone: signataires.legal.phone,
           ...operationDetailsAdvanced,
           fileObjects: [
             {
