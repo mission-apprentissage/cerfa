@@ -123,6 +123,7 @@ const DossierFooterControls = ({
       dossier.etat === "EN_ATTENTE_SIGNATURES"
     )
       return "Télécharger le contrat non signé";
+    if (dossier.etat === "SIGNATURES_REFUS") return "Télécharger le contrat";
     if (dossier.etat === "SIGNATURES_EN_COURS") return "Télécharger le contrat en cours de signature";
     if (
       dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE" ||
@@ -292,11 +293,7 @@ const DossierFooterControls = ({
               dossier.etat === "EN_ATTENTE_DECLENCHEMENT_SIGNATURES" ||
               dossier.etat === "EN_ATTENTE_SIGNATURES" ||
               dossier.etat === "SIGNATURES_EN_COURS" ||
-              dossier.etat === "TRANSMIS" ||
-              dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE" ||
-              dossier.etat === "EN_COURS_INSTRUCTION" ||
-              dossier.etat === "REFUSE" ||
-              dossier.etat === "DEPOSE") && (
+              dossier.etat === "SIGNATURES_REFUS") && (
               <Button
                 as={Link}
                 href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?dossierId=${dossier._id}`}
