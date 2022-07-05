@@ -213,6 +213,12 @@ module.exports = async () => {
           break;
         }
 
+        // Le téléphone est obligatoire pour l'apprenti et le responsable légal (signature avancée = OTP par SMS)
+        if ((key === "apprenti" || key === "legal") && element.phone === "") {
+          tmpComplete = false;
+          break;
+        }
+
         if (lookupDuplicate.includes(element.email)) {
           tmpComplete = false;
           break;
