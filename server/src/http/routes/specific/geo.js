@@ -1,6 +1,5 @@
 const express = require("express");
 const Joi = require("joi");
-// const Boom = require("boom");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 

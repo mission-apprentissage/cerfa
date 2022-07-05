@@ -42,20 +42,6 @@ export const ContratDatesControl = [
     },
   },
   {
-    deps: ["contrat.dateDebutContrat", "formation.dateDebutFormation"],
-    process: ({ values }) => {
-      if (!values.contrat.dateDebutContrat || !values.formation.dateDebutFormation) return;
-      const dateDebutContrat = DateTime.fromISO(values.contrat.dateDebutContrat).setLocale("fr-FR");
-      const dateDebutFormation = DateTime.fromISO(values.formation.dateDebutFormation).setLocale("fr-FR");
-
-      if (dateDebutContrat < dateDebutFormation.minus({ months: 3 })) {
-        return {
-          error: "Le contrat peut commencer au maximum 3 mois avant le début de la formation",
-        };
-      }
-    },
-  },
-  {
     deps: ["contrat.dateFinContrat", "formation.dateFinFormation"],
     process: ({ values }) => {
       if (!values.contrat.dateFinContrat || !values.formation.dateFinFormation) return;

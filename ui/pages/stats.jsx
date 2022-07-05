@@ -48,24 +48,22 @@ const stats = () => {
 
       <Tabs variant={"search"} mt={5} isLazy>
         <TabList bg="white">
-          {dashboards.map(({ title }) => {
-            return <Tab key={title}>{title}</Tab>;
-          })}
+          {dashboards.map((dashboard) => (
+            <Tab key={dashboard.title}>{dashboard.title}</Tab>
+          ))}
         </TabList>
         <TabPanels>
-          {dashboards.map(({ iframeURL, title }) => {
-            return (
-              <TabPanel key={title}>
-                <iframe
-                  src={iframeURL}
-                  frameBorder="0"
-                  style={{ height: "250vh", width: "100%" }}
-                  title={`Statistiques Metabase - ${title}`}
-                  allowtransparency={"true"}
-                />
-              </TabPanel>
-            );
-          })}
+          {dashboards.map((dashboard) => (
+            <TabPanel key={dashboard.title}>
+              <iframe
+                src={dashboard.iframeURL}
+                frameBorder="0"
+                style={{ height: "250vh", width: "100%" }}
+                title={`Statistiques Metabase - ${dashboard.title}`}
+                allowtransparency={"true"}
+              />
+            </TabPanel>
+          ))}
         </TabPanels>
       </Tabs>
     </Page>

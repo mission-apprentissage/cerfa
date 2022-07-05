@@ -5,12 +5,12 @@ const Boom = require("boom");
 const { set, get } = require("lodash");
 const cerfaSchema = require("../model/schema/specific/dossier/cerfa/Cerfa");
 
-const buildErrorResult = (validatedModel) => {
+const buildErrorResult = (validationError) => {
   let result = {};
-  if (validatedModel) {
-    const keys = Object.keys(validatedModel.errors);
+  if (validationError) {
+    const keys = Object.keys(validationError.errors);
     for (let i = 0; i < keys.length; i++) {
-      const err = validatedModel.errors[keys[i]];
+      const err = validationError.errors[keys[i]];
       if (err.kind === "required") {
         set(result, `${err.path}`, {
           detail: "is required",
@@ -90,7 +90,7 @@ module.exports = async () => {
         });
         await validate.delete();
       } catch (e) {
-        errorResult = buildErrorResult(e, cerfa);
+        errorResult = buildErrorResult(e);
       }
 
       if (errorResult) {

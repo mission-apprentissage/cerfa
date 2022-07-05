@@ -78,7 +78,7 @@ const DateInputIn = (props) => {
           size="sm"
           mt={-2}
         />
-        <select value={yearValue} onChange={({ target: { value } }) => changeYear(value)}>
+        <select value={yearValue} onChange={({ target }) => changeYear(target.value)}>
           {years.map((option) => (
             <option key={option} value={option}>
               {option}
@@ -86,10 +86,7 @@ const DateInputIn = (props) => {
           ))}
         </select>
 
-        <select
-          value={months[date.getMonth()]}
-          onChange={({ target: { value } }) => changeMonth(months.indexOf(value))}
-        >
+        <select value={months[date.getMonth()]} onChange={({ target }) => changeMonth(months.indexOf(target.value))}>
           {months.map((option) => (
             <option key={option} value={option}>
               {option}
@@ -153,7 +150,7 @@ const CustomDateInput = forwardRef(({ value, onChange, onFocus, locked, onClick,
       }}
       onAccept={(val) => {
         if (val.length === 8 || !val) {
-          onChange({ persist: () => {}, target: { value: val } });
+          onChange({ target: { value: val } });
         }
       }}
       ref={ref}

@@ -2,10 +2,7 @@ import React from "react";
 import { Text, Flex, UnorderedList, ListItem } from "@chakra-ui/react";
 import { _post } from "../../../common/httpClient";
 import PromptModal from "../../../components/Modals/PromptModal";
-import {
-  useRecoilValue,
-  // useSetRecoilState
-} from "recoil";
+import { useRecoilValue } from "recoil";
 
 import { dossierAtom } from "../atoms";
 
@@ -13,14 +10,12 @@ import { Warning } from "../../../theme/components/icons";
 
 const ESignatureModal = ({ ...modal }) => {
   const dossier = useRecoilValue(dossierAtom);
-  // const setDossier = useSetRecoilState(dossierAtom);
   const onSignClicked = async () => {
     await _post(`/api/v1/sign_document`, {
       dossierId: dossier._id,
       cerfaId: dossier.cerfaId,
     });
     window.location.reload();
-    // setDossier(reponse);
   };
 
   return (

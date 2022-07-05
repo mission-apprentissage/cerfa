@@ -1,6 +1,7 @@
 import { shouldAskRepresentantLegal } from "./domain/shouldAskRepresentantLegal";
 import { shouldAskResponsalLegalAdresse } from "./domain/shouldAskResponsalLegalAdresse";
 import { INDICE_DE_REPETITION_OPTIONS } from "../../domain/indiceDeRepetionOptions";
+import { nomPattern } from "../../../domain/nomPattern";
 
 export const apprentiSchema = {
   "apprenti.nom": {
@@ -13,7 +14,7 @@ export const apprentiSchema = {
       {
         name: "C",
         mask: "Pattern",
-        pattern: "^\\D*$",
+        pattern: nomPattern,
       },
     ],
   },
@@ -27,7 +28,7 @@ export const apprentiSchema = {
       {
         name: "C",
         mask: "Pattern",
-        pattern: "^\\D*$",
+        pattern: nomPattern,
       },
     ],
   },
@@ -964,7 +965,7 @@ export const apprentiSchema = {
       {
         name: "C",
         mask: "Pattern",
-        pattern: "^\\D*$",
+        pattern: nomPattern,
       },
     ],
   },
@@ -978,7 +979,7 @@ export const apprentiSchema = {
       {
         name: "C",
         mask: "Pattern",
-        pattern: "^\\D*$",
+        pattern: nomPattern,
       },
     ],
   },

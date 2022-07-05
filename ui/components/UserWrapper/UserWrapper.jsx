@@ -23,7 +23,7 @@ const AccountWrapper = ({ children }) => {
           if (auth.account_status === "FORCE_RESET_PASSWORD" && router.pathname !== "/auth/reset-password") {
             let { token } = await _post("/api/v1/password/forgotten-password", { username: auth.sub, noEmail: true });
             router.push(`/auth/reset-password?passwordToken=${token}`);
-          } else if (auth.account_status === "FORCE_COMPLETE_PROFILE") {
+          } else if (auth.account_status === "FORCE_COMPLETE_PROFILE" && router.asPath !== "/auth/finalize") {
             router.push(`/auth/finalize`);
           }
         }
@@ -91,12 +91,7 @@ const ForceAcceptCGU = ({ children }) => {
   );
 };
 
-export const AuthenticationContext = createContext({
-  auth: anonymous,
-  token: undefined,
-  setAuth: () => {},
-  setToken: () => {},
-});
+export const AuthenticationContext = createContext({});
 
 const UserWrapper = ({ children, ssrAuth }) => {
   const [token, setToken] = useState();

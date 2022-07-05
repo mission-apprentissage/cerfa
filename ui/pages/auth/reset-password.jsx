@@ -45,9 +45,6 @@ const ResetPasswordPage = () => {
     },
   };
 
-  // const title = `Changement du mot de passe`;
-  // setTitle(title);
-
   const { values, handleSubmit, handleChange } = useFormik({
     initialValues: {
       newPassword: "",

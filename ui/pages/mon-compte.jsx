@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, Flex, Heading } from "@chakra-ui/react";
 import ProfileInformation from "../components/Profile/ProfileInformation";
-// import ProfileNotification from "./components/Profile/ProfileNotification";
 import { Breadcrumb } from "../components/Breadcrumb/Breadcrumb";
 import { Page } from "../components/Page/Page";
 import Head from "next/head";
@@ -27,24 +26,6 @@ const ProfilePage = () => {
       </Flex>
     );
   };
-
-  // const MyNotification = () => {
-  //   setTitle("Mes Notifications");
-  //   return (
-  //     <Flex>
-  //       <Box w="30%" pt={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
-  //         <Box borderLeft="2px solid" _hover={{ cursor: "pointer" }} borderColor={"bluefrance"} color={"bluefrance"}>
-  //           <Heading as="h2" fontSize="md" ml={3}>
-  //             Mes notifications
-  //           </Heading>
-  //         </Box>
-  //       </Box>
-  //       <Box w="100%" pt={[4, 8]}>
-  //         <ProfileNotification />
-  //       </Box>
-  //     </Flex>
-  //   );
-  // };
 
   return (
     <Page>

@@ -18,7 +18,6 @@ const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
     baseURL: config.agecap.url,
     timeout: 5000,
     headers: { Authorization: `Basic ${config.agecap.key}` },
-    // httpsAgent,
   }),
 });
 
@@ -59,8 +58,6 @@ class ApiAgecap {
 
         return response;
       } catch (e) {
-        // console.log(e);
-        // console.log(e.response.data);
         throw new ApiError("Api Agecap contrat", `${e.message}`, {
           id: contratAgecap.detailsContrat.numeroEnregistrementContrat,
           ...e.response.data,

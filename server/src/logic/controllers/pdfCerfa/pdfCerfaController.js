@@ -4,8 +4,6 @@ const PdfUtils = require("./utils/pdfUtils");
 
 let PATH_EMPTY_CERFA_PDF = path.join(__dirname, "../../assets/cerfa_pdf_empty.pdf");
 class PdfCerfaController {
-  constructor() {}
-
   async createPdfCerfa(cerfa) {
     const pdfCerfaEmpty = fs.readFileSync(PATH_EMPTY_CERFA_PDF);
 

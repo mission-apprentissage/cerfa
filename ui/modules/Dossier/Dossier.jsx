@@ -38,7 +38,6 @@ const stepByPath = ["cerfa", "documents", "signatures", "suivi"];
 
 const Dossier = () => {
   const router = useRouter();
-  // TODO BETTER GETTER SLUGS
   const { slug } = router.query;
   const dossierIdParam = slug?.[slug.length - 2];
   const paramstep = slug?.[slug.length - 1];

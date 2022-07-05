@@ -372,24 +372,9 @@ module.exports = (components) => {
         throw Boom.forbidden("Cerfa is locked");
       }
 
-      let remunerationsAnnuelles = [...(data.contrat?.remunerationsAnnuelles || [])];
-      for (let i = 0; i < cerfaDb.contrat.remunerationsAnnuelles.length; i++) {
-        const remunerationsAnnuelleDb = cerfaDb.contrat.remunerationsAnnuelles[i];
-        for (let j = 0; j < remunerationsAnnuelles.length; j++) {
-          let remAnnuelle = remunerationsAnnuelles[j];
-          if (remunerationsAnnuelleDb.ordre === remunerationsAnnuelleDb.ordre) {
-            remAnnuelle = {
-              ...remunerationsAnnuelleDb,
-              ...remAnnuelle,
-            };
-          }
-        }
-      }
-      let mergedData = merge(cerfaDb, data);
+      const mergedData = merge(cerfaDb, data);
       mergedData.contrat.remunerationsAnnuelles =
-        cerfaDb.contrat.remunerationsAnnuelles.length > 0 && remunerationsAnnuelles.length === 0
-          ? cerfaDb.contrat.remunerationsAnnuelles
-          : remunerationsAnnuelles;
+        data.contrat?.remunerationsAnnuelles ?? cerfaDb.contrat.remunerationsAnnuelles;
 
       let cerfaHistory = await CerfaHistory.findOne({ cerfaId: params.id });
       if (!cerfaHistory) {
@@ -498,31 +483,14 @@ module.exports = (components) => {
     permissionsDossierMiddleware(components, ["dossier/voir_contrat_pdf"]),
     // eslint-disable-next-line no-unused-vars
     tryCatch(async ({ params, body }, res) => {
-      // let { dossierId } = await Joi.object({
-      //   dossierId: Joi.string().required(),
-      // }).validateAsync(body, { abortEarly: false });
-
       let finalBuffer = null;
-      // const documents = await dossiers.getDocuments(dossierId);
-      // const contratDocument = find(documents, { typeDocument: "CONTRAT" });
-      // if (contratDocument) {
-      //   const _buf = [];
-      //   await oleoduc(
-      //     await getFromStorage(contratDocument.cheminFichier),
-      //     crypto.isCipherAvailable() ? crypto.decipher(dossierId) : new PassThrough(),
-      //     writeData((chunk) => _buf.push(chunk))
-      //   );
-      //   finalBuffer = Buffer.concat(_buf);
-      // } else {
       const cerfa = await Cerfa.findOne({ _id: params.id }).lean();
       if (!cerfa) {
         throw Boom.notFound("Doesn't exist");
       }
 
       const pdfBytes = await pdfCerfaController.createPdfCerfa(cerfa);
-
       finalBuffer = Buffer.from(pdfBytes);
-      // }
       res.json({ pdfBase64: finalBuffer.toString("base64") });
     })
   );

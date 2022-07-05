@@ -40,7 +40,6 @@ const Confirmed = () => {
   }, [activationToken]);
 
   const title = `Confirmation du compte pour l'utilisateur ${email}`;
-  // setTitle(title);
 
   return (
     <Flex minH="50vh" justifyContent="start" mt="10" flexDirection="column">

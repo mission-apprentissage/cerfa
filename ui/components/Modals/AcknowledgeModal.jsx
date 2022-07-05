@@ -5,13 +5,13 @@ import { ArrowRightLine, Close } from "../../theme/components/icons";
 // eslint-disable-next-line react/display-name
 export default ({
   isOpen,
-  onClose = () => {},
+  onClose,
   title,
   children,
   size = "4xl",
   acknowledgeText = "J'ai compris",
   canBeClosed = true,
-  onAcknowledgement = () => {},
+  onAcknowledgement,
   bgOverlay = "rgba(0, 0, 0, 0.48)",
 }) => {
   return (
@@ -25,7 +25,7 @@ export default ({
             color="bluefrance"
             fontSize={"epsilon"}
             onClick={() => {
-              onClose();
+              onClose?.();
             }}
             variant="unstyled"
             pt={10}
@@ -50,8 +50,8 @@ export default ({
           <Button
             variant="primary"
             onClick={() => {
-              onAcknowledgement();
-              onClose();
+              onAcknowledgement?.();
+              onClose?.();
             }}
             type="submit"
           >
