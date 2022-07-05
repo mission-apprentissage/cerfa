@@ -99,6 +99,14 @@ export const Signataires = () => {
             <Divider />
           </>
         )}
+        {dossier.etat === "SIGNATURES_REFUS" && (
+          <Stack>
+            <Text fontWeight={"bold"}>
+              {dossier.signataires.commentaireRefus ? "Commentaire de refus :" : "Aucun commentaire de refus"}
+            </Text>
+            {dossier.signataires.commentaireRefus && <Text>{`${dossier.signataires.commentaireRefus}`}</Text>}
+          </Stack>
+        )}
       </Stack>
     </>
   );

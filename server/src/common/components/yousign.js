@@ -67,24 +67,33 @@ module.exports = async (dossiers, crypto, agecap, users) => {
       });
 
       // On regarde les membres qui ont signés sur YouSign, et on les mets à jour dans le dossier
-      const doneMembers = procedure.members.filter(({ status }) => status === "done");
-      for (let doneMember of doneMembers) {
-        if (doneMember.email === signataires.apprenti.email) {
-          signataires.apprenti.status = "SIGNE";
-        } else if (doneMember.email === signataires.employeur.email) {
-          signataires.employeur.status = "SIGNE";
-        } else if (doneMember.email === signataires.cfa.email) {
-          signataires.cfa.status = "SIGNE";
-        } else if (doneMember.email === signataires.legal.email) {
-          signataires.legal.status = "SIGNE";
+      const memberSignatureStatusChanged = (signataire, doneMember) => {
+        if (signataire.email === doneMember.email) {
+          signataire.status = doneMember.status === "done" ? "SIGNE" : "REFUS";
+
+          // Si le signataire a refusé de signer, on récupère son commentaire de refus
+          if (doneMember.status === "refused") {
+            signataires.commentaireRefus = doneMember.comment;
+          }
         }
+      };
+
+      const doneMembers = procedure.members.filter(({ status }) => status === "done" || status === "refused");
+      for (let doneMember of doneMembers) {
+        memberSignatureStatusChanged(signataires.apprenti, doneMember);
+        memberSignatureStatusChanged(signataires.employeur, doneMember);
+        memberSignatureStatusChanged(signataires.cfa, doneMember);
+        memberSignatureStatusChanged(signataires.legal, doneMember);
       }
 
       await dossiers.updateSignatairesDossier(dossierId, signataires);
 
+      // Si au moins un signataire a refusé de signer, on met à jour l'état du dossier
+      if (body.eventName === "procedure.refused") {
+        await dossiers.updateEtatDossier(params.id, "SIGNATURES_REFUS");
+      }
       // La procédure de signature est terminée, on lance automatiquement la télétransmission vers AGECAP
-      // if (body.eventName === "procedure.finished" || (doneMembers && doneMembers.length === procedure.members.length)) {
-      if (doneMembers && doneMembers.length === procedure.members.length) {
+      else if (doneMembers && doneMembers.length === procedure.members.length) {
         await dossiers.updateEtatDossier(params.id, "DOSSIER_TERMINE_AVEC_SIGNATURE");
 
         await agecap.convertAndSendToAgecap({

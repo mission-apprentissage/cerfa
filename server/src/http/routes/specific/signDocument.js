@@ -68,6 +68,8 @@ module.exports = (components) => {
 
       const resultFiles = await apiYousign.postFiles({ name, content });
 
+      const assistanceUrl = config.publicUrl + "/assistance";
+
       const operationDetails = {
         operationLevel: "custom",
         operationCustomModes: ["email"],
@@ -82,6 +84,8 @@ module.exports = (components) => {
             "<br><br>" +
             "Cet email a été envoyé automatiquement, merci de ne pas répondre." +
             "<br><br>" +
+            `Pour toutes questions relatives à la procédure de signature électronique, merci de contacter <a href="${assistanceUrl}">l'assistance</a>.` +
+            "<br><br><br>" +
             "Cordialement<br>" +
             "Equipe Alternance du Ministère du Travail, du Plein Emploi et de l'Insertion",
         },
@@ -173,6 +177,13 @@ module.exports = (components) => {
           ? "https://webhook.site/bb93b16f-ac32-44f6-92a9-16b3c4291cd8"
           : `${config.publicUrl}/api/v1/sign_document/${dossierId}`;
 
+      let webhook = {
+        url: webhookUrl,
+        method: "POST",
+        headers: {
+          "X-authorization": webhookJwtBearer,
+        },
+      };
       const dataToSend = {
         name: `Signature du dossier ${dossier.nom}`,
         description: `Le contrat en apprentissage de ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} pour ${cerfa.employeur.denomination}`,
@@ -189,12 +200,11 @@ module.exports = (components) => {
                   "Vous êtes invité à signer un contrat d&apos;apprentissage via la plateform YouSign." +
                   "<br><br>" +
                   '<tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Accéder au document</tag>' +
-                  "<br><br>" +
                   "Détails du contrat: " +
                   "<br>" +
                   `- Employeur : ${cerfa.employeur.denomination}, SIRET: ${cerfa.employeur.siret}<br>` +
                   `- Apprenti(e) : ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom}<br>` +
-                  `- Date de début de contrat : ${DateTime.fromSQL(cerfa.contrat.dateDebutContrat).toFormat(
+                  `- Date de début de contrat : ${DateTime.fromJSDate(cerfa.contrat.dateDebutContrat).toFormat(
                     "dd/MM/y"
                   )}<br>` +
                   `- CFA : ${cerfa.organismeFormation.denomination}` +
@@ -204,8 +214,10 @@ module.exports = (components) => {
                   "  2. Signez le contrat en utilisant votre code confidentiel que vous allez recevoir par mail de la part de yousign<br>" +
                   "  3. Joignez votre pièce d'identité (apprenti-e)" +
                   "<br><br>" +
-                  "Vous serez ensuite informé(e) par e-mail dès que le contrat est signé par l'employeur, l'apprenti, et visé par le CFA." +
+                  "Lorsque le contrat est signé par l'ensemble des parties, et visé par le CFA, vous recevrez une notification par email." +
                   "<br><br>" +
+                  `Pour toutes questions relatives à la procédure de signature électronique, merci de contacter <a href="${assistanceUrl}">l'assistance</a>.` +
+                  "<br><br><br>" +
                   "Cordialement<br>" +
                   "Equipe Alternance du Ministère du Travail, du Plein Emploi et de l'Insertion",
                 to: ["@members"],
@@ -222,9 +234,10 @@ module.exports = (components) => {
                   "Vous pouvez consulter et télécharger votre contrat signé en suivant le lien ci-dessous :" +
                   "<br><br>" +
                   '<tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Consulter le document</tag>' +
-                  "<br><br>" +
                   "Ce lien restera actif pendant un mois à partir de ce jour. Nous vous invitons à télécharger et conserver votre contrat d'apprentissage dès à présent." +
                   "<br><br>" +
+                  `Pour toutes questions relatives à la procédure de signature électronique, merci de contacter <a href="${assistanceUrl}">l'assistance</a>.` +
+                  "<br><br><br>" +
                   "Cordialement<br>" +
                   "Equipe Alternance du Ministère du Travail, du Plein Emploi et de l'Insertion",
                 to: ["@members"],
@@ -232,12 +245,11 @@ module.exports = (components) => {
             ],
             "procedure.refused": [
               {
-                subject: `Contrat d'apprentissage signé - ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom}`,
+                subject: `Signature du contrat d'apprentissage - ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} - Refus de signature`,
                 message:
                   "La procédure de signature électronique n'a pas abouti. Vous pouvez consulter la procédure concernée et le motif en cliquant sur le lien ci-dessous :" +
                   "<br><br>" +
                   '<tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Consulter le document</tag>' +
-                  "<br><br>" +
                   "Cordialement<br>" +
                   "Equipe Alternance du Ministère du Travail, du Plein Emploi et de l'Insertion",
                 to: ["@members"],
@@ -245,33 +257,9 @@ module.exports = (components) => {
             ],
           },
           webhook: {
-            "member.finished": [
-              {
-                url: webhookUrl,
-                method: "POST",
-                headers: {
-                  "X-authorization": webhookJwtBearer,
-                },
-              },
-            ],
-            "procedure.finished": [
-              {
-                url: webhookUrl,
-                method: "POST",
-                headers: {
-                  "X-authorization": webhookJwtBearer,
-                },
-              },
-            ],
-            "procedure.refused": [
-              {
-                url: webhookUrl,
-                method: "POST",
-                headers: {
-                  "X-authorization": webhookJwtBearer,
-                },
-              },
-            ],
+            "member.finished": [webhook],
+            "procedure.finished": [webhook],
+            "procedure.refused": [webhook],
           },
         },
       };
