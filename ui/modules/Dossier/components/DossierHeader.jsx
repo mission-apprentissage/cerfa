@@ -1,5 +1,5 @@
 import React from "react";
-import { Heading, Button, Badge, HStack, Text, useDisclosure, Flex, Box, Spinner } from "@chakra-ui/react";
+import { Heading, Button, Badge, HStack, Text, useDisclosure, Flex, Box, Spinner, Link } from "@chakra-ui/react";
 
 import { hasContextAccessTo } from "../../../common/utils/rolesUtils";
 
@@ -7,7 +7,7 @@ import { StatusBadge } from "../../../components/StatusBadge/StatusBadge";
 import LivePeopleAvatar from "./LivePeopleAvatar";
 import { InviteModal } from "./InviteModal";
 
-import { AvatarPlus } from "../../../theme/components/icons";
+import { AvatarPlus, DownloadLine } from "../../../theme/components/icons";
 import { useRecoilValue } from "recoil";
 import { autoSaveStatusAtom } from "../formEngine/hooks/useAutoSave";
 import { CheckIcon } from "@chakra-ui/icons";
@@ -35,7 +35,7 @@ const AutoSaveBadge = () => {
   );
 };
 
-const DossierHeader = ({ dossier }) => {
+const DossierHeader = ({ activeStep, dossier }) => {
   const nomDossier = useRecoilValue(workspaceTitleAtom);
   const inviteModal = useDisclosure();
   return (
@@ -48,6 +48,17 @@ const DossierHeader = ({ dossier }) => {
         </Heading>
         <HStack>
           <LivePeopleAvatar />
+          {[0, 1].includes(activeStep) && hasContextAccessTo(dossier, "dossier/voir_contrat_pdf/telecharger") && (
+            <Button
+              variant="secondary"
+              size="md"
+              as={Link}
+              target={"_blank"}
+              href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?dossierId=${dossier._id}`}
+            >
+              <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
+            </Button>
+          )}
           {hasContextAccessTo(dossier, "dossier/page_parametres/gestion_acces") && (
             <>
               <Button size="md" onClick={inviteModal.onOpen} variant="secondary">

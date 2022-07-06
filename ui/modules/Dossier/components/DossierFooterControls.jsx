@@ -148,17 +148,32 @@ const DossierFooterControls = ({
               Passer à l&apos;étape suivante
             </Button>
           )}
+
           {activeStep === 2 && dossier.draft && (
-            <Button
+            <>
+              {hasContextAccessTo(dossier, "dossier/voir_contrat_pdf/telecharger") && (
+                <Button
+                  mr={8}
+                  variant="secondary"
+                  size="md"
+                  as={Link}
+                  target={"_blank"}
+                  href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?dossierId=${dossier._id}`}
+                >
+                  <DownloadLine w={"0.75rem"} h={"0.75rem"} mr={2} /> Télécharger
+                </Button>
+              )}
+              <Button
               size="md"
-              onClick={() => {
-                finalizeModalDisclosure.onOpen();
-              }}
-              variant="primary"
-              isDisabled={!dossierComplete || isEmployeurPrive}
-            >
-              Choisir le mode de signature
-            </Button>
+                onClick={() => {
+                  finalizeModalDisclosure.onOpen();
+                }}
+                variant="primary"
+                isDisabled={!dossierComplete || isEmployeurPrive}
+              >
+                Choisir le mode de signature
+              </Button>
+            </>
           )}
         </Flex>
       )}
