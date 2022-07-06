@@ -96,7 +96,7 @@ module.exports = (components) => {
         operationLevel: "advanced",
       };
 
-      // On active la signature avancée uniquement en production
+      // On n'active pas la signature avancée en dev
       if (config.env === "dev") {
         operationDetailsAdvanced = operationDetails;
       }
