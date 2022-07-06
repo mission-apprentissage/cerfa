@@ -8,29 +8,20 @@ const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfa
 const apiYousign = require("../../../common/apis/yousign/ApiYousign");
 const config = require("../../../config");
 const authMiddleware = require("../../middlewares/authMiddleware");
-const pageAccessMiddleware = require("../../middlewares/pageAccessMiddleware");
-const { uploadToStorage, deleteFromStorage } = require("../../../common/utils/ovhUtils");
-const { oleoduc } = require("oleoduc");
-const { PassThrough } = require("stream");
-const { find } = require("lodash");
 const passport = require("passport");
 const { Strategy, ExtractJwt } = require("passport-jwt");
 const { createYouSignWebhookToken } = require("../../../common/utils/jwtUtils");
-
-function noop() {
-  return new PassThrough();
-}
+const { DateTime } = require("luxon");
 
 module.exports = (components) => {
   const router = express.Router();
 
-  const { dossiers, crypto } = components;
+  const { dossiers, yousign } = components;
 
   router.post(
     "/",
     authMiddleware(components),
-    pageAccessMiddleware(["signature_beta"]),
-    permissionsDossierMiddleware(components, ["dossier/page_signatures/signer"]),
+    permissionsDossierMiddleware(components, ["dossier/page_signatures/signature_electronique"]),
     tryCatch(async (req, res) => {
       let { cerfaId, dossierId } = await Joi.object({
         test: Joi.boolean(),
@@ -77,13 +68,39 @@ module.exports = (components) => {
 
       const resultFiles = await apiYousign.postFiles({ name, content });
 
+      const assistanceUrl = config.publicUrl + "/assistance";
+
       const operationDetails = {
         operationLevel: "custom",
         operationCustomModes: ["email"],
-        // operationModeSmsConfig: {
-        //   content: `eSIGNATURE - {{code}} est le code pour signer le contrat ${dossier.nom}.`,
-        // },
+        operationModeEmailConfig: {
+          subject: `Signature du contrat d'apprentissage - ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} - Votre code confidentiel`,
+          content:
+            'Bonjour <tag data-tag-type="string" data-tag-name="recipient.firstname"></tag> <tag data-tag-type="string" data-tag-name="recipient.lastname"></tag>,' +
+            "<br><br>" +
+            `Voici votre code confidentiel afin de compléter la signature électronique du contrat d'apprentissage de ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} :` +
+            "<br><br>" +
+            "{{code}}" +
+            "<br><br>" +
+            "Cet email a été envoyé automatiquement, merci de ne pas répondre." +
+            "<br><br>" +
+            `Pour toutes questions relatives à la procédure de signature électronique, merci de contacter <a href="${assistanceUrl}">l'assistance</a>.` +
+            "<br><br><br>" +
+            "Cordialement<br>" +
+            "Equipe Alternance du Ministère du Travail, du Plein Emploi et de l'Insertion",
+        },
       };
+
+      let operationDetailsAdvanced = {
+        ...operationDetails,
+        operationLevel: "advanced",
+      };
+
+      // On active la signature avancée uniquement en production
+      if (config.env === "dev") {
+        operationDetailsAdvanced = operationDetails;
+      }
+
       const positions = {
         employeur: "20,149,189,199", // Employeur
         apprenti: "190,149,360,199", // Apprenti(e)
@@ -113,8 +130,8 @@ module.exports = (components) => {
           firstname: signataires.apprenti.firstname,
           lastname: signataires.apprenti.lastname,
           email: signataires.apprenti.email,
-          phone: "+33601020304",
-          ...operationDetails,
+          phone: signataires.apprenti.phone,
+          ...operationDetailsAdvanced,
           fileObjects: [
             {
               ...constantFile,
@@ -141,8 +158,8 @@ module.exports = (components) => {
           firstname: signataires.legal.firstname,
           lastname: signataires.legal.lastname,
           email: signataires.legal.email,
-          phone: "+33601020304",
-          ...operationDetails,
+          phone: signataires.legal.phone,
+          ...operationDetailsAdvanced,
           fileObjects: [
             {
               ...constantFile,
@@ -152,6 +169,21 @@ module.exports = (components) => {
         });
       }
       const webhookJwtBearer = createYouSignWebhookToken({ payload: { dossierId } });
+
+      // Pour tester en dev : aller sur webhook.site et remplacer cette url.
+      // Récupérer le retour du webhook et l'envoyer à la PDIGI via Postman (ne pas oublier les headers, l'auth est dedans!)
+      const webhookUrl =
+        config.env === "dev"
+          ? "https://webhook.site/bb93b16f-ac32-44f6-92a9-16b3c4291cd8"
+          : `${config.publicUrl}/api/v1/sign_document/${dossierId}`;
+
+      let webhook = {
+        url: webhookUrl,
+        method: "POST",
+        headers: {
+          "X-authorization": webhookJwtBearer,
+        },
+      };
       const dataToSend = {
         name: `Signature du dossier ${dossier.nom}`,
         description: `Le contrat en apprentissage de ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} pour ${cerfa.employeur.denomination}`,
@@ -161,32 +193,73 @@ module.exports = (components) => {
           email: {
             "procedure.started": [
               {
-                subject: `Vous avez été invité à signer un contrat`,
+                subject: `Signature du contrat d'apprentissage - ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom}`,
                 message:
-                  'Bonjour <tag data-tag-type="string" data-tag-name="recipient.firstname"></tag> <tag data-tag-type="string" data-tag-name="recipient.lastname"></tag>, <br><br> Vous avez été invité à signer un contrat en apprentissage, merci de cliquer sur le boutton suivant pour y accéder: <br><br> <tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Accéder au document</tag>',
+                  'Bonjour <tag data-tag-type="string" data-tag-name="recipient.firstname"></tag> <tag data-tag-type="string" data-tag-name="recipient.lastname"></tag>,' +
+                  "<br><br>" +
+                  "Vous êtes invité à signer un contrat d&apos;apprentissage via la plateform YouSign." +
+                  "<br><br>" +
+                  '<tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Accéder au document</tag>' +
+                  "Détails du contrat: " +
+                  "<br>" +
+                  `- Employeur : ${cerfa.employeur.denomination}, SIRET: ${cerfa.employeur.siret}<br>` +
+                  `- Apprenti(e) : ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom}<br>` +
+                  `- Date de début de contrat : ${DateTime.fromJSDate(cerfa.contrat.dateDebutContrat).toFormat(
+                    "dd/MM/y"
+                  )}<br>` +
+                  `- CFA : ${cerfa.organismeFormation.denomination}` +
+                  "<br><br>" +
+                  "Quelles sont les prochaines étapes pour signer électroniquement le contrat ? <br>" +
+                  "  1. Cliquez le contrat en cliquant sur le bouton ci-dessus<br>" +
+                  "  2. Signez le contrat en utilisant votre code confidentiel que vous allez recevoir par mail de la part de yousign<br>" +
+                  "  3. Joignez votre pièce d'identité (apprenti-e)" +
+                  "<br><br>" +
+                  "Lorsque le contrat est signé par l'ensemble des parties, et visé par le CFA, vous recevrez une notification par email." +
+                  "<br><br>" +
+                  `Pour toutes questions relatives à la procédure de signature électronique, merci de contacter <a href="${assistanceUrl}">l'assistance</a>.` +
+                  "<br><br><br>" +
+                  "Cordialement<br>" +
+                  "Equipe Alternance du Ministère du Travail, du Plein Emploi et de l'Insertion",
+                to: ["@members"],
+              },
+            ],
+            "procedure.finished": [
+              {
+                subject: `Contrat d'apprentissage signé - ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom}`,
+                message:
+                  `Nous vous informons que votre contrat d'apprentissage entre ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} et l'employeur ${cerfa.employeur.denomination} a été signé.` +
+                  "<br><br>" +
+                  "Il a été télétransmis au service administratif en charge de son instruction et de son dépôt." +
+                  "<br><br>" +
+                  "Vous pouvez consulter et télécharger votre contrat signé en suivant le lien ci-dessous :" +
+                  "<br><br>" +
+                  '<tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Consulter le document</tag>' +
+                  "Ce lien restera actif pendant un mois à partir de ce jour. Nous vous invitons à télécharger et conserver votre contrat d'apprentissage dès à présent." +
+                  "<br><br>" +
+                  `Pour toutes questions relatives à la procédure de signature électronique, merci de contacter <a href="${assistanceUrl}">l'assistance</a>.` +
+                  "<br><br><br>" +
+                  "Cordialement<br>" +
+                  "Equipe Alternance du Ministère du Travail, du Plein Emploi et de l'Insertion",
+                to: ["@members"],
+              },
+            ],
+            "procedure.refused": [
+              {
+                subject: `Signature du contrat d'apprentissage - ${cerfa.apprenti.prenom} ${cerfa.apprenti.nom} - Refus de signature`,
+                message:
+                  "La procédure de signature électronique n'a pas abouti. Vous pouvez consulter la procédure concernée et le motif en cliquant sur le lien ci-dessous :" +
+                  "<br><br>" +
+                  '<tag data-tag-type="button" data-tag-name="url" data-tag-title="Accéder au document">Consulter le document</tag>' +
+                  "Cordialement<br>" +
+                  "Equipe Alternance du Ministère du Travail, du Plein Emploi et de l'Insertion",
                 to: ["@members"],
               },
             ],
           },
           webhook: {
-            "member.finished": [
-              {
-                url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
-                method: "POST",
-                headers: {
-                  "X-authorization": webhookJwtBearer,
-                },
-              },
-            ],
-            "procedure.finished": [
-              {
-                url: `${config.publicUrl}/api/v1/sign_document/${dossierId}`,
-                method: "POST",
-                headers: {
-                  "X-authorization": webhookJwtBearer,
-                },
-              },
-            ],
+            "member.finished": [webhook],
+            "procedure.finished": [webhook],
+            "procedure.refused": [webhook],
           },
         },
       };
@@ -222,69 +295,7 @@ module.exports = (components) => {
     passport.authenticate("jwt-yousign-webhook", { session: false, failWithError: true }),
     // eslint-disable-next-line no-unused-vars
     tryCatch(async ({ body, params, user }, res) => {
-      let { test } = await Joi.object({
-        test: Joi.boolean(),
-      })
-        .unknown()
-        .validateAsync(body, { abortEarly: false });
-
-      const dossier = await dossiers.findDossierById(params.id);
-      if (!dossier) {
-        throw Boom.notFound("Doesn't exist");
-      }
-
-      const { _doc } = await dossiers.updateSignatures(params.id, body);
-      const { procedure } = _doc.signatures;
-      const signataires = _doc.signataires;
-      const dossierId = params.id;
-      const yousignFile = procedure.files[0];
-
-      let { hashStream, getHash } = crypto.checksum();
-      let filename = yousignFile.name;
-      let path = `contrats/${dossierId}/${filename}`;
-      const documents = await dossiers.getDocuments(dossierId);
-      const contratDocument = find(documents, { typeDocument: "CONTRAT" });
-      if (contratDocument) {
-        await deleteFromStorage(path);
-      }
-      await oleoduc(
-        await apiYousign.getFile(yousignFile.id.replace("/files/", "")),
-        hashStream,
-        crypto.isCipherAvailable() ? crypto.cipher(dossierId) : noop(),
-        test ? noop() : await uploadToStorage(path, { contentType: "application/pdf" })
-      );
-      if (!contratDocument) {
-        let hash = await getHash();
-        await dossiers.addDocument(dossierId, {
-          typeDocument: "CONTRAT",
-          hash,
-          nomFichier: filename,
-          cheminFichier: path,
-          tailleFichier: 0,
-          userEmail: "yousign@hooks.fr", // TODO user.email,
-        });
-      }
-
-      const doneMembers = procedure.members.filter(({ status }) => status === "done");
-      for (let doneMember of doneMembers) {
-        if (doneMember.email === signataires.apprenti.email) {
-          signataires.apprenti.status = "SIGNE";
-        } else if (doneMember.email === signataires.employeur.email) {
-          signataires.employeur.status = "SIGNE";
-        } else if (doneMember.email === signataires.cfa.email) {
-          signataires.cfa.status = "SIGNE";
-        } else if (doneMember.email === signataires.legal.email) {
-          signataires.legal.status = "SIGNE";
-        }
-      }
-
-      await dossiers.updateSignatairesDossier(dossierId, signataires);
-
-      if (body.eventName === "procedure.finished" || (doneMembers && doneMembers.length === procedure.members.length)) {
-        await dossiers.updateEtatDossier(params.id, "DOSSIER_TERMINE_AVEC_SIGNATURE");
-      } else {
-        await dossiers.updateEtatDossier(params.id, "SIGNATURES_EN_COURS");
-      }
+      await yousign.handleRetourYouSign({ body, params });
 
       res.json({});
     })

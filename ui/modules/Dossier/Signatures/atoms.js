@@ -1,8 +1,8 @@
 import { atom, selector } from "recoil";
 import { valueSelector } from "../formEngine/atoms";
 
-export const signaturesCompletionSelector = selector({
-  key: "signaturesCompletionSelector",
+export const infoSignaturesCompletionSelector = selector({
+  key: "infoSignaturesCompletionSelector",
   get: ({ get }) => {
     const lieuSignature = get(valueSelector("contrat.lieuSignatureContrat"));
 

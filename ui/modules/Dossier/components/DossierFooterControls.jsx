@@ -15,7 +15,7 @@ import {
 
 import { _post, _put } from "../../../common/httpClient";
 import useAuth from "../../../hooks/useAuth";
-import { DownloadLine, SentPaperPlane, BallPenFill } from "../../../theme/components/icons";
+import { DownloadLine, SentPaperPlane, BallPenFill, ExternalLinkLine } from "../../../theme/components/icons";
 import { hasPageAccessTo, hasContextAccessTo } from "../../../common/utils/rolesUtils";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { dossierAtom } from "../atoms";
@@ -41,7 +41,8 @@ const DossierFooterControls = ({
       await _post(`/api/v1/agecap/`, {
         dossierId: dossier._id,
       });
-      window.location.reload();
+      // On redirige vers le suivi du dossier une fois qu'il est télétransmis
+      window.location.replace(window.location.pathname.replace(/\/[^/]*$/, "/suivi"));
     } catch (error) {
       console.log({ error });
       let details = "";
@@ -93,7 +94,7 @@ const DossierFooterControls = ({
     []
   );
 
-  let onMethodSingatureClickd = useCallback(
+  let onMethodSignatureClicked = useCallback(
     async (mode) => {
       try {
         const upDossier = await _put(`/api/v1/dossier/entity/${dossier._id}/mode`, {
@@ -113,10 +114,10 @@ const DossierFooterControls = ({
       dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION" ||
       dossier.etat === "EN_ATTENTE_DECLENCHEMENT_SIGNATURES" ||
       dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
-      dossier.etat === "TRANSMIS" ||
       dossier.etat === "EN_ATTENTE_SIGNATURES"
     )
       return "Télécharger le contrat non signé";
+    if (dossier.etat === "SIGNATURES_REFUS") return "Télécharger le contrat";
     if (dossier.etat === "SIGNATURES_EN_COURS") return "Télécharger le contrat en cours de signature";
     if (
       dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE" ||
@@ -133,8 +134,6 @@ const DossierFooterControls = ({
       return "Télécharger le contrat signé";
   }, [dossier.etat]);
 
-  const isBetaTester = auth.beta && auth.beta !== "non";
-
   return (
     <>
       {dossier.etat === "BROUILLON" && (
@@ -144,13 +143,13 @@ const DossierFooterControls = ({
               Revenir
             </Button>
           )}
-          {activeStep < steps.length - 1 && (
+          {activeStep < steps.length - 2 && (
             <Button size="md" onClick={onClickNextStep} variant="primary" isDisabled={isEmployeurPrive}>
               Passer à l&apos;étape suivante
             </Button>
           )}
 
-          {activeStep === steps.length - 1 && dossier.draft && (
+          {activeStep === 2 && dossier.draft && (
             <>
               {hasContextAccessTo(dossier, "dossier/voir_contrat_pdf/telecharger") && (
                 <Button
@@ -165,67 +164,74 @@ const DossierFooterControls = ({
                 </Button>
               )}
               <Button
-                size="md"
+              size="md"
                 onClick={() => {
                   finalizeModalDisclosure.onOpen();
                 }}
                 variant="primary"
                 isDisabled={!dossierComplete || isEmployeurPrive}
-                bg="greenmedium.600"
-                _hover={{ bg: "greenmedium.500" }}
               >
-                Finaliser et Télécharger le dossier
+                Choisir le mode de signature
               </Button>
             </>
           )}
         </Flex>
       )}
-      {activeStep === steps.length - 1 &&
-        !dossier.draft &&
-        dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION" &&
-        !dossier.mode && (
-          <Flex width="100%" justify="flex-start" mt={16} flexDirection="column">
-            <HStack>
-              <Text>Choisissez une méthode de signature:</Text>
-            </HStack>
-            <HStack spacing={16} justifyContent="center" mt={10}>
-              {isBetaTester && hasPageAccessTo(auth, "signature_beta") && (
-                <Flex flexDirection="column" borderWidth="1px" borderColor="bluefrance" p={10} w="55%" h="50vh">
-                  <Box flexGrow="1">
-                    <Flex flexDirection="column" alignItems="flex-start" p={0}>
-                      <Heading as="h4" fontSize="1.5rem" mb={4}>
-                        Signature en ligne
-                      </Heading>
-                      <Heading as="h5" fontSize="1rem" mb={4}>
-                        Processus automatique sécurisé & gratuit
-                      </Heading>
-                    </Flex>
-                    <OrderedList>
-                      <ListItem>Ajoutez les signataires</ListItem>
-                      <ListItem>Ils seront invités par courriel à signer via Yousign</ListItem>
-                      <ListItem>Suivez l&apos;évolution en temps réel</ListItem>
-                      <ListItem>
-                        Transmission automatique au service en charge de l&apos;instruction du dossier
-                      </ListItem>
-                    </OrderedList>
-                  </Box>
-                  <Center h="25%">
-                    {auth && hasPageAccessTo(auth, "signature_beta") && (
-                      <Button
-                        onClick={() => {
-                          onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
-                        }}
-                        size={"md"}
-                        variant={"primary"}
-                      >
-                        <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
-                        Signatures électroniques
-                      </Button>
-                    )}
-                  </Center>
-                </Flex>
-              )}
-
+      {activeStep === 2 && !dossier.draft && dossier.etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION" && !dossier.mode && (
+        <Flex width="100%" justify="flex-start" mt={16} flexDirection="column">
+          <HStack>
+            <Text>Choisissez une méthode de signature:</Text>
+          </HStack>
+          <HStack spacing={16} justifyContent="center" mt={10}>
+            {hasContextAccessTo(dossier, "dossier/page_signatures/signature_electronique") && (
+              <Flex flexDirection="column" borderWidth="1px" borderColor="bluefrance" p={10} w="55%" h="50vh">
+                <Box flexGrow="1">
+                  <Flex flexDirection="column" alignItems="flex-start" p={0}>
+                    <Heading as="h4" fontSize="1.5rem" mb={4}>
+                      Signature en ligne
+                    </Heading>
+                    <Heading as="h5" fontSize="1rem" mb={4}>
+                      Processus dématérialisé
+                    </Heading>
+                  </Flex>
+                  <OrderedList>
+                    <ListItem>
+                      Vous ajoutez les coordonnées des signataires en cliquant sur &laquo;&nbsp;signature en
+                      ligne&nbsp;&raquo;,
+                    </ListItem>
+                    <ListItem>Chaque signataire reçoit une notification l&apos;invitant à signer le contrat,</ListItem>
+                    <ListItem>
+                      Lorsque toutes les signatures sont réunies, le contrat est automatiquement télétransmis.
+                    </ListItem>
+                  </OrderedList>
+                  <br />
+                  <Text>
+                    La signature électronique est opérée par notre partenaire YouSign. <br />
+                    <Link
+                      href={"https://yousign.com/fr-fr/signature-electronique"}
+                      textDecoration={"underline"}
+                      isExternal
+                    >
+                      Plus d&apos;informations&nbsp;
+                      <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
+                    </Link>
+                  </Text>
+                </Box>
+                <Center h="25%">
+                  <Button
+                    onClick={() => {
+                      onMethodSignatureClicked("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
+                    }}
+                    size={"md"}
+                    variant={"primary"}
+                  >
+                    <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
+                    Signature électronique
+                  </Button>
+                </Center>
+              </Flex>
+            )}
+            {hasContextAccessTo(dossier, "dossier/page_signatures/signature_papier") && (
               <Flex flexDirection="column" bg="galt" p={10} w="45%" h="50vh">
                 <Box flexGrow="1">
                   <Flex flexDirection="column" alignItems="flex-start" p={0}>
@@ -233,60 +239,82 @@ const DossierFooterControls = ({
                       Signature papier
                     </Heading>
                     <Heading as="h5" fontSize="1rem" mb={4}>
-                      Processus manuel
+                      Processus classique
                     </Heading>
                   </Flex>
                   <OrderedList>
-                    <ListItem>Téléchargez le document complété</ListItem>
-                    <ListItem>Imprimez le contrat</ListItem>
-                    <ListItem>Recueillez les différentes signatures</ListItem>
                     <ListItem>
-                      Transmission automatique à votre service en charge de l&apos;instruction et du dépôt du dossier
+                      Téléchargez et imprimez le contrat finalisé en cliquant sur &laquo;&nbsp;signature
+                      papier&nbsp;&raquo;,
+                    </ListItem>
+                    <ListItem>Recueillez les différentes signatures manuscrites par vos propres moyens,</ListItem>
+                    <ListItem>
+                      Lorsque toutes les signatures sont réunies, revenez sur la plateforme pour télétransmettre le
+                      contrat.
                     </ListItem>
                   </OrderedList>
+                  <br />
+                  <Text>Il n&apos;est plus nécessaire de joindre le contrat signé en pièce jointe du dossier.</Text>
                 </Box>
                 <Center h="25%">
                   <Button
                     onClick={() => {
-                      onMethodSingatureClickd("NOUVEAU_CONTRAT_SIGNATURE_PAPIER");
+                      onMethodSignatureClicked("NOUVEAU_CONTRAT_SIGNATURE_PAPIER");
                     }}
                     size={"md"}
                     variant={"secondary"}
                     bg="galt"
                   >
                     <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
-                    Signatures papier
+                    Signature papier
                   </Button>
                 </Center>
               </Flex>
-            </HStack>
+            )}
+          </HStack>
+        </Flex>
+      )}
+      {/*TODO factoriser ce bouton qui est dupliqué juste en dessous => quickwin*/}
+      {activeStep === 3 &&
+        (dossier.etat === "TRANSMIS" ||
+          dossier.etat === "EN_COURS_INSTRUCTION" ||
+          dossier.etat === "REFUSE" ||
+          dossier.etat === "DEPOSE") && (
+          <Flex width="100%" justify="flex-start" mt={8} mb={10}>
+            <Center w="full">
+              <Button
+                as={Link}
+                href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?dossierId=${dossier._id}`}
+                {...buttonDownloadStyleProps}
+                variant="secondary"
+                isDisabled={!dossierComplete || isEmployeurPrive}
+              >
+                <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
+                {buttonTextProp}
+              </Button>
+            </Center>
           </Flex>
         )}
-      {activeStep === steps.length - 1 && !dossier.draft && dossier.mode && (
+      {activeStep === 2 && !dossier.draft && dossier.mode && (
         <Flex width="100%" justify="flex-start" mt={8} mb={10}>
           <Center w="full">
             {(dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
               dossier.etat === "EN_ATTENTE_DECLENCHEMENT_SIGNATURES" ||
               dossier.etat === "EN_ATTENTE_SIGNATURES" ||
               dossier.etat === "SIGNATURES_EN_COURS" ||
-              dossier.etat === "TRANSMIS" ||
-              dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE") && (
+              dossier.etat === "SIGNATURES_REFUS") && (
               <Button
                 as={Link}
                 href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?dossierId=${dossier._id}`}
                 {...buttonDownloadStyleProps}
-                bg={"greenmedium.500"}
-                _hover={{ bg: "greenmedium.600" }}
-                color="white"
+                variant="secondary"
                 isDisabled={!dossierComplete || isEmployeurPrive}
               >
                 <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
                 {buttonTextProp}
               </Button>
             )}
-            {isBetaTester &&
-              hasPageAccessTo(auth, "signature_beta") &&
-              dossier.mode === "NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE" &&
+            {dossier.mode === "NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE" &&
               dossier.etat === "EN_ATTENTE_DECLENCHEMENT_SIGNATURES" && (
                 <Button
                   size="md"
@@ -295,8 +323,6 @@ const DossierFooterControls = ({
                   }}
                   variant="primary"
                   ml={12}
-                  bg="pinksoft.500"
-                  _hover={{ bg: "pinksoft.500" }}
                   px={8}
                   mt={16}
                   isDisabled={!dossier.signataires.complete}
@@ -306,24 +332,22 @@ const DossierFooterControls = ({
                 </Button>
               )}
 
-            {hasContextAccessTo(dossier, "send_agecap") &&
-              (dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" ||
-                dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE") && (
-                <Button
-                  size="md"
-                  onClick={onSendToAgecap}
-                  variant="primary"
-                  ml={12}
-                  isDisabled={!dossierComplete || isEmployeurPrive || !signaturesPdfLoaded?.contents}
-                  bg="orangemedium.500"
-                  _hover={{ bg: "orangemedium.600" }}
-                  px={8}
-                  mt={16}
-                >
-                  <SentPaperPlane boxSize="4" mr="0.5rem" />
-                  Télétransmettre
-                </Button>
-              )}
+            {hasContextAccessTo(dossier, "dossier/publication") && dossier.etat === "DOSSIER_TERMINE_SANS_SIGNATURE" && (
+              <Button
+                size="md"
+                onClick={onSendToAgecap}
+                variant="primary"
+                ml={12}
+                isDisabled={!dossierComplete || isEmployeurPrive || !signaturesPdfLoaded?.contents}
+                bg="orangemedium.500"
+                _hover={{ bg: "orangemedium.600" }}
+                px={8}
+                mt={16}
+              >
+                <SentPaperPlane boxSize="4" mr="0.5rem" />
+                Télétransmettre
+              </Button>
+            )}
 
             {auth && hasPageAccessTo(auth, "admin/dossier_depublier") && (
               <Button

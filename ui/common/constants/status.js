@@ -23,9 +23,17 @@ export const DOSSIER_STATUS = {
     priority: 2,
     text: "En cours de signature",
   },
+  SIGNATURES_REFUS: {
+    priority: 2,
+    text: "Signature refusée",
+  },
   SIGNE: {
     priority: 2,
     text: "Signé",
+  },
+  REFUS: {
+    priority: 2,
+    text: "Refusé",
   },
   DOSSIER_TERMINE_AVEC_SIGNATURE: {
     priority: 3,
