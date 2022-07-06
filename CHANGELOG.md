@@ -1,3 +1,10 @@
+# [2.12.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.11.0...v2.12.0-beta.1) (2022-07-06)
+
+
+### Features
+
+* ajout des statuts de transmission ([#836](https://github.com/mission-apprentissage/cerfa/issues/836)) ([5cb8e92](https://github.com/mission-apprentissage/cerfa/commit/5cb8e924ea644d4f98ad266065be10294bf38641))
+
 # [2.11.0](https://github.com/mission-apprentissage/cerfa/compare/v2.10.2...v2.11.0) (2022-06-29)
 
 
