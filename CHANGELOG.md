@@ -1,3 +1,10 @@
+# [2.12.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0-beta.1...v2.12.0-beta.2) (2022-07-06)
+
+
+### Bug Fixes
+
+* formattage du tel compatible avec agecap ([480e2b6](https://github.com/mission-apprentissage/cerfa/commit/480e2b6fc917f4c9c8a0ca0085c73c068d9ba617))
+
 # [2.12.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.11.0...v2.12.0-beta.1) (2022-07-06)
 
 
