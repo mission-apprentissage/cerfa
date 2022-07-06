@@ -29,6 +29,16 @@ const Badge = {
       fontWeight: "500",
       pr: "15px",
     },
+    refus: {
+      ...commonStatusBadgeStyle,
+      bg: "redmarianne",
+      color: "white",
+    },
+    signaturesRefused: {
+      ...commonStatusBadgeStyle,
+      bg: "redmarianne",
+      color: "white",
+    },
     aTeletransmettre: {
       ...commonStatusBadgeStyle,
       bg: "#FBE769",

@@ -11,6 +11,8 @@ const createClamav = require("./clamav");
 const createCrypto = require("./crypto");
 const createSessions = require("./session");
 const createDreetsDdets = require("./dreetsDdets");
+const createAgecap = require("./agecap");
+const createYousign = require("./yousign");
 const config = require("../../config");
 
 module.exports = async (options = {}) => {
@@ -29,6 +31,8 @@ module.exports = async (options = {}) => {
   const crypto = options.crypto || createCrypto(config.ovh.storage.encryptionKey);
   const sessions = options.session || (await createSessions());
   const dreetsDdets = options.dreetsDdets || (await createDreetsDdets());
+  const agecap = options.agecap || (await createAgecap(dossiers, cerfas, crypto));
+  const yousign = options.yousign || (await createYousign(dossiers, crypto, agecap, users));
 
   return {
     users,
@@ -46,5 +50,7 @@ module.exports = async (options = {}) => {
     roles,
     clamav,
     crypto,
+    agecap,
+    yousign,
   };
 };

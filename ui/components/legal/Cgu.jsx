@@ -3,7 +3,7 @@ import { Box, Heading, Text, Link } from "@chakra-ui/react";
 import { ExternalLinkLine } from "../../theme/components/icons";
 
 export const cguVersion = () => {
-  return "v1.1";
+  return "v3";
 };
 
 export const Cgu = ({ onLoad }) => {
@@ -12,7 +12,7 @@ export const Cgu = ({ onLoad }) => {
   }, [onLoad]);
   return (
     <Box>
-      <Text>Dernière mise à jour le : 18/01/2022 - {cguVersion()} </Text>
+      <Text>Dernière mise à jour le : 04/07/2022 - {cguVersion()} </Text>
       <Box mt={4}>
         <Heading as={"h3"} textStyle="h6" mb={5}>
           1. PRÉAMBULE
@@ -531,9 +531,29 @@ export const Cgu = ({ onLoad }) => {
           <br />
         </Text>
       </Box>
+      <Box>
+        <Heading as={"h3"} textStyle={"h6"} mb={5}>
+          14. SIGNATURE ELECTRONIQUE
+        </Heading>
+        <Text>
+          L&apos;utilisateur, en tant qu&apos;employeur ou représentant d’un CFA, pourra être amené à renseigner les
+          noms, prénoms et adresses mails des parties prenantes d&apos;un contrat dans le cadre de la dématérialisation
+          de la procédure de validation du CERFA. Ces adresses mails sont obligatoirement détenues et accessibles par
+          l&apos;interlocuteur associé.
+          <br />
+          <br />
+          L&apos;utilisateur s&apos;engage à avoir obtenu l&apos;accord de la part des différentes parties dans le but
+          de renseigner ces informations. Après validation des champs, une notification ayant pour objet la signature
+          électronique du CERFA sera envoyée par mail aux adresses renseignées.
+          <br />
+          <br />
+          La DGEFP ne saurait être tenue pour responsable d&apos;une information de contact incomplète ou erronée, et
+          des conséquences y afférentes
+        </Text>
+      </Box>
       <Box mt={4}>
         <Heading as={"h3"} textStyle="h6" mb={5}>
-          14. RÉSILIATION - RÉSOLUTION
+          15. RÉSILIATION - RÉSOLUTION
         </Heading>
         <Text>
           En cas de manquement aux obligations des présentes, l&apos;utilisateur ou le Ministère pourront prononcer de
@@ -545,7 +565,7 @@ export const Cgu = ({ onLoad }) => {
       </Box>
       <Box mt={4}>
         <Heading as={"h3"} textStyle="h6" mb={5}>
-          15. TRAÇABILITÉ
+          16. TRAÇABILITÉ
         </Heading>
         <Text>
           Le Ministère conserve l&apos;historique des évènements des utilisateurs de la plateforme et des conditions
@@ -556,7 +576,7 @@ export const Cgu = ({ onLoad }) => {
       </Box>
       <Box mt={4}>
         <Heading as={"h3"} textStyle="h6" mb={5}>
-          16. NULLITÉ
+          17. NULLITÉ
         </Heading>
         <Text>
           Si une ou plusieurs stipulations des présentes sont tenues pour non valides ou déclarées comme telles en
@@ -568,7 +588,7 @@ export const Cgu = ({ onLoad }) => {
       </Box>
       <Box mt={4}>
         <Heading as={"h3"} textStyle="h6" mb={5}>
-          17. LOI APPLICABLE
+          18. LOI APPLICABLE
         </Heading>
         <Text>
           Les présentes conditions générales sont régies par la loi française.

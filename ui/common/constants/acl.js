@@ -135,8 +135,12 @@ export default [
         ref: "dossier/page_signatures",
         subFeatures: [
           {
-            feature: "Signer",
-            ref: "dossier/page_signatures/signer",
+            feature: "Signature papier",
+            ref: "dossier/page_signatures/signature_papier",
+          },
+          {
+            feature: "Signature electronique",
+            ref: "dossier/page_signatures/signature_electronique",
           },
         ],
       },
@@ -167,10 +171,6 @@ export default [
         ],
       },
     ],
-  },
-  {
-    feature: "Signature électronique - BETA",
-    ref: "signature_beta",
   },
   {
     feature: "Télétransmettre Agecap",

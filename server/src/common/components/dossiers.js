@@ -130,9 +130,9 @@ module.exports = async () => {
 
       let signataires = {
         employeur: {
-          firstname: "",
-          lastname: "",
-          email: cerfa.employeur.courriel,
+          firstname: contributors[0].user.prenom,
+          lastname: contributors[0].user.nom,
+          email: contributors[0].user.email,
           phone: cerfa.employeur.telephone,
           status: "EN_ATTENTE_SIGNATURE",
         },
@@ -209,6 +209,12 @@ module.exports = async () => {
       for (let key of Object.keys(signataires)) {
         const element = signataires[key];
         if (element.firstname === "" || element.lastname === "" || element.email === "") {
+          tmpComplete = false;
+          break;
+        }
+
+        // Le téléphone est obligatoire pour l'apprenti et le responsable légal (signature avancée = OTP par SMS)
+        if ((key === "apprenti" || key === "legal") && element.phone === "") {
           tmpComplete = false;
           break;
         }

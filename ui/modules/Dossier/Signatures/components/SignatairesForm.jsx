@@ -1,9 +1,10 @@
 import { useRecoilValue } from "recoil";
 import { dossierAtom } from "../../atoms";
-import { Divider, Flex, HStack, Stack, Text } from "@chakra-ui/react";
+import { Divider, Flex, HStack, Link, Stack, Text, VStack } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useSignatures } from "../hooks/useSignatures";
 import { Input } from "../../formEngine/components/Input/Input";
+import Ribbons from "../../../../components/Ribbons/Ribbons";
 
 export const SignatairesForm = () => {
   const dossier = useRecoilValue(dossierAtom);
@@ -18,62 +19,83 @@ export const SignatairesForm = () => {
 
   return (
     <>
-      <Text mb={5}>Coordonnées des signataires du contrat :</Text>
-      <Flex flexDirection="column">
+      <VStack w="full" alignItems="start" spacing="4w">
+        <Text fontWeight="bold">
+          Remplissez les champs des signataires pour leur envoyer une invitation à signer électroniquement le contrat.
+        </Text>
+        <Ribbons variant="info_clear" marginTop="1rem">
+          <Text color="grey.800">
+            Veuillez vous assurer de la conformité des adresses mails renseignées ci-après.
+            <br />
+            Elles doivent être obligatoirement détenues et accessibles par l&apos;interlocuteur associé. <br />
+            Pour plus d&apos;informations, vous pouvez consulter les&nbsp;
+            <Link href={"/cgu"} textDecoration={"underline"} color="bluefrance">
+              conditions générales d&apos;utilisation.
+            </Link>
+          </Text>
+        </Ribbons>
+      </VStack>
+      <Flex flexDirection="column" mt={8}>
         {employeur && (
           <Stack mb={5}>
-            <Text fontWeight="bold">Employeur :</Text>
+            <Text fontWeight="bold">Signature de l&apos;Employeur :</Text>
             <SignataireLineForm signataire={employeur} type="employeur" emails={emails} />
-          </Stack>
-        )}
-        <Divider />
-        {cfa && (
-          <Stack mb={5} mt={6}>
-            <Text fontWeight="bold">CFA :</Text>
-            <SignataireLineForm signataire={cfa} type="cfa" emails={emails} />
           </Stack>
         )}
         <Divider />
         {apprenti && (
           <Stack mb={5} mt={6}>
-            <Text fontWeight="bold">Pour l&apos;apprenti(e) :</Text>
-            <SignataireLineForm signataire={apprenti} type="apprenti" emails={emails} />
+            <Text fontWeight="bold">Signature de l&apos;Apprenti(e) :</Text>
+            <SignataireLineForm signataire={apprenti} type="apprenti" emails={emails} isLocked={true} />
+          </Stack>
+        )}
+        <Divider />
+        {cfa && (
+          <Stack mb={5} mt={6}>
+            <Text fontWeight="bold">Visa du CFA :</Text>
+            <SignataireLineForm signataire={cfa} type="cfa" emails={emails} />
           </Stack>
         )}
         <Divider />
         {legal && (
           <Stack mt={8}>
-            <Text fontWeight="bold">Pour le représentant légal de l&apos;apprenti(e) :</Text>
-            <SignataireLineForm signataire={legal} type="legal" emails={emails} />
+            <Text fontWeight="bold">Signature du représentant légal de l&apos;apprenti(e) :</Text>
+            <SignataireLineForm signataire={legal} type="legal" emails={emails} isLocked={true} />
           </Stack>
         )}
       </Flex>
+      <VStack w="full" alignItems="start" spacing="4w" mt={6}>
+        <Text fontWeight="bold">
+          Lorsque toutes les signatures seront réunies, le contrat est automatiquement télétransmis au service
+          administratif.
+        </Text>
+        <Text>
+          Pour toute question, consultez&nbsp;
+          <Link href={"/assistance"} isExternal={true} textDecoration={"underline"} color="bluefrance">
+            la page assistance
+          </Link>
+        </Text>
+      </VStack>
     </>
   );
 };
 
-const SignataireLineForm = ({ signataire, type, emails }) => {
+const SignataireLineForm = ({ signataire, type, emails, isLocked }) => {
   const { onSubmittedSignataireDetails } = useSignatures();
 
   const [firstname, setFirstname] = useState(signataire.firstname);
   const [lastname, setLastname] = useState(signataire.lastname);
   const [email, setEmail] = useState(signataire.email);
+  const [phone, setPhone] = useState(signataire.phone);
 
   return (
-    <HStack spacing={3}>
+    <HStack spacing={3} alignItems={"start"}>
       <Input
         required={true}
+        locked={isLocked}
         name={`signataire.${type}.lastname`}
         label="Nom"
         value={lastname || ""}
-        mask="C"
-        maskBlocks={[
-          {
-            name: "C",
-            mask: "Pattern",
-            pattern: "^[a-zA-Z]*$",
-          },
-        ]}
         mb={0}
         w="20%"
         onError={(val, name) => {
@@ -84,17 +106,10 @@ const SignataireLineForm = ({ signataire, type, emails }) => {
       />
       <Input
         required={true}
+        locked={isLocked}
         name={`signataire.${type}.firstname`}
         label="Prénom"
         value={firstname || ""}
-        mask="C"
-        maskBlocks={[
-          {
-            name: "C",
-            mask: "Pattern",
-            pattern: "^[a-zA-Z]*$",
-          },
-        ]}
         mt={0}
         w="20%"
         onError={(val, name) => {
@@ -105,6 +120,7 @@ const SignataireLineForm = ({ signataire, type, emails }) => {
       />
       <Input
         required={true}
+        locked={isLocked && type !== "legal"}
         name={`signataire.${type}.email`}
         label="Courriel"
         value={email}
@@ -118,7 +134,7 @@ const SignataireLineForm = ({ signataire, type, emails }) => {
         ]}
         fieldType="email"
         mt={0}
-        w="40%"
+        w="30%"
         onError={(val, name) => {
           onSubmittedSignataireDetails("", name);
         }}
@@ -132,6 +148,23 @@ const SignataireLineForm = ({ signataire, type, emails }) => {
           }
         }}
       />
+      {(type === "apprenti" || type === "legal") && (
+        <Input
+          required={true}
+          locked={false}
+          name={`signataire.${type}.phone`}
+          label="Téléphone"
+          value={phone}
+          fieldType={"phone"}
+          mt={0}
+          w="20%"
+          onError={(val, name) => {
+            onSubmittedSignataireDetails("", name);
+          }}
+          onSubmit={onSubmittedSignataireDetails}
+          onChange={setPhone}
+        />
+      )}
     </HStack>
   );
 };

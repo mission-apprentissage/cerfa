@@ -30,7 +30,7 @@ const FinalizeModal = ({ dossier, ...modal }) => {
           modal.onClose();
         }}
         bgOverlay="rgba(0, 0, 0, 0.28)"
-        okText={"Oui, passer au téléchargement"}
+        okText={"Oui, choisir le mode de signature"}
         koText={"Non, continuer l'édition"}
       >
         <Text mt={3}>Cette opération clôturera l&apos;édition de ce dossier :</Text>
