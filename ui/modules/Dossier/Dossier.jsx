@@ -114,7 +114,7 @@ const Dossier = () => {
           }}
         />
         <Container maxW="xl">
-          <DossierHeader dossier={dossier} />
+          <DossierHeader activeStep={activeStep} dossier={dossier} />
 
           <Flex flexDir="column" width="100%" mt={9}>
             <Steps
