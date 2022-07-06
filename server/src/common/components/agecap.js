@@ -136,7 +136,7 @@ async function convertContratToAgecapFormat(dossier, cerfa, user) {
       regimeSpecifique: cerfa.employeur.regimeSpecifique,
       codeIdcc: cerfa.employeur.codeIdcc,
       libelleIdcc: libelleIdcc,
-      telephone: cerfa.employeur.telephone.replace("+", "00"), // TO CONVERT   + => 00
+      telephone: cerfa.employeur.telephone.replace("+", ""), // TO CONVERT   + => 00
       courriel: cerfa.employeur.courriel,
       adresse: {
         numero: cerfa.employeur.adresse.numero || undefined,
@@ -167,7 +167,7 @@ async function convertContratToAgecapFormat(dossier, cerfa, user) {
       diplomePrepare: cerfa.apprenti.diplomePrepare,
       intituleDiplomePrepare: cerfa.apprenti.intituleDiplomePrepare,
       apprentiMineurNonEmancipe: cerfa.apprenti.apprentiMineurNonEmancipe,
-      telephone: cerfa.apprenti.telephone.replace("+", "00"), // TO CONVERT   + => 00
+      telephone: cerfa.apprenti.telephone.replace("+", ""), // TO CONVERT   + => 00
       courriel: cerfa.apprenti.courriel,
       adresse: {
         numero: cerfa.apprenti.adresse.numero || undefined,
@@ -238,7 +238,7 @@ async function convertContratToAgecapFormat(dossier, cerfa, user) {
         organismeDDETS: dossier.ddets.startsWith("97") ? "99" : dossier.ddets,
         nomContact: user.nom,
         prenomContact: user.prenom,
-        telephoneContact: user.telephone ? user.telephone.replace("+", "00") : undefined,
+        telephoneContact: user.telephone ? user.telephone.replace("+", "") : undefined,
         courrielContact: user.email,
         // commentaireTransmission
         // lien: "",
