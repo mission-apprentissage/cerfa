@@ -1,3 +1,15 @@
+# [2.12.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0-beta.3...v2.12.0-beta.4) (2022-07-06)
+
+
+### Bug Fixes
+
+* suppression d'une ligne commentée ([c0e071d](https://github.com/mission-apprentissage/cerfa/commit/c0e071d552de0c84487e0f6295e8279b93eef619))
+
+
+### Features
+
+* generation d'un brouillon du cerfa avant publication ([d0a0a1b](https://github.com/mission-apprentissage/cerfa/commit/d0a0a1be1e66f9836ff282b0afe819c2d446f8da))
+
 # [2.12.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0-beta.2...v2.12.0-beta.3) (2022-07-06)
 
 
