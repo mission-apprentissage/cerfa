@@ -68,6 +68,8 @@ module.exports = async (dossiers, crypto, agecap, users) => {
 
       // On regarde les membres qui ont signés sur YouSign, et on les mets à jour dans le dossier
       const memberSignatureStatusChanged = (signataire, doneMember) => {
+        if (!signataire) return;
+
         if (signataire.email === doneMember.email) {
           signataire.status = doneMember.status === "done" ? "SIGNE" : "REFUS";
 
