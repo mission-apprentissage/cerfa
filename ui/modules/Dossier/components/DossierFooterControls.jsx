@@ -164,7 +164,7 @@ const DossierFooterControls = ({
                 </Button>
               )}
               <Button
-              size="md"
+                size="md"
                 onClick={() => {
                   finalizeModalDisclosure.onOpen();
                 }}
@@ -196,12 +196,12 @@ const DossierFooterControls = ({
                   </Flex>
                   <OrderedList>
                     <ListItem>
-                      Vous ajoutez les coordonnées des signataires en cliquant sur &laquo;&nbsp;signature en
-                      ligne&nbsp;&raquo;,
+                      Vous ajoutez les coordonnées des signataires en cliquant sur &laquo;&nbsp;signature
+                      électronique&nbsp;&raquo;
                     </ListItem>
-                    <ListItem>Chaque signataire reçoit une notification l&apos;invitant à signer le contrat,</ListItem>
+                    <ListItem>Chaque signataire reçoit une notification l&apos;invitant à signer le contrat</ListItem>
                     <ListItem>
-                      Lorsque toutes les signatures sont réunies, le contrat est automatiquement télétransmis.
+                      Lorsque toutes les signatures sont réunies, le contrat est automatiquement télétransmis
                     </ListItem>
                   </OrderedList>
                   <br />
@@ -245,12 +245,12 @@ const DossierFooterControls = ({
                   <OrderedList>
                     <ListItem>
                       Téléchargez et imprimez le contrat finalisé en cliquant sur &laquo;&nbsp;signature
-                      papier&nbsp;&raquo;,
+                      papier&nbsp;&raquo;
                     </ListItem>
-                    <ListItem>Recueillez les différentes signatures manuscrites par vos propres moyens,</ListItem>
+                    <ListItem>Recueillez les différentes signatures manuscrites par vos propres moyens</ListItem>
                     <ListItem>
                       Lorsque toutes les signatures sont réunies, revenez sur la plateforme pour télétransmettre le
-                      contrat.
+                      contrat
                     </ListItem>
                   </OrderedList>
                   <br />

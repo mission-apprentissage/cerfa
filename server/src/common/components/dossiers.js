@@ -153,8 +153,8 @@ module.exports = async () => {
         ...(cerfa.apprenti.apprentiMineurNonEmancipe
           ? {
               legal: {
-                firstname: cerfa.apprenti.responsableLegal.nom,
-                lastname: cerfa.apprenti.responsableLegal.prenom,
+                firstname: cerfa.apprenti.responsableLegal.prenom,
+                lastname: cerfa.apprenti.responsableLegal.nom,
                 email: "",
                 phone: "",
                 status: "EN_ATTENTE_SIGNATURE",
