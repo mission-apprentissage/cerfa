@@ -43,6 +43,7 @@
     "clamscan": "2.0.1",
     "compose-middleware": "5.0.1",
     "convert-csv-to-json-latin": "1.0.6",
+    "csv-parse": "4.14.1",
     "cookie-parser": "1.4.6",
     "cross-var": "1.1.0",
     "deepmerge": "4.2.2",
