@@ -1,3 +1,14 @@
+# [2.12.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0-beta.4...v2.12.0-beta.5) (2022-07-07)
+
+
+### Bug Fixes
+
+* bug imports, librairie non existante ([dd1e7c6](https://github.com/mission-apprentissage/cerfa/commit/dd1e7c6822cb7119cef0adc77f9f3004a91d41b9))
+* bug lorsque responsable legal non présent ([a1de3c1](https://github.com/mission-apprentissage/cerfa/commit/a1de3c1e076c75b79375039435eadb199a3a882f))
+* inversion nom/prenom creation signataire ([b0120ad](https://github.com/mission-apprentissage/cerfa/commit/b0120adf107a50f64779f0826d2f185cebec7787))
+* maj commentaire ([4634ad2](https://github.com/mission-apprentissage/cerfa/commit/4634ad2e5d7a680b08bb4da235e8fd7e3dd4d174))
+* wording choix signatures ([40882b9](https://github.com/mission-apprentissage/cerfa/commit/40882b98bcc7aaca3bc17b81e7975542a7f6808a))
+
 # [2.12.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0-beta.3...v2.12.0-beta.4) (2022-07-06)
 
 
