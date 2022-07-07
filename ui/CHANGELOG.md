@@ -1,3 +1,11 @@
+# [2.12.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0-beta.5...v2.12.0-beta.6) (2022-07-07)
+
+
+### Bug Fixes
+
+* debloquer le champ si pas de libelle idcc ([417a184](https://github.com/mission-apprentissage/cerfa/commit/417a1840f164576313b3e11cbbd25eafa7714e1d))
+* la modale de validation est fix ([3e72051](https://github.com/mission-apprentissage/cerfa/commit/3e72051f0d4bd0d7efe8af7c846e56adf84d5fc5))
+
 # [2.12.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0-beta.4...v2.12.0-beta.5) (2022-07-07)
 
 
