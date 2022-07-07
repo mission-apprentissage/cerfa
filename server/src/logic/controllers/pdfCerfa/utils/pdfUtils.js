@@ -168,6 +168,7 @@ const fieldsPositions = {
     libelleIdcc: {
       x: 305,
       title: (value) => {
+        if (!value) return "";
         let newValue = value.replace("Convention collective ", "").toLowerCase();
 
         const result = [];
