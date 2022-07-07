@@ -26,7 +26,6 @@ const FinalizeModal = ({ dossier, ...modal }) => {
           modal.onClose();
         }}
         onKo={() => {
-          onReplyClicked("non");
           modal.onClose();
         }}
         bgOverlay="rgba(0, 0, 0, 0.28)"
