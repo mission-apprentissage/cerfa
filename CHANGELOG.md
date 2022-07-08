@@ -1,3 +1,157 @@
+# [2.12.0](https://github.com/mission-apprentissage/cerfa/compare/v2.11.0...v2.12.0) (2022-07-08)
+
+
+### Bug Fixes
+
+* affichage commentaire motif non depot ecran de suivi ([1c791b1](https://github.com/mission-apprentissage/cerfa/commit/1c791b11b2fb6562550dae9079d92647fbcd8a61))
+* apprenti et responsable légal arrivent bien à un niveau de signature avancé ([6007851](https://github.com/mission-apprentissage/cerfa/commit/60078516456c2c904616c3e38ea158af35b39705))
+* bug imports, librairie non existante ([dd1e7c6](https://github.com/mission-apprentissage/cerfa/commit/dd1e7c6822cb7119cef0adc77f9f3004a91d41b9))
+* bug lorsque responsable legal non présent ([a1de3c1](https://github.com/mission-apprentissage/cerfa/commit/a1de3c1e076c75b79375039435eadb199a3a882f))
+* condition affichage bouton telecharger contrat ([f5fb6e0](https://github.com/mission-apprentissage/cerfa/commit/f5fb6e0db7084db9675b85aeb1187a50f4b2abdb))
+* couleurs boutons ([aa55774](https://github.com/mission-apprentissage/cerfa/commit/aa557748088730bd4287ab2b9690964dd12489d7))
+* debloquer le champ si pas de libelle idcc ([417a184](https://github.com/mission-apprentissage/cerfa/commit/417a1840f164576313b3e11cbbd25eafa7714e1d))
+* décalage lors d'erreur sur le formulaire des signataires ([bd79933](https://github.com/mission-apprentissage/cerfa/commit/bd7993318063884f072cb331c957a661a6e5f2d2))
+* dev yousign webhook if env === dev ([b40e0ab](https://github.com/mission-apprentissage/cerfa/commit/b40e0ab57101d238e40af20ef1669d82957edcce))
+* emails yousign nouveau wording ([6dbcb5d](https://github.com/mission-apprentissage/cerfa/commit/6dbcb5dec7d13f4c65cc527071773e9eaaf6c4fd))
+* erreur cgu ([93a45e5](https://github.com/mission-apprentissage/cerfa/commit/93a45e5663e7b060c9fbcf6fed270779bf7785f8))
+* erreur condition yousign ([6573886](https://github.com/mission-apprentissage/cerfa/commit/6573886858c5a4790b07a693db8fbfbcf7f7a101))
+* formattage du tel compatible avec agecap ([480e2b6](https://github.com/mission-apprentissage/cerfa/commit/480e2b6fc917f4c9c8a0ca0085c73c068d9ba617))
+* formulaire signature données employeur remplies avec les données de l'utilisateur ([0080a54](https://github.com/mission-apprentissage/cerfa/commit/0080a54d0c47956207ce732105f1cebd50ab0c20))
+* formulaire signature on peut utiliser des caractères spéciaux dans les inputs des signataires ([af8622c](https://github.com/mission-apprentissage/cerfa/commit/af8622cf29c69ab72a53d9653c4a303705134084))
+* inversion nom/prenom creation signataire ([b0120ad](https://github.com/mission-apprentissage/cerfa/commit/b0120adf107a50f64779f0826d2f185cebec7787))
+* la modale de validation est fix ([3e72051](https://github.com/mission-apprentissage/cerfa/commit/3e72051f0d4bd0d7efe8af7c846e56adf84d5fc5))
+* maj commentaire ([4634ad2](https://github.com/mission-apprentissage/cerfa/commit/4634ad2e5d7a680b08bb4da235e8fd7e3dd4d174))
+* merge conflicts ([2c67732](https://github.com/mission-apprentissage/cerfa/commit/2c67732e976c000870f351d85e667a7ea114bda4))
+* nom bouton telecharger etape signature ([73fba97](https://github.com/mission-apprentissage/cerfa/commit/73fba97d4ebad48b0a0ab04a947d5c1cbfb86da1))
+* nouveau wording formulaire signataire ([2d706e5](https://github.com/mission-apprentissage/cerfa/commit/2d706e5be0f68291d0fe64aa86211184d650b2cb))
+* nouveau wording modal signature electronique ([fa9f632](https://github.com/mission-apprentissage/cerfa/commit/fa9f632ad0b4697bef6785603920bdc5770fff67))
+* on ne traite plus l'event procedure.finished dans le webhook du retour de yousign ([fb0f1e6](https://github.com/mission-apprentissage/cerfa/commit/fb0f1e63fbde082146df5341323a19a191b4efc8))
+* renommage bouton finaliser et telecharger ([2f15373](https://github.com/mission-apprentissage/cerfa/commit/2f15373d9dac87ef46f52cfdf9c42b5391461357))
+* resolved merge conflict ([8cd126c](https://github.com/mission-apprentissage/cerfa/commit/8cd126c83069c55bc85bf87f0e66db83958dea02))
+* suppression d'une ligne commentée ([c0e071d](https://github.com/mission-apprentissage/cerfa/commit/c0e071d552de0c84487e0f6295e8279b93eef619))
+* telephone obligatoire formulaire signataires ([bb0c037](https://github.com/mission-apprentissage/cerfa/commit/bb0c037186a3d14690aa1c3f962fa2b802da948a))
+* typo signature electronique ([c6057be](https://github.com/mission-apprentissage/cerfa/commit/c6057be3b1f0f0a63f7b8f61bd048e3ff07b8d61))
+* update cgu ([d4be1d9](https://github.com/mission-apprentissage/cerfa/commit/d4be1d97ccbf036cb099b255fdff22acb02ada11))
+* update date modification cgu ([d0f5fde](https://github.com/mission-apprentissage/cerfa/commit/d0f5fde6e0a01b0b85ca7bb8d55905437524775f))
+* vérification annee fin de contrat, annee periode ([#849](https://github.com/mission-apprentissage/cerfa/issues/849)) ([9fd9d44](https://github.com/mission-apprentissage/cerfa/commit/9fd9d440f8a246e9a64d795e0f0ead01d0389f17))
+* wording boutons choix mode signature ([8efced1](https://github.com/mission-apprentissage/cerfa/commit/8efced1d85ae00378f2a71d62b5a3a1635808d70))
+* wording choix signatures ([40882b9](https://github.com/mission-apprentissage/cerfa/commit/40882b98bcc7aaca3bc17b81e7975542a7f6808a))
+* wording mail yousign ([13e338c](https://github.com/mission-apprentissage/cerfa/commit/13e338cc496028688c79ab8c8979701eea189344))
+* wording notifications + notif refus signature + mode signature avancée ([0cf9efe](https://github.com/mission-apprentissage/cerfa/commit/0cf9efea782f68c05b1f1c1fc2a1b6d17c8b4e26))
+
+
+### Features
+
+* affichage bouton dl contrat dans la page de suivi ([7b3bfd2](https://github.com/mission-apprentissage/cerfa/commit/7b3bfd2aa2cdcaf169e83c476f7d1caf4f91da78))
+* ajout des statuts de transmission ([#836](https://github.com/mission-apprentissage/cerfa/issues/836)) ([5cb8e92](https://github.com/mission-apprentissage/cerfa/commit/5cb8e924ea644d4f98ad266065be10294bf38641))
+* ajout input numero de telephone apprenti/repLegal dans le formulaire des signataires ([ca84150](https://github.com/mission-apprentissage/cerfa/commit/ca8415062c2192dd3cf97f0ae21f247f188e6649))
+* formulaire signature ajout blocs textes au dessus ([5448a6f](https://github.com/mission-apprentissage/cerfa/commit/5448a6fa7eeb3a339a995c7c45f019e4d264e812))
+* formulaire signature informations apprenti & responsable légal non editable ([e515e6e](https://github.com/mission-apprentissage/cerfa/commit/e515e6e7a31283f598a4013c9bd76c93c92343b7))
+* generation d'un brouillon du cerfa avant publication ([d0a0a1b](https://github.com/mission-apprentissage/cerfa/commit/d0a0a1be1e66f9836ff282b0afe819c2d446f8da))
+* gestion du cas de refus de signature sur yousign ([aef943e](https://github.com/mission-apprentissage/cerfa/commit/aef943e9da7cd614b85a39da6680753d697681aa))
+* nouveau wording page formulaire des signataires ([b81ab3a](https://github.com/mission-apprentissage/cerfa/commit/b81ab3a0fd4f7f88e875c338756248b283f12707))
+* nouveau wording page selection methode de signature ([603fbcf](https://github.com/mission-apprentissage/cerfa/commit/603fbcf3d4e492e3b1c2cf0ec5edf43637df927a))
+* page attente signatures électronique ajout email signataires ([7ee79d0](https://github.com/mission-apprentissage/cerfa/commit/7ee79d00cfd900b9dd28a67df4176005aecf3f54))
+* signature electronique pour tous les utilisateurs avec envoi automatique vers agecap ([df19bbe](https://github.com/mission-apprentissage/cerfa/commit/df19bbe09b8de4d4fc0f43925b03114dbe51a02e))
+* timeline suivi du contrat ([29bd462](https://github.com/mission-apprentissage/cerfa/commit/29bd462e58a06c6287872b8f3f8c8d2a6ac664b7))
+
+# [2.12.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0-beta.6...v2.12.0-beta.7) (2022-07-08)
+
+
+### Bug Fixes
+
+* vérification annee fin de contrat, annee periode ([#849](https://github.com/mission-apprentissage/cerfa/issues/849)) ([9fd9d44](https://github.com/mission-apprentissage/cerfa/commit/9fd9d440f8a246e9a64d795e0f0ead01d0389f17))
+
+# [2.12.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0-beta.5...v2.12.0-beta.6) (2022-07-07)
+
+
+### Bug Fixes
+
+* debloquer le champ si pas de libelle idcc ([417a184](https://github.com/mission-apprentissage/cerfa/commit/417a1840f164576313b3e11cbbd25eafa7714e1d))
+* la modale de validation est fix ([3e72051](https://github.com/mission-apprentissage/cerfa/commit/3e72051f0d4bd0d7efe8af7c846e56adf84d5fc5))
+
+# [2.12.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0-beta.4...v2.12.0-beta.5) (2022-07-07)
+
+
+### Bug Fixes
+
+* bug imports, librairie non existante ([dd1e7c6](https://github.com/mission-apprentissage/cerfa/commit/dd1e7c6822cb7119cef0adc77f9f3004a91d41b9))
+* bug lorsque responsable legal non présent ([a1de3c1](https://github.com/mission-apprentissage/cerfa/commit/a1de3c1e076c75b79375039435eadb199a3a882f))
+* inversion nom/prenom creation signataire ([b0120ad](https://github.com/mission-apprentissage/cerfa/commit/b0120adf107a50f64779f0826d2f185cebec7787))
+* maj commentaire ([4634ad2](https://github.com/mission-apprentissage/cerfa/commit/4634ad2e5d7a680b08bb4da235e8fd7e3dd4d174))
+* wording choix signatures ([40882b9](https://github.com/mission-apprentissage/cerfa/commit/40882b98bcc7aaca3bc17b81e7975542a7f6808a))
+
+# [2.12.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0-beta.3...v2.12.0-beta.4) (2022-07-06)
+
+
+### Bug Fixes
+
+* suppression d'une ligne commentée ([c0e071d](https://github.com/mission-apprentissage/cerfa/commit/c0e071d552de0c84487e0f6295e8279b93eef619))
+
+
+### Features
+
+* generation d'un brouillon du cerfa avant publication ([d0a0a1b](https://github.com/mission-apprentissage/cerfa/commit/d0a0a1be1e66f9836ff282b0afe819c2d446f8da))
+
+# [2.12.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0-beta.2...v2.12.0-beta.3) (2022-07-06)
+
+
+### Bug Fixes
+
+* affichage commentaire motif non depot ecran de suivi ([1c791b1](https://github.com/mission-apprentissage/cerfa/commit/1c791b11b2fb6562550dae9079d92647fbcd8a61))
+* apprenti et responsable légal arrivent bien à un niveau de signature avancé ([6007851](https://github.com/mission-apprentissage/cerfa/commit/60078516456c2c904616c3e38ea158af35b39705))
+* condition affichage bouton telecharger contrat ([f5fb6e0](https://github.com/mission-apprentissage/cerfa/commit/f5fb6e0db7084db9675b85aeb1187a50f4b2abdb))
+* couleurs boutons ([aa55774](https://github.com/mission-apprentissage/cerfa/commit/aa557748088730bd4287ab2b9690964dd12489d7))
+* décalage lors d'erreur sur le formulaire des signataires ([bd79933](https://github.com/mission-apprentissage/cerfa/commit/bd7993318063884f072cb331c957a661a6e5f2d2))
+* dev yousign webhook if env === dev ([b40e0ab](https://github.com/mission-apprentissage/cerfa/commit/b40e0ab57101d238e40af20ef1669d82957edcce))
+* emails yousign nouveau wording ([6dbcb5d](https://github.com/mission-apprentissage/cerfa/commit/6dbcb5dec7d13f4c65cc527071773e9eaaf6c4fd))
+* erreur cgu ([93a45e5](https://github.com/mission-apprentissage/cerfa/commit/93a45e5663e7b060c9fbcf6fed270779bf7785f8))
+* erreur condition yousign ([6573886](https://github.com/mission-apprentissage/cerfa/commit/6573886858c5a4790b07a693db8fbfbcf7f7a101))
+* formulaire signature données employeur remplies avec les données de l'utilisateur ([0080a54](https://github.com/mission-apprentissage/cerfa/commit/0080a54d0c47956207ce732105f1cebd50ab0c20))
+* formulaire signature on peut utiliser des caractères spéciaux dans les inputs des signataires ([af8622c](https://github.com/mission-apprentissage/cerfa/commit/af8622cf29c69ab72a53d9653c4a303705134084))
+* merge conflicts ([2c67732](https://github.com/mission-apprentissage/cerfa/commit/2c67732e976c000870f351d85e667a7ea114bda4))
+* nom bouton telecharger etape signature ([73fba97](https://github.com/mission-apprentissage/cerfa/commit/73fba97d4ebad48b0a0ab04a947d5c1cbfb86da1))
+* nouveau wording formulaire signataire ([2d706e5](https://github.com/mission-apprentissage/cerfa/commit/2d706e5be0f68291d0fe64aa86211184d650b2cb))
+* nouveau wording modal signature electronique ([fa9f632](https://github.com/mission-apprentissage/cerfa/commit/fa9f632ad0b4697bef6785603920bdc5770fff67))
+* on ne traite plus l'event procedure.finished dans le webhook du retour de yousign ([fb0f1e6](https://github.com/mission-apprentissage/cerfa/commit/fb0f1e63fbde082146df5341323a19a191b4efc8))
+* renommage bouton finaliser et telecharger ([2f15373](https://github.com/mission-apprentissage/cerfa/commit/2f15373d9dac87ef46f52cfdf9c42b5391461357))
+* resolved merge conflict ([8cd126c](https://github.com/mission-apprentissage/cerfa/commit/8cd126c83069c55bc85bf87f0e66db83958dea02))
+* telephone obligatoire formulaire signataires ([bb0c037](https://github.com/mission-apprentissage/cerfa/commit/bb0c037186a3d14690aa1c3f962fa2b802da948a))
+* typo signature electronique ([c6057be](https://github.com/mission-apprentissage/cerfa/commit/c6057be3b1f0f0a63f7b8f61bd048e3ff07b8d61))
+* update cgu ([d4be1d9](https://github.com/mission-apprentissage/cerfa/commit/d4be1d97ccbf036cb099b255fdff22acb02ada11))
+* update date modification cgu ([d0f5fde](https://github.com/mission-apprentissage/cerfa/commit/d0f5fde6e0a01b0b85ca7bb8d55905437524775f))
+* wording boutons choix mode signature ([8efced1](https://github.com/mission-apprentissage/cerfa/commit/8efced1d85ae00378f2a71d62b5a3a1635808d70))
+* wording mail yousign ([13e338c](https://github.com/mission-apprentissage/cerfa/commit/13e338cc496028688c79ab8c8979701eea189344))
+* wording notifications + notif refus signature + mode signature avancée ([0cf9efe](https://github.com/mission-apprentissage/cerfa/commit/0cf9efea782f68c05b1f1c1fc2a1b6d17c8b4e26))
+
+
+### Features
+
+* affichage bouton dl contrat dans la page de suivi ([7b3bfd2](https://github.com/mission-apprentissage/cerfa/commit/7b3bfd2aa2cdcaf169e83c476f7d1caf4f91da78))
+* ajout input numero de telephone apprenti/repLegal dans le formulaire des signataires ([ca84150](https://github.com/mission-apprentissage/cerfa/commit/ca8415062c2192dd3cf97f0ae21f247f188e6649))
+* formulaire signature ajout blocs textes au dessus ([5448a6f](https://github.com/mission-apprentissage/cerfa/commit/5448a6fa7eeb3a339a995c7c45f019e4d264e812))
+* formulaire signature informations apprenti & responsable légal non editable ([e515e6e](https://github.com/mission-apprentissage/cerfa/commit/e515e6e7a31283f598a4013c9bd76c93c92343b7))
+* gestion du cas de refus de signature sur yousign ([aef943e](https://github.com/mission-apprentissage/cerfa/commit/aef943e9da7cd614b85a39da6680753d697681aa))
+* nouveau wording page formulaire des signataires ([b81ab3a](https://github.com/mission-apprentissage/cerfa/commit/b81ab3a0fd4f7f88e875c338756248b283f12707))
+* nouveau wording page selection methode de signature ([603fbcf](https://github.com/mission-apprentissage/cerfa/commit/603fbcf3d4e492e3b1c2cf0ec5edf43637df927a))
+* page attente signatures électronique ajout email signataires ([7ee79d0](https://github.com/mission-apprentissage/cerfa/commit/7ee79d00cfd900b9dd28a67df4176005aecf3f54))
+* signature electronique pour tous les utilisateurs avec envoi automatique vers agecap ([df19bbe](https://github.com/mission-apprentissage/cerfa/commit/df19bbe09b8de4d4fc0f43925b03114dbe51a02e))
+* timeline suivi du contrat ([29bd462](https://github.com/mission-apprentissage/cerfa/commit/29bd462e58a06c6287872b8f3f8c8d2a6ac664b7))
+
+# [2.12.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0-beta.1...v2.12.0-beta.2) (2022-07-06)
+
+
+### Bug Fixes
+
+* formattage du tel compatible avec agecap ([480e2b6](https://github.com/mission-apprentissage/cerfa/commit/480e2b6fc917f4c9c8a0ca0085c73c068d9ba617))
+
+# [2.12.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.11.0...v2.12.0-beta.1) (2022-07-06)
+
+
+### Features
+
+* ajout des statuts de transmission ([#836](https://github.com/mission-apprentissage/cerfa/issues/836)) ([5cb8e92](https://github.com/mission-apprentissage/cerfa/commit/5cb8e924ea644d4f98ad266065be10294bf38641))
+
 # [2.11.0](https://github.com/mission-apprentissage/cerfa/compare/v2.10.2...v2.11.0) (2022-06-29)
 
 

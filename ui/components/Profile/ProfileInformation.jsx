@@ -11,16 +11,15 @@ import {
   HStack,
   RadioGroup,
   Radio,
-  Text,
   Divider,
 } from "@chakra-ui/react";
 import PhoneInput from "react-phone-input-2";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import useAuth from "../../hooks/useAuth";
-import { hasPageAccessTo } from "../../common/utils/rolesUtils";
 import { _put } from "../../common/httpClient";
-import { betaVersion, BetaFeatures } from "../BetaFeatures/BetaFeatures";
+// import { hasPageAccessTo } from "../../common/utils/rolesUtils";
+// import { betaVersion, BetaFeatures } from "../BetaFeatures/BetaFeatures";
 
 const ProfileInformation = () => {
   let [auth] = useAuth();
@@ -135,7 +134,7 @@ const ProfileInformation = () => {
           </FormControl>
         </Flex>
         <Divider mt={10} mb={4} borderWidth="2px" />
-        {hasPageAccessTo(auth, "signature_beta") && (
+        {/*hasPageAccessTo(auth, "signature_beta") && (
           <>
             <Box>
               <HStack>
@@ -164,7 +163,7 @@ const ProfileInformation = () => {
             </Box>
             <Divider mt={10} mb={4} borderWidth="2px" />
           </>
-        )}
+        )*/}
       </Box>
       <Box mt="2rem">
         <Button variant="primary" onClick={handleSubmit} type="submit">

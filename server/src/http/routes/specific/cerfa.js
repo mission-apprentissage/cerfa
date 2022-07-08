@@ -443,7 +443,7 @@ module.exports = (components) => {
   router.get(
     "/pdf/:id",
     permissionsDossierMiddleware(components, ["dossier/voir_contrat_pdf/telecharger"]),
-    tryCatch(async ({ params, query }, res) => {
+    tryCatch(async ({ params, query, user }, res) => {
       let { dossierId } = await Joi.object({
         dossierId: Joi.string().required(),
       }).validateAsync(query, { abortEarly: false });
@@ -464,7 +464,11 @@ module.exports = (components) => {
         if (!cerfa) {
           throw Boom.notFound("Doesn't exist");
         }
-        const pdfBytes = await pdfCerfaController.createPdfCerfa(cerfa);
+        const pdfBytes = await pdfCerfaController.createPdfCerfa(cerfa, {
+          draft: cerfa.draft,
+          firstname: user.prenom,
+          lastname: user.nom,
+        });
 
         pdfBuffer = Buffer.from(pdfBytes.buffer, "binary");
       }

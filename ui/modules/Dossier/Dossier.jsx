@@ -3,13 +3,11 @@ import { Box, Flex, Center, Container, Spinner, useDisclosure } from "@chakra-ui
 import { Step, Steps, useSteps } from "chakra-ui-steps-rework-mna";
 import { useRouter } from "next/router";
 import { useSetRecoilState, useRecoilValueLoadable, useRecoilValue } from "recoil";
-import useAuth from "../../hooks/useAuth";
-import { hasPageAccessTo } from "../../common/utils/rolesUtils";
 import PiecesJustificatives from "./PiecesJustificatives/PiecesJustificatives";
 import Signatures from "./Signatures/Signatures";
+import Suivi from "./Suivi/Suivi";
 import DossierHeader from "./components/DossierHeader";
 import DossierFooterControls from "./components/DossierFooterControls";
-import AskBetaTestModal from "./components/AskBetaTestModal";
 import IsPrivateEmployeurModal from "./components/IsPrivateEmployeurModal";
 import FinalizeModal from "./components/FinalizeModal";
 import ESignatureModal from "./components/ESignatureModal";
@@ -25,14 +23,18 @@ import { useAutoSave } from "./formEngine/hooks/useAutoSave";
 import { useDossier } from "./hooks/useDossier";
 import { valueSelector } from "./formEngine/atoms";
 import { signaturesPdfLoadedAtom } from "./Signatures/atoms";
+// import useAuth from "../../hooks/useAuth";
+// import { hasPageAccessTo } from "../../common/utils/rolesUtils";
+// import AskBetaTestModal from "./components/AskBetaTestModal";
 
 const steps = [
   { label: "Cerfa", description: "Renseignez les informations" },
-  { label: "Pièces justificatives", description: "Ajoutez les pièces justificatives" },
-  { label: "Signatures et envoi", description: "Signatures" },
+  { label: "Pièces justificatives", description: "Ajoutez les documents" },
+  { label: "Signatures", description: "Récolter les signatures" },
+  { label: "Télétransmission", description: "Envoyer et suivre le statut" },
 ];
 
-const stepByPath = ["cerfa", "documents", "signatures"];
+const stepByPath = ["cerfa", "documents", "signatures", "suivi"];
 
 const Dossier = () => {
   const router = useRouter();
@@ -40,7 +42,7 @@ const Dossier = () => {
   const dossierIdParam = slug?.[slug.length - 2];
   const paramstep = slug?.[slug.length - 1];
 
-  let [auth] = useAuth();
+  // let [auth] = useAuth();
   const { activeStep, setStep } = useSteps({ initialStep: stepByPath.indexOf(paramstep) });
 
   const { isloaded, dossier } = useDossier(dossierIdParam);
@@ -71,6 +73,7 @@ const Dossier = () => {
       0: { state: activeStep >= 0 ? (cerfaComplete ? "success" : "error") : undefined },
       1: { state: activeStep >= 1 ? (documentsComplete ? "success" : "error") : undefined },
       2: { state: activeStep >= 2 ? (signatureComplete ? "success" : "error") : undefined },
+      3: { state: undefined },
     }),
     [activeStep, cerfaComplete, documentsComplete, signatureComplete]
   );
@@ -80,6 +83,7 @@ const Dossier = () => {
     let newSlug = "/cerfa";
     if (targetIndex === 1) newSlug = "/documents";
     if (targetIndex === 2) newSlug = "/signatures";
+    if (targetIndex === 3) newSlug = "/suivi";
     router.replace(router.asPath.replace(/\/[^/]*$/, newSlug));
     setStep(targetIndex);
   };
@@ -99,7 +103,7 @@ const Dossier = () => {
   return (
     <CerfaControllerContext.Provider value={cerfaController}>
       <Box w="100%" px={[1, 1, 6, 6]} mb={10}>
-        {hasPageAccessTo(auth, "signature_beta") && <AskBetaTestModal />}
+        {/*hasPageAccessTo(auth, "signature_beta") && <AskBetaTestModal />*/}
         {finalizeModalDisclosure.isOpen && <FinalizeModal {...finalizeModalDisclosure} dossier={dossier} />}
         {eSignatureModalDisclosure.isOpen && <ESignatureModal {...eSignatureModalDisclosure} />}
         <IsPrivateEmployeurModal
@@ -114,7 +118,7 @@ const Dossier = () => {
           }}
         />
         <Container maxW="xl">
-          <DossierHeader dossier={dossier} />
+          <DossierHeader activeStep={activeStep} dossier={dossier} />
 
           <Flex flexDir="column" width="100%" mt={9}>
             <Steps
@@ -142,6 +146,7 @@ const Dossier = () => {
                   {index === 0 && <CerfaForm />}
                   {index === 1 && <PiecesJustificatives />}
                   {index === 2 && <Signatures />}
+                  {index === 3 && <Suivi />}
                 </Step>
               ))}
             </Steps>

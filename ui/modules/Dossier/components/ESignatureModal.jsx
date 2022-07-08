@@ -37,16 +37,11 @@ const ESignatureModal = ({ ...modal }) => {
       >
         <Flex>
           <Warning boxSize="6" mr={2} />
-          <Text>Veuillez vérifier attentivement les informations renseignées pour les signataires</Text>
+          <Text>Avez-vous bien vérifié les adresses emails renseignées ?</Text>
         </Flex>
-        <UnorderedList ml="30px !important" mt={3}>
-          <ListItem>
-            Afin de recevoir le lien de signature, <strong>tous les courriels doivent être corrects</strong>
-          </ListItem>
-        </UnorderedList>
         <Text mb={1} mt={5}>
-          La signature électronique est réalisée via l&apos;outil Yousgin. <br />
-          Une fois la procedure de signature déclenchée, vous ne pourrez plus changer les informations des signataires.
+          L&apos;ensemble des signataires recevra une invitation à signer de la part de YouSign. Invitez-les à vérifier
+          leur boite de courrier indésirable s&apos;ils n&apos;ont rien reçu.
         </Text>
       </PromptModal>
     </>

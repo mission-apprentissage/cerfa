@@ -48,7 +48,15 @@ const TableDossiers = ({
       }))}
       components={{
         Nom: (value, i) => {
-          let step = "signatures";
+          let step = "suivi";
+          if (
+            dossiers[i].etat === "EN_ATTENTE_SIGNATURES" ||
+            dossiers[i].etat === "DOSSIER_FINALISE_EN_ATTENTE_ACTION" ||
+            dossiers[i].etat === "SIGNATURES_EN_COURS" ||
+            dossiers[i].etat === "EN_ATTENTE_DECLENCHEMENT_SIGNATURES" ||
+            dossiers[i].etat === "SIGNATURES_REFUS"
+          )
+            step = "signatures";
           if (dossiers[i].etat === "BROUILLON") step = "cerfa";
           return (
             <Center>
