@@ -29,7 +29,7 @@ export const SignatairesForm = () => {
             <br />
             Elles doivent être obligatoirement détenues et accessibles par l&apos;interlocuteur associé. <br />
             Pour plus d&apos;informations, vous pouvez consulter les&nbsp;
-            <Link href={"/cgu"} textDecoration={"underline"} color="bluefrance">
+            <Link href={"/cgu"} isExternal={true} textDecoration={"underline"} color="bluefrance">
               conditions générales d&apos;utilisation.
             </Link>
           </Text>
