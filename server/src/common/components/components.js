@@ -11,6 +11,7 @@ const createClamav = require("./clamav");
 const createCrypto = require("./crypto");
 const createSessions = require("./session");
 const createDreetsDdets = require("./dreetsDdets");
+const createBatchManagement = require("./batchManagement");
 const createAgecap = require("./agecap");
 const createYousign = require("./yousign");
 const config = require("../../config");
@@ -19,6 +20,7 @@ module.exports = async (options = {}) => {
   const users = options.users || (await createUsers());
 
   const db = options.db || (await connectToMongo()).db;
+  const batchManagement = options.batchManagement || (await createBatchManagement());
 
   // below specific
   const workspaces = options.workspace || (await createWorkspaces());
@@ -39,6 +41,7 @@ module.exports = async (options = {}) => {
     sessions,
     db,
     mailer: options.mailer || createMailer(),
+    batchManagement,
 
     // below specific
     workspaces,

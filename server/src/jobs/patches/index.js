@@ -4,6 +4,7 @@ const logger = require("../../common/logger");
 const emailsToLowerCase = require("./emailsLowercase");
 const forceResetPassword = require("./forceResetPassword");
 const migrateUsersToPDS = require("./migrateUsersToPDS");
+const cleanStatusAgecap = require("./cleanStatusAgecap");
 
 const patchesList = [
   {
@@ -24,6 +25,12 @@ const patchesList = [
     descr: "Migration des utilisateurs vers PDS",
     arg: "--migrateUsersToPDS",
   },
+  {
+    path: "Clean status agecap",
+    date: "05/07/2022",
+    desc: "Suppression de tous les status_agecap de tous les dossiers",
+    arf: "--cleanStatusAgecap",
+  },
 ];
 
 runScript(async () => {
@@ -34,6 +41,7 @@ runScript(async () => {
   const emailLowercaseArg = args.includes("--emailLowercase");
   const forceResetPasswordArg = args.includes("--forceResetPassword");
   const migrateUsersToPDSArg = args.includes("--migrateUsersToPDS");
+  const cleanStatusAgecapArg = args.includes("--cleanStatusAgecap");
 
   if (emailLowercaseArg) {
     await emailsToLowerCase();
@@ -41,6 +49,8 @@ runScript(async () => {
     await forceResetPassword();
   } else if (migrateUsersToPDSArg) {
     await migrateUsersToPDS();
+  } else if (cleanStatusAgecapArg) {
+    await cleanStatusAgecap();
   } else if (listArg) {
     console.table(patchesList);
   } else {
