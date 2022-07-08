@@ -1,3 +1,11 @@
+## [2.12.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0...v2.12.1-beta.1) (2022-07-08)
+
+
+### Bug Fixes
+
+* bug batch lookupAgecapStatusChanged ([ae692ec](https://github.com/mission-apprentissage/cerfa/commit/ae692ecf1151e3b993380a56620b11dc5929f612))
+* merge conflicts ([65e8157](https://github.com/mission-apprentissage/cerfa/commit/65e8157e0669b31fa7c138ad6c680fab3b818874))
+
 # [2.12.0](https://github.com/mission-apprentissage/cerfa/compare/v2.11.0...v2.12.0) (2022-07-08)
 
 
