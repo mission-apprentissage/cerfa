@@ -23,20 +23,19 @@ const specialsAcls = {
   ],
 };
 
-const shouldBeNotAllowed = (acl, ref) => {
-  const isAncestorsAllowed = (acl, ref) => {
-    const ancestorRef = ref.substring(0, ref.lastIndexOf("/"));
-    const hasAncestor = ancestorRef !== "";
-    if (hasAncestor) {
-      return isAncestorsAllowed(acl, ancestorRef) && acl.includes(ref);
-    } else {
-      return acl.includes(ref);
-    }
-  };
+const isAncestorsAllowed = (acl, ref) => {
+  const ancestorRef = ref.substring(0, ref.lastIndexOf("/"));
+  const hasAncestor = ancestorRef !== "";
+  if (hasAncestor) {
+    return isAncestorsAllowed(acl, ancestorRef) && acl.includes(ref);
+  } else {
+    return acl.includes(ref);
+  }
+};
 
+const shouldBeNotAllowed = (acl, ref) => {
   const parentRef = ref.substring(0, ref.lastIndexOf("/"));
   const isRootRef = parentRef === "";
-
   return isRootRef ? false : !isAncestorsAllowed(acl, parentRef);
 };
 

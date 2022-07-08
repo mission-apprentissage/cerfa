@@ -205,6 +205,14 @@ export const buildRemuneration = (data) => {
   const anniversaireA4 = anniversaireA3.plus({ years: 1 });
   const ageA5 = ageA4 + 1;
 
+  // Kept for debug
+  // console.log([
+  //   { date: apprentiDateNaissance.toFormat("yyyy-MM-dd"), age: ageA1 },
+  //   { date: anniversaireA1.toFormat("yyyy-MM-dd"), age: ageA2 },
+  //   { date: anniversaireA2.toFormat("yyyy-MM-dd"), age: ageA3 },
+  //   { date: anniversaireA3.toFormat("yyyy-MM-dd"), age: ageA4 },
+  // ]);
+
   const smicObj = findSmicAtDate(dateDebutContrat);
   let SMIC = smicObj.mensuel;
   const departementEmployeur = data.employeurAdresseDepartement;
@@ -253,7 +261,7 @@ export const buildRemuneration = (data) => {
     return getSeuils(nextAge) > getSeuils(currentAge);
   };
 
-  const getTaux = (part, taux) => Math.max(selectedTaux?.[part] ?? 0, taux);
+  const getTaux = (part, tauxValue) => Math.max(selectedTaux?.[part] ?? 0, tauxValue);
 
   let finRemuneration = false;
   const emptyLineObj = {
@@ -273,7 +281,10 @@ export const buildRemuneration = (data) => {
   const taux12 = taux.a1[getSeuils(ageA2)];
   const selectedTaux11 = getTaux(1.1, taux11);
   const selectedTaux12 = getTaux(1.2, taux12);
-  if (isChangingTaux(ageA1, ageA2) && !isAnniversaireInLastMonth) {
+  if (
+    isChangingTaux(ageA1, ageA2) &&
+    !(isAnniversaireInLastMonth && dateFinContrat.get("year") === dateFinA1.get("year"))
+  ) {
     const dateDebut12 = anniversaireA1.set({ day: 1, month: anniversaireA1.get("month") + 1 });
     const dateFin11 = dateDebut12.minus({ days: 1 });
 
@@ -368,7 +379,11 @@ export const buildRemuneration = (data) => {
   const taux22 = taux.a2[getSeuils(ageA3)];
   const selectedTaux21 = getTaux(2.1, taux21);
   const selectedTaux22 = getTaux(2.2, taux22);
-  if (isChangingTaux(ageA2, ageA3) && !finRemuneration && !isAnniversaireInLastMonth) {
+  if (
+    isChangingTaux(ageA2, ageA3) &&
+    !finRemuneration &&
+    !(isAnniversaireInLastMonth && dateFinContrat.get("year") === dateFinA2.get("year"))
+  ) {
     const dateDebut22 = anniversaireA2.set({ day: 1, month: anniversaireA2.get("month") + 1 });
     const dateFin21 = dateDebut22.minus({ days: 1 });
 
@@ -462,7 +477,11 @@ export const buildRemuneration = (data) => {
   const taux32 = taux.a3[getSeuils(ageA4)];
   const selectedTaux31 = getTaux(3.1, taux31);
   const selectedTaux32 = getTaux(3.2, taux32);
-  if (isChangingTaux(ageA3, ageA4) && !finRemuneration && !isAnniversaireInLastMonth) {
+  if (
+    isChangingTaux(ageA3, ageA4) &&
+    !finRemuneration &&
+    !(isAnniversaireInLastMonth && dateFinContrat.get("year") === dateFinA3.get("year"))
+  ) {
     const dateDebut32 = anniversaireA3.set({ day: 1, month: anniversaireA3.get("month") + 1 });
     const dateFin31 = dateDebut32.minus({ days: 1 });
 
@@ -595,7 +614,6 @@ export const buildRemuneration = (data) => {
       };
     }
   } else if (!finRemuneration) {
-    const taux41 = taux.a4[getSeuils(ageA4)];
     result4 = {
       41: {
         dateDebut: dateDebutA4.toISO(),

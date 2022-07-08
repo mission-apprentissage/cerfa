@@ -70,6 +70,7 @@ export const employerSiretLogic = {
         },
         "employeur.libelleIdcc": {
           value: result.conventionCollective?.titre || undefined,
+          locked: !!result.conventionCollective?.titre,
         },
         "employeur.nombreDeSalaries": {
           value: result.entreprise_tranche_effectif_salarie?.de || undefined,

@@ -6,9 +6,9 @@ export const Select = (props) => {
   const { name, locked, onChange, value, options } = props;
 
   const handleChange = (e) => {
-    const selectedLabel = e.target.value ?? undefined;
-    const selectedValue = labelValueMap[selectedLabel];
-    onChange(selectedValue);
+    const newSelectedLabel = e.target.value ?? undefined;
+    const newSelectedValue = labelValueMap[newSelectedLabel];
+    onChange(newSelectedValue);
   };
 
   const { labelValueMap, valueLabelMap } = useMemo(() => {
@@ -63,33 +63,6 @@ export const Select = (props) => {
             })}
           </>
         )}
-      </ChakraSelect>
-    </InputWrapper>
-  );
-};
-
-export const Selecta = (props) => {
-  const { name, locked, onChange, value, options } = props;
-  return (
-    <InputWrapper {...props}>
-      <ChakraSelect
-        name={name}
-        disabled={locked}
-        // variant={validated ? "valid" : "outline"}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-        onChange={(e) => onChange(e.target.value)}
-        iconColor={"gray.800"}
-        data-testid={`select-${name}`}
-        placeholder="Sélectionnez une option"
-        value={value}
-      >
-        {options.map(({ label, value, locked }, i) => (
-          <option key={i} value={value} disabled={locked}>
-            {label}
-          </option>
-        ))}
       </ChakraSelect>
     </InputWrapper>
   );

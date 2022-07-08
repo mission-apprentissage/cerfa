@@ -64,6 +64,7 @@ const dossierSchema = {
       "EN_ATTENTE_DECLENCHEMENT_SIGNATURES",
       "EN_ATTENTE_SIGNATURES", // 2
       "SIGNATURES_EN_COURS", // 2
+      "SIGNATURES_REFUS", // 2
       "DOSSIER_TERMINE_AVEC_SIGNATURE", // 3
 
       "DOSSIER_TERMINE_SANS_SIGNATURE", // 3
@@ -92,6 +93,25 @@ const dossierSchema = {
     type: String,
     default: null,
     nullable: true,
+  },
+  statut_transmission_agecap: {
+    enum: ["ERROR_CONTRAT", "ERROR_PJ", "SUCCESS", null],
+    description: "Statut de la transmission vers Agecap",
+    type: String,
+    default: null,
+    nullable: true,
+  },
+  statut_transmission_agecap_contrat_details: {
+    type: String,
+    description: "Statut de la transmission du contrat vers Agecap",
+    nullable: true,
+    default: null,
+  },
+  statut_transmission_agecap_pj_details: {
+    type: String,
+    description: "Statut de la transmission des pj vers Agecap",
+    nullable: true,
+    default: null,
   },
   draft: {
     type: Boolean,

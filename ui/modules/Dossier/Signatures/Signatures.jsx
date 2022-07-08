@@ -73,7 +73,7 @@ const Signatures = () => {
       <Box mt={12} pt={2} minH="25vh">
         <Center>
           <Tooltip variant="alert">
-            <Text>Le Cerfa doit être complété à 100% avant de commencer la procédure de finalisation du dossier.</Text>
+            <Text>Le Cerfa doit être complété à 100% avant de commencer la procédure de signature du dossier.</Text>
           </Tooltip>
         </Center>
       </Box>
@@ -86,8 +86,8 @@ const Signatures = () => {
         <Center>
           <Tooltip variant="alert">
             <Text>
-              Les pièces justificatives doivent être complétées à 100% avant de commencer la procédure de finalisation
-              du dossier.
+              Les pièces justificatives doivent être complétées à 100% avant de commencer la procédure de signature du
+              dossier.
             </Text>
           </Tooltip>
         </Center>

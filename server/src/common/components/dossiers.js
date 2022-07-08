@@ -130,9 +130,9 @@ module.exports = async () => {
 
       let signataires = {
         employeur: {
-          firstname: "",
-          lastname: "",
-          email: cerfa.employeur.courriel,
+          firstname: contributors[0].user.prenom,
+          lastname: contributors[0].user.nom,
+          email: contributors[0].user.email,
           phone: cerfa.employeur.telephone,
           status: "EN_ATTENTE_SIGNATURE",
         },
@@ -153,8 +153,8 @@ module.exports = async () => {
         ...(cerfa.apprenti.apprentiMineurNonEmancipe
           ? {
               legal: {
-                firstname: cerfa.apprenti.responsableLegal.nom,
-                lastname: cerfa.apprenti.responsableLegal.prenom,
+                firstname: cerfa.apprenti.responsableLegal.prenom,
+                lastname: cerfa.apprenti.responsableLegal.nom,
                 email: "",
                 phone: "",
                 status: "EN_ATTENTE_SIGNATURE",
@@ -209,6 +209,12 @@ module.exports = async () => {
       for (let key of Object.keys(signataires)) {
         const element = signataires[key];
         if (element.firstname === "" || element.lastname === "" || element.email === "") {
+          tmpComplete = false;
+          break;
+        }
+
+        // Le téléphone est obligatoire pour l'apprenti et le responsable légal (signature avancée = OTP par SMS)
+        if ((key === "apprenti" || key === "legal") && element.phone === "") {
           tmpComplete = false;
           break;
         }
@@ -405,6 +411,27 @@ module.exports = async () => {
       }
 
       return await Dossier.findOneAndUpdate({ _id: id }, { etat }, { new: true });
+    },
+    updateStatutTransmission: async (
+      id,
+      statut_transmission_agecap,
+      { statut_transmission_agecap_contrat_details, statut_transmission_agecap_pj_details }
+    ) => {
+      const found = await Dossier.findById(id).lean();
+
+      if (!found) {
+        throw Boom.notFound("Doesn't exist");
+      }
+
+      return await Dossier.findOneAndUpdate(
+        { _id: id },
+        {
+          statut_transmission_agecap,
+          ...(statut_transmission_agecap_contrat_details ? { statut_transmission_agecap_contrat_details } : {}),
+          ...(statut_transmission_agecap_pj_details ? { statut_transmission_agecap_pj_details } : {}),
+        },
+        { new: true }
+      );
     },
     updateSignatures: async (id, signatures) => {
       const found = await Dossier.findById(id).lean();

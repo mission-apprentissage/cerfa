@@ -168,6 +168,7 @@ const fieldsPositions = {
     libelleIdcc: {
       x: 305,
       title: (value) => {
+        if (!value) return "";
         let newValue = value.replace("Convention collective ", "").toLowerCase();
 
         const result = [];
@@ -980,6 +981,7 @@ const fieldsPositions = {
 const capitalizeFirstLetter = (value) => value?.charAt(0).toUpperCase() + value?.slice(1);
 
 const buildFieldDraw = async (value, fieldDefinition, options = {}) => {
+  if (!value) return "";
   const title = typeof value === "boolean" ? (value ? "×" : " ") : !value ? "" : `${value}`;
   const result = {
     title:
@@ -1025,7 +1027,37 @@ const buildRemunerations = async (remunerationsAnnuelles) => {
   return result;
 };
 
-module.exports = async (pdfCerfaEmpty, cerfa) => {
+const drawDraftWatermark = async (pdfDoc) => {
+  for (const page of pdfDoc.getPages()) {
+    page.drawText("Brouillon", {
+      x: 120,
+      y: 200,
+      size: 100,
+      opacity: 0.1,
+      font: await pdfDoc.embedFont(StandardFonts.Courier),
+      rotate: { type: "degrees", angle: 45 },
+    });
+  }
+};
+
+const drawFooter = async (pdfDoc, { date, firstname, lastname }) => {
+  for (const page of pdfDoc.getPages()) {
+    page.drawText(
+      `Contrat généré par la plateforme contrat.apprentissage.beta.gouv.fr
+par ${firstname} ${lastname}, le ${date}, avec le statut Brouillon`,
+      {
+        x: 20,
+        y: 15,
+        size: 8,
+        lineHeight: 9,
+        opacity: 1,
+        font: await pdfDoc.embedFont(StandardFonts.Courier),
+      }
+    );
+  }
+};
+
+module.exports = async (pdfCerfaEmpty, cerfa, { draft = false, firstname, lastname } = {}) => {
   const pdfDoc = await PDFDocument.load(pdfCerfaEmpty);
   const writtingFont = await pdfDoc.embedFont(StandardFonts.Courier); // TimesRoman // Courier // Helvetica
   const pages = pdfDoc.getPages();
@@ -1190,6 +1222,15 @@ module.exports = async (pdfCerfaEmpty, cerfa) => {
         }
       });
     }
+  }
+
+  if (draft) {
+    await drawDraftWatermark(pdfDoc);
+    await drawFooter(pdfDoc, {
+      date: DateTime.now().toFormat("dd/MM/yyyy"),
+      firstname,
+      lastname,
+    });
   }
 
   const pdfBytes = await pdfDoc.save();

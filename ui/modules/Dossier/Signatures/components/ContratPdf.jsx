@@ -22,10 +22,10 @@ export const ContratPdf = () => {
     const run = async () => {
       try {
         if (dossier._id && dossier.cerfaId) {
-          const { pdfBase64 } = await _post(`/api/v1/cerfa/pdf/${dossier.cerfaId}`, {
+          const data = await _post(`/api/v1/cerfa/pdf/${dossier.cerfaId}`, {
             dossierId: dossier._id,
           });
-          setPdfBase64(pdfBase64);
+          setPdfBase64(data.pdfBase64);
         }
       } catch (e) {
         console.error(e);
