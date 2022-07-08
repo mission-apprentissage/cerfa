@@ -1,3 +1,10 @@
+# [2.12.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0-beta.6...v2.12.0-beta.7) (2022-07-08)
+
+
+### Bug Fixes
+
+* vérification annee fin de contrat, annee periode ([#849](https://github.com/mission-apprentissage/cerfa/issues/849)) ([9fd9d44](https://github.com/mission-apprentissage/cerfa/commit/9fd9d440f8a246e9a64d795e0f0ead01d0389f17))
+
 # [2.12.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0-beta.5...v2.12.0-beta.6) (2022-07-07)
 
 
