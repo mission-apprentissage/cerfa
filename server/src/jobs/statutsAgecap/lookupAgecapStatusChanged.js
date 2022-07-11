@@ -59,29 +59,39 @@ async function getAgecapStatusChanged(batchManagement, apiAgecap) {
         // On ajoute les différents statuts récupérés à la suite des existants.
         const currentDbStatut = dossier.statutAgecap ?? [];
         const newStatut = [];
-        if (currentDbStatut.length > 0) {
-          const lastestStatut = currentDbStatut[currentDbStatut.length - 1];
 
-          const stringifier = ({
+        const lastestStatut =
+          currentDbStatut.length > 0
+            ? currentDbStatut[currentDbStatut.length - 1]
+            : {
+                statut: null,
+                dateMiseAJourStatut: null,
+                numDepot: null,
+                numAvenant: null,
+                libelleMotifNonDepot: null,
+                commentaireMotifNonDepot: null,
+              };
+
+        const stringifier = ({
+          statut,
+          dateMiseAJourStatut,
+          numDepot,
+          numAvenant,
+          libelleMotifNonDepot,
+          commentaireMotifNonDepot,
+        }) =>
+          JSON.stringify({
             statut,
             dateMiseAJourStatut,
             numDepot,
             numAvenant,
             libelleMotifNonDepot,
             commentaireMotifNonDepot,
-          }) =>
-            JSON.stringify({
-              statut,
-              dateMiseAJourStatut,
-              numDepot,
-              numAvenant,
-              libelleMotifNonDepot,
-              commentaireMotifNonDepot,
-            });
-          if (stringifier(contrat) !== stringifier(lastestStatut)) {
-            newStatut.push(contrat);
-          }
+          });
+        if (stringifier(contrat) !== stringifier(lastestStatut)) {
+          newStatut.push(contrat);
         }
+
         dossier.statutAgecap = [...currentDbStatut, ...newStatut];
         await dossier.save();
       }
