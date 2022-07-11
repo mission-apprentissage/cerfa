@@ -183,7 +183,8 @@ const DossierFooterControls = ({
             <Text>Choisissez une méthode de signature:</Text>
           </HStack>
           <HStack spacing={16} justifyContent="center" mt={10}>
-            {hasContextAccessTo(dossier, "dossier/page_signatures/signature_electronique") && (
+            {(hasContextAccessTo(dossier, "dossier/page_signatures/signature_electronique") ||
+              hasPageAccessTo(auth, "dossier/page_signatures/signature_electronique")) && (
               <Flex flexDirection="column" borderWidth="1px" borderColor="bluefrance" p={10} w="55%" h="50vh">
                 <Box flexGrow="1">
                   <Flex flexDirection="column" alignItems="flex-start" p={0}>
