@@ -37,7 +37,7 @@ async function getAgecapStatusChanged(batchManagement, apiAgecap) {
   // Récupération des infos sur les status des contrats via le WS03 d'AGECAP ici
   const { contrats } = await apiAgecap.statut({
     dateDebut: dateDebut.toFormat("yyyy-MM-dd HH:mm:ss"),
-    dateFin: dateFin.toFormat("yyyy-MM-dd HH:mm:ss"),
+    dateFin: dateFin.plus({ days: 1 }).toFormat("yyyy-MM-dd HH:mm:ss"),
   });
 
   await asyncForEach(contrats, async (contrat) => {
@@ -57,7 +57,42 @@ async function getAgecapStatusChanged(batchManagement, apiAgecap) {
         }
 
         // On ajoute les différents statuts récupérés à la suite des existants.
-        dossier.statutAgecap = [...(dossier.statutAgecap ?? []), contrat];
+        const currentDbStatut = dossier.statutAgecap ?? [];
+        const newStatut = [];
+
+        const lastestStatut =
+          currentDbStatut.length > 0
+            ? currentDbStatut[currentDbStatut.length - 1]
+            : {
+                statut: null,
+                dateMiseAJourStatut: null,
+                numDepot: null,
+                numAvenant: null,
+                libelleMotifNonDepot: null,
+                commentaireMotifNonDepot: null,
+              };
+
+        const stringifier = ({
+          statut,
+          dateMiseAJourStatut,
+          numDepot,
+          numAvenant,
+          libelleMotifNonDepot,
+          commentaireMotifNonDepot,
+        }) =>
+          JSON.stringify({
+            statut,
+            dateMiseAJourStatut,
+            numDepot,
+            numAvenant,
+            libelleMotifNonDepot,
+            commentaireMotifNonDepot,
+          });
+        if (stringifier(contrat) !== stringifier(lastestStatut)) {
+          newStatut.push(contrat);
+        }
+
+        dossier.statutAgecap = [...currentDbStatut, ...newStatut];
         await dossier.save();
       }
     }
