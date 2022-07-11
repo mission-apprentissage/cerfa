@@ -1,3 +1,10 @@
+## [2.12.1-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.12.1-beta.1...v2.12.1-beta.2) (2022-07-11)
+
+
+### Bug Fixes
+
+* synthax statut ([0bdf690](https://github.com/mission-apprentissage/cerfa/commit/0bdf690998326e3e272ec12816cdb273ea3dc0c5))
+
 ## [2.12.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0...v2.12.1-beta.1) (2022-07-08)
 
 
