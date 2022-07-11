@@ -71,4 +71,5 @@ module.exports = {
       schema.index({ cerfaId: 1 }, { unique: true });
     },
   }),
+  BatchManagement: createModel("batchManagement", schema.batchManagementSchema),
 };

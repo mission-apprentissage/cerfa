@@ -1,3 +1,25 @@
+## [2.12.1-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.12.1-beta.2...v2.12.1-beta.3) (2022-07-11)
+
+
+### Bug Fixes
+
+* rotate date window + saving status ([#853](https://github.com/mission-apprentissage/cerfa/issues/853)) ([cf81e76](https://github.com/mission-apprentissage/cerfa/commit/cf81e76bb27f9e891f5a2881f3f7ebf70ae06e2e))
+
+## [2.12.1-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.12.1-beta.1...v2.12.1-beta.2) (2022-07-11)
+
+
+### Bug Fixes
+
+* synthax statut ([0bdf690](https://github.com/mission-apprentissage/cerfa/commit/0bdf690998326e3e272ec12816cdb273ea3dc0c5))
+
+## [2.12.1-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0...v2.12.1-beta.1) (2022-07-08)
+
+
+### Bug Fixes
+
+* bug batch lookupAgecapStatusChanged ([ae692ec](https://github.com/mission-apprentissage/cerfa/commit/ae692ecf1151e3b993380a56620b11dc5929f612))
+* merge conflicts ([65e8157](https://github.com/mission-apprentissage/cerfa/commit/65e8157e0669b31fa7c138ad6c680fab3b818874))
+
 # [2.12.0](https://github.com/mission-apprentissage/cerfa/compare/v2.11.0...v2.12.0) (2022-07-08)
 
 

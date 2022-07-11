@@ -4,6 +4,7 @@ const ApiAgecap = require("../../common/apis/ApiAgecap");
 const { Dossier } = require("../../common/model/index");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 
+// Mapping état dossier AGECAP => CELIA
 const STATUS_AGECAP = {
   "Transmis au gestionnaire": "TRANSMIS",
   "En cours d'instruction": "EN_COURS_INSTRUCTION",
@@ -12,16 +13,36 @@ const STATUS_AGECAP = {
   Déposé: "DEPOSE",
 };
 
-const lookupAgecapStatusChanged = async ({ crypto }) => {
-  const apiAgecap = new ApiAgecap(crypto);
-  await apiAgecap.authenticate();
+async function getAgecapStatusChanged(batchManagement, apiAgecap) {
+  let dateDebut;
 
-  const dateDebut = DateTime.fromISO("2021-12-01").setLocale("fr-FR").toFormat("yyyy-MM-dd HH:mm:ss"); // TODO Should be rotate
-  const dateFin = DateTime.now().setLocale("fr-FR").toFormat("yyyy-MM-dd HH:mm:ss");
-  const { contrats } = await apiAgecap.statut({ dateDebut, dateFin });
+  // On va chercher la date de fin de la dernière exécution du batch en bdd.
+  const lastRunDate = await batchManagement.getLastBatchExecution("agecap_status");
+
+  // Si cette date existe, on l'utilise comme date de début pour ce batch
+  if (lastRunDate.length) {
+    dateDebut = DateTime.fromJSDate(lastRunDate[0].dateFin);
+  } else {
+    // Si elle n'existe pas (le batch n'a encore jamais tourné), on prend le 01/12/2021 (date de début de CELIA)
+    dateDebut = DateTime.fromISO("2021-12-01").setLocale("fr-FR");
+  }
+
+  // Si la date de début est plus vieille qu'1 an jusqu'à aujourd'hui, on ne prend qu'un an max
+  // => Limite WS03 AGECAP: dateFin - dateDebut <= 365 days.
+  // Sinon on prend jusqu'à maintenant
+  let dateDebutPlusOneYear = dateDebut.plus({ days: 364 });
+  const now = DateTime.now();
+  let dateFin = dateDebutPlusOneYear < now ? dateDebutPlusOneYear : now;
+
+  // Récupération des infos sur les status des contrats via le WS03 d'AGECAP ici
+  const { contrats } = await apiAgecap.statut({
+    dateDebut: dateDebut.toFormat("yyyy-MM-dd HH:mm:ss"),
+    dateFin: dateFin.plus({ days: 1 }).toFormat("yyyy-MM-dd HH:mm:ss"),
+  });
 
   await asyncForEach(contrats, async (contrat) => {
     const isMongoObjectId = new RegExp(`^[0-9A-Fa-f]{24}$`);
+    // On ne s'occupe que des numTeletransmission qui proviennent de CELIA
     if (isMongoObjectId.test(contrat.numTeletransmission)) {
       const dossier = await Dossier.findOne({ _id: contrat.numTeletransmission });
       if (dossier) {
@@ -29,146 +50,80 @@ const lookupAgecapStatusChanged = async ({ crypto }) => {
           dossier.numeroDeca = contrat.numDepot;
         }
 
+        // On applique au dossier CELIA son état AGECAP
         const etat = STATUS_AGECAP[contrat.statut];
         if (etat) {
           dossier.etat = etat;
         }
 
-        dossier.statutAgecap = [...(dossier.statutAgecap ?? []), contrat];
+        // On ajoute les différents statuts récupérés à la suite des existants.
+        const currentDbStatut = dossier.statutAgecap ?? [];
+        const newStatut = [];
+
+        const lastestStatut =
+          currentDbStatut.length > 0
+            ? currentDbStatut[currentDbStatut.length - 1]
+            : {
+                statut: null,
+                dateMiseAJourStatut: null,
+                numDepot: null,
+                numAvenant: null,
+                libelleMotifNonDepot: null,
+                commentaireMotifNonDepot: null,
+              };
+
+        const stringifier = ({
+          statut,
+          dateMiseAJourStatut,
+          numDepot,
+          numAvenant,
+          libelleMotifNonDepot,
+          commentaireMotifNonDepot,
+        }) =>
+          JSON.stringify({
+            statut,
+            dateMiseAJourStatut,
+            numDepot,
+            numAvenant,
+            libelleMotifNonDepot,
+            commentaireMotifNonDepot,
+          });
+        if (stringifier(contrat) !== stringifier(lastestStatut)) {
+          newStatut.push(contrat);
+        }
+
+        dossier.statutAgecap = [...currentDbStatut, ...newStatut];
         await dossier.save();
       }
     }
   });
+
+  // On trace cette exécution du batch en bdd
+  await batchManagement.addBatchExecution({
+    name: "agecap_status",
+    dateDebut: dateDebut,
+    dateFin: dateFin,
+  });
+
+  // On return true si on doit refaire une passe.
+  return dateFin < now;
+}
+
+const lookupAgecapStatusChanged = async ({ crypto, batchManagement }) => {
+  const apiAgecap = new ApiAgecap(crypto);
+  await apiAgecap.authenticate();
+
+  // On recommence tant que la date de fin en est inférieure à la date aujourd'hui
+  let redo;
+  do {
+    redo = await getAgecapStatusChanged(batchManagement, apiAgecap);
+  } while (redo);
 };
 
 module.exports = lookupAgecapStatusChanged;
 
 if (process.env.standaloneJobs) {
-  runScript(async ({ crypto }) => {
-    await lookupAgecapStatusChanged({ crypto });
+  runScript(async (components) => {
+    await lookupAgecapStatusChanged(components);
   });
 }
-
-// BELOW SAMPLE DATA
-
-// resp.contrats = [
-//   {
-//     numTeletransmission: "620a6c551091c5002af67d61",
-//     statut: "Transmis au gestionnaire",
-//     dateMiseAJourStatut: "2022-02-14",
-//     numDepot: null,
-//     numAvenant: null,
-//     libelleMotifNonDepot: null,
-//     commentaireMotifNonDepot: null,
-//   },
-
-//   {
-//     numTeletransmission: "620b68b2f798d1002a873c65",
-//     statut: "Déposé",
-//     dateMiseAJourStatut: "2022-02-15",
-//     numDepot: "075202202000004",
-//     numAvenant: null,
-//     libelleMotifNonDepot: null,
-//     commentaireMotifNonDepot: null,
-//   },
-
-//   {
-//     numTeletransmission: "62277cf99c435d002a459a2e",
-//     statut: "Transmis au gestionnaire",
-//     dateMiseAJourStatut: "2022-03-08",
-//     numDepot: null,
-//     numAvenant: null,
-//     libelleMotifNonDepot: null,
-//     commentaireMotifNonDepot: null,
-//   },
-
-//   {
-//     numTeletransmission: "6203cf839320d4002afa76cd",
-//     statut: "Transmis au gestionnaire",
-//     dateMiseAJourStatut: "2022-02-14",
-//     numDepot: null,
-//     numAvenant: null,
-//     libelleMotifNonDepot: null,
-//     commentaireMotifNonDepot: null,
-//   },
-
-//   {
-//     numTeletransmission: "620e2231568e2a002a9854bb",
-//     statut: "Transmis au gestionnaire",
-//     dateMiseAJourStatut: "2022-02-17",
-//     numDepot: null,
-//     numAvenant: null,
-//     libelleMotifNonDepot: null,
-//     commentaireMotifNonDepot: null,
-//   },
-
-//   {
-//     numTeletransmission: "6220d6fb5576cc002b93f23b",
-//     statut: "Transmis au gestionnaire",
-//     dateMiseAJourStatut: "2022-03-08",
-//     numDepot: null,
-//     numAvenant: null,
-//     libelleMotifNonDepot: null,
-//     commentaireMotifNonDepot: null,
-//   },
-
-//   {
-//     numTeletransmission: "620b5fc1156557002c16223c",
-//     statut: "Déposé",
-//     dateMiseAJourStatut: "2022-02-15",
-//     numDepot: "095202202000003",
-//     numAvenant: null,
-//     libelleMotifNonDepot: null,
-//     commentaireMotifNonDepot: null,
-//   },
-
-//   {
-//     numTeletransmission: "621cea175576cc002b93ac7e",
-//     statut: "Non déposable",
-//     dateMiseAJourStatut: "2022-03-31",
-//     numDepot: null,
-//     numAvenant: null,
-//     libelleMotifNonDepot: "Incomplétude",
-//     commentaireMotifNonDepot: "",
-//   },
-
-//   {
-//     numTeletransmission: "620b6596f798d1002a872d6e",
-//     statut: "Déposé",
-//     dateMiseAJourStatut: "2022-03-31",
-//     numDepot: "075202203000193",
-//     numAvenant: null,
-//     libelleMotifNonDepot: null,
-//     commentaireMotifNonDepot: null,
-//   },
-
-//   {
-//     numTeletransmission: "6239c40fd0c39f002a8f07ae",
-//     statut: "En cours d'instruction",
-//     dateMiseAJourStatut: "2022-03-31",
-//     numDepot: null,
-//     numAvenant: null,
-//     libelleMotifNonDepot: null,
-//     commentaireMotifNonDepot: null,
-//   },
-
-//   {
-//     numTeletransmission: "JBU6",
-//     statut: "Transmis au gestionnaire",
-//     dateMiseAJourStatut: "2022-03-30",
-//     numDepot: null,
-//     numAvenant: null,
-//     libelleMotifNonDepot: null,
-//     commentaireMotifNonDepot: null,
-//   },
-
-//   {
-//     numTeletransmission: "6214eaa9b7063f002cde9a01",
-//     statut: "Transmis au gestionnaire",
-//     dateMiseAJourStatut: "2022-02-22",
-//     numDepot: null,
-//     numAvenant: null,
-//     libelleMotifNonDepot: null,
-//     commentaireMotifNonDepot: null,
-//   },
-// ];
