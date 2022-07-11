@@ -1,3 +1,10 @@
+## [2.12.2-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.12.1...v2.12.2-beta.1) (2022-07-11)
+
+
+### Bug Fixes
+
+* verification acl dossier + user pour la signature electronique ([6acbbc3](https://github.com/mission-apprentissage/cerfa/commit/6acbbc3f5d94aceaef3c747361a5dedb9e239d8f))
+
 ## [2.12.1](https://github.com/mission-apprentissage/cerfa/compare/v2.12.0...v2.12.1) (2022-07-11)
 
 
