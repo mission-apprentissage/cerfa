@@ -183,55 +183,57 @@ const DossierFooterControls = ({
             <Text>Choisissez une méthode de signature:</Text>
           </HStack>
           <HStack spacing={16} justifyContent="center" mt={10}>
-            {(hasContextAccessTo(dossier, "dossier/page_signatures/signature_electronique") ||
-              hasPageAccessTo(auth, "dossier/page_signatures/signature_electronique")) && (
-              <Flex flexDirection="column" borderWidth="1px" borderColor="bluefrance" p={10} w="55%" h="50vh">
-                <Box flexGrow="1">
-                  <Flex flexDirection="column" alignItems="flex-start" p={0}>
-                    <Heading as="h4" fontSize="1.5rem" mb={4}>
-                      Signature en ligne
-                    </Heading>
-                    <Heading as="h5" fontSize="1rem" mb={4}>
-                      Processus dématérialisé
-                    </Heading>
-                  </Flex>
-                  <OrderedList>
-                    <ListItem>
-                      Vous ajoutez les coordonnées des signataires en cliquant sur &laquo;&nbsp;signature
-                      électronique&nbsp;&raquo;
-                    </ListItem>
-                    <ListItem>Chaque signataire reçoit une notification l&apos;invitant à signer le contrat</ListItem>
-                    <ListItem>
-                      Lorsque toutes les signatures sont réunies, le contrat est automatiquement télétransmis
-                    </ListItem>
-                  </OrderedList>
-                  <br />
-                  <Text>
-                    La signature électronique est opérée par notre partenaire YouSign. <br />
-                    <Link
-                      href={"https://yousign.com/fr-fr/signature-electronique"}
-                      textDecoration={"underline"}
-                      isExternal
+            {
+              //hasContextAccessTo(dossier, "dossier/page_signatures/signature_electronique") ||
+              hasPageAccessTo(auth, "dossier/page_signatures/signature_electronique") && (
+                <Flex flexDirection="column" borderWidth="1px" borderColor="bluefrance" p={10} w="55%" h="50vh">
+                  <Box flexGrow="1">
+                    <Flex flexDirection="column" alignItems="flex-start" p={0}>
+                      <Heading as="h4" fontSize="1.5rem" mb={4}>
+                        Signature en ligne
+                      </Heading>
+                      <Heading as="h5" fontSize="1rem" mb={4}>
+                        Processus dématérialisé
+                      </Heading>
+                    </Flex>
+                    <OrderedList>
+                      <ListItem>
+                        Vous ajoutez les coordonnées des signataires en cliquant sur &laquo;&nbsp;signature
+                        électronique&nbsp;&raquo;
+                      </ListItem>
+                      <ListItem>Chaque signataire reçoit une notification l&apos;invitant à signer le contrat</ListItem>
+                      <ListItem>
+                        Lorsque toutes les signatures sont réunies, le contrat est automatiquement télétransmis
+                      </ListItem>
+                    </OrderedList>
+                    <br />
+                    <Text>
+                      La signature électronique est opérée par notre partenaire YouSign. <br />
+                      <Link
+                        href={"https://yousign.com/fr-fr/signature-electronique"}
+                        textDecoration={"underline"}
+                        isExternal
+                      >
+                        Plus d&apos;informations&nbsp;
+                        <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
+                      </Link>
+                    </Text>
+                  </Box>
+                  <Center h="25%">
+                    <Button
+                      onClick={() => {
+                        onMethodSignatureClicked("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
+                      }}
+                      size={"md"}
+                      variant={"primary"}
                     >
-                      Plus d&apos;informations&nbsp;
-                      <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
-                    </Link>
-                  </Text>
-                </Box>
-                <Center h="25%">
-                  <Button
-                    onClick={() => {
-                      onMethodSignatureClicked("NOUVEAU_CONTRAT_SIGNATURE_ELECTRONIQUE");
-                    }}
-                    size={"md"}
-                    variant={"primary"}
-                  >
-                    <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
-                    Signature électronique
-                  </Button>
-                </Center>
-              </Flex>
-            )}
+                      <BallPenFill w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
+                      Signature électronique
+                    </Button>
+                  </Center>
+                </Flex>
+              )
+            }
             {hasContextAccessTo(dossier, "dossier/page_signatures/signature_papier") && (
               <Flex flexDirection="column" bg="galt" p={10} w="45%" h="50vh">
                 <Box flexGrow="1">
