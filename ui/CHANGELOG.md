@@ -1,3 +1,10 @@
+## [2.12.3](https://github.com/mission-apprentissage/cerfa/compare/v2.12.2...v2.12.3) (2022-07-12)
+
+
+### Bug Fixes
+
+* temporary control access esignature ([fc82128](https://github.com/mission-apprentissage/cerfa/commit/fc8212890eef6301bd514037af02a0f784f0f8f1))
+
 ## [2.12.3-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.12.2...v2.12.3-beta.1) (2022-07-12)
 
 
