@@ -101,5 +101,11 @@ export const departements = {
   973: { code: "973", name: "Guyane" },
   974: { code: "974", name: "La Réunion" },
   976: { code: "976", name: "Mayotte" },
-  987: { code: "987", name: "Polynésie Française" },
+  977: { code: "977", name: "Saint-Barthélemy" },
+  978: { code: "978", name: "Saint-Martin" },
+  984: { code: "984", name: "Terres australes et antarctiques françaises" },
+  986: { code: "986", name: "Wallis-et-Futuna" },
+  987: { code: "987", name: "Polynésie française" },
+  988: { code: "988", name: "Nouvelle-Calédonie" },
+  989: { code: "989", name: "Clipperton" },
 };
