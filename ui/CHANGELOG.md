@@ -1,3 +1,10 @@
+## [2.12.4-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.12.3...v2.12.4-beta.1) (2022-07-13)
+
+
+### Bug Fixes
+
+* ajout polynésie française ([#858](https://github.com/mission-apprentissage/cerfa/issues/858)) ([556ac7c](https://github.com/mission-apprentissage/cerfa/commit/556ac7cd4e243dfd9feb2955dc28cff090272ab9))
+
 ## [2.12.3](https://github.com/mission-apprentissage/cerfa/compare/v2.12.2...v2.12.3) (2022-07-12)
 
 
