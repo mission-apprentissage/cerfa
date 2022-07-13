@@ -101,4 +101,5 @@ export const departements = {
   973: { code: "973", name: "Guyane" },
   974: { code: "974", name: "La Réunion" },
   976: { code: "976", name: "Mayotte" },
+  987: { code: "987", name: "Polynésie Française" },
 };

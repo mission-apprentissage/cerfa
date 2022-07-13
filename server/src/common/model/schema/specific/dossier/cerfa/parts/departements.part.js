@@ -101,6 +101,7 @@ const departementEnum = [
   "973",
   "974",
   "976",
+  "987",
 ];
 
 module.exports = departementEnum;
