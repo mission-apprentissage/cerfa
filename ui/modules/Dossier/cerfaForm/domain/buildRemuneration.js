@@ -186,7 +186,9 @@ export const buildRemuneration = (data) => {
   const dateDebutContrat = DateTime.fromISO(data.dateDebutContrat).setLocale("fr-FR");
   const dateFinContrat = DateTime.fromISO(data.dateFinContrat).setLocale("fr-FR");
   const apprentiDateNaissance = DateTime.fromISO(data.apprentiDateNaissance).setLocale("fr-FR");
-  const isAnniversaireInLastMonth = dateFinContrat.get("month") === apprentiDateNaissance.get("month");
+  const isAnniversaireInLastMonthContrat = dateFinContrat.get("month") === apprentiDateNaissance.get("month");
+  const isAnniversaireMonthBeforeStartContrat =
+    dateDebutContrat.get("month") === apprentiDateNaissance.get("month") + 1;
 
   const dateFinA1 = dateDebutContrat.plus({ years: 1 }).minus({ days: 1 });
   const dateDebutA2 = dateDebutContrat.plus({ years: 1 });
@@ -206,12 +208,13 @@ export const buildRemuneration = (data) => {
   const ageA5 = ageA4 + 1;
 
   // Kept for debug
-  // console.log([
-  //   { date: apprentiDateNaissance.toFormat("yyyy-MM-dd"), age: ageA1 },
-  //   { date: anniversaireA1.toFormat("yyyy-MM-dd"), age: ageA2 },
-  //   { date: anniversaireA2.toFormat("yyyy-MM-dd"), age: ageA3 },
-  //   { date: anniversaireA3.toFormat("yyyy-MM-dd"), age: ageA4 },
-  // ]);
+  console.log([
+    { date: apprentiDateNaissance.toFormat("yyyy-MM-dd"), age: ageA1 },
+    { date: anniversaireA1.toFormat("yyyy-MM-dd"), age: ageA2 },
+    { date: anniversaireA2.toFormat("yyyy-MM-dd"), age: ageA3 },
+    { date: anniversaireA3.toFormat("yyyy-MM-dd"), age: ageA4 },
+    isAnniversaireMonthBeforeStartContrat,
+  ]);
 
   const smicObj = findSmicAtDate(dateDebutContrat);
   let SMIC = smicObj.mensuel;
@@ -283,7 +286,7 @@ export const buildRemuneration = (data) => {
   const selectedTaux12 = getTaux(1.2, taux12);
   if (
     isChangingTaux(ageA1, ageA2) &&
-    !(isAnniversaireInLastMonth && dateFinContrat.get("year") === dateFinA1.get("year"))
+    !(isAnniversaireInLastMonthContrat && dateFinContrat.get("year") === dateFinA1.get("year"))
   ) {
     const dateDebut12 = anniversaireA1.set({ day: 1, month: anniversaireA1.get("month") + 1 });
     const dateFin11 = dateDebut12.minus({ days: 1 });
@@ -322,24 +325,38 @@ export const buildRemuneration = (data) => {
         },
       };
     } else {
-      result1 = {
-        11: {
-          dateDebut: dateDebutContrat.toISO(),
-          dateFin: dateFin11.toISO(),
-          taux: selectedTaux11,
-          tauxMinimal: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux11) / 100),
-        },
-        12: {
-          dateDebut: dateDebut12.toISO(),
-          dateFin: dateFinA1.toISO(),
-          taux: selectedTaux12,
-          tauxMinimal: taux12,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux12) / 100),
-        },
-      };
+      if (isAnniversaireMonthBeforeStartContrat) {
+        result1 = {
+          11: {
+            dateDebut: dateDebutContrat.toISO(),
+            dateFin: dateFin11.toISO(),
+            taux: selectedTaux11,
+            tauxMinimal: taux11,
+            typeSalaire: "SMIC",
+            salaireBrut: ceilUp((SMIC * selectedTaux11) / 100),
+          },
+          12: emptyLineObj,
+        };
+      } else {
+        result1 = {
+          11: {
+            dateDebut: dateDebutContrat.toISO(),
+            dateFin: dateFin11.toISO(),
+            taux: selectedTaux11,
+            tauxMinimal: taux11,
+            typeSalaire: "SMIC",
+            salaireBrut: ceilUp((SMIC * selectedTaux11) / 100),
+          },
+          12: {
+            dateDebut: dateDebut12.toISO(),
+            dateFin: dateFinA1.toISO(),
+            taux: selectedTaux12,
+            tauxMinimal: taux12,
+            typeSalaire: "SMIC",
+            salaireBrut: ceilUp((SMIC * selectedTaux12) / 100),
+          },
+        };
+      }
     }
   } else {
     if (dateFinA1 >= dateFinContrat) {
@@ -382,7 +399,7 @@ export const buildRemuneration = (data) => {
   if (
     isChangingTaux(ageA2, ageA3) &&
     !finRemuneration &&
-    !(isAnniversaireInLastMonth && dateFinContrat.get("year") === dateFinA2.get("year"))
+    !(isAnniversaireInLastMonthContrat && dateFinContrat.get("year") === dateFinA2.get("year"))
   ) {
     const dateDebut22 = anniversaireA2.set({ day: 1, month: anniversaireA2.get("month") + 1 });
     const dateFin21 = dateDebut22.minus({ days: 1 });
@@ -421,24 +438,38 @@ export const buildRemuneration = (data) => {
         },
       };
     } else {
-      result2 = {
-        21: {
-          dateDebut: dateDebutA2.toISO(),
-          dateFin: dateFin21.toISO(),
-          taux: selectedTaux21,
-          tauxMinimal: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux21) / 100),
-        },
-        22: {
-          dateDebut: dateDebut22.toISO(),
-          dateFin: dateFinA2.toISO(),
-          taux: selectedTaux22,
-          tauxMinimal: taux22,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux22) / 100),
-        },
-      };
+      if (isAnniversaireMonthBeforeStartContrat) {
+        result2 = {
+          21: {
+            dateDebut: dateDebutA2.toISO(),
+            dateFin: dateFin21.toISO(),
+            taux: selectedTaux21,
+            tauxMinimal: taux21,
+            typeSalaire: "SMIC",
+            salaireBrut: ceilUp((SMIC * selectedTaux21) / 100),
+          },
+          22: emptyLineObj,
+        };
+      } else {
+        result2 = {
+          21: {
+            dateDebut: dateDebutA2.toISO(),
+            dateFin: dateFin21.toISO(),
+            taux: selectedTaux21,
+            tauxMinimal: taux21,
+            typeSalaire: "SMIC",
+            salaireBrut: ceilUp((SMIC * selectedTaux21) / 100),
+          },
+          22: {
+            dateDebut: dateDebut22.toISO(),
+            dateFin: dateFinA2.toISO(),
+            taux: selectedTaux22,
+            tauxMinimal: taux22,
+            typeSalaire: "SMIC",
+            salaireBrut: ceilUp((SMIC * selectedTaux22) / 100),
+          },
+        };
+      }
     }
   } else if (!finRemuneration) {
     if (dateFinA2 >= dateFinContrat) {
@@ -480,7 +511,7 @@ export const buildRemuneration = (data) => {
   if (
     isChangingTaux(ageA3, ageA4) &&
     !finRemuneration &&
-    !(isAnniversaireInLastMonth && dateFinContrat.get("year") === dateFinA3.get("year"))
+    !(isAnniversaireInLastMonthContrat && dateFinContrat.get("year") === dateFinA3.get("year"))
   ) {
     const dateDebut32 = anniversaireA3.set({ day: 1, month: anniversaireA3.get("month") + 1 });
     const dateFin31 = dateDebut32.minus({ days: 1 });
@@ -519,24 +550,38 @@ export const buildRemuneration = (data) => {
         },
       };
     } else {
-      result3 = {
-        31: {
-          dateDebut: dateDebutA3.toISO(),
-          dateFin: dateFin31.toISO(),
-          taux: selectedTaux31,
-          tauxMinimal: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux31) / 100),
-        },
-        32: {
-          dateDebut: dateDebut32.toISO(),
-          dateFin: dateFinA3.toISO(),
-          taux: selectedTaux32,
-          tauxMinimal: taux32,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux32) / 100),
-        },
-      };
+      if (isAnniversaireMonthBeforeStartContrat) {
+        result3 = {
+          31: {
+            dateDebut: dateDebutA3.toISO(),
+            dateFin: dateFin31.toISO(),
+            taux: selectedTaux31,
+            tauxMinimal: taux31,
+            typeSalaire: "SMIC",
+            salaireBrut: ceilUp((SMIC * selectedTaux31) / 100),
+          },
+          32: emptyLineObj,
+        };
+      } else {
+        result3 = {
+          31: {
+            dateDebut: dateDebutA3.toISO(),
+            dateFin: dateFin31.toISO(),
+            taux: selectedTaux31,
+            tauxMinimal: taux31,
+            typeSalaire: "SMIC",
+            salaireBrut: ceilUp((SMIC * selectedTaux31) / 100),
+          },
+          32: {
+            dateDebut: dateDebut32.toISO(),
+            dateFin: dateFinA3.toISO(),
+            taux: selectedTaux32,
+            tauxMinimal: taux32,
+            typeSalaire: "SMIC",
+            salaireBrut: ceilUp((SMIC * selectedTaux32) / 100),
+          },
+        };
+      }
     }
   } else if (!finRemuneration) {
     if (dateFinA3 >= dateFinContrat) {
@@ -576,7 +621,7 @@ export const buildRemuneration = (data) => {
   const selectedTaux41 = getTaux(4.1, taux41);
   const selectedTaux42 = getTaux(4.2, taux42);
 
-  if (isChangingTaux(ageA4, ageA5) && !finRemuneration && !isAnniversaireInLastMonth) {
+  if (isChangingTaux(ageA4, ageA5) && !finRemuneration && !isAnniversaireInLastMonthContrat) {
     const dateDebut42 = anniversaireA4.set({ day: 1, month: anniversaireA4.get("month") + 1 });
     const dateFin41 = dateDebut42.minus({ days: 1 });
 
@@ -594,24 +639,38 @@ export const buildRemuneration = (data) => {
         42: emptyLineObj,
       };
     } else {
-      result4 = {
-        41: {
-          dateDebut: dateDebutA4.toISO(),
-          dateFin: dateFin41.toISO(),
-          taux: selectedTaux41,
-          tauxMinimal: taux41,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux41) / 100),
-        },
-        42: {
-          dateDebut: dateDebut42.toISO(),
-          dateFin: dateFinContrat.toISO(),
-          taux: selectedTaux42,
-          tauxMinimal: taux42,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux42) / 100),
-        },
-      };
+      if (isAnniversaireMonthBeforeStartContrat) {
+        result4 = {
+          41: {
+            dateDebut: dateDebutA4.toISO(),
+            dateFin: dateFin41.toISO(),
+            taux: selectedTaux41,
+            tauxMinimal: taux41,
+            typeSalaire: "SMIC",
+            salaireBrut: ceilUp((SMIC * selectedTaux41) / 100),
+          },
+          42: emptyLineObj,
+        };
+      } else {
+        result4 = {
+          41: {
+            dateDebut: dateDebutA4.toISO(),
+            dateFin: dateFin41.toISO(),
+            taux: selectedTaux41,
+            tauxMinimal: taux41,
+            typeSalaire: "SMIC",
+            salaireBrut: ceilUp((SMIC * selectedTaux41) / 100),
+          },
+          42: {
+            dateDebut: dateDebut42.toISO(),
+            dateFin: dateFinContrat.toISO(),
+            taux: selectedTaux42,
+            tauxMinimal: taux42,
+            typeSalaire: "SMIC",
+            salaireBrut: ceilUp((SMIC * selectedTaux42) / 100),
+          },
+        };
+      }
     }
   } else if (!finRemuneration) {
     result4 = {
