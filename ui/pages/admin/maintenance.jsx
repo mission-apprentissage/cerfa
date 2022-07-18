@@ -34,6 +34,7 @@ export const getServerSideProps = async (context) => ({ props: { ...(await getAu
 
 const Message = () => {
   const [messageAutomatique, setMessageAutomatique] = useState([]);
+  const [messageMaintenance, setMessageMaintenance] = useState([]);
   const [messages, setMessages] = useState([]);
 
   const [user] = useAuth();
@@ -44,7 +45,7 @@ const Message = () => {
       console.log(msg, type, context);
       try {
         let messagePosted =
-          context === "manuel" || context === "maintenance"
+          context === "manuel"
             ? await _post("/api/v1/maintenanceMessage", {
                 type,
                 context,
@@ -52,13 +53,18 @@ const Message = () => {
                 name: user.email,
                 enabled: true,
               })
-            : await _put(`/api/v1/maintenanceMessage/${messageAutomatique._id}`, {
-                type,
-                context,
-                msg,
-                name: "auto",
-                enabled: false,
-              });
+            : await _put(
+                `/api/v1/maintenanceMessage/${
+                  context !== "maintenance" ? messageAutomatique._id : messageMaintenance._id
+                }`,
+                {
+                  type,
+                  context,
+                  msg,
+                  name: user.email,
+                  enabled: false,
+                }
+              );
 
         if (messagePosted) {
           alert("Le message a bien été envoyé/mise à jour.");
@@ -91,9 +97,8 @@ const Message = () => {
         const [auto] = data.filter((d) => d.context === "automatique" && d.msg);
         setMessageAutomatique(auto);
 
-        // const [maintenance] = data.filter((d) => d.context === "maintenance");
-        // setMessagesMaintenance(maintenance);
-        // setFieldValue("msg", auto.msg);
+        const [maintenance] = data.filter((d) => d.context === "maintenance");
+        setMessageMaintenance(maintenance);
       } catch (e) {
         console.error(e);
       }

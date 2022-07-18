@@ -7,6 +7,7 @@ import { Cgu, cguVersion } from "../legal/Cgu";
 import AcknowledgeModal from "../../components/Modals/AcknowledgeModal";
 import { anonymous } from "../../common/anonymous";
 import { emitter } from "../../common/emitter";
+import { isUserAdmin } from "../../common/utils/rolesUtils";
 
 const AccountWrapper = ({ children }) => {
   let [auth] = useAuth();
@@ -25,6 +26,12 @@ const AccountWrapper = ({ children }) => {
             router.push(`/auth/reset-password?passwordToken=${token}`);
           } else if (auth.account_status === "FORCE_COMPLETE_PROFILE" && router.asPath !== "/auth/finalize") {
             router.push(`/auth/finalize`);
+          } else {
+            const data = await _get("/api/v1/maintenanceMessage");
+            const [maintenance] = data.filter((d) => d.context === "maintenance" && d.enabled);
+            if (maintenance && router.asPath !== "/en-maintenance" && !isUserAdmin(auth)) {
+              router.push(`/en-maintenance`);
+            }
           }
         }
       }
