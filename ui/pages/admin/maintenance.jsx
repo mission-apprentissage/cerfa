@@ -9,11 +9,14 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  Input,
   Textarea,
   Divider,
   Text,
   Switch,
+  RadioGroup,
+  Radio,
+  VStack,
+  HStack,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { _post, _get, _put, _delete } from "../../common/httpClient";
@@ -31,115 +34,72 @@ export const getServerSideProps = async (context) => ({ props: { ...(await getAu
 
 const Message = () => {
   const [messageAutomatique, setMessageAutomatique] = useState([]);
-  const [messagesManuel, setMessagesManuel] = useState([]);
+  const [messages, setMessages] = useState([]);
 
   const [user] = useAuth();
+
+  const onSubmitMessage = ({ msg, type, context }) => {
+    // eslint-disable-next-line no-undef
+    return new Promise(async (resolve) => {
+      console.log(msg, type, context);
+      try {
+        let messagePosted =
+          context === "manuel" || context === "maintenance"
+            ? await _post("/api/v1/maintenanceMessage", {
+                type,
+                context,
+                msg,
+                name: user.email,
+                enabled: true,
+              })
+            : await _put(`/api/v1/maintenanceMessage/${messageAutomatique._id}`, {
+                type,
+                context,
+                msg,
+                name: "auto",
+                enabled: false,
+              });
+
+        if (messagePosted) {
+          alert("Le message a bien été envoyé/mise à jour.");
+        }
+        window.location.reload();
+      } catch (e) {
+        console.log(e);
+      }
+
+      resolve("onSubmitHandler complete");
+    });
+  };
 
   const {
     values: valuesM,
     handleSubmit: handleSubmitM,
     handleChange: handleChangeM,
   } = useFormik({
-    initialValues: {
-      msg: "",
-      type: "",
-    },
-    onSubmit: ({ msg, type }, { setSubmitting }) => {
-      // eslint-disable-next-line no-undef
-      return new Promise(async (resolve) => {
-        try {
-          const newMaintenanceMessage = {
-            type,
-            context: "manuel",
-            msg,
-            name: user.email,
-            enabled: true,
-          };
-          const messagePosted = await _post("/api/v1/maintenanceMessage", newMaintenanceMessage);
-          if (messagePosted) {
-            alert("Le message a bien été envoyé.");
-          }
-          window.location.reload();
-        } catch (e) {
-          console.log(e);
-        }
-
-        setSubmitting(false);
-        resolve("onSubmitHandler complete");
-      });
-    },
-  });
-
-  const {
-    values: valuesA,
-    handleSubmit: handleSubmitA,
-    handleChange: handleChangeA,
-    setFieldValue: setFieldValueA,
-  } = useFormik({
-    initialValues: {
-      msg: "",
-    },
-    onSubmit: ({ msg }, { setSubmitting }) => {
-      // eslint-disable-next-line no-undef
-      return new Promise(async (resolve) => {
-        try {
-          const newMaintenanceMessage = {
-            type: "alert",
-            context: "automatique",
-            msg,
-            name: "auto",
-            enabled: false,
-          };
-          const messagePosted = await _put(
-            `/api/v1/maintenanceMessage/${messageAutomatique._id}`,
-            newMaintenanceMessage
-          );
-          if (messagePosted) {
-            alert("Le message a bien été mise à jour.");
-          }
-          window.location.reload();
-        } catch (e) {
-          console.log(e);
-        }
-
-        setSubmitting(false);
-        resolve("onSubmitHandler complete");
-      });
-    },
+    initialValues: { msg: "", type: "", context: "manuel" },
+    onSubmit: ({ msg, type, context }) =>
+      onSubmitMessage({ msg, type: context !== "manuel" ? "alert" : type, context }),
   });
 
   useEffect(() => {
     const run = async () => {
       try {
         const data = await _get("/api/v1/maintenanceMessage");
-        if (data.length === 0) {
-          const newMaintenanceMessage = {
-            type: "alert",
-            context: "automatique",
-            msg: "Une mise à jour des données est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.",
-            name: "auto",
-            enabled: false,
-          };
-          await _post("/api/v1/maintenanceMessage", newMaintenanceMessage);
-          window.location.reload();
-        } else {
-          const [a] = data.filter((d) => d.context === "automatique");
-          setMessageAutomatique(a);
-          setFieldValueA(
-            "msg",
-            a.msg ||
-              "Une mise à jour des données est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh."
-          );
+        setMessages(data.filter((d) => d.msg));
 
-          const m = data.filter((d) => d.context === "manuel");
-          setMessagesManuel(m);
-        }
+        const [auto] = data.filter((d) => d.context === "automatique" && d.msg);
+        setMessageAutomatique(auto);
+
+        // const [maintenance] = data.filter((d) => d.context === "maintenance");
+        // setMessagesMaintenance(maintenance);
+        // setFieldValue("msg", auto.msg);
       } catch (e) {
         console.error(e);
       }
     };
     run();
-  }, [setFieldValueA]);
+  }, []);
 
   const onEnabledClicked = async (item, payload) => {
     try {
@@ -160,7 +120,7 @@ const Message = () => {
     try {
       const messageDeleted = await _delete(`/api/v1/maintenanceMessage/${item._id}`);
       if (messageDeleted) {
-        alert("Le message MANUEL seulement a bien été supprimé.");
+        alert("Le message a bien été supprimé.");
       }
       window.location.reload();
     } catch (e) {
@@ -174,7 +134,7 @@ const Message = () => {
         <title>Messages de maintenance</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Box w="100%" pt={[4, 8]} px={[1, 24]} color="grey.800">
+      <Box w="100%" pt={[4, 8]} color="grey.800">
         <Container maxW="xl">
           <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
             <BreadcrumbItem>
@@ -183,25 +143,30 @@ const Message = () => {
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>Message de maintenance</BreadcrumbLink>
+              <BreadcrumbLink>Messages de maintenance</BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
         </Container>
       </Box>
-      <Box w="100%" px={[1, 1, 12, 24]}>
+      <Box w="100%">
         <Container maxW="xl">
           <Heading textStyle="h2" marginBottom="2w" mt={6}>
-            Message de maintenance
+            Messages de maintenance
           </Heading>
           <Box>
             <Box>
-              {messagesManuel.length > 0 && (
+              {messages.length > 0 && (
                 <Table
-                  data={messagesManuel.map((m) => ({
+                  data={messages.map((m) => ({
                     Message: {
-                      Header: "Message",
+                      Header: "Messages précédents",
                       value: m.msg,
                       width: 300,
+                    },
+                    Context: {
+                      Header: "Context",
+                      value: m.context,
+                      width: 90,
                     },
                     Type: {
                       Header: "Type",
@@ -216,16 +181,20 @@ const Message = () => {
                     Supprimer: {
                       Header: "Supprimer",
                       value: null,
-                      width: 20,
+                      width: 40,
                     },
                   }))}
                   components={{
+                    Message: (value) => {
+                      return <Box px={3}>{value}</Box>;
+                    },
                     Actif: (value, i) => {
+                      if (messages[i].context === "automatique") return null;
                       return (
                         <Box>
                           <Switch
                             onChange={() => {
-                              onEnabledClicked(messagesManuel[i], { enabled: !value });
+                              onEnabledClicked(messages[i], { enabled: !value });
                             }}
                             defaultIsChecked={value}
                           />
@@ -233,10 +202,11 @@ const Message = () => {
                       );
                     },
                     Supprimer: (value, i) => {
+                      if (messages[i].context === "automatique") return null;
                       return (
                         <Box
                           onClick={() => {
-                            onDeleteClicked(messagesManuel[i]);
+                            onDeleteClicked(messages[i]);
                           }}
                         >
                           <Text color="tomato" fontWeight="bold">
@@ -249,48 +219,90 @@ const Message = () => {
                 />
               )}
             </Box>
+            <Divider my={10} border="2px solid" />
+            <Heading textStyle="h4" fontSize="1.3rem" mt={10}>
+              Ajouter/Mettre à jour un message:{" "}
+            </Heading>
             <FormControl as="fieldset" mt={8}>
-              <FormLabel as="legend">Ajouter un message manuel: </FormLabel>
+              <VStack alignItems="flex-start" mb={5}>
+                <FormLabel textDecoration="underline">Context du message: </FormLabel>
+                <RadioGroup value={valuesM.context}>
+                  <VStack alignItems="flex-start">
+                    <Radio
+                      type="radio"
+                      name="context"
+                      value="manuel"
+                      checked={valuesM.context === "manuel"}
+                      onChange={handleChangeM}
+                    >
+                      Manuel (Message informatif permanent si activé)
+                    </Radio>
+                    <Radio
+                      type="radio"
+                      name="context"
+                      value="automatique"
+                      checked={valuesM.context === "automatique"}
+                      onChange={handleChangeM}
+                    >
+                      Automatique (Message d&apos;alert automatique déclenché lors d&apos;un traitement coté serveur)
+                    </Radio>
+                    <Radio
+                      type="radio"
+                      name="context"
+                      value="maintenance"
+                      checked={valuesM.context === "maintenance"}
+                      onChange={handleChangeM}
+                    >
+                      Maintenance (Message global de maintenance; si activé le site ne sera pas accesible pour les
+                      utilisarteurs non adminstrateur)
+                    </Radio>
+                  </VStack>
+                </RadioGroup>
+              </VStack>
+              <FormLabel textDecoration="underline">Message: </FormLabel>
               <Textarea
                 name="msg"
                 value={valuesM.msg}
                 onChange={handleChangeM}
-                placeholder="Message Manuel"
+                placeholder="exemple: Une mise à jour des données est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/2022 à XXh."
                 rows={3}
                 required
               />
-              <Input
-                mt={3}
-                name="type"
-                value={valuesM.type}
-                onChange={handleChangeM}
-                placeholder="alert ou info"
-                required
-              />
-              <Box mt="3">
+              <Text fontSize="0.8rem" mb={5}>
+                Aide! Pour afficher un lien hypertexte dans les messages, veuillez suivre la synthaxe suivante [Mon
+                Lien](<strong>##</strong>https://MON_URL)
+              </Text>
+              <HStack alignItems="flex-start" mb={5}>
+                <FormLabel textDecoration="underline">Type de message: </FormLabel>
+                <RadioGroup
+                  value={valuesM.context !== "manuel" ? "alert" : valuesM.type}
+                  isDisabled={valuesM.context !== "manuel"}
+                >
+                  <HStack alignItems="flex-start">
+                    <Radio
+                      type="radio"
+                      name="type"
+                      value="alert"
+                      checked={valuesM.type !== "info"}
+                      onChange={handleChangeM}
+                    >
+                      Alert (Bandeau rouge)
+                    </Radio>
+                    <Radio
+                      type="radio"
+                      name="type"
+                      value="info"
+                      checked={valuesM.type === "info"}
+                      onChange={handleChangeM}
+                    >
+                      Info (Bandeau bleu)
+                    </Radio>
+                  </HStack>
+                </RadioGroup>
+              </HStack>
+              <Box my="8">
                 <Button textStyle="sm" variant="primary" onClick={handleSubmitM}>
-                  Enregistrer et activé
-                </Button>
-              </Box>
-            </FormControl>
-          </Box>
-          <Divider my={10} border="2px solid" />
-          <Box>
-            <FormControl as="fieldset" mt={5}>
-              <FormLabel as="legend">
-                Message d&apos;alert automatique lors d&apos;un traitement coté serveur:{" "}
-              </FormLabel>
-              <Textarea
-                name="msg"
-                value={valuesA.msg}
-                onChange={handleChangeA}
-                placeholder="Message Automatique"
-                rows={3}
-                required
-              />
-              <Box mt="2rem">
-                <Button textStyle="sm" variant="primary" onClick={handleSubmitA} mb={8}>
-                  Mettre à jour le message automatique
+                  Enregistrer
                 </Button>
               </Box>
             </FormControl>
