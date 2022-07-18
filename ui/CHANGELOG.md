@@ -1,3 +1,10 @@
+# [2.13.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.1...v2.13.0-beta.2) (2022-07-18)
+
+
+### Bug Fixes
+
+* **remuneration:** date anniversaire mois precedent le debut de contrat ([5e57acd](https://github.com/mission-apprentissage/cerfa/commit/5e57acd34d5ab3e08ab7b9f7b369ac01e842b307))
+
 # [2.13.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.12.4-beta.1...v2.13.0-beta.1) (2022-07-18)
 
 
