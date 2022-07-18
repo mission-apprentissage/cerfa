@@ -208,13 +208,12 @@ export const buildRemuneration = (data) => {
   const ageA5 = ageA4 + 1;
 
   // Kept for debug
-  console.log([
-    { date: apprentiDateNaissance.toFormat("yyyy-MM-dd"), age: ageA1 },
-    { date: anniversaireA1.toFormat("yyyy-MM-dd"), age: ageA2 },
-    { date: anniversaireA2.toFormat("yyyy-MM-dd"), age: ageA3 },
-    { date: anniversaireA3.toFormat("yyyy-MM-dd"), age: ageA4 },
-    isAnniversaireMonthBeforeStartContrat,
-  ]);
+  // console.log([
+  //   { date: apprentiDateNaissance.toFormat("yyyy-MM-dd"), age: ageA1 },
+  //   { date: anniversaireA1.toFormat("yyyy-MM-dd"), age: ageA2 },
+  //   { date: anniversaireA2.toFormat("yyyy-MM-dd"), age: ageA3 },
+  //   { date: anniversaireA3.toFormat("yyyy-MM-dd"), age: ageA4 },
+  // ]);
 
   const smicObj = findSmicAtDate(dateDebutContrat);
   let SMIC = smicObj.mensuel;
