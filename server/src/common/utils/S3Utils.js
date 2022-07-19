@@ -15,8 +15,6 @@ module.exports = {
     return s3.getObject({ Bucket: config.aws.Bucket, Key: key }).createReadStream();
   },
   putS3Object: (fileBinary, key) => {
-    console.log(JSON.stringify(config.aws));
-
     return new Promise((resolve, reject) => {
       s3.putObject(
         {
