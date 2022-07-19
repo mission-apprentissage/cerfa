@@ -1,7 +1,7 @@
 version: "2.4"
 services:
   reverse_proxy:
-    image: cerfa_reverse_proxy
+    image: registry.kleegroup.com/dgefp-pdigi/cerfa_reverse_proxy:latest
     container_name: cerfa_reverse_proxy
     build:
       context: reverse_proxy
@@ -30,7 +30,7 @@ services:
       - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
 
   ui:
-    image: cerfa_ui
+    image: registry.kleegroup.com/dgefp-pdigi/cerfa_ui:latest
     container_name: cerfa_ui
     build:
       context: ui
@@ -43,7 +43,7 @@ services:
       - SERVER_URI=http://server:5000
 
   server:
-    image: cerfa_server
+    image: registry.kleegroup.com/dgefp-pdigi/cerfa_server:latest
     container_name: cerfa_server
     build:
       context: server

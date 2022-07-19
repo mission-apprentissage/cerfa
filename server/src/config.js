@@ -64,6 +64,7 @@ module.exports = {
     uri: env.get("CERFA_CLAMAV_URI").default("127.0.0.1:3310").asString(),
   },
   pds: {
+    pdsUrl: env.get("CERFA_PDS_URL").asString(),
     clientId: env.get("CERFA_PDS_CLIENT_ID").asString(),
     clientSecret: env.get("CERFA_PDS_CLIENT_SECRET").asString(),
   },
