@@ -5,7 +5,7 @@ const s3 = new AWS.S3({
   accessKeyId: config.aws.AccessKeyId,
   secretAccessKey: config.aws.SecretAccessKey,
   endpoint: config.aws.BasePath,
-  s3ForcePathStyle: true,
+  region: config.aws.region,
   signatureVersion: "v4",
 });
 

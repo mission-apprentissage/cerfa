@@ -126,7 +126,7 @@
 
       - name: creation du fichier docker compose
         ansible.builtin.template:
-          src: pdigi/env-override.yaml.j2
+          src: pdigi/env-recette.yaml.j2
           dest: "/opt/pdigi/docker-compose.yml"
 
       - name: login sur le registry

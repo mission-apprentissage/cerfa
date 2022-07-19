@@ -61,6 +61,7 @@ module.exports = {
     BasePath: env.get("CERFA_AWS_BASE_PATH").asString(),
     AccessKeyId: env.get("CERFA_AWS_ACCESS_KEY_ID").asString(),
     SecretAccessKey: env.get("CERFA_AWS_SECRET_ACCES_KEY").asString(),
+    region: env.get("CERFA_AWS_REGION").asString(),
   },
   apiEntreprise: env.get("CERFA_API_ENTREPRISE_KEY").asString(),
   apiYousign: {
