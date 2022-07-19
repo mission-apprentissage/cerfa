@@ -139,6 +139,7 @@
         docker_compose:
           project_src: /opt/pdigi
           recreate: always
+          remove_orphans: yes
           files:
             - docker-compose.yml
         register: docker_compose_output

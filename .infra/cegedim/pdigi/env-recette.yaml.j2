@@ -26,8 +26,8 @@ services:
       - NGINX_ALWAYS_TLS_REDIRECT=false
       - PARANOIA=1
       - PROXY=1
-#      - PROXY_SSL_CERT=/ssl/fullchain.pem
-#      - PROXY_SSL_CERT_KEY=/ssl/privkey.pem
+      #      - PROXY_SSL_CERT=/ssl/fullchain.pem
+      #      - PROXY_SSL_CERT_KEY=/ssl/privkey.pem
       - REPORTING_LEVEL=4
     volumes:
       - /opt/cerfa/data/nginx:/data
@@ -117,6 +117,22 @@ services:
       start_period: 120s
     networks:
       - cerfa_network
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:latest
+    container_name: cerfa_minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=romain
+      - MINIO_ROOT_PASSWORD=Kleeklee2022!
+    networks:
+      - cerfa_network
+    volumes:
+      - ~/minio/data:/data
     restart: unless-stopped
 
 networks:
