@@ -3,12 +3,14 @@ const Joi = require("joi");
 const { createWriteStream } = require("fs");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const { getFromStorage, uploadToStorage, deleteFromStorage } = require("../../../common/utils/ovhUtils");
-const { oleoduc } = require("oleoduc");
+const { oleoduc, writeData, accumulateData } = require("oleoduc");
 const multiparty = require("multiparty");
 const { EventEmitter } = require("events");
 const { PassThrough } = require("stream");
 const logger = require("../../../common/logger");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
+const { putS3Object } = require("../../../common/utils/S3Utils");
+const config = require("../../../config");
 
 function discard() {
   return createWriteStream("/dev/null");
@@ -104,8 +106,22 @@ module.exports = (components) => {
           part,
           scanStream,
           hashStream,
-          crypto.isCipherAvailable() ? crypto.cipher(dossierId) : noop(),
-          test ? noop() : await uploadToStorage(path, { contentType: part.headers["content-type"] })
+          // crypto.isCipherAvailable() ? crypto.cipher(dossierId) : noop(),
+          config.storageType === "s3"
+            ? accumulateData(
+                (acc, value) => {
+                  return Buffer.concat([acc, Buffer.from(value)]);
+                },
+                { accumulator: Buffer.from(new Uint8Array()) }
+              )
+            : noop(),
+          test
+            ? noop()
+            : config.storageType === "s3"
+            ? writeData((data) => {
+                return putS3Object(data, path);
+              })
+            : await uploadToStorage(path, { contentType: part.headers["content-type"] })
         );
 
         if (part.byteCount > 10485760) {
