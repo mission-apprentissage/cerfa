@@ -6,7 +6,8 @@ const s3 = new AWS.S3({
   secretAccessKey: config.aws.SecretAccessKey,
   endpoint: config.aws.BasePath,
   region: config.aws.region,
-  signatureVersion: "v4",
+  s3ForcePathStyle: config.aws.s3ForcePathStyle,
+  signatureVersion: config.aws.signatureVersion,
 });
 
 module.exports = {
@@ -14,6 +15,8 @@ module.exports = {
     return s3.getObject({ Bucket: config.aws.Bucket, Key: key }).createReadStream();
   },
   putS3Object: (fileBinary, key) => {
+    console.log(JSON.stringify(config.aws));
+
     return new Promise((resolve, reject) => {
       s3.putObject(
         {
