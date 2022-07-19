@@ -48,12 +48,19 @@ module.exports = {
       pass: env.get("CERFA_SMTP_AUTH_PASS").asString(),
     },
   },
+  storageType: env.get("CERFA_STORAGE_TYPE").default("s3").asString(),
   ovh: {
     storage: {
       encryptionKey: env.get("CERFA_OVH_STORAGE_ENCRYPTION_KEY").asString(),
       uri: env.get("CERFA_OVH_STORAGE_URI").asString(),
       storageName: env.get("CERFA_OVH_STORAGE_NAME").default("mna-cerfa").asString(),
     },
+  },
+  aws: {
+    Bucket: env.get("CERFA_AWS_BUCKET_NAME").asString(),
+    BasePath: env.get("CERFA_AWS_BASE_PATH").asString(),
+    AccessKeyId: env.get("CERFA_AWS_ACCESS_KEY_ID").asString(),
+    SecretAccessKey: env.get("CERFA_AWS_SECRET_ACCES_KEY").asString(),
   },
   apiEntreprise: env.get("CERFA_API_ENTREPRISE_KEY").asString(),
   apiYousign: {
