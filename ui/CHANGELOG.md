@@ -1,3 +1,10 @@
+# [2.13.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.2...v2.13.0-beta.3) (2022-07-19)
+
+
+### Features
+
+* ajout S3 mecanism ([#860](https://github.com/mission-apprentissage/cerfa/issues/860)) ([8d54cd9](https://github.com/mission-apprentissage/cerfa/commit/8d54cd92f89a13a146e999edf51126ead853a6cb))
+
 # [2.13.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.1...v2.13.0-beta.2) (2022-07-18)
 
 
