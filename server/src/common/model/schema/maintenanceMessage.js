@@ -6,10 +6,13 @@ const maintenanceMessageSchema = {
   type: {
     type: String,
     required: true,
+    nullable: true,
+    enum: ["alert", "info", null],
   },
   context: {
     type: String,
     required: true,
+    enum: ["manuel", "automatique", "maintenance"],
   },
   name: {
     type: String,

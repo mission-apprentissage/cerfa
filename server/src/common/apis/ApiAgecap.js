@@ -8,6 +8,7 @@ const { getFromStorage } = require("../utils/ovhUtils");
 const { oleoduc, writeData } = require("oleoduc");
 const { PassThrough } = require("stream");
 const Boom = require("boom");
+const { getS3ObjectAsStream } = require("../utils/S3Utils");
 
 // Cf Documentation : Api Agecap
 const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
@@ -73,7 +74,9 @@ class ApiAgecap {
 
       const _buf = [];
       await oleoduc(
-        await getFromStorage(document.cheminFichier),
+        config.storageType !== "s3"
+          ? await getFromStorage(document.cheminFichier)
+          : await getS3ObjectAsStream(document.cheminFichier),
         this.crypto.isCipherAvailable() ? this.crypto.decipher(dossierId) : new PassThrough(),
         writeData((chunk) => _buf.push(chunk))
       );

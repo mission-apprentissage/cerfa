@@ -1,3 +1,24 @@
+# [2.13.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.2...v2.13.0-beta.3) (2022-07-19)
+
+
+### Features
+
+* ajout S3 mecanism ([#860](https://github.com/mission-apprentissage/cerfa/issues/860)) ([8d54cd9](https://github.com/mission-apprentissage/cerfa/commit/8d54cd92f89a13a146e999edf51126ead853a6cb))
+
+# [2.13.0-beta.2](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.1...v2.13.0-beta.2) (2022-07-18)
+
+
+### Bug Fixes
+
+* **remuneration:** date anniversaire mois precedent le debut de contrat ([5e57acd](https://github.com/mission-apprentissage/cerfa/commit/5e57acd34d5ab3e08ab7b9f7b369ac01e842b307))
+
+# [2.13.0-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.12.4-beta.1...v2.13.0-beta.1) (2022-07-18)
+
+
+### Features
+
+* ajout page de maintenance globale ([#859](https://github.com/mission-apprentissage/cerfa/issues/859)) ([6e8029b](https://github.com/mission-apprentissage/cerfa/commit/6e8029bed5001aa20bb76b6cc9c0464beeb5635a))
+
 ## [2.12.4-beta.1](https://github.com/mission-apprentissage/cerfa/compare/v2.12.3...v2.12.4-beta.1) (2022-07-13)
 
 

@@ -12,6 +12,8 @@ const { getFromStorage } = require("../../../common/utils/ovhUtils");
 const { oleoduc, writeData } = require("oleoduc");
 const { PassThrough } = require("stream");
 const { get } = require("lodash/object");
+const config = require("../../../config");
+const { getS3ObjectAsStream } = require("../../../common/utils/S3Utils");
 
 module.exports = (components) => {
   const router = express.Router();
@@ -453,8 +455,11 @@ module.exports = (components) => {
       const contratDocument = find(documents, { typeDocument: "CONTRAT" });
       if (contratDocument) {
         const _buf = [];
+
         await oleoduc(
-          await getFromStorage(contratDocument.cheminFichier),
+          config.storageType !== "s3"
+            ? await getFromStorage(contratDocument.cheminFichier)
+            : await getS3ObjectAsStream(contratDocument.cheminFichier),
           crypto.isCipherAvailable() ? crypto.decipher(dossierId) : new PassThrough(),
           writeData((chunk) => _buf.push(chunk))
         );

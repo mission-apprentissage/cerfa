@@ -91,7 +91,7 @@ runScript(async ({ users, workspaces, dossiers }) => {
   await MaintenanceMessage.create({
     context: "automatique",
     type: "alert",
-    msg: "Une mise à jour des données est en cours...",
+    msg: "Une mise à jour des données est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/2022 à XXh.",
     name: "auto",
     enabled: false,
     time: new Date(),
