@@ -1,3 +1,18 @@
+# [2.13.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.4...v2.13.0-beta.5) (2022-07-20)
+
+
+### Bug Fixes
+
+* ajout variables d'env ([f567f73](https://github.com/mission-apprentissage/cerfa/commit/f567f7301987020f86a251d50d54ab04ada22542))
+* ajouts variables config AWS S3 ([f088dfe](https://github.com/mission-apprentissage/cerfa/commit/f088dfecd3f35749c42dc07c2d73e4ef11bcfa16))
+* connexion s3 ([ef099d1](https://github.com/mission-apprentissage/cerfa/commit/ef099d1280c23b60ca7387ae197c424e707c3457))
+* connexion s3 ([a7492e8](https://github.com/mission-apprentissage/cerfa/commit/a7492e8fcd416508540df692b9786a84a03da885))
+* fichiers docker-compose pour déploiement ([e51045b](https://github.com/mission-apprentissage/cerfa/commit/e51045ba25f8920bf68c527cfcbbd5f6fb51d29d))
+* merge conflicts ([f09226a](https://github.com/mission-apprentissage/cerfa/commit/f09226a1c1631e1ce90913869253125b09ab2e34))
+* removed console.log ([4ae948e](https://github.com/mission-apprentissage/cerfa/commit/4ae948e159695a92e027d1f2b14c771714732d41))
+* rollback docker-compose ([b488716](https://github.com/mission-apprentissage/cerfa/commit/b488716df4b736d4ce18ccd000e4fe2935ef398e))
+* updated docker-compose recette ([589a455](https://github.com/mission-apprentissage/cerfa/commit/589a45500e6f81fdcead10272792fb73e587f7de))
+
 # [2.13.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.3...v2.13.0-beta.4) (2022-07-20)
 
 
