@@ -1,3 +1,10 @@
+# [2.13.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.5...v2.13.0-beta.6) (2022-07-20)
+
+
+### Bug Fixes
+
+* departements pattern ([#863](https://github.com/mission-apprentissage/cerfa/issues/863)) ([0b7dc8e](https://github.com/mission-apprentissage/cerfa/commit/0b7dc8ee243eab0df921f1c5e0006f013ef8778f))
+
 # [2.13.0-beta.5](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.4...v2.13.0-beta.5) (2022-07-20)
 
 
