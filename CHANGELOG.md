@@ -1,3 +1,10 @@
+# [2.13.0-beta.4](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.3...v2.13.0-beta.4) (2022-07-20)
+
+
+### Bug Fixes
+
+* rncp too fast, add debounce prop ([#862](https://github.com/mission-apprentissage/cerfa/issues/862)) ([97174a2](https://github.com/mission-apprentissage/cerfa/commit/97174a2b3a59dbb47a9abe8da25fc034ae8f2c6f))
+
 # [2.13.0-beta.3](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.2...v2.13.0-beta.3) (2022-07-19)
 
 
