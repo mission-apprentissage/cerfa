@@ -61,6 +61,9 @@ module.exports = {
     BasePath: env.get("CERFA_AWS_BASE_PATH").asString(),
     AccessKeyId: env.get("CERFA_AWS_ACCESS_KEY_ID").asString(),
     SecretAccessKey: env.get("CERFA_AWS_SECRET_ACCES_KEY").asString(),
+    region: env.get("CERFA_AWS_REGION").asString(),
+    s3ForcePathStyle: env.get("CERFA_AWS_S3FORCEPATHSTYLE").default("true").asBoolStrict(),
+    signatureVersion: env.get("CERFA_AWS_SIGNATURE_VERSION").default("v4").asString(),
   },
   apiEntreprise: env.get("CERFA_API_ENTREPRISE_KEY").asString(),
   apiYousign: {
@@ -71,6 +74,7 @@ module.exports = {
     uri: env.get("CERFA_CLAMAV_URI").default("127.0.0.1:3310").asString(),
   },
   pds: {
+    pdsUrl: env.get("CERFA_PDS_URL").asString(),
     clientId: env.get("CERFA_PDS_CLIENT_ID").asString(),
     clientSecret: env.get("CERFA_PDS_CLIENT_SECRET").asString(),
   },

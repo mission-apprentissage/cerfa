@@ -1,0 +1,56 @@
+- name: Check if certificate exists
+  stat: path=/opt/pdigi/data/server/agecap/ca-key.pem
+  register: certificate_output
+
+- name: Création du répertoire certificates
+  file:
+    path: /opt/pdigi/data/server/agecap
+    state: directory
+
+- name: Generate client certificate for AGECAP
+  block:
+    - name: Create CA key (Certification Authority)
+      openssl_privatekey:
+        path: /opt/pdigi/data/server/agecap/ca-key.pem
+        passphrase: "{{ vault.TLS_CA_PASSPHRASE }}"
+        cipher: aes256
+
+    - name: Create CSR (Certificate Signing Request)
+      openssl_csr:
+        path: /opt/pdigi/data/server/agecap/ca-csr.pem
+        privatekey_path: /opt/pdigi/data/server/agecap/ca-key.pem
+        privatekey_passphrase: "{{ vault.TLS_CA_PASSPHRASE }}"
+        common_name: "{{ dns_name }}"
+        basic_constraints:
+          - 'CA:TRUE'
+
+    - name: Generate CA certificate
+      community.crypto.x509_certificate:
+        path: /opt/pdigi/data/server/agecap/ca-crt.pem
+        csr_path: /opt/pdigi/data/server/agecap/ca-csr.pem
+        privatekey_path: /opt/pdigi/data/server/agecap/ca-key.pem
+        privatekey_passphrase: "{{ vault.TLS_CA_PASSPHRASE }}"
+        provider: selfsigned
+
+    - name: Generate client key
+      openssl_privatekey:
+        path: /opt/pdigi/data/server/agecap/client-key.pem
+        passphrase: "{{ vault.TLS_CLIENT_PASSPHRASE }}"
+        cipher: aes256
+
+    - name: Create the client CSR
+      openssl_csr:
+        path: /opt/pdigi/data/server/agecap/client-csr.pem
+        privatekey_path: /opt/pdigi/data/server/agecap/client-key.pem
+        privatekey_passphrase: "{{ vault.TLS_CLIENT_PASSPHRASE }}"
+        common_name: "{{ dns_name }}"
+
+    - name: Generate the client certificate
+      community.crypto.x509_certificate:
+        path: /opt/pdigi/data/server/agecap/client-crt.pem
+        csr_path: /opt/pdigi/data/server/agecap/client-csr.pem
+        provider: ownca
+        ownca_path: /opt/pdigi/data/server/agecap/ca-crt.pem
+        ownca_privatekey_path: /opt/pdigi/data/server/agecap/ca-key.pem
+        ownca_privatekey_passphrase: "{{ vault.TLS_CA_PASSPHRASE }}"
+  when: certificate_output.stat.exists == False

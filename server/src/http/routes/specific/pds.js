@@ -29,11 +29,7 @@ module.exports = (components) => {
   const { users, sessions, mailer } = components;
 
   const getPdsClient = async () => {
-    const pdsIssuer = await Issuer.discover(
-      config.env === "production"
-        ? "https://mesdemarches.emploi.gouv.fr/identification/oidc/"
-        : "https://agadir-app.rct01.kleegroup.com/identification/oidc/"
-    );
+    const pdsIssuer = await Issuer.discover(config.pds.pdsUrl);
 
     const client = new pdsIssuer.Client({
       client_id: config.pds.clientId,
