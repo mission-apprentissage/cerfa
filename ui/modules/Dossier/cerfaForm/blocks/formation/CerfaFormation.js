@@ -31,7 +31,7 @@ export const CerfaFormation = memo(() => {
             <InputController name="organismeFormation.adresse.commune" mt="2" />
           </Box>
           <Box w="45%" flex="1" ml="5w">
-            <InputController name="formation.rncp" mt="2" />
+            <InputController name="formation.rncp" mt="2" debounce="600" />
             <InputController name="formation.codeDiplome" mt="2" />
             <InputController name="formation.typeDiplome" type="select" mt="2" />
             <InputController name="formation.intituleQualification" mt="2" />
