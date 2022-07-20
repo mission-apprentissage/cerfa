@@ -85,13 +85,13 @@ const apprentiSchema = {
     validate: {
       validator: function (v) {
         if (!v) return true;
-        return /^([0-9][0-9]|2[AB]|9[012345]|97[12346])$/.test(v);
+        return /^([0-9][0-9]|2[AB]|9[012345]|97[1234678]|98[46789])$/.test(v);
       },
       message: (props) => `${props.value} n'est pas un departement valide`,
     },
     type: String,
     example: "1, 60",
-    pattern: "^([0-9][0-9]|2[AB]|9[012345]|97[12346])$",
+    pattern: "^([0-9][0-9]|2[AB]|9[012345]|97[1234678]|98[46789])$",
     description: `Pour les personnes nées à l'étranger, indiquez 99. Pour les départements à 1 chiffre, faites précéder le chiffre par un "0".`,
     default: null,
     nullable: true,
