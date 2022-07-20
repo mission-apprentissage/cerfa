@@ -161,14 +161,14 @@ const employeurCerfaSchema = {
       validate: {
         validator: function (v) {
           if (!v) return true;
-          return /^([0-9][0-9]|2[AB]|9[012345]|97[12346])$/.test(v);
+          return /^([0-9][0-9]|2[AB]|9[012345]|97[1234678]|98[46789])$/.test(v);
         },
         message: (props) => `${props.value} n'est pas un departement valide`,
       },
       type: String,
       description: "Département de l'employeur",
       example: "1 Ain, 99 Étranger",
-      pattern: "^([0-9][0-9]|2[AB]|9[012345]|97[12346])$",
+      pattern: "^([0-9][0-9]|2[AB]|9[012345]|97[1234678]|98[46789])$",
       default: null,
       nullable: true,
       required: function () {
