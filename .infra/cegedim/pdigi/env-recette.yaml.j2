@@ -128,13 +128,13 @@ services:
       - "9000:9000"
       - "9001:9001"
     environment:
-      - MINIO_ROOT_USER=romain
-      - MINIO_ROOT_PASSWORD=Kleeklee2022!
+      - MINIO_ROOT_USER={{vault.CERFA_MINIO_USER}}
+      - MINIO_ROOT_PASSWORD={{vault.CERFA_MINIO_PASSWORD}}
     networks:
       - cerfa_network
     volumes:
       - ~/minio/data:/data
-    restart: unless-stopped
+    restart: always
 
 networks:
   cerfa_network:
