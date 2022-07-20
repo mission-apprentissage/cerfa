@@ -2,11 +2,12 @@ import { memo, useCallback } from "react";
 import { useRecoilValue } from "recoil";
 import { fieldSelector } from "../../atoms";
 import { useCerfaController } from "../../CerfaControllerContext";
+import lodashDebounce from "lodash.debounce";
 
 import { InputField } from "./Input";
 
 // eslint-disable-next-line react/display-name
-export const InputController = memo(({ name, fieldType, mt, mb, ml, mr, w }) => {
+export const InputController = memo(({ name, fieldType, mt, mb, ml, mr, w, debounce = 0 }) => {
   const controller = useCerfaController();
 
   const handle = useCallback(
@@ -28,7 +29,7 @@ export const InputController = memo(({ name, fieldType, mt, mb, ml, mr, w }) => 
       name={name}
       {...field}
       value={field.value ?? ""}
-      onChange={handle}
+      onChange={debounce ? lodashDebounce(handle, debounce, { trailing: true }) : handle}
       isRequired={field.required}
       mb={mb}
       mt={mt}
