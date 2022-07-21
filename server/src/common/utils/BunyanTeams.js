@@ -34,8 +34,6 @@ class BunyanTeams {
   }
 
   write(record) {
-    let data;
-
     if (typeof record === "string") {
       record = JSON.parse(record);
     }
@@ -46,10 +44,12 @@ class BunyanTeams {
     const message = {
       "@type": "MessageCard",
       "@context": "http://schema.org/extensions",
-      themeColor: colors[record.level],
-      markdown: true,
+      themeColor: "0072C6",
+      summary: "Summary description",
       sections: [
         {
+          activityTitle: record.error.message ?? level,
+          text: "Teams logger",
           facts: [
             {
               name: "Environnement",
@@ -66,28 +66,27 @@ class BunyanTeams {
           ],
         },
       ],
-      title: util.format(`[%s][${config.env}]`, level.toUpperCase()),
     };
 
+    let data;
     try {
       data = this.customFormatter
         ? this.customFormatter(record, level)
         : {
-            text: util.format("[%s] %s", level.toUpperCase(), record.msg),
+            text: util.format("[%s] %s", level.toUpperCase(), record.error.stack ?? record.msg),
           };
     } catch (err) {
       return this.error(err);
     }
 
-    message.text = `\`\`\`\n${JSON.stringify(data)}\n\`\`\``;
+    message.sections[0].text = `\`\`\`\n${data.text}\n\`\`\``;
 
     axios
-      .post(this.webhook_url, {
-        method: "post",
-        body: JSON.stringify(message),
+      .post(this.webhook_url, message, {
         headers: { "Content-Type": "application/json" },
       })
       .catch((err) => {
+        console.error("erreur lors de l'envoi a teams");
         return this.error(err);
       });
   }
