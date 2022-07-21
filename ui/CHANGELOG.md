@@ -1,3 +1,10 @@
+# [2.13.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.7...v2.13.0-beta.8) (2022-07-21)
+
+
+### Bug Fixes
+
+* error bunyansTeams ([a254ce3](https://github.com/mission-apprentissage/cerfa/commit/a254ce31a460efbf0b368e22c944ec422fbd30c7))
+
 # [2.13.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.6...v2.13.0-beta.7) (2022-07-21)
 
 
