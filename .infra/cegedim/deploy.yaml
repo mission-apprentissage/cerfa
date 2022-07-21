@@ -1,0 +1,29 @@
+---
+  - hosts: "{{ env }}-app"
+    name: deploy app
+    become: true
+    gather_facts: false
+    vars_files:
+    - "vault-{{ env }}.yml"
+    tasks:
+      - name: login sur le registry
+        docker_login:
+          registry_url: "{{registry_url}}"
+          username: "{{registry_username}}"
+          password: "{{registry_password}}"
+
+      - name: creation du fichier docker compose
+        ansible.builtin.template:
+          src: pdigi/env-recette-klee.yaml.j2
+          dest: "/opt/pdigi/docker-compose.yml"
+
+      - name: lancement de l'application
+        docker_compose:
+          project_src: /opt/pdigi
+          recreate: always
+          remove_orphans: yes
+          files:
+            - docker-compose.yml
+        register: docker_compose_output
+      - debug:
+          var: docker_compose_output

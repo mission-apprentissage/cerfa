@@ -14,7 +14,7 @@ services:
       - server
       - ui
     environment:
-      - SERVER_NAME={{ dns_name }}
+      - SERVER_NAME={{ hostname }}
       - SERVERNAME=localhost
       - ACCESSLOG=/data/access.log
       - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
@@ -73,7 +73,7 @@ services:
       - CERFA_LOG_LEVEL=info
       - CERFA_LOG_DESTINATIONS=stdout,mongodb,teams
       - CERFA_PUBLIC_URL=https://{{ hostname }}
-      - CERFA_MONGODB_URI=mongodb://{{ mongo_user }}:{{ mongo_password }}@{{ mongo_host }}:27017/pdigi?retryWrites=true&w=majority&authSource=admin
+      - CERFA_MONGODB_URI=mongodb://{{ mongo_user }}:{{ mongo_password }}@{{ mongo_host }}:27017/{{ mongo_database }}?retryWrites=true&w=majority&authSource=admin
       - CERFA_SLACK_WEBHOOK_URL={{ vault.CERFA_SLACK_WEBHOOK_URL }}
       - CERFA_TEAMS_WEBHOOK_URL={{ vault.CERFA_TEAMS_WEBHOOK_URL }}
       - CERFA_API_KEY={{ vault.CERFA_API_KEY }}
