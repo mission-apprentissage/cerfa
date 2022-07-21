@@ -137,6 +137,6 @@ yarn-error.log
 
 **/.vault-password.gpg
 **/habilitations.yml
-**/vault.yml
+cegedim/vault-*.yml
 /cegedim/pdigi/inventory.yaml
 /cegedim/pdigi/daemon.json
