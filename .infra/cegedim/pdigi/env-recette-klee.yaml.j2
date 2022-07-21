@@ -26,8 +26,8 @@ services:
       - NGINX_ALWAYS_TLS_REDIRECT=false
       - PARANOIA=1
       - PROXY=1
-#      - PROXY_SSL_CERT=/ssl/fullchain.pem
-#      - PROXY_SSL_CERT_KEY=/ssl/privkey.pem
+      #      - PROXY_SSL_CERT=/ssl/fullchain.pem
+      #      - PROXY_SSL_CERT_KEY=/ssl/privkey.pem
       - REPORTING_LEVEL=4
     volumes:
       - /opt/cerfa/data/nginx:/data
@@ -45,7 +45,7 @@ services:
       - NEXT_PUBLIC_BASE_URL=https://{{ hostname }}
       - NEXT_PUBLIC_BASE_HOST={{ hostname }}
       - NEXT_PUBLIC_METABASE_URL=https://{{ hostname }}
-      - NEXT_PUBLIC_METABASE_SECRET_KEY=not-a-real-key
+      - NEXT_PUBLIC_METABASE_SECRET_KEY={{ vault.NEXT_PUBLIC_METABASE_SECRET_KEY }}
 
   metabase:
     image: metabase/metabase:v0.42.0
@@ -71,7 +71,7 @@ services:
     environment:
       - CERFA_ENV=recette
       - CERFA_LOG_LEVEL=info
-      - CERFA_LOG_DESTINATIONS=stdout,mongodb
+      - CERFA_LOG_DESTINATIONS=stdout,mongodb,teams
       - CERFA_PUBLIC_URL=https://{{ hostname }}
       - CERFA_MONGODB_URI=mongodb://{{ mongo_user }}:{{ mongo_password }}@{{ mongo_host }}:27017/pdigi?retryWrites=true&w=majority&authSource=admin
       - CERFA_SLACK_WEBHOOK_URL={{ vault.CERFA_SLACK_WEBHOOK_URL }}
@@ -119,6 +119,22 @@ services:
     networks:
       - cerfa_network
     restart: unless-stopped
+
+  minio:
+    image: minio/minio:latest
+    container_name: cerfa_minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER={{vault.CERFA_MINIO_USER}}
+      - MINIO_ROOT_PASSWORD={{vault.CERFA_MINIO_PASSWORD}}
+    networks:
+      - cerfa_network
+    volumes:
+      - ~/minio/data:/data
+    restart: always
 
 networks:
   cerfa_network:

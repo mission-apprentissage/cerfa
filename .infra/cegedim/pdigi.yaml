@@ -116,24 +116,16 @@
     vars_files:
     - "vault.yml"
     tasks:
-      - name: Création des répertoires 'overrides'
-        ansible.builtin.file:
-          path: "/opt/pdigi/.overrides/{{ item }}/"
-          state: directory
-        loop:
-          - common/
-          - production/
-
-      - name: creation du fichier docker compose
-        ansible.builtin.template:
-          src: pdigi/env-recette.yaml.j2
-          dest: "/opt/pdigi/docker-compose.yml"
-
       - name: login sur le registry
         docker_login:
           registry_url: "{{registry_url}}"
           username: "{{registry_username}}"
           password: "{{registry_password}}"
+
+      - name: creation du fichier docker compose
+        ansible.builtin.template:
+          src: pdigi/env-recette-klee.yaml.j2
+          dest: "/opt/pdigi/docker-compose.yml"
 
       - name: lancement de l'application
         docker_compose:
@@ -143,6 +135,5 @@
           files:
             - docker-compose.yml
         register: docker_compose_output
-
       - debug:
           var: docker_compose_output
