@@ -48,7 +48,7 @@ class BunyanTeams {
       summary: "Summary description",
       sections: [
         {
-          activityTitle: record.error.message ?? level,
+          activityTitle: level,
           text: "Teams logger",
           facts: [
             {
@@ -70,11 +70,19 @@ class BunyanTeams {
 
     let data;
     try {
-      data = this.customFormatter
-        ? this.customFormatter(record, level)
-        : {
-            text: util.format("[%s] %s", level.toUpperCase(), record.error.stack ?? record.msg),
+      if (this.customFormatter) {
+        data = this.customFormatter(record, level);
+      } else {
+        if (record.error && record.error.stack) {
+          data = {
+            text: util.format("[%s] %s", level.toUpperCase(), record.error.stack),
           };
+        } else {
+          data = {
+            text: util.format("[%s] %s", level.toUpperCase(), record.msg),
+          };
+        }
+      }
     } catch (err) {
       return this.error(err);
     }
