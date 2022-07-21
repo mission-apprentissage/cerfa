@@ -1,3 +1,10 @@
+# [2.13.0-beta.7](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.6...v2.13.0-beta.7) (2022-07-21)
+
+
+### Bug Fixes
+
+* correction logger teams ([a5c6aae](https://github.com/mission-apprentissage/cerfa/commit/a5c6aaec3c6e1de068442ba86f628cbae78ac881))
+
 # [2.13.0-beta.6](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.5...v2.13.0-beta.6) (2022-07-20)
 
 
