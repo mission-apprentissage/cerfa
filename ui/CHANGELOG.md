@@ -1,3 +1,10 @@
+# [2.13.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.8...v2.13.0-beta.9) (2022-07-22)
+
+
+### Bug Fixes
+
+* unused var colors in BunyanTeams ([1cfcc9f](https://github.com/mission-apprentissage/cerfa/commit/1cfcc9f7abf7d21a6b0a3b6bca20a09332c816ed))
+
 # [2.13.0-beta.8](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.7...v2.13.0-beta.8) (2022-07-21)
 
 
