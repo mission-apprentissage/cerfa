@@ -45,7 +45,6 @@ services:
       - NEXT_PUBLIC_BASE_URL=https://{{ hostname }}
       - NEXT_PUBLIC_BASE_HOST={{ hostname }}
       - NEXT_PUBLIC_METABASE_URL=https://{{ hostname }}
-      - NEXT_PUBLIC_METABASE_SECRET_KEY={{ vault.NEXT_PUBLIC_METABASE_SECRET_KEY }}
 
   metabase:
     image: metabase/metabase:v0.42.0
