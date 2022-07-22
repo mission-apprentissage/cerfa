@@ -1,7 +1,7 @@
 import { useRecoilValue } from "recoil";
 import { dossierAtom } from "../../atoms";
 import { Divider, Flex, HStack, Link, Stack, Text, VStack } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSignatures } from "../hooks/useSignatures";
 import { Input } from "../../formEngine/components/Input/Input";
 import Ribbons from "../../../../components/Ribbons/Ribbons";
@@ -29,7 +29,7 @@ export const SignatairesForm = () => {
             <br />
             Elles doivent être obligatoirement détenues et accessibles par l&apos;interlocuteur associé. <br />
             Pour plus d&apos;informations, vous pouvez consulter les&nbsp;
-            <Link href={"/cgu"} textDecoration={"underline"} color="bluefrance">
+            <Link href={"/cgu"} isExternal={true} textDecoration={"underline"} color="bluefrance">
               conditions générales d&apos;utilisation.
             </Link>
           </Text>
@@ -80,6 +80,15 @@ export const SignatairesForm = () => {
   );
 };
 
+function validateUniqueEmail(emails, type, value) {
+  if (!value) return;
+  const filteredEmails = { ...emails };
+  delete filteredEmails[type];
+  if (Object.values(filteredEmails).includes(value)) {
+    return { error: "Chaque courriel des signataires doit être unique" };
+  }
+}
+
 const SignataireLineForm = ({ signataire, type, emails, isLocked }) => {
   const { onSubmittedSignataireDetails } = useSignatures();
 
@@ -87,6 +96,16 @@ const SignataireLineForm = ({ signataire, type, emails, isLocked }) => {
   const [lastname, setLastname] = useState(signataire.lastname);
   const [email, setEmail] = useState(signataire.email);
   const [phone, setPhone] = useState(signataire.phone);
+
+  const [error, setError] = useState(null);
+
+  // permet d'avoir la validation directement avec le remplissage automatique des champs
+  useEffect(() => {
+    if (!isLocked) {
+      const currentError = validateUniqueEmail(emails, type, email);
+      setError(currentError?.error);
+    }
+  }, [email, emails, isLocked, type]);
 
   return (
     <HStack spacing={3} alignItems={"start"}>
@@ -135,17 +154,14 @@ const SignataireLineForm = ({ signataire, type, emails, isLocked }) => {
         fieldType="email"
         mt={0}
         w="30%"
+        error={error}
         onError={(val, name) => {
           onSubmittedSignataireDetails("", name);
         }}
         onSubmit={onSubmittedSignataireDetails}
         onChange={setEmail}
         validate={({ value }) => {
-          const filteredEmails = { ...emails };
-          delete filteredEmails[type];
-          if (Object.values(filteredEmails).includes(value)) {
-            return { error: "Chaque courriel des signataires doit être unique" };
-          }
+          return validateUniqueEmail(emails, type, value);
         }}
       />
       {(type === "apprenti" || type === "legal") && (
