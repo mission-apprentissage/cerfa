@@ -41,7 +41,7 @@ services:
       - cerfa_network
     environment:
       - SERVER_URI=http://server:5000
-      - NEXT_PUBLIC_ENV=recette
+      - NEXT_PUBLIC_ENV={{ vault.CERFA_ENV }}
       - NEXT_PUBLIC_BASE_URL=https://{{ hostname }}
       - NEXT_PUBLIC_BASE_HOST={{ hostname }}
       - NEXT_PUBLIC_METABASE_URL=https://{{ hostname }}
@@ -69,11 +69,11 @@ services:
       - cerfa_network
     restart: unless-stopped
     environment:
-      - CERFA_ENV=recette
+      - CERFA_ENV={{ vault.CERFA_ENV }}
       - CERFA_LOG_LEVEL=info
-      - CERFA_LOG_DESTINATIONS=stdout,mongodb,teams
+      - CERFA_LOG_DESTINATIONS={{ vault.CERFA_LOG_DESTINATIONS }}
       - CERFA_PUBLIC_URL=https://{{ hostname }}
-      - CERFA_MONGODB_URI=mongodb://{{ mongo_user }}:{{ mongo_password }}@{{ mongo_host }}:27017/{{ mongo_database }}?retryWrites=true&w=majority&authSource=admin
+      - CERFA_MONGODB_URI=mongodb://{{ mongo_user }}:{{ mongo_password }}@{{ mongo_host }}:27017/{{ mongo_database }}?retryWrites=true&w=majority
       - CERFA_SLACK_WEBHOOK_URL={{ vault.CERFA_SLACK_WEBHOOK_URL }}
       - CERFA_TEAMS_WEBHOOK_URL={{ vault.CERFA_TEAMS_WEBHOOK_URL }}
       - CERFA_API_KEY={{ vault.CERFA_API_KEY }}
