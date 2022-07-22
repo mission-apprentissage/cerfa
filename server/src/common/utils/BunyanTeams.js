@@ -11,15 +11,6 @@ const levels = {
   60: "fatal",
 };
 
-const colors = {
-  10: "BBBBBB", // trace
-  20: "BBBBBB", // debug
-  30: "000000", // info
-  40: "FF9800", // warn
-  50: "E51C23", // error
-  60: "E51C23", // fatal
-};
-
 class BunyanTeams {
   constructor(options, error) {
     options = options || {};
