@@ -1,3 +1,10 @@
+# [2.13.0-beta.10](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.9...v2.13.0-beta.10) (2022-07-25)
+
+
+### Bug Fixes
+
+* deploiement + non rejet tls en recette ([afba44b](https://github.com/mission-apprentissage/cerfa/commit/afba44bb0c28b564ab98a4e10e86c5987b9d6727))
+
 # [2.13.0-beta.9](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.8...v2.13.0-beta.9) (2022-07-22)
 
 
