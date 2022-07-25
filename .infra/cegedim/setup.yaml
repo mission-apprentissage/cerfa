@@ -77,7 +77,8 @@
 
       - name: "Install requisites"
         apt:
-          name: 
+          name:
+          - vim
           - docker-ce
           - python3-pip
           - python3-docker

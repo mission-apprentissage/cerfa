@@ -4,7 +4,7 @@
     become: true
     gather_facts: false
     vars_files:
-    - "vault-{{ env }}.yml"
+      - "vault-{{ env }}.yml"
     tasks:
       - name: login sur le registry
         docker_login:

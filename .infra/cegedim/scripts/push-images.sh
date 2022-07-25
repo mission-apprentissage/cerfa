@@ -65,10 +65,14 @@ docker build ./reverse_proxy -t registry.kleegroup.com/dgefp-pdigi/cerfa_reverse
 # On supprime le fichier location_metabase.conf.template
 rm ./reverse_proxy/app/nginx/templates/includes/location_metabase.conf.template
 
+# L'enchainement de commande plante régulièrement => Le sleep 3 résoud en partie le problème
+sleep 3
 echo "Push des images locales sur le registry"
 echo "Pushing cerfa_ui:$v ..."
 docker push registry.kleegroup.com/dgefp-pdigi/cerfa_ui:"$v"
+sleep 3
 echo "Pushing cerfa_server:$v ..."
 docker push registry.kleegroup.com/dgefp-pdigi/cerfa_server:"$v"
+sleep 3
 echo "Pushing cerfa_reverse_proxy:$v ..."
 docker push registry.kleegroup.com/dgefp-pdigi/cerfa_reverse_proxy:"$v"

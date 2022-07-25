@@ -9,6 +9,7 @@ const { oleoduc, writeData } = require("oleoduc");
 const { PassThrough } = require("stream");
 const Boom = require("boom");
 const { getS3ObjectAsStream } = require("../utils/S3Utils");
+const https = require("https");
 
 // Cf Documentation : Api Agecap
 const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
@@ -19,6 +20,9 @@ const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
     baseURL: config.agecap.url,
     timeout: 5000,
     headers: { Authorization: `Basic ${config.agecap.key}` },
+    httpsAgent: new https.Agent({
+      rejectUnauthorized: config.env !== "recette",
+    }),
   }),
 });
 
@@ -33,6 +37,7 @@ class ApiAgecap {
       if (this.auth) return true;
       try {
         logger.debug(`[Agecap API] Authenticate`);
+        console.log(`Basic ${config.agecap.key}`);
         let response = await client.post(`authenticate`);
         if (!response?.data?.token) {
           throw new ApiError("Api Agecap", ` Authenticate: Something went wrong`);
