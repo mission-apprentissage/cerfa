@@ -21,7 +21,7 @@ describe("[Routes] Password", () => {
     let emailsSent = getEmailsSent();
     assert.strictEqual(emailsSent.length, 1);
     assert.strictEqual(emailsSent[0].to, "user1@apprentissage.beta.gouv.fr");
-    assert.strictEqual(emailsSent[0].from, "no-reply@apprentissage.beta.gouv.fr");
+    assert.strictEqual(emailsSent[0].from, "no-reply@celia.emploi.gouv.fr");
     assert.ok(emailsSent[0].subject.indexOf("Réinitialiser votre mot de passe") !== -1);
   });
 

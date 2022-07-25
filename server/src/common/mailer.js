@@ -59,7 +59,7 @@ module.exports = (transporter = createTransporter({ ...config.smtp, secure: fals
       });
 
       return transporter.sendMail({
-        from: "no-reply@apprentissage.beta.gouv.fr",
+        from: "no-reply@celia.emploi.gouv.fr",
         to,
         subject,
         html: await renderEmail(emailTemplateContent),
