@@ -1,3 +1,10 @@
+# [2.13.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.10...v2.13.0-beta.11) (2022-07-25)
+
+
+### Bug Fixes
+
+* correction test expediteur mail ([4a196bc](https://github.com/mission-apprentissage/cerfa/commit/4a196bcc9db3ed9d533dbbb1083a1a975a8d24e2))
+
 # [2.13.0-beta.10](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.9...v2.13.0-beta.10) (2022-07-25)
 
 
