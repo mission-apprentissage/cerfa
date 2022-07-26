@@ -8,12 +8,20 @@ const APP_VERSION = process.env.NEXT_PUBLIC_VERSION;
 
 const Footer = () => {
   return (
-    <Box borderTop="1px solid" borderColor="bluefrance" color="#1E1E1E" fontSize="zeta" w="full">
+    <Box
+      as="footer"
+      role="contentinfo"
+      borderTop="1px solid"
+      borderColor="bluefrance"
+      color="#1E1E1E"
+      fontSize="zeta"
+      w="full"
+    >
       <Container maxW="xl" my={"-2.5rem"}>
         <Flex flexDirection={["column", "column", "row"]}>
-          <Link href="/" w={["100%", "100%", "50%"]}>
+          <Box w={["100%", "100%", "50%"]}>
             <LogoFooter size={"xl"} />
-          </Link>
+          </Box>
 
           <Box alignSelf="center" flex="1">
             <Text>

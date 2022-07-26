@@ -40,7 +40,7 @@ const Input = {
         _disabled: {
           cursor: "not-allowed",
           opacity: 1,
-          color: "grey.600",
+          color: "grey.700",
           borderBottomColor: "#E5E5E5",
         },
       },

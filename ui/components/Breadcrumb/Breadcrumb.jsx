@@ -6,6 +6,7 @@ import NavLink from "next/link";
 const Breadcrumb = ({ pages }) => {
   return (
     <ChakraBreadcrumb
+      aria-label="Fil d'Ariane"
       separator={<ArrowDropRightLine color="grey.600" boxSize={3} mb={1} />}
       textStyle="xs"
       color={"grey.800"}

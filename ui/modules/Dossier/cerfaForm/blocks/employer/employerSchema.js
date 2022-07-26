@@ -2,6 +2,7 @@ import { INDICE_DE_REPETITION_OPTIONS } from "../../domain/indiceDeRepetionOptio
 
 export const employerSchema = {
   "employeur.adresse.codePostal": {
+    showInfo: true,
     required: true,
     label: "Code postal :",
     requiredMessage: "Le code postal est obligatoire",
@@ -98,7 +99,7 @@ export const employerSchema = {
     required: true,
     label: "Département de l'employeur :",
     requiredMessage: "le département de l'employeur est obligatoire",
-    validateMessage: " n'est pas un département valide",
+    validateMessage: "Le département doit contenir 2 à 3 chiffres",
   },
   "employeur.adresse.region": {
     required: true,
@@ -203,6 +204,7 @@ export const employerSchema = {
     showInfo: true,
     label: "Téléphone de l'employeur :",
     requiredMessage: "Le téléphone de l'employeur est obligatoire",
+    validateMessage: "Le numéro de téléphone doit contenir 9 chiffres après l’indicatif",
   },
   "employeur.courriel": {
     required: true,

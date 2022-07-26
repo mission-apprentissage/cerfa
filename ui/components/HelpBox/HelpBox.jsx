@@ -87,9 +87,9 @@ export const HelpBox = () => {
               >
                 portail de l’assistance <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} ml={"0.125rem"} />
               </Link>{" "}
-              ou composer le numéro vert ci-dessous du lundi au vendredi, de 9h à 18h, sans interruption.
+              ou composer le numéro vert 0 805 032 430 du lundi au vendredi, de 9h à 18h, sans interruption.
             </Box>
-            <Image mb={6} width={300} src={"/numero_vert.jpg"} alt="0 805 032 430" />
+            <Image alt="numéro vert 0 805 032 430" mb={6} width={300} src={"/numero_vert.jpg"} />
           </ModalBody>
         </ModalContent>
       </Modal>

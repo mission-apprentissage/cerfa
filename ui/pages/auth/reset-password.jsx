@@ -117,23 +117,39 @@ const ResetPasswordPage = () => {
           />
           <List mb={5}>
             <ListItem color={variant[conditions.min].color}>
-              <ListIcon as={variant[conditions.min].icon} color={variant[conditions.min].color} />
+              <ListIcon aria-hidden={true} as={variant[conditions.min].icon} color={variant[conditions.min].color} />
               Le mot de passe doit contenir <strong>au moins {minLength} caractères</strong>
             </ListItem>
             <ListItem color={variant[conditions.lowerCase].color}>
-              <ListIcon as={variant[conditions.lowerCase].icon} color={variant[conditions.lowerCase].color} />
+              <ListIcon
+                aria-hidden={true}
+                as={variant[conditions.lowerCase].icon}
+                color={variant[conditions.lowerCase].color}
+              />
               Le mot de passe doit contenir <strong>au moins une lettre minuscule</strong>
             </ListItem>
             <ListItem color={variant[conditions.upperCase].color}>
-              <ListIcon as={variant[conditions.upperCase].icon} color={variant[conditions.upperCase].color} />
+              <ListIcon
+                aria-hidden={true}
+                as={variant[conditions.upperCase].icon}
+                color={variant[conditions.upperCase].color}
+              />
               Le mot de passe doit contenir <strong>au moins une lettre majuscule</strong>
             </ListItem>
             <ListItem color={variant[conditions.special].color}>
-              <ListIcon as={variant[conditions.special].icon} color={variant[conditions.special].color} />
+              <ListIcon
+                aria-hidden={true}
+                as={variant[conditions.special].icon}
+                color={variant[conditions.special].color}
+              />
               Le mot de passe doit contenir <strong>au moins un caractère spécial</strong>
             </ListItem>
             <ListItem color={variant[conditions.number].color}>
-              <ListIcon as={variant[conditions.number].icon} color={variant[conditions.number].color} />
+              <ListIcon
+                aria-hidden={true}
+                as={variant[conditions.number].icon}
+                color={variant[conditions.number].color}
+              />
               Le mot de passe doit contenir <strong>au moins un chiffre</strong>
             </ListItem>
           </List>

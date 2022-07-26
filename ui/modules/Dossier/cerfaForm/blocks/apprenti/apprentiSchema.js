@@ -69,10 +69,11 @@ export const apprentiSchema = {
     requiredMessage: "le complement d'adress est obligatoire",
   },
   "apprenti.adresse.codePostal": {
+    showInfo: true,
     required: true,
     label: "Code postal :",
     requiredMessage: "Le code postal est obligatoire",
-    validateMessage: "n'est pas un code postal valide",
+    validateMessage: "Le code postal doit contenir 5 caractères.",
     pattern: "^[0-9]{5}$",
     mask: "C",
     maskBlocks: [
@@ -905,6 +906,7 @@ export const apprentiSchema = {
     required: true,
     fieldType: "phone",
     label: "Téléphone de l'apprenti(e) :",
+    validateMessage: "Le numéro de téléphone doit contenir 9 chiffres après l’indicatif",
     showInfo: true,
   },
   "apprenti.courriel": {
@@ -1038,10 +1040,11 @@ export const apprentiSchema = {
     requiredMessage: "le complement d'adress est obligatoire",
   },
   "apprenti.responsableLegal.adresse.codePostal": {
+    showInfo: true,
     _init: ({ values }) => ({ required: shouldAskResponsalLegalAdresse({ values }) }),
     label: "Code postal :",
     requiredMessage: "Le code postal est obligatoire",
-    validateMessage: "n'est pas un code postal valide",
+    validateMessage: "Le code postal doit contenir 5 caractères.",
     mask: "C",
     maskBlocks: [
       {
@@ -1897,7 +1900,7 @@ export const apprentiSchema = {
     required: true,
     label: "Département de naissance :",
     requiredMessage: "le département de naissance est obligatoire",
-    validateMessage: " n'est pas un département valide",
+    validateMessage: "Le département doit contenir 2 à 3 chiffres",
     showInfo: true,
   },
   "apprenti.communeNaissance": {

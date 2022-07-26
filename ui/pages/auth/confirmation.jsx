@@ -53,7 +53,7 @@ const Confirmed = () => {
       )}
       {error && (
         <HStack>
-          <CloseIcon color="error" cursor="pointer" />
+          <CloseIcon aria-hidden={true} color="error" cursor="pointer" />
           <Heading fontSize="1rem" fontFamily="Marianne" fontWeight="500" marginBottom="2w" color="error">
             Le lien est expiré ou invalide, merci de prendre contact avec un administrateur en précisant votre adresse
             mail :

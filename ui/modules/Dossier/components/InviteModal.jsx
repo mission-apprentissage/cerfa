@@ -200,7 +200,7 @@ const InviteModal = ({ title, size = "md", isOpen, onClose, onInvite, defaultRol
                     onChange={handleChange}
                     value={values["userEmail"]}
                     required
-                    placeholder="Renseigner un courriel"
+                    placeholder="Renseigner un courriel au format courriel@texte.domaine"
                     variant="outline"
                     isInvalid={errors.userEmail && touched.userEmail}
                     outlineOffset="0px"
@@ -342,6 +342,7 @@ const InviteModal = ({ title, size = "md", isOpen, onClose, onInvite, defaultRol
                         <Center pl={5}>
                           {!dossierContributors[i].owner && (
                             <CloseIcon
+                              aria-hidden={true}
                               color="bluefrance"
                               onClick={async () => {
                                 onDeleteContributor.mutate(dossierContributors[i]);

@@ -114,7 +114,7 @@ const WorkspaceLayout = ({ header, content }) => {
     const { sharedWithMeWorkspaces } = useSharedWithMe();
 
     return (
-      <Flex direction="column" as="nav" fontSize="sm" color="gray.600" aria-label="Sub Navigation" {...props}>
+      <Flex direction="column" as="nav" fontSize="sm" color="gray.600" aria-label="Menu latéral" {...props}>
         {/* <Flex alignItems="flex-start" px="4" pl="2" py="3" w="full" fontSize="md">
         {titles.workspace}
       </Flex> */}

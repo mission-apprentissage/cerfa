@@ -16,10 +16,10 @@ import { workspaceTitleAtom } from "../../../hooks/workspaceAtoms";
 const AutoSaveBadge = () => {
   const status = useRecoilValue(autoSaveStatusAtom);
   return (
-    <Badge variant="solid" bg="grey.100" color="grey.500" textStyle="sm" px="15px" ml="10px">
+    <Badge variant="solid" bg="grey.100" color="grey.800" textStyle="sm" px="15px" ml="10px">
       {status === "OK" && (
         <Text as="i" display="flex" alignItems="center">
-          Sauvegarde automatique activée <CheckIcon w="10px" h="10px" ml="2" color="grey" />
+          Sauvegarde automatique activée <CheckIcon aria-hidden={true} w="10px" h="10px" ml="2" color="grey" />
         </Text>
       )}
       {status === "PENDING" && (

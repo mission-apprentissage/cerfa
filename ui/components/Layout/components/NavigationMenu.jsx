@@ -185,7 +185,7 @@ const NavBarContainer = ({ children, isMyWorkspace, ...props }) => {
         borderColor: "bluefrance",
       };
   return (
-    <Box w="full" {...boxProps}>
+    <Box as="nav" role="navigation" aria-label="menu principal" w="full" {...boxProps}>
       <Container maxW="xl">
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" w="100%" {...props}>
           {children}

@@ -25,6 +25,7 @@ const LogoFooter = ({ size = "sm" }) => {
   return (
     <Box p={[0, 0, 4]}>
       <Text
+        alt="Logo gouvernement, logo France Relance, logo financé par l’union européenne"
         display="inline-block"
         fontSize={fontSize}
         fontWeight="700"
