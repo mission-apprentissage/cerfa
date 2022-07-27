@@ -66,6 +66,7 @@ const Suivi = () => {
   dossier.statutAgecap.forEach((statutAgecap) => {
     let titre = "";
     let commentaire = "";
+    let content = "";
     let date = statutAgecap.dateMiseAJourStatut
       ? `- ${DateTime.fromSQL(statutAgecap.dateMiseAJourStatut).toFormat("dd/MM/y")}`
       : " ";
@@ -77,7 +78,16 @@ const Suivi = () => {
 
     if (statutAgecap.statut === "En attente de complément") {
       titre = "Dossier en attente de complément";
-      commentaire = statutAgecap.commentaire;
+      content = (
+        <Text textAlign={"left"} fontSize={"sm"} color={"gray.800"} fontWeight={"300"}>
+          Votre dossier a été renvoyé pour modification par {serviceInstruction} pour les raisons suivantes :<br />
+          {statutAgecap.commentaire}
+          <br />
+          <br />
+          En cliquant sur le bouton &quot;modifier&quot;, vous allez être renvoyé sur les premières étapes de complétion
+          du contrat.
+        </Text>
+      );
     }
 
     if (statutAgecap.statut === "Non déposable") {
@@ -95,7 +105,7 @@ const Suivi = () => {
       if (statutAgecap.numAvenant) commentaire += `-${statutAgecap.numAvenant}`;
     }
 
-    listStatusPdigi.push({ titre, commentaire, date });
+    listStatusPdigi.push({ titre, commentaire, content, date });
   });
 
   return (
@@ -115,7 +125,9 @@ const Suivi = () => {
                   {listStatusPdigi.length}
                 </Box>
               )}
-            />
+            >
+              {statutPdigi.content}
+            </Step>
           );
         })}
       </Steps>
