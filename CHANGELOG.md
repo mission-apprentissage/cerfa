@@ -1,3 +1,15 @@
+# [2.13.0-beta.12](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.11...v2.13.0-beta.12) (2022-07-27)
+
+
+### Bug Fixes
+
+* comment removed ([50a6f1f](https://github.com/mission-apprentissage/cerfa/commit/50a6f1fa3267a3a4cbdce3992066fa38dc3490d6))
+
+
+### Features
+
+* ajout cron dans le playbook setup ([d7216c4](https://github.com/mission-apprentissage/cerfa/commit/d7216c4e4eb655d038d7d61fb1b23f7396408f43))
+
 # [2.13.0-beta.11](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.10...v2.13.0-beta.11) (2022-07-25)
 
 
