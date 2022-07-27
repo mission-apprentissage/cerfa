@@ -1,3 +1,10 @@
+# [2.13.0-beta.13](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.12...v2.13.0-beta.13) (2022-07-27)
+
+
+### Bug Fixes
+
+* probleme formattage setup.yaml ([5f8a48a](https://github.com/mission-apprentissage/cerfa/commit/5f8a48a882075fb5791618eb4086d358d2d7944c))
+
 # [2.13.0-beta.12](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.11...v2.13.0-beta.12) (2022-07-27)
 
 
