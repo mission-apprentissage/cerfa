@@ -100,9 +100,9 @@
           state: directory
 
       - name: ajout cron server batch
-          cron:
-            name: "server jobs"
-            minute: "15"
-            hour: "*"
-            weekday: "*"
-            job: "docker exec cerfa_server yarn --silent jobs >> /var/log/server-jobs.log"
+        cron:
+          name: "server jobs"
+          minute: "15"
+          hour: "*"
+          weekday: "*"
+          job: "docker exec cerfa_server yarn --silent jobs >> /var/log/server-jobs.log"
