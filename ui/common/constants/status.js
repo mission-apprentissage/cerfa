@@ -61,7 +61,7 @@ export const DOSSIER_STATUS = {
   },
   DEPOSE: {
     priority: 6,
-    text: "Validé",
+    text: "Déposé",
   },
   REFUSE: {
     priority: 6,
