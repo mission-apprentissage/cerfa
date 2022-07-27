@@ -21,7 +21,7 @@ const executeWithRateLimiting = apiRateLimiter("apiAgecap", {
     timeout: 5000,
     headers: { Authorization: `Basic ${config.agecap.key}` },
     httpsAgent: new https.Agent({
-      rejectUnauthorized: config.env !== "recette",
+      rejectUnauthorized: config.env === "production",
     }),
   }),
 });
