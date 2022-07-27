@@ -37,7 +37,6 @@ class ApiAgecap {
       if (this.auth) return true;
       try {
         logger.debug(`[Agecap API] Authenticate`);
-        console.log(`Basic ${config.agecap.key}`);
         let response = await client.post(`authenticate`);
         if (!response?.data?.token) {
           throw new ApiError("Api Agecap", ` Authenticate: Something went wrong`);
