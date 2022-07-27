@@ -16,7 +16,27 @@ const Suivi = () => {
   // TODO : duplicate Signataires.jsx
   const [serviceInstruction, setServiceInstruction] = useState(null);
 
+  if (
+    !(
+      dossier.etat === "TRANSMIS" ||
+      dossier.etat === "EN_COURS_INSTRUCTION" ||
+      dossier.etat === "EN_ATTENTE_COMPLEMENT" ||
+      dossier.etat === "REFUSE" ||
+      dossier.etat === "DEPOSE"
+    )
+  ) {
+    return (
+      <Box mt={12} pt={2} minH="25vh">
+        <Center>
+          <Tooltip variant="alert">
+            <Text>Le dossier doit être signé avant de procéder à sa télétransmission et d’accéder à son suivi.</Text>
+          </Tooltip>
+        </Center>
+      </Box>
+    );
+  }
   // On récupère la valeure la plus actuelle de la DDETS / DREETS
+
   useEffect(() => {
     const run = async () => {
       if (!serviceInstruction) {
@@ -33,26 +53,7 @@ const Suivi = () => {
     };
     run();
   }, [code_dpt, code_region, serviceInstruction, dossier._id]);
-
   // On ne peut pas accéder à l'écran de suivi de télétransmission du dossier si la partie signature n'est pas terminée
-  if (
-    !(
-      dossier.etat === "TRANSMIS" ||
-      dossier.etat === "EN_COURS_INSTRUCTION" ||
-      dossier.etat === "REFUSE" ||
-      dossier.etat === "DEPOSE"
-    )
-  ) {
-    return (
-      <Box mt={12} pt={2} minH="25vh">
-        <Center>
-          <Tooltip variant="alert">
-            <Text>Le dossier doit être signé avant de procéder à sa télétransmission et d’accéder à son suivi.</Text>
-          </Tooltip>
-        </Center>
-      </Box>
-    );
-  }
 
   const listStatusPdigi = [
     {
@@ -72,6 +73,11 @@ const Suivi = () => {
     if (statutAgecap.statut === "En cours d'instruction") {
       titre = "Dossier en cours d'instruction";
       commentaire = "Un agent a pris en charge votre dossier, il est en cours d'instruction";
+    }
+
+    if (statutAgecap.statut === "En attente de complément") {
+      titre = "Dossier en attente de complément";
+      commentaire = statutAgecap.commentaire;
     }
 
     if (statutAgecap.statut === "Non déposable") {

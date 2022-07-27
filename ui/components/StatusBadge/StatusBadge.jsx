@@ -38,6 +38,7 @@ export const StatusBadge = ({ status, text, withIcon = false, ...badgeProps }) =
     DOSSIER_TERMINE_SANS_SIGNATURE: "aTeletransmettre", //   text: "À télétransmettre",
     TRANSMIS: "draft", //  text: "Transmis",
     EN_COURS_INSTRUCTION: "draft", // text: "En cours d'instruction",
+    EN_ATTENTE_COMPLEMENT: "draft", // text: "En attente de complément",
     INCOMPLET: "nonConforme", // text: "À modifier",
     DEPOSE: "published", //  text: "Validé",
     REFUSE: "nonConforme", // text: "Non déposable",
