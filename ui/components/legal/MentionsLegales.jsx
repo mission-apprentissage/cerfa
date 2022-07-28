@@ -5,7 +5,7 @@ const MentionsLegales = () => {
   return (
     <Box pt={1} pb={16}>
       <Box>
-        <Text>Mentions légales « Plateforme de digitalisation »</Text>
+        <Text>Mentions légales « CELIA Contrat En Ligne d&apos;Apprentissage pour les employeurs publics. »</Text>
         <Box mt={4}>
           <Heading as={"h3"} textStyle="h6" mb={2}>
             Éditeur du site

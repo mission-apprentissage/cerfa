@@ -17,7 +17,7 @@ function Home() {
       </Head>
       <Breadcrumb pages={[{ title: title }]} />
       <Heading as="h1" fontSize="lg" pt={[4, 8]}>
-        Plateforme de saisie en ligne des contrats d&apos;apprentissage pour les employeurs publics.
+        CELIA, votre plateforme de saisie en ligne des contrats d&apos;apprentissage pour les employeurs publics.
       </Heading>
       <Box pt={4} pb={16} mt={8}>
         <Text>
