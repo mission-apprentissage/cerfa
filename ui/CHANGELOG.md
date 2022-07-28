@@ -1,3 +1,10 @@
+# [2.13.0-beta.15](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.14...v2.13.0-beta.15) (2022-07-28)
+
+
+### Features
+
+* ajout de la signification de l'asterix ([c8a12d5](https://github.com/mission-apprentissage/cerfa/commit/c8a12d51efab9413651ac95468735798056490c4))
+
 # [2.13.0-beta.14](https://github.com/mission-apprentissage/cerfa/compare/v2.13.0-beta.13...v2.13.0-beta.14) (2022-07-28)
 
 
