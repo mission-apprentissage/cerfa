@@ -102,6 +102,9 @@ export const CerfaForm = memo(() => {
           </AccordionItem>
         </Accordion>
       )}
+      <Text color="gray.500" fontSize="small" mt={4}>
+        Les asterix « * » indiquent les champs obligatoires pour la télétransmission de votre dossier.
+      </Text>
     </div>
   );
 });
