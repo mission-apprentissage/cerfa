@@ -9,12 +9,18 @@ const Header = () => {
   return (
     <>
       <AlertMessage />
-      <Container maxW={"full"} borderBottom={"1px solid"} borderColor={"grey.400"} px={[0, 4]}>
+      <Container
+        as="header"
+        role="banner"
+        maxW={"full"}
+        borderBottom={"1px solid"}
+        borderColor={"grey.400"}
+        px={[0, 4]}
+      >
         <Container maxW="xl" py={[0, 2]} px={[0, 4]}>
-          <Flex alignItems="center" color="grey.800">
-            {/* Logo */}
+          <Flex flexDirection={"row"} alignItems="center" color="grey.800">
             <Link href="/" p={[4, 0]}>
-              <Logo />
+              <Logo alt={"Page d'accueil"} />
             </Link>
 
             <Box p={[1, 6]} flex="1">

@@ -7,8 +7,8 @@ const DonneesPersonnelles = () => {
       <Box>
         <Box mt={4}>
           <Text>
-            MENTIONS D&apos;INFORMATION RELATIVES AU TRAITEMENT DES DONNÉES À CARACTÈRE PERSONNEL DANS LE CADRE DU «
-            SERVICE DÉMATÉRIALISÉ DE L&apos;APPRENTISSAGE DES EMPLOYEURS PUBLICS »
+            MENTIONS D&apos;INFORMATION RELATIVES AU TRAITEMENT DES DONNÉES À CARACTÈRE PERSONNEL DANS LE CADRE DU
+            SERVICE DÉMATÉRIALISÉ DE L&apos;APPRENTISSAGE DES EMPLOYEURS PUBLICS
           </Text>
         </Box>
         <Box mt={4}>

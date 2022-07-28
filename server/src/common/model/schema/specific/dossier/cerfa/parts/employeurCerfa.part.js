@@ -108,7 +108,10 @@ const employeurCerfaSchema = {
       return !this.draft;
     },
     type: String,
-    description: `Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le "0" car l'indicateur pays est pré-renseigné.`,
+    description: `Dans le cas d'un numéro français, il n'est pas 
+    nécessaire de saisir le "0" car l'indicateur pays est 
+    pré-renseigné.
+    Il doit contenir 9 chiffres après l’indicatif.`,
     example: "0908070605",
     // pattern: "^([+])?((d)[.-]?)?[s]?(?(d{3}))?[.-]?[s]?(d{3})[.-]?[s]?(d{4,})$",
   },
@@ -120,7 +123,8 @@ const employeurCerfaSchema = {
     required: function () {
       return !this.draft;
     },
-    description: "Ce courriel sera utilisé pour l'envoi des notifications pour le suivi du dossier.",
+    description: `Ce courriel sera utilisé pour l'envoi des notifications pour le suivi du dossier.
+     Il doit être au format courriel@texte.domaine.`,
     validate: {
       validator: function (v) {
         if (!v) return true;

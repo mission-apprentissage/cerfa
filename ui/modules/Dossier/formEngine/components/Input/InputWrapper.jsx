@@ -5,7 +5,7 @@ import React from "react";
 
 export const getRightIcon = ({ loading, locked, success }) => {
   if (loading) return <Spinner boxSize="4" />;
-  if (success) return <CheckIcon color={"green.500"} boxSize="4" />;
+  if (success) return <CheckIcon aria-hidden={true} color={"green.500"} boxSize="4" />;
   if (locked) return <LockFill color={"disablegrey"} boxSize="4" />;
 };
 

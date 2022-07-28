@@ -92,7 +92,10 @@ const apprentiSchema = {
     type: String,
     example: "1, 60",
     pattern: "^([0-9][0-9]|2[AB]|9[012345]|97[1234678]|98[46789])$",
-    description: `Pour les personnes nées à l'étranger, indiquez 99. Pour les départements à 1 chiffre, faites précéder le chiffre par un "0".`,
+    description: `Pour les personnes nées à l'étranger, indiquez 99. 
+    Pour les départements à 1 chiffre, faites précéder 
+    le chiffre par un "0".
+    Le numéro doit contenir 2 à 3 chiffres.`,
     default: null,
     nullable: true,
     required: function () {
@@ -215,14 +218,18 @@ const apprentiSchema = {
     required: function () {
       return !this.draft;
     },
-    description: `Dans le cas d'un numéro français, il n'est pas nécessaire de saisir le "0" car l'indicateur pays est pré-renseigné.`,
+    description: `Dans le cas d'un numéro français, il n'est pas 
+    nécessaire de saisir le "0" car l'indicateur pays est 
+    pré-renseigné.
+    Il doit contenir 9 chiffres après l’indicatif.`,
     example: "0102030405",
   },
   courriel: {
     path: "apprenti.courriel",
     maxLength: 80,
     type: String,
-    description: "Courriel de l'apprenti",
+    description: `Ce courriel sera utilisé pour l'envoi des notifications pour le suivi du dossier.
+     Il doit être au format courriel@texte.domaine.`,
     validate: {
       validator: function (v) {
         if (!v) return true;

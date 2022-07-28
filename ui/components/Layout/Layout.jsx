@@ -13,7 +13,7 @@ const Layout = ({ children, withoutDisplayNavigationBar = false, ...rest }) => {
     <Container maxW="full" minH="100vh" d="flex" flexDirection="column" p={0} {...rest}>
       <Header />
       {!withoutDisplayNavigationBar && <NavigationMenu isMyWorkspace={isMyWorkspace} />}
-      <Box minH={"60vh"} flexGrow="1">
+      <Box as="main" role="main" minH={"60vh"} flexGrow="1">
         <Box w="100%" py={[4, 8]} px={[1, 1, 12, 24]}>
           <Container maxW="xl">{children}</Container>
         </Box>

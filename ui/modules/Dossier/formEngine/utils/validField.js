@@ -11,7 +11,7 @@ export const validField = async ({ field, value }) => {
   }
 
   if (value && field.fieldType === "email" && !(await isValidEmail(value))) {
-    return { error: "Le courriel doit être au format correct" };
+    return { error: "Le courriel doit être au format email@texte.domaine" };
   }
 
   if (value && field.pattern && !new RegExp(field.pattern).test(value)) {
@@ -33,7 +33,7 @@ export const validField = async ({ field, value }) => {
   return (await field?.validate?.({ value })) ?? {};
 };
 
-const emailValidator = Yup.string().email("Le courriel doit être au format correct");
+const emailValidator = Yup.string().email("Le courriel doit être au format email@texte.domaine");
 const isValidEmail = async (value) => {
   try {
     await emailValidator.validate(value);

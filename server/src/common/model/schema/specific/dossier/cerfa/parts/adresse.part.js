@@ -43,7 +43,7 @@ const adresseSchema = {
       message: (props) => `${props.value} n'est pas un code postal valide`,
     },
     type: String,
-    description: "Code postal",
+    description: "Le code postal doit contenir 5 caractères.",
     pattern: "^[0-9]{5}$",
     example: "75000",
     default: null,

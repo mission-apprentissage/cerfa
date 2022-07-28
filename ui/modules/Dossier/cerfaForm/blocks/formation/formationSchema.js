@@ -94,12 +94,13 @@ export const formationSchema = {
     requiredMessage: "le complement d'adress est obligatoire",
   },
   "etablissementFormation.adresse.codePostal": {
+    showInfo: true,
     fieldType: "text",
     required: true,
     completion: shouldAskEtablissementFormation,
     label: "Code postal :",
     requiredMessage: "Le code postal est obligatoire",
-    validateMessage: "n'est pas un code postal valide",
+    validateMessage: "Le code postal doit contenir 5 caractères.",
     mask: "C",
     maskBlocks: [
       {
@@ -420,11 +421,12 @@ export const formationSchema = {
     requiredMessage: "le complement d'adress est obligatoire",
   },
   "organismeFormation.adresse.codePostal": {
+    showInfo: true,
     fieldType: "text",
     required: true,
     label: "Code postal :",
     requiredMessage: "Le code postal est obligatoire",
-    validateMessage: "n'est pas un code postal valide",
+    validateMessage: "Le code postal doit contenir 5 caractères.",
     mask: "C",
     maskBlocks: [
       {

@@ -356,6 +356,7 @@ const InviteModal = ({ title, size = "md", isOpen, onClose }) => {
                               "wks/page_espace/page_parametres/gestion_acces/supprimer_contributeur"
                             ) && (
                               <CloseIcon
+                                aria-hidden={true}
                                 color="bluefrance"
                                 onClick={async () => {
                                   onDeleteContributor.mutate(workspaceContributors[i]);
