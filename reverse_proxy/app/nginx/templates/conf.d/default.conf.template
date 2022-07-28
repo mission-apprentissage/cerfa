@@ -22,6 +22,8 @@ server {
 
     server_name ${SERVER_NAME};
 
+
+
     ssl_certificate ${PROXY_SSL_CERT};
     ssl_certificate_key ${PROXY_SSL_CERT_KEY};
     ssl_session_timeout 1d;
@@ -38,6 +40,9 @@ server {
     ssl_stapling_verify ${PROXY_SSL_OCSP_STAPLING};
 
     ssl_verify_client ${PROXY_SSL_VERIFY};
+
+
+    return 301 $scheme://celia.emploi.gouv.fr$request_uri;
 
     include includes/location_*.conf;
     include includes/env/location_*.conf;
