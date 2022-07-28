@@ -153,6 +153,12 @@ const dossierSchema = {
     required: true,
     description: "Workspace id",
   },
+  version: {
+    type: Number,
+    default: 1,
+    required: true,
+    description: "Version du dossier",
+  },
   signatures: {
     type: {},
     default: null,

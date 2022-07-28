@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Box, Flex, Center, Container, Spinner, useDisclosure } from "@chakra-ui/react";
+import { Box, Flex, Center, Container, Spinner, useDisclosure, Text } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps-rework-mna";
 import { useRouter } from "next/router";
 import { useSetRecoilState, useRecoilValueLoadable, useRecoilValue } from "recoil";
@@ -23,9 +23,7 @@ import { useAutoSave } from "./formEngine/hooks/useAutoSave";
 import { useDossier } from "./hooks/useDossier";
 import { valueSelector } from "./formEngine/atoms";
 import { signaturesPdfLoadedAtom } from "./Signatures/atoms";
-// import useAuth from "../../hooks/useAuth";
-// import { hasPageAccessTo } from "../../common/utils/rolesUtils";
-// import AskBetaTestModal from "./components/AskBetaTestModal";
+import Ribbons from "../../components/Ribbons/Ribbons";
 
 const steps = [
   { label: "Cerfa", description: "Renseignez les informations" },
@@ -103,7 +101,6 @@ const Dossier = () => {
   return (
     <CerfaControllerContext.Provider value={cerfaController}>
       <Box w="100%" px={[1, 1, 6, 6]} mb={10}>
-        {/*hasPageAccessTo(auth, "signature_beta") && <AskBetaTestModal />*/}
         {finalizeModalDisclosure.isOpen && <FinalizeModal {...finalizeModalDisclosure} dossier={dossier} />}
         {eSignatureModalDisclosure.isOpen && <ESignatureModal {...eSignatureModalDisclosure} />}
         <IsPrivateEmployeurModal
@@ -143,6 +140,27 @@ const Dossier = () => {
                   )}
                   state={stepStatuses[index].state}
                 >
+                  {dossier.version > 1 &&
+                    (index === 0 || index === 3) &&
+                    dossier.etat !== "TRANSMIS" &&
+                    dossier.etat !== "EN_COURS_INSTRUCTION" &&
+                    dossier.etat !== "REFUSE" &&
+                    dossier.etat !== "DEPOSE" && (
+                      <Ribbons
+                        variant={"info_clear"}
+                        marginTop={"2rem"}
+                        paddingRight={"2rem"}
+                        borderColor={"bluefrance"}
+                        borderWidth={"1px"}
+                        borderStyle={"solid"}
+                      >
+                        <Text color={"grey.800"}>
+                          Commentaire de la demande de complément <br />
+                          <br />
+                          <strong>{dossier.statutAgecap[dossier.statutAgecap.length - 1].commentaire}</strong>
+                        </Text>
+                      </Ribbons>
+                    )}
                   {index === 0 && <CerfaForm />}
                   {index === 1 && <PiecesJustificatives />}
                   {index === 2 && <Signatures />}
