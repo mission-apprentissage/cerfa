@@ -108,34 +108,4 @@ describe("[Routes] Upload", () => {
     assert.strictEqual(response.status, 400);
     assert.deepStrictEqual(response.data, { error: "Le contenu du fichier est invalide" });
   });
-
-  it("Vérifie qu'on ne peut pas uploader un fichier avec un virus", async () => {
-    let { httpClient, createAndLogUser } = await startServerWithClamav({ isInfected: true });
-    let { Cookie, testDossier } = await createAndLogUser("user1@apprentissage.beta.gouv.fr", "password", {
-      nom: "Robert",
-      prenom: "Henri",
-      permissions: { isAdmin: true },
-      account_status: "CONFIRMED",
-    });
-
-    var form = new FormData();
-    form.append("file", fs.createReadStream(__filename), {
-      filename: "virus.pdf",
-      contentType: "application/pdf",
-    });
-
-    const response = await httpClient.post(
-      `/api/v1/upload?test=true&dossierId=${testDossier._id.toString()}&typeDocument=CONVENTION_FORMATION`,
-      form,
-      {
-        headers: {
-          ...form.getHeaders(),
-          cookie: Cookie,
-        },
-      }
-    );
-
-    assert.strictEqual(response.status, 400);
-    assert.deepStrictEqual(response.data, { error: "Le contenu du fichier est invalide" });
-  });
 });
