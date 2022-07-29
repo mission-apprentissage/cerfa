@@ -203,11 +203,7 @@ module.exports = (components) => {
         tailleFichier,
       });
 
-      if (config.storageType === "s3") {
-        await deleteS3Object(cheminFichier);
-      } else {
-        await deleteFromStorage(cheminFichier);
-      }
+      await deleteS3Object(cheminFichier);
 
       const documents = await dossiers.getDocuments(dossierId);
       return res.json({ documents });

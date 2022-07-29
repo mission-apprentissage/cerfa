@@ -11,7 +11,6 @@ const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfa
 const { oleoduc, writeData } = require("oleoduc");
 const { PassThrough } = require("stream");
 const { get } = require("lodash/object");
-const config = require("../../../config");
 const { getS3ObjectAsStream } = require("../../../common/utils/S3Utils");
 
 module.exports = (components) => {
