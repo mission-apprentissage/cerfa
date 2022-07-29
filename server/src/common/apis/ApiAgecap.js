@@ -4,7 +4,6 @@ const config = require("../../config");
 const ApiError = require("./_apiError");
 const apiRateLimiter = require("./_apiRateLimiter");
 const FormData = require("form-data");
-const { getFromStorage } = require("../utils/ovhUtils");
 const { oleoduc, writeData } = require("oleoduc");
 const { PassThrough } = require("stream");
 const Boom = require("boom");
@@ -78,9 +77,7 @@ class ApiAgecap {
 
       const _buf = [];
       await oleoduc(
-        config.storageType !== "s3"
-          ? await getFromStorage(document.cheminFichier)
-          : await getS3ObjectAsStream(document.cheminFichier),
+        await getS3ObjectAsStream(document.cheminFichier),
         this.crypto.isCipherAvailable() ? this.crypto.decipher(dossierId) : new PassThrough(),
         writeData((chunk) => _buf.push(chunk))
       );

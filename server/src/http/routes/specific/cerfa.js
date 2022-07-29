@@ -8,7 +8,6 @@ const tryCatch = require("../../middlewares/tryCatchMiddleware");
 const permissionsDossierMiddleware = require("../../middlewares/permissionsDossierMiddleware");
 const cerfaSchema = require("../../../common/model/schema/specific/dossier/cerfa/Cerfa");
 const pdfCerfaController = require("../../../logic/controllers/pdfCerfa/pdfCerfaController");
-const { getFromStorage } = require("../../../common/utils/ovhUtils");
 const { oleoduc, writeData } = require("oleoduc");
 const { PassThrough } = require("stream");
 const { get } = require("lodash/object");
@@ -457,9 +456,7 @@ module.exports = (components) => {
         const _buf = [];
 
         await oleoduc(
-          config.storageType !== "s3"
-            ? await getFromStorage(contratDocument.cheminFichier)
-            : await getS3ObjectAsStream(contratDocument.cheminFichier),
+          await getS3ObjectAsStream(contratDocument.cheminFichier),
           crypto.isCipherAvailable() ? crypto.decipher(dossierId) : new PassThrough(),
           writeData((chunk) => _buf.push(chunk))
         );

@@ -46,22 +46,32 @@ services:
       - "127.0.0.1:27017:27017"
     volumes:
       - cerfa_mongodb_data:/data
-
-  clamav:
-    image: clamav/clamav
-    ports:
-      - 3310:3310
-
   smtp:
     image: mailhog/mailhog
     container_name: cerfa_smtp
     mem_limit: 128m
     ports:
-      - 1025:1025
+      - "1025:1025"
     networks:
       - cerfa_network
     environment:
       - MH_UI_WEB_PATH=smtp
+
+  minio:
+    image: minio/minio:latest
+    container_name: cerfa_minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=admin-user
+      - MINIO_ROOT_PASSWORD=thisisapassword
+    networks:
+      - cerfa_network
+    volumes:
+      - ~/minio/data:/data
+    restart: always
 
 volumes:
   cerfa_mongodb_data:

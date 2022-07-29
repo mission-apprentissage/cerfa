@@ -1,7 +1,6 @@
 const util = require("util");
 const { throttle, omit, isEmpty } = require("lodash");
 const bunyan = require("bunyan");
-const BunyanSlack = require("bunyan-slack");
 const BunyanTeams = require("./utils/BunyanTeams");
 const BunyanMongodbStream = require("bunyan-mongodb-stream");
 const { Log } = require("./model/index");
@@ -132,26 +131,6 @@ function getCustomFormatter() {
   };
 }
 
-function sendLogsToSlack() {
-  const stream = new BunyanSlack(
-    {
-      webhook_url: config.slackWebhookUrl,
-      customFormatter: getCustomFormatter(),
-    },
-    (error) => {
-      console.error("Unable to send log to slack", error);
-    }
-  );
-
-  stream.write = throttle(stream.write, 5000);
-
-  return {
-    name: "slack",
-    level: "error",
-    stream,
-  };
-}
-
 function sendLogsToTeams() {
   const stream = new BunyanTeams(
     {
@@ -177,7 +156,6 @@ const createStreams = () => {
     stdout: () => sendLogsToConsole("stdout"),
     stderr: () => sendLogsToConsole("stderr"),
     mongodb: () => mongoDBStream(),
-    slack: () => sendLogsToSlack(),
     teams: () => sendLogsToTeams(),
   };
 

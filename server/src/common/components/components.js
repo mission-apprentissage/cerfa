@@ -30,7 +30,7 @@ module.exports = async (options = {}) => {
   const roles = options.role || (await createRoles());
   const connectionsDossiers = options.connectionsDossier || (await createConnectionsDossiers());
   const clamav = options.clamav || (await createClamav(config.clamav.uri));
-  const crypto = options.crypto || createCrypto(config.ovh.storage.encryptionKey);
+  const crypto = options.crypto || createCrypto(config.objectStorage.encryptionKey);
   const sessions = options.session || (await createSessions());
   const dreetsDdets = options.dreetsDdets || (await createDreetsDdets());
   const agecap = options.agecap || (await createAgecap(dossiers, cerfas, crypto));

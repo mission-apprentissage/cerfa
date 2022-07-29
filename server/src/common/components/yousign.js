@@ -2,7 +2,6 @@ const Boom = require("boom");
 const { find } = require("lodash");
 const { oleoduc, accumulateData, writeData } = require("oleoduc");
 const { PassThrough } = require("stream");
-const { deleteFromStorage, uploadToStorage } = require("../utils/ovhUtils");
 const apiYousign = require("../apis/yousign/ApiYousign");
 const config = require("../../config");
 const { deleteS3Object, putS3Object } = require("../utils/S3Utils");
@@ -44,11 +43,7 @@ module.exports = async (dossiers, crypto, agecap, users) => {
       // Si on a déjà un contrat dans l'object storage, on le supprime
       const contratDocument = find(documents, { typeDocument: "CONTRAT" });
       if (contratDocument) {
-        if (config.storageType === "s3") {
-          await deleteS3Object(path);
-        } else {
-          await deleteFromStorage(path);
-        }
+        await deleteS3Object(path);
       }
 
       // On upload sur le S3 le nouveau contrat avec l'oleoduc (input stream => output stream)
@@ -66,11 +61,9 @@ module.exports = async (dossiers, crypto, agecap, users) => {
             )
           : noop(),
         // On donne en stream output l'upload vers le S3
-        config.storageType === "s3"
-          ? writeData((data) => {
-              return putS3Object(data, path);
-            })
-          : await uploadToStorage(path, { contentType: "application/pdf" })
+        writeData((data) => {
+          return putS3Object(data, path);
+        })
       );
 
       // On enregistre le contrat en pièce jointe dans le dossier, qu'on enverra pas à AGECAP
