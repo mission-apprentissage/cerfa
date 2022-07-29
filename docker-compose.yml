@@ -67,19 +67,6 @@ services:
     networks:
       - cerfa_network
 
-  clamav:
-    image: clamav/clamav:0.105.0
-    container_name: cerfa_clamav
-    mem_limit: 3g
-    restart: unless-stopped
-    networks:
-      - cerfa_network
-    healthcheck:
-      test: [ "CMD", "/usr/local/bin/clamdcheck.sh" ]
-      interval: 60s
-      retries: 3
-      start_period: 120s
-
 networks:
   cerfa_network:
     name: cerfa_network

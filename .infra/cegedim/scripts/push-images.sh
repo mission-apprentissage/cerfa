@@ -57,7 +57,7 @@ docker build ./server -t registry.kleegroup.com/dgefp-pdigi/cerfa_server:"$v"
 
 # On copie le fichier location_metabase.conf.template dans le dossier /reverse_proxy/app/nginx/templates/includes
 # On doit faire ça parce que ce fichier ne doit exister que pour le build des images, pas pour le lancement local
-cp ./.infra/cegedim/files/location_metabase.conf.template ./reverse_proxy/app/nginx/templates/includes/location_metabase.conf.template
+cp ./.infra/cegedim/scripts/files/location_metabase.conf.template ./reverse_proxy/app/nginx/templates/includes/location_metabase.conf.template
 
 echo "Building reverse_proxy:$v ..."
 docker build ./reverse_proxy -t registry.kleegroup.com/dgefp-pdigi/cerfa_reverse_proxy:"$v"

@@ -2,7 +2,6 @@ const express = require("express");
 const Joi = require("joi");
 const { createWriteStream } = require("fs");
 const tryCatch = require("../../middlewares/tryCatchMiddleware");
-const { getFromStorage, uploadToStorage, deleteFromStorage } = require("../../../common/utils/ovhUtils");
 const { oleoduc, writeData, accumulateData } = require("oleoduc");
 const multiparty = require("multiparty");
 const { EventEmitter } = require("events");
@@ -104,7 +103,7 @@ module.exports = (components) => {
 
         await oleoduc(
           part,
-          scanStream,
+          config.env !== "local" ? scanStream : noop(),
           hashStream,
           crypto.isCipherAvailable() ? crypto.cipher(dossierId) : noop(),
           config.storageType === "s3"
@@ -117,31 +116,27 @@ module.exports = (components) => {
             : noop(),
           test
             ? noop()
-            : config.storageType === "s3"
-            ? writeData((data) => {
+            : writeData((data) => {
                 return putS3Object(data, path);
               })
-            : await uploadToStorage(path, { contentType: part.headers["content-type"] })
         );
 
         if (part.byteCount > 10485760) {
           throw new Error("Le fichier est trop volumineux");
         }
 
-        let hash = await getHash();
-        let { isInfected, viruses } = await getScanResults();
-        if (isInfected) {
-          if (!test) {
-            logger.error(`Uploaded file ${path} is infected by ${viruses.join(",")}. Deleting file from storage...`);
-
-            if (config.storageType === "s3") {
+        if (config.env !== "local") {
+          let { isInfected, viruses } = await getScanResults();
+          if (isInfected) {
+            if (!test) {
+              logger.error(`Uploaded file ${path} is infected by ${viruses.join(",")}. Deleting file from storage...`);
               await deleteS3Object(path);
-            } else {
-              await deleteFromStorage(path);
             }
+            throw new Error("Le contenu du fichier est invalide");
           }
-          throw new Error("Le contenu du fichier est invalide");
         }
+
+        let hash = await getHash();
 
         await dossiers.addDocument(dossierId, {
           typeDocument,
@@ -167,10 +162,7 @@ module.exports = (components) => {
 
       const document = await dossiers.getDocument(dossierId, name, path);
 
-      const stream =
-        config.storageType !== "s3"
-          ? await getFromStorage(document.cheminFichier)
-          : await getS3ObjectAsStream(document.cheminFichier);
+      const stream = await getS3ObjectAsStream(document.cheminFichier);
 
       res.header("Content-Type", "application/pdf");
       res.header("Content-Disposition", `attachment; filename=${document.nomFichier}`);
@@ -211,11 +203,7 @@ module.exports = (components) => {
         tailleFichier,
       });
 
-      if (config.storageType === "s3") {
-        await deleteS3Object(cheminFichier);
-      } else {
-        await deleteFromStorage(cheminFichier);
-      }
+      await deleteS3Object(cheminFichier);
 
       const documents = await dossiers.getDocuments(dossierId);
       return res.json({ documents });

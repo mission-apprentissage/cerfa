@@ -229,24 +229,6 @@ backup_partition_name=<nom de la partition>
 
 - Relancer le `setup-vm.sh` afin d'appliquer les modifications sur le serveur.
 
-### Notifications Slack
-
-Un mécanisme de banissement d'IP est mis en place dans le dossier :
-
-- `ansible/roles/setup/files/fail2ban`
-
-Pour en savoir plus sur le fail2ban et sa configuration : https://doc.ubuntu-fr.org/fail2ban.
-
-Ce mécanisme se charge de notifier dans une channel Slack lorsqu'une IP est bannie ou débannie.
-
-Pour mettre en place les notifications Slack il est nécessaire d'utiliser les Webhooks et de créer une chaine dédiée
-dans votre espace de travail Slack.
-
-Il vous faudra créer une application dans Slack et récupérer le lien de la Webhook, pour en savoir
-plus : https://api.slack.com/messaging/webhooks.
-
-Une fois le lien de la Webhook récupéré il faudra stocker l'information dans le vault (`SLACK_WEBHOOK_URL`).
-
 ## Création d'un nouvel environnement
 
 ## Création d'une app OVH

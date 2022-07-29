@@ -37,7 +37,6 @@ module.exports = {
     destinations: env.get("CERFA_LOG_DESTINATIONS").default("stdout").asArray(),
     format: env.get("CERFA_LOG_FORMAT").default("pretty").asString(),
   },
-  slackWebhookUrl: env.get("CERFA_SLACK_WEBHOOK_URL").asString(),
   teamsWebhookUrl: env.get("CERFA_TEAMS_WEBHOOK_URL").asString(),
   outputDir: env.get("CERFA_OUTPUT_DIR").default(".local/output").asString(),
   smtp: {
@@ -48,22 +47,17 @@ module.exports = {
       pass: env.get("CERFA_SMTP_AUTH_PASS").asString(),
     },
   },
-  storageType: env.get("CERFA_STORAGE_TYPE").default("s3").asString(),
-  ovh: {
-    storage: {
-      encryptionKey: env.get("CERFA_OVH_STORAGE_ENCRYPTION_KEY").asString(),
-      uri: env.get("CERFA_OVH_STORAGE_URI").asString(),
-      storageName: env.get("CERFA_OVH_STORAGE_NAME").default("mna-cerfa").asString(),
+  objectStorage: {
+    encryptionKey: env.get("CERFA_OBJECTSTORAGE_ENCRYPTION_KEY").asString(),
+    aws: {
+      Bucket: env.get("CERFA_AWS_BUCKET_NAME").asString(),
+      BasePath: env.get("CERFA_AWS_BASE_PATH").asString(),
+      AccessKeyId: env.get("CERFA_AWS_ACCESS_KEY_ID").asString(),
+      SecretAccessKey: env.get("CERFA_AWS_SECRET_ACCES_KEY").asString(),
+      region: env.get("CERFA_AWS_REGION").asString(),
+      s3ForcePathStyle: env.get("CERFA_AWS_S3FORCEPATHSTYLE").default("true").asBoolStrict(),
+      signatureVersion: env.get("CERFA_AWS_SIGNATURE_VERSION").default("v4").asString(),
     },
-  },
-  aws: {
-    Bucket: env.get("CERFA_AWS_BUCKET_NAME").asString(),
-    BasePath: env.get("CERFA_AWS_BASE_PATH").asString(),
-    AccessKeyId: env.get("CERFA_AWS_ACCESS_KEY_ID").asString(),
-    SecretAccessKey: env.get("CERFA_AWS_SECRET_ACCES_KEY").asString(),
-    region: env.get("CERFA_AWS_REGION").asString(),
-    s3ForcePathStyle: env.get("CERFA_AWS_S3FORCEPATHSTYLE").default("true").asBoolStrict(),
-    signatureVersion: env.get("CERFA_AWS_SIGNATURE_VERSION").default("v4").asString(),
   },
   apiEntreprise: env.get("CERFA_API_ENTREPRISE_KEY").asString(),
   apiYousign: {

@@ -169,12 +169,7 @@ Par défaut plusieurs streams sont disponibles :
 
 - console
 - json
-- slack
 - mongodb
-
-Pour mettre en place les notifications Slack il est nécessaire d'utiliser les Webhooks et de créer une chaine dédiée dans votre espace de travail Slack.
-
-Il vous faudra créer une application dans Slack et récupérer le lien de la Webhook, pour en savoir plus : https://api.slack.com/messaging/webhooks.
 
 ### Utilitaires
 
