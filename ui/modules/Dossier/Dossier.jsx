@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Box, Flex, Center, Container, Spinner, useDisclosure } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps-rework-mna";
 import { useRouter } from "next/router";
@@ -8,7 +8,7 @@ import Signatures from "./Signatures/Signatures";
 import Suivi from "./Suivi/Suivi";
 import DossierHeader from "./components/DossierHeader";
 import DossierFooterControls from "./components/DossierFooterControls";
-import IsPrivateEmployeurModal from "./components/IsPrivateEmployeurModal";
+// import IsPrivateEmployeurModal from "./components/IsPrivateEmployeurModal";
 import FinalizeModal from "./components/FinalizeModal";
 import ESignatureModal from "./components/ESignatureModal";
 import { workspaceTitleAtom } from "../../hooks/workspaceAtoms";
@@ -21,7 +21,7 @@ import { dossierCompletionStatus, dossierNameSelector } from "./atoms";
 import { useInitCerfa } from "./formEngine/hooks/useInitCerfa";
 import { useAutoSave } from "./formEngine/hooks/useAutoSave";
 import { useDossier } from "./hooks/useDossier";
-import { valueSelector } from "./formEngine/atoms";
+// import { valueSelector } from "./formEngine/atoms";
 import { signaturesPdfLoadedAtom } from "./Signatures/atoms";
 // import useAuth from "../../hooks/useAuth";
 // import { hasPageAccessTo } from "../../common/utils/rolesUtils";
@@ -51,9 +51,9 @@ const Dossier = () => {
   useAutoSave({ controller: cerfaController });
 
   const setWorkspaceTitle = useSetRecoilState(workspaceTitleAtom);
-  const isEmployeurPrive = useRecoilValue(valueSelector("employeur.privePublic")) === false;
-  const [hasSeenPrivateSectorModal, setHasSeenPrivateSectorModal] = useState(false);
-  const isPrivateSectorAckModal = useDisclosure({ defaultIsOpen: true });
+  // const isEmployeurPrive = useRecoilValue(valueSelector("employeur.privePublic")) === false;
+  // const [hasSeenPrivateSectorModal, setHasSeenPrivateSectorModal] = useState(false);
+  // const isPrivateSectorAckModal = useDisclosure({ defaultIsOpen: true });
   const finalizeModalDisclosure = useDisclosure();
   const eSignatureModalDisclosure = useDisclosure();
 
@@ -79,7 +79,7 @@ const Dossier = () => {
   );
 
   const goToStep = async (targetIndex) => {
-    if (isEmployeurPrive) return false;
+    // if (isEmployeurPrive) return false;
     let newSlug = "/cerfa";
     if (targetIndex === 1) newSlug = "/documents";
     if (targetIndex === 2) newSlug = "/signatures";
@@ -106,7 +106,7 @@ const Dossier = () => {
         {/*hasPageAccessTo(auth, "signature_beta") && <AskBetaTestModal />*/}
         {finalizeModalDisclosure.isOpen && <FinalizeModal {...finalizeModalDisclosure} dossier={dossier} />}
         {eSignatureModalDisclosure.isOpen && <ESignatureModal {...eSignatureModalDisclosure} />}
-        <IsPrivateEmployeurModal
+        {/* <IsPrivateEmployeurModal
           isOpen={isEmployeurPrive && !hasSeenPrivateSectorModal && isPrivateSectorAckModal.isOpen}
           onClose={() => {
             setHasSeenPrivateSectorModal(true);
@@ -116,7 +116,7 @@ const Dossier = () => {
             setHasSeenPrivateSectorModal(true);
             isPrivateSectorAckModal.onClose();
           }}
-        />
+        /> */}
         <Container maxW="xl">
           <DossierHeader activeStep={activeStep} dossier={dossier} />
 
@@ -158,7 +158,7 @@ const Dossier = () => {
               finalizeModalDisclosure={finalizeModalDisclosure}
               eSignatureModalDisclosure={eSignatureModalDisclosure}
               dossierComplete={dossierStatus.dossier.complete}
-              isEmployeurPrive={isEmployeurPrive}
+              // isEmployeurPrive={isEmployeurPrive}
               signaturesPdfLoaded={signaturesPdfLoaded}
             />
           </Flex>

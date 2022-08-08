@@ -261,6 +261,36 @@ export const employerSchema = {
     showInfo: true,
     options: [
       {
+        name: "Privé",
+        options: [
+          {
+            label:
+              "11 Entreprise inscrite au répertoire des métiers ou au registre des entreprises pour l'Alsace-Moselle",
+            value: 11,
+          },
+          {
+            label: "12 Entreprise inscrite uniquement au registre du commerce et des sociétés",
+            value: 12,
+          },
+          {
+            label: "13 Entreprises dont les salariés relèvent de la mutualité sociale agricole",
+            value: 13,
+          },
+          {
+            label: "14 Profession libérale",
+            value: 14,
+          },
+          {
+            label: "15 Association",
+            value: 15,
+          },
+          {
+            label: "16 Autre employeur privé",
+            value: 16,
+          },
+        ],
+      },
+      {
         name: "Public",
         options: [
           {

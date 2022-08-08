@@ -1,5 +1,5 @@
 const adresseSchema = require("./adresse.part");
-const idccEnum = require("./idcc.part");
+// const idccEnum = require("./idcc.part");
 const departementEnum = require("./departements.part");
 
 const employeurCerfaSchema = {
@@ -70,7 +70,7 @@ const employeurCerfaSchema = {
   },
   codeIdcc: {
     path: "employeur.codeIdcc",
-    enum: [null, ...idccEnum.map(({ code }) => code)],
+    // enum: [null, ...idccEnum.map(({ code }) => code)],
     maxLength: 4,
     type: String,
     default: null,
@@ -83,7 +83,7 @@ const employeurCerfaSchema = {
   },
   libelleIdcc: {
     path: "employeur.libelleIdcc",
-    enum: [null, ...idccEnum.map(({ libelle }) => libelle)],
+    // enum: [null, ...idccEnum.map(({ libelle }) => libelle)],
     maxLength: 500,
     default: null,
     type: String,
