@@ -25,9 +25,9 @@ const Header = () => {
 
             <Box p={[1, 6]} flex="1">
               <Heading as="h6" textStyle="h6" fontSize="xl">
-                Contrat d&apos;apprentissage dématérialisé pour les employeurs publics{" "}
+                Contrat d&apos;apprentissage dématérialisé{" "}
                 <Tag marginBottom="1w" backgroundColor="bluefrance" color="white">
-                  V1
+                  Alpha
                 </Tag>
               </Heading>
             </Box>
