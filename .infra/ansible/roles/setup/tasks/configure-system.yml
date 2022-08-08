@@ -1,7 +1,3 @@
-- name: Mise à jour APT Package Manager
-  apt:
-    update_cache: yes
-
 - name: Mise à jour des packages
   apt:
     name: "*"
