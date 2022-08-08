@@ -20,7 +20,6 @@ import { MenuFill, Close, AccountFill, AccountUnfill, Parametre } from "../../..
 import { _get } from "../../../common/httpClient";
 import Link from "../../../components/Link";
 import MenuItem from "../../../components/MenuItem";
-import { useLinkToPds } from "../../../hooks/useLinkToPds";
 
 const NavigationMenu = ({ isMyWorkspace, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +37,6 @@ const NavigationMenu = ({ isMyWorkspace, ...props }) => {
 
 const UserMenu = () => {
   let [auth] = useAuth();
-  const linkToPds = useLinkToPds();
 
   let logout = async () => {
     const { loggedOut } = await _get("/api/v1/auth/logout");
@@ -48,19 +46,17 @@ const UserMenu = () => {
   };
   let accountType = auth.roles.length ? auth.roles[0].name : isUserAdmin(auth) ? "admin" : "utilisateur";
 
-  if (!linkToPds) return null;
-
   return (
     <>
       {auth?.sub === "anonymous" && (
         <HStack>
-          <Link href={linkToPds} variant="pill" px={3} py={1}>
+          <Link href="/auth/inscription" variant="pill" px={3} py={1}>
             <Text lineHeight={6}>
               <AccountUnfill boxSize={5} mr={2} />
               S&apos;inscrire
             </Text>
           </Link>
-          <Link href={linkToPds} variant="pill" px={3} py={1}>
+          <Link href="/auth/connexion" variant="pill" px={3} py={1}>
             <Text lineHeight={6}>
               <AccountFill boxSize={5} mr={2} />
               Se connecter
