@@ -123,6 +123,7 @@ const DossierFooterControls = ({
       dossier.etat === "DOSSIER_TERMINE_AVEC_SIGNATURE" ||
       dossier.etat === "TRANSMIS" ||
       dossier.etat === "EN_COURS_INSTRUCTION" ||
+      dossier.etat === "EN_ATTENTE_COMPLEMENT" ||
       dossier.etat === "INCOMPLET" ||
       dossier.etat === "DEPOSE" ||
       dossier.etat === "REFUSE" ||
@@ -277,27 +278,6 @@ const DossierFooterControls = ({
           </HStack>
         </Flex>
       )}
-      {/*TODO factoriser ce bouton qui est dupliqué juste en dessous => quickwin*/}
-      {activeStep === 3 &&
-        (dossier.etat === "TRANSMIS" ||
-          dossier.etat === "EN_COURS_INSTRUCTION" ||
-          dossier.etat === "REFUSE" ||
-          dossier.etat === "DEPOSE") && (
-          <Flex width="100%" justify="flex-start" mt={8} mb={10}>
-            <Center w="full">
-              <Button
-                as={Link}
-                href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?dossierId=${dossier._id}`}
-                {...buttonDownloadStyleProps}
-                variant="secondary"
-                isDisabled={!dossierComplete || isEmployeurPrive}
-              >
-                <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
-                {buttonTextProp}
-              </Button>
-            </Center>
-          </Flex>
-        )}
       {activeStep === 2 && !dossier.draft && dossier.mode && (
         <Flex width="100%" justify="flex-start" mt={8} mb={10}>
           <Center w="full">
@@ -369,6 +349,52 @@ const DossierFooterControls = ({
           </Center>
         </Flex>
       )}
+      {activeStep === 3 &&
+        (dossier.etat === "TRANSMIS" ||
+          dossier.etat === "EN_COURS_INSTRUCTION" ||
+          dossier.etat === "REFUSE" ||
+          dossier.etat === "EN_ATTENTE_COMPLEMENT" ||
+          dossier.etat === "DEPOSE") && (
+          <Flex width="100%" justify="flex-start" mt={8} mb={10}>
+            <Center w="full" spacing={16}>
+              {dossier.etat === "EN_ATTENTE_COMPLEMENT" &&
+                hasContextAccessTo(dossier, "dossier/page_suivi/modifier_demande_complements") && (
+                  <Button
+                    size="md"
+                    onClick={async () => {
+                      // Call server pour modifier la version du dossier
+                      try {
+                        await _put(`/api/v1/dossier/entity/${dossier._id}/nouvelleVersion?dossierId=${dossier._id}`, {
+                          dossierId: dossier._id,
+                        });
+                      } catch (e) {
+                        console.log(e);
+                      }
+
+                      // Redirection vers la 1ere étape
+                      window.location.replace(window.location.pathname.replace(/\/[^/]*$/, "/cerfa"));
+                    }}
+                    variant="primary"
+                    mr={12}
+                    px={8}
+                    mt={16}
+                  >
+                    Modifier
+                  </Button>
+                )}
+              <Button
+                as={Link}
+                href={`/api/v1/cerfa/pdf/${dossier.cerfaId}/?dossierId=${dossier._id}`}
+                {...buttonDownloadStyleProps}
+                variant="secondary"
+                isDisabled={!dossierComplete || isEmployeurPrive}
+              >
+                <DownloadLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} mr="0.5rem" />
+                {buttonTextProp}
+              </Button>
+            </Center>
+          </Flex>
+        )}
     </>
   );
 };

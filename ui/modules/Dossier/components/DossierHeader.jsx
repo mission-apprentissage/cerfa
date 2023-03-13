@@ -79,7 +79,8 @@ const DossierHeader = ({ activeStep, dossier }) => {
       </HStack>
       <Box>
         <Text color="mgalt" as="i" fontSize="0.9rem">
-          Numéro de {dossier?.etat === "TRANSMIS" ? "télétransmission" : "dossier"} : {dossier?._id}
+          Numéro de {dossier?.etat === "TRANSMIS" ? "télétransmission" : "dossier"} : {dossier?._id} / Version{" "}
+          {dossier?.version}
         </Text>
       </Box>
     </Flex>

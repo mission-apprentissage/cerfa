@@ -53,6 +53,19 @@ module.exports = (components) => {
   );
 
   router.put(
+    "/entity/:id/nouvelleVersion",
+    permissionsDossierMiddleware(components, ["dossier/page_suivi/modifier_demande_complements"]),
+    tryCatch(async ({ params }, res) => {
+      const dossier = await Dossier.findOneAndUpdate(
+        { _id: params.id },
+        { $set: { signatures: null, mode: null, draft: true }, etat: "BROUILLON", $inc: { version: 1 } }
+      );
+
+      return res.json(dossier);
+    })
+  );
+
+  router.put(
     "/entity/:id",
     permissionsDossierMiddleware(components, ["dossier/sauvegarder"]),
     tryCatch(async ({ body, params }, res) => {

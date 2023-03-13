@@ -51,14 +51,17 @@ export const DOSSIER_STATUS = {
     priority: 5,
     text: "En cours d'instruction",
   },
+  EN_ATTENTE_COMPLEMENT: {
+    priority: 6,
+    text: "En attente de complément",
+  },
   INCOMPLET: {
     priority: 6,
-    // text: "À modifier",
     text: "Non déposable",
   },
   DEPOSE: {
     priority: 6,
-    text: "Validé",
+    text: "Déposé",
   },
   REFUSE: {
     priority: 6,

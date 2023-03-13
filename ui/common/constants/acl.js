@@ -50,6 +50,10 @@ export default [
                 ref: "wks/page_espace/page_dossiers/supprimer_dossier",
               },
               {
+                feature: "Modifier un dossier de l'espace",
+                ref: "wks/page_espace/page_dossiers/modifier_dossier_demande_complement",
+              },
+              {
                 feature: "Voir la liste des dossiers",
                 ref: "wks/page_espace/page_dossiers/voir_liste_dossiers",
                 uniqSubFeature: true,
@@ -167,6 +171,16 @@ export default [
           {
             feature: "Gestion des notifications du dossier",
             ref: "dossier/page_parametres/gestion_notifications",
+          },
+        ],
+      },
+      {
+        feature: "Voir le suivi du dossier",
+        ref: "dossier/page_suivi",
+        subFeatures: [
+          {
+            feature: "Modification du contrat suite à une demande de compléments",
+            ref: "dossier/page_suivi/modifier_demande_complements",
           },
         ],
       },

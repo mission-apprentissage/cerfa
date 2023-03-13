@@ -11,6 +11,7 @@ const STATUS_AGECAP = {
   "Non déposable": "REFUSE",
   // eslint-disable-next-line prettier/prettier
   Déposé: "DEPOSE",
+  "En attente de complément": "EN_ATTENTE_COMPLEMENT",
 };
 
 async function getAgecapStatusChanged(batchManagement, apiAgecap) {

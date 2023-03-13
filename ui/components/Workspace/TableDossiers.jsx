@@ -9,6 +9,8 @@ import { hasContextAccessTo } from "../../common/utils/rolesUtils";
 import { workspaceAtom } from "../../hooks/workspaceAtoms";
 
 import Link from "../Link";
+import { _put } from "../../common/httpClient";
+import { useRouter } from "next/router";
 
 const TableDossiers = ({
   dossiers,
@@ -16,6 +18,7 @@ const TableDossiers = ({
   onDeleteClicked,
   baseUrl = "/mes-dossiers/mon-espace",
 }) => {
+  const router = useRouter();
   const workspace = useRecoilValue(workspaceAtom);
   return (
     <Table
@@ -108,16 +111,38 @@ const TableDossiers = ({
                 <Parametre width={"2rem"} height={"1.2rem"} color="bluefrance" />
               </MenuButton>
               <MenuList>
-                {hasContextAccessTo(workspace, "wks/page_espace/page_dossiers/supprimer_dossier") && withDeleteAction && (
-                  <MenuItem
-                    color="redmarianne"
-                    onClick={async () => {
-                      await onDeleteClicked(dossiers[i]);
-                    }}
-                  >
-                    Supprimer
-                  </MenuItem>
-                )}
+                {hasContextAccessTo(workspace, "wks/page_espace/page_dossiers/supprimer_dossier") &&
+                  withDeleteAction &&
+                  dossiers[i].etat !== "EN_ATTENTE_COMPLEMENT" && (
+                    <MenuItem
+                      color="redmarianne"
+                      onClick={async () => {
+                        await onDeleteClicked(dossiers[i]);
+                      }}
+                    >
+                      Supprimer
+                    </MenuItem>
+                  )}
+                {hasContextAccessTo(workspace, "wks/page_espace/page_dossiers/modifier_dossier_demande_complement") &&
+                  dossiers[i].etat === "EN_ATTENTE_COMPLEMENT" && (
+                    <MenuItem
+                      onClick={async () => {
+                        // Call server pour modifier la version du dossier
+                        try {
+                          const res = await _put(`/api/v1/dossier/entity/${dossiers[i]._id}/nouvelleVersion`, {
+                            dossierId: dossiers[i]._id,
+                          });
+                        } catch (e) {
+                          console.log(e);
+                        }
+
+                        // Redirection vers la 1ere étape
+                        await router.push(`/mes-dossiers/mon-espace/${dossiers[i]._id}/cerfa`);
+                      }}
+                    >
+                      Modifier
+                    </MenuItem>
+                  )}
               </MenuList>
             </Menu>
           );

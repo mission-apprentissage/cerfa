@@ -73,6 +73,7 @@ const dossierSchema = {
 
       "EN_COURS_INSTRUCTION", // 5
 
+      "EN_ATTENTE_COMPLEMENT", // 6
       "INCOMPLET", // 6
       "DEPOSE", // 6
       "REFUSE", // 6
@@ -151,6 +152,12 @@ const dossierSchema = {
     ref: "workspace",
     required: true,
     description: "Workspace id",
+  },
+  version: {
+    type: Number,
+    default: 1,
+    required: true,
+    description: "Version du dossier",
   },
   signatures: {
     type: {},

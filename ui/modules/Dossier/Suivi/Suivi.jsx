@@ -16,7 +16,27 @@ const Suivi = () => {
   // TODO : duplicate Signataires.jsx
   const [serviceInstruction, setServiceInstruction] = useState(null);
 
+  if (
+    !(
+      dossier.etat === "TRANSMIS" ||
+      dossier.etat === "EN_COURS_INSTRUCTION" ||
+      dossier.etat === "EN_ATTENTE_COMPLEMENT" ||
+      dossier.etat === "REFUSE" ||
+      dossier.etat === "DEPOSE"
+    )
+  ) {
+    return (
+      <Box mt={12} pt={2} minH="25vh">
+        <Center>
+          <Tooltip variant="alert">
+            <Text>Le dossier doit être signé avant de procéder à sa télétransmission et d’accéder à son suivi.</Text>
+          </Tooltip>
+        </Center>
+      </Box>
+    );
+  }
   // On récupère la valeure la plus actuelle de la DDETS / DREETS
+
   useEffect(() => {
     const run = async () => {
       if (!serviceInstruction) {
@@ -33,26 +53,7 @@ const Suivi = () => {
     };
     run();
   }, [code_dpt, code_region, serviceInstruction, dossier._id]);
-
   // On ne peut pas accéder à l'écran de suivi de télétransmission du dossier si la partie signature n'est pas terminée
-  if (
-    !(
-      dossier.etat === "TRANSMIS" ||
-      dossier.etat === "EN_COURS_INSTRUCTION" ||
-      dossier.etat === "REFUSE" ||
-      dossier.etat === "DEPOSE"
-    )
-  ) {
-    return (
-      <Box mt={12} pt={2} minH="25vh">
-        <Center>
-          <Tooltip variant="alert">
-            <Text>Le dossier doit être signé avant de procéder à sa télétransmission et d’accéder à son suivi.</Text>
-          </Tooltip>
-        </Center>
-      </Box>
-    );
-  }
 
   const listStatusPdigi = [
     {
@@ -65,6 +66,7 @@ const Suivi = () => {
   dossier.statutAgecap.forEach((statutAgecap) => {
     let titre = "";
     let commentaire = "";
+    let content = "";
     let date = statutAgecap.dateMiseAJourStatut
       ? `- ${DateTime.fromSQL(statutAgecap.dateMiseAJourStatut).toFormat("dd/MM/y")}`
       : " ";
@@ -72,6 +74,20 @@ const Suivi = () => {
     if (statutAgecap.statut === "En cours d'instruction") {
       titre = "Dossier en cours d'instruction";
       commentaire = "Un agent a pris en charge votre dossier, il est en cours d'instruction";
+    }
+
+    if (statutAgecap.statut === "En attente de complément") {
+      titre = "Dossier en attente de complément";
+      content = (
+        <Text textAlign={"left"} fontSize={"sm"} color={"gray.800"} fontWeight={"300"}>
+          Votre dossier a été renvoyé pour modification par {serviceInstruction} pour les raisons suivantes :<br />
+          {statutAgecap.commentaire}
+          <br />
+          <br />
+          En cliquant sur le bouton &quot;modifier&quot;, vous allez être renvoyé sur les premières étapes de complétion
+          du contrat.
+        </Text>
+      );
     }
 
     if (statutAgecap.statut === "Non déposable") {
@@ -89,7 +105,7 @@ const Suivi = () => {
       if (statutAgecap.numAvenant) commentaire += `-${statutAgecap.numAvenant}`;
     }
 
-    listStatusPdigi.push({ titre, commentaire, date });
+    listStatusPdigi.push({ titre, commentaire, content, date });
   });
 
   return (
@@ -109,7 +125,9 @@ const Suivi = () => {
                   {listStatusPdigi.length}
                 </Box>
               )}
-            />
+            >
+              {statutPdigi.content}
+            </Step>
           );
         })}
       </Steps>
